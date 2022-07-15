@@ -45,33 +45,33 @@ export type TokenInputCustomProps = {
 export type TokenInputProps = (
   TokenInputCustomProps // custom
   & Partial<TextFieldProps>  // MUI TextField
-  );
+);
 
 export const VALID_INPUTS = /[0-9]*/;
 
 const TokenInput: React.FC<TokenInputProps
   & FieldProps // Formik Field
-  > = ({
-         /// Custom props
-         token,
-         // Balance
-         balance: _balance,
-         balanceLabel = 'Balance',
-         hideBalance = false,
-         quote,
-         /// Formik props
-         field,
-         form,
-         meta,
-         /// TextField props
-         handleChange: _handleChange,
-         placeholder,
-         disabled,
-         sx,
-         InputProps,
-         label,
-         ...textFieldProps
-       }) => {
+> = ({
+  /// Custom props
+  token,
+  // Balance
+  balance: _balance,
+  balanceLabel = 'Balance',
+  hideBalance = false,
+  quote,
+  /// Formik props
+  field,
+  form,
+  meta,
+  /// TextField props
+  handleChange: _handleChange,
+  placeholder,
+  disabled,
+  sx,
+  InputProps,
+  label,
+  ...textFieldProps
+}) => {
   const [displayAmount, setDisplayAmount] = useState<string>(field.value?.toString() || '');
   const inputProps = useMemo(() => ({
     inputProps: {
@@ -184,8 +184,8 @@ const TokenInput: React.FC<TokenInputProps
       {(balance && !hideBalance || quote) && (
         <Stack direction="row" alignItems="center" gap={0.5} px={0.5} py={1}>
           {/* Leaving the Stack rendered regardless of whether `quote` is defined
-          * ensures that the Balance section gets flexed to the right side of
-          * the input. */}
+            * ensures that the Balance section gets flexed to the right side of
+            * the input. */}
           <Stack direction="row" alignItems="center" sx={{ flex: 1 }} spacing={1}>
             <Typography variant="bodySmall">
               {quote}
@@ -196,14 +196,14 @@ const TokenInput: React.FC<TokenInputProps
               <Tooltip title={balanceTooltip}>
                 <Typography variant="body1">
                   {balanceLabel}: {(
-                  balance
-                    ? token
-                      // If `token` is provided, use its requested decimals
-                      ? `${displayFullBN(balance, token.displayDecimals)}`
-                      // Otherwise... *shrug*
-                      : balance.toString()
-                    : '0'
-                )}
+                    balance
+                      ? token
+                        // If `token` is provided, use its requested decimals
+                        ? `${displayFullBN(balance, token.displayDecimals)}`
+                        // Otherwise... *shrug*
+                        : balance.toString()
+                      : '0'
+                  )}
                 </Typography>
               </Tooltip>
               <Typography
@@ -228,9 +228,9 @@ const TokenInputField: React.FC<TokenInputProps> = ({ name, ...props }) => (
       <TokenInput
         {...fieldProps}
         {...props}
-        />
-      )}
+      />
+    )}
   </Field>
-  );
+);
 
 export default TokenInputField;

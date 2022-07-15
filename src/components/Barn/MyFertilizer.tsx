@@ -16,13 +16,13 @@ import { useHumidityFromId } from 'hooks/useHumidity';
 import { AppState } from 'state';
 import FertilizerItem from 'components/Barn/FertilizerItem';
 import { ZERO_BN } from 'constants/index';
-import { SupportedChainId } from 'constants/chains';
-import { BEAN, SPROUTS, FERTILIZED_SPROUTS } from 'constants/tokens';
+import { SPROUTS, FERTILIZED_SPROUTS } from 'constants/tokens';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { displayBN } from 'util/Tokens';
 import { MY_FERTILIZER } from 'components/Barn/FertilizerItemTooltips';
 import useFarmerTotalFertilizer from 'hooks/useFarmerTotalFertilizer';
 import TokenIcon from '../Common/TokenIcon';
+import useTabs from 'hooks/display/useTabs';
 
 enum TabState {
   ACTIVE = 0,
@@ -30,13 +30,14 @@ enum TabState {
 }
 
 const MyFertilizer: React.FC = () => {
-  const farmerFertilizer = useSelector<AppState,
-    AppState['_farmer']['fertilizer']>((state) => state._farmer.fertilizer);
+  const farmerFertilizer = useSelector<AppState, AppState['_farmer']['fertilizer']>(
+    (state) => state._farmer.fertilizer
+  );
   const getHumidity = useHumidityFromId();
-  const [tab, setTab] = useState<TabState>(TabState.ACTIVE);
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setTab(newValue);
-  };
+
+  const [tab, handleChange] = useTabs();
+
+  ///
   const tokenIds = useMemo(
     () =>
       Object.keys(farmerFertilizer.tokens).filter(
@@ -45,7 +46,7 @@ const MyFertilizer: React.FC = () => {
     [farmerFertilizer.tokens, tab]
   );
 
-  const fertilizerSummary = useFarmerTotalFertilizer(tokenIds);
+  // const fertilizerSummary = useFarmerTotalFertilizer(tokenIds);
 
   return (
     <Card>
@@ -72,7 +73,7 @@ const MyFertilizer: React.FC = () => {
             <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={SPROUTS} />
               <Typography>
-                {displayBN(fertilizerSummary.unfertilized)}
+                {displayBN(farmerFertilizer.unfertilized)}
               </Typography>
             </Stack>
           </Stack>
@@ -94,7 +95,9 @@ const MyFertilizer: React.FC = () => {
             </Typography>
             <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={FERTILIZED_SPROUTS} />
-              <Typography>0</Typography>
+              <Typography>
+                {displayBN(farmerFertilizer.fertilized)}
+              </Typography>
             </Stack>
           </Stack>
         </Stack>

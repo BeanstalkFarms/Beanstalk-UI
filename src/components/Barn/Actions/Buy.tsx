@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Box, Card, Divider, Stack, Typography } from '@mui/material';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Box, Divider, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import toast from 'react-hot-toast';
@@ -7,8 +7,8 @@ import { ethers } from 'ethers';
 import { useAccount, useProvider, useSigner } from 'wagmi';
 import { Token } from 'classes';
 import { ERC20Token, NativeToken } from 'classes/Token';
-import { BEAN, BEAN_CRV3_LP, ETH, USDC, USDT, WETH } from 'constants/tokens';
-import { CURVE_ZAP_ADDRESSES, TokenMap, ZERO_BN } from 'constants/index';
+import { BEAN, ETH, USDC, USDT, WETH } from 'constants/tokens';
+import { ZERO_BN } from 'constants/index';
 import { FarmerBalances } from 'state/farmer/balances';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
@@ -30,23 +30,14 @@ import { BUY_FERTILIZER } from 'components/Barn/FertilizerItemTooltips';
 import { QuoteHandler } from 'hooks/useQuote';
 import SmartSubmitButton from 'components/Common/Form/SmartSubmitButton';
 import TransactionToast from 'components/Common/TxnToast';
-import FertilizerItem from './FertilizerItem';
+import FertilizerItem from '../FertilizerItem';
 import { displayBN, displayFullBN, tokenResult, toStringBaseUnitBN, toTokenUnitsBN, parseError, getChainConstant } from 'util/index';
 import { BeanstalkReplanted } from 'generated';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 
 // ---------------------------------------------------
-export interface BarnraiseFormProps {
-  amount: BigNumber;
-  handleSetAmount: (val?: string | BigNumber) => void;
-  from: NativeToken | ERC20Token;
-  handleSetFrom: (val?: any) => void; // TODO: Add type
-  erc20TokenList: TokenMap<Token> | never[];
-  balances: FarmerBalances;
-  account: any;
-}
 
-type FertilizerFormValues = FormState;
+type BuyFormValues = FormState;
 
 // ---------------------------------------------------
 
@@ -65,8 +56,8 @@ const TOKEN_LIST = [USDC, ETH];
 
 // ---------------------------------------------------
 
-const FertilizeForm : React.FC<
-  FormikProps<FertilizerFormValues>
+const BuyForm : React.FC<
+  FormikProps<BuyFormValues>
   & {
     contract: ethers.Contract;
     handleQuote: QuoteHandler;
@@ -178,7 +169,7 @@ const FertilizeForm : React.FC<
 
 // ---------------------------------------------------
 
-const SetupForm: React.FC<{}> = () => {
+const Buy : React.FC<{}> = () => {
   // Wallet connection
   const { data: account } = useAccount();
   const provider = useProvider();
@@ -207,11 +198,12 @@ const SetupForm: React.FC<{}> = () => {
   const isReplanted = REPLANTED_CHAINS.has(chainId);
   const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
   const tokenOut = Usdc;
+  
   /// Will need approval to use USDC; contract to approve
   /// varies depending on if we're replanted
   const contract = isReplanted ? beanstalk : fertContract;
   
-  const initialValues : FertilizerFormValues = useMemo(() => ({
+  const initialValues : BuyFormValues = useMemo(() => ({
     tokens: [
       {
         token: baseToken as (ERC20Token | NativeToken),
@@ -267,7 +259,7 @@ const SetupForm: React.FC<{}> = () => {
     isReplanted,
   ]);
 
-  const onSubmit = useCallback(async (values: FertilizerFormValues, formActions: FormikHelpers<FertilizerFormValues>) => {
+  const onSubmit = useCallback(async (values: BuyFormValues, formActions: FormikHelpers<BuyFormValues>) => {
     let txToast;
     try {
       if (!fertContract || !beanstalk || !account?.address) throw new Error('Unable to access contracts');
@@ -327,12 +319,11 @@ const SetupForm: React.FC<{}> = () => {
               ),
               // Mint Fertilizer, which also mints Beans and 
               // deposits the underlying LP in the same txn.
-              // beanstalk.interface.encodeFunctionData('mintFertilizer', [
-              //   toStringBaseUnitBN(amountUsdc, 0),
-              //   Farm.slip(minLP, 0.1/100),
-              //   FarmFromMode.EXTERNAL,
-              //   // FarmFromMode.INTERNAL_TOLERANT,
-              // ])
+              beanstalk.interface.encodeFunctionData('mintFertilizer', [
+                toStringBaseUnitBN(amountUsdc, 0),
+                Farm.slip(minLP, 0.1/100),
+                FarmFromMode.INTERNAL_TOLERANT,
+              ])
             ];
             const gas = await beanstalk.estimateGas.farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) });
             console.debug(`gas`, gas);
@@ -420,26 +411,21 @@ const SetupForm: React.FC<{}> = () => {
   ]);
 
   return (
-    <Card sx={{ p: 2 }}>
-      <Stack gap={1}>
-        <Typography variant="h4">Buy Fertilizer</Typography>
-        <Formik initialValues={initialValues} onSubmit={onSubmit}>
-          {(formikProps) => (
-            <FertilizeForm
-              handleQuote={handleQuote}
-              contract={contract}
-              balances={balances}
-              tokenOut={tokenOut}
-              {...formikProps}
-            />
-          )}
-        </Formik>
-      </Stack>
-    </Card>
+    <Formik initialValues={initialValues} onSubmit={onSubmit}>
+      {(formikProps) => (
+        <BuyForm
+          handleQuote={handleQuote}
+          contract={contract}
+          balances={balances}
+          tokenOut={tokenOut}
+          {...formikProps}
+        />
+      )}
+    </Formik>
   );
 };
 
-export default SetupForm;
+export default Buy;
 
 // ---------------------------------------------------
 

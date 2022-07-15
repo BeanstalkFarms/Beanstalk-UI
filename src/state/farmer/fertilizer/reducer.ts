@@ -1,18 +1,23 @@
 import { createReducer } from '@reduxjs/toolkit';
+import { NEW_BN } from 'constants/index';
 import { FarmerFertilizer } from '.';
-import { resetFertilizer, updateFertilizer } from './actions';
+import { resetFertilizer, updateFarmerFertilizer } from './actions';
 
 const initialState : FarmerFertilizer = {
-  tokens: {}
+  tokens: {},
+  unfertilized: NEW_BN,
+  fertilized: NEW_BN,
 };
 
 export default createReducer(initialState, (builder) =>
   builder
-    .addCase(updateFertilizer, (state, { payload }) => {
+    .addCase(updateFarmerFertilizer, (state, { payload }) => {
       state.tokens = {
         ...state.tokens,
-        ...payload,
+        ...payload.tokens,
       };
+      state.unfertilized = payload.unfertilized;
+      state.fertilized = payload.fertilized;
     })
     .addCase(resetFertilizer, () => initialState)
 );
