@@ -1,13 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import { Box, Card, CardProps, Stack, Tab, Tabs, Typography, useMediaQuery } from '@mui/material';
+import { Box, Card, CardProps, Stack, Tab, Tabs, Typography } from '@mui/material';
 import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
-import { useTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import PlotTable from './Tables/PlotTable';
-import MyOrdersDialog from './Dialogs/MyOrdersDialog';
-import MyListingsDialog from './Dialogs/MyListingsDialog';
-import { mockPodListingData, mockPodOrderData, PodListing, PodOrder } from './Plots.mock';
+import { mockPodListingData, mockPodOrderData } from './Plots.mock';
 import { displayBN, displayFullBN } from '../../util';
 import { BeanstalkPalette } from '../App/muiTheme';
 import { AppState } from '../../state';
@@ -87,11 +85,11 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
   const myListingsColumns: DataGridProps['columns'] = [
     {
       field: 'account',
-      headerName: 'Order',
+      headerName: 'Listing',
       flex: 1.5,
       renderCell: (params) => (
         <Stack direction="row" gap={1} alignItems="center">
-          <Typography>Pod Order</Typography>
+          <Typography>Pod Listing</Typography>
           <Box
             sx={{
               borderRadius: 1,
@@ -151,42 +149,20 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
       ),
     },
   ];
-  
-  const theme = useTheme();
+
+  const navigate = useNavigate();
   const [tab, setTab] = useState(0);
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
   };
 
-  /**
-   * User clicks "Create Buy Order" button
-   */
-  const [myOrdersOpen, setMyOrdersOpen] = useState(false);
-  const [myOrderRow, setMyOrderRow] = useState<PodOrder | undefined>();
+  const handleOrderClick = useCallback((params: GridRowParams) => {
+    navigate(`/market/order/${params.row.id}/edit`);
+  }, [navigate]);
 
-  const handleMyOrdersOpen = useCallback((params: GridRowParams) => {
-    setMyOrderRow(params.row);
-    setMyOrdersOpen(true);
-  }, []);
-
-  const handleMyOrdersClose = useCallback(() => {
-    setMyOrdersOpen(false);
-  }, []);
-
-  /**
-   * User clicks "Create Sell Listing" button
-   */
-  const [sellModalOpen, setSellModalOpen] = useState(false);
-  const [myListingRow, setMyListingRow] = useState<PodListing | undefined>();
-
-  const handleSellModalOpen = useCallback((params: GridRowParams) => {
-    setMyListingRow(params.row);
-    setSellModalOpen(true);
-  }, []);
-
-  const handleSellModalClose = useCallback(() => {
-    setSellModalOpen(false);
-  }, []);
+  const handleListingClick = useCallback((params: GridRowParams) => {
+    navigate(`/market/listing/${params.row.id}/edit`);
+  }, [navigate]);
 
   return (
     <>
@@ -200,7 +176,7 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
             columns={myOrdersColumns}
             rows={mockPodOrderData}
             maxRows={3}
-            onRowClick={handleMyOrdersOpen}
+            onRowClick={handleOrderClick}
           />
         )}
         {tab === 1 && (
@@ -208,29 +184,10 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
           columns={myListingsColumns}
           rows={mockPodListingData}
           maxRows={3}
-          onRowClick={handleSellModalOpen}
+          onRowClick={handleListingClick}
           />
          )}
       </Card>
-
-      {/* ----- modals ----- */}
-      {/* User clicks "My Orders" tab */}
-      <MyOrdersDialog
-        fullWidth
-        open={myOrdersOpen}
-        handleClose={handleMyOrdersClose}
-        podListing={myOrderRow}
-        harvestableIndex={beanstalkField.harvestableIndex}
-      />
-
-      {/* User clicks "My Listings" tab */}
-      <MyListingsDialog
-        fullWidth
-        open={sellModalOpen}
-        handleClose={handleSellModalClose}
-        podListing={myListingRow}
-        harvestableIndex={beanstalkField.harvestableIndex}
-      />
     </>
   );
 };

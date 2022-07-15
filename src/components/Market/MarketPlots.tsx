@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import PlotTable from './Tables/PlotTable';
-import { mockPodListingData, mockPodOrderData, PodOrder } from './Plots.mock';
+import { mockPodListingData, mockPodOrderData } from './Plots.mock';
 import { displayBN, displayFullBN } from '../../util';
 import beanIcon from '../../img/tokens/bean-logo-circled.svg';
 import podIcon from '../../img/beanstalk/pod-icon.svg';
@@ -157,18 +157,12 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
     setTab(newValue);
   };
 
-  const handleBuyNowModalOpen = useCallback((params: GridRowParams) => {
-    console.log('ROW', params.row.id);
+  const handleBuyNowClick = useCallback((params: GridRowParams) => {
     navigate(`/market/listing/${params.row.id}`);
-    // setBuyNowRow(params.row);
-    // setBuyNowDialogOpen(true);
   }, [navigate]);
 
-  const handleSellNowModalOpen = useCallback((params: GridRowParams) => {
-    console.log('ROW', params.row.id);
+  const handleSellNowClick = useCallback((params: GridRowParams) => {
     navigate(`/market/order/${params.row.id}`);
-    // setSellNowRow(params.row);
-    // setSellNowModalOpen(true);
   }, [navigate]);
 
   return (
@@ -185,7 +179,7 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
             columns={LISTING_COLUMNS}
             rows={mockPodListingData}
             maxRows={8}
-            onRowClick={handleBuyNowModalOpen}
+            onRowClick={handleBuyNowClick}
           />
         )}
 
@@ -195,7 +189,7 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
             columns={orderColumns}
             rows={mockPodOrderData}
             maxRows={8}
-            onRowClick={handleSellNowModalOpen}
+            onRowClick={handleSellNowClick}
           />
        )}
       </Card>

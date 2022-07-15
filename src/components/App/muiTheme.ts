@@ -11,10 +11,12 @@ declare module '@mui/material/styles' {
   interface Palette {
     light: Palette['primary'];
     dark: Palette['primary'];
+    cancel: Palette['primary']
   }
   interface PaletteOptions {
     light: PaletteOptions['primary'];
     dark: PaletteOptions['primary'];
+    cancel: PaletteOptions['primary']
   }
   interface TypographyVariants {
     bodySmall: React.CSSProperties;
@@ -33,12 +35,14 @@ declare module '@mui/material/Button' {
   interface ButtonPropsColorOverrides {
     light: true;
     dark: true;
+    cancel: true;
   }
 }
 declare module '@mui/material/IconButton' {
   interface IconButtonPropsColorOverrides {
     light: true;
     dark: true;
+    cancel: true;
   }
 }
 
@@ -165,6 +169,10 @@ let muiTheme = createTheme({
     dark: {
       main: BeanstalkPalette.black,
       contrastText: BeanstalkPalette.white,
+    },
+    cancel: {
+      main: BeanstalkPalette.washedRed,
+      contrastText: 'white'
     },
     //
     text: {

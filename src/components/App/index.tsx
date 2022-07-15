@@ -37,6 +37,8 @@ import MarketActivityPage from '../../pages/market/activity';
 import CreatePage from '../../pages/market/create';
 import OrderPage from '../../pages/market/order';
 import ListingPage from '../../pages/market/listing';
+import EditListingPage from '../../pages/market/edit-listing';
+import EditOrderPage from '../../pages/market/edit-order';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -145,7 +147,9 @@ export default function App() {
           <Route path="/market/activity" element={<MarketActivityPage />} />
           <Route path="/market/create" element={<CreatePage />} />
           <Route path="/market/order/:id" element={<OrderPage />} />
+          <Route path="/market/order/:id/edit" element={<EditOrderPage />} />
           <Route path="/market/listing/:id" element={<ListingPage />} />
+          <Route path="/market/listing/:id/edit" element={<EditListingPage />} />
           <Route path="/analytics/bean" element={<BeanAnalytics />} />
           <Route path="/analytics/silo" element={<SiloAnalytics />} />
           <Route path="/analytics/field" element={<FieldAnalytics />} />
