@@ -75,7 +75,7 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
         open={dialogOpen}
       />
       <Stack gap={1}>
-        <pre>{JSON.stringify(values, null, 2)}</pre>
+        {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
         {(values?.plotIndex === null)
           ? (
             <FieldWrapper>
