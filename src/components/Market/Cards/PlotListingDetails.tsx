@@ -9,7 +9,7 @@ import podIcon from 'img/beanstalk/pod-icon.svg';
 import BigNumber from 'bignumber.js';
 import { PodListing } from '../Plots.mock';
 import { displayBN, displayFullBN } from '../../../util';
-import { BeanstalkPalette } from '../../App/muiTheme';
+import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
 
 export type PlotListingCardProps = {
   podListing: PodListing | undefined;
@@ -28,40 +28,40 @@ const PlotListingDetails: React.FC<PlotListingCardProps & CardProps> = ({
     <Card sx={{ p: 2, ...sx }}>
       <Stack gap={2}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Stack direction="row" gap={0.3} alignItems="center">
-            <Typography>Pod Listing</Typography>
+          <Stack direction="row" gap={1} alignItems="center">
+            <Typography variant="h4">Pod Listing</Typography>
             <Box sx={{
-              px: 0.5,
-              py: 0.2,
-              borderRadius: 0.5,
+              px: 1,
+              py: 0.5,
+              borderRadius: 1,
               backgroundColor: BeanstalkPalette.washedGreen,
               color: BeanstalkPalette.logoGreen
             }}>
-              <Typography>{podListing.account.substring(0, 6)}</Typography>
+              <Typography variant="body1">{podListing.account.substring(0, 6)}</Typography>
             </Box>
           </Stack>
+          <Typography color={BeanstalkPalette.gray} variant="bodySmall">Listing expires at position <Typography color={BeanstalkPalette.black} variant="bodySmall" display="inline">500,000</Typography> in the Pod Line</Typography>
         </Stack>
         <Stack direction="row" justifyContent="space-between">
-          <Stack>
-            <Typography>Place in Line</Typography>
+          <Stack gap={0.5}>
+            <Typography variant="body1">Place in Line</Typography>
             {/* <Typography variant="h1" sx={{ fontWeight: 400 }}>613,964</Typography> */}
-            <Typography variant="h1" sx={{ fontWeight: 400 }}>{displayBN(new BigNumber(podListing.index).minus(harvestableIndex))}</Typography>
+            <Typography variant="bodyLarge">{displayBN(new BigNumber(podListing.index).minus(harvestableIndex))}</Typography>
           </Stack>
-          <Stack>
-            <Typography>Price per Pod</Typography>
+          <Stack gap={0.5}>
+            <Typography variant="body1">Price per Pod</Typography>
             <Stack direction="row" gap={0.3} alignItems="center">
-              <Typography variant="h1" sx={{ fontWeight: 400 }}>{displayBN(podListing.pricePerPod)}</Typography>
-              <img src={beanIcon} alt="" height="25px" />
+              <img src={beanIcon} alt="" height={IconSize.medium} />
+              <Typography variant="bodyLarge">{displayBN(podListing.pricePerPod)}</Typography>
             </Stack>
           </Stack>
-          <Stack>
-            <Typography>Pods Sold</Typography>
+          <Stack gap={0.5}>
+            <Typography variant="body1">Pods Sold</Typography>
             <Stack direction="row" gap={0.3} alignItems="center">
-              <Typography
-                variant="h1"
-                sx={{ fontWeight: 400 }}>{displayBN(podListing.filledAmount)}/{displayBN(podListing.totalAmount)}
+              <img src={podIcon} alt="" height={IconSize.medium} />
+              <Typography variant="bodyLarge">
+                {displayBN(podListing.filledAmount)}/{displayBN(podListing.totalAmount)}
               </Typography>
-              <img src={podIcon} alt="" height="25px" />
             </Stack>
           </Stack>
         </Stack>

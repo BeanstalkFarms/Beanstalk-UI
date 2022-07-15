@@ -24,7 +24,7 @@ export const mockPodListingData: PodListing[] = new Array(20).fill(null).map((_,
 */
 export const mockPodOrderData: PodOrder[] = new Array(20).fill(null).map((_, i) => ({
   account: '0X123456789101112131415',
-  id: '',
+  id: '123456789',
   pricePerPod: new BigNumber(Math.random()),
   maxPlaceInLine: new BigNumber(10000000 * Math.random()),
   totalAmount: new BigNumber(10000000 * Math.random()),

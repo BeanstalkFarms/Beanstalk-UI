@@ -157,17 +157,6 @@ const SendForm: React.FC<SendFormProps &
             {/*  onClick={showDialog} */}
             {/* /> */}
             <FieldWrapper>
-              {/* <TokenInputField */}
-              {/*  name="amount" */}
-              {/*  token={PODS} */}
-              {/*  placeholder="0.0000" */}
-              {/*  balance={numPods || ZERO_BN} */}
-              {/*  hideBalance */}
-              {/*  InputProps={{ */}
-              {/*    endAdornment: <TokenAdornment token={PODS} /> */}
-              {/*  }} */}
-              {/*  handleChange={handleChangeAmount} */}
-              {/* /> */}
               <Box px={1}>
                 <SliderField
                   min={0}

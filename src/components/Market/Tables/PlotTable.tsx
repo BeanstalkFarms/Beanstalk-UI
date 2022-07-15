@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Box, BoxProps } from '@mui/material';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
-import { BeanstalkPalette } from 'components/App/muiTheme';
+import { BeanstalkPalette, FontSize } from 'components/App/muiTheme';
 
 const marketplaceTableStyle = {
   '& .MuiDataGrid-root': {
@@ -15,6 +15,7 @@ const marketplaceTableStyle = {
     },
     '& .MuiDataGrid-columnHeaderTitle': {
       fontWeight: 500,
+      fontSize: FontSize.base
     },
     '& .MuiDataGrid-columnHeader:focus': {
       outline: 'none'
@@ -79,7 +80,6 @@ const PlotTable: React.FC<BuySellTableProps & DataGridProps & BoxProps> = ({ row
     if (!rows || rows.length === 0) return '200px';
     if (maxRows !== undefined) return maxRows * 56 + 112;
     return MAX_ROWS * 56 + 112;
-    // return Math.min(rows.length, MAX_ROWS) * 61 + 112;
   }, [rows, maxRows]);
 
   return (
@@ -89,12 +89,6 @@ const PlotTable: React.FC<BuySellTableProps & DataGridProps & BoxProps> = ({ row
           height: tableHeight,
           width: '100%',
           ...marketplaceTableStyle,
-          // '& .MuiDataGrid-columnHeaders': {
-          //   display: hideHeader ? 'none' : null,
-          // },
-          // '& .MuiDataGrid-virtualScroller': {
-          //   marginTop: hideHeader ? '0!important' : null
-          // },
         }}
       >
         <DataGrid

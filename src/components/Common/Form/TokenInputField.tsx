@@ -137,8 +137,9 @@ const TokenInput: React.FC<TokenInputProps
   const handleMax = useCallback(() => {
     if (balance) {
       form.setFieldValue(field.name, balance);
+      _handleChange?.(balance)
     }
-  }, [form, field.name, balance]);
+  }, [balance, form, field.name, _handleChange]);
 
   // Ignore scroll events on the input. Prevents
   // accidentally scrolling up/down the number input.

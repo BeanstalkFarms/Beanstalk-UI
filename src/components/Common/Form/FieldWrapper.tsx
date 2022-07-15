@@ -5,7 +5,7 @@ const FieldWrapper : React.FC<{ label?: ReactNode | string; tooltip?: string }> 
   <Stack gap={0}>
     {label && (
     <Tooltip title={tooltip !== undefined ? tooltip : ''} placement="top-start">
-      <Typography sx={{ fontSize: 15, px: 0.5 }}>{label}</Typography>
+      <Typography sx={{ fontSize: 15, px: 1 }}>{label}</Typography>
     </Tooltip>
       )}
     {children}

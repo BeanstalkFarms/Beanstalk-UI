@@ -1,38 +1,51 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { Field, FieldProps, Form, FormikProps } from 'formik';
-import { Box, Button, InputAdornment, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Button, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { ERC20Token, NativeToken } from 'classes/Token';
-import { BuyOrderFormValues } from '../Dialogs/BuyOrderDialog';
+import Token, { ERC20Token, NativeToken } from 'classes/Token';
+import {
+  FormTokenState,
+  SettingInput, TokenAdornment,
+  TokenQuoteProvider,
+  TokenSelectDialog,
+  TxnSettings
+} from 'components/Common/Form';
+import { SupportedChainId } from 'constants/index';
+import { BEAN, ETH, PODS } from 'constants/tokens';
+import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import useChainId from 'hooks/useChain';
+import useChainConstant from 'hooks/useChainConstant';
+import useFarmerBalances from 'hooks/useFarmerBalances';
+import { QuoteHandler } from 'hooks/useQuote';
+import useTokenMap from 'hooks/useTokenMap';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
+import { toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
+import FieldWrapper from '../../Common/Form/FieldWrapper';
 import SliderField from '../../Common/Form/SliderField';
-import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import InputField from '../../Common/Form/InputField';
 import { BeanstalkPalette } from '../../App/muiTheme';
+import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import beanIcon from '../../../img/tokens/bean-logo-circled.svg';
-import TokenQuoteProvider from '../../Common/Form/TokenQuoteProvider';
-import { SupportedChainId } from '../../../constants';
-import { Token } from '../../../classes';
-import useChainId from '../../../hooks/useChain';
-import { QuoteHandler } from '../../../hooks/useQuote';
-import { toStringBaseUnitBN, toTokenUnitsBN } from '../../../util';
 import useCurve from '../../../hooks/useCurve';
-import useFarmerBalances from '../../../hooks/useFarmerBalances';
-import TokenSelectDialog from '../../Common/Form/TokenSelectDialog';
-import useTokenMap from '../../../hooks/useTokenMap';
-import { BEAN, ETH } from '../../../constants/tokens';
-import FieldWrapper from '../../Common/Form/FieldWrapper';
 
-export type BuyOrderFormProps = {
-  podLine: BigNumber;
-  token: ERC20Token | NativeToken
+export type BuyOrderFormValues = {
+  placeInLine: BigNumber | null;
+  pricePerPod: BigNumber | null;
+  tokens: FormTokenState[];
 }
 
-const BuyOrderForm: React.FC<BuyOrderFormProps & FormikProps<BuyOrderFormValues>> = ({
+const BuyOrderForm : React.FC<
+  FormikProps<BuyOrderFormValues>
+  & {
+    podLine: BigNumber;
+    token: ERC20Token | NativeToken;
+  }
+> = ({
   values,
   podLine,
   setFieldValue,
-  isSubmitting,
-  token: depositToken// BEAN
+  //
+  token: depositToken, // BEAN
 }) => {
   const chainId = useChainId();
   const [showTokenSelect, setShowTokenSelect] = useState(false);
@@ -116,19 +129,19 @@ const BuyOrderForm: React.FC<BuyOrderFormProps & FormikProps<BuyOrderFormValues>
         <FieldWrapper label="Price Per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
           <Field name="pricePerPod">
             {(fieldProps: FieldProps) => (
+              // FIXME: delete InputField and use TokenInputField
               <InputField
                 {...fieldProps}
                 placeholder="0.0000"
                 showMaxButton
+                balanceLabel="Maximum Price Per Pod"
                 InputProps={{
                   inputProps: { step: '0.01' },
                   endAdornment: (
-                    <InputAdornment position="end">
-                      <Stack direction="row" gap={0.3} alignItems="center" sx={{ pr: 1 }}>
-                        <img src={beanIcon} alt="" height="30px" />
-                        <Typography sx={{ fontSize: '20px' }}>BEAN</Typography>
-                      </Stack>
-                    </InputAdornment>)
+                    <TokenAdornment
+                      token={BEAN[1]}
+                    />
+                  )
                 }}
                 maxValue={new BigNumber(1)}
                 minValue={new BigNumber(0)}
@@ -153,7 +166,7 @@ const BuyOrderForm: React.FC<BuyOrderFormProps & FormikProps<BuyOrderFormValues>
             ))}
           </>
         </FieldWrapper>
-        <Button sx={{ p: 1 }} type="submit" disabled>
+        <Button sx={{ p: 1, height: '60px' }} type="submit" disabled>
           Create Order
         </Button>
       </Stack>
@@ -161,4 +174,48 @@ const BuyOrderForm: React.FC<BuyOrderFormProps & FormikProps<BuyOrderFormValues>
   );
 };
 
-export default BuyOrderForm;
+// ---------------------------------------------------
+
+const BuyOrder : React.FC<{}> = () => {
+  const Eth = useChainConstant(ETH);
+
+  const initialValues: BuyOrderFormValues = useMemo(() => ({
+    placeInLine: null,
+    pricePerPod: null,
+    tokens: [
+      {
+        token: Eth,
+        amount: null,
+      },
+    ],
+  }), [Eth]);
+  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
+    (state) => state._beanstalk.field
+  );
+  
+  const onSubmit = useCallback((values: BuyOrderFormValues, formActions: FormikHelpers<BuyOrderFormValues>) => {
+    Promise.resolve();
+  }, []);
+  
+  return (
+    <Formik<BuyOrderFormValues>
+      initialValues={initialValues}
+      onSubmit={onSubmit}
+    >
+      {(formikProps: FormikProps<BuyOrderFormValues>) => (
+        <>
+          <TxnSettings placement="form-top-right">
+            <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
+          </TxnSettings>
+          <BuyOrderForm
+            token={BEAN[1]}
+            podLine={beanstalkField.totalPods.minus(beanstalkField.harvestableIndex)}
+            {...formikProps}
+          />
+        </>
+      )}
+    </Formik>
+  );
+};
+
+export default BuyOrder;
