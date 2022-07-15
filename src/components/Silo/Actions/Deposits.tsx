@@ -70,19 +70,19 @@ const Deposits : React.FC<{
       valueFormatter: (params) => displayBN(params.value),
       renderCell: (params) => {
         const seedsPerSeason = params.row.seeds.times(0.00001);
-        const accrued = seedsPerSeason.times(currentSeason.minus(params.row.season));
+        const accruedStalk   = seedsPerSeason.times(currentSeason.minus(params.row.season));
         return (
           <Tooltip
             title={(
               <>
                 <Typography>Base: {displayBN(params.row.stalk)} Stalk</Typography>
-                <Typography>Accrued: {displayBN(accrued)} Stalk</Typography>
+                <Typography>Accrued: {displayBN(accruedStalk)} Stalk</Typography>
                 <Typography>Earning {displayBN(seedsPerSeason)} Stalk per Season</Typography>
               </>
             )}
           >
             <Typography>
-              {displayFullBN(params.value.plus(accrued), STALK.displayDecimals, STALK.displayDecimals)}
+              {displayFullBN(params.value.plus(accruedStalk), STALK.displayDecimals, STALK.displayDecimals)}
             </Typography>
           </Tooltip>
         );

@@ -12,7 +12,7 @@ import { SupportedChainId, TESTNET_RPC_ADDRESSES } from 'constants/chains';
 
 // ------------------------------------------------------------
 
-import { providers } from 'ethers'
+import { providers } from 'ethers';
 
 export type JsonRpcBatchProviderConfig = Omit<providers.FallbackProviderConfig, 'provider'> & {
   pollingInterval?: number
@@ -28,8 +28,8 @@ export function jsonRpcBatchProvider({
   weight,
 }: JsonRpcBatchProviderConfig) {
   return function (_chain: Chain) {
-    const rpcConfig = rpc(_chain)
-    if (!rpcConfig || rpcConfig.http === '') return null
+    const rpcConfig = rpc(_chain);
+    if (!rpcConfig || rpcConfig.http === '') return null;
     return {
       chain: {
         ..._chain,
@@ -43,9 +43,9 @@ export function jsonRpcBatchProvider({
         const provider = new RpcProvider(rpcConfig.http, {
           chainId: _chain.id,
           name: _chain.network,
-        })
-        if (pollingInterval) provider.pollingInterval = pollingInterval
-        return Object.assign(provider, { priority, stallTimeout, weight })
+        });
+        if (pollingInterval) provider.pollingInterval = pollingInterval;
+        return Object.assign(provider, { priority, stallTimeout, weight });
       },
       ...(rpcConfig.webSocket && {
         webSocketProvider: () =>
@@ -54,8 +54,8 @@ export function jsonRpcBatchProvider({
             _chain.id,
           ),
       }),
-    }
-  }
+    };
+  };
 }
 
 // Setup node

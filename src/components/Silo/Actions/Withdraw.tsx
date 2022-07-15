@@ -15,7 +15,7 @@ import { FarmerSilo } from 'state/farmer/silo';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { displayFullBN, toStringBaseUnitBN } from 'util/index';
 import TransactionToast from 'components/Common/TxnToast';
-import { useSigner } from 'wagmi';
+import { useSigner } from 'hooks/ledger/useSigner';
 import useFarmerSiloBalances from 'hooks/useFarmerSiloBalances';
 import { ERC20Token } from 'classes/Token';
 import { BeanstalkReplanted } from 'generated/index';

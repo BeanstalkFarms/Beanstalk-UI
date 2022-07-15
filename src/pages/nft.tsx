@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Card, Container, Divider, Stack, Tab, Tabs, Typography, } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
-import { useAccount, useSigner } from 'wagmi';
+import { useAccount } from 'wagmi';
+import { useSigner } from 'hooks/ledger/useSigner';
 import fetch from 'node-fetch';
 import { getAccount } from 'util/Account';
 import { ClaimStatus, loadNFTs, Nft } from 'util/BeaNFTs';

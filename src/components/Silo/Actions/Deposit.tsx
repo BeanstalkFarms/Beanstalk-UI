@@ -3,7 +3,7 @@ import { Accordion, AccordionDetails, Box, Stack, Tooltip } from '@mui/material'
 import { Token } from 'classes';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
-import { useProvider, useSigner } from 'wagmi';
+import { useProvider } from 'wagmi';
 import { ethers } from 'ethers';
 import { BEAN, CRV3, DAI, ETH, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3, USDC, USDT, WETH } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
@@ -34,6 +34,7 @@ import useToggle from 'hooks/display/useToggle';
 import { combineBalances, optimizeFromMode } from 'util/Farm';
 import usePreferredToken from 'hooks/usePreferredToken';
 import useTokenMap from 'hooks/useTokenMap';
+import { useSigner } from 'hooks/ledger/useSigner';
 
 // -----------------------------------------------------------------------
 
@@ -288,7 +289,7 @@ const Deposit : React.FC<{
           // pool.underlying  = [BEAN, DAI, USDC, USDT] 
           const tokenIndex = pool.tokens.indexOf(tokenIn);
           const underlyingTokenIndex = pool.underlying.indexOf(tokenIn);
-          console.debug(`[Deposit] LP Deposit`, {
+          console.debug('[Deposit] LP Deposit', {
             pool,
             tokenIn,
             tokenIndex,
@@ -457,7 +458,7 @@ const Deposit : React.FC<{
         // Encode steps to get from token i to siloToken
         const encoded = Farm.encodeStepsWithSlippage(
           formData.steps,
-          0.1/100,
+          0.1 / 100,
           // ethers.BigNumber.from(
           //   toStringBaseUnitBN(
           //     values.settings.slippage / 100,

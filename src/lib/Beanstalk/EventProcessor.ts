@@ -350,13 +350,6 @@ export default class EventProcessor {
   // |      SILO: UTILITIES     |
   // ----------------------------
   
-  // parseWithdrawals(currentSeason?: BigNumber) {
-  //   return EventProcessor._parseWithdrawals(
-  //     this.withdrawals,
-  //     currentSeason || this.epp.season,
-  //   );
-  // }
-
   static _parseWithdrawals(
     withdrawals: EventProcessorData['withdrawals'][string], 
     currentSeason: BigNumber
@@ -421,8 +414,11 @@ export default class EventProcessor {
   }
 
   _removeDeposit(
+    /** */
     season: string,
+    /** token address; lowercase before inputting */
     token: string,
+    /** */
     _amount: EBN,
   ) {
     if (!this.epp.whitelist[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
@@ -457,6 +453,14 @@ export default class EventProcessor {
     const amount    = tokenBN(event.args.amount, this.epp.whitelist[token]);
     const bdv       = tokenBN(event.args.bdv, Bean);
 
+    console.debug('[EventProcessor@AddDeposit] ', {
+      season,
+      amount: amount.toString(),
+      bdv: bdv.toString(),
+      token,
+      event,
+    });
+
     this.deposits[token] = {
       ...this.deposits[token],
       [season]: this._upsertDeposit(this.deposits[token][season], amount, bdv),
@@ -475,7 +479,7 @@ export default class EventProcessor {
     event.args.seasons.forEach((seasonNum, index) => {
       this._removeDeposit(
         seasonNum.toString(),
-        event.args.token,
+        event.args.token.toLowerCase(),
         event.args.amounts[index],
       );
     });
@@ -498,8 +502,11 @@ export default class EventProcessor {
   }
 
   _removeWithdrawal(
+    /** */
     season: string,
+    /** token address; lowercase before inputting */
     token: string,
+    /** */
     _amount: EBN,
   ) {
     // For gas optimization reasons, `RemoveWithdrawal` is emitted
@@ -516,18 +523,6 @@ export default class EventProcessor {
 
     // Removing a Withdrawal always removes the entire season.
     delete this.withdrawals[token][season];
-
-    // this.withdrawals[token] = {
-    //   ...this.withdrawals[token],
-    //   [season]: this._upsertWithdrawal(
-    //     this.withdrawals[token][season],
-    //     amount.negated(),
-    //   ),
-    // };
-
-    // if (this.withdrawals[token][season].amount.eq(0)) {
-    //    delete this.withdrawals[token][season];
-    // }
   }
 
   AddWithdrawal(event: Simplify<AddWithdrawalEvent>) {

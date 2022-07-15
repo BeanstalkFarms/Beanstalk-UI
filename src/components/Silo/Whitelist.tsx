@@ -136,14 +136,14 @@ const Whitelist : React.FC<{
                         ? (
                           <Tooltip title={(
                             <>
-                              {displayFullBN(deposited?.amount.minus(farmerSilo.beans.earned) || ZERO_BN, token.displayDecimals)} Deposited Beans<br />
+                              {displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)} Deposited Beans<br />
                               {displayFullBN(farmerSilo.beans.earned || ZERO_BN, token.displayDecimals)} Earned Beans<br />
                               <Divider sx={{ my: 0.5, opacity: 0.3 }} />
-                              = {displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)} Silo Beans<br />
+                              = {displayFullBN(deposited?.amount.plus(farmerSilo.beans.earned) || ZERO_BN, token.displayDecimals)} Silo Beans<br />
                             </>
                           )}>
                             <span>
-                              {displayFullBN(deposited?.amount.minus(farmerSilo.beans.earned) || ZERO_BN, token.displayDecimals)}
+                              {displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)}
                               {farmerSilo.beans.earned.gt(0) ? (
                                 <Typography component="span" color="primary.main">
                                   {' + '}

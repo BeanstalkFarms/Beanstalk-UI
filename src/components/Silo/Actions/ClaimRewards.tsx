@@ -1,7 +1,8 @@
 import { Box, Divider, Stack } from '@mui/material';
 import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps, useFormikContext } from 'formik';
 import React, { useCallback, useMemo, useState } from 'react';
-import { useAccount, useSigner } from 'wagmi';
+import { useAccount } from 'wagmi';
+import { useSigner } from 'hooks/ledger/useSigner';
 import BigNumber from 'bignumber.js';
 import { LoadingButton } from '@mui/lab';
 import { useSelector } from 'react-redux';
@@ -11,6 +12,9 @@ import { BeanstalkReplanted } from 'generated/index';
 import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import stalkIcon from 'img/beanstalk/stalk-icon.svg';
 import seedIcon from 'img/beanstalk/seed-icon.svg';
+import toast from 'react-hot-toast';
+import { parseError } from 'util/index'; 
+import { useFarmerSilo } from 'state/farmer/silo/updater';
 import RewardItem from '../RewardItem';
 import DescriptionButton from '../../Common/DescriptionButton';
 import { AppState } from '../../../state';
@@ -110,7 +114,7 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
           <RewardItem
             title="Plantable Seeds"
             tooltip="The number of Seeds earned from Earned Beans. Plantable Seeds do not grow Stalk until they are Planted."
-            amount={farmerSilo.seeds.earned}
+            amount={farmerSilo.seeds.plantable}
             isClaimable={isHovering(ClaimRewardsAction.PLANT_AND_MOW)}
             icon={seedIcon}
           />
@@ -232,7 +236,8 @@ const ClaimRewardsForm: React.FC<FormikProps<SendFormValues>> = (props) => {
 const ClaimRewards: React.FC<{}> = () => {
   const { data: account } = useAccount();
   const { data: signer } = useSigner();
-  const beanstalk = (useBeanstalkContract(signer) as unknown) as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const [fetchFarmerSilo] = useFarmerSilo();
 
   // Form
   const initialValues: ClaimRewardsFormValues = useMemo(() => ({
@@ -240,25 +245,27 @@ const ClaimRewards: React.FC<{}> = () => {
   }), []);
 
   // Handlers
-  const onSubmit = useCallback((values: ClaimRewardsFormValues, formActions: FormikHelpers<ClaimRewardsFormValues>) => {
-    if (!account?.address) throw new Error('Connect a wallet first.');
+  const onSubmit = useCallback(async (values: ClaimRewardsFormValues, formActions: FormikHelpers<ClaimRewardsFormValues>) => {
+    let txToast;
+    try {
+      if (!account?.address)  throw new Error('Connect a wallet first.');
+      if (!values.action)     throw new Error('No action selected.');
 
-    if (values.action) {
       // FIXME: suggest using "call" here for consistency with other forms
       // but this is perfectly functional
-      let claimResult;
+      let call;
       if (values.action === ClaimRewardsAction.MOW) {
-        claimResult = beanstalk.update(account.address);
+        call = beanstalk.update(account.address);
       }
       else if (values.action === ClaimRewardsAction.PLANT_AND_MOW) {
-        claimResult = beanstalk.earn(account.address);
+        call = beanstalk.earn(account.address);
       }
       else if (values.action === ClaimRewardsAction.ENROOT_AND_MOW) {
         // do something
         // claimResult = beanstalk.unripe
       }
       else if (values.action === ClaimRewardsAction.CLAIM_ALL) {
-        claimResult = beanstalk.farm([
+        call = beanstalk.farm([
           // PLANT_AND_MOW
           beanstalk.interface.encodeFunctionData('earn', [account.address]),
           // ENROOT_AND_MOW
@@ -267,32 +274,29 @@ const ClaimRewards: React.FC<{}> = () => {
       }
 
       // FIXME: set the name of the action to Mow, etc. depending on `values.action`
-      const txToast = new TransactionToast({
+      txToast = new TransactionToast({
         loading: 'Claiming rewards.',
         success: 'Claim successful. You have claimed your rewards.',
       });
 
-      if (claimResult !== undefined) {
-        return claimResult
-          .then((txn) => {
-            txToast.confirming(txn);
-            return txn.wait();
-          })
-          .then((receipt) => {
-            txToast.success(receipt);
-            formActions.resetForm();
-          })
-          .catch((err) => {
-            console.error(
-              txToast.error(err.error || err),
-              {
-                action: values.action,
-              }
-            );
-          });
-      }
+      if (!call) throw new Error('Unknown action.');
+
+      const txn = await call;
+      txToast.confirming(txn);
+
+      const receipt = await txn.wait();
+      await fetchFarmerSilo(account.address);
+      // if (values.action === ClaimRewards)
+      txToast.success(receipt);
+      formActions.resetForm();
+    } catch (err) {
+      txToast ? txToast.error(err) : toast.error(parseError(err));
     }
-  }, [account?.address, beanstalk]);
+  }, [
+    account?.address,
+    beanstalk,
+    fetchFarmerSilo
+  ]);
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>

@@ -25,7 +25,7 @@ const Template: ComponentStory<typeof RewardsBar> = (args: any) => (
     seeds={{
       total: new BigNumber(100),
       active: new BigNumber(100),
-      earned: new BigNumber(100),
+      plantable: new BigNumber(100),
     }}
   />
 );

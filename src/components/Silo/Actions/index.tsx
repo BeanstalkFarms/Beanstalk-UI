@@ -3,13 +3,13 @@ import { Badge, Box, Card, Stack, Tab, Tabs } from '@mui/material';
 import { Pool } from 'classes';
 import { ERC20Token } from 'classes/Token';
 import { FarmerSiloBalance } from 'state/farmer/silo';
+import useTabs from 'hooks/display/useTabs';
 import Deposit from './Deposit';
 import Withdraw from './Withdraw';
 import Claim from './Claim';
 import Deposits from './Deposits';
 import Withdrawals from './Withdrawals';
 import Send from './Send';
-import useTabs from 'hooks/display/useTabs';
 
 /**
  * Show the three primary Silo actions: Deposit, Withdraw, Claim.
@@ -43,25 +43,25 @@ const SiloActions : React.FC<{
             </Tabs>
           </Stack>
           <Box sx={{ px: 1, pb: 1 }}>
-          {tab === 0 ? (
-            <Deposit
-              pool={props.pool}
-              token={props.token}
+            {tab === 0 ? (
+              <Deposit
+                pool={props.pool}
+                token={props.token}
             />
           ) : null}
-          {tab === 1 ? (
-            <Withdraw
-              token={props.token}
+            {tab === 1 ? (
+              <Withdraw
+                token={props.token}
             />
           ) : null}
-          {tab === 2 ? (
-            <Claim
-              token={props.token}
-              siloBalance={props.siloBalance}
+            {tab === 2 ? (
+              <Claim
+                token={props.token}
+                siloBalance={props.siloBalance}
             />
           ) : null}
-          {tab === 3 ? (
-            <Send
+            {tab === 3 ? (
+              <Send
               // token={props.token}
               // siloBalance={props.siloBalance}
             />

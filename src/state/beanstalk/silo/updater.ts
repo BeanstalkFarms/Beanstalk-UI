@@ -98,8 +98,8 @@ export const useBeanstalkSilo = () => {
                       .bdv(addr, toStringBaseUnitBN(1, WHITELIST[addr].decimals))
                       .then(tokenResult(BEAN))
                       .catch((err) => {
-                        console.error(`Failed to fetch BDV: ${addr}`)
-                        console.error(err)
+                        console.error(`Failed to fetch BDV: ${addr}`);
+                        console.error(err);
                         throw err;
                       })
               ) : Promise.resolve(ZERO_BN)

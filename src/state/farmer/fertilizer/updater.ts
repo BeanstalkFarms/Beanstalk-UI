@@ -8,10 +8,10 @@ import useChainId from 'hooks/useChain';
 import { getAccount } from 'util/Account';
 import useMigrateCall from 'hooks/useMigrateCall';
 import { BeanstalkReplanted } from 'generated';
-import { resetFertilizer, updateFarmerFertilizer } from './actions';
 import { toTokenUnitsBN } from 'util/index';
 import BigNumber from 'bignumber.js';
 import { ZERO_BN } from 'constants/index';
+import { resetFertilizer, updateFarmerFertilizer } from './actions';
 
 export const useFetchFarmerFertilizer = () => {
   const dispatch = useDispatch();
@@ -55,7 +55,7 @@ export const useFetchFarmerFertilizer = () => {
         ),
       ] as const);
 
-      console.debug(`[farmer/fertilizer/updater] RESULT: balances =`, balances, unfertilized.toString(), fertilized.toString());
+      console.debug('[farmer/fertilizer/updater] RESULT: balances =', balances, unfertilized.toString(), fertilized.toString());
       
       let sum = ZERO_BN;
       const fertById = balances.reduce((prev, curr, index) => {
@@ -64,7 +64,7 @@ export const useFetchFarmerFertilizer = () => {
         return prev;
       }, {} as { [key: number] : BigNumber });
 
-      console.debug(`[farmer/fertilizer/updater] fertById =`, fertById, sum.toString());
+      console.debug('[farmer/fertilizer/updater] fertById =', fertById, sum.toString());
 
       dispatch(updateFarmerFertilizer({
         tokens: fertById,

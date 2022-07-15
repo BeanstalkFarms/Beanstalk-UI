@@ -1,7 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
 import { Box, Stack } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { useAccount, useProvider, useSigner } from 'wagmi';
+import { useAccount, useProvider } from 'wagmi';
+import { useSigner } from 'hooks/ledger/useSigner';
 import { ERC20Token } from 'classes/Token';
 import { BEAN, FERTILIZED_SPROUTS } from 'constants/tokens';
 import { ZERO_BN } from 'constants/index';
@@ -49,10 +50,10 @@ const RinseForm : React.FC<
           {/* Inputs */}
           <TokenInputField
             token={FERTILIZED_SPROUTS}
-            balanceLabel={"Fertilized Sprout Balance"}
+            balanceLabel="Fertilized Sprout Balance"
             balance={amountSprouts || ZERO_BN}
-            name={`amount`}
-            disabled={true}
+            name="amount"
+            disabled
             // MUI
             fullWidth
             InputProps={{
@@ -110,7 +111,7 @@ const Rinse : React.FC<{}> = () => {
   const chainId = useChainId();
   
   /// Farmer data
-  const farmerFertilizer = useFarmerFertilizer()
+  const farmerFertilizer = useFarmerFertilizer();
   const farmerBalances   = useFarmerBalances();
 
   /// Data refreshing
@@ -139,7 +140,7 @@ const Rinse : React.FC<{}> = () => {
       txToast = new TransactionToast({
         loading: `Rinsing ${displayFullBN(farmerFertilizer.fertilized)} Fertilized Sprouts`,
         success: 'Rinse successfull.',
-      })
+      });
 
       const txn = await beanstalk.claimFertilized(
         Object.keys(farmerFertilizer.tokens),

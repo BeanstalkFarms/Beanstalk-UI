@@ -21,8 +21,8 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { displayBN } from 'util/Tokens';
 import { MY_FERTILIZER } from 'components/Barn/FertilizerItemTooltips';
 import useFarmerTotalFertilizer from 'hooks/useFarmerTotalFertilizer';
-import TokenIcon from '../Common/TokenIcon';
 import useTabs from 'hooks/display/useTabs';
+import TokenIcon from '../Common/TokenIcon';
 
 enum TabState {
   ACTIVE = 0,

@@ -33,7 +33,8 @@ import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { displayBN, displayFullBN, displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
-import { useProvider, useSigner } from 'wagmi';
+import { useProvider } from 'wagmi';
+import { useSigner } from 'hooks/ledger/useSigner';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 
@@ -282,7 +283,7 @@ const Sow : React.FC<{}> = () => {
         // Encode steps to get from token i to siloToken
         const encoded = Farm.encodeStepsWithSlippage(
           formData.steps,
-          0.1/100,
+          0.1 / 100,
           // ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage / 100, 6)), // slippage
         );
         data.push(...encoded);

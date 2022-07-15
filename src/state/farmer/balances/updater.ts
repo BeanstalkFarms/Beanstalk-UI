@@ -11,9 +11,9 @@ import useMigrateCall from 'hooks/useMigrateCall';
 import useTokenMap from 'hooks/useTokenMap';
 import { getAccount, tokenResult } from 'util/index';
 import useChainConstant from 'hooks/useChainConstant';
-import { clearBalances, updateBalances } from './actions';
 import useMulticall from 'hooks/useMulticall';
 import { ContractCall } from 'ethers-multicall';
+import { clearBalances, updateBalances } from './actions';
 
 // -- Hooks
 

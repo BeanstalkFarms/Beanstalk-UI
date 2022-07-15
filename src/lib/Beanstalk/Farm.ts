@@ -57,7 +57,7 @@ const getContracts = (provider: ethers.providers.BaseProvider) => {
   const cryptoFactory   = CurveCryptoFactory__factory.connect(CRYPTO_FACTORY, provider);
   const zap             = CurveZap__factory.connect(ZAP, provider);
 
-  console.debug(`[Farm] Connected to addresses: `, {
+  console.debug('[Farm] Connected to addresses: ', {
     BEANSTALK,
     POOL3,
     TRICRYPTO2,
@@ -66,7 +66,7 @@ const getContracts = (provider: ethers.providers.BaseProvider) => {
     META_FACTORY,
     CRYPTO_FACTORY,
     ZAP,
-  })
+  });
 
   return {
     beanstalk: BeanstalkReplanted__factory.connect(BEANSTALK, provider),
@@ -99,7 +99,7 @@ export default class Farm {
 
   contracts : ReturnType<typeof getContracts>;
 
-  static SLIPPAGE_PRECISION = 10**6;
+  static SLIPPAGE_PRECISION = 10 ** 6;
 
   // ------------------------------------------
 
@@ -115,7 +115,7 @@ export default class Farm {
       amount
         .mul(Farm.SLIPPAGE_PRECISION * (1 - slippage))
         .div(Farm.SLIPPAGE_PRECISION)
-    )
+    );
   }
 
   /**
@@ -142,7 +142,7 @@ export default class Farm {
         steps.push(step);
       } catch (e) {
         console.debug(`[farm/estimate] Failed to estimate step ${i}`, fns[i].name, args);
-        console.error(e)
+        console.error(e);
         throw e;
       }
     }
@@ -205,7 +205,7 @@ export default class Farm {
     _fromMode : FarmFromMode = FarmFromMode.INTERNAL_TOLERANT,
     _toMode   : FarmToMode   = FarmToMode.INTERNAL,
   ) : ChainableFunction => async (amountInStep: ethers.BigNumber) => {
-    console.debug(`[step@exchange] run:`, {
+    console.debug('[step@exchange] run:', {
       _pool,
       _registry,
       _tokenIn,
@@ -255,12 +255,12 @@ export default class Farm {
         j,
         amountInStep,
         { gasLimit: 10000000 }
-      )
+      );
     }
 
     //
     if (!amountOut) throw new Error('No supported pool found');
-    console.debug(`[step@exchange] finish:`, {
+    console.debug('[step@exchange] finish:', {
       i,
       j,
       amountOut: amountOut.toString(),
@@ -293,7 +293,7 @@ export default class Farm {
     _fromMode : FarmFromMode = FarmFromMode.INTERNAL_TOLERANT,
     _toMode   : FarmToMode   = FarmToMode.INTERNAL,
   ) : ChainableFunction => async (amountInStep: ethers.BigNumber) => {
-    console.debug(`[step@exchangeUnderlying] run: `, {
+    console.debug('[step@exchangeUnderlying] run: ', {
       _pool,
       _tokenIn,
       _tokenOut,
@@ -323,7 +323,7 @@ export default class Farm {
     
     //
     if (!amountOut) throw new Error('No supported pool found');
-    console.debug(`[step@exchangeUnderlying] finish: `, {
+    console.debug('[step@exchangeUnderlying] finish: ', {
       i,
       j,
       amountOut: amountOut.toString(),
@@ -358,7 +358,7 @@ export default class Farm {
     _toMode   : FarmToMode   = FarmToMode.INTERNAL,
   ) : ChainableFunction {
     return async (_amountInStep: ethers.BigNumber) => {
-      console.debug(`[step@addLiquidity] run: `, {
+      console.debug('[step@addLiquidity] run: ', {
         _pool,
         _registry,
         _amounts,
@@ -405,7 +405,7 @@ export default class Farm {
       }
 
       if (!amountOut) throw new Error('No supported pool found');
-      console.debug(`[step@addLiquidity] finish: `, {
+      console.debug('[step@addLiquidity] finish: ', {
         amountInStep: amountInStep.toString(),
         amountOut: amountOut.toString(),
       });
