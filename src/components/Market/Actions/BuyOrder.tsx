@@ -3,13 +3,13 @@ import BigNumber from 'bignumber.js';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
   FormTokenState,
-  SettingInput,
+  SettingInput, TokenAdornment,
   TokenQuoteProvider,
   TokenSelectDialog,
   TxnSettings
 } from 'components/Common/Form';
 import { SupportedChainId } from 'constants/index';
-import { BEAN, ETH } from 'constants/tokens';
+import { BEAN, ETH, PODS } from 'constants/tokens';
 import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useChainId from 'hooks/useChain';
 import useChainConstant from 'hooks/useChainConstant';
@@ -129,19 +129,19 @@ const BuyOrderForm : React.FC<
         <FieldWrapper label="Price Per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
           <Field name="pricePerPod">
             {(fieldProps: FieldProps) => (
+              // FIXME: delete InputField and use TokenInputField
               <InputField
                 {...fieldProps}
                 placeholder="0.0000"
                 showMaxButton
+                balanceLabel="Maximum Price Per Pod"
                 InputProps={{
                   inputProps: { step: '0.01' },
                   endAdornment: (
-                    <InputAdornment position="end">
-                      <Stack direction="row" gap={0.3} alignItems="center" sx={{ pr: 1 }}>
-                        <img src={beanIcon} alt="" height="30px" />
-                        <Typography sx={{ fontSize: '20px' }}>BEAN</Typography>
-                      </Stack>
-                    </InputAdornment>)
+                    <TokenAdornment
+                      token={BEAN[1]}
+                    />
+                  )
                 }}
                 maxValue={new BigNumber(1)}
                 minValue={new BigNumber(0)}
@@ -166,7 +166,7 @@ const BuyOrderForm : React.FC<
             ))}
           </>
         </FieldWrapper>
-        <Button sx={{ p: 1 }} type="submit" disabled>
+        <Button sx={{ p: 1, height: '60px' }} type="submit" disabled>
           Create Order
         </Button>
       </Stack>

@@ -1,3 +1,5 @@
+import { FontSize } from '../../App/muiTheme';
+
 export const tableStyle = {
   '& .MuiDataGrid-root': {
     outline: 'none',
@@ -24,7 +26,8 @@ export const tableStyle = {
       },
     },
     '& .MuiDataGrid-columnHeaderTitle': {
-      fontWeight: 500
+      fontWeight: 500,
+      fontSize: FontSize.base
     },
 
     // Cells

@@ -13,6 +13,7 @@ type InputFieldProps = {
   minValue?: BigNumber | undefined;
   showMaxButton?: boolean
   handleChangeOverride?: any;
+  balanceLabel?: string;
 };
 
 /**
@@ -30,6 +31,7 @@ const InputField : React.FC<
   showMaxButton,
   handleChangeOverride,
   minValue,
+  balanceLabel,
   // -- Formik props
   field,
   form,
@@ -140,19 +142,15 @@ const InputField : React.FC<
       />
       {/* Bottom Adornment */}
       {showMaxButton && (
-        <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={0.5} px={0.75}>
-          <Typography sx={{ fontSize: 13.5 }}>
-            Max Value: {maxValue ? `${displayFullBN(maxValue)}` : '0'}
+        <Stack direction="row" alignItems="center" justifyContent="end" spacing={0.5} px={0.75}>
+          <Typography variant="body1">
+            {balanceLabel !== undefined ? (balanceLabel) : ('Max Value')}: {maxValue ? `${displayFullBN(maxValue)}` : '0'}
           </Typography>
           <Typography
             variant="body1"
             onClick={isInputDisabled ? undefined : handleMax}
             color={isInputDisabled ? 'text.secondary' : 'primary'}
-            sx={{
-              fontSize: 13.5,
-              fontWeight: 600,
-              cursor: isInputDisabled ? 'inherit' : 'pointer',
-            }}
+            sx={{ cursor: isInputDisabled ? 'inherit' : 'pointer' }}
           >
             (Max)
           </Typography>

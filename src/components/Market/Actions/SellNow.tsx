@@ -192,7 +192,7 @@ const SellNowForm: React.FC<FormikProps<SellNowFormValues>
             </Box>
           </Stack>
         )}
-        <Button sx={{ p: 1 }} type="submit" disabled>
+        <Button sx={{ p: 1, height: '60px' }} type="submit" disabled>
           Create Listing
         </Button>
       </Stack>

@@ -147,7 +147,7 @@ const BuyNowForm : React.FC<
             </AccordionDetails>
           </Accordion>
         </Box>
-        <Button sx={{ p: 1 }} type="submit" disabled>
+        <Button sx={{ p: 1, height: '60px' }} type="submit" disabled>
           Buy Pods
         </Button>
       </Stack>

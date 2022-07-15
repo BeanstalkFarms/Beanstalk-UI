@@ -42,21 +42,21 @@ const PlotOrderDetails: React.FC<PlotDetailsCardProps & CardProps> = ({
           </Stack>
         </Stack>
         <Stack direction="row" justifyContent="space-between">
-          <Stack>
+          <Stack gap={0.5}>
             <Typography variant="body1">Place in Line</Typography>
             {/* <Typography variant="h1" sx={{ fontWeight: 400 }}>613,964</Typography> */}
             <Typography variant="bodyLarge">0
               - {displayBN(new BigNumber(podListing.maxPlaceInLine).minus(harvestableIndex))}
             </Typography>
           </Stack>
-          <Stack>
+          <Stack gap={0.5}>
             <Typography variant="body1">Price per Pod</Typography>
             <Stack direction="row" gap={0.3} alignItems="center">
               <img src={beanIcon} alt="" height={IconSize.medium} />
               <Typography variant="bodyLarge">{displayBN(podListing.pricePerPod)}</Typography>
             </Stack>
           </Stack>
-          <Stack>
+          <Stack gap={0.5}>
             <Typography variant="body1">Pods Purchased</Typography>
             <Stack direction="row" gap={0.3} alignItems="center">
               <img src={podIcon} alt="" height={IconSize.medium} />

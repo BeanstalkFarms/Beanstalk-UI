@@ -10,7 +10,7 @@ const CreateButtons: React.FC = () => (
   <Stack direction="row" gap={1} alignItems="end" height="100%">
     <Button
       href="#/market/create"
-      color="primary"
+      color="inverse"
       variant="contained"
       sx={{ py: 1 }}
       >

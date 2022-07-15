@@ -43,19 +43,19 @@ const PlotListingDetails: React.FC<PlotListingCardProps & CardProps> = ({
           <Typography color={BeanstalkPalette.gray} variant="bodySmall">Listing expires at position <Typography color={BeanstalkPalette.black} variant="bodySmall" display="inline">500,000</Typography> in the Pod Line</Typography>
         </Stack>
         <Stack direction="row" justifyContent="space-between">
-          <Stack>
+          <Stack gap={0.5}>
             <Typography variant="body1">Place in Line</Typography>
             {/* <Typography variant="h1" sx={{ fontWeight: 400 }}>613,964</Typography> */}
             <Typography variant="bodyLarge">{displayBN(new BigNumber(podListing.index).minus(harvestableIndex))}</Typography>
           </Stack>
-          <Stack>
+          <Stack gap={0.5}>
             <Typography variant="body1">Price per Pod</Typography>
             <Stack direction="row" gap={0.3} alignItems="center">
               <img src={beanIcon} alt="" height={IconSize.medium} />
               <Typography variant="bodyLarge">{displayBN(podListing.pricePerPod)}</Typography>
             </Stack>
           </Stack>
-          <Stack>
+          <Stack gap={0.5}>
             <Typography variant="body1">Pods Sold</Typography>
             <Stack direction="row" gap={0.3} alignItems="center">
               <img src={podIcon} alt="" height={IconSize.medium} />
