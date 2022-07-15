@@ -20,7 +20,10 @@ export default function useFarmerTotalFertilizer(tokenIds?: string[]) {
           );
           return agg;
         },
-        { unfertilized: new BigNumber(0) }
+        {
+          unfertilized: new BigNumber(0),
+          fertilizer:   new BigNumber(0),
+        }
       ),
     [farmerFertilizer, getHumidity, ids]
   );

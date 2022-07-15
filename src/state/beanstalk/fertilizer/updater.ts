@@ -30,18 +30,22 @@ export const useFertilizer = () => {
         fundedPercent,
         humidity
       ] = await Promise.all([
+        // Amount of Fertilizer remaining to be sold
         migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
           () => fertContract.remaining().then(tokenResult(BEAN)),
           () => beanstalk.remainingRecapitalization().then(tokenResult(BEAN)),
         ]),
+        // Amount of USDC already raised
         migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
           () => usdcContract.balanceOf(custodian).then(tokenResult(USDC)),
-          () => beanstalk.totalFertilizerBeans().then(tokenResult(USDC)),
+          () => Promise.resolve(ZERO_BN), // not possible after Replant
         ]),
+        // 
         migrate(beanstalk, [
           () => Promise.resolve(ZERO_BN),
-          () => Promise.resolve(ZERO_BN), // beanstalk.getRecapFundedPercent(),
+          () => Promise.resolve(ZERO_BN),
         ]),
+        // Humidity
         migrate(beanstalk, [
           () => Promise.resolve(new BigNumber(500)),
           () => beanstalk.getCurrentHumidity().then(bigNumberResult)

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Button, Container, Stack } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import PageHeader from 'components/Common/PageHeader';
-import PurchaseForm from 'components/Barn/PurchaseForm';
 import RemainingFertilizer from 'components/Barn/RemainingFertilizer';
 import MyFertilizer from 'components/Barn/MyFertilizer';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import BarnActions from 'components/Barn/Actions';
 
 const Barn: React.FC = () => (
   <Container maxWidth="md">
@@ -44,7 +44,7 @@ const Barn: React.FC = () => (
       {/* Section 1: Fertilizer Remaining */}
       <RemainingFertilizer />
       {/* Section 2: Purchase Fertilizer */}
-      <PurchaseForm />
+      <BarnActions />
       {/* Section 3: My Fertilizer */}
       <MyFertilizer />
     </Stack>

@@ -1,4 +1,5 @@
 import { BigNumber as EBN, ethers } from 'ethers';
+import BigNumber from 'bignumber.js';
 import {
   SowEvent,
   HarvestEvent,
@@ -11,12 +12,10 @@ import {
   RemoveWithdrawalsEvent,
 } from 'generated/Beanstalk/BeanstalkReplanted';
 import { BEAN, PODS } from 'constants/tokens';
-import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
 import { TokenMap } from 'constants/index';
 import { PlotMap } from 'state/farmer/field';
 import { FarmerSiloBalance, WithdrawalCrate } from 'state/farmer/silo';
-import { toTokenUnitsBN } from 'util/Tokens';
 
 // ----------------------------------------
 

@@ -1,9 +1,13 @@
 import { createAction } from '@reduxjs/toolkit';
-import { FertByID } from '.';
+import { FarmerFertilizer } from '.';
 
-export const updateFertilizer = createAction<FertByID>(
+export const updateFarmerFertilizer = createAction<FarmerFertilizer>(
   'farmer/fertilizer/updateFertilizer'
 );
+
+// export const updateFertilizer = createAction<FertByID>(
+//   'farmer/fertilizer/updateFertilizer'
+// );
 
 export const resetFertilizer = createAction(
   'farmer/fertilizer/reset'
