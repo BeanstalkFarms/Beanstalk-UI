@@ -178,9 +178,9 @@ const BEANSTALK_ABIS = {
 };
 
 export function useBeanstalkContract(signer?: ethers.Signer | null) {
-  const address = useChainConstant(BEANSTALK_ADDRESSES);
-  const abi     = useChainConstant(BEANSTALK_ABIS);
-  const provider = useProvider();
+  const address   = useChainConstant(BEANSTALK_ADDRESSES);
+  const abi       = useChainConstant(BEANSTALK_ABIS);
+  const provider  = useProvider();
   return useWagmiContract<Beanstalk>({
     addressOrName: address,
     contractInterface: abi,

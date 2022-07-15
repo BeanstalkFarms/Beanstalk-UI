@@ -3,7 +3,7 @@ import { Accordion, AccordionDetails, Box, Stack, Tooltip } from '@mui/material'
 import { Token } from 'classes';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
-import { useProvider, useSigner } from 'wagmi';
+import { useProvider } from 'wagmi';
 import { ethers } from 'ethers';
 import { BEAN, CRV3, DAI, ETH, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3, USDC, USDT, WETH } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
@@ -34,6 +34,7 @@ import useToggle from 'hooks/display/useToggle';
 import { combineBalances, optimizeFromMode } from 'util/Farm';
 import usePreferredToken from 'hooks/usePreferredToken';
 import useTokenMap from 'hooks/useTokenMap';
+import { useSigner } from 'hooks/ledger/useSigner';
 
 // -----------------------------------------------------------------------
 
