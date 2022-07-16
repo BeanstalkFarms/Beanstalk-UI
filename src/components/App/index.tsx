@@ -13,6 +13,7 @@ import BalancesPage from 'pages/balances';
 import pageBackground from 'img/theme/bg-mainnet.png';
 import NavBar from 'components/Nav/NavBar';
 import PoolsUpdater from 'state/bean/pools/updater';
+import UnripeUpdater from 'state/bean/unripe/updater';
 import SunUpdater from 'state/beanstalk/sun/updater';
 import FertilizerUpdater from 'state/beanstalk/fertilizer/updater';
 import SiloUpdater from 'state/beanstalk/silo/updater';
@@ -95,6 +96,7 @@ export default function App() {
         * Bean Updaters
         * ----------------------- */}
       <PoolsUpdater />
+      <UnripeUpdater />
       {/* -----------------------
         * Beanstalk Updaters
         * ----------------------- */}

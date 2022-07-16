@@ -18,7 +18,6 @@ export enum FarmFromMode {
 export enum FarmToMode {
   EXTERNAL = '0',
   INTERNAL = '1',
-  DEPOSIT = '2'
 }
 export enum ClaimRewardsAction {
   MOW = '0',

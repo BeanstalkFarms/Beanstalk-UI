@@ -91,7 +91,7 @@ const BuyNowForm : React.FC<
   return (
     <Form noValidate>
       {/* Selected value: {values.option?.toString()} */}
-      {/* <pre>{JSON.stringify({ ...values }, null, 2)}</pre>*/}
+      {/* <pre>{JSON.stringify({ ...values }, null, 2)}</pre> */}
       <Stack gap={1}>
         <TokenSelectDialog
           open={showTokenSelect}

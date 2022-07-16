@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import {  Scalars, Season, SeasonalPodRateDocument, SeasonalPodRateQuery, SeasonalPodRateQueryResult } from 'generated/graphql';
+import { Season } from 'generated/graphql';
 import { apolloClient } from 'graph/client';
 import { DocumentNode, useLazyQuery } from '@apollo/client';
 

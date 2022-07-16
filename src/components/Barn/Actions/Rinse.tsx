@@ -3,13 +3,12 @@ import { Box, Stack } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { useAccount, useProvider } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
-import { ERC20Token } from 'classes/Token';
 import { BEAN, FERTILIZED_SPROUTS } from 'constants/tokens';
 import { ZERO_BN } from 'constants/index';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useFarmerBalances from 'hooks/useFarmerBalances';
 import { useBeanstalkContract, useFertilizerContract } from 'hooks/useContract';
-import { FormState, TokenAdornment, TokenInputField, TokenOutputField, TxnSeparator } from 'components/Common/Form';
+import { TokenAdornment, TokenInputField, TokenOutputField, TxnSeparator } from 'components/Common/Form';
 import TxnPreview from 'components/Common/Form/TxnPreview';
 import TxnAccordion from 'components/Common/TxnAccordion';
 import { useFetchFarmerFertilizer } from 'state/farmer/fertilizer/updater';
@@ -116,11 +115,11 @@ const Rinse : React.FC<{}> = () => {
 
   /// Data refreshing
   const [refetchFertilizer] = useFetchFarmerFertilizer();
-  
+
   /// Contracts
   const fertContract = useFertilizerContract(signer);
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
-  const farm = useMemo(() => new Farm(provider), [provider]);
+  const farm = useMemo(() => new Farm(provider),   [provider]);
 
   const initialValues : BuyFormValues = useMemo(() => ({
     destination: FarmToMode.INTERNAL,

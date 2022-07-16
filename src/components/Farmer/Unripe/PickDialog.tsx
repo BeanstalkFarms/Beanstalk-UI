@@ -111,14 +111,20 @@ const PickBeansDialog: React.FC<{
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [tab, setTab] = useState(0);
-  const { data: account } = useAccount();
+
+  /// Farmer data
   const breakdown = useFarmerSiloBreakdown();
-  const chainId = useChainId();
-  const { data: signer } = useSigner();
+
+  ///
+  const chainId           = useChainId();
+  const { data: account } = useAccount();
+  const { data: signer }  = useSigner();
+  const getChainToken     = useGetChainToken();
+
+  /// Contracts
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
-  const getChainToken = useGetChainToken();
   
-  //
+  /// Local data
   const [unripe, setUnripe] = useState<GetUnripeResponse | null>(null);
   const [merkles, setMerkles] = useState<PickMerkleResponse | null>(null);
   const [pickStatus, setPickStatus] = useState<null | 'picking' | 'success' | 'error'>(null);
@@ -133,7 +139,6 @@ const PickBeansDialog: React.FC<{
           fetch(`/.netlify/functions/unripe?account=${getAccount(account.address.toLowerCase())}`).then((response) => response.json()),
           fetch(`/.netlify/functions/pick?account=${getAccount(account.address.toLowerCase())}`).then((response) => response.json())
         ]);
-
         setUnripe(_unripe);
         setMerkles(_merkles);
       }

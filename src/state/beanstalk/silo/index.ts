@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { TokenMap } from '../../../constants';
+import { AddressMap, TokenMap } from '../../../constants';
 
 /**
  * A "Silo Balance" provides all information
@@ -59,5 +59,5 @@ export type BeanstalkSilo = (
   & BeanstalkSiloBalances
   & {
     withdrawSeasons: BigNumber;
-  }
+  } 
 );

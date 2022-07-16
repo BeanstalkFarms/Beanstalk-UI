@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Alert, Box, Button,  Card,  Container, Stack } from '@mui/material';
+import React, { useMemo } from 'react';
+import { Alert, Box, Button, Card, Container, Stack, Tooltip } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import Overview from 'components/Silo/Overview';
@@ -9,43 +9,40 @@ import PageHeader from 'components/Common/PageHeader';
 import { SNAPSHOT_LINK, SupportedChainId } from 'constants/index';
 import snapshotIcon from 'img/ecosystem/snapshot-logo.svg';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-
 import useWhitelist from 'hooks/useWhitelist';
 import usePools from 'hooks/usePools';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import useChainId from 'hooks/useChain';
 import BigNumber from 'bignumber.js';
 import { displayFullBN } from 'util/index';
-import RewardsDialog from '../../components/Silo/RewardsDialog';
+import useToggle from 'hooks/display/useToggle';
+import useRevitalized from 'hooks/useRevitalized';
+import RewardsDialog from 'components/Silo/RewardsDialog';
+import DropdownIcon from 'components/Common/DropdownIcon';
 
 const SiloPage : React.FC = () => {
-  // Constants
-  const WHITELIST = useWhitelist();
-  const POOLS     = usePools();
-  const chainId = useChainId();
+  /// Chain Constants
+  const whitelist = useWhitelist();
+  const pools     = usePools();
+  const chainId   = useChainId();
 
-  // State
-  // const beanPools   = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
-  const farmerSilo  = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
+  /// State
+  const farmerSilo    = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
-  const { season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
-  const breakdown   = useFarmerSiloBreakdown();
+  const { season }    = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
+  const breakdown     = useFarmerSiloBreakdown();
+  const { revitalizedStalk, revitalizedSeeds } = useRevitalized();
 
-  // Local state
-  const [rewardsDialogOpen, setRewardsDialogOpen] = useState<boolean>(false);
+  /// Local state
+  const [open, show, hide] = useToggle();
+  const config = useMemo(() => ({
+    whitelist: Object.values(whitelist),
+    poolsByAddress: pools,
+  }), [whitelist, pools]);
 
-  // Temporary
+  /// TEMP: Exploiter calculations
   const exploiterEarnedBeans = new BigNumber(6458.005059);
   const ownership = farmerSilo.stalk.active.div(beanstalkSilo.stalk.active);
-
-  // Handlers
-  const handleOpenRewardsDialog = () => {
-    setRewardsDialogOpen(true);
-  };
-
-  const handleCloseRewardsDialog = () => {
-    setRewardsDialogOpen(false);
-  };
 
   return (
     <Container maxWidth="lg">
@@ -78,30 +75,54 @@ const SiloPage : React.FC = () => {
             The exploiter{'\''}s Earned Beans were distributed pro rata to Silo Members. Your Earned Bean balance has increased by ~{displayFullBN(exploiterEarnedBeans.times(ownership), 2)} Beans.
           </Alert>
         ) : null}
-        <RewardsBar
-          chainId={chainId}
+        <Card sx={{ pl: 2, pr: 2, py: 1.5 }}>
+          <Stack
+            direction={{ lg: 'row', xs: 'column' }}
+            justifyContent={{ lg: 'space-between' }}
+            alignItems={{ lg: 'center', xs: 'auto' }}
+            rowGap={1.5}
+          >
+            <RewardsBar
+              beans={farmerSilo.beans}
+              stalk={farmerSilo.stalk}
+              seeds={farmerSilo.seeds}
+              revitalizedStalk={revitalizedStalk}
+              revitalizedSeeds={revitalizedSeeds}
+            />
+            <Box
+              justifySelf={{ lg: 'flex-end', xs: 'auto' }}
+              width={{ xs: '100%', lg: 'auto' }}
+            >
+              <Tooltip title={chainId === SupportedChainId.MAINNET ? <>Claiming Silo rewards will be available upon Replant.</> : ''}>
+                <span>
+                  <Button
+                    disabled={chainId === SupportedChainId.MAINNET}
+                    variant="contained"
+                    sx={{ height: '100%', width: { xs: '100%', lg: 'auto' } }}
+                    endIcon={<DropdownIcon open={false} />}
+                    onClick={show}
+                  >
+                    Claim Rewards
+                  </Button>
+                </span>
+              </Tooltip>
+            </Box>
+          </Stack>
+        </Card>
+        <Whitelist
+          config={config}
+          farmerSilo={farmerSilo}
+        />
+        <RewardsDialog
+          open={open}
+          handleClose={hide}
           beans={farmerSilo.beans}
           stalk={farmerSilo.stalk}
           seeds={farmerSilo.seeds}
-          handleOpenDialog={handleOpenRewardsDialog}
-        />
-        <Whitelist
-          config={{
-            whitelist: Object.values(WHITELIST),
-            poolsByAddress: POOLS,
-          }}
-          farmerSilo={farmerSilo}
-          // beanPools={beanPools}
-          // beanstalkSilo={beanstalkSilo}
+          revitalizedStalk={revitalizedStalk}
+          revitalizedSeeds={revitalizedSeeds}
         />
       </Stack>
-      <RewardsDialog
-        handleClose={handleCloseRewardsDialog}
-        beans={farmerSilo.beans}
-        stalk={farmerSilo.stalk}
-        seeds={farmerSilo.seeds}
-        open={rewardsDialogOpen}
-      />
     </Container>
   );
 };
