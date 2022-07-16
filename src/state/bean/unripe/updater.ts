@@ -3,12 +3,12 @@ import { useDispatch } from 'react-redux';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useChainId from 'hooks/useChain';
 import { BeanstalkReplanted } from 'generated/index';
-import { resetUnripe, updateUnripe } from './actions';
 import useTokenMap from 'hooks/useTokenMap';
-import { UNRIPE_TOKENS } from 'constants/tokens';
 import { tokenResult } from 'util/index';
 import BigNumber from 'bignumber.js';
 import { AddressMap } from 'constants/index';
+import { resetUnripe, updateUnripe } from './actions';
+import { UNRIPE_TOKENS } from '../../../constants/tokens';
 
 // Hook
 export const useUnripe = () => {
@@ -31,7 +31,7 @@ export const useUnripe = () => {
             prev[key] = results[index];
             return prev;
           }, {})
-        }))
+        }));
       } catch (err) {
         /// ???
         console.error(err);
@@ -49,7 +49,6 @@ export const useUnripe = () => {
 
   return [fetch, clear] as const;
 };
-
 
 // Component
 const UnripeUpdater = () => {
