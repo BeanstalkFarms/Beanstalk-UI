@@ -1,12 +1,11 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import useChainConstant from 'hooks/useChainConstant';
-import { useBeanstalkContract, useBeanstalkFertilizerContract, useFertilizerContract } from 'hooks/useContract';
+import { useBeanstalkContract, useFertilizerContract } from 'hooks/useContract';
 import { useAccount } from 'wagmi';
 import { REPLANT_INITIAL_ID } from 'hooks/useHumidity';
 import useChainId from 'hooks/useChain';
 import { getAccount } from 'util/Account';
-import useMigrateCall from 'hooks/useMigrateCall';
 import { BeanstalkReplanted } from 'generated';
 import { toTokenUnitsBN } from 'util/index';
 import BigNumber from 'bignumber.js';
@@ -15,6 +14,7 @@ import { resetFertilizer, updateFarmerFertilizer } from './actions';
 import useEvents, { GetQueryFilters } from '../events2/updater';
 import useBlocks from 'hooks/useBlocks';
 import { CacheID } from '../events2';
+import ERC1155EventProcessor from 'lib/ERC1155/ERC1155EventProcessor';
 
 /**
  * Try to call a subgraph -> formulate data
@@ -77,16 +77,15 @@ import { CacheID } from '../events2';
  *    - Even if there are events loaded, we should know whether the visible data came from events or subgraph
  */
 
-
 export const useFetchFarmerFertilizer = () => {
   /// Helpers
   const dispatch  = useDispatch();
   const replantId = useChainConstant(REPLANT_INITIAL_ID);
 
   /// Contracts
-  const fertContract    = useFertilizerContract();
-  const beanstalk       = useBeanstalkContract() as unknown as BeanstalkReplanted;
-  const blocks          = useBlocks();
+  const fertContract = useFertilizerContract();
+  const beanstalk    = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const blocks       = useBlocks();
 
   const getQueryFilters = useCallback<GetQueryFilters>((
     account,
@@ -99,8 +98,8 @@ export const useFetchFarmerFertilizer = () => {
         null,     // operator
         account,  // from
         null,     // to
-        null,     // ids
-        null,     // values
+        null,     // id
+        null,     // value
       ),
       fromBlock || blocks.FERTILIZER_LAUNCH_BLOCK,
       toBlock   || 'latest',
@@ -122,8 +121,8 @@ export const useFetchFarmerFertilizer = () => {
         null,     // operator
         null,     // from
         account,  // to
-        null,     // ids
-        null,     // values
+        null,     // id
+        null,     // value
       ),
       fromBlock || blocks.FERTILIZER_LAUNCH_BLOCK,
       toBlock   || 'latest',
@@ -149,16 +148,10 @@ export const useFetchFarmerFertilizer = () => {
     if (fertContract && account && fetchEvents) {
       console.debug('[farmer/fertilizer/updater] FETCH: ', replantId.toString());
 
-      const newEvents = await fetchEvents!();
-      console.debug(`[fertilizer] new events = `, newEvents);
-
-      // subgraph call?
-      const ids = [
-        6_000_000,
-        3_500_000,
-        3_495_182,
-      ];
-
+      /// Fetch new events and re-run the processor.
+      const allEvents = await fetchEvents();
+      const { tokens } = new ERC1155EventProcessor(account, 0).ingestAll(allEvents || []);
+      const ids = Object.keys(tokens);
       const idStrings = ids.map((id) => id.toString())
 
       const [
@@ -181,7 +174,7 @@ export const useFetchFarmerFertilizer = () => {
         sum = sum.plus(new BigNumber(curr.amount.toString()));
         prev[ids[index]] = toTokenUnitsBN(curr.amount.toString(), 0);
         return prev;
-      }, {} as { [key: number] : BigNumber });
+      }, {} as { [key: string] : BigNumber });
 
       console.debug('[farmer/fertilizer/updater] fertById =', fertById, sum.toString());
 
@@ -198,6 +191,7 @@ export const useFetchFarmerFertilizer = () => {
     replantId,
     fetchEvents,
   ]); 
+
   const clear = useCallback(() => { 
     dispatch(resetFertilizer());
   }, [dispatch]);
@@ -206,16 +200,22 @@ export const useFetchFarmerFertilizer = () => {
 };
 
 const FarmerFertilizerUpdater = () => {
-  const [fetch, clear] = useFetchFarmerFertilizer();
+  const [fetch, clear]    = useFetchFarmerFertilizer();
   const { data: account } = useAccount();
-  const chainId = useChainId();
+  const chainId           = useChainId();
+
+  ///
   useEffect(() => {
     clear();
     if (account?.address) {
       fetch(account.address);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account?.address, chainId]);
+  }, [
+    account?.address,
+    chainId
+  ]);
+
   return null;
 };
 

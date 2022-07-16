@@ -36,8 +36,9 @@ const Bean = BEAN[1];
 // ----------------------------------------
 
 /** */
-export const BN      = (v: EBN | BigNumber.Value) => (v instanceof EBN ? new BigNumber(v.toString()) : new BigNumber(v));
-export const tokenBN = (v: EBN | BigNumber.Value, token: Token) => BN(v).div(10 ** token.decimals);
+export const BN         = (v: EBN | BigNumber.Value) => (v instanceof EBN ? new BigNumber(v.toString()) : new BigNumber(v));
+export const decimalBN  = (v: EBN | BigNumber.Value, decimals: number) => BN(v).div(10 ** decimals);
+export const tokenBN    = (v: EBN | BigNumber.Value, token: Token) => decimalBN(v, token.decimals);
 export const initTokens = (tokenMap: TokenMap) =>
   Object.keys(tokenMap).reduce<{ [season: string] : any }>(
     (prev, curr) => {

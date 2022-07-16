@@ -76,6 +76,8 @@ export default function useEvents(cacheId: CacheID, getQueryFilters: GetQueryFil
   const fetch = useCallback(async (_startBlockNumber?: number) => {
     if (!account?.address) return undefined;
 
+    const existingEvents = (cache?.events || []);
+
     /// If a start block is provided, use it; otherwise fall back
     /// to the most recent block queried in this cache.
     const startBlockNumber = (
@@ -90,7 +92,7 @@ export default function useEvents(cacheId: CacheID, getQueryFilters: GetQueryFil
     const endBlockNumber = await provider.getBlockNumber();
     
     /// FIXME: edge case where user does two transactions in one block
-    if (startBlockNumber && startBlockNumber > endBlockNumber) return [];
+    if (startBlockNumber && startBlockNumber > endBlockNumber) return existingEvents;
 
     /// if a starting block isn't provided, getQueryFilters will
     /// fall back to the most efficient block for a given query.
@@ -128,11 +130,15 @@ export default function useEvents(cacheId: CacheID, getQueryFilters: GetQueryFil
       events: newEvents,
     }))
 
-    return newEvents;
+    return [
+      ...existingEvents,
+      ...newEvents,
+    ];
   }, [
     dispatch,
     account?.address,
     cache?.endBlockNumber,
+    cache?.events,
     cacheId,
     chainId,
     getQueryFilters,

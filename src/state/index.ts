@@ -49,11 +49,7 @@ const store = configureStore({
       serializableCheck: false,
     }),
   ],
-  preloadedState: {
-    _farmer: {
-      events2: rehydrateEvents2(persistedState?._farmer?.events2)
-    }
-  }
+  preloadedState: {}
 });
 
 store.subscribe(throttle(() => {
