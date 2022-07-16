@@ -18,7 +18,6 @@ export const useFetchFarmerFertilizer = () => {
   const replantId = useChainConstant(REPLANT_INITIAL_ID);
   const [fertContract] = useBeanstalkFertilizerContract();
   const beanstalk = useBeanstalkContract() as unknown as BeanstalkReplanted;
-  const migrate = useMigrateCall();
 
   // Handlers
   const fetch = useCallback(async (_account: string) => {

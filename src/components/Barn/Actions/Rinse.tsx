@@ -116,11 +116,11 @@ const Rinse : React.FC<{}> = () => {
 
   /// Data refreshing
   const [refetchFertilizer] = useFetchFarmerFertilizer();
-  
+
   /// Contracts
   const fertContract = useFertilizerContract(signer);
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
-  const farm = useMemo(() => new Farm(provider), [provider]);
+  const farm = useMemo(() => new Farm(provider),   [provider]);
 
   const initialValues : BuyFormValues = useMemo(() => ({
     destination: FarmToMode.INTERNAL,
