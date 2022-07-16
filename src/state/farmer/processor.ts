@@ -151,7 +151,6 @@ const FarmerEventsProcessor = () => {
             harvestablePods: results.harvestablePodBalance,
           }));
           dispatch(updateFarmerSiloBalances({
-            // -----------------------------
             [SiloTokens.Bean.address]: {
               deposited: Object.keys(results.userBeanDeposits).reduce((prev, s) => {
                 const tokenAmount = results.userBeanDeposits[s];
@@ -173,8 +172,6 @@ const FarmerEventsProcessor = () => {
               }),
               ...parseWithdrawals(results.beanWithdrawals, eventParsingParameters.season)
             },
-
-            // -----------------------------
             [SiloTokens.BeanEthLP.address]: {
               deposited: Object.keys(results.userLPDeposits).reduce((prev, s) => {
                 const tokenAmount = results.userLPDeposits[s];
@@ -199,8 +196,6 @@ const FarmerEventsProcessor = () => {
               }),
               ...parseWithdrawals(results.lpWithdrawals, eventParsingParameters.season)
             },
-
-            // -----------------------------
             [SiloTokens.BeanCrv3LP.address]: {
               deposited: Object.keys(results.userCurveDeposits).reduce((prev, s) => {
                 const tokenAmount = results.userCurveDeposits[s];
@@ -222,8 +217,6 @@ const FarmerEventsProcessor = () => {
               }),
               ...parseWithdrawals(results.curveWithdrawals, eventParsingParameters.season)
             },
-
-            // -----------------------------
             [SiloTokens.BeanLusdLP?.address]: {
               deposited: Object.keys(results.userBeanlusdDeposits).reduce((prev, s) => {
                 const tokenAmount = results.userBeanlusdDeposits[s];

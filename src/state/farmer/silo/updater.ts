@@ -12,9 +12,9 @@ import { Beanstalk, BeanstalkReplanted } from 'generated/index';
 import { resetFarmerSilo, updateFarmerSiloRewards } from './actions';
 
 export const useFarmerSilo = () => {
-  const dispatch = useDispatch();
+  const dispatch  = useDispatch();
   const beanstalk = useBeanstalkContract();
-  const migrate = useMigrateCall();
+  const migrate   = useMigrateCall();
 
   // Handlers
   const fetch = useCallback(async (_account: string) => {
