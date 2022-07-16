@@ -11,6 +11,8 @@ export type RewardItemProps = {
   icon?: string;
   /** If isClaimable === false, grey out the RewardItem. */
   isClaimable?: boolean;
+  /** */
+  compact?: boolean;
 }
 
 const RewardItem: React.FC<RewardItemProps> = ({
@@ -20,16 +22,14 @@ const RewardItem: React.FC<RewardItemProps> = ({
   icon,
   isClaimable,
 }) => (
-  <Box sx={{ flex: { md: 'auto', xs: 1 }, opacity: isClaimable === false ? 0.2 : 1 }}>
+  <Box sx={{ flex: { lg: 'auto', xs: 1 }, opacity: isClaimable === false ? 0.2 : 1 }}>
     <Typography>
-      <Stack direction="row" gap={0.3} alignItems="center">
-        {title}
-        <Tooltip title={tooltip} placement="top">
-          <HelpOutlineIcon
-            sx={{ fontSize: '13px' }}
-          />
-        </Tooltip>
-      </Stack>
+      {title}
+      <Tooltip title={tooltip} placement="top">
+        <HelpOutlineIcon
+          sx={{ display: 'inline', mb: 0.5, fontSize: '11px' }}
+        />
+      </Tooltip>
     </Typography>
     <Stack direction="row" gap={0.3} alignItems="center">
       {icon && <img src={icon} alt="" height="17px" />}
