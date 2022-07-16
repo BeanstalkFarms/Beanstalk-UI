@@ -1,4 +1,4 @@
-import { Typography, Tooltip, Box, Stack } from '@mui/material';
+import { Typography, Tooltip, Box, Stack, CircularProgress } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import React from 'react';
 import BigNumber from 'bignumber.js';
@@ -31,9 +31,11 @@ const RewardItem: React.FC<RewardItemProps> = ({
         />
       </Tooltip>
     </Typography>
-    <Stack direction="row" gap={0.3} alignItems="center">
+    <Stack direction="row" gap={0.4} alignItems="center">
       {icon && <img src={icon} alt="" height="17px" />}
-      {amount && <Typography variant="h3">{displayFullBN(amount, 2)}</Typography>}
+      {amount && (
+        <Typography variant="h3">{amount.lt(0) ? '-' : displayFullBN(amount, 2)}</Typography>
+      )}
     </Stack>
   </Box>
 );
