@@ -10,6 +10,7 @@ import Claim from './Claim';
 import Deposits from './Deposits';
 import Withdrawals from './Withdrawals';
 import Send from './Send';
+import AlmTab from 'components/Common/Almanac/AlmTab';
 
 /**
  * Show the three primary Silo actions: Deposit, Withdraw, Claim.
@@ -33,13 +34,14 @@ const SiloActions : React.FC<{
         <Stack gap={1.5}>
           <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>
             <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }} variant="scrollable">
-              <Tab label="Deposit" />
-              <Tab label="Withdraw" />
-              <Tab
+              <AlmTab label="Deposit" almHref="/farm/silo" />
+              <AlmTab label="Withdraw" almHref="/farm/silo#withdraw" />
+              <AlmTab
+                almHref="/farm/silo#withdraw"
                 label={hasClaimable ? <Badge color="primary" variant="dot">Claim</Badge> : 'Claim'}
                 sx={{ overflow: 'visible' }}
               />
-              <Tab label="Send" />
+              <AlmTab label="Send" almHref="/farm/silo" />
             </Tabs>
           </Stack>
           <Box sx={{ px: 1, pb: 1 }}>

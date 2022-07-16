@@ -22,23 +22,24 @@ import FarmerEventsProcessor from 'state/farmer/processor';
 import FarmerBalancesUpdater from 'state/farmer/balances/updater';
 import FarmerFertilizerUpdater from 'state/farmer/fertilizer/updater';
 import FieldUpdater from 'state/beanstalk/field/updater';
+import AppUpdater from 'state/app/updater';
 import { BeanstalkPalette } from './muiTheme';
 import './App.css';
-import WelcomeBackModal from '../Common/WelcomeBackModal';
-import BeanAnalytics from '../../pages/analytics/bean';
-import SiloAnalytics from '../../pages/analytics/silo';
-import FieldAnalytics from '../../pages/analytics/field';
-import BarnraiseAnalytics from '../../pages/analytics/barnraise';
-import PodMarketPage from '../../pages/market/pod-market';
-import NFTPage from '../../pages/nft';
-import ChopPage from '../../pages/chop';
-import MarketAccountPage from '../../pages/market/account';
-import MarketActivityPage from '../../pages/market/activity';
-import CreatePage from '../../pages/market/create';
-import OrderPage from '../../pages/market/order';
-import ListingPage from '../../pages/market/listing';
-import EditListingPage from '../../pages/market/edit-listing';
-import EditOrderPage from '../../pages/market/edit-order';
+import WelcomeBackModal from 'components/Common/WelcomeBackModal';
+import BeanAnalytics from 'pages/analytics/bean';
+import SiloAnalytics from 'pages/analytics/silo';
+import FieldAnalytics from 'pages/analytics/field';
+import BarnraiseAnalytics from 'pages/analytics/barnraise';
+import PodMarketPage from 'pages/market/pod-market';
+import NFTPage from 'pages/nft';
+import ChopPage from 'pages/chop';
+import MarketAccountPage from 'pages/market/account';
+import MarketActivityPage from 'pages/market/activity';
+import CreatePage from 'pages/market/create';
+import OrderPage from 'pages/market/order';
+import ListingPage from 'pages/market/listing';
+import EditListingPage from 'pages/market/edit-listing';
+import EditOrderPage from 'pages/market/edit-order';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -91,6 +92,7 @@ export default function App() {
   return (
     <>
       <CssBaseline />
+      <AppUpdater />
       {/* -----------------------
         * Bean Updaters
         * ----------------------- */}
