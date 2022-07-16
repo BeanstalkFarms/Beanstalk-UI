@@ -21,7 +21,7 @@ import useToggle from 'hooks/display/useToggle';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useFarmerBalances from 'hooks/useFarmerBalances';
 import useTokenMap from 'hooks/useTokenMap';
-import React, {useCallback, useEffect, useMemo} from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { displayBN, displayFullBN, getChainConstant, parseError, toStringBaseUnitBN } from 'util/index';
@@ -209,7 +209,7 @@ const Chop: React.FC<{}> = () => {
       if (!farmerBalances[urBean.address]?.total.gt(0)) throw new Error('No Unfertilized token to Chop.');
       if (!account?.address) throw new Error('Connect a wallet first.');
 
-      const token = values.tokens[0].token
+      const token = values.tokens[0].token;
 
       txToast = new TransactionToast({
         loading: `Chopping ${displayFullBN(values.amount)} ${token.symbol}`,
