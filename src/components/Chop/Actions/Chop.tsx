@@ -21,7 +21,7 @@ import useToggle from 'hooks/display/useToggle';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useFarmerBalances from 'hooks/useFarmerBalances';
 import useTokenMap from 'hooks/useTokenMap';
-import React, { useCallback, useMemo } from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { displayBN, displayFullBN, getChainConstant, parseError, toStringBaseUnitBN } from 'util/index';
@@ -93,9 +93,9 @@ const ChopForm: React.FC<FormikProps<ChopFormValues>
   const amountOut = tokenBalance?.multipliedBy(chopPenalty);
   const outputToken = tokenOutputMap[values.tokens[0].token.address];
 
-  // useEffect(() => {
-  //   setFieldValue('amount', balances[selectedTokenAddress]?.total);
-  // }, [balances, selectedTokenAddress, setFieldValue]);
+  useEffect(() => {
+    setFieldValue('amount', balances[selectedTokenAddress]?.total);
+  }, [balances, selectedTokenAddress, setFieldValue]);
 
   return (
     <Form autoComplete="off">
