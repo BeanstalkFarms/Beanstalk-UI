@@ -40,30 +40,24 @@ import { BeanstalkPalette } from '../../App/muiTheme';
 type ChopFormValues = FormState & {
   settings: {
     slippage: number;
-  }
+  },
+  amount: BigNumber;
 };
 
-const ChopForm : React.FC<
-  FormikProps<ChopFormValues>
+const ChopForm: React.FC<FormikProps<ChopFormValues>
   & {
-    balances: ReturnType<typeof useFarmerBalances>;
-    beanstalk: BeanstalkReplanted;
-    weather: BigNumber;
-    farm: Farm;
-  }
-> = ({
+  balances: ReturnType<typeof useFarmerBalances>;
+  beanstalk: BeanstalkReplanted;
+}> = ({
   values,
   setFieldValue,
   //
   balances,
   beanstalk,
-  weather,
-  farm,
 }) => {
   // TODO: constrain this when siloToken = Unripe
   const erc20TokenMap = useTokenMap<ERC20Token | NativeToken>([UNRIPE_BEAN, UNRIPE_BEAN_CRV3]);
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
-  const Bean = useChainConstant(BEAN);
 
   //
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
@@ -81,13 +75,8 @@ const ChopForm : React.FC<
     ]);
   }, [values.tokens, setFieldValue]);
 
-  const beans = values.tokens[0].token === Bean
-    ? values.tokens[0]?.amount || ZERO_BN
-    : values.tokens[0]?.amountOut || ZERO_BN;
-
-  const isSubmittable = beans?.gt(0);
-  const numPods = beans.multipliedBy(weather.div(100).plus(1));
   const chopPenalty = new BigNumber(999); // TODO: calculate chop penalty
+  const tokenBalance = values.amount;
 
   return (
     <Form autoComplete="off">
@@ -103,21 +92,22 @@ const ChopForm : React.FC<
       <Stack gap={1}>
         <pre>{JSON.stringify(values, null, 2)}</pre>
         <TokenInputField
-          name="tokens.token"
+          token={values.tokens[0].token}
+          balance={tokenBalance || ZERO_BN}
+          name="amount"
+          disabled
+          // MUI 
           fullWidth
           InputProps={{
             endAdornment: (
               <TokenAdornment
-                token={values.tokens[0] as unknown as ERC20Token}
+                token={values.tokens[0].token}
                 onClick={showTokenSelect}
               />
-            ),
+            )
           }}
-          // Other
-          // balance={balances[values.tokens[0].token.address] || undefined}
-          balance={new BigNumber(1000)} // TODO: pass user's unripe bean balance
         />
-        {isSubmittable ? (
+        {tokenBalance?.gt(0) ? (
           <>
             <TxnSeparator />
             <Stack direction="row" justifyContent="space-between" sx={{ p: 1 }}>
@@ -126,7 +116,7 @@ const ChopForm : React.FC<
             </Stack>
             <TokenOutputField
               token={BEAN[1]}
-              amount={numPods}
+              amount={new BigNumber(1)}
             />
             <Box>
               <Accordion variant="outlined">
@@ -154,7 +144,7 @@ const ChopForm : React.FC<
           variant="contained"
           color="primary"
           size="large"
-          disabled={!isSubmittable}
+          disabled={!tokenBalance?.gt(0)}
           contract={beanstalk}
           tokens={values.tokens}
           mode="auto"
@@ -168,7 +158,7 @@ const ChopForm : React.FC<
 
 // ---------------------------------------------------
 
-const PREFERRED_TOKENS : PreferredToken[] = [
+const PREFERRED_TOKENS: PreferredToken[] = [
   {
     token: UNRIPE_BEAN,
     minimum: new BigNumber(0.001),    // $1
@@ -179,19 +169,14 @@ const PREFERRED_TOKENS : PreferredToken[] = [
   },
 ];
 
-const Chop : React.FC<{}> = () => {
+const Chop: React.FC<{}> = () => {
   const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
   const balances = useFarmerBalances();
-  const Bean = useChainConstant(BEAN);
-  const Eth = useChainConstant(ETH);
   const { data: signer } = useSigner();
-  const provider = useProvider();
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
-  const farm = useMemo(() => new Farm(provider), [provider]);
-  const weather = useSelector<AppState, AppState['_beanstalk']['field']['weather']['yield']>((state) => state._beanstalk.field.weather.yield);
 
   // Form setup
-  const initialValues : ChopFormValues = useMemo(() => ({
+  const initialValues: ChopFormValues = useMemo(() => ({
     settings: {
       slippage: 0.1, // 0.1%
     },
@@ -201,90 +186,13 @@ const Chop : React.FC<{}> = () => {
         amount: null,
       },
     ],
+    amount: new BigNumber(100),
   }), [baseToken]);
 
   // Handlers
   const onSubmit = useCallback(async (values: ChopFormValues, formActions: FormikHelpers<ChopFormValues>) => {
-    try {
-      const formData = values.tokens[0];
-      const inputToken = formData.token;
-      const amountBeans = inputToken === Bean ? formData.amount : formData.amountOut;
-      if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
-      if (!amountBeans || amountBeans.eq(0)) throw new Error('No amount set');
-
-      // TEMP: recast as BeanstalkReplanted
-      const data : string[] = [];
-      const amountPods = amountBeans.times(weather.div(100).plus(1));
-      let value = ZERO_BN;
-
-      const txToast = new TransactionToast({
-        loading: `Sowing ${displayFullBN(amountBeans, Bean.decimals)} Beans for ${displayFullBN(amountPods, PODS.decimals)} Pods`,
-        success: 'Sow complete.',
-      });
-
-      // Sow directly from BEAN
-      if (inputToken === Bean) {
-        // Nothing to do
-      }
-
-      // Swap to BEAN and Sow
-      else {
-        // Require a quote
-        if (!formData.steps || !formData.amountOut) throw new Error(`No quote available for ${formData.token.symbol}`);
-
-        if (inputToken === Eth) {
-          if (!formData.amount) throw new Error('No amount set');
-          value = value.plus(formData.amount);
-          data.push(beanstalk.interface.encodeFunctionData('wrapEth', [
-            toStringBaseUnitBN(value, Eth.decimals),
-            FarmToMode.INTERNAL,
-          ]));
-        }
-
-        // Encode steps to get from token i to siloToken
-        const encoded = Farm.encodeStepsWithSlippage(
-          formData.steps,
-          0.1 / 100,
-          // ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage / 100, 6)), // slippage
-        );
-        data.push(...encoded);
-        encoded.forEach((_data, index) =>
-          console.debug(`[Deposit] step ${index}:`, formData.steps?.[index]?.decode(_data).map((elem) => (elem instanceof ethers.BigNumber ? elem.toString() : elem)))
-        );
-      }
-
-      data.push(
-        beanstalk.interface.encodeFunctionData('sow', [
-          toStringBaseUnitBN(amountBeans, Bean.decimals),
-          FarmFromMode.INTERNAL_EXTERNAL,
-        ])
-      );
-
-      //
-      return beanstalk.farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) })
-        .then((txn) => {
-          txToast.confirming(txn);
-          return txn.wait();
-        })
-        .then((receipt) => {
-          txToast.success(receipt);
-          formActions.resetForm();
-        })
-        .catch((err) => {
-          console.error(
-            txToast.error(err.error || err)
-          );
-        });
-    } catch (e) {
-      // txToast.error(err);
-      formActions.setSubmitting(false);
-    }
-  }, [
-    beanstalk,
-    weather,
-    Bean,
-    Eth
-  ]);
+    console.log('TEST');
+  }, []);
 
   return (
     <Formik<ChopFormValues>
@@ -299,8 +207,6 @@ const Chop : React.FC<{}> = () => {
           <ChopForm
             balances={balances}
             beanstalk={beanstalk}
-            weather={weather}
-            farm={farm}
             {...formikProps}
           />
         </>
