@@ -126,6 +126,7 @@ const SowForm : React.FC<
 
   return (
     <Form autoComplete="off">
+      {/*<pre>{JSON.stringify(values, null, 2)}</pre>*/}
       <TokenSelectDialog
         open={isTokenSelectVisible}
         handleClose={hideTokenSelect}
