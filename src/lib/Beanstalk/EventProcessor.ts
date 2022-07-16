@@ -105,15 +105,15 @@ export default class EventProcessor {
   ) {
     this.account = account.toLowerCase();
     if (!epp.whitelist || typeof epp !== 'object') throw new Error('EventProcessor: Missing tokenMap');
-    this.epp = epp;
-    this.plots = initialState?.plots || {};
+    this.epp         = epp;
+    this.plots       = initialState?.plots       || {};
     this.deposits    = initialState?.deposits    || initTokens(this.epp.whitelist);
     this.withdrawals = initialState?.withdrawals || initTokens(this.epp.whitelist);
   }
   
   ingest<T extends Event>(event: T) {
-    if (!event.event) { return; } // throw new Error('Missing event name');
-    if (!SupportedEventsSet.has(event.event as (typeof SupportedEvents)[number])) { return; } // throw new Error(`No handler for event: ${event.event}`);
+    if (!event.event) { return; }
+    if (!SupportedEventsSet.has(event.event as (typeof SupportedEvents)[number])) { return; }
     return this[event.event as (typeof SupportedEvents)[number]](event as any);
   }
 
@@ -305,13 +305,16 @@ export default class EventProcessor {
   }
 
   parsePlots(_harvestableIndex: BigNumber) {
-    return EventProcessor.parsePlots(
+    return EventProcessor._parsePlots(
       this.plots,
       _harvestableIndex || this.epp.harvestableIndex
     );
   }
 
-  static parsePlots(plots: EventProcessorData['plots'], index: BigNumber) {
+  static _parsePlots(
+    plots: EventProcessorData['plots'],
+    index: BigNumber
+  ) {
     let pods = new BigNumber(0);
     let harvestablePods = new BigNumber(0);
     const unharvestablePlots  : PlotMap<BigNumber> = {};
@@ -349,6 +352,13 @@ export default class EventProcessor {
   // ----------------------------
   // |      SILO: UTILITIES     |
   // ----------------------------
+
+  parseWithdrawals(_token: string, _season: BigNumber) {
+    return EventProcessor._parseWithdrawals(
+      this.withdrawals[_token],
+      _season || this.epp.season
+    );
+  }
   
   static _parseWithdrawals(
     withdrawals: EventProcessorData['withdrawals'][string], 
@@ -384,7 +394,7 @@ export default class EventProcessor {
     return {
       withdrawn: {
         amount: transitBalance,
-        bdv: new BigNumber(0),
+        bdv:    new BigNumber(0),
         crates: transitWithdrawals,
       },
       claimable: {

@@ -124,10 +124,7 @@ const FarmerEventsProcessor = () => {
                   })
                 },
                 // Splits into 'withdrawn' and 'claimable'
-                ...Beanstalk.EventProcessor._parseWithdrawals(
-                  results.withdrawals[addr],
-                  eventParsingParameters.season,
-                )
+                ...p.parseWithdrawals(addr, eventParsingParameters.season)
               };
               return prev;
             }, {})
