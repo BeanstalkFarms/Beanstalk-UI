@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import useChainConstant from 'hooks/useChainConstant';
-import { useBeanstalkContract, useBeanstalkFertilizerContract } from 'hooks/useContract';
+import { useBeanstalkContract, useBeanstalkFertilizerContract, useFertilizerContract } from 'hooks/useContract';
 import { useAccount } from 'wagmi';
 import { REPLANT_INITIAL_ID } from 'hooks/useHumidity';
 import useChainId from 'hooks/useChain';
@@ -12,6 +12,9 @@ import { toTokenUnitsBN } from 'util/index';
 import BigNumber from 'bignumber.js';
 import { ZERO_BN } from 'constants/index';
 import { resetFertilizer, updateFarmerFertilizer } from './actions';
+import useEvents, { GetQueryFilters } from '../events2/updater';
+import useBlocks from 'hooks/useBlocks';
+import { CacheID } from '../events2';
 
 /**
  * Try to call a subgraph -> formulate data
@@ -39,6 +42,7 @@ import { resetFertilizer, updateFarmerFertilizer } from './actions';
  *      required for both the Field and the Marketplace
  *      - Is the marketplace out of scope for event processing? Soon enough it will
  *        be far too large to parse. Check to see which event params are indexed.
+ *    
  *  2 In a top level "farmer/events" section that shares all events
  *    - The event processor can loop through all events, so no need to filter before
  *      running it
@@ -73,21 +77,80 @@ import { resetFertilizer, updateFarmerFertilizer } from './actions';
  *    - Even if there are events loaded, we should know whether the visible data came from events or subgraph
  */
 
+
 export const useFetchFarmerFertilizer = () => {
   /// Helpers
   const dispatch  = useDispatch();
   const replantId = useChainConstant(REPLANT_INITIAL_ID);
 
   /// Contracts
-  const [fertContract]  = useBeanstalkFertilizerContract();
+  const fertContract    = useFertilizerContract();
   const beanstalk       = useBeanstalkContract() as unknown as BeanstalkReplanted;
-  const migrate         = useMigrateCall();
+  const blocks          = useBlocks();
+
+  const getQueryFilters = useCallback<GetQueryFilters>((
+    account,
+    fromBlock,
+    toBlock,
+  ) => [
+    /// Send FERT
+    fertContract.queryFilter(
+      fertContract.filters.TransferSingle(
+        null,     // operator
+        account,  // from
+        null,     // to
+        null,     // ids
+        null,     // values
+      ),
+      fromBlock || blocks.FERTILIZER_LAUNCH_BLOCK,
+      toBlock   || 'latest',
+    ),
+    fertContract.queryFilter(
+      fertContract.filters.TransferBatch(
+        null,     // operator
+        account,  // from
+        null,     // to
+        null,     // ids
+        null,     // values
+      ),
+      fromBlock || blocks.FERTILIZER_LAUNCH_BLOCK,
+      toBlock   || 'latest',
+    ),
+    /// Receive FERT
+    fertContract.queryFilter(
+      fertContract.filters.TransferSingle(
+        null,     // operator
+        null,     // from
+        account,  // to
+        null,     // ids
+        null,     // values
+      ),
+      fromBlock || blocks.FERTILIZER_LAUNCH_BLOCK,
+      toBlock   || 'latest',
+    ),
+    fertContract.queryFilter(
+      fertContract.filters.TransferBatch(
+        null,     // operator
+        null,     // from
+        account,  // to
+        null,     // ids
+        null,     // values
+      ),
+      fromBlock || blocks.FERTILIZER_LAUNCH_BLOCK,
+      toBlock   || 'latest',
+    ),
+  ], [blocks.FERTILIZER_LAUNCH_BLOCK, fertContract]);
+
+  const [fetchEvents] = useEvents(CacheID.FERTILIZER, getQueryFilters);
 
   /// Handlers 
   const fetch = useCallback(async (_account: string) => {
     const account = getAccount(_account);
-    if (fertContract && account) {
+    if (fertContract && account && fetchEvents) {
       console.debug('[farmer/fertilizer/updater] FETCH: ', replantId.toString());
+
+      const newEvents = await fetchEvents!();
+      console.debug(`[fertilizer] new events = `, newEvents);
 
       // subgraph call?
       const ids = [
@@ -133,6 +196,7 @@ export const useFetchFarmerFertilizer = () => {
     beanstalk,
     fertContract,
     replantId,
+    fetchEvents,
   ]); 
   const clear = useCallback(() => { 
     dispatch(resetFertilizer());
