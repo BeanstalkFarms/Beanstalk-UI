@@ -12,7 +12,7 @@ export default function AppUpdater() {
     window.addEventListener('blur', () => {
       dispatch(setAlmanacView(false));
     });
-  }, [])
+  }, [dispatch])
   
   useHotkeys('opt+q, alt+q', (event, handler) => {
     if (!pressed) {
