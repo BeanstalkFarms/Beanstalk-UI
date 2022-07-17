@@ -1,6 +1,6 @@
-import BigNumber from "bignumber.js";
-import { ethers } from "ethers";
-import { TransferBatchEvent, TransferSingleEvent } from "generated/Beanstalk/BeanstalkFertilizer";
+import BigNumber from 'bignumber.js';
+import { ethers } from 'ethers';
+import { TransferBatchEvent, TransferSingleEvent } from 'generated/Beanstalk/BeanstalkFertilizer';
 import { decimalBN, Event, tokenBN } from 'lib/Beanstalk/EventProcessor';
 
 export default class ERC1155EventProcessor {
@@ -50,7 +50,7 @@ export default class ERC1155EventProcessor {
 
     /// Sent token
     if (from === this.account) {
-      if (!this.tokens[id] || this.tokens[id].lt(valueBN)) throw new Error('ERC1155: Value is greater than known balance')
+      if (!this.tokens[id] || this.tokens[id].lt(valueBN)) throw new Error('ERC1155: Value is greater than known balance');
       this.tokens[id] = this.tokens[id].minus(valueBN);
       if (this.tokens[id].eq(0)) delete this.tokens[id];
     }
@@ -65,7 +65,7 @@ export default class ERC1155EventProcessor {
   }
 
   TransferSingle(event: TransferSingleEvent) {
-    console.debug(`[ERC1155EventProcessor] TransferSingle`, event);
+    console.debug('[ERC1155EventProcessor] TransferSingle', event);
     this._transfer(
       event.args.from.toLowerCase(),
       event.args.to.toLowerCase(),
@@ -75,14 +75,14 @@ export default class ERC1155EventProcessor {
   }
 
   TransferBatch(event: TransferBatchEvent) {
-    console.debug(`[ERC1155EventProcessor] TransferBatch`, event);
+    console.debug('[ERC1155EventProcessor] TransferBatch', event);
     event.args.ids.forEach((id, index) => {
       this._transfer(
         event.args.from.toLowerCase(),
         event.args.to.toLowerCase(),
         id.toString(),
         event.args.values[index],
-      )
+      );
     });
   }
 }

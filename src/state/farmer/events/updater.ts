@@ -12,8 +12,8 @@ import { getAccount } from 'util/Account';
 import { getEventFacet } from 'util/GetEventFacet';
 import useMigrateCall from 'hooks/useMigrateCall';
 import { Event } from 'lib/Beanstalk/EventProcessor';
-import { resetEvents, setEvents } from './actions';
 import toast from 'react-hot-toast';
+import { resetEvents, setEvents } from './actions';
 
 const getQueryFilters = (
   beanstalk:  Beanstalk,
@@ -246,7 +246,7 @@ const useFarmerEvents = () => {
     } catch (e) {
       console.debug('[farmer/events/useFarmerEvents] FAILED', e);
       console.error(e);
-      toast.error('Failed to load event data from Ethereum.')
+      toast.error('Failed to load event data from Ethereum.');
     }
   }, [
     dispatch,
@@ -265,7 +265,7 @@ const useFarmerEvents = () => {
 
 // ----------------------------------------
 
-const FarmerEventsUpdater = () => {
+const FarmerEventsUpdater = () => 
   // const [fetch, clear] = useFarmerEvents();
   // const { data: account } = useAccount();
   // const chainId = useChainId();
@@ -278,7 +278,5 @@ const FarmerEventsUpdater = () => {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [chainId, account?.address]);
 
-  return null;
-};
-
+   null;
 export default FarmerEventsUpdater;

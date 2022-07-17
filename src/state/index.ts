@@ -2,10 +2,10 @@ import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { loadState, saveState } from 'util/State';
 import throttle from 'lodash/throttle';
 
+import { ethers } from 'ethers';
 import _bean from './bean/reducer';
 import _beanstalk from './beanstalk/reducer';
 import _farmer from './farmer/reducer';
-import { ethers } from 'ethers';
 import { FarmerEvents } from './farmer/events2';
 
 const rehydrateEvents2 = (events2: FarmerEvents | undefined) => {
@@ -14,17 +14,15 @@ const rehydrateEvents2 = (events2: FarmerEvents | undefined) => {
     const cache = { ...events2 };
     Object.keys(cache).forEach((key) => {
       if (cache[key].events?.length > 0) {
-        cache[key].events = cache[key].events.map((event) => {
-          return {
+        cache[key].events = cache[key].events.map((event) => ({
             ...event,
             args: event.args?.map((arg: any) => {
-              if (typeof arg === "object" && arg.type === "BigNumber") {
+              if (typeof arg === 'object' && arg.type === 'BigNumber') {
                 return ethers.BigNumber.from(arg.hex);
               }
               return arg;
             }) || [],
-          }
-        });
+          }));
       }
     });
     return cache;
@@ -32,7 +30,7 @@ const rehydrateEvents2 = (events2: FarmerEvents | undefined) => {
     console.error(err);
     return {}; //
   }
-}
+};
 
 const persistedState = loadState();
 

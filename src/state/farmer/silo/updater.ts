@@ -7,26 +7,26 @@ import useChainId from 'hooks/useChain';
 import { bigNumberResult, tokenResult } from 'util/index';
 import useMigrateCall from 'hooks/useMigrateCall';
 import { Beanstalk, BeanstalkReplanted } from 'generated/index';
-import { resetFarmerSilo, updateFarmerSiloBalances, UpdateFarmerSiloBalancesPayload, updateFarmerSiloRewards } from './actions';
-import useEvents, { GetQueryFilters } from '../events2/updater';
 import useBlocks from 'hooks/useBlocks';
 import { ethers } from 'ethers';
-import { EventCacheName } from '../events2';
 import useAccount from 'hooks/ledger/useAccount';
 import EventProcessor from 'lib/Beanstalk/EventProcessor';
 import useWhitelist from 'hooks/useWhitelist';
 import useSeason from 'hooks/useSeason';
 import BigNumber from 'bignumber.js';
-import { DepositCrate } from '.';
 import useEventProcessor, { EventParsingParameters } from 'hooks/useEventProcessor';
 import { useGetChainConstant } from 'hooks/useChainConstant';
 import { AppState } from 'state';
 import { parseWithdrawals } from 'util/Crates';
+import { DepositCrate } from '.';
+import { EventCacheName } from '../events2';
+import useEvents, { GetQueryFilters } from '../events2/updater';
+import { resetFarmerSilo, updateFarmerSiloBalances, UpdateFarmerSiloBalancesPayload, updateFarmerSiloRewards } from './actions';
 
 export const useFetchFarmerSilo = () => {
   /// Helpers
   const dispatch  = useDispatch();
-  const account   = useAccount()
+  const account   = useAccount();
 
   /// Contracts
   const beanstalk = useBeanstalkContract();
@@ -71,14 +71,12 @@ export const useFetchFarmerSilo = () => {
     harvestableIndex,
   ]);
 
-
   /// Events
   const getQueryFilters = useCallback<GetQueryFilters>((
     _account,
     fromBlock,
     toBlock,
-  ) => {
-    return migrate<Beanstalk, BeanstalkReplanted, Promise<ethers.Event[]>[]>(beanstalk, [
+  ) => migrate<Beanstalk, BeanstalkReplanted, Promise<ethers.Event[]>[]>(beanstalk, [
       (b) => ([
         // Silo (v1)
         b.queryFilter(
@@ -186,8 +184,7 @@ export const useFetchFarmerSilo = () => {
           toBlock   || 'latest',
         ),
       ]),
-    ])
-  }, [
+    ]), [
     migrate,
     blocks,
     beanstalk,
@@ -417,7 +414,7 @@ export const useFetchFarmerSilo = () => {
 
 const FarmerSiloUpdater = () => {
   const [fetch, clear] = useFetchFarmerSilo();
-  const account = useAccount()
+  const account = useAccount();
   const chainId = useChainId();
 
   useEffect(() => {

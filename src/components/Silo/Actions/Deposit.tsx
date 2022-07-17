@@ -486,7 +486,7 @@ const Deposit : React.FC<{
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
-      await refetchFarmerSilo()
+      await refetchFarmerSilo();
       txToast.success(receipt);
       formActions.resetForm();
     } catch (err) {

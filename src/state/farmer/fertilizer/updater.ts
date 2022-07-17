@@ -10,11 +10,11 @@ import { BeanstalkReplanted } from 'generated';
 import { toTokenUnitsBN } from 'util/index';
 import BigNumber from 'bignumber.js';
 import { ZERO_BN } from 'constants/index';
+import useBlocks from 'hooks/useBlocks';
+import ERC1155EventProcessor from 'lib/ERC1155/ERC1155EventProcessor';
 import { resetFertilizer, updateFarmerFertilizer } from './actions';
 import useEvents, { GetQueryFilters } from '../events2/updater';
-import useBlocks from 'hooks/useBlocks';
 import { EventCacheName } from '../events2';
-import ERC1155EventProcessor from 'lib/ERC1155/ERC1155EventProcessor';
 
 /**
  * Try to call a subgraph -> formulate data
@@ -153,7 +153,7 @@ export const useFetchFarmerFertilizer = () => {
       const allEvents = await fetchEvents();
       const { tokens } = new ERC1155EventProcessor(account, 0).ingestAll(allEvents || []);
       const ids = Object.keys(tokens);
-      const idStrings = ids.map((id) => id.toString())
+      const idStrings = ids.map((id) => id.toString());
 
       const [
         balances,

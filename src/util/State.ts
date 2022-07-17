@@ -1,4 +1,4 @@
-import { EventCacheName } from "state/farmer/events2";
+import { EventCacheName } from 'state/farmer/events2';
 
 export const loadState = () => {
   try {
@@ -8,10 +8,10 @@ export const loadState = () => {
     }
     return JSON.parse(serializedState);
   } catch (err) {
-    console.warn(`Failed to load state`);
+    console.warn('Failed to load state');
     return undefined;
   }
-}
+};
 
 export const saveState = (state: any) => {
   try {
@@ -19,9 +19,9 @@ export const saveState = (state: any) => {
     localStorage.setItem('state', serializedState);
   } catch (err) {
     // pass
-    console.warn(`Failed to save state`);
+    console.warn('Failed to save state');
   }
-}
+};
 
 export const getEventCacheId = (
   chainId: number,

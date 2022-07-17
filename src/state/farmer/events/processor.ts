@@ -17,7 +17,7 @@ import { DepositCrate } from '../silo';
 import { updateFarmerSiloBalances, UpdateFarmerSiloBalancesPayload } from '../silo/actions';
 
 const FarmerEventsProcessor = () => {
-  const account  = useAccount()
+  const account  = useAccount();
   const dispatch = useDispatch();
 
   // Selectors

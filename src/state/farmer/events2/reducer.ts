@@ -3,7 +3,7 @@ import { getEventCacheId } from 'util/State';
 import { FarmerEvents } from '.';
 import { ingestEvents, resetEvents } from './actions';
 
-const initialState : FarmerEvents = {}
+const initialState : FarmerEvents = {};
 
 export default createReducer(initialState, (builder) =>
   builder
@@ -32,7 +32,7 @@ export default createReducer(initialState, (builder) =>
           ],
           endBlockNumber: payload.endBlockNumber,
           updatedAt:      payload.timestamp,
-        }
+        };
       }
     })
 );

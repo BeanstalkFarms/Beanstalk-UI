@@ -137,7 +137,7 @@ const TokenInput: React.FC<TokenInputProps
   const handleMax = useCallback(() => {
     if (balance) {
       form.setFieldValue(field.name, balance);
-      _handleChange?.(balance)
+      _handleChange?.(balance);
     }
   }, [balance, form, field.name, _handleChange]);
 

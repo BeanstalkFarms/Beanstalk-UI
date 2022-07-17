@@ -363,7 +363,6 @@ const Claim : React.FC<{
       await refetchFarmerSilo();
       txToast.success(receipt);
       formActions.resetForm();
-
     } catch (err) {
       txToast ? txToast.error(err) : toast.error(parseError(err));
       formActions.setSubmitting(false);

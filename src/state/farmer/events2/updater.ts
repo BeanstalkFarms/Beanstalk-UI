@@ -1,15 +1,15 @@
-import { ethers } from "ethers";
-import useChainId from "hooks/useChain";
-import { useCallback } from "react";
-import { useDispatch } from "react-redux";
-import { useProvider } from "wagmi";
+import { ethers } from 'ethers';
+import useChainId from 'hooks/useChain';
+import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import { useProvider } from 'wagmi';
 import flattenDeep from 'lodash/flattenDeep';
 import { Event } from 'lib/Beanstalk/EventProcessor';
-import { ingestEvents } from "./actions";
-import { EventCacheName } from ".";
-import useEventCache from "hooks/events/useEventCache";
-import useAccount from "hooks/ledger/useAccount";
-import { getEventCacheId } from "util/State";
+import useEventCache from 'hooks/events/useEventCache';
+import useAccount from 'hooks/ledger/useAccount';
+import { getEventCacheId } from 'util/State';
+import { EventCacheName } from '.';
+import { ingestEvents } from './actions';
 
 export type GetQueryFilters = (
   /**
@@ -59,7 +59,7 @@ export const sortEvents = (a: Event, b: Event) => {
   const diff = a.blockNumber - b.blockNumber;
   if (diff !== 0) return diff;
   return a.logIndex - b.logIndex;
-}
+};
 
 export default function useEvents(cacheName: EventCacheName, getQueryFilters: GetQueryFilters) {
   const dispatch  = useDispatch();
@@ -106,7 +106,7 @@ export default function useEvents(cacheName: EventCacheName, getQueryFilters: Ge
       endBlockNumber,
       filterCount: filters.length,
       cacheEndBlockNumber: cache?.endBlockNumber,
-    })
+    });
 
     ///
     const results = await Promise.all(filters); // [[0,1,2],[0,1],...]
@@ -129,7 +129,7 @@ export default function useEvents(cacheName: EventCacheName, getQueryFilters: Ge
       endBlockNumber,
       timestamp: new Date().getTime(),
       events: newEvents,
-    }))
+    }));
 
     return [
       ...existingEvents,
@@ -146,5 +146,5 @@ export default function useEvents(cacheName: EventCacheName, getQueryFilters: Ge
     provider,
   ]);
 
-  return [cache ? fetch : undefined]
+  return [cache ? fetch : undefined];
 }
