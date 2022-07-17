@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Button, Card, Divider, Grid, Stack, Tooltip, Typography } from '@mui/material';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Link } from 'react-router-dom';
 import { Pool, Token } from 'classes';
@@ -9,7 +8,7 @@ import { displayUSD } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BEAN, SEEDS, STALK } from 'constants/tokens';
 import { AddressMap, ZERO_BN } from 'constants/index';
-import { displayBN, displayFullBN, displayTokenAmount } from 'util/Tokens';
+import { displayBN, displayFullBN } from 'util/Tokens';
 import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
 import useTVL from 'hooks/useTVL';
 import useChainConstant from 'hooks/useChainConstant';

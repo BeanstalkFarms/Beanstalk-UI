@@ -1,12 +1,11 @@
 import React from 'react';
-import { Stack, Typography, Card, ListItem, ListItemButton, ListItemIcon, ListItemText, List } from '@mui/material';
+import { Stack, Typography, ListItem, ListItemButton, ListItemIcon, ListItemText, List } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { makeStyles } from '@mui/styles';
 import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
 import { displayBN } from '../../util';
 import podIcon from '../../img/beanstalk/pod-icon.svg';
 import { PlotMap } from '../../state/farmer/field';
-import { ZERO_BN } from '../../constants';
 
 const useStyles = makeStyles(() => ({
   tokenIcon: {

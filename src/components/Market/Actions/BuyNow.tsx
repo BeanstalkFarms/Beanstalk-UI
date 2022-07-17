@@ -1,17 +1,16 @@
-import { Accordion, AccordionDetails, Box, Button, InputAdornment, Stack, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Button, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
   FormState,
-  FormTokenState,
   SettingInput, TokenOutputField,
   TokenQuoteProvider,
   TokenSelectDialog, TxnPreview, TxnSeparator,
   TxnSettings
 } from 'components/Common/Form';
-import { SupportedChainId, ZERO_BN } from 'constants/index';
+import { SupportedChainId } from 'constants/index';
 import { BEAN, ETH, PODS } from 'constants/tokens';
-import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useChainId from 'hooks/useChain';
 import useChainConstant from 'hooks/useChainConstant';
 import useFarmerBalances from 'hooks/useFarmerBalances';
@@ -22,11 +21,6 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { displayBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
-import SliderField from '../../Common/Form/SliderField';
-import InputField from '../../Common/Form/InputField';
-import { BeanstalkPalette } from '../../App/muiTheme';
-import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
-import beanIcon from '../../../img/tokens/bean-logo-circled.svg';
 import useCurve from '../../../hooks/useCurve';
 import { PodListing } from '../Plots.mock';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';

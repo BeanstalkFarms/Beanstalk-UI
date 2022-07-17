@@ -5,10 +5,8 @@ import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Sta
 import { makeStyles } from '@mui/styles';
 import Token from 'classes/Token';
 import { displayBN } from 'util/index';
-import { AddressMap, ZERO_BN } from 'constants/index';
-import BigNumber from 'bignumber.js';
+import { ZERO_BN } from 'constants/index';
 import { FarmerBalances } from 'state/farmer/balances';
-import TokenIcon from '../TokenIcon';
 import { BeanstalkPalette, FontSize, IconSize } from '../../App/muiTheme';
 
 const useStyles = makeStyles(() => ({

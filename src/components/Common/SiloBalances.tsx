@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Stack, Typography, Grid, Box, Tooltip, Badge } from '@mui/material';
+import { Stack, Typography, Grid, Box, Tooltip } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import useBeanstalkSiloBreakdown from 'hooks/useBeanstalkSiloBreakdown';

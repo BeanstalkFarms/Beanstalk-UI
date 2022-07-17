@@ -32,7 +32,7 @@ import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { displayBN, displayFullBN, displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
+import { displayBN, displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
 import { useProvider } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
@@ -126,7 +126,7 @@ const SowForm : React.FC<
 
   return (
     <Form autoComplete="off">
-      {/*<pre>{JSON.stringify(values, null, 2)}</pre>*/}
+      {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
       <TokenSelectDialog
         open={isTokenSelectVisible}
         handleClose={hideTokenSelect}

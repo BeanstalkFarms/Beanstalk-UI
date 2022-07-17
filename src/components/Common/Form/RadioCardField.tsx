@@ -1,6 +1,6 @@
 import React from 'react';
 import { Field, FieldProps } from 'formik';
-import { Button, Card, CardProps, Grid, GridProps, Stack, StackProps, Typography } from '@mui/material';
+import { Button, CardProps, Grid, GridProps, Stack, StackProps, Typography } from '@mui/material';
 import { BeanstalkPalette } from '../../App/muiTheme';
 
 export type RadioCardFieldProps = {

@@ -1,13 +1,11 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import ethers, { BigNumber as BN } from 'ethers';
 import BigNumber from 'bignumber.js';
-import { useAccount } from 'wagmi';
 import { useDispatch } from 'react-redux';
 import flattenDeep from 'lodash/flattenDeep';
 import useBlocks from 'hooks/useBlocks';
 import { Beanstalk, BeanstalkReplanted } from 'generated/index';
 import { useBeanstalkContract } from 'hooks/useContract';
-import useChainId from 'hooks/useChain';
 import { getAccount } from 'util/Account';
 import { getEventFacet } from 'util/GetEventFacet';
 import useMigrateCall from 'hooks/useMigrateCall';

@@ -99,7 +99,7 @@ const FertilizerImage : React.FC<FertilizerImageProps> = ({
       >
         {inner}
       </Button>
-    )
+    );
   }
 
   return inner;

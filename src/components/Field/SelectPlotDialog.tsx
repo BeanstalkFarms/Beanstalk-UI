@@ -1,6 +1,5 @@
 import React from 'react';
 import { Dialog, DialogProps, Stack, Typography } from '@mui/material';
-import { useSelector } from 'react-redux';
 import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
 import PlotSelect from '../Common/PlotSelect';
 import { AppState } from '../../state';

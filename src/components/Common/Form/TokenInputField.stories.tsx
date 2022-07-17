@@ -1,8 +1,7 @@
 import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import { BEAN } from 'constants/tokens';
 import { Field, FieldProps, Formik } from 'formik';
-import { Box, Card } from '@mui/material';
+import { Card } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import TokenInputField from './TokenInputField';
 

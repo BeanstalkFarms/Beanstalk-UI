@@ -3,7 +3,7 @@ import {
   Box,
   Card,
   Container,
-  Stack, Tab, Tabs,
+  Stack,
   Typography,
 } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';

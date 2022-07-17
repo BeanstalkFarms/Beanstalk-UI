@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAccount } from 'wagmi';
 import { BEANSTALK_ADDRESSES } from 'constants/index';
-import { Box, BoxProps } from '@mui/material';
+import { BoxProps } from '@mui/material';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 
 const FALLBACK_ADDRESS = BEANSTALK_ADDRESSES[1];

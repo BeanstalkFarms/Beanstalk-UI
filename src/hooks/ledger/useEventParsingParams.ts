@@ -1,9 +1,9 @@
-import { EventParsingParameters } from "hooks/useEventProcessor";
-import useSeason from "hooks/useSeason";
-import { useMemo } from "react";
-import { useSelector } from "react-redux";
-import { AppState } from "state";
-import useAccount from "./useAccount";
+import { EventParsingParameters } from 'hooks/useEventProcessor';
+import useSeason from 'hooks/useSeason';
+import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
+import useAccount from './useAccount';
 
 export default function useEventParsingParams() {
   const account     = useAccount();

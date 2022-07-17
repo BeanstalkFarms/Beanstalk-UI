@@ -5,7 +5,6 @@ import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
 import { BEAN, BEAN_ETH_UNIV2_LP, ETH, PODS } from 'constants/tokens';
 import { SupportedChainId } from 'constants/chains';
-import { PodListingFilledEventObject, PodOrderFilledEventObject } from 'generated/Beanstalk/Beanstalk';
 import { Event } from 'lib/Beanstalk/EventProcessor';
 import TokenIcon from '../Common/TokenIcon';
 

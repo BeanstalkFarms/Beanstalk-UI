@@ -1,6 +1,5 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
-import { LocalStorageWrapper, persistCache, persistCacheSync } from 'apollo3-cache-persist';
-import { QuerySeasonsArgs, Season } from 'generated/graphql';
+import { LocalStorageWrapper, persistCacheSync } from 'apollo3-cache-persist';
 
 const seasonIntToIndex = (n: number) => n - 0;
 

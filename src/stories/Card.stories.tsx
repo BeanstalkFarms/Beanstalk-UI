@@ -1,6 +1,5 @@
 import React from 'react';
 import { Card, CardContent, Typography } from '@mui/material';
-import { Box } from '@mui/system';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 export default {

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { BEAN_TO_SEEDS, BEAN_TO_STALK, LP_TO_SEEDS, REPLANTED_CHAINS, ZERO_BN } from 'constants/index';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, SEEDS, STALK } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useChainId from 'hooks/useChain';
@@ -14,15 +14,14 @@ import EventProcessor from 'lib/Beanstalk/EventProcessor';
 import useWhitelist from 'hooks/useWhitelist';
 import useSeason from 'hooks/useSeason';
 import BigNumber from 'bignumber.js';
-import useEventProcessor, { EventParsingParameters } from 'hooks/useEventProcessor';
+import useEventProcessor from 'hooks/useEventProcessor';
 import { useGetChainConstant } from 'hooks/useChainConstant';
-import { AppState } from 'state';
 import { parseWithdrawals } from 'util/Crates';
+import useEventParsingParams from 'hooks/ledger/useEventParsingParams';
 import { DepositCrate } from '.';
 import { EventCacheName } from '../events2';
 import useEvents, { GetQueryFilters } from '../events2/updater';
 import { resetFarmerSilo, updateFarmerSiloBalances, UpdateFarmerSiloBalancesPayload, updateFarmerSiloRewards } from './actions';
-import useEventParsingParams from 'hooks/ledger/useEventParsingParams';
 
 export const useFetchFarmerSilo = () => {
   /// Helpers

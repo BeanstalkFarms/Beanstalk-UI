@@ -10,10 +10,10 @@ import EventProcessor from 'lib/Beanstalk/EventProcessor';
 import useWhitelist from 'hooks/useWhitelist';
 import useSeason from 'hooks/useSeason';
 import useEventProcessor from 'hooks/useEventProcessor';
+import useEventParsingParams from 'hooks/ledger/useEventParsingParams';
 import { EventCacheName } from '../events2';
 import useEvents, { GetQueryFilters } from '../events2/updater';
 import { updateFarmerField, resetFarmerField } from './actions';
-import useEventParsingParams from 'hooks/ledger/useEventParsingParams';
 
 export const useFetchFarmerField = () => {
   /// Helpers
@@ -70,13 +70,11 @@ export const useFetchFarmerField = () => {
   /// Handlers
   const fetch = useCallback(async () => {
     if (beanstalk && account && fetchFieldEvents && eventParsingParameters) {
-
       const allEvents = await fetchFieldEvents();
 
       if (!allEvents) return;
 
       if (REPLANTED_CHAINS.has(chainId)) {
-
         const p = new EventProcessor(account, { season, whitelist });
         p.ingestAll(allEvents);
 
@@ -84,7 +82,6 @@ export const useFetchFarmerField = () => {
         dispatch(updateFarmerField(
           p.parsePlots(eventParsingParameters.harvestableIndex)
         ));
-
       } else {
         const results = processFarmerEventsV1(allEvents, eventParsingParameters);
 
@@ -97,7 +94,6 @@ export const useFetchFarmerField = () => {
           harvestablePods:  results.harvestablePodBalance,
         }));
       }
-      
     }
   }, [
     dispatch,
