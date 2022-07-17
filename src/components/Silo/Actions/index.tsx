@@ -1,9 +1,10 @@
 import React from 'react';
-import { Badge, Box, Card, Stack, Tab, Tabs } from '@mui/material';
+import { Box, Card, Stack, Tab, Tabs } from '@mui/material';
 import { Pool } from 'classes';
 import { ERC20Token } from 'classes/Token';
 import { FarmerSiloBalance } from 'state/farmer/silo';
 import useTabs from 'hooks/display/useTabs';
+import BadgeTab from 'components/Common/BadgeTab';
 import Deposit from './Deposit';
 import Withdraw from './Withdraw';
 import Claim from './Claim';
@@ -35,8 +36,9 @@ const SiloActions : React.FC<{
             <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }} variant="scrollable">
               <Tab label="Deposit" />
               <Tab label="Withdraw" />
-              <Tab
-                label={hasClaimable ? <Badge color="primary" variant="dot">Claim</Badge> : 'Claim'}
+              <BadgeTab
+                showBadge={hasClaimable}
+                label="Claim"
                 sx={{ overflow: 'visible' }}
               />
               <Tab label="Send" />

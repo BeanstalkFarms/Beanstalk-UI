@@ -18,7 +18,6 @@ import { useSigner } from 'hooks/ledger/useSigner';
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from 'constants/tokens';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 import { UNRIPE_ASSET_TOOLTIPS } from 'constants/tooltips';
-import { getAccount } from 'util/Account';
 import { SupportedChainId, ZERO_BN } from 'constants/index';
 import Token from 'classes/Token';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
@@ -117,7 +116,7 @@ const PickBeansDialog: React.FC<{
 
   ///
   const chainId           = useChainId();
-  const { data: account } = useAccount();
+  const account           = useAccount();
   const { data: signer }  = useSigner();
   const getChainToken     = useGetChainToken();
 
@@ -131,13 +130,13 @@ const PickBeansDialog: React.FC<{
 
   useEffect(() => {
     (async () => {
-      if (account?.address && open) {
+      if (account && open) {
         const [
           _unripe,
           _merkles
         ] = await Promise.all([
-          fetch(`/.netlify/functions/unripe?account=${getAccount(account.address.toLowerCase())}`).then((response) => response.json()),
-          fetch(`/.netlify/functions/pick?account=${getAccount(account.address.toLowerCase())}`).then((response) => response.json())
+          fetch(`/.netlify/functions/unripe?account=${account}`).then((response) => response.json()),
+          fetch(`/.netlify/functions/pick?account=${account}`).then((response) => response.json())
         ]);
         setUnripe(_unripe);
         setMerkles(_merkles);
@@ -159,7 +158,7 @@ const PickBeansDialog: React.FC<{
   };
 
   ///
-  const handlePick = useCallback((deposit : boolean) => () => {
+  const handlePick = useCallback((isDeposit : boolean) => () => {
     if (!merkles) return;
 
     setPickStatus('picking');
@@ -172,9 +171,9 @@ const PickBeansDialog: React.FC<{
         uBean.address,
         merkles.bean.amount,
         merkles.bean.proof,
-        deposit ? FarmToMode.INTERNAL : FarmToMode.EXTERNAL,
+        isDeposit ? FarmToMode.INTERNAL : FarmToMode.EXTERNAL,
       ]));
-      if (deposit) {
+      if (isDeposit) {
         data.push(beanstalk.interface.encodeFunctionData('deposit', [
           uBean.address,
           merkles.bean.amount,
@@ -187,9 +186,9 @@ const PickBeansDialog: React.FC<{
         uBeanCRV3.address,
         merkles.bean3crv.amount,
         merkles.bean3crv.proof,
-        deposit ? FarmToMode.INTERNAL : FarmToMode.EXTERNAL,
+        isDeposit ? FarmToMode.INTERNAL : FarmToMode.EXTERNAL,
       ]));
-      if (deposit) {
+      if (isDeposit) {
         data.push(beanstalk.interface.encodeFunctionData('deposit', [
           uBeanCRV3.address,
           merkles.bean3crv.amount,
@@ -199,8 +198,8 @@ const PickBeansDialog: React.FC<{
     }
 
     const txToast = new TransactionToast({
-      loading: `Picking${deposit ? ' and depositing' : ''} Unripe Assets`,
-      success: `Pick${deposit ? ' and deposit' : ''} successful. You can find your Unripe Assets ${deposit ? 'in the Silo' : 'in your wallet'}.`,
+      loading: `Picking${isDeposit ? ' and depositing' : ''} Unripe Assets`,
+      success: `Pick${isDeposit ? ' and deposit' : ''} successful. You can find your Unripe Assets ${isDeposit ? 'in the Silo' : 'in your wallet'}.`,
     });
 
     beanstalk.farm(data)
