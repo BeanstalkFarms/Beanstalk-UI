@@ -8,7 +8,7 @@ import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import podIcon from 'img/beanstalk/pod-icon.svg';
 import BigNumber from 'bignumber.js';
 import { PodListing } from '../Plots.mock';
-import { displayBN, displayFullBN } from '../../../util';
+import { displayBN } from '../../../util';
 import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
 
 export type PlotListingCardProps = {

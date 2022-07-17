@@ -1,4 +1,4 @@
-import { Button, Stack, StackProps, Typography } from '@mui/material';
+import { StackProps } from '@mui/material';
 import React from 'react';
 import { StyledDialog, StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import PillRow from './PillRow';

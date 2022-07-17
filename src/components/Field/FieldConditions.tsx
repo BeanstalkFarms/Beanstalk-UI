@@ -1,11 +1,7 @@
 import React from 'react';
-import { Card, Grid, Link, Stack, Tooltip, Typography } from '@mui/material';
-import BigNumber from 'bignumber.js';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import podIcon from 'img/beanstalk/pod-icon.svg';
+import { Card, Grid, Stack, Tooltip, Typography } from '@mui/material';
 import { displayBN } from '../../util';
 import { AppState } from '../../state';
-import PodLineSection from './PodLineSection';
 
 export interface FieldConditionsProps {
   beanstalkField: AppState['_beanstalk']['field'];

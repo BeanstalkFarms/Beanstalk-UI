@@ -19,7 +19,7 @@ export default createReducer(initialState, (builder) =>
       state.humidity    = payload.humidity;
       state.totalRaised = payload.totalRaised;
       state.currentBpf  = payload.currentBpf;
-      state.endBpf      = payload.endBpf
+      state.endBpf      = payload.endBpf;
     })
     .addCase(setRemaining, (state, { payload }) => {
       state.remaining = payload;

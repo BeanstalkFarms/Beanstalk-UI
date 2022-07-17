@@ -1,8 +1,7 @@
 import React from 'react';
 import { Stack, Tooltip, Typography } from '@mui/material';
-import { BEAN, SPROUTS } from 'constants/tokens';
+import { SPROUTS } from 'constants/tokens';
 import TokenIcon from 'components/Common/TokenIcon';
-import { SupportedChainId } from 'constants/chains';
 import BigNumber from 'bignumber.js';
 import { displayBN, displayFullBN } from 'util/index';
 import humidityIcon from 'img/beanstalk/humidity-icon.svg';

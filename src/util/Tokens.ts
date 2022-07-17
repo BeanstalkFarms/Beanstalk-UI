@@ -1,8 +1,6 @@
 import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
-import { SupportedChainId } from 'constants/chains';
-import { ZERO_BN, ChainConstant } from 'constants/index';
-import { bigNumberResult } from './Ledger';
+import { ZERO_BN } from 'constants/index';
 
 // -------------------------
 // BigNumber Comparators

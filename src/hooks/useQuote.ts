@@ -1,7 +1,6 @@
 import { BigNumber } from 'bignumber.js';
-import Token, { ERC20Token, NativeToken } from 'classes/Token';
+import { ERC20Token, NativeToken } from 'classes/Token';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { toTokenUnitsBN } from 'util/Tokens';
 import debounce from 'lodash/debounce';
 import toast from 'react-hot-toast';
 import { ChainableFunctionResult } from 'lib/Beanstalk/Farm';

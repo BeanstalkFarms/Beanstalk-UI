@@ -8,7 +8,7 @@ export const resetBarn = createAction(
 
 export const updateBarn = createAction<Barn>(
   'beanstalk/barn/update'
-)
+);
 
 export const setRemaining = createAction<BigNumber>(
   'beanstalk/barn/setRemaining'

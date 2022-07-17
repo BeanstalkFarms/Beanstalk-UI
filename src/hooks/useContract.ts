@@ -1,4 +1,4 @@
-import { REPLANTED_CHAINS, SupportedChainId } from 'constants/chains';
+import { SupportedChainId } from 'constants/chains';
 import {
   Beanstalk,
   BeaNFTGenesis,

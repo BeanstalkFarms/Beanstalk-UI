@@ -12,7 +12,6 @@ import FieldWrapper from '../../Common/Form/FieldWrapper';
 import SliderField from '../../Common/Form/SliderField';
 import InputField from '../../Common/Form/InputField';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
-import beanIcon from '../../../img/tokens/bean-logo-circled.svg';
 import RadioCardField from '../../Common/Form/RadioCardField';
 import Warning from '../../Common/Form/Warning';
 import useToggle from '../../../hooks/display/useToggle';

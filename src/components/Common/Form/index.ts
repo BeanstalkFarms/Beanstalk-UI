@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import Token, { BeanstalkToken, ERC20Token, NativeToken } from 'classes/Token';
+import { ERC20Token, NativeToken } from 'classes/Token';
 import { ChainableFunctionResult } from 'lib/Beanstalk/Farm';
 
 export type FormState = {

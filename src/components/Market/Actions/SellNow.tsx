@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, Box, Button, Grid, InputAdornment, Stack, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Button, Grid, Stack } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import {
@@ -11,23 +11,19 @@ import {
 } from 'components/Common/Form';
 import { ZERO_BN } from 'constants/index';
 import { BEAN, ETH, PODS } from 'constants/tokens';
-import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import useChainId from 'hooks/useChain';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useChainConstant from 'hooks/useChainConstant';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { displayTokenAmount, MaxBN, MinBN } from 'util/index';
+import { MaxBN, MinBN } from 'util/index';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
 import SliderField from '../../Common/Form/SliderField';
-import InputField from '../../Common/Form/InputField';
-import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
-import podsIcon from '../../../img/beanstalk/pod-icon.svg';
 import useToggle from '../../../hooks/display/useToggle';
 import SelectPlotDialog from '../../Field/SelectPlotDialog';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
-import { PodListing, PodOrder } from '../Plots.mock';
+import { PodOrder } from '../Plots.mock';
 
 export type SellNowFormValues = {
   plotIndex: string | null;

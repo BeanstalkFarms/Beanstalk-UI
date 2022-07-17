@@ -7,7 +7,6 @@ import flattenDeep from 'lodash/flattenDeep';
 import { Event } from 'lib/Beanstalk/EventProcessor';
 import useEventCache from 'hooks/events/useEventCache';
 import useAccount from 'hooks/ledger/useAccount';
-import { getEventCacheId } from 'util/State';
 import { EventCacheName } from '.';
 import { ingestEvents } from './actions';
 

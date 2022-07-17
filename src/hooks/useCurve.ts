@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import curve, { initCurve } from 'util/Curve';
-import { useAccount, useProvider } from 'wagmi';
 import useChainId from './useChain';
 
 // class DebugProvider extends ethers.providers.ExternalProvider {

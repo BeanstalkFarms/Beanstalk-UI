@@ -1,7 +1,7 @@
-import { Accordion, AccordionDetails, Box, Grid, InputAdornment, Stack, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Grid, Stack } from '@mui/material';
 import AddressInputField from 'components/Common/Form/AddressInputField';
 import FieldWrapper from 'components/Common/Form/FieldWrapper';
-import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
@@ -22,8 +22,6 @@ import SliderField from '../../Common/Form/SliderField';
 import Warning from '../../Common/Form/Warning';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
-import InputField from '../../Common/Form/InputField';
-import podsIcon from '../../../img/beanstalk/pod-icon.svg';
 
 export type SendFormValues = {
   to: string | null;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, AlertTitle, Box, Link } from '@mui/material';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
-import { displayFullBN, displayUSD } from 'util/index';
+import { displayUSD } from 'util/index';
 import Stat from 'components/Common/Stat';
 import { useAccount } from 'wagmi';
 import BlurComponent from 'components/Common/BlurComponent';

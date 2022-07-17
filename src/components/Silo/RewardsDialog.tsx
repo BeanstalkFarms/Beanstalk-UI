@@ -1,10 +1,9 @@
 import { Box, Dialog, Stack } from '@mui/material';
-import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps, useFormikContext } from 'formik';
+import { Field, FieldProps, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useAccount, useProvider } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
 import { LoadingButton } from '@mui/lab';
-import { useSelector } from 'react-redux';
 import { ClaimRewardsAction } from 'lib/Beanstalk/Farm';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { BeanstalkReplanted } from 'generated/index';
@@ -19,7 +18,6 @@ import useTokenMap from 'hooks/useTokenMap';
 import { encodeCratesForEnroot } from 'util/Crates';
 import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
 import TransactionToast from '../Common/TxnToast';
-import { AppState } from '../../state';
 import DescriptionButton from '../Common/DescriptionButton';
 import RewardsBar, { RewardsBarProps } from './RewardsBar';
 

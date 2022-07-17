@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
-import { CircularProgress, Stack, TextFieldProps, Typography } from '@mui/material';
-import { Token } from 'classes';
-import { Field, FieldProps, useFormikContext } from 'formik';
+import { CircularProgress, Stack, Typography } from '@mui/material';
+import { useFormikContext } from 'formik';
 import TokenInputField, { TokenInputProps } from 'components/Common/Form/TokenInputField';
 import TokenAdornment from 'components/Common/Form/TokenAdornment';
 import BigNumber from 'bignumber.js';

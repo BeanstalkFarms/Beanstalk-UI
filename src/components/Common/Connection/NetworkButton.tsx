@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { useNetwork } from 'wagmi';
 import { Button, ButtonProps, Typography } from '@mui/material';
 import { SupportedChainId } from 'constants/chains';

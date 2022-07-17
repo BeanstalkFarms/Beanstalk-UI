@@ -5,8 +5,7 @@ import BigNumber from 'bignumber.js';
 import { useAccount, useProvider } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
 import { Token } from 'classes';
-import { BEAN, BEAN_CRV3_LP, PODS } from 'constants/tokens';
-import useChainConstant from 'hooks/useChainConstant';
+import { BEAN, BEAN_CRV3_LP } from 'constants/tokens';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
@@ -14,7 +13,6 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import { ActionType } from 'util/Actions';
 import usePools from 'hooks/usePools';
 import { ERC20Token } from 'classes/Token';
-import useSeason from 'hooks/useSeason';
 import {
   FormTokenState,
   TokenOutputField,
@@ -24,16 +22,15 @@ import {
   TxnSeparator
 } from 'components/Common/Form';
 import { BeanstalkReplanted } from 'generated/index';
-import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
+import Farm, { FarmToMode } from 'lib/Beanstalk/Farm';
 import useGetChainToken from 'hooks/useGetChainToken';
 import { ZERO_BN } from 'constants/index';
-import { displayBN, displayFullBN, displayTokenAmount, parseError, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
+import { displayBN, displayTokenAmount, parseError, toTokenUnitsBN } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
 import useToggle from 'hooks/display/useToggle';
 import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import PillRow from 'components/Common/Form/PillRow';
 import { useSelector } from 'react-redux';
-import { ethers } from 'ethers';
 import toast from 'react-hot-toast';
 import { AppState } from '../../../state';
 import { QuoteHandler } from '../../../hooks/useQuote';

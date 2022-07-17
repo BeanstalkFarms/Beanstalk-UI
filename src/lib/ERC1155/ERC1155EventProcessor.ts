@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { ethers } from 'ethers';
 import { TransferBatchEvent, TransferSingleEvent } from 'generated/Beanstalk/BeanstalkFertilizer';
-import { decimalBN, Event, tokenBN } from 'lib/Beanstalk/EventProcessor';
+import { decimalBN, Event } from 'lib/Beanstalk/EventProcessor';
 
 export default class ERC1155EventProcessor {
   static SUPPORTED_EVENTS = new Set([

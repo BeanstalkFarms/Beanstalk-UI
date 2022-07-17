@@ -10,7 +10,7 @@ import useMigrateCall from 'hooks/useMigrateCall';
 import { Beanstalk, BeanstalkReplanted } from 'generated/index';
 import { ZERO_BN } from 'constants/index';
 import BigNumber from 'bignumber.js';
-import { resetBarn, setRemaining, setTotalRaised, setHumidity, updateBarn } from './actions';
+import { resetBarn, updateBarn } from './actions';
 
 export const useBarn = () => {
   const dispatch        = useDispatch();

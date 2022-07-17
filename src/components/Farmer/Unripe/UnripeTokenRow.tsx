@@ -8,7 +8,7 @@ import greenBeanIcon from 'img/tokens/bean-logo-circled.svg';
 import { useTheme } from '@mui/material/styles';
 import { Token } from 'classes';
 import BigNumber from 'bignumber.js';
-import { displayBN, displayFullBN } from '../../../util';
+import { displayFullBN } from '../../../util';
 
 const UnripeTokenRow: React.FC<{
   name: string;

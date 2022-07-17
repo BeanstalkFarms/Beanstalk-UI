@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import {
   Box,
   Card,
@@ -12,15 +12,14 @@ import {
 } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import { useHumidityAtId, useHumidityFromId } from 'hooks/useHumidity';
+import { useHumidityAtId } from 'hooks/useHumidity';
 import { AppState } from 'state';
 import FertilizerItem from 'components/Barn/FertilizerItem';
 import { ZERO_BN } from 'constants/index';
 import { SPROUTS, FERTILIZED_SPROUTS } from 'constants/tokens';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { displayBN, displayFullBN } from 'util/Tokens';
+import { displayFullBN } from 'util/Tokens';
 import { MY_FERTILIZER } from 'components/Barn/FertilizerItemTooltips';
-import useFarmerTotalFertilizer from 'hooks/useFarmerTotalFertilizer';
 import useTabs from 'hooks/display/useTabs';
 import TokenIcon from '../Common/TokenIcon';
 
@@ -33,7 +32,7 @@ const MyFertilizer: React.FC = () => {
   /// Data
   const beanstalkBarn = useSelector<AppState, AppState['_beanstalk']['barn']>(
     (state) => state._beanstalk.barn
-  )
+  );
   const farmerBarn = useSelector<AppState, AppState['_farmer']['barn']>(
     (state) => state._farmer.barn
   );

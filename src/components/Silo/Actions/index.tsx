@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { Badge, Box, Card, Stack, Tab, Tabs } from '@mui/material';
 import { Pool } from 'classes';
 import { ERC20Token } from 'classes/Token';

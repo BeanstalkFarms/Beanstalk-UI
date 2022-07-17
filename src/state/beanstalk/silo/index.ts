@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { AddressMap, TokenMap } from '../../../constants';
+import { TokenMap } from '../../../constants';
 
 /**
  * A "Silo Balance" provides all information

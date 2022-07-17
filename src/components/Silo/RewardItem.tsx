@@ -1,4 +1,4 @@
-import { Typography, Tooltip, Box, Stack, CircularProgress } from '@mui/material';
+import { Typography, Tooltip, Box, Stack } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import React from 'react';
 import BigNumber from 'bignumber.js';

@@ -19,8 +19,20 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module'
   },
-  ignorePatterns: ["src/generated/**/*"],
-  plugins: ['react', 'react-hooks', '@typescript-eslint', 'jest'],
+  ignorePatterns: [
+    'src/components/v1/**/*',
+    'src/state/v1/**/*',
+    'src/util/v1/**/*',
+    'src/constants/v1/**/*',
+    'src/generated/**/*'
+  ],
+  plugins: [
+    'react',
+    'react-hooks',
+    '@typescript-eslint',
+    'jest',
+    'unused-imports',
+  ],
   extends: ['plugin:react/recommended', 'airbnb', 'plugin:storybook/recommended'],
   rules: {
     // -- Tree-shaking
@@ -28,6 +40,22 @@ module.exports = {
     'no-restricted-imports': ['error', {
       patterns: ['@mui/*/*/*', '!@mui/material/test-utils/*']
     }],
+
+    /// Automatically remove unused imports
+    /// https://github.com/sweepline/eslint-plugin-unused-imports#usage
+    '@typescript-eslint/no-unused-vars': 'off',
+    'no-unused-vars': 'off',
+    'unused-imports/no-unused-imports': 'error',
+    'unused-imports/no-unused-vars': [
+      'warn',
+      { 
+        vars: 'all',
+        varsIgnorePattern: '^_',
+        args: 'after-used',
+        argsIgnorePattern: '^_'
+      }
+    ],
+
     // -- Stylistic
     'react/no-unused-prop-types': 'warn',
     'arrow-parens': 'warn',
@@ -52,7 +80,7 @@ module.exports = {
     'keyword-spacing': 'warn',
     'jsx-a11y/anchor-is-valid': 0,
     'react/self-closing-comp': 'warn',
-    'react/jsx-no-duplicate-props': ['warn', { "ignoreCase": false }],
+    'react/jsx-no-duplicate-props': ['warn', { 'ignoreCase': false }],
     // 'comma-dangle': ['warn', {
     //   arrays: 'always-multiline',
     //   imports: 'always-multiline',
@@ -63,7 +91,7 @@ module.exports = {
     // -- Space efficiency
     'arrow-body-style': 'warn',
     'no-trailing-spaces': 0,
-    '@typescript-eslint/no-unused-vars': ['warn'],
+
     // -- Other (to categorize)
     'react/button-has-type': 0,
     'react/require-default-props': 0,
@@ -77,7 +105,6 @@ module.exports = {
     'no-use-before-define': 0,
     '@typescript-eslint/no-use-before-define': 'error',
     'import/prefer-default-export': 0,
-    'no-unused-vars': 0,
     'react/jsx-props-no-spreading': 0,
     'jsx-a11y/label-has-associated-control': 0,
     'consistent-return': 0,

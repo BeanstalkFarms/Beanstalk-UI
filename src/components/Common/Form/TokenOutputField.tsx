@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Stack, Typography } from '@mui/material';
+import { CircularProgress, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { Token } from 'classes';
 import React from 'react';

@@ -1,13 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Stack, Typography, CardProps, Box, Card, Divider, Tab, Tabs } from '@mui/material';
+import React, { useCallback, useState } from 'react';
+import { Stack, Typography, Box, Divider } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Stat from '../../../Common/Stat';
-import TokenIcon from '../../../Common/TokenIcon';
-import { BEAN } from '../../../../constants/tokens';
-import { SupportedChainId } from '../../../../constants';
 import { displayBN } from '../../../../util';
 import LineChart, { DataPoint } from '../../../Common/Charts/LineChart';
-import { mockPodRateData, mockTWAPData } from '../../../Common/Charts/LineChart.mock';
+import { mockPodRateData } from '../../../Common/Charts/LineChart.mock';
 import { BeanstalkPalette } from '../../../App/muiTheme';
 import TimeTabs from '../../../Common/Charts/TimeTabs';
 

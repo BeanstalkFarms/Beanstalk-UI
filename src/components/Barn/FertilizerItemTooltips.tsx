@@ -3,7 +3,6 @@ import BigNumber from 'bignumber.js';
 import { Stack, Typography } from '@mui/material';
 import { displayBN } from 'util/index';
 import { SPROUTS, FERTILIZED_SPROUTS } from 'constants/tokens';
-import { SupportedChainId } from 'constants/chains';
 import TokenIcon from '../Common/TokenIcon';
 
 export type FertilizerTooltip = {

@@ -27,9 +27,9 @@ import unripeBeanLogoUrl from 'img/tokens/unripe-bean-logo-circled.svg';
 import unripeBeanCrv3LogoUrl from 'img/tokens/unripe-lp-logo-circled.svg';
 
 // Other imports
-import Token, { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
+import { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
 import { SupportedChainId } from './chains';
-import { AddressMap, ChainConstant } from '.';
+import { ChainConstant } from '.';
 import { BEAN_CRV3_ADDRESSES, BEAN_LUSD_ADDRESSES, CRV3_ADDRESSES, DAI_ADDRESSES, LUSD_ADDRESSES, USDC_ADDRESSES, USDT_ADDRESSES, UNRIPE_BEAN_ADDRESSES, UNRIPE_BEAN_CRV3_ADDRESSES, BEAN_ADDRESSES } from './addresses';
 
 // ----------------------------------------
