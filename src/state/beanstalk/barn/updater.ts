@@ -10,15 +10,15 @@ import useMigrateCall from 'hooks/useMigrateCall';
 import { Beanstalk, BeanstalkReplanted } from 'generated/index';
 import { ZERO_BN } from 'constants/index';
 import BigNumber from 'bignumber.js';
-import { resetFertilizer, setRemaining, setTotalRaised, setHumidity } from './actions';
+import { resetBarn, setRemaining, setTotalRaised, setHumidity } from './actions';
 
-export const useFertilizer = () => {
-  const dispatch = useDispatch();
-  const beanstalk = useBeanstalkContract() as unknown as BeanstalkReplanted;
-  const [fertContract] = useBeanstalkFertilizerContract();
-  const [usdcContract] = useERC20Contract(USDC_ADDRESSES);
-  const custodian = useChainConstant(BARNRAISE_CUSTODIAN_ADDRESSES);
-  const migrate = useMigrateCall();
+export const useBarn = () => {
+  const dispatch        = useDispatch();
+  const beanstalk       = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const [fertContract]  = useBeanstalkFertilizerContract();
+  const [usdcContract]  = useERC20Contract(USDC_ADDRESSES);
+  const custodian       = useChainConstant(BARNRAISE_CUSTODIAN_ADDRESSES);
+  const migrate         = useMigrateCall();
 
   // Handlers
   const fetch = useCallback(async () => {
@@ -65,14 +65,14 @@ export const useFertilizer = () => {
     custodian
   ]); 
   const clear = useCallback(() => {
-    dispatch(resetFertilizer());
+    dispatch(resetBarn());
   }, [dispatch]);
 
   return [fetch, clear] as const;
 };
 
-const FertilizerUpdater = () => {
-  const [fetch, clear] = useFertilizer();
+const BarnUpdater = () => {
+  const [fetch, clear] = useBarn();
   const chainId = useChainId();
   
   useEffect(() => {
@@ -86,4 +86,4 @@ const FertilizerUpdater = () => {
   return null;
 };
 
-export default FertilizerUpdater;
+export default BarnUpdater;

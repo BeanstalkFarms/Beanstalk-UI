@@ -2,14 +2,14 @@ import { createAction } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
 
 export const setRemaining = createAction<BigNumber>(
-  'beanstalk/fertilizer/setRemaining'
+  'beanstalk/barn/setRemaining'
 );
 export const setTotalRaised = createAction<BigNumber>(
-  'beanstalk/fertilizer/setTotalRaised'
+  'beanstalk/barn/setTotalRaised'
 );
-export const resetFertilizer = createAction(
-  'beanstalk/fertilizer/reset'
+export const resetBarn = createAction(
+  'beanstalk/barn/reset'
 );
 export const setHumidity = createAction<BigNumber>(
-  'beanstalk/fertilizer/setHumidity'
+  'beanstalk/barn/setHumidity'
 );

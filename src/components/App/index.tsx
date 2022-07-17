@@ -14,7 +14,7 @@ import pageBackground from 'img/theme/bg-mainnet.png';
 import NavBar from 'components/Nav/NavBar';
 import PoolsUpdater from 'state/bean/pools/updater';
 import SunUpdater from 'state/beanstalk/sun/updater';
-import FertilizerUpdater from 'state/beanstalk/fertilizer/updater';
+import BarnUpdater from 'state/beanstalk/barn/updater';
 import SiloUpdater from 'state/beanstalk/silo/updater';
 import FarmerSiloUpdater from 'state/farmer/silo/updater';
 import FarmerEventsUpdater from 'state/farmer/events/updater';
@@ -98,7 +98,7 @@ export default function App() {
       {/* -----------------------
         * Beanstalk Updaters
         * ----------------------- */}
-      <FertilizerUpdater />
+      <BarnUpdater />
       <FieldUpdater />
       <SiloUpdater />
       <SunUpdater />
