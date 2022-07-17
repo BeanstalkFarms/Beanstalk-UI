@@ -4,9 +4,6 @@ import { apolloClient } from 'graph/client';
 import { DocumentNode, useLazyQuery } from '@apollo/client';
 
 const PAGE_SIZE = 1000;
-const WINDOWS = ['hr', 'day'] as const;
-const RANGES  = ['week', 'month', 'all'] as const;
-type Range = typeof RANGES[number];
 
 export enum SeasonAggregation {
   HOUR = 0,

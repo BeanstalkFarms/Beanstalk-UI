@@ -228,6 +228,7 @@ const Chop: React.FC<{}> = () => {
       txToast.success(receipt);
     } catch (err) {
       txToast ? txToast.error(err) : toast.error(parseError(err));
+      formActions.setSubmitting(false);
     }
   }, [account?.address, beanstalk, farmerBalances, urBean.address]);
 

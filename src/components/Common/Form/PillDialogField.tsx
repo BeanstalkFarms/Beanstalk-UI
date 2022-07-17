@@ -16,7 +16,6 @@ const PillDialogField : React.FC<{
   label,
   pill: selected,
   children,
-  ...props
 }) => (
   <>
     <StyledDialog open={isOpen} onClose={hide} transitionDuration={0}>
@@ -34,6 +33,6 @@ const PillDialogField : React.FC<{
       {selected}
     </PillRow>
   </>
-  );
+);
 
 export default PillDialogField;

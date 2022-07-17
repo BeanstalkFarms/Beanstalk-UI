@@ -59,7 +59,7 @@ const getY1 = (d: SeriesPoint<MockPastSiloData>) => d[1] / 100;
 export type StackedAreasProps = {
   width: number;
   height: number;
-  events?: boolean;
+  // events?: boolean;
   margin?: { top: number; right: number; bottom: number; left: number };
 };
 
@@ -67,7 +67,7 @@ const StackedAreaChart: React.FC<StackedAreasProps> = ({
   width,
   height,
   margin = { top: 0, right: 0, bottom: 0, left: 0 },
-  events = false,
+  // events = false,
 }) => {
   // bounds
   const yMax = height - margin.top - margin.bottom;
@@ -108,9 +108,7 @@ const StackedAreaChart: React.FC<StackedAreasProps> = ({
                   d={path(stack) || ''}
                   stroke="transparent"
                   fill={`${ALL_POOLS[SupportedChainId.MAINNET][`${stack.key}`.toLowerCase()]?.color}`}
-                  onClick={() => {
-                    if (events) alert(`${stack.key}`);
-                  }}
+                  onClick={() => {}}
                 />
               </>
             ))
@@ -123,10 +121,10 @@ const StackedAreaChart: React.FC<StackedAreasProps> = ({
 /**
  * Wrap the graph in a ParentSize handler.
  */
-const SimpleStackedAreaChart: React.FC<{}> = (props) => (
+const SimpleStackedAreaChart: React.FC<{}> = () => (
   <ParentSize debounceTime={10}>
     {({ width: visWidth, height: visHeight }) => (
-      <StackedAreaChart height={150} width={visWidth} />
+      <StackedAreaChart height={visHeight} width={visWidth} />
     )}
   </ParentSize>
 );

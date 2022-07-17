@@ -14,6 +14,7 @@ import { mockPodListingData } from '../../components/Market/Plots.mock';
 
 const ListingPage: React.FC = () => {
   // index of plot
+  // eslint-disable-next-line
   const { id } = useParams<{ id: string }>();
 
   return (

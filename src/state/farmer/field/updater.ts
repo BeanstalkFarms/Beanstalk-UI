@@ -3,7 +3,6 @@ import { REPLANTED_CHAINS } from 'constants/index';
 import { useDispatch } from 'react-redux';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useChainId from 'hooks/useChain';
-import useMigrateCall from 'hooks/useMigrateCall';
 import useBlocks from 'hooks/useBlocks';
 import useAccount from 'hooks/ledger/useAccount';
 import EventProcessor from 'lib/Beanstalk/EventProcessor';
@@ -21,7 +20,6 @@ export const useFetchFarmerField = () => {
 
   /// Contracts
   const beanstalk = useBeanstalkContract();
-  const migrate   = useMigrateCall();
 
   /// Data
   const account   = useAccount();

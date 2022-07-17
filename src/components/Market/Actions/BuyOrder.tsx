@@ -192,6 +192,7 @@ const BuyOrder : React.FC<{}> = () => {
     (state) => state._beanstalk.field
   );
   
+  // eslint-disable-next-line unused-imports/no-unused-vars
   const onSubmit = useCallback((values: BuyOrderFormValues, formActions: FormikHelpers<BuyOrderFormValues>) => {
     Promise.resolve();
   }, []);

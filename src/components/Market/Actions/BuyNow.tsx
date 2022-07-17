@@ -163,6 +163,7 @@ const BuyNow : React.FC<{podListing: PodListing}> = ({ podListing }) => {
     ],
   }), [Eth]);
 
+  // eslint-disable-next-line unused-imports/no-unused-vars
   const onSubmit = useCallback((values: BuyNowFormValues, formActions: FormikHelpers<BuyNowFormValues>) => {
     Promise.resolve();
   }, []);

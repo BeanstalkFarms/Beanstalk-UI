@@ -1,4 +1,5 @@
-import { EventCacheName } from 'state/farmer/events2';
+import { ethers } from 'ethers';
+import { EventCacheName, FarmerEvents } from 'state/farmer/events2';
 
 export const loadState = () => {
   try {
@@ -28,3 +29,27 @@ export const getEventCacheId = (
   account: string,
   cacheId: EventCacheName
 ) => `${chainId}-${account.toLowerCase()}-${cacheId}`;
+
+export const rehydrateEvents2 = (events2: FarmerEvents | undefined) => {
+  try {
+    if (!events2) return;
+    const cache = { ...events2 };
+    Object.keys(cache).forEach((key) => {
+      if (cache[key].events?.length > 0) {
+        cache[key].events = cache[key].events.map((event) => ({
+            ...event,
+            args: event.args?.map((arg: any) => {
+              if (typeof arg === 'object' && arg.type === 'BigNumber') {
+                return ethers.BigNumber.from(arg.hex);
+              }
+              return arg;
+            }) || [],
+          }));
+      }
+    });
+    return cache;
+  } catch (err) {
+    console.error(err);
+    return {}; //
+  }
+};

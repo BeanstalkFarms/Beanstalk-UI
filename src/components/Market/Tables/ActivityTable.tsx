@@ -6,10 +6,10 @@ import { tableStyle } from '../../Common/Table/styles';
 const MAX_ROWS = 10;
 
 export type ActivityTableProps = {
-  hideHeader?: boolean;
+  // hideHeader?: boolean;
 }
 
-const ActivityTable: React.FC<ActivityTableProps & DataGridProps & BoxProps> = ({ rows, columns, hideHeader }) => {
+const ActivityTable: React.FC<ActivityTableProps & DataGridProps & BoxProps> = ({ rows, columns }) => {
   const tableHeight = useMemo(() => {
     if (!rows || rows.length === 0) return '200px';
     return Math.min(rows.length, MAX_ROWS) * 35 + 112;

@@ -1,8 +1,6 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { LocalStorageWrapper, persistCacheSync } from 'apollo3-cache-persist';
 
-const seasonIntToIndex = (n: number) => n - 0;
-
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {

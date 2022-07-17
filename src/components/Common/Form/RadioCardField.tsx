@@ -24,7 +24,6 @@ const RadioCardField: React.FC<(
   options,
   // Styling
   direction,
-  sx,
   xs = 12,
   md = 6,
   spacing = 1,

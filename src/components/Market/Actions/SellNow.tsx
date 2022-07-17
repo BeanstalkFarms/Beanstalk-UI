@@ -1,6 +1,5 @@
 import { Accordion, AccordionDetails, Box, Button, Grid, Stack } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { ERC20Token, NativeToken } from 'classes/Token';
 import {
   SettingInput,
   TokenAdornment,
@@ -34,14 +33,12 @@ export type SellNowFormValues = {
 
 const SellNowForm: React.FC<FormikProps<SellNowFormValues>
   & {
-  token: ERC20Token | NativeToken;
-  podOrder: PodOrder;
-}> = ({
+    podOrder: PodOrder;
+  }
+> = ({
   values,
   setFieldValue,
   podOrder,
-  //
-  token: depositToken, // BEAN
 }) => {
   const [dialogOpen, showDialog, hideDialog] = useToggle();
 
@@ -214,6 +211,7 @@ const SellNow: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
     amount: null
   }), [Eth]);
 
+  // eslint-disable-next-line unused-imports/no-unused-vars
   const onSubmit = useCallback((values: SellNowFormValues, formActions: FormikHelpers<SellNowFormValues>) => {
     Promise.resolve();
   }, []);
@@ -230,7 +228,6 @@ const SellNow: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
           </TxnSettings>
           <SellNowForm
             podOrder={podOrder}
-            token={BEAN[1]}
             {...formikProps}
           />
         </>

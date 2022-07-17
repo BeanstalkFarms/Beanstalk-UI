@@ -5,7 +5,6 @@ import { grey } from '@mui/material/colors';
 import { useTheme } from '@mui/material/styles';
 import { SWITCH_NETWORK_ERRORS } from 'constants/wallets';
 import { SupportedChainId, TESTNET_RPC_ADDRESSES } from 'constants/chains';
-import { useGetChainConstant } from 'hooks/useChainConstant';
 import { ETH } from 'constants/tokens';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 
@@ -16,7 +15,6 @@ const NetworkDialog: React.FC<{
   open,
   handleClose
 }) => {
-  const getChainConstant = useGetChainConstant();
   const { activeChain, chains, error, pendingChainId, switchNetwork } = useNetwork({
     onSettled(data, err) {
       if (!err) {

@@ -184,7 +184,7 @@ const parseBNJS = (_o: { [key: string]: any }) => {
 
 // ----------------------------------------
 
-const useFarmerEvents = () => {
+export const useFarmerEvents = () => {
   const blocks    = useBlocks();
   const dispatch  = useDispatch();
   const beanstalk = useBeanstalkContract();

@@ -11,7 +11,6 @@ export type AmountRaisedProps = {
 
 const AmountRaisedCard: React.FC<AmountRaisedProps> =
   ({
-     children,
      totalRaised
    }) => {
     const startingAmount = new BigNumber(77000000);

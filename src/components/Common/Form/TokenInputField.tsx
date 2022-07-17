@@ -62,7 +62,7 @@ const TokenInput: React.FC<TokenInputProps
   /// Formik props
   field,
   form,
-  meta,
+  // meta,
   /// TextField props
   handleChange: _handleChange,
   placeholder,

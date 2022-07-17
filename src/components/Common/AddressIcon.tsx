@@ -12,8 +12,6 @@ const AddressIcon : React.FC<BoxProps & {
 }> = ({
   size = 25,
   address,
-  sx,
-  ...props
 }) => {
   const { data: account } = useAccount();
   const addr = address || account?.address || FALLBACK_ADDRESS;

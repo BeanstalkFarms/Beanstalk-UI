@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, Divider, Link, Stack, Tooltip, Typography } from '@mui/material';
 import { displayBN, toTokenUnitsBN } from 'util/index';
 import BigNumber from 'bignumber.js';
@@ -38,7 +38,7 @@ const TokenDisplay: React.FC<{
 );
 
 const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
-  const [expanded, setExpanded] = useState(false);
+  // const [expanded, setExpanded] = useState(false);
   let eventTitle = `${event.event}`;
   let amountIn;
   let amountOut;

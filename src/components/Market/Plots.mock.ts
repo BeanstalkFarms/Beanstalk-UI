@@ -22,7 +22,7 @@ export const mockPodListingData: PodListing[] = new Array(20).fill(null).map((_,
  * Follows PodOrder format at:
  * /src/state/v1/marketplace/reducer.ts
 */
-export const mockPodOrderData: PodOrder[] = new Array(20).fill(null).map((_, i) => ({
+export const mockPodOrderData: PodOrder[] = new Array(20).fill(null).map(() => ({
   account: '0X123456789101112131415',
   id: '123456789',
   pricePerPod: new BigNumber(Math.random()),

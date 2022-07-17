@@ -284,7 +284,8 @@ const Deposit : React.FC<{
         if (!pool) throw new Error(`Depositing to ${tokenOut.symbol} but no corresponding pool data found.`);
         
         // This is a Curve MetaPool...
-        if (/* pool is Curve MetaPool */true) {
+        const isMetapool = true;
+        if (isMetapool) {
           // ...and we're depositing one of the underlying pool tokens.
           // Ex. for BEAN:3CRV this could be [BEAN, (DAI, USDC, USDT)].
           // pool.tokens      = [BEAN, CRV3]

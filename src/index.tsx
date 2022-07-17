@@ -11,7 +11,7 @@ import BigNumber from 'bignumber.js';
 import reportWebVitals from './reportWebVitals';
 
 // @ts-ignore
-BigNumber.prototype.toJSON = function () {
+BigNumber.prototype.toJSON = function toJSON() {
   return {
     type: 'BigNumber.js',
     // bignumber can rehydrate hex numbers with decimals

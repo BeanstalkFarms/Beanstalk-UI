@@ -8,7 +8,7 @@ export type SendFormValues = {
   to?: string;
 }
 
-const SendForm : React.FC<FormikProps<SendFormValues>> = (props) => (
+const SendForm : React.FC<FormikProps<SendFormValues>> = () => (
   <Form autoComplete="off">
     <Stack gap={1}>
       <FieldWrapper label="Send Deposits to">

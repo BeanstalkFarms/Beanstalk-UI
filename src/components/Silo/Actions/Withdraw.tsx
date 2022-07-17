@@ -92,7 +92,7 @@ const WithdrawForm : React.FC<
       setAllowConfirm(true);
     }, CONFIRM_DELAY);
   }, []);
-  const onSubmit = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+  const onSubmit = useCallback(() => {
     submitForm();
     onClose();
   }, [onClose, submitForm]);

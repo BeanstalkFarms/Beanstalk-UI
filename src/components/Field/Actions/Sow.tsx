@@ -20,7 +20,6 @@ import { BEAN, ETH, PODS, WETH } from 'constants/tokens';
 import { ethers } from 'ethers';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useToggle from 'hooks/display/useToggle';
-import useChainId from 'hooks/useChain';
 import useChainConstant from 'hooks/useChainConstant';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useFarmerBalances from 'hooks/useFarmerBalances';
@@ -61,8 +60,6 @@ const SowForm : React.FC<
   weather,
   farm,
 }) => {
-  const chainId = useChainId();
-  // TODO: constrain this when siloToken = Unripe
   const erc20TokenMap = useTokenMap<ERC20Token | NativeToken>([BEAN, ETH, WETH]);
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
   const getChainToken = useGetChainToken();
