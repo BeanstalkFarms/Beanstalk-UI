@@ -19,7 +19,7 @@ import FolderMenu from '../FolderMenu';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import SeasonCard from '../SeasonCard';
 
-const mockSunData = new Array(20).fill(null).map((_, i) => ({
+const mockSunData = new Array(20).fill(null).map(() => ({
   season: new BigNumber(5000 * Math.random()),
   newBeans: new BigNumber(100000 * Math.random()),
   newSoil: new BigNumber(1000 * Math.random()),

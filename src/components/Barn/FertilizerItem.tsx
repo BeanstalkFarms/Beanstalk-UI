@@ -60,7 +60,7 @@ const FertilizerItem: React.FC<FertilizerData & {
   humidity,
   remaining,
   progress,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line unused-imports/no-unused-vars
   season,
   //
   tooltip,

@@ -69,26 +69,26 @@ function AnimatedPie<Datum>({
     leave: animate ? fromLeaveTransition : enterUpdateTransition,
     keys: getKey,
   });
-  return transitions((props, arc, { key }) => {
-    const [centroidX, centroidY] = path.centroid(arc);
-    const hasSpaceForLabel = arc.endAngle - arc.startAngle >= 0.1;
-
-    return (
-      <g key={key}>
-        <animated.path
+  return transitions((props, arc, { key }) => 
+    // const [centroidX, centroidY] = path.centroid(arc);
+    // const hasSpaceForLabel = arc.endAngle - arc.startAngle >= 0.1;
+    // eslint-disable-next-line arrow-body-style
+     (
+       <g key={key}>
+         <animated.path
           // compute interpolated path d attribute from intermediate angle values
-          d={interpolate([props.startAngle, props.endAngle], (startAngle, endAngle) =>
+           d={interpolate([props.startAngle, props.endAngle], (startAngle, endAngle) =>
             path({
               ...arc,
               startAngle,
               endAngle,
             }),
           )}
-          fill={getColor(arc)}
-          onClick={() => onClickDatum(arc)}
-          onTouchStart={() => onClickDatum(arc)}
+           fill={getColor(arc)}
+           onClick={() => onClickDatum(arc)}
+           onTouchStart={() => onClickDatum(arc)}
         />
-        {/* {hasSpaceForLabel && (
+         {/* {hasSpaceForLabel && (
           <animated.g style={{ opacity: props.opacity }}>
             <text
               fill="#333"
@@ -105,9 +105,9 @@ function AnimatedPie<Datum>({
             </text>
           </animated.g>
         )} */}
-      </g>
-    );
-  });
+       </g>
+    )
+  );
 }
 
 // ------------------------------------------------------

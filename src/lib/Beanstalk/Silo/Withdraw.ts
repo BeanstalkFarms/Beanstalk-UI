@@ -1,7 +1,7 @@
 import { Token } from 'classes';
 import { FormState } from 'components/Common/Form';
 // import { Action, ActionType } from 'util/Actions';
-import { DepositCrate, WithdrawalCrate } from 'state/farmer/silo';
+import { DepositCrate } from 'state/farmer/silo';
 import BigNumber from 'bignumber.js';
 import { _sortCratesBySeason } from './Utils';
 
@@ -69,13 +69,13 @@ export function _selectCratesToWithdraw(
   };
 }
 
-export function _selectCratesToClaim(
+/* export function _selectCratesToClaim(
   amount: BigNumber,
   withdrawnCrates: WithdrawalCrate[],
   currentSeason: BigNumber,
 ) {
   const sortedCrates = _sortCratesBySeason<WithdrawalCrate>(withdrawnCrates);
-}
+} */
 
 /**
  * Summarize the Actions that will occur when making a Withdrawal.

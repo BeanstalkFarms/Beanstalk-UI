@@ -27,7 +27,6 @@ export const useBarn = () => {
       const [
         remaining,
         totalRaised,
-        fundedPercent,
         humidity,
         currentBpf,
         endBpf,
@@ -41,11 +40,6 @@ export const useBarn = () => {
         migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
           () => usdcContract.balanceOf(custodian).then(tokenResult(USDC)),
           () => Promise.resolve(ZERO_BN), // not possible after Replant
-        ]),
-        // 
-        migrate(beanstalk, [
-          () => Promise.resolve(ZERO_BN),
-          () => Promise.resolve(ZERO_BN),
         ]),
         // Humidity
         migrate(beanstalk, [

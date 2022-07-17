@@ -226,7 +226,8 @@ const NFTPage: React.FC = () => {
             {tab === 0 && (
               <NFTGrid
                 nfts={genesisNFTs}
-                handleDialogOpen={handleDialogOpen} />
+                handleDialogOpen={handleDialogOpen}
+              />
             )}
             {/* winter */}
             {tab === 1 && (

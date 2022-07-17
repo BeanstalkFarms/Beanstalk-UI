@@ -1,17 +1,31 @@
+# Filesystem
 .DS_Store
+
+# Build files
+src/generated
 build
-node_modules/
-node_modules_pre/
-node_modules_post/
-package-lock.json
-yarn-error.log
-.idea/
-stats.json
+
+# Environment
 .env.local
 
-# Ignore generated Typechain files.
-src/generated
-
+# Editors
 .vscode/
+.idea/
+stats.json
 
+# Netlify
 .netlify/
+
+# Packages
+node_modules/
+package-lock.json
+yarn-error.log
+
+# Yarn v2
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

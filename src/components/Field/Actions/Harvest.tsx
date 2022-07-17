@@ -23,7 +23,6 @@ import {
 } from 'components/Common/Form';
 import { BeanstalkReplanted } from 'generated/index';
 import Farm, { FarmToMode } from 'lib/Beanstalk/Farm';
-import useGetChainToken from 'hooks/useGetChainToken';
 import { ZERO_BN } from 'constants/index';
 import { displayBN, displayTokenAmount, parseError, toTokenUnitsBN } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
@@ -57,6 +56,7 @@ const HarvestForm : React.FC<
   // Custom
   token,
   harvestablePods,
+  // eslint-disable-next-line
   farm,
   // Formik
   values,
@@ -66,7 +66,6 @@ const HarvestForm : React.FC<
   const chainId = useChainId();
   const pools = usePools();
   const isMainnet = chainId === SupportedChainId.MAINNET;
-  const getChainToken = useGetChainToken();
 
   // ASSUMPTION: Pool address === LP Token address
   // Lazy way to do this. Should key pools by lpToken.address.
@@ -166,7 +165,6 @@ const HarvestForm : React.FC<
             />
           </Stack>
           {/* Transaction Details */}
-
           <>
             <TxnSeparator mt={-1} />
             <TokenOutputField
@@ -252,6 +250,7 @@ const Harvest : React.FC<{}> = () => {
       txToast.success(receipt);
     } catch (err) {
       txToast ? txToast.error(err) : toast.error(parseError(err));
+      formActions.setSubmitting(false);
     }
   }, [account?.address, beanstalk, farmerField.harvestablePlots, farmerField.harvestablePods]);
 

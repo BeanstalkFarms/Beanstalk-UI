@@ -12,6 +12,7 @@ export type RewardItemProps = {
   /** If isClaimable === false, grey out the RewardItem. */
   isClaimable?: boolean;
   /** */
+  // eslint-disable-next-line
   compact?: boolean;
 }
 

@@ -556,7 +556,7 @@ export default class EventProcessor {
   }
 
   RemoveWithdrawals(event: Simplify<RemoveWithdrawalsEvent>) {
-    event.args.seasons.forEach((seasonNum, index) => {
+    event.args.seasons.forEach((seasonNum) => {
       this._removeWithdrawal(
         seasonNum.toString(),
         event.args.token.toLowerCase(),

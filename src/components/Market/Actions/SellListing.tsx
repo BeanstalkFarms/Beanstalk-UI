@@ -252,6 +252,7 @@ const SellListing: React.FC<{}> = () => {
     plotIndex: null,
   }), []);
 
+  // eslint-disable-next-line unused-imports/no-unused-vars
   const onSubmit = useCallback((values: SellListingFormValues, formActions: FormikHelpers<SellListingFormValues>) => {
     console.log('CARD: ', values.option);
     Promise.resolve();

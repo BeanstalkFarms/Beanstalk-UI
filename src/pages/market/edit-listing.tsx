@@ -15,6 +15,7 @@ import CancelButton from '../../components/Common/CancelButton';
 
 const EditListingPage: React.FC = () => {
   // index of plot
+  // eslint-disable-next-line
   const { id } = useParams<{ id: string }>();
   const { data: account } = useAccount();
 

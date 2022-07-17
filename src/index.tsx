@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Theme } from '@mui/material/styles';
-import { setUseWhatChange } from '@simbathesailor/use-what-changed';
 
 import App from 'components/App';
 import Wrapper from 'components/App/Wrapper';
@@ -11,7 +10,7 @@ import BigNumber from 'bignumber.js';
 import reportWebVitals from './reportWebVitals';
 
 // @ts-ignore
-BigNumber.prototype.toJSON = function () {
+BigNumber.prototype.toJSON = function toJSON() {
   return {
     type: 'BigNumber.js',
     // bignumber can rehydrate hex numbers with decimals
@@ -19,9 +18,6 @@ BigNumber.prototype.toJSON = function () {
     hex: `0x${this.toString(16)}` 
   };
 };
-
-// Debug
-setUseWhatChange(process.env.NODE_ENV === 'development');
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface

@@ -1,13 +1,12 @@
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import React from 'react';
-import fertUnusedImage from 'img/tokens/fert-logo-unused.svg';
-import fertActiveImage from 'img/tokens/fert-logo-active.svg';
-import fertUsedImage   from 'img/tokens/fert-logo-used.svg';
-import { BeanstalkPalette } from '../App/muiTheme';
-
-import './FertilizerImage.css';
 import BigNumber from 'bignumber.js';
+import fertActiveImage from 'img/tokens/fert-logo-active.svg';
+import fertUnusedImage from 'img/tokens/fert-logo-unused.svg';
+import fertUsedImage from 'img/tokens/fert-logo-used.svg';
+import React from 'react';
+import { BeanstalkPalette } from '../App/muiTheme';
+import './FertilizerImage.css';
 
 export type FertilizerState = 'unused' | 'active' | 'used'
 export const FERTILIZER_ICONS : { [key in FertilizerState]: string } = {

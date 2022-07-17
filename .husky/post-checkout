@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+yarn run generate
+
+# ABIS_CHANGED=`git diff $1 $2 --stat -- $GIT_DIR/../src/constants/abi/**/*.json | wc -l`
+# if [ $ABIS_CHANGED -gt 0 ];
+# then
+#     echo "ABIs have changed!"
+# fi

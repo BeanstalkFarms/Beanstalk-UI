@@ -53,9 +53,6 @@ const getY = (d: DateValue) => d.value;
 const bisectDate = bisector<DataPoint, Date>(
   (d) => d.date
 ).left;
-const bisectValue = bisector<DataPoint, number>(
-  (d) => d.value
-).left;
 
 // ------------------------
 //        Plot Sizing
@@ -98,7 +95,7 @@ export const backgroundColor = '#da7cff';
 export const labelColor = '#340098';
 const axisColor      = BeanstalkPalette.lightishGrey;
 const tickLabelColor = BeanstalkPalette.lightishGrey;
-const gridColor = '#6e0fca';
+// const gridColor = '#6e0fca';
 const tickLabelProps = () => ({
   fill: tickLabelColor,
   fontSize: 12,
@@ -143,7 +140,7 @@ const Graph: React.FC<GraphProps> = ({
    *  "domain" = values shown on the graph (dates, numbers)
    *  "range"  = pixel values
    */
-  const scales = useMemo(() => series.map((_data, index) => {
+  const scales = useMemo(() => series.map((_data) => {
     const xScale = scaleTime<number>({
       domain: extent(_data, getX) as [Date, Date],
     });
@@ -271,7 +268,7 @@ const Graph: React.FC<GraphProps> = ({
             key="axis"
             orientation={Orientation.bottom}
             scale={scales[0].xScale}
-            tickFormat={(v: any, i: number) => `${(v as Date).getMonth() + 1}/${(v as Date).getDate()}`}
+            tickFormat={(v: any) => `${(v as Date).getMonth() + 1}/${(v as Date).getDate()}`}
             stroke={axisColor}
             tickStroke={axisColor}
             tickLabelProps={tickLabelProps}

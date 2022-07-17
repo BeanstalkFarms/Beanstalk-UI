@@ -17,6 +17,7 @@ import { getAccount } from '../../util/Account';
 
 const EditOrderPage: React.FC = () => {
   // index of plot
+  // eslint-disable-next-line
   const { id } = useParams<{ id: string }>();
   const { data: account } = useAccount();
 

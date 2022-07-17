@@ -1,3 +1,4 @@
+/** @type {import('eslint').Linter.Config} */
 module.exports = {
   env: {
     browser: true,
@@ -33,7 +34,11 @@ module.exports = {
     'jest',
     'unused-imports',
   ],
-  extends: ['plugin:react/recommended', 'airbnb', 'plugin:storybook/recommended'],
+  extends: [
+    'plugin:react/recommended',
+    'airbnb',
+    'plugin:storybook/recommended'
+  ],
   rules: {
     // -- Tree-shaking
     // https://mui.com/material-ui/guides/minimizing-bundle-size/#option-1
@@ -80,7 +85,7 @@ module.exports = {
     'keyword-spacing': 'warn',
     'jsx-a11y/anchor-is-valid': 0,
     'react/self-closing-comp': 'warn',
-    'react/jsx-no-duplicate-props': ['warn', { 'ignoreCase': false }],
+    'react/jsx-no-duplicate-props': ['warn', { ignoreCase: false }],
     // 'comma-dangle': ['warn', {
     //   arrays: 'always-multiline',
     //   imports: 'always-multiline',
@@ -153,5 +158,15 @@ module.exports = {
     'import/resolver': {
       typescript: {}
     }
-  }
+  },
+  overrides: [
+    {
+      files: [
+        '**/*.stories.*'
+      ],
+      rules: {
+        'import/no-anonymous-default-export': 'off'
+      }
+    }
+  ],
 };

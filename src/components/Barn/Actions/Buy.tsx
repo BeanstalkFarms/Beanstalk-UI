@@ -191,7 +191,6 @@ const Buy : React.FC<{}> = () => {
   const farm = useMemo(() => new Farm(provider), [provider]);
 
   // Constants
-  const Bean = getChainConstant(BEAN, chainId);
   const Usdc = getChainConstant(USDC, chainId);
   const Eth  = getChainConstant(ETH,  chainId);
   const Weth = getChainConstant(WETH, chainId);

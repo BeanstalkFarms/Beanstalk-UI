@@ -26,7 +26,6 @@
     "formik": "^2.2.9",
     "graphql": "^16.5.0",
     "luxon": "^2.4.0",
-    "netlify-cli": "^10.5.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hot-toast": "^2.2.0",
@@ -46,7 +45,6 @@
     "@graphql-codegen/typescript": "2.6.0",
     "@graphql-codegen/typescript-operations": "^2.4.3",
     "@graphql-codegen/typescript-react-apollo": "3.2.17",
-    "@simbathesailor/use-what-changed": "^2.0.0",
     "@storybook/addon-actions": "^6.5.0",
     "@storybook/addon-essentials": "^6.5.0",
     "@storybook/addon-interactions": "^6.5.0",
@@ -90,8 +88,9 @@
     "eslint-plugin-react-hooks": "4.2.0",
     "eslint-plugin-storybook": "^0.5.12",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "husky": "^6.0.0",
+    "husky": "^8.0.0",
     "lint-staged": "^11.0.0",
+    "netlify-cli": "^10.10.0",
     "prettier": "^2.3.0",
     "react-app-rewired": "^2.2.1",
     "react-error-overlay": "6.0.9",
@@ -111,44 +110,20 @@
     "build-fleek": "REACT_APP_NAME=$npm_package_name REACT_APP_VERSION=$npm_package_version REACT_APP_HOST='fleek' REACT_APP_GIT_COMMIT_REF=$(git rev-parse HEAD) yarn build",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "test": "react-scripts test",
-    "eject": "react-scripts-rewired eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
     "format": "prettier --write \"**/*.{ts,tsx,json,md,js}\"",
     "lint": "eslint \"src/**/**/*.ts{,x}\"",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
     "generate": "yarn generate:typechain && yarn generate:graphql",
     "generate:typechain": "typechain --target=ethers-v5 --ts-nocheck --out-dir=./src/generated './src/constants/abi/**/*.json'",
-    "generate:graphql": "graphql-codegen --config codegen.yml"
-  },
-  "lint-staged": {
-    "*.{ts,tsx,json}": "prettier --write"
+    "generate:graphql": "graphql-codegen --config codegen.yml",
+    "postpack": "yarn generate",
+    "postinstall": "husky install"
   },
   "engines": {
     "node": ">=14"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ],
-    "overrides": [
-      {
-        "files": [
-          "**/*.stories.*"
-        ],
-        "rules": {
-          "import/no-anonymous-default-export": "off"
-        }
-      }
-    ]
-  },
+  "packageManager": "yarn@3.2.1",
   "browserslist": {
     "production": [
       ">0.2%",

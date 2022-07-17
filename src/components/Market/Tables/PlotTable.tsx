@@ -71,7 +71,7 @@ const marketplaceTableStyle = {
 const MAX_ROWS = 5;
 
 export type BuySellTableProps = {
-  hideHeader?: boolean;
+  // hideHeader?: boolean;
   maxRows?: number;
 }
 

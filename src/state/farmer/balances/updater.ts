@@ -11,7 +11,6 @@ import useMigrateCall from 'hooks/useMigrateCall';
 import useTokenMap from 'hooks/useTokenMap';
 import { getAccount, tokenResult } from 'util/index';
 import useChainConstant from 'hooks/useChainConstant';
-import useMulticall from 'hooks/useMulticall';
 import { clearBalances, updateBalances } from './actions';
 
 // -- Hooks
@@ -28,7 +27,6 @@ export const useFetchFarmerBalances = () => {
   // Contracts
   const beanstalk = useBeanstalkContract();
   const migrate   = useMigrateCall();
-  const [multiCall, wrap] = useMulticall();
 
   // Handlers
   // FIXME: make this callback accept a tokens array to prevent reloading all balances on every call

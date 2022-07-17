@@ -26,7 +26,7 @@ import useChainId from './useChain';
 
 export default function useCurve() {
   const [_curve, setCurve] = useState<typeof curve | null>(null);
-  const [initializing, setInitializing] = useState(false);
+  const [initializing] = useState(false);
   const chainId = useChainId();
   
   useEffect(() => {

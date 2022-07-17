@@ -1,11 +1,12 @@
 import React from 'react';
 import { Card, CircularProgress, Grid, Stack, Typography } from '@mui/material';
 import { Box } from '@mui/system';
+import { Nft } from 'util/BeaNFTs';
 import NFTDetails from './NFTDetails';
 import { BeanstalkPalette } from '../App/muiTheme';
 
 export interface NFTGridProps {
-  nfts: any[] | null;
+  nfts: Nft[] | null;
   handleDialogOpen: any;
 }
 
@@ -30,8 +31,8 @@ const NFTGrid: React.FC<NFTGridProps> = ({
           </Box>
         ) : (
           <Grid container spacing={3} sx={{ px: 3 }}>
-            {nfts.map((nft, i) => (
-              <Grid item md={4} xs={12}>
+            {nfts.map((nft) => (
+              <Grid key={nft.id} item md={4} xs={12}>
                 <Card
                   onClick={() => handleDialogOpen(nft)}
                   sx={{

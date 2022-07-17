@@ -5,8 +5,6 @@ import BigNumber from 'bignumber.js';
 import { useProvider } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
 import { Token } from 'classes';
-import { BEAN } from 'constants/tokens';
-import useChainConstant from 'hooks/useChainConstant';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
@@ -15,11 +13,9 @@ import { FarmerSiloBalance } from 'state/farmer/silo';
 import { ActionType } from 'util/Actions';
 import usePools from 'hooks/usePools';
 import { ERC20Token } from 'classes/Token';
-import useSeason from 'hooks/useSeason';
 import { FormTokenState, TxnPreview, TokenOutputField, TokenSelectDialog, TxnSeparator, TokenQuoteProvider, TxnSettings, SettingInput } from 'components/Common/Form';
 import { BeanstalkReplanted } from 'generated/index';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
-import useGetChainToken from 'hooks/useGetChainToken';
 import { ZERO_BN } from 'constants/index';
 import { displayFullBN, displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN, parseError } from 'util/index';
 import DestinationField from 'components/Common/Form/DestinationField';
@@ -75,7 +71,6 @@ const ClaimForm : React.FC<
   const chainId = useChainId();
   const pools = usePools();
   const isMainnet = chainId === SupportedChainId.MAINNET;
-  const getChainToken = useGetChainToken();
   
   // ASSUMPTION: Pool address === LP Token address
   // Lazy way to do this. Should key pools by lpToken.address.
@@ -271,18 +266,16 @@ const Claim : React.FC<{
   token,
   siloBalance
 }) => {
-  // Constants
-  const Bean = useChainConstant(BEAN);
-
-  // Contracts
+  /// 
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
-  const currentSeason = useSeason();
-  const [refetchFarmerSilo] = useFetchFarmerSilo();
   const provider = useProvider();
   const farm = useMemo(() => new Farm(provider), [provider]);
 
-  // Balances
+  /// Contracts
+  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+
+  /// Data
+  const [refetchFarmerSilo] = useFetchFarmerSilo();
   const claimableBalance = siloBalance?.claimable.amount;
 
   // Form
@@ -298,10 +291,10 @@ const Claim : React.FC<{
       amountOut: claimableBalance
     }
   }), [token, claimableBalance]);
+
   const onSubmit = useCallback(async (values: ClaimFormValues, formActions: FormikHelpers<ClaimFormValues>) => {
     let txToast;
     try {
-      let call;
       const crates = siloBalance?.claimable?.crates;
       if (!crates || crates.length === 0) throw new Error('No claimable crates');
 

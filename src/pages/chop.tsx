@@ -12,9 +12,9 @@ const ChopPage: React.FC = () => (
       <PageHeader
         title="Chop"
         description="Chop your unripe beans"
-        />
+      />
       <ChopActions />
     </Stack>
   </Container>
-  );
+);
 export default ChopPage;

@@ -23,10 +23,10 @@ const SliderField : React.FC<
   SliderFieldProps
   & SliderProps// Formik Field
 > = ({
-  // -- Custom props
+  /// Custom props
   initialState,
   fields,
-  // -- Slider Props
+  /// Slider Props
   min,
   max,
   sx,
@@ -52,7 +52,7 @@ const SliderField : React.FC<
   const handleChange = useCallback((
     event: Event,
     newValue: number | number[],
-    activeThumb: number,
+    // activeThumb: number,
   ) => {
     // ----- single slider -----
     if (!Array.isArray(newValue)) {
@@ -77,8 +77,6 @@ const SliderField : React.FC<
     minVal,
     setFieldValue
   ]);
-
-  // const valueLabelFormat = useCallback((value: string, index: number) => )
 
   return (
     <Stack gap={0.5} py={1.5}>

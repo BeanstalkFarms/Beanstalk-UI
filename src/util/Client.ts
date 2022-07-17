@@ -26,7 +26,7 @@ export function jsonRpcBatchProvider({
   stallTimeout,
   weight,
 }: JsonRpcBatchProviderConfig) {
-  return function (_chain: Chain) {
+  return (_chain: Chain) => {
     const rpcConfig = rpc(_chain);
     if (!rpcConfig || rpcConfig.http === '') return null;
     return {

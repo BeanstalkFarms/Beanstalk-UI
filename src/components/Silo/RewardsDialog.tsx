@@ -10,9 +10,7 @@ import { BeanstalkReplanted } from 'generated/index';
 import toast from 'react-hot-toast';
 import { parseError } from 'util/index'; 
 import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
-import useRevitalized from 'hooks/useRevitalized';
 import useFarmerSiloBalances from 'hooks/useFarmerSiloBalances';
-import useGetChainToken from 'hooks/useGetChainToken';
 import { UNRIPE_TOKENS } from 'constants/tokens';
 import useTokenMap from 'hooks/useTokenMap';
 import { encodeCratesForEnroot } from 'util/Crates';
@@ -184,17 +182,15 @@ const RewardsDialog: React.FC<RewardsBarProps & {
   open,
   ...rewardsBarProps
 }) => {
-  /// Helpers
-  const getChainToken     = useGetChainToken();
-  const unripeTokens      = useTokenMap(UNRIPE_TOKENS);
-
   /// Wallet
   const { data: account } = useAccount();
   const { data: signer }  = useSigner();
   const provider          = useProvider();
   
+  /// Helpers
+  const unripeTokens      = useTokenMap(UNRIPE_TOKENS);
+  
   /// Farmer data
-  const revitalized       = useRevitalized();
   const siloBalances      = useFarmerSiloBalances();
   const [fetchFarmerSilo] = useFetchFarmerSilo();
   
