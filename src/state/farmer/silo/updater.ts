@@ -33,16 +33,16 @@ import useEventProcessor, {
 import { useGetChainConstant } from 'hooks/useChainConstant';
 import { AppState } from 'state';
 import { parseWithdrawals } from 'util/Crates';
-import useEventParsingParams from "hooks/ledger/useEventParsingParams";
-import { DepositCrate } from ".";
-import { EventCacheName } from "../events2";
-import useEvents, { GetQueryFilters } from "../events2/updater";
+import useEventParsingParams from 'hooks/ledger/useEventParsingParams';
+import { DepositCrate } from '.';
+import { EventCacheName } from '../events2';
+import useEvents, { GetQueryFilters } from '../events2/updater';
 import {
   resetFarmerSilo,
   updateFarmerSiloBalances,
   UpdateFarmerSiloBalancesPayload,
   updateFarmerSiloRewards,
-} from "./actions";
+} from './actions';
 
 export const useFetchFarmerSilo = () => {
   /// Helpers
