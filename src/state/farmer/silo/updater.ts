@@ -22,54 +22,33 @@ import { DepositCrate } from '.';
 import { EventCacheName } from '../events2';
 import useEvents, { GetQueryFilters } from '../events2/updater';
 import { resetFarmerSilo, updateFarmerSiloBalances, UpdateFarmerSiloBalancesPayload, updateFarmerSiloRewards } from './actions';
+import useEventParsingParams from 'hooks/ledger/useEventParsingParams';
 
 export const useFetchFarmerSilo = () => {
   /// Helpers
   const dispatch  = useDispatch();
-  const account   = useAccount();
 
   /// Contracts
   const beanstalk = useBeanstalkContract();
   const migrate   = useMigrateCall();
 
   /// Data
+  const account   = useAccount();
+  const chainId   = useChainId();
   const blocks    = useBlocks();
   const whitelist = useWhitelist();
   const season    = useSeason();
 
   /// v1
-  const processFarmerEventsV1 = useEventProcessor();
+  const processFarmerEventsV1   = useEventProcessor();
+  const eventParsingParameters  = useEventParsingParams();
   const getChainConstant = useGetChainConstant();
-  const chainId = useChainId();
   const SiloTokens = useMemo(() => ({
     Bean:       getChainConstant(BEAN),
     BeanEthLP:  getChainConstant(BEAN_ETH_UNIV2_LP),
     BeanCrv3LP: getChainConstant(BEAN_CRV3_LP),
     BeanLusdLP: getChainConstant(BEAN_LUSD_LP),
   }), [getChainConstant]);
-  const earnedBeans = useSelector<AppState, AppState['_farmer']['silo']['beans']['earned']>(
-    (state) => state._farmer.silo.beans.earned
-  );
-  const harvestableIndex = useSelector<AppState, AppState['_beanstalk']['field']['harvestableIndex']>(
-    (state) => state._beanstalk.field.harvestableIndex,
-  );
-  const eventParsingParameters = useMemo<null | EventParsingParameters>(() => {
-    if (account && season && earnedBeans && harvestableIndex) {
-      return {
-        account,
-        season: season,
-        // only needed for v1
-        harvestableIndex: harvestableIndex,
-        farmableBeans: earnedBeans,
-      };
-    }
-    return null;
-  }, [
-    account,
-    season,
-    earnedBeans,
-    harvestableIndex,
-  ]);
 
   /// Events
   const getQueryFilters = useCallback<GetQueryFilters>((
@@ -260,7 +239,6 @@ export const useFetchFarmerSilo = () => {
       if (REPLANTED_CHAINS.has(chainId)) {
         const p = new EventProcessor(account, { season, whitelist });
         const results = p.ingestAll(allEvents);
-        console.debug('[processor.ts] ...received results:', results);
 
         dispatch(updateFarmerSiloBalances(
           Object.keys(whitelist).reduce<UpdateFarmerSiloBalancesPayload>((prev, addr) => {
