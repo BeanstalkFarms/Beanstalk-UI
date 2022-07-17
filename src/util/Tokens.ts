@@ -42,18 +42,20 @@ export function TrimBN(
   bn: BigNumber,
   decimals: number,
   allowNegative: boolean = false
-) : BigNumber {
+): BigNumber {
   if (typeof bn !== 'object') return new BigNumber(bn);
 
   const numberString = bn.toString();
   const decimalComponents = numberString.split('.');
-  if ((bn.isLessThan(0) && !allowNegative) || decimalComponents.length < 2) return bn;
+  if ((bn.isLessThan(0) && !allowNegative) || decimalComponents.length < 2)
+    return bn;
 
   // If too many decimals are provided, trim them.
   // If there aren't enough decimals, do nothing.
   // 1.123456 => [1, 123456]
   const decimalsFound = decimalComponents[1].length;
-  const decimalsToTrim = decimalsFound < decimals ? 0 : decimalsFound - decimals;
+  const decimalsToTrim =
+    decimalsFound < decimals ? 0 : decimalsFound - decimals;
 
   return new BigNumber(
     numberString.substr(0, numberString.length - decimalsToTrim)
@@ -66,14 +68,12 @@ export function TrimBN(
 export function displayFullBN(
   bn: BigNumber,
   maxDecimals: number = 18,
-  minDecimals : number = 0
+  minDecimals: number = 0
 ) {
-  return bn
-    .toNumber()
-    .toLocaleString('en-US', {
-      minimumFractionDigits: minDecimals,
-      maximumFractionDigits: maxDecimals
-    });
+  return bn.toNumber().toLocaleString('en-US', {
+    minimumFractionDigits: minDecimals,
+    maximumFractionDigits: maxDecimals,
+  });
 }
 
 /**
@@ -85,12 +85,10 @@ export function displayTokenAmount(
   token: Token,
   modifier?: string
 ) {
-  return `${amount
-    .toNumber()
-    .toLocaleString('en-US', { 
-      maximumFractionDigits: token.displayDecimals,
-      // maximumSignificantDigits: 3,
-    })} ${modifier ? `${modifier} ` : ''}${token.name}`;
+  return `${amount.toNumber().toLocaleString('en-US', {
+    maximumFractionDigits: token.displayDecimals,
+    // maximumSignificantDigits: 3,
+  })} ${modifier ? `${modifier} ` : ''}${token.name}`;
 }
 
 /**
@@ -99,7 +97,7 @@ export function displayTokenAmount(
 export function displayBN(
   bn: BigNumber,
   allowNegative: boolean = false
-) : string {
+): string {
   if (bn === undefined || !(bn instanceof BigNumber)) return '0';
   if (bn.isLessThan(new BigNumber(0))) {
     return allowNegative ? `-${displayBN(bn.multipliedBy(-1))}` : '0';
@@ -135,7 +133,7 @@ export function displayBN(
 }
 
 /**
- * 
+ *
  */
 export function smallDecimalPercent(bn: BigNumber) {
   if (bn.isLessThanOrEqualTo(1e-4)) return '<.0001';
@@ -145,9 +143,9 @@ export function smallDecimalPercent(bn: BigNumber) {
 }
 
 /**
- * 
+ *
  */
-export function displayUSD(bn: BigNumber, allowNegative : boolean = false) {
+export function displayUSD(bn: BigNumber, allowNegative: boolean = false) {
   const v = allowNegative === false ? MaxBN(ZERO_BN, bn).abs() : bn;
   return `$${displayFullBN(v, 2, 2)}`;
 }
@@ -164,9 +162,9 @@ export function displayUSD(bn: BigNumber, allowNegative : boolean = false) {
  * @param decimals
  * @returns
  */
- export function toBaseUnitBN(
-  rawAmt:   BigNumber.Value,
-  decimals: BigNumber.Value,
+export function toBaseUnitBN(
+  rawAmt: BigNumber.Value,
+  decimals: BigNumber.Value
 ): BigNumber {
   const amt = new BigNumber(rawAmt);
   const base = new BigNumber(10);
@@ -185,7 +183,7 @@ export function displayUSD(bn: BigNumber, allowNegative : boolean = false) {
  */
 export function toTokenUnitsBN(
   tokenAmt: BigNumber.Value,
-  decimals: BigNumber.Value,
+  decimals: BigNumber.Value
 ): BigNumber {
   const amt = new BigNumber(tokenAmt);
   const base = new BigNumber(10);
@@ -200,9 +198,9 @@ export function toTokenUnitsBN(
  * @param decimals
  * @returns
  */
- export function toStringBaseUnitBN(
-  rawAmt:   BigNumber.Value,
-  decimals: BigNumber.Value,
+export function toStringBaseUnitBN(
+  rawAmt: BigNumber.Value,
+  decimals: BigNumber.Value
 ): string {
   return toBaseUnitBN(rawAmt, decimals).toFixed();
 }

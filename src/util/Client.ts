@@ -1,12 +1,11 @@
-import { createClient as createWagmiClient, configureChains, chain, Chain } from 'wagmi';
+import { chain, Chain, configureChains, createClient as createWagmiClient } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 // import { InjectedConnector } from 'wagmi/connectors/injected';
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 
 import { SupportedChainId, TESTNET_RPC_ADDRESSES } from 'constants/chains';
 
@@ -27,7 +26,7 @@ export function jsonRpcBatchProvider({
   stallTimeout,
   weight,
 }: JsonRpcBatchProviderConfig) {
-  return function (_chain: Chain) {
+  return (_chain: Chain) => {
     const rpcConfig = rpc(_chain);
     if (!rpcConfig || rpcConfig.http === '') return null;
     return {

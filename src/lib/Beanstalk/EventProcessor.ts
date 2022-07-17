@@ -1,19 +1,14 @@
-import { BigNumber as EBN, ethers } from 'ethers';
 import BigNumber from 'bignumber.js';
-import {
-  SowEvent,
-  HarvestEvent,
-  PlotTransferEvent,
-  AddDepositEvent,
-  AddWithdrawalEvent,
-  RemoveWithdrawalEvent,
-  RemoveDepositEvent,
-  RemoveDeposits_address_address_uint32_array_uint256_array_uint256_Event,
-  RemoveWithdrawalsEvent,
-} from 'generated/Beanstalk/BeanstalkReplanted';
-import { BEAN, PODS } from 'constants/tokens';
 import Token from 'classes/Token';
 import { TokenMap } from 'constants/index';
+import { BEAN, PODS } from 'constants/tokens';
+import { BigNumber as EBN, ethers } from 'ethers';
+import {
+  AddDepositEvent,
+  AddWithdrawalEvent, HarvestEvent,
+  PlotTransferEvent, RemoveDepositEvent,
+  RemoveDeposits_address_address_uint32_array_uint256_array_uint256_Event, RemoveWithdrawalEvent, RemoveWithdrawalsEvent, SowEvent
+} from 'generated/Beanstalk/BeanstalkReplanted';
 import { PlotMap } from 'state/farmer/field';
 import { FarmerSiloBalance, WithdrawalCrate } from 'state/farmer/silo';
 

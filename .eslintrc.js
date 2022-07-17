@@ -19,10 +19,29 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module'
   },
-  ignorePatterns: ["src/generated/**/*"],
-  plugins: ['react', 'react-hooks', '@typescript-eslint', 'jest'],
-  extends: ['plugin:react/recommended', 'airbnb', 'plugin:storybook/recommended'],
+  ignorePatterns: [
+    "src/generated/**/*",
+    "src/components/v1/**/*",
+    "src/state/v1/**/*",
+    "src/util/v1/**/*",
+    "src/constants/v1/**/*",
+    "src/generated/**/*"
+  ],
+  plugins: [
+    'react',
+    'react-hooks',
+    '@typescript-eslint',
+    'jest',
+    'prettier'
+  ],
+  extends: [
+    'plugin:react/recommended',
+    'airbnb',
+    'plugin:storybook/recommended',
+    'prettier'
+  ],
   rules: {
+    'prettier/prettier': 1,
     // -- Tree-shaking
     // https://mui.com/material-ui/guides/minimizing-bundle-size/#option-1
     'no-restricted-imports': ['error', {
@@ -36,15 +55,14 @@ module.exports = {
     'import/order': 'warn',
     'space-infix-ops': 'warn',
     'react/jsx-indent': 'warn',
-    quotes: ['warn', 'single'],
-    'comma-dangle': 0,
-    'no-multiple-empty-lines': 'warn',
+    quotes: ['error', 'single'], // prefer single; lintable
+    'comma-dangle': 0, 
+    'no-multiple-empty-lines': 'warn', // lintable
     'jsx-quotes': ['error', 'prefer-double'],
     'react/jsx-curly-brace-presence': 'warn',
     'eol-last': 'warn',
     'key-spacing': 0,
-    // I like to line up my values sometimes
-    'no-multi-spaces': 0,
+    'no-multi-spaces': 0, // I like to line up my values sometimes
     'react/jsx-boolean-value': 'warn',
     'react/jsx-props-no-multi-spaces': 'warn',
     'spaced-comment': 'warn',
@@ -106,21 +124,21 @@ module.exports = {
     'react/jsx-one-expression-per-line': 'off',
     'react/jsx-closing-bracket-location': 0,
     'react/jsx-curly-newline': 0,
-    'no-nested-ternary': 0,
+    'no-nested-ternary': 0, 
     'react/jsx-wrap-multilines': 0,
     'no-await-in-loop': 0,
     'no-restricted-syntax': ['error', 'ForInStatement', 'LabeledStatement', 'WithStatement'],
-    'no-shadow': 'off',
+    'no-shadow': 0,
     '@typescript-eslint/no-shadow': 'error',
     '@typescript-eslint/no-extra-non-null-assertion': ['error'],
-    'no-console': 'off',
+    'no-console': 0,
     'object-shorthand': 0,
     'comma-spacing': 0,
-    'react/jsx-tag-spacing': 'warn',
+    'react/jsx-tag-spacing': 1,
     camelcase: 0,
     // disable because generated files aren't camel-cased
-    'padded-blocks': 'warn',
-    'import/no-useless-path-segments': 'warn'
+    'padded-blocks': 1,
+    'import/no-useless-path-segments': 1
   },
   settings: {
     'import/resolver': {

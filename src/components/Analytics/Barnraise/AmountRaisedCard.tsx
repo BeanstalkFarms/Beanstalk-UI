@@ -1,9 +1,9 @@
-import React from 'react';
-import { Stack, Typography, LinearProgress, Card } from '@mui/material';
+import { Card, LinearProgress, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import Stat from '../../Common/Stat';
+import React from 'react';
 import { displayBN } from '../../../util';
 import { BeanstalkPalette } from '../../App/muiTheme';
+import Stat from '../../Common/Stat';
 
 export type AmountRaisedProps = {
   totalRaised: BigNumber;
