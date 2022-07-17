@@ -13,7 +13,7 @@ import Beanstalk from 'lib/Beanstalk';
 import useSeason from 'hooks/useSeason';
 import { FarmerSilo } from 'state/farmer/silo';
 import { useBeanstalkContract } from 'hooks/useContract';
-import { displayFullBN, toStringBaseUnitBN } from 'util/index';
+import { displayFullBN, parseError, toStringBaseUnitBN } from 'util/index';
 import TransactionToast from 'components/Common/TxnToast';
 import { useSigner } from 'hooks/ledger/useSigner';
 import useFarmerSiloBalances from 'hooks/useFarmerSiloBalances';
@@ -25,6 +25,8 @@ import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
 import { ActionType } from 'util/Actions';
 import { ZERO_BN } from 'constants/index';
+import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
+import toast from 'react-hot-toast';
 
 // -----------------------------------------------------------------------
 
@@ -237,6 +239,7 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
   const season = useSeason();
   const siloBalances = useFarmerSiloBalances();
   const { data: signer } = useSigner();
+  const [refetchFarmerSilo] = useFetchFarmerSilo();
   const beanstalk = (useBeanstalkContract(signer) as unknown) as BeanstalkReplanted;
   const withdrawSeasons = useSelector<AppState, AppState['_beanstalk']['silo']['withdrawSeasons']>((state) => state._beanstalk.silo.withdrawSeasons);
 
@@ -252,14 +255,18 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
   }), [token]);
 
   // Handlers
-  const onSubmit = useCallback((values: WithdrawFormValues, formActions: FormikHelpers<WithdrawFormValues>) => {
-    const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
-      token,
-      values.tokens,
-      siloBalances[token.address]?.deposited.crates,
-      season,
-    );
-    if (withdrawResult) {
+  const onSubmit = useCallback(async (values: WithdrawFormValues, formActions: FormikHelpers<WithdrawFormValues>) => {
+    let txToast;
+    try {
+      const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
+        token,
+        values.tokens,
+        siloBalances[token.address]?.deposited.crates,
+        season,
+      );
+
+      if (!withdrawResult) throw new Error('Nothing to Withdraw.');
+      
       let call;
       const seasons = withdrawResult.deltaCrates.map((crate) => crate.season.toString());
       const amounts = withdrawResult.deltaCrates.map((crate) => toStringBaseUnitBN(crate.amount.abs(), token.decimals));
@@ -272,7 +279,8 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
         },
       });
 
-      //
+      /// Optimize the call used depending on the
+      /// number of crates.
       if (seasons.length === 0) {
         throw new Error('Malformatted crates.');
       } else if (seasons.length === 1) {
@@ -289,30 +297,21 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
         );
       }
 
-      const txToast = new TransactionToast({
+      txToast = new TransactionToast({
         loading: `Withdrawing ${displayFullBN(withdrawResult.amount.abs(), token.displayDecimals, token.displayDecimals)} ${token.name} from the Silo`,
         success: `Withdraw successful. Your ${token.name} will be available to Claim in ${withdrawSeasons.toFixed()} Seasons.`,
       });
 
-      return call
-        .then((txn) => {
-          txToast.confirming(txn);
-          return txn.wait();
-        })
-        .then((receipt) => {
-          txToast.success(receipt);
-          formActions.resetForm();
-        })
-        .catch((err) => {
-          console.error(
-            txToast.error(err.error || err),
-            {
-              token: token.address,
-              seasons,
-              amounts,
-            }
-          );
-        });
+      const txn = await call;
+      txToast.confirming(txn);
+
+      const receipt = await txn.wait();
+      await refetchFarmerSilo(); // FIXME: ignore refetch error?
+      txToast.success(receipt);
+      formActions.resetForm();
+    } catch (err) {
+      txToast ? txToast.error(err) : toast.error(parseError(err));
+      formActions.setSubmitting(false);
     }
   }, [
     siloBalances,
@@ -320,6 +319,7 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
     token,
     season,
     withdrawSeasons,
+    refetchFarmerSilo,
   ]);
 
   //

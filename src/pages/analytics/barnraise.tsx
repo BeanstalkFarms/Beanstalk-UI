@@ -15,8 +15,8 @@ import useTabs from 'hooks/display/useTabs';
 const BarnraiseAnalytics: React.FC<{}> = () => {
   const fertilizer = useSelector<
     AppState,
-    AppState['_beanstalk']['fertilizer']
-  >((state) => state._beanstalk.fertilizer);
+    AppState['_beanstalk']['barn']
+  >((state) => state._beanstalk.barn);
 
   const chainId = useChainId();
   const [tab, handleChangeTab] = useTabs();

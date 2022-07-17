@@ -17,7 +17,7 @@ const BarnActions : React.FC<{}> = () => {
         <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>
           <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }} variant="scrollable">
             <Tab label="Buy" />
-            <BadgeTab showBadge={farmerFertilizer.fertilized.gt(0)} label="Rinse" />
+            <BadgeTab showBadge={farmerFertilizer.fertilizedSprouts.gt(0)} label="Rinse" />
           </Tabs>
         </Stack>
         <Box sx={{ px: 1, pb: 1 }}>

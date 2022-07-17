@@ -15,13 +15,13 @@ import NavBar from 'components/Nav/NavBar';
 import PoolsUpdater from 'state/bean/pools/updater';
 import UnripeUpdater from 'state/bean/unripe/updater';
 import SunUpdater from 'state/beanstalk/sun/updater';
-import FertilizerUpdater from 'state/beanstalk/fertilizer/updater';
+import BarnUpdater from 'state/beanstalk/barn/updater';
 import SiloUpdater from 'state/beanstalk/silo/updater';
 import FarmerSiloUpdater from 'state/farmer/silo/updater';
 import FarmerEventsUpdater from 'state/farmer/events/updater';
-import FarmerEventsProcessor from 'state/farmer/processor';
+import FarmerEventsProcessor from 'state/farmer/events/processor';
 import FarmerBalancesUpdater from 'state/farmer/balances/updater';
-import FarmerFertilizerUpdater from 'state/farmer/fertilizer/updater';
+import FarmerBarnUpdater from 'state/farmer/barn/updater';
 import FieldUpdater from 'state/beanstalk/field/updater';
 import { BeanstalkPalette } from './muiTheme';
 import './App.css';
@@ -100,7 +100,7 @@ export default function App() {
       {/* -----------------------
         * Beanstalk Updaters
         * ----------------------- */}
-      <FertilizerUpdater />
+      <BarnUpdater />
       <FieldUpdater />
       <SiloUpdater />
       <SunUpdater />
@@ -110,7 +110,7 @@ export default function App() {
       <FarmerEventsUpdater />
       <FarmerEventsProcessor />
       <FarmerBalancesUpdater />
-      <FarmerFertilizerUpdater />
+      <FarmerBarnUpdater />
       <FarmerSiloUpdater />
       {/* -----------------------
         * Content

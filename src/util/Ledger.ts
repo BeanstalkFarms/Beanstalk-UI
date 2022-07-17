@@ -2,19 +2,15 @@ import { BigNumber as BNJS } from 'ethers';
 import BigNumber from 'bignumber.js';
 import type Token from 'classes/Token';
 import { ChainConstant, SupportedChainId } from 'constants/index';
-import client from './Client';
 import { toTokenUnitsBN } from './Tokens';
-
-export const identityResult = (result: any) => result;
-export const bigNumberResult = (result: any) => new BigNumber(result instanceof BNJS ? result.toString() : result);
-
-export async function getBlockTimestamp(blockNumber: any) {
-  return (await client.provider.getBlock(blockNumber)).timestamp;
-}
 
 // -------------------------
 // Chain Result Helpers
 // -------------------------
+
+export const identityResult = (result: any) => result;
+
+export const bigNumberResult = (result: any) => new BigNumber(result instanceof BNJS ? result.toString() : result);
 
 export const tokenResult = (_token: Token | ChainConstant<Token>) => {
   // If a mapping is provided, default to MAINNET decimals.
@@ -26,6 +22,19 @@ export const tokenResult = (_token: Token | ChainConstant<Token>) => {
     bigNumberResult(result),
     token.decimals
   );
+};
+
+// HACK:
+// Recursively parse all instances of BNJS as BigNumber
+export const bn = (v: any) => (v instanceof BNJS ? new BigNumber(v.toString()) : false);
+export const parseBNJS = (_o: { [key: string]: any }) => {
+  const o: { [key: string]: any } = {};
+  Object.keys(_o).forEach((k: string) => {
+    o[k] =
+      bn(_o[k]) ||
+      (Array.isArray(_o[k]) ? _o[k].map((v: any) => bn(v) || v) : _o[k]);
+  });
+  return o;
 };
 
 export const parseError = (error: any) => {

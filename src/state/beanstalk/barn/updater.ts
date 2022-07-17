@@ -10,15 +10,15 @@ import useMigrateCall from 'hooks/useMigrateCall';
 import { Beanstalk, BeanstalkReplanted } from 'generated/index';
 import { ZERO_BN } from 'constants/index';
 import BigNumber from 'bignumber.js';
-import { resetFertilizer, setRemaining, setTotalRaised, setHumidity } from './actions';
+import { resetBarn, setRemaining, setTotalRaised, setHumidity, updateBarn } from './actions';
 
-export const useFertilizer = () => {
-  const dispatch = useDispatch();
-  const beanstalk = useBeanstalkContract() as unknown as BeanstalkReplanted;
-  const [fertContract] = useBeanstalkFertilizerContract();
-  const [usdcContract] = useERC20Contract(USDC_ADDRESSES);
-  const custodian = useChainConstant(BARNRAISE_CUSTODIAN_ADDRESSES);
-  const migrate = useMigrateCall();
+export const useBarn = () => {
+  const dispatch        = useDispatch();
+  const beanstalk       = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const [fertContract]  = useBeanstalkFertilizerContract();
+  const [usdcContract]  = useERC20Contract(USDC_ADDRESSES);
+  const custodian       = useChainConstant(BARNRAISE_CUSTODIAN_ADDRESSES);
+  const migrate         = useMigrateCall();
 
   // Handlers
   const fetch = useCallback(async () => {
@@ -28,7 +28,9 @@ export const useFertilizer = () => {
         remaining,
         totalRaised,
         fundedPercent,
-        humidity
+        humidity,
+        currentBpf,
+        endBpf,
       ] = await Promise.all([
         // Amount of Fertilizer remaining to be sold
         migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
@@ -49,12 +51,26 @@ export const useFertilizer = () => {
         migrate(beanstalk, [
           () => Promise.resolve(new BigNumber(500)),
           () => beanstalk.getCurrentHumidity().then(bigNumberResult)
-        ])
+        ]),
+        // Current BPF
+        migrate(beanstalk, [
+          () => Promise.resolve(ZERO_BN),
+          () => beanstalk.beansPerFertilizer().then(bigNumberResult)
+        ]),
+        // End BPF
+        migrate(beanstalk, [
+          () => Promise.resolve(ZERO_BN),
+          () => beanstalk.getEndBpf().then(bigNumberResult)
+        ]),
       ] as const);
       console.debug(`[beanstalk/fertilizer/updater] RESULT: remaining = ${remaining.toFixed(2)}`);
-      dispatch(setRemaining(remaining));
-      dispatch(setTotalRaised(totalRaised));
-      dispatch(setHumidity(humidity));
+      dispatch(updateBarn({
+        remaining,
+        totalRaised,
+        humidity,
+        currentBpf,
+        endBpf
+      }));
     }
   }, [
     dispatch,
@@ -65,14 +81,14 @@ export const useFertilizer = () => {
     custodian
   ]); 
   const clear = useCallback(() => {
-    dispatch(resetFertilizer());
+    dispatch(resetBarn());
   }, [dispatch]);
 
   return [fetch, clear] as const;
 };
 
-const FertilizerUpdater = () => {
-  const [fetch, clear] = useFertilizer();
+const BarnUpdater = () => {
+  const [fetch, clear] = useBarn();
   const chainId = useChainId();
   
   useEffect(() => {
@@ -86,4 +102,4 @@ const FertilizerUpdater = () => {
   return null;
 };
 
-export default FertilizerUpdater;
+export default BarnUpdater;

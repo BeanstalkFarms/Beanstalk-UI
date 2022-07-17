@@ -36,8 +36,9 @@ const Bean = BEAN[1];
 // ----------------------------------------
 
 /** */
-export const BN      = (v: EBN | BigNumber.Value) => (v instanceof EBN ? new BigNumber(v.toString()) : new BigNumber(v));
-export const tokenBN = (v: EBN | BigNumber.Value, token: Token) => BN(v).div(10 ** token.decimals);
+export const BN         = (v: EBN | BigNumber.Value) => (v instanceof EBN ? new BigNumber(v.toString()) : new BigNumber(v));
+export const decimalBN  = (v: EBN | BigNumber.Value, decimals: number) => BN(v).div(10 ** decimals);
+export const tokenBN    = (v: EBN | BigNumber.Value, token: Token) => decimalBN(v, token.decimals);
 export const initTokens = (tokenMap: TokenMap) =>
   Object.keys(tokenMap).reduce<{ [season: string] : any }>(
     (prev, curr) => {
@@ -52,8 +53,6 @@ export const initTokens = (tokenMap: TokenMap) =>
 
 export type EventProcessingParameters = {
   season: BigNumber;
-  farmableBeans: BigNumber;
-  harvestableIndex: BigNumber;
   whitelist: TokenMap;
 }
 export type EventProcessorData = {
@@ -103,17 +102,17 @@ export default class EventProcessor {
     epp : EventProcessingParameters,
     initialState?: Partial<EventProcessorData>,
   ) {
-    this.account = account.toLowerCase();
-    if (!epp.whitelist || typeof epp !== 'object') throw new Error('EventProcessor: Missing tokenMap');
-    this.epp = epp;
-    this.plots = initialState?.plots || {};
+    if (!epp.whitelist || typeof epp !== 'object') throw new Error('EventProcessor: Missing whitelist.');
+    this.account     = account.toLowerCase();
+    this.epp         = epp;
+    this.plots       = initialState?.plots       || {};
     this.deposits    = initialState?.deposits    || initTokens(this.epp.whitelist);
     this.withdrawals = initialState?.withdrawals || initTokens(this.epp.whitelist);
   }
   
   ingest<T extends Event>(event: T) {
-    if (!event.event) { return; } // throw new Error('Missing event name');
-    if (!SupportedEventsSet.has(event.event as (typeof SupportedEvents)[number])) { return; } // throw new Error(`No handler for event: ${event.event}`);
+    if (!event.event) { return; }
+    if (!SupportedEventsSet.has(event.event as (typeof SupportedEvents)[number])) { return; }
     return this[event.event as (typeof SupportedEvents)[number]](event as any);
   }
 
@@ -305,13 +304,16 @@ export default class EventProcessor {
   }
 
   parsePlots(_harvestableIndex: BigNumber) {
-    return EventProcessor.parsePlots(
+    return EventProcessor._parsePlots(
       this.plots,
-      _harvestableIndex || this.epp.harvestableIndex
+      _harvestableIndex
     );
   }
 
-  static parsePlots(plots: EventProcessorData['plots'], index: BigNumber) {
+  static _parsePlots(
+    plots: EventProcessorData['plots'],
+    index: BigNumber
+  ) {
     let pods = new BigNumber(0);
     let harvestablePods = new BigNumber(0);
     const unharvestablePlots  : PlotMap<BigNumber> = {};
@@ -349,6 +351,13 @@ export default class EventProcessor {
   // ----------------------------
   // |      SILO: UTILITIES     |
   // ----------------------------
+
+  parseWithdrawals(_token: string, _season: BigNumber) {
+    return EventProcessor._parseWithdrawals(
+      this.withdrawals[_token],
+      _season || this.epp.season
+    );
+  }
   
   static _parseWithdrawals(
     withdrawals: EventProcessorData['withdrawals'][string], 
@@ -384,7 +393,7 @@ export default class EventProcessor {
     return {
       withdrawn: {
         amount: transitBalance,
-        bdv: new BigNumber(0),
+        bdv:    new BigNumber(0),
         crates: transitWithdrawals,
       },
       claimable: {
