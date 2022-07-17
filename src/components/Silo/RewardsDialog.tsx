@@ -10,7 +10,7 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import { BeanstalkReplanted } from 'generated/index';
 import toast from 'react-hot-toast';
 import { parseError } from 'util/index'; 
-import { useFarmerSilo } from 'state/farmer/silo/updater';
+import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
 import useRevitalized from 'hooks/useRevitalized';
 import useFarmerSiloBalances from 'hooks/useFarmerSiloBalances';
 import useGetChainToken from 'hooks/useGetChainToken';
@@ -198,7 +198,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
   /// Farmer data
   const revitalized       = useRevitalized();
   const siloBalances      = useFarmerSiloBalances();
-  const [fetchFarmerSilo] = useFarmerSilo();
+  const [fetchFarmerSilo] = useFetchFarmerSilo();
   
   /// Contracts
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
@@ -269,7 +269,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
-      await fetchFarmerSilo(account.address);
+      await fetchFarmerSilo();
       // if (values.action === ClaimRewards)
       txToast.success(receipt);
       formActions.resetForm();
