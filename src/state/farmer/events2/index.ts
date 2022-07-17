@@ -1,6 +1,6 @@
 import { Event } from 'lib/Beanstalk/EventProcessor';
 
-export enum CacheID {
+export enum EventCacheName {
   SILO = 'silo',
   FIELD = 'field',
   FERTILIZER = 'fert',

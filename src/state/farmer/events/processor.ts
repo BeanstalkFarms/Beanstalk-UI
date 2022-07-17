@@ -1,25 +1,23 @@
 import BigNumber from 'bignumber.js';
-import { AddDepositEvent, AddWithdrawalEvent, RemoveDepositEvent } from 'generated/Beanstalk/BeanstalkReplanted';
 import { LP_TO_SEEDS, REPLANTED_CHAINS, ZERO_BN } from 'constants/index';
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP } from 'constants/tokens';
-import { ethers } from 'ethers';
+import useAccount from 'hooks/ledger/useAccount';
 import useChainId from 'hooks/useChain';
 import { useGetChainConstant } from 'hooks/useChainConstant';
 import useEventProcessor, { EventParsingParameters } from 'hooks/useEventProcessor';
+import useSeason from 'hooks/useSeason';
 import useWhitelist from 'hooks/useWhitelist';
 import Beanstalk from 'lib/Beanstalk';
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { getAccount } from 'util/Account';
 import { parseWithdrawals } from 'util/Crates';
-import { useAccount } from 'wagmi';
 import { updateFarmerField } from '../field/actions';
 import { DepositCrate } from '../silo';
 import { updateFarmerSiloBalances, UpdateFarmerSiloBalancesPayload } from '../silo/actions';
 
 const FarmerEventsProcessor = () => {
-  const { data: account } = useAccount();
+  const account  = useAccount()
   const dispatch = useDispatch();
 
   // Selectors
@@ -29,9 +27,7 @@ const FarmerEventsProcessor = () => {
   const earnedBeans = useSelector<AppState, AppState['_farmer']['silo']['beans']['earned']>(
     (state) => state._farmer.silo.beans.earned
   );
-  const season = useSelector<AppState, AppState['_farmer']['silo']['beans']['earned']>(
-    (state) => state._beanstalk.sun.season,
-  );
+  const season = useSeason();
   const harvestableIndex = useSelector<AppState, AppState['_beanstalk']['field']['harvestableIndex']>(
     (state) => state._beanstalk.field.harvestableIndex,
   );
@@ -49,18 +45,18 @@ const FarmerEventsProcessor = () => {
 
   // Required to properly parse event data
   const eventParsingParameters = useMemo<null | EventParsingParameters>(() => {
-    if (account?.address && season && earnedBeans && harvestableIndex) {
+    if (account && season && earnedBeans && harvestableIndex) {
       return {
-        // override account if necessary
-        account: getAccount(account.address.toLowerCase()),
-        farmableBeans: earnedBeans,
+        account,
         season: season,
+        // only needed for v1
         harvestableIndex: harvestableIndex,
+        farmableBeans: earnedBeans,
       };
     }
     return null;
   }, [
-    account?.address,
+    account,
     season,
     earnedBeans,
     harvestableIndex,
@@ -133,10 +129,7 @@ const FarmerEventsProcessor = () => {
         
         /// EVENT PROCESSING v1: PRE-REPLANT
         else {
-          const results = processFarmerEventsV1(
-            events,
-            eventParsingParameters
-          );
+          const results = processFarmerEventsV1(events, eventParsingParameters);
           console.debug('[farmer/updater] ...processed events!', results);
 
           // TEMP:

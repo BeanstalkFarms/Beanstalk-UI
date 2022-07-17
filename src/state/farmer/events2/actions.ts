@@ -1,10 +1,10 @@
 import { createAction } from '@reduxjs/toolkit';
 import { Event } from 'lib/Beanstalk/EventProcessor';
-import { CacheID } from '.';
+import { EventCacheName } from '.';
 
 export type IngestPayload = {
   // Cache selectors
-  cache:   CacheID;
+  cache:   EventCacheName;
   account: string;
   chainId: number;
   // Results

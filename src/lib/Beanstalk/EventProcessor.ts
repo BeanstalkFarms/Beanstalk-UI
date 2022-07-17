@@ -53,8 +53,6 @@ export const initTokens = (tokenMap: TokenMap) =>
 
 export type EventProcessingParameters = {
   season: BigNumber;
-  farmableBeans: BigNumber;
-  harvestableIndex: BigNumber;
   whitelist: TokenMap;
 }
 export type EventProcessorData = {
@@ -104,8 +102,8 @@ export default class EventProcessor {
     epp : EventProcessingParameters,
     initialState?: Partial<EventProcessorData>,
   ) {
-    this.account = account.toLowerCase();
-    if (!epp.whitelist || typeof epp !== 'object') throw new Error('EventProcessor: Missing tokenMap');
+    if (!epp.whitelist || typeof epp !== 'object') throw new Error('EventProcessor: Missing whitelist.');
+    this.account     = account.toLowerCase();
     this.epp         = epp;
     this.plots       = initialState?.plots       || {};
     this.deposits    = initialState?.deposits    || initTokens(this.epp.whitelist);
@@ -308,7 +306,7 @@ export default class EventProcessor {
   parsePlots(_harvestableIndex: BigNumber) {
     return EventProcessor._parsePlots(
       this.plots,
-      _harvestableIndex || this.epp.harvestableIndex
+      _harvestableIndex
     );
   }
 

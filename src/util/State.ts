@@ -1,4 +1,4 @@
-import { CacheID } from "state/farmer/events2";
+import { EventCacheName } from "state/farmer/events2";
 
 export const loadState = () => {
   try {
@@ -26,5 +26,5 @@ export const saveState = (state: any) => {
 export const getEventCacheId = (
   chainId: number,
   account: string,
-  cacheId: CacheID
+  cacheId: EventCacheName
 ) => `${chainId}-${account.toLowerCase()}-${cacheId}`;

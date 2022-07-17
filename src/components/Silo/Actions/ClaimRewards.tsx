@@ -285,7 +285,7 @@ const ClaimRewards: React.FC<{}> = () => {
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
-      await fetchFarmerSilo(account.address);
+      await fetchFarmerSilo();
       // if (values.action === ClaimRewards)
       txToast.success(receipt);
       formActions.resetForm();

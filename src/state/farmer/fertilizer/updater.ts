@@ -13,7 +13,7 @@ import { ZERO_BN } from 'constants/index';
 import { resetFertilizer, updateFarmerFertilizer } from './actions';
 import useEvents, { GetQueryFilters } from '../events2/updater';
 import useBlocks from 'hooks/useBlocks';
-import { CacheID } from '../events2';
+import { EventCacheName } from '../events2';
 import ERC1155EventProcessor from 'lib/ERC1155/ERC1155EventProcessor';
 
 /**
@@ -87,6 +87,7 @@ export const useFetchFarmerFertilizer = () => {
   const beanstalk    = useBeanstalkContract() as unknown as BeanstalkReplanted;
   const blocks       = useBlocks();
 
+  /// Events
   const getQueryFilters = useCallback<GetQueryFilters>((
     account,
     fromBlock,
@@ -140,7 +141,7 @@ export const useFetchFarmerFertilizer = () => {
     ),
   ], [blocks.FERTILIZER_LAUNCH_BLOCK, fertContract]);
 
-  const [fetchEvents] = useEvents(CacheID.FERTILIZER, getQueryFilters);
+  const [fetchEvents] = useEvents(EventCacheName.FERTILIZER, getQueryFilters);
 
   /// Handlers 
   const fetch = useCallback(async (_account: string) => {

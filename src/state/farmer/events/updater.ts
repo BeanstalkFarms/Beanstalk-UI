@@ -266,17 +266,17 @@ const useFarmerEvents = () => {
 // ----------------------------------------
 
 const FarmerEventsUpdater = () => {
-  const [fetch, clear] = useFarmerEvents();
-  const { data: account } = useAccount();
-  const chainId = useChainId();
+  // const [fetch, clear] = useFarmerEvents();
+  // const { data: account } = useAccount();
+  // const chainId = useChainId();
 
-  useEffect(() => {
-    clear();
-    if (account?.address) {
-      fetch(account.address);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chainId, account?.address]);
+  // useEffect(() => {
+  //   clear();
+  //   if (account?.address) {
+  //     fetch(account.address);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [chainId, account?.address]);
 
   return null;
 };

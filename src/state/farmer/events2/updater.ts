@@ -2,14 +2,14 @@ import { ethers } from "ethers";
 import useChainId from "hooks/useChain";
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { useAccount, useProvider } from "wagmi";
+import { useProvider } from "wagmi";
 import flattenDeep from 'lodash/flattenDeep';
-import { getEventFacet } from "util/GetEventFacet";
-import { parseBNJS } from "util/index";
 import { Event } from 'lib/Beanstalk/EventProcessor';
 import { ingestEvents } from "./actions";
-import { CacheID } from ".";
+import { EventCacheName } from ".";
 import useEventCache from "hooks/events/useEventCache";
+import useAccount from "hooks/ledger/useAccount";
+import { getEventCacheId } from "util/State";
 
 export type GetQueryFilters = (
   /**
@@ -61,21 +61,22 @@ export const sortEvents = (a: Event, b: Event) => {
   return a.logIndex - b.logIndex;
 }
 
-export default function useEvents(cacheId: CacheID, getQueryFilters: GetQueryFilters) {
+export default function useEvents(cacheName: EventCacheName, getQueryFilters: GetQueryFilters) {
   const dispatch  = useDispatch();
   const chainId   = useChainId();
   const provider  = useProvider();
-  const { data: account } = useAccount();
+  const account   = useAccount();
 
   ///
-  const cache = useEventCache(cacheId);
+  const cache = useEventCache(cacheName);
 
   /**
+   * FIXME: most other similar "fetch" hooks related to the Farmer
+   * accept an account as a parameter, however this hook wasn't designed
    * 
    */
   const fetch = useCallback(async (_startBlockNumber?: number) => {
-    if (!account?.address) return undefined;
-
+    if (!account) return;
     const existingEvents = (cache?.events || []);
 
     /// If a start block is provided, use it; otherwise fall back
@@ -96,11 +97,11 @@ export default function useEvents(cacheId: CacheID, getQueryFilters: GetQueryFil
 
     /// if a starting block isn't provided, getQueryFilters will
     /// fall back to the most efficient block for a given query.
-    const filters = getQueryFilters(account.address, startBlockNumber, endBlockNumber);
+    const filters = getQueryFilters(account, startBlockNumber, endBlockNumber);
 
     ///
-    console.debug(`[useEvents] ${cacheId}: fetching events`, {
-      cacheId,
+    console.debug(`[useEvents] ${cacheName}: fetching events`, {
+      cacheId: cacheName,
       startBlockNumber,
       endBlockNumber,
       filterCount: filters.length,
@@ -115,12 +116,12 @@ export default function useEvents(cacheId: CacheID, getQueryFilters: GetQueryFil
         .sort(sortEvents)
     ); // [0,0,1,1,2]
 
-    console.debug(`[useEvents] ${cacheId}: fetched ${newEvents.length} new events`);
+    console.debug(`[useEvents] ${cacheName}: fetched ${newEvents.length} new events`);
 
     dispatch(ingestEvents({
       // cache info
-      cache: cacheId,
-      account: account.address,
+      cache: cacheName,
+      account,
       chainId,
       /// if startBlockNumber wasn't set, use the earliest block found.
       /// FIXME: handle undefined
@@ -136,10 +137,10 @@ export default function useEvents(cacheId: CacheID, getQueryFilters: GetQueryFil
     ];
   }, [
     dispatch,
-    account?.address,
+    account,
     cache?.endBlockNumber,
     cache?.events,
-    cacheId,
+    cacheName,
     chainId,
     getQueryFilters,
     provider,
