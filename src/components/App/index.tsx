@@ -20,7 +20,7 @@ import FarmerSiloUpdater from 'state/farmer/silo/updater';
 import FarmerEventsUpdater from 'state/farmer/events/updater';
 import FarmerEventsProcessor from 'state/farmer/events/processor';
 import FarmerBalancesUpdater from 'state/farmer/balances/updater';
-import FarmerFertilizerUpdater from 'state/farmer/fertilizer/updater';
+import FarmerBarnUpdater from 'state/farmer/barn/updater';
 import FieldUpdater from 'state/beanstalk/field/updater';
 import { BeanstalkPalette } from './muiTheme';
 import './App.css';
@@ -108,7 +108,7 @@ export default function App() {
       <FarmerEventsUpdater />
       <FarmerEventsProcessor />
       <FarmerBalancesUpdater />
-      <FarmerFertilizerUpdater />
+      <FarmerBarnUpdater />
       <FarmerSiloUpdater />
       {/* -----------------------
         * Content

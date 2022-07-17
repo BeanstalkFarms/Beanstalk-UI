@@ -22,7 +22,7 @@ import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
 import { FormState } from 'components/Common/Form';
 import TxnPreview from 'components/Common/Form/TxnPreview';
 import TxnAccordion from 'components/Common/TxnAccordion';
-import { useFetchFarmerFertilizer } from 'state/farmer/fertilizer/updater';
+import { useFetchFarmerBarn } from 'state/farmer/barn/updater';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import { useFetchFarmerAllowances } from 'state/farmer/allowances/updater';
 import useChainId from 'hooks/useChain';
@@ -181,7 +181,7 @@ const Buy : React.FC<{}> = () => {
   const balances = useFarmerBalances();
 
   // Data refreshing
-  const [refetchFertilizer] = useFetchFarmerFertilizer();
+  const [refetchFertilizer] = useFetchFarmerBarn();
   const [refetchBalances]   = useFetchFarmerBalances();
   const [refetchAllowances] = useFetchFarmerAllowances();
   

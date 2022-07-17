@@ -40,10 +40,10 @@ const MyFertilizer: React.FC = () => {
   ///
   const tokenIds = useMemo(
     () =>
-      Object.keys(farmerFertilizer.tokens).filter(
+      Object.keys(farmerFertilizer.fertilizer).filter(
         () => tab === TabState.ACTIVE
       ),
-    [farmerFertilizer.tokens, tab]
+    [farmerFertilizer.fertilizer, tab]
   );
 
   // const fertilizerSummary = useFarmerTotalFertilizer(tokenIds);
@@ -73,7 +73,7 @@ const MyFertilizer: React.FC = () => {
             <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={SPROUTS} />
               <Typography>
-                {displayFullBN(farmerFertilizer.unfertilized, SPROUTS.displayDecimals)}
+                {displayFullBN(farmerFertilizer.unfertilizedSprouts, SPROUTS.displayDecimals)}
               </Typography>
             </Stack>
           </Stack>
@@ -96,7 +96,7 @@ const MyFertilizer: React.FC = () => {
             <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={FERTILIZED_SPROUTS} />
               <Typography>
-                {displayFullBN(farmerFertilizer.fertilized, FERTILIZED_SPROUTS.displayDecimals)}
+                {displayFullBN(farmerFertilizer.fertilizedSprouts, FERTILIZED_SPROUTS.displayDecimals)}
               </Typography>
             </Stack>
           </Stack>
@@ -122,7 +122,7 @@ const MyFertilizer: React.FC = () => {
               {tokenIds.map((_id) => {
                 const id     = new BigNumber(_id);
                 const season = new BigNumber(6_074);
-                const amount = farmerFertilizer.tokens[_id];
+                const amount = farmerFertilizer.fertilizer[_id];
                 const [humidity] = getHumidity(); // Until Unpause, fixed to 6_074.
                 const remaining = amount.multipliedBy(humidity.plus(1));
                 return (

@@ -12,7 +12,7 @@ import BigNumber from 'bignumber.js';
 import { ZERO_BN } from 'constants/index';
 import useBlocks from 'hooks/useBlocks';
 import ERC1155EventProcessor from 'lib/ERC1155/ERC1155EventProcessor';
-import { resetFertilizer, updateFarmerFertilizer } from './actions';
+import { resetFarmerBarn, updateFarmerBarn } from './actions';
 import useEvents, { GetQueryFilters } from '../events2/updater';
 import { EventCacheName } from '../events2';
 
@@ -77,7 +77,7 @@ import { EventCacheName } from '../events2';
  *    - Even if there are events loaded, we should know whether the visible data came from events or subgraph
  */
 
-export const useFetchFarmerFertilizer = () => {
+export const useFetchFarmerBarn = () => {
   /// Helpers
   const dispatch  = useDispatch();
   const replantId = useChainConstant(REPLANT_INITIAL_ID);
@@ -179,10 +179,10 @@ export const useFetchFarmerFertilizer = () => {
 
       console.debug('[farmer/fertilizer/updater] fertById =', fertById, sum.toString());
 
-      dispatch(updateFarmerFertilizer({
-        tokens: fertById,
-        unfertilized: toTokenUnitsBN(unfertilized.toString(), 6),
-        fertilized:   toTokenUnitsBN(fertilized.toString(), 6),
+      dispatch(updateFarmerBarn({
+        fertilizer: fertById,
+        unfertilizedSprouts: toTokenUnitsBN(unfertilized.toString(), 6),
+        fertilizedSprouts:   toTokenUnitsBN(fertilized.toString(), 6),
       }));
     }
   }, [
@@ -194,14 +194,14 @@ export const useFetchFarmerFertilizer = () => {
   ]); 
 
   const clear = useCallback(() => { 
-    dispatch(resetFertilizer());
+    dispatch(resetFarmerBarn());
   }, [dispatch]);
 
   return [fetch, clear] as const;
 };
 
-const FarmerFertilizerUpdater = () => {
-  const [fetch, clear]    = useFetchFarmerFertilizer();
+const FarmerBarnUpdater = () => {
+  const [fetch, clear]    = useFetchFarmerBarn();
   const { data: account } = useAccount();
   const chainId           = useChainId();
 
@@ -220,4 +220,4 @@ const FarmerFertilizerUpdater = () => {
   return null;
 };
 
-export default FarmerFertilizerUpdater;
+export default FarmerBarnUpdater;
