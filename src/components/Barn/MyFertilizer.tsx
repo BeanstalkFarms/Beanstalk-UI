@@ -30,8 +30,8 @@ enum TabState {
 }
 
 const MyFertilizer: React.FC = () => {
-  const farmerFertilizer = useSelector<AppState, AppState['_farmer']['fertilizer']>(
-    (state) => state._farmer.fertilizer
+  const farmerFertilizer = useSelector<AppState, AppState['_farmer']['barn']>(
+    (state) => state._farmer.barn
   );
   const getHumidity = useHumidityFromId();
 

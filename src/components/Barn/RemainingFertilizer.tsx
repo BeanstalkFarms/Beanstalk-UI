@@ -13,8 +13,8 @@ const RemainingFertilizer: React.FC = () => {
   const [humidity, nextDecreaseAmount] = useHumidity();
   const fertilizer = useSelector<
     AppState,
-    AppState['_beanstalk']['fertilizer']
-  >((state) => state._beanstalk.fertilizer);
+    AppState['_beanstalk']['barn']
+  >((state) => state._beanstalk.barn);
   const nextDecreaseDuration = useSelector<
     AppState,
     AppState['_beanstalk']['sun']['sunrise']['remaining']
