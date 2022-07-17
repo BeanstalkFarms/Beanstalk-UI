@@ -14,9 +14,9 @@ export interface FieldConditionsProps {
 }
 
 const FieldConditions: React.FC<FieldConditionsProps> = ({
- beanstalkField,
- // farmerField,
- // podLine,
+  beanstalkField,
+  // farmerField,
+  // podLine,
 }) => (
   <Card sx={{ p: 2 }}>
     <Stack gap={1}>
@@ -37,7 +37,10 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
         </Grid>
         <Grid item xs={12} md={3}>
           <Stack gap={0.5}>
-            <Tooltip title="The interest rate for Sowing Beans, or lending your Beans to Beanstalk." placement="top">
+            <Tooltip
+              title="The interest rate for Sowing Beans, or lending your Beans to Beanstalk."
+              placement="top"
+            >
               <Typography variant="body1">Temperature&nbsp;</Typography>
             </Tooltip>
             <Typography variant="bodyLarge" fontWeight="400">
@@ -47,17 +50,25 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
         </Grid>
         <Grid item xs={12} md={3}>
           <Stack gap={0.5}>
-            <Tooltip title="The interest rate for Sowing Beans, or lending your Beans to Beanstalk." placement="top">
+            <Tooltip
+              title="The interest rate for Sowing Beans, or lending your Beans to Beanstalk."
+              placement="top"
+            >
               <Typography variant="body1">Pod Line&nbsp;</Typography>
             </Tooltip>
             <Typography variant="bodyLarge" fontWeight="400">
-              {displayBN(beanstalkField?.podIndex.minus(beanstalkField.harvestableIndex))}
+              {displayBN(
+                beanstalkField?.podIndex.minus(beanstalkField.harvestableIndex)
+              )}
             </Typography>
           </Stack>
         </Grid>
         <Grid item xs={12} md={3}>
           <Stack gap={0.5}>
-            <Tooltip title="The number of Beans that Beanstalk has paid back to Sowers." placement="top">
+            <Tooltip
+              title="The number of Beans that Beanstalk has paid back to Sowers."
+              placement="top"
+            >
               <Typography variant="body1">Pods Harvested&nbsp;</Typography>
             </Tooltip>
             <Typography variant="bodyLarge" fontWeight="400">

@@ -4,15 +4,18 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 
 const PLACEMENTS = {
-  'form-top-right': { position: 'absolute', top: 0, right: 0, pr: 1.3, pt: 1.53 },
+  'form-top-right': {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    pr: 1.3,
+    pt: 1.53,
+  },
 };
 
-const TxnSettings : React.FC<{
-  placement?: 'form-top-right',
-}> = ({ 
-  placement = 'form-top-right',
-  children
-}) => {
+const TxnSettings: React.FC<{
+  placement?: 'form-top-right';
+}> = ({ placement = 'form-top-right', children }) => {
   // Menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const menuVisible = Boolean(anchorEl);
@@ -29,7 +32,13 @@ const TxnSettings : React.FC<{
   return (
     <Box sx={PLACEMENTS[placement]}>
       <IconButton size="small" onClick={handleToggleMenu}>
-        <SettingsIcon sx={{ fontSize: 20, transform: `rotate(${anchorEl ? 30 : 0}deg)`, transition: 'transform 150ms ease-in-out' }} />
+        <SettingsIcon
+          sx={{
+            fontSize: 20,
+            transform: `rotate(${anchorEl ? 30 : 0}deg)`,
+            transition: 'transform 150ms ease-in-out',
+          }}
+        />
       </IconButton>
       <Menu
         elevation={0}
@@ -44,10 +53,10 @@ const TxnSettings : React.FC<{
             borderStyle: 'solid',
             py: 0.5,
             px: 2,
-          }
+          },
         }}
-        // Align the menu to the bottom 
-        // right side of the anchor button. 
+        // Align the menu to the bottom
+        // right side of the anchor button.
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',
@@ -58,9 +67,13 @@ const TxnSettings : React.FC<{
         }}
       >
         <Stack gap={1}>
-          <Typography variant="h4" fontWeight="fontWeightBold">Transaction Settings</Typography>
+          <Typography variant="h4" fontWeight="fontWeightBold">
+            Transaction Settings
+          </Typography>
           <Box>
-            {children || <Typography>No settings for this transaction.</Typography>}
+            {children || (
+              <Typography>No settings for this transaction.</Typography>
+            )}
           </Box>
         </Stack>
       </Menu>

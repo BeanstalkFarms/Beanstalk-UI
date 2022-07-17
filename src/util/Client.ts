@@ -1,4 +1,9 @@
-import { chain, Chain, configureChains, createClient as createWagmiClient } from 'wagmi';
+import {
+  chain,
+  Chain,
+  configureChains,
+  createClient as createWagmiClient,
+} from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
@@ -13,10 +18,13 @@ import { SupportedChainId, TESTNET_RPC_ADDRESSES } from 'constants/chains';
 
 import { providers } from 'ethers';
 
-export type JsonRpcBatchProviderConfig = Omit<providers.FallbackProviderConfig, 'provider'> & {
-  pollingInterval?: number
-  rpc: (chain: Chain) => { http: string; webSocket?: string } | null
-}
+export type JsonRpcBatchProviderConfig = Omit<
+  providers.FallbackProviderConfig,
+  'provider'
+> & {
+  pollingInterval?: number;
+  rpc: (chain: Chain) => { http: string; webSocket?: string } | null;
+};
 
 export function jsonRpcBatchProvider({
   pollingInterval,
@@ -50,7 +58,7 @@ export function jsonRpcBatchProvider({
         webSocketProvider: () =>
           new providers.WebSocketProvider(
             rpcConfig.webSocket as string,
-            _chain.id,
+            _chain.id
           ),
       }),
     };
@@ -59,7 +67,7 @@ export function jsonRpcBatchProvider({
 
 // Setup node
 // FIXME: overlaps heavily with Uniswap fork implementation
-const makeTestnet = (_chainId: number, name: string) : Chain => ({
+const makeTestnet = (_chainId: number, name: string): Chain => ({
   id: _chainId,
   name: name,
   network: 'ethereum',
@@ -77,10 +85,7 @@ const makeTestnet = (_chainId: number, name: string) : Chain => ({
   testnet: true,
 });
 
-const baseChains = [
-  chain.mainnet,
-  chain.ropsten,
-];
+const baseChains = [chain.mainnet, chain.ropsten];
 
 if (Boolean(process.env.REACT_APP_SHOW_DEV_CHAINS) === true) {
   baseChains.push(makeTestnet(SupportedChainId.ASTRO, 'Astro'));
@@ -89,40 +94,37 @@ if (Boolean(process.env.REACT_APP_SHOW_DEV_CHAINS) === true) {
   baseChains.push(chain.localhost);
 }
 
-const { chains, provider } = configureChains(
-  baseChains, 
-  [
-    alchemyProvider({
-      alchemyId: process.env.REACT_APP_ALCHEMY_API_KEY,
-      priority: 0,
-    }),
-    jsonRpcBatchProvider({
-      priority: 1,
-      rpc: (_chain) => {
-        if (!TESTNET_RPC_ADDRESSES[_chain.id]) return null;
-        return { http: TESTNET_RPC_ADDRESSES[_chain.id] };
-      },
-    }),
-    // jsonRpcProvider({
-    //   priority: 1,
-    //   rpc: (_chain) => {
-    //     if (!TESTNET_RPC_ADDRESSES[_chain.id]) return null;
-    //     return { http: TESTNET_RPC_ADDRESSES[_chain.id] };
-    //   },
-    //   static: false,
-    // }),
-    publicProvider({
-      priority: 2,
-    }),
-  ]
-);
+const { chains, provider } = configureChains(baseChains, [
+  alchemyProvider({
+    alchemyId: process.env.REACT_APP_ALCHEMY_API_KEY,
+    priority: 0,
+  }),
+  jsonRpcBatchProvider({
+    priority: 1,
+    rpc: (_chain) => {
+      if (!TESTNET_RPC_ADDRESSES[_chain.id]) return null;
+      return { http: TESTNET_RPC_ADDRESSES[_chain.id] };
+    },
+  }),
+  // jsonRpcProvider({
+  //   priority: 1,
+  //   rpc: (_chain) => {
+  //     if (!TESTNET_RPC_ADDRESSES[_chain.id]) return null;
+  //     return { http: TESTNET_RPC_ADDRESSES[_chain.id] };
+  //   },
+  //   static: false,
+  // }),
+  publicProvider({
+    priority: 2,
+  }),
+]);
 
 const client = createWagmiClient({
   autoConnect: true,
   provider,
   connectors: [
     new MetaMaskConnector({
-      chains
+      chains,
     }),
     // new InjectedConnector({
     //   chains,
@@ -141,9 +143,9 @@ const client = createWagmiClient({
       chains,
       options: {
         appName: 'Beanstalk',
-      }
+      },
     }),
-  ]
+  ],
 });
 
 export default client;

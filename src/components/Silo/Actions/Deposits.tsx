@@ -18,84 +18,106 @@ import TableCard from '../../Common/TableCard';
 /**
  * Prep data to loading to a CratesCard.
  */
-const Deposits : React.FC<{
+const Deposits: React.FC<{
   token: Token;
   balance: FarmerSiloBalance | undefined;
-}> = ({
-  token,
-  balance,
-}) => {
+}> = ({ token, balance }) => {
   const Bean = useChainConstant(BEAN);
   const getUSD = useSiloTokenToUSD();
   const currentSeason = useSeason();
   const { data: account } = useAccount();
 
-  const rows : (DepositCrate & { id: BigNumber })[] = useMemo(() => 
-    balance?.deposited.crates.map((deposit) => ({
-      id: deposit.season,
-      ...deposit
-    })) || [],
+  const rows: (DepositCrate & { id: BigNumber })[] = useMemo(
+    () =>
+      balance?.deposited.crates.map((deposit) => ({
+        id: deposit.season,
+        ...deposit,
+      })) || [],
     [balance?.deposited.crates]
   );
 
-  const columns = useMemo(() => ([
-    COLUMNS.season,
-    {
-      field: 'amount',
-      flex: 2,
-      headerName: 'Amount',
-      align: 'left',
-      headerAlign: 'left',
-      valueFormatter: (params) => displayFullBN(params.value, token.displayDecimals, token.displayDecimals),
-      renderCell: (params) => (
-        <Tooltip
-          title={(
-            <>
-              <Typography>BDV: {displayBN(params.row.bdv)}</Typography>
-              <Typography>Value: {displayUSD(getUSD(Bean, params.row.bdv))}</Typography>
-            </>
-          )}
-        >
-          <Typography>{displayFullBN(params.value, token.displayDecimals, token.displayDecimals)}</Typography>
-        </Tooltip>
-      ),
-      sortable: false,
-    },
-    {
-      field: 'stalk',
-      flex: 1,
-      headerName: 'Stalk',
-      align: 'right',
-      headerAlign: 'right',
-      valueFormatter: (params) => displayBN(params.value),
-      renderCell: (params) => {
-        const seedsPerSeason = params.row.seeds.times(0.00001);
-        const accruedStalk   = seedsPerSeason.times(currentSeason.minus(params.row.season));
-        return (
-          <Tooltip
-            title={(
-              <>
-                <Typography>Base: {displayBN(params.row.stalk)} Stalk</Typography>
-                <Typography>Accrued: {displayBN(accruedStalk)} Stalk</Typography>
-                <Typography>Earning {displayBN(seedsPerSeason)} Stalk per Season</Typography>
-              </>
-            )}
-          >
-            <Typography>
-              {displayFullBN(params.value.plus(accruedStalk), STALK.displayDecimals, STALK.displayDecimals)}
-            </Typography>
-          </Tooltip>
-        );
-      },
-      sortable: false,
-    },
-    COLUMNS.seeds,
-  ] as GridColumns), [
-    token.displayDecimals,
-    getUSD,
-    Bean,
-    currentSeason
-  ]);
+  const columns = useMemo(
+    () =>
+      [
+        COLUMNS.season,
+        {
+          field: 'amount',
+          flex: 2,
+          headerName: 'Amount',
+          align: 'left',
+          headerAlign: 'left',
+          valueFormatter: (params) =>
+            displayFullBN(
+              params.value,
+              token.displayDecimals,
+              token.displayDecimals
+            ),
+          renderCell: (params) => (
+            <Tooltip
+              title={
+                <>
+                  <Typography>BDV: {displayBN(params.row.bdv)}</Typography>
+                  <Typography>
+                    Value: {displayUSD(getUSD(Bean, params.row.bdv))}
+                  </Typography>
+                </>
+              }
+            >
+              <Typography>
+                {displayFullBN(
+                  params.value,
+                  token.displayDecimals,
+                  token.displayDecimals
+                )}
+              </Typography>
+            </Tooltip>
+          ),
+          sortable: false,
+        },
+        {
+          field: 'stalk',
+          flex: 1,
+          headerName: 'Stalk',
+          align: 'right',
+          headerAlign: 'right',
+          valueFormatter: (params) => displayBN(params.value),
+          renderCell: (params) => {
+            const seedsPerSeason = params.row.seeds.times(0.00001);
+            const accruedStalk = seedsPerSeason.times(
+              currentSeason.minus(params.row.season)
+            );
+            return (
+              <Tooltip
+                title={
+                  <>
+                    <Typography>
+                      Base: {displayBN(params.row.stalk)} Stalk
+                    </Typography>
+                    <Typography>
+                      Accrued: {displayBN(accruedStalk)} Stalk
+                    </Typography>
+                    <Typography>
+                      Earning {displayBN(seedsPerSeason)} Stalk per Season
+                    </Typography>
+                  </>
+                }
+              >
+                <Typography>
+                  {displayFullBN(
+                    params.value.plus(accruedStalk),
+                    STALK.displayDecimals,
+                    STALK.displayDecimals
+                  )}
+                </Typography>
+              </Tooltip>
+            );
+          },
+          sortable: false,
+        },
+        COLUMNS.seeds,
+      ] as GridColumns,
+    [token.displayDecimals, getUSD, Bean, currentSeason]
+  );
 
   const amount = balance?.deposited.amount;
   const state = !account ? 'disconnected' : 'ready';

@@ -10,8 +10,8 @@ export type Sun = {
     next: DateTime;
     /** The Duration remaining until the next Sunrise. Updated once per second. */
     remaining: Duration;
-  }
-}
+  };
+};
 
 // const UNPAUSE_DATE = DateTime.fromISO('2022-07-04T09:00:00.000-07:00'); // '2016-05-25T09:08:34.123+06:00'
 export const getNextExpectedSunrise = () => {

@@ -2,10 +2,10 @@ import React from 'react';
 import {
   Button,
   Card,
-  Container, 
+  Container,
   Stack,
   Typography,
-  useMediaQuery
+  useMediaQuery,
 } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { GridColumns, GridRowsProp } from '@mui/x-data-grid';
@@ -40,7 +40,13 @@ const columns: GridColumns = [
       `${displayFullBN(params.value as BigNumber, 4)}`,
     renderCell: (params) => (
       <Typography
-        sx={{ color: params.value.gte(1) ? BeanstalkPalette.logoGreen : BeanstalkPalette.washedRed }}>{displayBN(params.value)}
+        sx={{
+          color: params.value.gte(1)
+            ? BeanstalkPalette.logoGreen
+            : BeanstalkPalette.washedRed,
+        }}
+      >
+        {displayBN(params.value)}
       </Typography>
     ),
   },
@@ -54,18 +60,20 @@ const columns: GridColumns = [
       `${displayFullBN(params.value as BigNumber, 4)}`,
     renderCell: (params) => (
       <>
-        {
-          params.value.gt(0) ? (
-            <Stack direction="row" alignItems="center">
-              <ArrowUpwardIcon sx={{ color: BeanstalkPalette.logoGreen, height: '17px' }} />
-              <Typography sx={{ color: BeanstalkPalette.logoGreen }}>{displayBN(params.value)}</Typography>
-            </Stack>
-          ) : (
-            <Typography>{displayBN(params.value)}</Typography>
-          )
-        }
+        {params.value.gt(0) ? (
+          <Stack direction="row" alignItems="center">
+            <ArrowUpwardIcon
+              sx={{ color: BeanstalkPalette.logoGreen, height: '17px' }}
+            />
+            <Typography sx={{ color: BeanstalkPalette.logoGreen }}>
+              {displayBN(params.value)}
+            </Typography>
+          </Stack>
+        ) : (
+          <Typography>{displayBN(params.value)}</Typography>
+        )}
       </>
-    )
+    ),
   },
   {
     field: 'newSoil',
@@ -77,26 +85,28 @@ const columns: GridColumns = [
       `${displayFullBN(params.value as BigNumber, 4)}`,
     renderCell: (params) => (
       <>
-        {
-          params.value.gt(0) ? (
-            <Stack direction="row" alignItems="center">
-              <ArrowUpwardIcon sx={{ color: BeanstalkPalette.logoGreen, height: '17px' }} />
-              <Typography sx={{ color: BeanstalkPalette.logoGreen }}>{displayBN(params.value)}</Typography>
-            </Stack>
-          ) : (
-            <Typography>{displayBN(params.value)}</Typography>
-          )
-        }
+        {params.value.gt(0) ? (
+          <Stack direction="row" alignItems="center">
+            <ArrowUpwardIcon
+              sx={{ color: BeanstalkPalette.logoGreen, height: '17px' }}
+            />
+            <Typography sx={{ color: BeanstalkPalette.logoGreen }}>
+              {displayBN(params.value)}
+            </Typography>
+          </Stack>
+        ) : (
+          <Typography>{displayBN(params.value)}</Typography>
+        )}
       </>
-    )
+    ),
   },
   {
     field: 'weather',
     headerName: '🌤 Weather',
     align: 'right',
     headerAlign: 'right',
-    flex: 1
-  }
+    flex: 1,
+  },
 ];
 
 const rows: GridRowsProp = [
@@ -106,7 +116,7 @@ const rows: GridRowsProp = [
     twap: new BigNumber(1.004),
     newBeans: new BigNumber(50000),
     newSoil: new BigNumber(2000),
-    weather: new BigNumber(689)
+    weather: new BigNumber(689),
   },
   {
     id: 2,
@@ -114,7 +124,7 @@ const rows: GridRowsProp = [
     twap: new BigNumber(1.004),
     newBeans: new BigNumber(500),
     newSoil: new BigNumber(1),
-    weather: new BigNumber(689)
+    weather: new BigNumber(689),
   },
   {
     id: 3,
@@ -122,7 +132,7 @@ const rows: GridRowsProp = [
     twap: new BigNumber(1.069),
     newBeans: new BigNumber(1),
     newSoil: new BigNumber(0),
-    weather: new BigNumber(689)
+    weather: new BigNumber(689),
   },
   {
     id: 4,
@@ -130,7 +140,7 @@ const rows: GridRowsProp = [
     twap: new BigNumber(0.95),
     newBeans: new BigNumber(0),
     newSoil: new BigNumber(5000),
-    weather: new BigNumber(689)
+    weather: new BigNumber(689),
   },
   {
     id: 5,
@@ -138,7 +148,7 @@ const rows: GridRowsProp = [
     twap: new BigNumber(0.9099),
     newBeans: new BigNumber(0),
     newSoil: new BigNumber(3785),
-    weather: new BigNumber(689)
+    weather: new BigNumber(689),
   },
   {
     id: 6,
@@ -146,24 +156,36 @@ const rows: GridRowsProp = [
     twap: new BigNumber(0.60009),
     newBeans: new BigNumber(0),
     newSoil: new BigNumber(1092),
-    weather: new BigNumber(689)
-  }
+    weather: new BigNumber(689),
+  },
 ];
 
 const ForecastPage: React.FC = () => {
   const chainId = useChainId();
 
   // Data
-  const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>((state) => state._bean.token.price);
-  const { season } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
-  const { totalPods } = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
-  const { supply: totalBeanSupply } = useSelector<AppState, AppState['_bean']['token']>((state) => state._bean.token);
-  const balances = useSelector<AppState, AppState['_beanstalk']['silo']['balances']>((state) => state._beanstalk.silo.balances);
-  
+  const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>(
+    (state) => state._bean.token.price
+  );
+  const { season } = useSelector<AppState, AppState['_beanstalk']['sun']>(
+    (state) => state._beanstalk.sun
+  );
+  const { totalPods } = useSelector<AppState, AppState['_beanstalk']['field']>(
+    (state) => state._beanstalk.field
+  );
+  const { supply: totalBeanSupply } = useSelector<
+    AppState,
+    AppState['_bean']['token']
+  >((state) => state._bean.token);
+  const balances = useSelector<
+    AppState,
+    AppState['_beanstalk']['silo']['balances']
+  >((state) => state._beanstalk.silo.balances);
+
   // Theme
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
+
   // Calculations
   const podRate = totalPods.dividedBy(totalBeanSupply).multipliedBy(100);
   // const isPriceLoading = beanPrice.eq(new BigNumber(-1));
@@ -171,9 +193,7 @@ const ForecastPage: React.FC = () => {
 
   let content;
   if (chainId === SupportedChainId.MAINNET) {
-    content = (
-      <ComingSoonCard title="Forecast" />
-    );
+    content = <ComingSoonCard title="Forecast" />;
   } else {
     content = (
       <>
@@ -197,18 +217,20 @@ const ForecastPage: React.FC = () => {
         <PageHeader
           title="Forecast"
           description="View conditions on the Bean Farm"
-          control={(
+          control={
             <Button
               href={ANALYTICS_LINK}
               target="_blank"
               rel="noreferrer"
               color="light"
               variant="contained"
-              endIcon={<ArrowForwardIcon sx={{ transform: 'rotate(-45deg)' }} />}
+              endIcon={
+                <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)' }} />
+              }
             >
               More Analytics
             </Button>
-          )}
+          }
         />
         {content}
       </Stack>

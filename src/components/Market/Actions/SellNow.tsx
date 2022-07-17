@@ -1,17 +1,34 @@
-import { Accordion, AccordionDetails, Box, Button, Grid, InputAdornment, Stack, Typography } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  Box,
+  Button,
+  Grid,
+  InputAdornment,
+  Stack,
+  Typography,
+} from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import {
   SettingInput,
   TokenAdornment,
   TokenInputField,
-  TokenOutputField, TxnPreview,
+  TokenOutputField,
+  TxnPreview,
   TxnSeparator,
-  TxnSettings
+  TxnSettings,
 } from 'components/Common/Form';
 import { ZERO_BN } from 'constants/index';
 import { BEAN, ETH, PODS } from 'constants/tokens';
-import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import {
+  Field,
+  FieldProps,
+  Form,
+  Formik,
+  FormikHelpers,
+  FormikProps,
+} from 'formik';
 import useChainId from 'hooks/useChain';
 import useChainConstant from 'hooks/useChainConstant';
 import React, { useCallback, useEffect, useMemo } from 'react';
@@ -34,13 +51,14 @@ export type SellNowFormValues = {
   min: BigNumber | null;
   max: BigNumber | null;
   amount: BigNumber | null;
-}
+};
 
-const SellNowForm: React.FC<FormikProps<SellNowFormValues>
-  & {
-  token: ERC20Token | NativeToken;
-  podOrder: PodOrder;
-}> = ({
+const SellNowForm: React.FC<
+  FormikProps<SellNowFormValues> & {
+    token: ERC20Token | NativeToken;
+    podOrder: PodOrder;
+  }
+> = ({
   values,
   setFieldValue,
   podOrder,
@@ -52,30 +70,45 @@ const SellNowForm: React.FC<FormikProps<SellNowFormValues>
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
     (state) => state._farmer.field
   );
-  
+
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
     (state) => state._beanstalk.field
   );
 
-  const numPods = useMemo(() => (values.plotIndex !== null ? new BigNumber(farmerField.plots[values.plotIndex]) : ZERO_BN), [farmerField.plots, values.plotIndex]);
-  
-  const handlePlotSelect = useCallback((index: string) => {
-    setFieldValue('plotIndex', index);
-    setFieldValue('min', ZERO_BN);
-    setFieldValue('max', new BigNumber(farmerField.plots[index]));
-    setFieldValue('amount', new BigNumber(farmerField.plots[index]));
-  }, [farmerField.plots, setFieldValue]);
+  const numPods = useMemo(
+    () =>
+      values.plotIndex !== null
+        ? new BigNumber(farmerField.plots[values.plotIndex])
+        : ZERO_BN,
+    [farmerField.plots, values.plotIndex]
+  );
+
+  const handlePlotSelect = useCallback(
+    (index: string) => {
+      setFieldValue('plotIndex', index);
+      setFieldValue('min', ZERO_BN);
+      setFieldValue('max', new BigNumber(farmerField.plots[index]));
+      setFieldValue('amount', new BigNumber(farmerField.plots[index]));
+    },
+    [farmerField.plots, setFieldValue]
+  );
 
   const handleChangeAmount = (amount: BigNumber) => {
     const delta = (values?.max || ZERO_BN).minus(amount);
     setFieldValue('min', MaxBN(ZERO_BN, delta));
     if (delta.lt(0)) {
-      setFieldValue('max', MinBN(numPods, (values?.max || ZERO_BN).plus(delta.abs())));
+      setFieldValue(
+        'max',
+        MinBN(numPods, (values?.max || ZERO_BN).plus(delta.abs()))
+      );
     }
   };
 
   useEffect(() => {
-    setFieldValue('amount', values.max?.minus(values.min ? values.min : ZERO_BN));
+    setFieldValue(
+      'amount',
+      values.max?.minus(values.min ? values.min : ZERO_BN)
+    );
   }, [values.min, values.max, setFieldValue]);
 
   return (
@@ -89,7 +122,7 @@ const SellNowForm: React.FC<FormikProps<SellNowFormValues>
         open={dialogOpen}
       />
       <Stack gap={1}>
-        {(values?.plotIndex === null) ? (
+        {values?.plotIndex === null ? (
           <FieldWrapper>
             <TokenInputField
               name="amount"
@@ -115,10 +148,7 @@ const SellNowForm: React.FC<FormikProps<SellNowFormValues>
                 fullWidth
                 InputProps={{
                   endAdornment: (
-                    <TokenAdornment
-                      token={PODS}
-                      onClick={showDialog}
-                    />
+                    <TokenAdornment token={PODS} onClick={showDialog} />
                   ),
                 }}
                 // Other
@@ -146,7 +176,7 @@ const SellNowForm: React.FC<FormikProps<SellNowFormValues>
                   balance={numPods || ZERO_BN}
                   hideBalance
                   InputProps={{
-                    endAdornment: 'Start'
+                    endAdornment: 'Start',
                   }}
                   size="small"
                 />
@@ -159,7 +189,7 @@ const SellNowForm: React.FC<FormikProps<SellNowFormValues>
                   balance={numPods || ZERO_BN}
                   hideBalance
                   InputProps={{
-                    endAdornment: 'End'
+                    endAdornment: 'End',
                   }}
                   size="small"
                 />
@@ -168,7 +198,9 @@ const SellNowForm: React.FC<FormikProps<SellNowFormValues>
             <TxnSeparator mt={0} />
             <TokenOutputField
               token={BEAN[1]}
-              amount={podOrder.pricePerPod.multipliedBy(values.amount ? values.amount : ZERO_BN)}
+              amount={podOrder.pricePerPod.multipliedBy(
+                values.amount ? values.amount : ZERO_BN
+              )}
               isLoading={false}
             />
             <Box>
@@ -179,12 +211,12 @@ const SellNowForm: React.FC<FormikProps<SellNowFormValues>
                     actions={[
                       {
                         type: ActionType.BASE,
-                        message: 'DO SOMETHING'
+                        message: 'DO SOMETHING',
                       },
                       {
                         type: ActionType.BASE,
-                        message: 'DO SOMETHING!'
-                      }
+                        message: 'DO SOMETHING!',
+                      },
                     ]}
                   />
                 </AccordionDetails>
@@ -202,25 +234,34 @@ const SellNowForm: React.FC<FormikProps<SellNowFormValues>
 
 // ---------------------------------------------------
 
-const SellNow: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
+const SellNow: React.FC<{ podOrder: PodOrder }> = ({ podOrder }) => {
   const Eth = useChainConstant(ETH);
 
-  const initialValues: SellNowFormValues = useMemo(() => ({
-    tokens: [
-      {
-        token: Eth,
-        amount: null,
-      },
-    ],
-    plotIndex: null,
-    min: ZERO_BN,
-    max: null,
-    amount: null
-  }), [Eth]);
+  const initialValues: SellNowFormValues = useMemo(
+    () => ({
+      tokens: [
+        {
+          token: Eth,
+          amount: null,
+        },
+      ],
+      plotIndex: null,
+      min: ZERO_BN,
+      max: null,
+      amount: null,
+    }),
+    [Eth]
+  );
 
-  const onSubmit = useCallback((values: SellNowFormValues, formActions: FormikHelpers<SellNowFormValues>) => {
-    Promise.resolve();
-  }, []);
+  const onSubmit = useCallback(
+    (
+      values: SellNowFormValues,
+      formActions: FormikHelpers<SellNowFormValues>
+    ) => {
+      Promise.resolve();
+    },
+    []
+  );
 
   return (
     <Formik<SellNowFormValues>
@@ -230,13 +271,13 @@ const SellNow: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
       {(formikProps: FormikProps<SellNowFormValues>) => (
         <>
           <TxnSettings placement="form-top-right">
-            <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
+            <SettingInput
+              name="settings.slippage"
+              label="Slippage Tolerance"
+              endAdornment="%"
+            />
           </TxnSettings>
-          <SellNowForm
-            podOrder={podOrder}
-            token={BEAN[1]}
-            {...formikProps}
-          />
+          <SellNowForm podOrder={podOrder} token={BEAN[1]} {...formikProps} />
         </>
       )}
     </Formik>

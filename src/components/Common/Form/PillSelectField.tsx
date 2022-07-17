@@ -5,29 +5,27 @@ import useToggle from 'hooks/display/useToggle';
 import DescriptionButton from '../DescriptionButton';
 import PillDialogField from './PillDialogField';
 
-const PillSelectField : React.FC<{
+const PillSelectField: React.FC<{
   /** */
-  options: ({
+  options: {
     title: string;
     description: string;
     icon: string | ReactNode;
     pill: string | ReactNode;
     value: any;
-  })[]
+  }[];
   /** Field name */
   name: string;
   /** Field label */
   label: string;
-}> = ({
-  options,
-  name,
-  label,
-}) => {
+}> = ({ options, name, label }) => {
   const [isOpen, show, hide] = useToggle();
   return (
     <Field name={name}>
       {(fieldProps: FieldProps<any>) => {
-        const pill = options.find((x) => x.value === fieldProps.field.value)?.pill;
+        const pill = options.find(
+          (x) => x.value === fieldProps.field.value
+        )?.pill;
         const set = (v: any) => () => {
           fieldProps.form.setFieldValue(name, v);
           hide();
@@ -49,8 +47,8 @@ const PillSelectField : React.FC<{
                   onClick={set(option.value)}
                   fullWidth
                   disableRipple
-                  />
-                ))}
+                />
+              ))}
             </Stack>
           </PillDialogField>
         );

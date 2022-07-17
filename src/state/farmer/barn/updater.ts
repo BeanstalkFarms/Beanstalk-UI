@@ -21,18 +21,18 @@ import { EventCacheName } from '../events2';
  *  - Loop through data as necessary (probably fetching all data for the farmer)
  *  - How to handle the case where we want to paginate? Very tricky with events,
  *    since application state needs to rebuilt from the first event up.
- *   
+ *
  * If the subgraph call fails, what next?
  *  1. Silently fall back to on-chain events.
  *  2. Ask the user how they want to proceed.
  *  3. Throw an error and stop trying.
- * 
+ *
  * If the on-chain event call works
  *  - Parse the events into the same format
- * 
+ *
  * If the on-chain event calls fail
  *  - Stop trying
- * 
+ *
  * How to save events:
  *  1 Within each section of state (silo, field, market)
  *    - Requires reducer/actions to handle saving events for each section
@@ -42,7 +42,7 @@ import { EventCacheName } from '../events2';
  *      required for both the Field and the Marketplace
  *      - Is the marketplace out of scope for event processing? Soon enough it will
  *        be far too large to parse. Check to see which event params are indexed.
- *    
+ *
  *  2 In a top level "farmer/events" section that shares all events
  *    - The event processor can loop through all events, so no need to filter before
  *      running it
@@ -50,11 +50,11 @@ import { EventCacheName } from '../events2';
  *        - Will event process work OK if data from different regions is entered
  *          out of order? Ex. I ingest all of the Silo events in order, then do all
  *          of the field events in order. I don't think there's any interdependencies here.
- * 
+ *
  * What needs to be saved:
  *  - Array of events
  *    - Each event should be annotated with the last time it was loaded, what RPC address
- *  - Last block queried  
+ *  - Last block queried
  *    - Defaults to an efficient block (ex. don't start at block 0, start at genesis)
  *      - Most efficient block depends on the event. For ex. after Replant the most efficient
  *        block from which to query silo events is the one at which Silo deposits first begin
@@ -67,7 +67,7 @@ import { EventCacheName } from '../events2';
  *      - Should we ever bust the event cache for some reason?
  *        - User needs to be able to reset the cache
  *        - User needs to be able to choose whether the cache is saved or not
- *          - If we don't let them save, we should re-investigate using wallet native RPCs for 
+ *          - If we don't let them save, we should re-investigate using wallet native RPCs for
  *            loading big data like this. Our poor Alchemy keys will get wrecked.
  *        - Not sure in what instance we'd want to bust the cache due to it being stale, given
  *          that ethereum events are set in stone and are processed sequentially to rebuild state.
@@ -79,121 +79,132 @@ import { EventCacheName } from '../events2';
 
 export const useFetchFarmerBarn = () => {
   /// Helpers
-  const dispatch  = useDispatch();
+  const dispatch = useDispatch();
   const replantId = useChainConstant(REPLANT_INITIAL_ID);
 
   /// Contracts
   const fertContract = useFertilizerContract();
-  const beanstalk    = useBeanstalkContract() as unknown as BeanstalkReplanted;
-  const blocks       = useBlocks();
+  const beanstalk = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const blocks = useBlocks();
 
   /// Events
-  const getQueryFilters = useCallback<GetQueryFilters>((
-    account,
-    fromBlock,
-    toBlock,
-  ) => [
-    /// Send FERT
-    fertContract.queryFilter(
-      fertContract.filters.TransferSingle(
-        null,     // operator
-        account,  // from
-        null,     // to
-        null,     // id
-        null,     // value
+  const getQueryFilters = useCallback<GetQueryFilters>(
+    (account, fromBlock, toBlock) => [
+      /// Send FERT
+      fertContract.queryFilter(
+        fertContract.filters.TransferSingle(
+          null, // operator
+          account, // from
+          null, // to
+          null, // id
+          null // value
+        ),
+        fromBlock || blocks.FERTILIZER_LAUNCH_BLOCK,
+        toBlock || 'latest'
       ),
-      fromBlock || blocks.FERTILIZER_LAUNCH_BLOCK,
-      toBlock   || 'latest',
-    ),
-    fertContract.queryFilter(
-      fertContract.filters.TransferBatch(
-        null,     // operator
-        account,  // from
-        null,     // to
-        null,     // ids
-        null,     // values
+      fertContract.queryFilter(
+        fertContract.filters.TransferBatch(
+          null, // operator
+          account, // from
+          null, // to
+          null, // ids
+          null // values
+        ),
+        fromBlock || blocks.FERTILIZER_LAUNCH_BLOCK,
+        toBlock || 'latest'
       ),
-      fromBlock || blocks.FERTILIZER_LAUNCH_BLOCK,
-      toBlock   || 'latest',
-    ),
-    /// Receive FERT
-    fertContract.queryFilter(
-      fertContract.filters.TransferSingle(
-        null,     // operator
-        null,     // from
-        account,  // to
-        null,     // id
-        null,     // value
+      /// Receive FERT
+      fertContract.queryFilter(
+        fertContract.filters.TransferSingle(
+          null, // operator
+          null, // from
+          account, // to
+          null, // id
+          null // value
+        ),
+        fromBlock || blocks.FERTILIZER_LAUNCH_BLOCK,
+        toBlock || 'latest'
       ),
-      fromBlock || blocks.FERTILIZER_LAUNCH_BLOCK,
-      toBlock   || 'latest',
-    ),
-    fertContract.queryFilter(
-      fertContract.filters.TransferBatch(
-        null,     // operator
-        null,     // from
-        account,  // to
-        null,     // ids
-        null,     // values
+      fertContract.queryFilter(
+        fertContract.filters.TransferBatch(
+          null, // operator
+          null, // from
+          account, // to
+          null, // ids
+          null // values
+        ),
+        fromBlock || blocks.FERTILIZER_LAUNCH_BLOCK,
+        toBlock || 'latest'
       ),
-      fromBlock || blocks.FERTILIZER_LAUNCH_BLOCK,
-      toBlock   || 'latest',
-    ),
-  ], [blocks.FERTILIZER_LAUNCH_BLOCK, fertContract]);
+    ],
+    [blocks.FERTILIZER_LAUNCH_BLOCK, fertContract]
+  );
 
   const [fetchEvents] = useEvents(EventCacheName.FERTILIZER, getQueryFilters);
 
-  /// Handlers 
-  const fetch = useCallback(async (_account: string) => {
-    const account = getAccount(_account);
-    if (fertContract && account && fetchEvents) {
-      console.debug('[farmer/fertilizer/updater] FETCH: ', replantId.toString());
+  /// Handlers
+  const fetch = useCallback(
+    async (_account: string) => {
+      const account = getAccount(_account);
+      if (fertContract && account && fetchEvents) {
+        console.debug(
+          '[farmer/fertilizer/updater] FETCH: ',
+          replantId.toString()
+        );
 
-      /// Fetch new events and re-run the processor.
-      const allEvents = await fetchEvents();
-      const { tokens } = new ERC1155EventProcessor(account, 0).ingestAll(allEvents || []);
-      const ids = Object.keys(tokens);
-      const idStrings = ids.map((id) => id.toString());
+        /// Fetch new events and re-run the processor.
+        const allEvents = await fetchEvents();
+        const { tokens } = new ERC1155EventProcessor(account, 0).ingestAll(
+          allEvents || []
+        );
+        const ids = Object.keys(tokens);
+        const idStrings = ids.map((id) => id.toString());
 
-      const [
-        balances,
-        unfertilized,
-        fertilized,
-      ] = await Promise.all([
-        beanstalk.balanceOfBatchFertilizer(ids.map(() => account), idStrings),
-        /// How much of each ID is Unfertilized (aka a Sprout)
-        beanstalk.balanceOfUnfertilized(account, idStrings),
-        /// How much of each ID is Fertilized   (aka a Fertilized Sprout)
-        beanstalk.balanceOfFertilized(account, idStrings),
-      ] as const);
+        const [balances, unfertilized, fertilized] = await Promise.all([
+          beanstalk.balanceOfBatchFertilizer(
+            ids.map(() => account),
+            idStrings
+          ),
+          /// How much of each ID is Unfertilized (aka a Sprout)
+          beanstalk.balanceOfUnfertilized(account, idStrings),
+          /// How much of each ID is Fertilized   (aka a Fertilized Sprout)
+          beanstalk.balanceOfFertilized(account, idStrings),
+        ] as const);
 
-      console.debug('[farmer/fertilizer/updater] RESULT: balances =', balances, unfertilized.toString(), fertilized.toString());
-      
-      /// Key the amount of fertilizer by ID.
-      let sum = ZERO_BN;
-      const fertById = balances.reduce((prev, curr, index) => {
-        sum = sum.plus(new BigNumber(curr.amount.toString()));
-        prev[ids[index]] = toTokenUnitsBN(curr.amount.toString(), 0);
-        return prev;
-      }, {} as { [key: string] : BigNumber });
+        console.debug(
+          '[farmer/fertilizer/updater] RESULT: balances =',
+          balances,
+          unfertilized.toString(),
+          fertilized.toString()
+        );
 
-      console.debug('[farmer/fertilizer/updater] fertById =', fertById, sum.toString());
+        /// Key the amount of fertilizer by ID.
+        let sum = ZERO_BN;
+        const fertById = balances.reduce((prev, curr, index) => {
+          sum = sum.plus(new BigNumber(curr.amount.toString()));
+          prev[ids[index]] = toTokenUnitsBN(curr.amount.toString(), 0);
+          return prev;
+        }, {} as { [key: string]: BigNumber });
 
-      dispatch(updateFarmerBarn({
-        fertilizer: fertById,
-        unfertilizedSprouts: toTokenUnitsBN(unfertilized.toString(), 6),
-        fertilizedSprouts:   toTokenUnitsBN(fertilized.toString(), 6),
-      }));
-    }
-  }, [
-    dispatch,
-    beanstalk,
-    fertContract,
-    replantId,
-    fetchEvents,
-  ]); 
+        console.debug(
+          '[farmer/fertilizer/updater] fertById =',
+          fertById,
+          sum.toString()
+        );
 
-  const clear = useCallback(() => { 
+        dispatch(
+          updateFarmerBarn({
+            fertilizer: fertById,
+            unfertilizedSprouts: toTokenUnitsBN(unfertilized.toString(), 6),
+            fertilizedSprouts: toTokenUnitsBN(fertilized.toString(), 6),
+          })
+        );
+      }
+    },
+    [dispatch, beanstalk, fertContract, replantId, fetchEvents]
+  );
+
+  const clear = useCallback(() => {
     dispatch(resetFarmerBarn());
   }, [dispatch]);
 
@@ -201,9 +212,9 @@ export const useFetchFarmerBarn = () => {
 };
 
 const FarmerBarnUpdater = () => {
-  const [fetch, clear]    = useFetchFarmerBarn();
+  const [fetch, clear] = useFetchFarmerBarn();
   const { data: account } = useAccount();
-  const chainId           = useChainId();
+  const chainId = useChainId();
 
   ///
   useEffect(() => {
@@ -212,10 +223,7 @@ const FarmerBarnUpdater = () => {
       fetch(account.address);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    account?.address,
-    chainId
-  ]);
+  }, [account?.address, chainId]);
 
   return null;
 };

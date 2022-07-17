@@ -2,7 +2,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import { Event } from 'lib/Beanstalk/EventProcessor';
 import { resetEvents, setEvents } from './actions';
 
-const initialState : Event[] = [];
+const initialState: Event[] = [];
 
 export default createReducer(initialState, (builder) =>
   builder

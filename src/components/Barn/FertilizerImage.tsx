@@ -3,26 +3,26 @@ import { grey } from '@mui/material/colors';
 import React from 'react';
 import fertUnusedImage from 'img/tokens/fert-logo-unused.svg';
 import fertActiveImage from 'img/tokens/fert-logo-active.svg';
-import fertUsedImage   from 'img/tokens/fert-logo-used.svg';
+import fertUsedImage from 'img/tokens/fert-logo-used.svg';
 import { BeanstalkPalette } from '../App/muiTheme';
 
 import './FertilizerImage.css';
 import BigNumber from 'bignumber.js';
 
-export type FertilizerState = 'unused' | 'active' | 'used'
-export const FERTILIZER_ICONS : { [key in FertilizerState]: string } = {
+export type FertilizerState = 'unused' | 'active' | 'used';
+export const FERTILIZER_ICONS: { [key in FertilizerState]: string } = {
   unused: fertUnusedImage,
   active: fertActiveImage,
-  used:   fertUsedImage,
+  used: fertUsedImage,
 };
 export type FertilizerImageProps = {
   state?: FertilizerState;
-  isNew? : boolean;
+  isNew?: boolean;
   progress?: number;
   id?: BigNumber;
 };
 
-const FertilizerImage : React.FC<FertilizerImageProps> = ({
+const FertilizerImage: React.FC<FertilizerImageProps> = ({
   state = 'unused',
   isNew = false,
   progress,
@@ -41,8 +41,8 @@ const FertilizerImage : React.FC<FertilizerImageProps> = ({
         borderRadius: 1,
         position: 'relative',
         '&:hover > .id': {
-          display: 'block'
-        }
+          display: 'block',
+        },
       }}
       className="fert-item"
     >
@@ -51,11 +51,13 @@ const FertilizerImage : React.FC<FertilizerImageProps> = ({
         src={FERTILIZER_ICONS[state]}
         width="45%"
         style={{ position: 'relative', zIndex: 2 }}
-        className={isNew ? 'fert-anim bounce' : id ? 'fert-anim bounce-hover' : undefined}
+        className={
+          isNew ? 'fert-anim bounce' : id ? 'fert-anim bounce-hover' : undefined
+        }
       />
       {id && (
         <Box
-          className="id" 
+          className="id"
           sx={{
             display: 'none',
             position: 'absolute',
@@ -80,7 +82,7 @@ const FertilizerImage : React.FC<FertilizerImageProps> = ({
             left: 0,
             zIndex: 0,
             borderBottomLeftRadius: 9,
-            borderBottomRightRadius: 9
+            borderBottomRightRadius: 9,
           }}
         />
       )}
@@ -92,14 +94,14 @@ const FertilizerImage : React.FC<FertilizerImageProps> = ({
       <Button
         variant="outlined"
         sx={{ borderColor: 'none', p: 0 }}
-        href={`https://opensea.io/assets/ethereum/0x402c84de2ce49af88f5e2ef3710ff89bfed36cb6/${id.toString()}`} 
+        href={`https://opensea.io/assets/ethereum/0x402c84de2ce49af88f5e2ef3710ff89bfed36cb6/${id.toString()}`}
         target="_blank"
         fullWidth
         disableRipple={false}
       >
         {inner}
       </Button>
-    )
+    );
   }
 
   return inner;

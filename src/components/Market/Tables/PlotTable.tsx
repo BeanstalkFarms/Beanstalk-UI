@@ -8,31 +8,31 @@ const marketplaceTableStyle = {
     outline: 'none',
     border: 'none',
     '& .MuiDataGrid-row.odd': {
-      backgroundColor: '#F6FAFE'
+      backgroundColor: '#F6FAFE',
     },
     '& .MuiDataGrid-iconSeparator': {
-      display: 'none'
+      display: 'none',
     },
     '& .MuiDataGrid-columnHeaderTitle': {
       fontWeight: 500,
-      fontSize: FontSize.base
+      fontSize: FontSize.base,
     },
     '& .MuiDataGrid-columnHeader:focus': {
-      outline: 'none'
+      outline: 'none',
     },
     '& .MuiDataGrid-columnHeaderDraggableContainer:focus': {
-      outline: 'none'
+      outline: 'none',
     },
     '& .MuiDataGrid-cellContent': {
       color: '#677166',
-      fontSize: '18px'
+      fontSize: '18px',
     },
     '& .MuiDataGrid-cell': {
       outline: 'none',
       border: 'none',
       '&:focused': {
-        border: 'none'
-      }
+        border: 'none',
+      },
     },
     '& .MuiDataGrid-cell:focus': {
       outline: 'none',
@@ -48,8 +48,8 @@ const marketplaceTableStyle = {
       cursor: 'pointer',
       width: 'calc(100% - 2.5px)',
       '&:hover': {
-        background: BeanstalkPalette.hoverBlue
-      }
+        background: BeanstalkPalette.hoverBlue,
+      },
     },
     '& .MuiDataGrid-footerContainer': {
       outline: 'none',
@@ -60,22 +60,27 @@ const marketplaceTableStyle = {
       outline: 'none',
       border: 'none',
       fontSize: '18px',
-      color: '#000000'
+      color: '#000000',
     },
     '& .MuiDataGrid-virtualScrollerRenderZone :hover': {
       // backgroundColor: "transparent"
       // backgroundColor: "#D8F2DB"
-    }
-  }
+    },
+  },
 };
 const MAX_ROWS = 5;
 
 export type BuySellTableProps = {
   hideHeader?: boolean;
   maxRows?: number;
-}
+};
 
-const PlotTable: React.FC<BuySellTableProps & DataGridProps & BoxProps> = ({ rows, columns, maxRows, onRowClick }) => {
+const PlotTable: React.FC<BuySellTableProps & DataGridProps & BoxProps> = ({
+  rows,
+  columns,
+  maxRows,
+  onRowClick,
+}) => {
   const tableHeight = useMemo(() => {
     if (!rows || rows.length === 0) return '200px';
     if (maxRows !== undefined) return maxRows * 56 + 112;
@@ -101,7 +106,7 @@ const PlotTable: React.FC<BuySellTableProps & DataGridProps & BoxProps> = ({ row
           initialState={{
             sorting: {
               sortModel: [{ field: 'placeInLine', sort: 'asc' }],
-            }
+            },
           }}
         />
       </Box>

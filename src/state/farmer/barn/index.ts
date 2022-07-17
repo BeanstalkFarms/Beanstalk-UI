@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 
 export type FarmerBarn = {
-  /** 
+  /**
    * Fertilizer ERC1155 tokens. The key is a token ID,
    * value is the amount of that ID owned by the Farmer.
    * In Beanstlak this is referred to as "Fertilized".
@@ -21,4 +21,4 @@ export type FarmerBarn = {
    * When the Farmer calls `rinse()` this is reset to 0.
    */
   fertilizedSprouts: BigNumber;
-}
+};

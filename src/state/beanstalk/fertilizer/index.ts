@@ -6,4 +6,4 @@ export type Barn = {
   humidity: BigNumber;
   currentBpf: BigNumber;
   endBpf: BigNumber;
-}
+};

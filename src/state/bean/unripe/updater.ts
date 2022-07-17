@@ -21,27 +21,30 @@ export const useUnripe = () => {
       try {
         const tokenAddresses = Object.keys(unripeTokens); // ['0x1BEA0', '0x1BEA1']
         const results = await Promise.all(
-          tokenAddresses.map((addr) => (
+          tokenAddresses.map((addr) =>
             // VERIFY: the percentage returned uses the underlying token's decimals
-            beanstalk.getPercentPenalty(addr).then(tokenResult(unripeTokens[addr]))
-          ))
+            beanstalk
+              .getPercentPenalty(addr)
+              .then(tokenResult(unripeTokens[addr]))
+          )
         ); // [BigNumber(0.001), BigNumber(0.0014)]
-        dispatch(updateUnripe({
-          penalties: tokenAddresses.reduce<AddressMap<BigNumber>>((prev, key, index) => {
-            prev[key] = results[index];
-            return prev;
-          }, {})
-        }));
+        dispatch(
+          updateUnripe({
+            penalties: tokenAddresses.reduce<AddressMap<BigNumber>>(
+              (prev, key, index) => {
+                prev[key] = results[index];
+                return prev;
+              },
+              {}
+            ),
+          })
+        );
       } catch (err) {
         /// ???
         console.error(err);
       }
     }
-  }, [
-    dispatch,
-    beanstalk,
-    unripeTokens,
-  ]);
+  }, [dispatch, beanstalk, unripeTokens]);
 
   const clear = useCallback(() => {
     dispatch(resetUnripe());
@@ -54,11 +57,11 @@ export const useUnripe = () => {
 const UnripeUpdater = () => {
   const [fetch, clear] = useUnripe();
   const chainId = useChainId();
-  
+
   useEffect(() => {
     clear();
     fetch();
-    // NOTE: 
+    // NOTE:
     // The below requires that useChainId() is called last in the stack of hooks.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId]);

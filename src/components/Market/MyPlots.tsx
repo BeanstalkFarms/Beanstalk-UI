@@ -1,5 +1,13 @@
 import React, { useCallback, useState } from 'react';
-import { Box, Card, CardProps, Stack, Tab, Tabs, Typography } from '@mui/material';
+import {
+  Box,
+  Card,
+  CardProps,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
+} from '@mui/material';
 import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
@@ -31,7 +39,7 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
               px: 0.8,
               py: 0.5,
               backgroundColor: BeanstalkPalette.lightGreen,
-              color: BeanstalkPalette.logoGreen
+              color: BeanstalkPalette.logoGreen,
             }}
           >
             <Typography>{params.value.substring(0, 6)}</Typography>
@@ -44,8 +52,15 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
       headerName: 'Place In Line',
       flex: 1,
       renderCell: (params) => (
-        <Typography>0 - {displayFullBN(new BigNumber(params.value).minus(beanstalkField.harvestableIndex), 0)}
-          <Typography display="inline" color={BeanstalkPalette.lightishGrey}>in Line</Typography>
+        <Typography>
+          0 -{' '}
+          {displayFullBN(
+            new BigNumber(params.value).minus(beanstalkField.harvestableIndex),
+            0
+          )}
+          <Typography display="inline" color={BeanstalkPalette.lightishGrey}>
+            in Line
+          </Typography>
         </Typography>
       ),
     },
@@ -72,17 +87,16 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
       disableColumnMenu: true,
       align: 'right',
       headerAlign: 'right',
-      valueFormatter: (params) => (
-        `${displayFullBN(params.value as BigNumber, 2)}`
-      ),
+      valueFormatter: (params) =>
+        `${displayFullBN(params.value as BigNumber, 2)}`,
       renderCell: (params) => (
         <Stack direction="row" gap={0.3} alignItems="center">
           <img src={podIcon} alt="Pods Icon" height="18px" />
-          <Typography>{displayBN(params.row.filledAmount)}
-            /{displayBN(params.row.totalAmount)}
-            <Typography
-              display="inline"
-              color={BeanstalkPalette.lightishGrey}>Purchased
+          <Typography>
+            {displayBN(params.row.filledAmount)}/
+            {displayBN(params.row.totalAmount)}
+            <Typography display="inline" color={BeanstalkPalette.lightishGrey}>
+              Purchased
             </Typography>
           </Typography>
         </Stack>
@@ -104,7 +118,7 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
               px: 0.8,
               py: 0.5,
               backgroundColor: BeanstalkPalette.lightGreen,
-              color: BeanstalkPalette.logoGreen
+              color: BeanstalkPalette.logoGreen,
             }}
           >
             <Typography>{params.value.substring(0, 6)}</Typography>
@@ -118,11 +132,23 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
       flex: 1.5,
       renderCell: (params) => (
         <Stack direction="row" gap={1}>
-          <Typography>{displayFullBN(new BigNumber(params.value).minus(beanstalkField.harvestableIndex), 0)} in
-            Line
+          <Typography>
+            {displayFullBN(
+              new BigNumber(params.value).minus(
+                beanstalkField.harvestableIndex
+              ),
+              0
+            )}{' '}
+            in Line
           </Typography>
-          <Typography color={BeanstalkPalette.lightishGrey}>expires
-            at {displayFullBN(new BigNumber(params.row.maxHarvestableIndex).minus(beanstalkField.harvestableIndex), 0)}
+          <Typography color={BeanstalkPalette.lightishGrey}>
+            expires at{' '}
+            {displayFullBN(
+              new BigNumber(params.row.maxHarvestableIndex).minus(
+                beanstalkField.harvestableIndex
+              ),
+              0
+            )}
           </Typography>
         </Stack>
       ),
@@ -150,17 +176,16 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
       disableColumnMenu: true,
       align: 'right',
       headerAlign: 'right',
-      valueFormatter: (params) => (
-        `${displayFullBN(params.value as BigNumber, 2)}`
-      ),
+      valueFormatter: (params) =>
+        `${displayFullBN(params.value as BigNumber, 2)}`,
       renderCell: (params) => (
         <Stack direction="row" gap={0.3} alignItems="center">
           <img src={podIcon} alt="Pods Icon" height="18px" />
-          <Typography>{displayBN(params.row.filledAmount)}
-            /{displayBN(params.row.totalAmount)}
-            <Typography
-              display="inline"
-              color={BeanstalkPalette.lightishGrey}>Sold
+          <Typography>
+            {displayBN(params.row.filledAmount)}/
+            {displayBN(params.row.totalAmount)}
+            <Typography display="inline" color={BeanstalkPalette.lightishGrey}>
+              Sold
             </Typography>
           </Typography>
         </Stack>
@@ -174,13 +199,19 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
     setTab(newValue);
   };
 
-  const handleOrderClick = useCallback((params: GridRowParams) => {
-    navigate(`/market/order/${params.row.id}/edit`);
-  }, [navigate]);
+  const handleOrderClick = useCallback(
+    (params: GridRowParams) => {
+      navigate(`/market/order/${params.row.id}/edit`);
+    },
+    [navigate]
+  );
 
-  const handleListingClick = useCallback((params: GridRowParams) => {
-    navigate(`/market/listing/${params.row.id}/edit`);
-  }, [navigate]);
+  const handleListingClick = useCallback(
+    (params: GridRowParams) => {
+      navigate(`/market/listing/${params.row.id}/edit`);
+    },
+    [navigate]
+  );
 
   return (
     <>
@@ -189,7 +220,11 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
           <Tabs
             value={tab}
             onChange={handleChangeTab}
-            sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }}
+            sx={{
+              minHeight: 0,
+              overflow: 'visible',
+              '& .MuiTabs-scroller': { overflow: 'visible' },
+            }}
             variant="scrollable"
           >
             <Tab label="My Orders" />
@@ -211,9 +246,7 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
               onRowClick={handleListingClick}
             />
           )}
-
         </Stack>
-
       </Card>
     </>
   );

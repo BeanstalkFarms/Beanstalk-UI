@@ -15,7 +15,7 @@ const mappedEvents = {
     'LPRemove',
     'LPWithdraw',
     'Deposit',
-    'Withdraw'
+    'Withdraw',
   ],
   // field
   1: [
@@ -27,8 +27,8 @@ const mappedEvents = {
     'PodListingFilled',
     'PodOrderCancelled',
     'PodOrderCreated',
-    'PodOrderFilled'
-  ]
+    'PodOrderFilled',
+  ],
 };
 
 export function getEventFacet(event: string | undefined) {

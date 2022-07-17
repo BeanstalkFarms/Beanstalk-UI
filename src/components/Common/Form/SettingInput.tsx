@@ -3,18 +3,19 @@ import { Field, FieldProps } from 'formik';
 import { Stack, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-const SettingInput : React.FC<{
+const SettingInput: React.FC<{
   name: string;
   label: string;
   endAdornment?: React.ReactNode;
-}> = ({
-  name,
-  label,
-  endAdornment,
-}) => (
+}> = ({ name, label, endAdornment }) => (
   <Field name={name}>
     {(fieldProps: FieldProps) => (
-      <Stack direction="row" gap={5} alignItems="center" justifyContent="space-between">
+      <Stack
+        direction="row"
+        gap={5}
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <Typography variant="body1">{label}</Typography>
         <Box>
           <TextField
@@ -22,21 +23,21 @@ const SettingInput : React.FC<{
             variant="standard"
             type="number"
             sx={{
-                minWidth: 'none',
-                width: 50,
-              }}
+              minWidth: 'none',
+              width: 50,
+            }}
             InputProps={{
-                endAdornment,
-                sx: {
-                  fontSize: 16,
-                }
-              }}
+              endAdornment,
+              sx: {
+                fontSize: 16,
+              },
+            }}
             {...fieldProps.field}
-            />
+          />
         </Box>
       </Stack>
-      )}
+    )}
   </Field>
-  );
+);
 
 export default SettingInput;

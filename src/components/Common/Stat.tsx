@@ -1,4 +1,10 @@
-import { Stack, Typography, TypographyProps, StackProps, Tooltip } from '@mui/material';
+import {
+  Stack,
+  Typography,
+  TypographyProps,
+  StackProps,
+  Tooltip,
+} from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import React from 'react';
 
@@ -23,7 +29,7 @@ export type StatProps = {
   color?: TypographyProps['color'];
   /** Gap between statistic elements (default: 1) */
   gap?: StackProps['gap'];
-}
+};
 
 const Stat: React.FC<StatProps> = ({
   title,
@@ -55,9 +61,14 @@ const Stat: React.FC<StatProps> = ({
       </Stack>
     </Typography>
     {/* Amount */}
-    <Typography variant={variant} color={color} sx={{ marginLeft: '-3px', ...sx }}>
+    <Typography
+      variant={variant}
+      color={color}
+      sx={{ marginLeft: '-3px', ...sx }}
+    >
       <Stack direction="row" alignItems="center" gap={0.5}>
-        {amountIcon && <>{amountIcon}</>}{amount}
+        {amountIcon && <>{amountIcon}</>}
+        {amount}
       </Stack>
     </Typography>
     {/* Subtitle */}

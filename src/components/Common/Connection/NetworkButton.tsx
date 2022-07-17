@@ -14,7 +14,7 @@ const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
   // Dialog
   const [anchor, toggleAnchor] = useAnchor();
   const open = Boolean(anchor);
-  
+
   if (!activeChain) return null;
 
   const startIcon = SupportedChainId[activeChain.id] ? (
@@ -30,11 +30,9 @@ const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
       style={{ height: '1.4em' }}
     />
   );
-  const text = SupportedChainId[activeChain.id] ? (
-    activeChain.name
-  ) : (
-    'Switch Network'
-  );
+  const text = SupportedChainId[activeChain.id]
+    ? activeChain.name
+    : 'Switch Network';
 
   return (
     <>
@@ -57,15 +55,18 @@ const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
             // xs: 0,
           },
           '& .MuiButton-startIcon': {
-            marginRight: { 
-              md: 0.8,  // FIXME: couldn't get 'inherit' to work here
-              xs: 0
-            }
+            marginRight: {
+              md: 0.8, // FIXME: couldn't get 'inherit' to work here
+              xs: 0,
+            },
           },
-          ...props.sx
+          ...props.sx,
         }}
       >
-        <Typography variant="bodyMedium" sx={{ display: { md: 'block', xs: 'none' } }}>
+        <Typography
+          variant="bodyMedium"
+          sx={{ display: { md: 'block', xs: 'none' } }}
+        >
           {text}
         </Typography>
       </Button>

@@ -5,9 +5,14 @@ import { AppState } from '../state';
 import { useHumidityFromId } from './useHumidity';
 
 export default function useFarmerTotalFertilizer(tokenIds?: string[]) {
-  const farmerFertilizer = useSelector<AppState, AppState['_farmer']['barn']>((state) => state._farmer.barn);
+  const farmerFertilizer = useSelector<AppState, AppState['_farmer']['barn']>(
+    (state) => state._farmer.barn
+  );
   const getHumidity = useHumidityFromId();
-  const ids = tokenIds === undefined ? Object.keys(farmerFertilizer.fertilizer) : tokenIds;
+  const ids =
+    tokenIds === undefined
+      ? Object.keys(farmerFertilizer.fertilizer)
+      : tokenIds;
 
   return useMemo(
     () =>
@@ -22,7 +27,7 @@ export default function useFarmerTotalFertilizer(tokenIds?: string[]) {
         },
         {
           unfertilized: new BigNumber(0),
-          fertilizer:   new BigNumber(0),
+          fertilizer: new BigNumber(0),
         }
       ),
     [farmerFertilizer, getHumidity, ids]

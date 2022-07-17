@@ -11,10 +11,9 @@ import { BeanstalkPalette } from '../App/muiTheme';
 
 const RemainingFertilizer: React.FC = () => {
   const [humidity, nextDecreaseAmount] = useHumidity();
-  const fertilizer = useSelector<
-    AppState,
-    AppState['_beanstalk']['barn']
-  >((state) => state._beanstalk.barn);
+  const fertilizer = useSelector<AppState, AppState['_beanstalk']['barn']>(
+    (state) => state._beanstalk.barn
+  );
   const nextDecreaseDuration = useSelector<
     AppState,
     AppState['_beanstalk']['sun']['sunrise']['remaining']

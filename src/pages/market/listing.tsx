@@ -3,7 +3,9 @@ import {
   Box,
   Card,
   Container,
-  Stack, Tab, Tabs,
+  Stack,
+  Tab,
+  Tabs,
   Typography,
 } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
@@ -19,13 +21,19 @@ const ListingPage: React.FC = () => {
   return (
     <Container maxWidth="sm">
       <Stack spacing={2}>
-        <PageHeader
-          returnPath="/market"
+        <PageHeader returnPath="/market" />
+        <PlotListingDetails
+          podListing={mockPodListingData[0]}
+          harvestableIndex={mockPodListingData[0].index}
         />
-        <PlotListingDetails podListing={mockPodListingData[0]} harvestableIndex={mockPodListingData[0].index} />
         <Card sx={{ position: 'relative' }}>
           <Stack gap={1.5}>
-            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              sx={{ overflow: 'visible', px: 2, pt: 2 }}
+            >
               <Typography variant="h4">Buy Pods from Pod Listing</Typography>
             </Stack>
             <Box sx={{ px: 1, pb: 1 }}>

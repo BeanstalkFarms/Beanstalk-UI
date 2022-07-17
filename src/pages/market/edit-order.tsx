@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  Container,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Container, Stack, Typography } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -32,16 +28,23 @@ const EditOrderPage: React.FC = () => {
     <Container maxWidth="sm">
       <Stack spacing={2}>
         <PageHeader
-          title={(
+          title={
             <Stack direction="row" gap={0.5} alignItems="center">
               <AddressIcon address={account.address} />
-              <Typography variant="h1">{`${getAccount(account.address).substring(0, 7)}...'s Pod Order`}</Typography>
+              <Typography variant="h1">{`${getAccount(
+                account.address
+              ).substring(0, 7)}...'s Pod Order`}</Typography>
             </Stack>
-          )}
+          }
           returnPath="/market/account"
-          control={<CancelButton buttonText="Cancel Order" onClick={() => {}} />} // FIXME
+          control={
+            <CancelButton buttonText="Cancel Order" onClick={() => {}} />
+          } // FIXME
         />
-        <PlotOrderDetails podListing={mockPodOrderData[0]} harvestableIndex={beanstalkField.harvestableIndex} />
+        <PlotOrderDetails
+          podListing={mockPodOrderData[0]}
+          harvestableIndex={beanstalkField.harvestableIndex}
+        />
       </Stack>
     </Container>
   );

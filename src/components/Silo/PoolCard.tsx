@@ -1,5 +1,12 @@
 import React from 'react';
-import { Button, ButtonProps as MuiButtonProps, Card, LinkProps, Stack, Typography } from '@mui/material';
+import {
+  Button,
+  ButtonProps as MuiButtonProps,
+  Card,
+  LinkProps,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { BeanPoolState } from 'state/bean/pools';
 import { displayBN, displayFullBN } from 'util/index';
 import { Pool } from 'classes';
@@ -13,18 +20,10 @@ const PoolCard: React.FC<{
   pool: Pool;
   poolState: BeanPoolState;
   ButtonProps?: MuiButtonProps & LinkProps;
-}> = ({
-  pool,
-  poolState,
-  ButtonProps,
-}) => {
+}> = ({ pool, poolState, ButtonProps }) => {
   const cardContent = (
     <Stack direction="row" justifyContent="space-between" alignItems="center">
-      <Stack
-        direction="row"
-        alignItems="center"
-        gap={2}
-      >
+      <Stack direction="row" alignItems="center" gap={2}>
         <Stack direction="row" spacing={0.25} sx={{ fontSize: 24 }}>
           {pool.tokens.map((token) => (
             <TokenIcon key={token.address} token={token} />
@@ -38,25 +37,23 @@ const PoolCard: React.FC<{
         <Stack justifyContent="end" direction="row" gap={0.6}>
           <Typography
             color="text.secondary"
-            sx={{ fontSize: ButtonProps ? '13px' : null }}>
-            liquidity:
-          </Typography>
-          <Typography
             sx={{ fontSize: ButtonProps ? '13px' : null }}
           >
+            liquidity:
+          </Typography>
+          <Typography sx={{ fontSize: ButtonProps ? '13px' : null }}>
             ${displayBN(poolState?.liquidity || ZERO_BN)}
           </Typography>
         </Stack>
         <Stack justifyContent="end" direction="row" gap={0.6}>
           <Typography
             color="text.secondary"
-            sx={{ fontSize: ButtonProps ? '13px' : null }}>
+            sx={{ fontSize: ButtonProps ? '13px' : null }}
+          >
             Δb:
           </Typography>
           <Stack direction="row" gap={0.25}>
-            <Typography
-              sx={{ fontSize: ButtonProps ? '13px' : null }}
-            >
+            <Typography sx={{ fontSize: ButtonProps ? '13px' : null }}>
               {poolState?.deltaB?.gte(0) ? '+' : ''}
               {displayBN(poolState?.deltaB || ZERO_BN, true)}
             </Typography>
@@ -65,7 +62,7 @@ const PoolCard: React.FC<{
       </Stack>
     </Stack>
   );
-  
+
   return ButtonProps ? (
     <Button
       variant="outlined"
@@ -84,9 +81,7 @@ const PoolCard: React.FC<{
       {cardContent}
     </Button>
   ) : (
-    <Card sx={{ p: 1, pr: 2, pl:2 }}>
-      {cardContent}
-    </Card>
+    <Card sx={{ p: 1, pr: 2, pl: 2 }}>{cardContent}</Card>
   );
 };
 

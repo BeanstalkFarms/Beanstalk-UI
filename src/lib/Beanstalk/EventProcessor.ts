@@ -5,9 +5,14 @@ import { BEAN, PODS } from 'constants/tokens';
 import { BigNumber as EBN, ethers } from 'ethers';
 import {
   AddDepositEvent,
-  AddWithdrawalEvent, HarvestEvent,
-  PlotTransferEvent, RemoveDepositEvent,
-  RemoveDeposits_address_address_uint32_array_uint256_array_uint256_Event, RemoveWithdrawalEvent, RemoveWithdrawalsEvent, SowEvent
+  AddWithdrawalEvent,
+  HarvestEvent,
+  PlotTransferEvent,
+  RemoveDepositEvent,
+  RemoveDeposits_address_address_uint32_array_uint256_array_uint256_Event,
+  RemoveWithdrawalEvent,
+  RemoveWithdrawalsEvent,
+  SowEvent,
 } from 'generated/Beanstalk/BeanstalkReplanted';
 import { PlotMap } from 'state/farmer/field';
 import { FarmerSiloBalance, WithdrawalCrate } from 'state/farmer/silo';
@@ -31,84 +36,101 @@ const Bean = BEAN[1];
 // ----------------------------------------
 
 /** */
-export const BN         = (v: EBN | BigNumber.Value) => (v instanceof EBN ? new BigNumber(v.toString()) : new BigNumber(v));
-export const decimalBN  = (v: EBN | BigNumber.Value, decimals: number) => BN(v).div(10 ** decimals);
-export const tokenBN    = (v: EBN | BigNumber.Value, token: Token) => decimalBN(v, token.decimals);
+export const BN = (v: EBN | BigNumber.Value) =>
+  v instanceof EBN ? new BigNumber(v.toString()) : new BigNumber(v);
+export const decimalBN = (v: EBN | BigNumber.Value, decimals: number) =>
+  BN(v).div(10 ** decimals);
+export const tokenBN = (v: EBN | BigNumber.Value, token: Token) =>
+  decimalBN(v, token.decimals);
 export const initTokens = (tokenMap: TokenMap) =>
-  Object.keys(tokenMap).reduce<{ [season: string] : any }>(
-    (prev, curr) => {
-      // Lowercase all token addresses.
-      prev[curr.toLowerCase()] = {};
-      return prev;
-    },
-    {}
-  );
+  Object.keys(tokenMap).reduce<{ [season: string]: any }>((prev, curr) => {
+    // Lowercase all token addresses.
+    prev[curr.toLowerCase()] = {};
+    return prev;
+  }, {});
 
 // ----------------------------------------
 
 export type EventProcessingParameters = {
   season: BigNumber;
   whitelist: TokenMap;
-}
+};
 export type EventProcessorData = {
   plots: {
-    [index: string] : BigNumber
+    [index: string]: BigNumber;
   };
-  deposits: TokenMap<{ 
-    [season: string]: { 
+  deposits: TokenMap<{
+    [season: string]: {
       amount: BigNumber;
       bdv: BigNumber;
-    }
+    };
   }>;
   withdrawals: TokenMap<{
-    [season: string]: { 
+    [season: string]: {
       amount: BigNumber;
-    }
+    };
   }>;
-}
-export type EventKeys = 'event' | 'args' | 'blockNumber' | 'transactionIndex' | 'transactionHash' | 'logIndex'
-export type Simplify<T extends ethers.Event> = Pick<T, EventKeys> & { facet?: string, returnValues?: any };
+};
+export type EventKeys =
+  | 'event'
+  | 'args'
+  | 'blockNumber'
+  | 'transactionIndex'
+  | 'transactionHash'
+  | 'logIndex';
+export type Simplify<T extends ethers.Event> = Pick<T, EventKeys> & {
+  facet?: string;
+  returnValues?: any;
+};
 export type Event = Simplify<ethers.Event>;
 
 export default class EventProcessor {
   // ----------------------------
   // |       PROCESSING         |
   // ----------------------------
-  account : string;
+  account: string;
 
-  epp   : EventProcessingParameters;
+  epp: EventProcessingParameters;
 
   // ----------------------------
   // |      DATA STORAGE        |
   // ----------------------------
 
-  plots       : EventProcessorData['plots'];
+  plots: EventProcessorData['plots'];
 
-  deposits    : EventProcessorData['deposits'];    // token => season => amount
+  deposits: EventProcessorData['deposits']; // token => season => amount
 
-  withdrawals : EventProcessorData['withdrawals']; // token => season => amount
+  withdrawals: EventProcessorData['withdrawals']; // token => season => amount
 
   // ----------------------------
   // |      SETUP + UTILS       |
   // ----------------------------
 
   constructor(
-    account : string,
-    epp : EventProcessingParameters,
-    initialState?: Partial<EventProcessorData>,
+    account: string,
+    epp: EventProcessingParameters,
+    initialState?: Partial<EventProcessorData>
   ) {
-    if (!epp.whitelist || typeof epp !== 'object') throw new Error('EventProcessor: Missing whitelist.');
-    this.account     = account.toLowerCase();
-    this.epp         = epp;
-    this.plots       = initialState?.plots       || {};
-    this.deposits    = initialState?.deposits    || initTokens(this.epp.whitelist);
-    this.withdrawals = initialState?.withdrawals || initTokens(this.epp.whitelist);
+    if (!epp.whitelist || typeof epp !== 'object')
+      throw new Error('EventProcessor: Missing whitelist.');
+    this.account = account.toLowerCase();
+    this.epp = epp;
+    this.plots = initialState?.plots || {};
+    this.deposits = initialState?.deposits || initTokens(this.epp.whitelist);
+    this.withdrawals =
+      initialState?.withdrawals || initTokens(this.epp.whitelist);
   }
-  
+
   ingest<T extends Event>(event: T) {
-    if (!event.event) { return; }
-    if (!SupportedEventsSet.has(event.event as (typeof SupportedEvents)[number])) { return; }
-    return this[event.event as (typeof SupportedEvents)[number]](event as any);
+    if (!event.event) {
+      return;
+    }
+    if (
+      !SupportedEventsSet.has(event.event as typeof SupportedEvents[number])
+    ) {
+      return;
+    }
+    return this[event.event as typeof SupportedEvents[number]](event as any);
   }
 
   ingestAll<T extends Event>(events: T[]) {
@@ -129,17 +151,15 @@ export default class EventProcessor {
   // ----------------------------
 
   Sow(event: Simplify<SowEvent>) {
-    const index       = tokenBN(event.args.index, PODS).toString();
-    this.plots[index] = tokenBN(event.args.pods,  PODS);
+    const index = tokenBN(event.args.index, PODS).toString();
+    this.plots[index] = tokenBN(event.args.pods, PODS);
   }
 
   Harvest(event: Simplify<HarvestEvent>) {
     let beansClaimed = tokenBN(event.args.beans, Bean);
-    const plots = (
-      event.args.plots
-        .map((_index) => tokenBN(_index, Bean))
-        .sort((a, b) => a.minus(b).toNumber())
-    ); 
+    const plots = event.args.plots
+      .map((_index) => tokenBN(_index, Bean))
+      .sort((a, b) => a.minus(b).toNumber());
     plots.forEach((indexBN) => {
       const index = indexBN.toString();
       if (beansClaimed.isLessThan(this.plots[index])) {
@@ -157,11 +177,11 @@ export default class EventProcessor {
         //  beansClaimed  = 4
         //  partialIndex  = 4 + 10 = 14
         //  partialAmount = 10 - 4 = 6
-        // 
+        //
         // Add Plot with 6 Pods at index 14
         // Remove Plot at index 10.
         // ----------------------------------------
-        const partialIndex  = beansClaimed.plus(indexBN);
+        const partialIndex = beansClaimed.plus(indexBN);
         const partialAmount = this.plots[index].minus(beansClaimed);
         this.plots = {
           ...this.plots,
@@ -177,7 +197,7 @@ export default class EventProcessor {
   PlotTransfer(event: Simplify<PlotTransferEvent>) {
     // Numerical "index" of the Plot.
     // Absolute, with respect to Pod 0.
-    const transferIndex   = tokenBN(event.args.id, Bean);
+    const transferIndex = tokenBN(event.args.id, Bean);
     const podsTransferred = tokenBN(event.args.pods, Bean);
 
     // This account received a Plot
@@ -193,7 +213,7 @@ export default class EventProcessor {
 
       // ----------------------------------------
       // The PlotTransfer event doesn't contain info
-      // about the `start` position of a Transfer. 
+      // about the `start` position of a Transfer.
       // Say for example I have the following plot:
       //
       //  0       9 10         20              END
@@ -204,7 +224,7 @@ export default class EventProcessor {
       //
       // PlotTransfer(from=0x, to=0x, id=15, pods=5)
       // This means we send Pods: 15, 16, 17, 18, 19
-      // 
+      //
       // However this Plot doesn't exist yet in our
       // cache. To find it we search for the Plot
       // beginning at 10 and ending at 20, then
@@ -217,11 +237,11 @@ export default class EventProcessor {
         // ----------------------------------------
         if (!podsTransferred.isEqualTo(this.plots[indexStr])) {
           const newStartIndex = transferIndex.plus(podsTransferred);
-          this.plots[newStartIndex.toString()] = this.plots[indexStr].minus(podsTransferred);
+          this.plots[newStartIndex.toString()] =
+            this.plots[indexStr].minus(podsTransferred);
         }
         delete this.plots[indexStr];
-      }
-      else {
+      } else {
         // ----------------------------------------
         // A Plot was partially sent from a non-zero
         // starting index. Find the containing Plot
@@ -232,11 +252,13 @@ export default class EventProcessor {
         const plotIndices = Object.keys(this.plots);
         while (found === false && i < plotIndices.length) {
           // Setup the boundaries of this Plot
-          const startIndex = BN(plotIndices[i]); 
-          const endIndex   = startIndex.plus(this.plots[startIndex.toString()]);
+          const startIndex = BN(plotIndices[i]);
+          const endIndex = startIndex.plus(this.plots[startIndex.toString()]);
           // Check if the Transfer happened within this Plot
-          if (startIndex.isLessThanOrEqualTo(transferIndex) 
-             && endIndex.isGreaterThan(transferIndex)) {
+          if (
+            startIndex.isLessThanOrEqualTo(transferIndex) &&
+            endIndex.isGreaterThan(transferIndex)
+          ) {
             // ----------------------------------------
             // Slice #1. This is the part that
             // the user keeps (they sent the other part).
@@ -246,7 +268,7 @@ export default class EventProcessor {
             //  podsTransferred = 5
             //  startIndex      = 10
             //  endIndex        = 20
-            //  
+            //
             // This would update the existing Plot such that:
             //  this.plots[10] = (15 - 10) = 5
             // containing Pods 10, 11, 12, 13, 14
@@ -254,14 +276,15 @@ export default class EventProcessor {
             if (transferIndex.eq(startIndex)) {
               delete this.plots[startIndex.toString()];
             } else {
-              this.plots[startIndex.toString()] = transferIndex.minus(startIndex);
+              this.plots[startIndex.toString()] =
+                transferIndex.minus(startIndex);
             }
 
             // ----------------------------------------
             // Slice #2. Handles the below case where
             // the amount sent doesn't reach the end
             // of the Plot (i.e. I sent Pods in the middle.
-            // 
+            //
             //  0       9 10         20              END
             // [---------[0123456789)-----------------]
             //                 ^
@@ -299,20 +322,14 @@ export default class EventProcessor {
   }
 
   parsePlots(_harvestableIndex: BigNumber) {
-    return EventProcessor._parsePlots(
-      this.plots,
-      _harvestableIndex
-    );
+    return EventProcessor._parsePlots(this.plots, _harvestableIndex);
   }
 
-  static _parsePlots(
-    plots: EventProcessorData['plots'],
-    index: BigNumber
-  ) {
+  static _parsePlots(plots: EventProcessorData['plots'], index: BigNumber) {
     let pods = new BigNumber(0);
     let harvestablePods = new BigNumber(0);
-    const unharvestablePlots  : PlotMap<BigNumber> = {};
-    const harvestablePlots    : PlotMap<BigNumber> = {};
+    const unharvestablePlots: PlotMap<BigNumber> = {};
+    const harvestablePlots: PlotMap<BigNumber> = {};
 
     Object.keys(plots).forEach((p) => {
       if (plots[p].plus(p).isLessThanOrEqualTo(index)) {
@@ -320,9 +337,7 @@ export default class EventProcessor {
         harvestablePlots[p] = plots[p];
       } else if (new BigNumber(p).isLessThan(index)) {
         harvestablePods = harvestablePods.plus(index.minus(p));
-        pods = pods.plus(
-          plots[p].minus(index.minus(p))
-        );
+        pods = pods.plus(plots[p].minus(index.minus(p)));
         harvestablePlots[p] = index.minus(p);
         unharvestablePlots[index.minus(p).plus(p).toString()] = plots[p].minus(
           index.minus(p)
@@ -332,14 +347,14 @@ export default class EventProcessor {
         unharvestablePlots[p] = plots[p];
       }
     });
-    
+
     // FIXME: "unharvestable pods" are just Pods,
     // but we can't reuse "plots" in the same way.
     return {
       pods,
       harvestablePods,
       plots: unharvestablePlots,
-      harvestablePlots
+      harvestablePlots,
     };
   }
 
@@ -353,19 +368,19 @@ export default class EventProcessor {
       _season || this.epp.season
     );
   }
-  
+
   static _parseWithdrawals(
-    withdrawals: EventProcessorData['withdrawals'][string], 
+    withdrawals: EventProcessorData['withdrawals'][string],
     currentSeason: BigNumber
-  ) : {
+  ): {
     withdrawn: FarmerSiloBalance['withdrawn'];
     claimable: FarmerSiloBalance['claimable'];
   } {
-    let transitBalance    = new BigNumber(0);
+    let transitBalance = new BigNumber(0);
     let receivableBalance = new BigNumber(0);
-    const transitWithdrawals    : WithdrawalCrate[] = [];
-    const receivableWithdrawals : WithdrawalCrate[] = [];
-  
+    const transitWithdrawals: WithdrawalCrate[] = [];
+    const receivableWithdrawals: WithdrawalCrate[] = [];
+
     // Split each withdrawal between `receivable` and `transit`.
     Object.keys(withdrawals).forEach((season: string) => {
       const v = withdrawals[season].amount;
@@ -384,17 +399,17 @@ export default class EventProcessor {
         });
       }
     });
-  
+
     return {
       withdrawn: {
         amount: transitBalance,
-        bdv:    new BigNumber(0),
+        bdv: new BigNumber(0),
         crates: transitWithdrawals,
       },
       claimable: {
         amount: receivableBalance,
         crates: receivableWithdrawals,
-      }
+      },
     };
   }
 
@@ -406,15 +421,17 @@ export default class EventProcessor {
   _upsertDeposit(
     existing: EventProcessorData['deposits'][string][string] | undefined,
     amount: BigNumber,
-    bdv: BigNumber,
+    bdv: BigNumber
   ) {
-    return existing ? {
-      amount: existing.amount.plus(amount),
-      bdv:    existing.bdv.plus(bdv),
-     } : {
-      amount,
-      bdv,
-    };
+    return existing
+      ? {
+          amount: existing.amount.plus(amount),
+          bdv: existing.bdv.plus(bdv),
+        }
+      : {
+          amount,
+          bdv,
+        };
   }
 
   _removeDeposit(
@@ -423,17 +440,25 @@ export default class EventProcessor {
     /** token address; lowercase before inputting */
     token: string,
     /** */
-    _amount: EBN,
+    _amount: EBN
   ) {
-    if (!this.epp.whitelist[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
-    const amount    = tokenBN(_amount, this.epp.whitelist[token]);
+    if (!this.epp.whitelist[token])
+      throw new Error(
+        `Attempted to process an event with an unknown token: ${token}`
+      );
+    const amount = tokenBN(_amount, this.epp.whitelist[token]);
     const existingDeposit = this.deposits[token][season];
-    if (!existingDeposit) throw new Error(`Received a 'RemoveDeposit' event for an unknown deposit: ${token} ${season}`);
+    if (!existingDeposit)
+      throw new Error(
+        `Received a 'RemoveDeposit' event for an unknown deposit: ${token} ${season}`
+      );
 
     // BDV scales linearly with the amount of the underlying token.
     // Ex. if we remove 60% of the `amount`, we also remove 60% of the BDV.
     // Because of this, the `RemoveDeposit` event doesn't contain the BDV to save gas.
-    const bdv = existingDeposit.bdv.times(amount.dividedBy(existingDeposit.amount));
+    const bdv = existingDeposit.bdv.times(
+      amount.dividedBy(existingDeposit.amount)
+    );
 
     this.deposits[token] = {
       ...this.deposits[token],
@@ -450,12 +475,15 @@ export default class EventProcessor {
   }
 
   AddDeposit(event: Simplify<AddDepositEvent>) {
-    const token     = event.args.token.toLowerCase();
-    if (!this.epp.whitelist[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
-    const seasonBN  = BN(event.args.season);
-    const season    = seasonBN.toString();
-    const amount    = tokenBN(event.args.amount, this.epp.whitelist[token]);
-    const bdv       = tokenBN(event.args.bdv, Bean);
+    const token = event.args.token.toLowerCase();
+    if (!this.epp.whitelist[token])
+      throw new Error(
+        `Attempted to process an event with an unknown token: ${token}`
+      );
+    const seasonBN = BN(event.args.season);
+    const season = seasonBN.toString();
+    const amount = tokenBN(event.args.amount, this.epp.whitelist[token]);
+    const bdv = tokenBN(event.args.bdv, Bean);
 
     console.debug('[EventProcessor@AddDeposit] ', {
       season,
@@ -479,12 +507,14 @@ export default class EventProcessor {
     );
   }
 
-  RemoveDeposits(event: Simplify<RemoveDeposits_address_address_uint32_array_uint256_array_uint256_Event>) {
+  RemoveDeposits(
+    event: Simplify<RemoveDeposits_address_address_uint32_array_uint256_array_uint256_Event>
+  ) {
     event.args.seasons.forEach((seasonNum, index) => {
       this._removeDeposit(
         seasonNum.toString(),
         event.args.token.toLowerCase(),
-        event.args.amounts[index],
+        event.args.amounts[index]
       );
     });
   }
@@ -496,13 +526,15 @@ export default class EventProcessor {
   // eslint-disable-next-line class-methods-use-this
   _upsertWithdrawal(
     existing: EventProcessorData['withdrawals'][string][string] | undefined,
-    amount: BigNumber,
+    amount: BigNumber
   ) {
-    return existing ? {
-      amount: existing.amount.plus(amount),
-     } : {
-      amount,
-    };
+    return existing
+      ? {
+          amount: existing.amount.plus(amount),
+        }
+      : {
+          amount,
+        };
   }
 
   _removeWithdrawal(
@@ -511,7 +543,7 @@ export default class EventProcessor {
     /** token address; lowercase before inputting */
     token: string,
     /** */
-    _amount: EBN,
+    _amount: EBN
   ) {
     // For gas optimization reasons, `RemoveWithdrawal` is emitted
     // with a zero amount when the removeWithdrawal method is called with:
@@ -523,30 +555,36 @@ export default class EventProcessor {
 
     ///
     const existingWithdrawal = this.withdrawals[token][season];
-    if (!existingWithdrawal) throw new Error(`Received a RemoveWithdrawal(s) event for an unknown Withdrawal: ${token} ${season}`);
+    if (!existingWithdrawal)
+      throw new Error(
+        `Received a RemoveWithdrawal(s) event for an unknown Withdrawal: ${token} ${season}`
+      );
 
     // Removing a Withdrawal always removes the entire season.
     delete this.withdrawals[token][season];
   }
 
   AddWithdrawal(event: Simplify<AddWithdrawalEvent>) {
-    const token  = event.args.token.toLowerCase();
-    if (!this.epp.whitelist[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
+    const token = event.args.token.toLowerCase();
+    if (!this.epp.whitelist[token])
+      throw new Error(
+        `Attempted to process an event with an unknown token: ${token}`
+      );
     const seasonBN = BN(event.args.season);
     const season = seasonBN.toString();
     const amount = tokenBN(event.args.amount, this.epp.whitelist[token]);
-    
+
     this.withdrawals[token] = {
       ...this.withdrawals[token],
       [season]: this._upsertWithdrawal(this.withdrawals[token][season], amount),
     };
   }
-  
+
   RemoveWithdrawal(event: Simplify<RemoveWithdrawalEvent>) {
     this._removeWithdrawal(
       event.args.season.toString(),
       event.args.token.toLowerCase(),
-      event.args.amount,
+      event.args.amount
     );
   }
 
@@ -555,7 +593,7 @@ export default class EventProcessor {
       this._removeWithdrawal(
         seasonNum.toString(),
         event.args.token.toLowerCase(),
-        event.args.amount,
+        event.args.amount
       );
     });
   }

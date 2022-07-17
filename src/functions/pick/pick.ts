@@ -1,20 +1,20 @@
 import { Handler } from '@netlify/functions';
 
-const unripeBean     = require('./unripe-beans-merkle.json');
+const unripeBean = require('./unripe-beans-merkle.json');
 const unripeBean3CRV = require('./unripe-bean3crv-merkle.json');
 
 export type MerkleRoot = {
   amount: string;
   leaf: string;
   proof: string[];
-}
+};
 
 export type PickMerkleResponse = {
   bean: MerkleRoot | null;
   bean3crv: MerkleRoot | null;
-}
+};
 
-const handler : Handler = async (event, context) => {
+const handler: Handler = async (event, context) => {
   const account = event.queryStringParameters?.account?.toLowerCase();
   if (!account) {
     return {

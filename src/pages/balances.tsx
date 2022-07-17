@@ -13,8 +13,12 @@ import PageHeader from '../components/Common/PageHeader';
 
 const BalancesPage: React.FC = () => {
   // State
-  const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
-  const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
+  const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>(
+    (state) => state._farmer.silo
+  );
+  const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
+    (state) => state._farmer.field
+  );
 
   // Breakdowns
   const breakdown = useFarmerSiloBreakdown();
@@ -25,10 +29,7 @@ const BalancesPage: React.FC = () => {
   return (
     <Container maxWidth="lg">
       <Stack gap={2}>
-        <PageHeader
-          title="Balances"
-          description="View all balances"
-        />
+        <PageHeader title="Balances" description="View all balances" />
         <Card sx={{ p: 2 }}>
           <TotalBalanceCard breakdown={breakdown} />
           <Card sx={{ p: 2 }}>

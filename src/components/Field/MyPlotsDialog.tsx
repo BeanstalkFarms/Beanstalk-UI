@@ -74,7 +74,7 @@ const MyPlotsDialog: React.FC<MyPlotsDialogProps> = ({
               initialState={{
                 sorting: {
                   sortModel: [{ field: 'placeInLine', sort: 'asc' }],
-                }
+                },
               }}
             />
           </Box>

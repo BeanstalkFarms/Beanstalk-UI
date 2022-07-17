@@ -8,21 +8,32 @@ import {
   Divider,
   Box,
   Link,
-  CircularProgress
+  CircularProgress,
 } from '@mui/material';
 import unripeBeanIcon from 'img/tokens/unripe-bean-logo-circled.svg';
 import brownLPIcon from 'img/tokens/unripe-lp-logo-circled.svg';
 import { useTheme } from '@mui/material/styles';
 import { useAccount } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
-import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from 'constants/tokens';
+import {
+  BEAN,
+  BEAN_CRV3_LP,
+  BEAN_ETH_UNIV2_LP,
+  BEAN_LUSD_LP,
+  UNRIPE_BEAN,
+  UNRIPE_BEAN_CRV3,
+} from 'constants/tokens';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 import { UNRIPE_ASSET_TOOLTIPS } from 'constants/tooltips';
 import { getAccount } from 'util/Account';
 import { SupportedChainId, ZERO_BN } from 'constants/index';
 import Token from 'classes/Token';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
-import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
+import {
+  StyledDialogActions,
+  StyledDialogContent,
+  StyledDialogTitle,
+} from 'components/Common/Dialog';
 import { displayFullBN, displayUSD, toTokenUnitsBN } from 'util/index';
 import useChainId from 'hooks/useChain';
 import pickImage from 'img/pick.png';
@@ -38,30 +49,29 @@ import UnripeTokenRow from './UnripeTokenRow';
 
 // ----------------------------------------------------
 
-type UnripeKeys = (
+type UnripeKeys =
   // Beans
-  'circulatingBeans' |
-  'withdrawnBeans' |
-  'harvestableBeans' |
-  'orderedBeans' |
-  'farmableBeans' |
-  'wrappedBeans' |
-  'unripeBeans' |
+  | 'circulatingBeans'
+  | 'withdrawnBeans'
+  | 'harvestableBeans'
+  | 'orderedBeans'
+  | 'farmableBeans'
+  | 'wrappedBeans'
+  | 'unripeBeans'
   // LP
-  'circulatingBeanEthLp' |
-  'circulatingBeanLusdLp' |
-  'circulatingBean3CrvLp' |
-  'withdrawnBeanEthLp' |
-  'withdrawnBeanLusdLp' |
-  'withdrawnBean3CrvLp' |
-  'circulatingBeanEthBdv' |
-  'circulatingBeanLusdBdv' |
-  'circulatingBean3CrvBdv' |
-  'withdrawnBeanEthBdv' |
-  'withdrawnBeanLusdBdv' |
-  'withdrawnBean3CrvBdv' |
-  'unripeLp'
-);
+  | 'circulatingBeanEthLp'
+  | 'circulatingBeanLusdLp'
+  | 'circulatingBean3CrvLp'
+  | 'withdrawnBeanEthLp'
+  | 'withdrawnBeanLusdLp'
+  | 'withdrawnBean3CrvLp'
+  | 'circulatingBeanEthBdv'
+  | 'circulatingBeanLusdBdv'
+  | 'circulatingBean3CrvBdv'
+  | 'withdrawnBeanEthBdv'
+  | 'withdrawnBeanLusdBdv'
+  | 'withdrawnBean3CrvBdv'
+  | 'unripeLp';
 type GetUnripeResponse = Partial<{ [key in UnripeKeys]: string }>;
 
 // ----------------------------------------------------
@@ -97,16 +107,18 @@ const tokenOrZero = (amount: string | undefined, token: Token) => {
 
 // ----------------------------------------------------
 
-const PickBeansDialog: React.FC<{
-  handleClose: any;
-} & DialogProps> = ({
+const PickBeansDialog: React.FC<
+  {
+    handleClose: any;
+  } & DialogProps
+> = ({
   open,
   sx,
   onClose,
   fullWidth,
   fullScreen,
   disableScrollLock,
-  handleClose
+  handleClose,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -116,28 +128,37 @@ const PickBeansDialog: React.FC<{
   const breakdown = useFarmerSiloBreakdown();
 
   ///
-  const chainId           = useChainId();
+  const chainId = useChainId();
   const { data: account } = useAccount();
-  const { data: signer }  = useSigner();
-  const getChainToken     = useGetChainToken();
+  const { data: signer } = useSigner();
+  const getChainToken = useGetChainToken();
 
   /// Contracts
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
-  
+  const beanstalk = useBeanstalkContract(
+    signer
+  ) as unknown as BeanstalkReplanted;
+
   /// Local data
   const [unripe, setUnripe] = useState<GetUnripeResponse | null>(null);
   const [merkles, setMerkles] = useState<PickMerkleResponse | null>(null);
-  const [pickStatus, setPickStatus] = useState<null | 'picking' | 'success' | 'error'>(null);
+  const [pickStatus, setPickStatus] = useState<
+    null | 'picking' | 'success' | 'error'
+  >(null);
 
   useEffect(() => {
     (async () => {
       if (account?.address && open) {
-        const [
-          _unripe,
-          _merkles
-        ] = await Promise.all([
-          fetch(`/.netlify/functions/unripe?account=${getAccount(account.address.toLowerCase())}`).then((response) => response.json()),
-          fetch(`/.netlify/functions/pick?account=${getAccount(account.address.toLowerCase())}`).then((response) => response.json())
+        const [_unripe, _merkles] = await Promise.all([
+          fetch(
+            `/.netlify/functions/unripe?account=${getAccount(
+              account.address.toLowerCase()
+            )}`
+          ).then((response) => response.json()),
+          fetch(
+            `/.netlify/functions/pick?account=${getAccount(
+              account.address.toLowerCase()
+            )}`
+          ).then((response) => response.json()),
         ]);
         setUnripe(_unripe);
         setMerkles(_merkles);
@@ -159,70 +180,80 @@ const PickBeansDialog: React.FC<{
   };
 
   ///
-  const handlePick = useCallback((deposit : boolean) => () => {
-    if (!merkles) return;
+  const handlePick = useCallback(
+    (deposit: boolean) => () => {
+      if (!merkles) return;
 
-    setPickStatus('picking');
-    const data = [];
-    const uBean     = getChainToken(UNRIPE_BEAN);
-    const uBeanCRV3 = getChainToken(UNRIPE_BEAN_CRV3);
+      setPickStatus('picking');
+      const data = [];
+      const uBean = getChainToken(UNRIPE_BEAN);
+      const uBeanCRV3 = getChainToken(UNRIPE_BEAN_CRV3);
 
-    if (merkles.bean) {
-      data.push(beanstalk.interface.encodeFunctionData('pick', [
-        uBean.address,
-        merkles.bean.amount,
-        merkles.bean.proof,
-        deposit ? FarmToMode.INTERNAL : FarmToMode.EXTERNAL,
-      ]));
-      if (deposit) {
-        data.push(beanstalk.interface.encodeFunctionData('deposit', [
-          uBean.address,
-          merkles.bean.amount,
-          FarmFromMode.INTERNAL, // always use internal for deposits
-        ]));
-      }
-    }
-    if (merkles.bean3crv) {
-      data.push(beanstalk.interface.encodeFunctionData('pick', [
-        uBeanCRV3.address,
-        merkles.bean3crv.amount,
-        merkles.bean3crv.proof,
-        deposit ? FarmToMode.INTERNAL : FarmToMode.EXTERNAL,
-      ]));
-      if (deposit) {
-        data.push(beanstalk.interface.encodeFunctionData('deposit', [
-          uBeanCRV3.address,
-          merkles.bean3crv.amount,
-          FarmFromMode.INTERNAL, // always use internal for deposits
-        ]));
-      }
-    }
-
-    const txToast = new TransactionToast({
-      loading: `Picking${deposit ? ' and depositing' : ''} Unripe Assets`,
-      success: `Pick${deposit ? ' and deposit' : ''} successful. You can find your Unripe Assets ${deposit ? 'in the Silo' : 'in your wallet'}.`,
-    });
-
-    beanstalk.farm(data)
-      .then((txn) => {
-        txToast.confirming(txn);
-        return txn.wait();
-      })
-      .then((receipt) => {
-        txToast.success(receipt);
-        setPickStatus('success');
-      })
-      .catch((err) => {
-        console.error(
-          txToast.error(err.error || err)
+      if (merkles.bean) {
+        data.push(
+          beanstalk.interface.encodeFunctionData('pick', [
+            uBean.address,
+            merkles.bean.amount,
+            merkles.bean.proof,
+            deposit ? FarmToMode.INTERNAL : FarmToMode.EXTERNAL,
+          ])
         );
-        setPickStatus('error');
+        if (deposit) {
+          data.push(
+            beanstalk.interface.encodeFunctionData('deposit', [
+              uBean.address,
+              merkles.bean.amount,
+              FarmFromMode.INTERNAL, // always use internal for deposits
+            ])
+          );
+        }
+      }
+      if (merkles.bean3crv) {
+        data.push(
+          beanstalk.interface.encodeFunctionData('pick', [
+            uBeanCRV3.address,
+            merkles.bean3crv.amount,
+            merkles.bean3crv.proof,
+            deposit ? FarmToMode.INTERNAL : FarmToMode.EXTERNAL,
+          ])
+        );
+        if (deposit) {
+          data.push(
+            beanstalk.interface.encodeFunctionData('deposit', [
+              uBeanCRV3.address,
+              merkles.bean3crv.amount,
+              FarmFromMode.INTERNAL, // always use internal for deposits
+            ])
+          );
+        }
+      }
+
+      const txToast = new TransactionToast({
+        loading: `Picking${deposit ? ' and depositing' : ''} Unripe Assets`,
+        success: `Pick${
+          deposit ? ' and deposit' : ''
+        } successful. You can find your Unripe Assets ${
+          deposit ? 'in the Silo' : 'in your wallet'
+        }.`,
       });
-  }, [
-    merkles,
-    beanstalk,
-    getChainToken,
-  ]);
+
+      beanstalk
+        .farm(data)
+        .then((txn) => {
+          txToast.confirming(txn);
+          return txn.wait();
+        })
+        .then((receipt) => {
+          txToast.success(receipt);
+          setPickStatus('success');
+        })
+        .catch((err) => {
+          console.error(txToast.error(err.error || err));
+          setPickStatus('error');
+        });
+    },
+    [merkles, beanstalk, getChainToken]
+  );
 
   /// Tab: Pick Overview
   let buttonText = 'Nothing to Pick';
@@ -244,49 +275,76 @@ const PickBeansDialog: React.FC<{
       <Stack direction="row" alignItems="center" gap={1} pb={2} pl={1} pr={3}>
         <img src={pickImage} alt="pick" style={{ height: 120 }} />
         <Typography sx={{ fontSize: '15px' }} color="text.secondary">
-          To claim non-Deposited Unripe Beans and Unripe LP, they must be Picked. After Replant, you can Pick assets to your wallet, or Pick and Deposit them directly in the Silo.<br /><br />
-          Unripe Deposited assets <b>do not need to be Picked</b> and will be automatically Deposited at Replant.<br /><br />
-          Unripe assets represent a pro rata share of underlying assets. You can read more about them <Link href="https://bean.money/blog/a-farmers-guide-to-the-barn-raise" target="_blank" rel="noreferrer">here</Link>.
+          To claim non-Deposited Unripe Beans and Unripe LP, they must be
+          Picked. After Replant, you can Pick assets to your wallet, or Pick and
+          Deposit them directly in the Silo.
+          <br />
+          <br />
+          Unripe Deposited assets <b>do not need to be Picked</b> and will be
+          automatically Deposited at Replant.
+          <br />
+          <br />
+          Unripe assets represent a pro rata share of underlying assets. You can
+          read more about them{' '}
+          <Link
+            href="https://bean.money/blog/a-farmers-guide-to-the-barn-raise"
+            target="_blank"
+            rel="noreferrer"
+          >
+            here
+          </Link>
+          .
         </Typography>
       </Stack>
       <Divider />
       <StyledDialogContent>
         <Stack gap={2}>
           {/**
-            * Section 1: Deposited Balance
-            */}
+           * Section 1: Deposited Balance
+           */}
           <Stack gap={0.25}>
             <Stack direction="row" justifyContent="space-between">
               <Typography>Deposited Assets</Typography>
-              <Typography>{displayUSD(breakdown.states.deposited.value)}</Typography>
+              <Typography>
+                {displayUSD(breakdown.states.deposited.value)}
+              </Typography>
             </Stack>
             <Typography sx={{ fontSize: '13px' }} color="text.secondary">
-              These assets do not need to be Picked and will be automatically Deposited in their Unripe state at Replant. Head to the Silo page to view your balances.
+              These assets do not need to be Picked and will be automatically
+              Deposited in their Unripe state at Replant. Head to the Silo page
+              to view your balances.
             </Typography>
           </Stack>
           <Stack gap={0.25}>
             <Stack direction="row" justifyContent="space-between">
               <Typography>Earned Beans</Typography>
-              <Typography>{displayFullBN(tokenOrZero(unripe?.farmableBeans, BEAN[1]))}</Typography>
+              <Typography>
+                {displayFullBN(tokenOrZero(unripe?.farmableBeans, BEAN[1]))}
+              </Typography>
             </Stack>
             <Typography sx={{ fontSize: '13px' }} color="text.secondary">
-              These assets do not need to be Picked and will be automatically Deposited as Unripe Beans upon Replant.
+              These assets do not need to be Picked and will be automatically
+              Deposited as Unripe Beans upon Replant.
             </Typography>
           </Stack>
           <Divider />
           {/**
-            * Section 2: Unripe Beans
-            */}
+           * Section 2: Unripe Beans
+           */}
           <Stack gap={1}>
             {/**
-              * Section 2a: Beans by State
-              */}
-            <Typography variant="h3">Non-Deposited pre-exploit Bean balances</Typography>
+             * Section 2a: Beans by State
+             */}
+            <Typography variant="h3">
+              Non-Deposited pre-exploit Bean balances
+            </Typography>
             <Stack gap={0.5} pl={1}>
               {UNRIPE_BEAN_CATEGORIES.map((key) => (
                 <UnripeTokenRow
                   key={key}
-                  name={key === 'harvestable' ? 'Harvestable Pods' : `${key} Beans`}
+                  name={
+                    key === 'harvestable' ? 'Harvestable Pods' : `${key} Beans`
+                  }
                   amount={tokenOrZero(unripe?.[`${key}Beans`], BEAN[1])}
                   tooltip={UNRIPE_ASSET_TOOLTIPS[`${key}Beans`]}
                   token={BEAN[1]}
@@ -295,8 +353,8 @@ const PickBeansDialog: React.FC<{
             </Stack>
             <Divider sx={{ ml: 1 }} />
             {/**
-              * Section 3b: Total Unripe Beans
-              */}
+             * Section 3b: Total Unripe Beans
+             */}
             <Stack direction="row" justifyContent="space-between" pl={1}>
               <Typography>
                 Unripe Beans that will be available to Pick at Replant
@@ -308,7 +366,7 @@ const PickBeansDialog: React.FC<{
                     // HOTFIX:
                     // After launching this dialog, the team decided to
                     // auto-deposit Farmable Beans. Instead of reworking the
-                    // underlying JSONs, we just subtract farmableBeans from 
+                    // underlying JSONs, we just subtract farmableBeans from
                     // the total unripeBeans for user display.
                     tokenOrZero(unripe?.unripeBeans, BEAN[1]).minus(
                       tokenOrZero(unripe?.farmableBeans, BEAN[1])
@@ -319,26 +377,39 @@ const PickBeansDialog: React.FC<{
             </Stack>
           </Stack>
           {/**
-            * Section 3: LP
-            */}
+           * Section 3: LP
+           */}
           <Stack sx={{ pl: isMobile ? 0 : 0, pb: 0.5 }} gap={1}>
             {/**
-              * Section 2a: LP by State
-              */}
-            <Typography variant="h3">Non-Deposited pre-exploit LP balances</Typography>
+             * Section 2a: LP by State
+             */}
+            <Typography variant="h3">
+              Non-Deposited pre-exploit LP balances
+            </Typography>
             {UNRIPE_LP_CATEGORIES.map((obj) => (
               <Stack key={obj.token.address} gap={0.5} pl={1}>
-                <Typography sx={{ fontSize: '16px' }}>{obj.token.name} Balances</Typography>
+                <Typography sx={{ fontSize: '16px' }}>
+                  {obj.token.name} Balances
+                </Typography>
                 <UnripeTokenRow
                   name={`Circulating ${obj.token.name}`}
-                  amount={tokenOrZero(unripe?.[`circulating${obj.key}Lp`], obj.token)}
+                  amount={tokenOrZero(
+                    unripe?.[`circulating${obj.key}Lp`],
+                    obj.token
+                  )}
                   tooltip={UNRIPE_ASSET_TOOLTIPS[`circulating${obj.key}Lp`]}
                   token={obj.token}
-                  bdv={tokenOrZero(unripe?.[`circulating${obj.key}Bdv`], BEAN[1])}
+                  bdv={tokenOrZero(
+                    unripe?.[`circulating${obj.key}Bdv`],
+                    BEAN[1]
+                  )}
                 />
                 <UnripeTokenRow
                   name={`Withdrawn ${obj.token.name}`}
-                  amount={tokenOrZero(unripe?.[`withdrawn${obj.key}Lp`], obj.token)}
+                  amount={tokenOrZero(
+                    unripe?.[`withdrawn${obj.key}Lp`],
+                    obj.token
+                  )}
                   tooltip={UNRIPE_ASSET_TOOLTIPS[`withdrawn${obj.key}Lp`]}
                   token={obj.token}
                   bdv={tokenOrZero(unripe?.[`withdrawn${obj.key}Bdv`], BEAN[1])}
@@ -347,8 +418,8 @@ const PickBeansDialog: React.FC<{
             ))}
             <Divider sx={{ ml: 1 }} />
             {/**
-              * Section 2b: Total Unripe LP
-              */}
+             * Section 2b: Total Unripe LP
+             */}
             <Stack direction="row" justifyContent="space-between" pl={1}>
               <Typography>
                 Unripe BEAN:3CRV LP that will be available to Pick at Replant
@@ -378,11 +449,12 @@ const PickBeansDialog: React.FC<{
             sx={{
               py: 1,
               backgroundColor: BeanstalkPalette.brown,
-              '&:hover': { 
+              '&:hover': {
                 backgroundColor: BeanstalkPalette.brown,
-                opacity: 0.96
-              }
-            }}>
+                opacity: 0.96,
+              },
+            }}
+          >
             {buttonText}
           </LoadingButton>
         </Box>
@@ -393,10 +465,7 @@ const PickBeansDialog: React.FC<{
   /// Tab: Pick
   const tab1 = (
     <>
-      <StyledDialogTitle
-        onBack={handlePreviousTab}
-        onClose={handleDialogClose}
-      >
+      <StyledDialogTitle onBack={handlePreviousTab} onClose={handleDialogClose}>
         Pick Unripe Assets
       </StyledDialogTitle>
       <StyledDialogContent sx={{ width: isMobile ? null : '560px' }}>
@@ -407,24 +476,40 @@ const PickBeansDialog: React.FC<{
           {pickStatus === null ? (
             <>
               <DescriptionButton
-                title="Pick Unripe Assets" 
-                description="Claim your Unripe Beans and Unripe LP to your wallet." 
+                title="Pick Unripe Assets"
+                description="Claim your Unripe Beans and Unripe LP to your wallet."
                 onClick={handlePick(false)}
               />
               <DescriptionButton
-                title="Pick and Deposit Unripe Assets" 
+                title="Pick and Deposit Unripe Assets"
                 description="Claim your Unripe Beans and Unripe LP, then Deposit them in the Silo to earn yield."
                 onClick={handlePick(true)}
               />
             </>
           ) : (
-            <Stack direction="column" sx={{ width: '100%', minHeight: 100 }} justifyContent="center" gap={1} alignItems="center">
-              {pickStatus === 'picking' && <CircularProgress variant="indeterminate" color="primary" size={32} />}
+            <Stack
+              direction="column"
+              sx={{ width: '100%', minHeight: 100 }}
+              justifyContent="center"
+              gap={1}
+              alignItems="center"
+            >
+              {pickStatus === 'picking' && (
+                <CircularProgress
+                  variant="indeterminate"
+                  color="primary"
+                  size={32}
+                />
+              )}
               {pickStatus === 'error' && (
-                <Typography color="text.secondary">Something went wrong while picking your Unripe assets.</Typography>
+                <Typography color="text.secondary">
+                  Something went wrong while picking your Unripe assets.
+                </Typography>
               )}
               {pickStatus === 'success' && (
-                <Typography color="text.secondary">Unripe Assets picked successfully.</Typography>
+                <Typography color="text.secondary">
+                  Unripe Assets picked successfully.
+                </Typography>
               )}
             </Stack>
           )}

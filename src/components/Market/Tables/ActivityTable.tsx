@@ -7,9 +7,11 @@ const MAX_ROWS = 10;
 
 export type ActivityTableProps = {
   hideHeader?: boolean;
-}
+};
 
-const ActivityTable: React.FC<ActivityTableProps & DataGridProps & BoxProps> = ({ rows, columns, hideHeader }) => {
+const ActivityTable: React.FC<
+  ActivityTableProps & DataGridProps & BoxProps
+> = ({ rows, columns, hideHeader }) => {
   const tableHeight = useMemo(() => {
     if (!rows || rows.length === 0) return '200px';
     return Math.min(rows.length, MAX_ROWS) * 35 + 112;
@@ -17,13 +19,15 @@ const ActivityTable: React.FC<ActivityTableProps & DataGridProps & BoxProps> = (
 
   return (
     <Card sx={{ p: 2 }}>
-      <Typography variant="h4" sx={{ pb: 1 }}>Marketplace Activity</Typography>
+      <Typography variant="h4" sx={{ pb: 1 }}>
+        Marketplace Activity
+      </Typography>
       <Box display="flex" alignItems="center" justifyContent="center">
         <Box
           sx={{
             height: tableHeight,
             width: '100%',
-            ...tableStyle
+            ...tableStyle,
           }}
         >
           <DataGrid
@@ -35,7 +39,7 @@ const ActivityTable: React.FC<ActivityTableProps & DataGridProps & BoxProps> = (
             initialState={{
               sorting: {
                 sortModel: [{ field: 'placeInLine', sort: 'asc' }],
-              }
+              },
             }}
           />
         </Box>

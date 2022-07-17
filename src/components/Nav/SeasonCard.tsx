@@ -14,12 +14,26 @@ export interface SeasonCardProps {
   weather: BigNumber;
 }
 
-const SeasonCard: React.FC<SeasonCardProps> = ({ season, newBeans, newSoil, weather }) => (
-  <Box sx={{ border: 1, borderColor: BeanstalkPalette.lightBlue, p: 0.75, borderRadius: '8px' }}>
+const SeasonCard: React.FC<SeasonCardProps> = ({
+  season,
+  newBeans,
+  newSoil,
+  weather,
+}) => (
+  <Box
+    sx={{
+      border: 1,
+      borderColor: BeanstalkPalette.lightBlue,
+      p: 0.75,
+      borderRadius: '8px',
+    }}
+  >
     <Stack direction="row" justifyContent="space-between" alignItems="center">
       <Grid container alignItems="flex-end">
         <Grid item md={2} xs={4}>
-          <Typography color="text.primary" sx={{ fontSize: '14px' }}>{displayBN(season)}</Typography>
+          <Typography color="text.primary" sx={{ fontSize: '14px' }}>
+            {displayBN(season)}
+          </Typography>
         </Grid>
         <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
           <Stack direction="row" alignItems="center" spacing="2px">
@@ -37,7 +51,9 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, newBeans, newSoil, weat
           </Stack>
         </Grid>
         <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
-          <Typography color="text.primary" sx={{ fontSize: '14px' }}>{displayBN(newBeans)}</Typography>
+          <Typography color="text.primary" sx={{ fontSize: '14px' }}>
+            {displayBN(newBeans)}
+          </Typography>
         </Grid>
         <Grid item md={2.4} xs={0} display={{ xs: 'none', md: 'block' }}>
           <Stack

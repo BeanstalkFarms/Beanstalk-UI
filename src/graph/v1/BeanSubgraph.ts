@@ -85,8 +85,8 @@ function roundTo4Digits(num: number) {
 
 function queryHourData(first: Number, skip: Number): Promise<any> {
   return client.query({
-      query: gql(HourBeanQuery),
-      variables: { first: first, skip: skip },
+    query: gql(HourBeanQuery),
+    variables: { first: first, skip: skip },
   });
 }
 

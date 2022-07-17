@@ -1,7 +1,7 @@
 import {
   createTheme,
   experimental_sx as sx,
-  responsiveFontSizes
+  responsiveFontSizes,
 } from '@mui/material/styles';
 import React from 'react';
 
@@ -17,7 +17,7 @@ declare module '@mui/material/styles' {
   interface PaletteOptions {
     light: PaletteOptions['primary'];
     dark: PaletteOptions['primary'];
-    cancel: PaletteOptions['primary']
+    cancel: PaletteOptions['primary'];
     inverse: PaletteOptions['primary'];
   }
   interface TypographyVariants {
@@ -107,7 +107,7 @@ export const IconSize = {
   xs: 14,
   small: 20,
   medium: 25,
-  large: 50
+  large: 50,
 };
 
 export const FontSize = {
@@ -124,7 +124,7 @@ export const FontWeight = {
   normal: 400,
   medium: 450,
   semiBold: 600,
-  bold: 700
+  bold: 700,
 };
 
 // FIXME: changes to createTheme don't hot reload.
@@ -138,7 +138,7 @@ let muiTheme = createTheme({
       xl: 1536,
     },
   },
-  
+
   /**
    *
    */
@@ -180,7 +180,7 @@ let muiTheme = createTheme({
     },
     cancel: {
       main: BeanstalkPalette.washedRed,
-      contrastText: 'white'
+      contrastText: 'white',
     },
     //
     text: {
@@ -195,13 +195,13 @@ let muiTheme = createTheme({
    */
   typography: {
     fontFamily: 'Futura PT',
-    fontSize:           16,
+    fontSize: 16,
 
     // FONT WEIGHTS
-    fontWeightLight:      FontWeight.normal,
-    fontWeightRegular:    FontWeight.medium,
-    fontWeightMedium:   FontWeight.semiBold,
-    fontWeightBold:         FontWeight.bold,
+    fontWeightLight: FontWeight.normal,
+    fontWeightRegular: FontWeight.medium,
+    fontWeightMedium: FontWeight.semiBold,
+    fontWeightBold: FontWeight.bold,
 
     // page headers
     h1: {
@@ -222,7 +222,7 @@ let muiTheme = createTheme({
     h4: {
       fontSize: FontSize.base, // 16px
       fontWeight: FontWeight.semiBold,
-      lineHeight: '1.25rem' // 20px
+      lineHeight: '1.25rem', // 20px
     },
     // ---
     body1: {
@@ -234,20 +234,20 @@ let muiTheme = createTheme({
     bodySmall: {
       fontFamily: 'Futura PT',
       fontSize: FontSize.sm, // 14px
-      fontWeight: FontWeight.medium
+      fontWeight: FontWeight.medium,
     },
     // nav labels, nav button labels, token labels (module)
     bodyMedium: {
       fontFamily: 'Futura PT',
       fontSize: FontSize['1xl'], // 20px
       fontWeight: FontWeight.medium,
-      lineHeight: '1.875rem'
+      lineHeight: '1.875rem',
     },
     // token inputs (module)
     bodyLarge: {
       fontFamily: 'Futura PT',
       fontSize: FontSize['2xl'], // 24px
-      fontWeight: FontWeight.medium
+      fontWeight: FontWeight.medium,
     },
     // page subtitles
     subtitle1: {
@@ -290,7 +290,7 @@ let muiTheme = createTheme({
       defaultProps: {
         disableElevation: true,
         variant: 'contained',
-        disableRipple: true
+        disableRipple: true,
       },
       styleOverrides: {
         root: sx({
@@ -298,15 +298,15 @@ let muiTheme = createTheme({
           fontWeight: 'bold',
           '&.MuiLoadingButton-root:hover': {
             backgroundColor: BeanstalkPalette.supportGreen,
-          }
+          },
         }),
         sizeLarge: sx({
           py: 1.5,
-          height: '60px'
+          height: '60px',
         }),
         disabled: sx({
           pointerEvents: 'auto',
-        })
+        }),
       },
     },
     MuiAccordion: {
@@ -348,18 +348,17 @@ let muiTheme = createTheme({
         color: 'secondary',
       },
       styleOverrides: {
-        root: {
-        },
+        root: {},
       },
     },
     MuiInputBase: {
       styleOverrides: {
         root: {
-          fontSize: '1.5rem'
+          fontSize: '1.5rem',
         },
         sizeSmall: {
-          fontSize: '1.1rem'
-        }
+          fontSize: '1.1rem',
+        },
       },
     },
     MuiListItem: {
@@ -369,29 +368,28 @@ let muiTheme = createTheme({
             backgroundColor: BeanstalkPalette.washedGreen,
             borderRadius: 1,
           },
-        })
-      }
+        }),
+      },
     },
     MuiListItemButton: {
       styleOverrides: {
         root: sx({
           borderRadius: 1,
           px: 1,
-          py: 1
+          py: 1,
         }),
-      }
+      },
     },
     MuiList: {
       styleOverrides: {
         root: sx({
           // p: 0
-        })
-      }
+        }),
+      },
     },
     MuiListItemText: {
       styleOverrides: {
-        root: {
-        },
+        root: {},
       },
     },
     MuiTabs: {
@@ -431,15 +429,14 @@ let muiTheme = createTheme({
           '&.Mui-selected': {
             // fontWeight: 'bold',
             fontWeight: 700,
-          fontSize: '1rem', // 1*16 = 16px
+            fontSize: '1rem', // 1*16 = 16px
             color: BeanstalkPalette.black,
           },
         }),
       },
     },
     MuiButtonBase: {
-      styleOverrides: {
-      },
+      styleOverrides: {},
     },
     MuiButtonGroup: {
       defaultProps: {
@@ -463,16 +460,16 @@ let muiTheme = createTheme({
       },
     },
     MuiDialog: {
-      defaultProps: {  
+      defaultProps: {
         transitionDuration: 0,
-      }
+      },
     },
     MuiDialogContent: {
       styleOverrides: {
         root: sx({
           px: 1,
-        })
-      }
+        }),
+      },
     },
   },
 });

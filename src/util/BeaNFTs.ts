@@ -16,14 +16,16 @@ export type Nft = {
   signature?: string;
 
   // winter and genesis
-  signature2?: string
-}
+  signature2?: string;
+};
 
 export async function loadNFTs(account: string) {
   // FIXME: API load this
   // const nftData = (await import('../data/parsed-accounts.json')).default as { [key: string] : Nft[] };
-  const nftData : Nft[] = await fetch(`/.netlify/functions/nfts?account=${account}`).then((response) => response.json());
-  
+  const nftData: Nft[] = await fetch(
+    `/.netlify/functions/nfts?account=${account}`
+  ).then((response) => response.json());
+
   if (nftData.length === 0) {
     return {
       genesis: [],
@@ -32,7 +34,7 @@ export async function loadNFTs(account: string) {
   }
 
   const genesisNFTs = nftData.filter((n) => n.subcollection === 'Genesis');
-  const winterNFTs  = nftData.filter((n) => n.subcollection === 'Winter');
+  const winterNFTs = nftData.filter((n) => n.subcollection === 'Winter');
 
   return {
     genesis: genesisNFTs,

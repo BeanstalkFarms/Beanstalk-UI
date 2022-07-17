@@ -1,10 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import {
-  Box,
-  Container,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Box, Container, Stack, Typography } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
@@ -23,11 +18,12 @@ const columns: DataGridProps['columns'] = [
     flex: 1,
     valueFormatter: (params) =>
       `${displayFullBN(params.value as BigNumber, 0)}`,
-    renderCell: (params) => (
-      (params.value.eq(-1))
-        ? (<Typography color="primary">Harvestable</Typography>)
-        : (<Typography>{displayBN(params.value)}</Typography>)
-    )
+    renderCell: (params) =>
+      params.value.eq(-1) ? (
+        <Typography color="primary">Harvestable</Typography>
+      ) : (
+        <Typography>{displayBN(params.value)}</Typography>
+      ),
   },
   {
     field: 'amount',
@@ -38,7 +34,9 @@ const columns: DataGridProps['columns'] = [
     headerAlign: 'left',
     valueFormatter: (params) =>
       `${displayFullBN(params.value as BigNumber, 2)}`,
-    renderCell: (params) => <Typography>{displayBN(params.value, true)}</Typography>,
+    renderCell: (params) => (
+      <Typography>{displayBN(params.value, true)}</Typography>
+    ),
   },
 ];
 

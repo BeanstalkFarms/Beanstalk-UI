@@ -18,10 +18,7 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
         amountIcon={undefined}
         gap={0}
       />
-      <SiloBalances
-        breakdown={breakdown}
-        whitelist={whitelist}
-      />
+      <SiloBalances breakdown={breakdown} whitelist={whitelist} />
     </Card>
   );
 };

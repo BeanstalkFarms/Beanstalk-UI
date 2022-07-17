@@ -44,7 +44,7 @@ import EditOrderPage from '../../pages/market/edit-order';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
-const CustomToaster : React.FC = () => (
+const CustomToaster: React.FC = () => (
   <Toaster
     containerStyle={{
       top: 78,
@@ -56,7 +56,7 @@ const CustomToaster : React.FC = () => (
         minWidth: 300,
         maxWidth: 400,
         paddingLeft: '16px',
-      }
+      },
     }}
   >
     {(t) => (
@@ -94,20 +94,20 @@ export default function App() {
     <>
       <CssBaseline />
       {/* -----------------------
-        * Bean Updaters
-        * ----------------------- */}
+       * Bean Updaters
+       * ----------------------- */}
       <PoolsUpdater />
       <UnripeUpdater />
       {/* -----------------------
-        * Beanstalk Updaters
-        * ----------------------- */}
+       * Beanstalk Updaters
+       * ----------------------- */}
       <BarnUpdater />
       <FieldUpdater />
       <SiloUpdater />
       <SunUpdater />
       {/* -----------------------
-        * Farmer Updaters
-        * ----------------------- */}
+       * Farmer Updaters
+       * ----------------------- */}
       <FarmerFieldUpdater />
       <FarmerEventsUpdater />
       <FarmerEventsProcessor />
@@ -115,8 +115,8 @@ export default function App() {
       <FarmerBarnUpdater />
       <FarmerSiloUpdater />
       {/* -----------------------
-        * Content
-        * ----------------------- */}
+       * Content
+       * ----------------------- */}
       <NavBar />
       <CustomToaster />
       {/* only show welcome back modal on non barn-raise pages */}
@@ -137,9 +137,10 @@ export default function App() {
           },
           paddingBottom: {
             md: 4,
-            xs: 2 
-          }
-        }}>
+            xs: 2,
+          },
+        }}
+      >
         <Routes>
           <Route path="/" element={<ForecastPage />} />
           <Route path="/silo" element={<SiloPage />} />
@@ -153,7 +154,10 @@ export default function App() {
           <Route path="/market/order/:id" element={<OrderPage />} />
           <Route path="/market/order/:id/edit" element={<EditOrderPage />} />
           <Route path="/market/listing/:id" element={<ListingPage />} />
-          <Route path="/market/listing/:id/edit" element={<EditListingPage />} />
+          <Route
+            path="/market/listing/:id/edit"
+            element={<EditListingPage />}
+          />
           <Route path="/analytics/bean" element={<BeanAnalytics />} />
           <Route path="/analytics/silo" element={<SiloAnalytics />} />
           <Route path="/analytics/field" element={<FieldAnalytics />} />

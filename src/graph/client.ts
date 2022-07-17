@@ -1,5 +1,9 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
-import { LocalStorageWrapper, persistCache, persistCacheSync } from 'apollo3-cache-persist';
+import {
+  LocalStorageWrapper,
+  persistCache,
+  persistCacheSync,
+} from 'apollo3-cache-persist';
 import { QuerySeasonsArgs, Season } from 'generated/graphql';
 
 const seasonIntToIndex = (n: number) => n - 0;
@@ -12,23 +16,31 @@ const cache = new InMemoryCache({
           // Don't cache separate results based on
           // any of this field's arguments.
           keyArgs: false,
-          
+
           /**
            */
           read(existing, { args, readField }) {
-            const first       = args?.first;
-            const startSeason = args?.where?.seasonInt_lte;       // could be larger than the biggest season
-            
-            console.debug(`[ApolloClient/seasons/read] read first = ${first} startSeason = ${startSeason} for ${existing?.length || 0} existing items`, existing);
+            const first = args?.first;
+            const startSeason = args?.where?.seasonInt_lte; // could be larger than the biggest season
+
+            console.debug(
+              `[ApolloClient/seasons/read] read first = ${first} startSeason = ${startSeason} for ${
+                existing?.length || 0
+              } existing items`,
+              existing
+            );
 
             if (!existing) return;
-            
+
             let dataset;
             if (!first) {
               dataset = existing;
             } else {
-              const maxSeason = Math.min(startSeason || existing.length, existing.length);
-              
+              const maxSeason = Math.min(
+                startSeason || existing.length,
+                existing.length
+              );
+
               // 0 = latest season; always defined
               // maxSeason = 6073
               // existing.length = 6074
@@ -43,23 +55,41 @@ const cache = new InMemoryCache({
               // 6071 2
               // 6072 1
               // 6073 0 (this doesnt exist)
-              const left  = Math.max(
-                0,                           // clamp to first index
-                existing.length - maxSeason, // 
-              ); 
+              const left = Math.max(
+                0, // clamp to first index
+                existing.length - maxSeason //
+              );
 
               // n = oldest season
               const right = Math.min(
-                left + first - 1,            //
-                existing.length - 1,         // clamp to last index
+                left + first - 1, //
+                existing.length - 1 // clamp to last index
               );
 
               console.debug('[ApolloClient/seasons/read] READ:');
-              console.debug(`| left:  index = ${left}, season = ${readField('seasonInt', existing[left])}`);
-              console.debug(`| right: index = ${right}, season = ${readField('seasonInt', existing[right])}`);
+              console.debug(
+                `| left:  index = ${left}, season = ${readField(
+                  'seasonInt',
+                  existing[left]
+                )}`
+              );
+              console.debug(
+                `| right: index = ${right}, season = ${readField(
+                  'seasonInt',
+                  existing[right]
+                )}`
+              );
               console.debug(`| existing.length = ${existing.length}`);
-              console.debug(`| existing[0] = ${readField('seasonInt', existing[0])}`, existing);
-              console.debug(`| existing[${existing.length - 1}] = ${readField('seasonInt', existing[existing.length - 1])}`);
+              console.debug(
+                `| existing[0] = ${readField('seasonInt', existing[0])}`,
+                existing
+              );
+              console.debug(
+                `| existing[${existing.length - 1}] = ${readField(
+                  'seasonInt',
+                  existing[existing.length - 1]
+                )}`
+              );
 
               // If one of the endpoints is missing, force refresh
               if (!existing[left] || !existing[right]) return;
@@ -74,7 +104,12 @@ const cache = new InMemoryCache({
             return dataset;
           },
           merge(existing = [], incoming, { args, readField }) {
-            console.debug('[ApolloClient] init merge: ', existing, incoming, args);
+            console.debug(
+              '[ApolloClient] init merge: ',
+              existing,
+              incoming,
+              args
+            );
 
             // Slicing is necessary because the existing data is
             // immutable, and frozen in development.
@@ -87,11 +122,12 @@ const cache = new InMemoryCache({
             // merged[2] = ...
             for (let i = 0; i < incoming.length; i += 1) {
               const seasonInt = readField('seasonInt', incoming[i]);
-              if (!seasonInt) throw new Error('Seasons queried without seasonInt');
+              if (!seasonInt)
+                throw new Error('Seasons queried without seasonInt');
               // Season 1 = Index 0
               merged[(seasonInt as number) - 1] = incoming[i];
             }
-            
+
             merged = merged.reverse();
 
             console.debug('[ApolloClient] merge: finalize', merged);
@@ -103,10 +139,10 @@ const cache = new InMemoryCache({
             // return merged.reverse();
             return merged; // .sort((a: any, b: any) => (readField("seasonInt", a) as number) - (readField("seasonInt", b) as number));
           },
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 });
 
 persistCacheSync({

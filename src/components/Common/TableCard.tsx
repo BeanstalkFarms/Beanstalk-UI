@@ -1,6 +1,13 @@
 import React, { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
-import { Box, Card, CircularProgress, Divider, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Card,
+  CircularProgress,
+  Divider,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { DataGrid, GridColumns, GridSortItem } from '@mui/x-data-grid';
 import { displayBN, displayUSD } from 'util/index';
 import { tableStyle } from 'components/Common/Table/styles';
@@ -14,7 +21,7 @@ const MAX_ROWS = 5;
  * a header with title, aggregate amount, and aggregate value.
  * Used to display deposits/withdrawals within the Silo.
  */
-const TableCard : React.FC<{
+const TableCard: React.FC<{
   /** Card title */
   title: string;
   /** Column setup */
@@ -39,18 +46,21 @@ const TableCard : React.FC<{
   value,
   state,
   sort = { field: 'season', sort: 'desc' },
-  token
+  token,
 }) => {
   const tableHeight = useMemo(() => {
     if (!rows || rows.length === 0) return '180px';
-    return (60.5 + 6 + 39 - 5) + Math.min(rows.length, MAX_ROWS) * 36;
+    return 60.5 + 6 + 39 - 5 + Math.min(rows.length, MAX_ROWS) * 36;
   }, [rows]);
   return (
     <Card>
-      <Stack p={2} direction="row" justifyContent="space-between" alignItems="center">
-        <Typography variant="h4">
-          {title}
-        </Typography>
+      <Stack
+        p={2}
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Typography variant="h4">{title}</Typography>
         {state === 'ready' ? (
           <Stack direction="row" gap={0.3} alignItems="center">
             {token && <img src={token.logo} alt="" height="17px" />}
@@ -58,17 +68,20 @@ const TableCard : React.FC<{
               {displayBN(amount || ZERO_BN)}
               {value && (
                 <Typography display="inline" color="text.secondary">
-                  {' '}(~{displayUSD(value)})
+                  {' '}
+                  (~{displayUSD(value)})
                 </Typography>
               )}
             </Typography>
           </Stack>
-
-        ) : (
-          state === 'loading' ? (
-            <CircularProgress color="primary" variant="indeterminate" size={18} thickness={5} />
-          ) : null
-        )}
+        ) : state === 'loading' ? (
+          <CircularProgress
+            color="primary"
+            variant="indeterminate"
+            size={18}
+            thickness={5}
+          />
+        ) : null}
       </Stack>
       <Divider />
       <Box
@@ -77,8 +90,9 @@ const TableCard : React.FC<{
           px: 1,
           height: tableHeight,
           width: '100%',
-          ...tableStyle
-        }}>
+          ...tableStyle,
+        }}
+      >
         <DataGrid
           columns={columns}
           rows={rows}
@@ -89,12 +103,16 @@ const TableCard : React.FC<{
           components={{
             NoRowsOverlay() {
               return (
-                <Stack height="100%" alignItems="center" justifyContent="center">
+                <Stack
+                  height="100%"
+                  alignItems="center"
+                  justifyContent="center"
+                >
                   {state === 'disconnected'
                     ? `Connect a wallet to view ${title}`
-                    : state === 'loading' 
-                      ? 'Loading...'
-                      : `No ${title}`}
+                    : state === 'loading'
+                    ? 'Loading...'
+                    : `No ${title}`}
                 </Stack>
               );
             },
@@ -102,7 +120,7 @@ const TableCard : React.FC<{
           initialState={{
             sorting: {
               sortModel: [sort],
-            }
+            },
           }}
         />
       </Box>

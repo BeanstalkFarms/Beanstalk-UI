@@ -9,7 +9,10 @@ it('sorts crates by descending Season', () => {
 });
 
 it('sorts crates by ascending Season', () => {
-  const sorted = Beanstalk.Silo.Utils._sortCratesBySeason(depositedCrates, 'asc');
+  const sorted = Beanstalk.Silo.Utils._sortCratesBySeason(
+    depositedCrates,
+    'asc'
+  );
   expect(sorted.length).toBe(2);
   expect(sorted[0].season.toNumber()).toBe(24);
   expect(sorted[1].season.toNumber()).toBe(77);

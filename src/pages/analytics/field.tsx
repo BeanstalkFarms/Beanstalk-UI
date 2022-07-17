@@ -20,7 +20,7 @@ const FieldAnalytics: React.FC<{}> = () => {
       </Container>
     );
   }
-  
+
   return (
     <Container maxWidth="lg">
       <Card>

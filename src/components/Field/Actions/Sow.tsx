@@ -1,4 +1,10 @@
-import { Accordion, AccordionDetails, Box, Stack, Typography } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  Box,
+  Stack,
+  Typography,
+} from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
@@ -10,7 +16,7 @@ import {
   TokenSelectDialog,
   TxnPreview,
   TxnSeparator,
-  TxnSettings
+  TxnSettings,
 } from 'components/Common/Form';
 import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import TransactionToast from 'components/Common/TxnToast';
@@ -32,7 +38,13 @@ import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { displayBN, displayFullBN, displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
+import {
+  displayBN,
+  displayFullBN,
+  displayTokenAmount,
+  toStringBaseUnitBN,
+  toTokenUnitsBN,
+} from 'util/index';
 import { useProvider } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
@@ -41,12 +53,11 @@ import { ActionType } from '../../../util/Actions';
 type SowFormValues = FormState & {
   settings: {
     slippage: number;
-  }
+  };
 };
 
-const SowForm : React.FC<
-  FormikProps<SowFormValues>
-  & {
+const SowForm: React.FC<
+  FormikProps<SowFormValues> & {
     balances: ReturnType<typeof useFarmerBalances>;
     beanstalk: BeanstalkReplanted;
     weather: BigNumber;
@@ -63,7 +74,11 @@ const SowForm : React.FC<
 }) => {
   const chainId = useChainId();
   // TODO: constrain this when siloToken = Unripe
-  const erc20TokenMap = useTokenMap<ERC20Token | NativeToken>([BEAN, ETH, WETH]);
+  const erc20TokenMap = useTokenMap<ERC20Token | NativeToken>([
+    BEAN,
+    ETH,
+    WETH,
+  ]);
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
   const getChainToken = useGetChainToken();
   const Bean = getChainToken(BEAN);
@@ -74,28 +89,38 @@ const SowForm : React.FC<
   );
 
   //
-  const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
-    // If the user has typed some existing values in,
-    // save them. Add new tokens to the end of the list.
-    // FIXME: match sorting of erc20TokenList
-    const copy = new Set(_tokens);
-    const newValue = values.tokens.filter((x) => {
-      copy.delete(x.token);
-      return _tokens.has(x.token);
-    });
-    setFieldValue('tokens', [
-      ...newValue,
-      ...Array.from(copy).map((_token) => ({ token: _token, amount: undefined })),
-    ]);
-  }, [values.tokens, setFieldValue]);
+  const handleSelectTokens = useCallback(
+    (_tokens: Set<Token>) => {
+      // If the user has typed some existing values in,
+      // save them. Add new tokens to the end of the list.
+      // FIXME: match sorting of erc20TokenList
+      const copy = new Set(_tokens);
+      const newValue = values.tokens.filter((x) => {
+        copy.delete(x.token);
+        return _tokens.has(x.token);
+      });
+      setFieldValue('tokens', [
+        ...newValue,
+        ...Array.from(copy).map((_token) => ({
+          token: _token,
+          amount: undefined,
+        })),
+      ]);
+    },
+    [values.tokens, setFieldValue]
+  );
 
   // This handler does not run when _tokenIn = _tokenOut
-  // _tokenOut === Bean 
+  // _tokenOut === Bean
   const handleQuote = useCallback<QuoteHandler>(
     async (_tokenIn, _amountIn, _tokenOut) => {
-      const tokenIn  : ERC20Token = _tokenIn  instanceof NativeToken ? Weth : _tokenIn;
-      const tokenOut : ERC20Token = _tokenOut instanceof NativeToken ? Weth : _tokenOut;
-      const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, tokenIn.decimals));
+      const tokenIn: ERC20Token =
+        _tokenIn instanceof NativeToken ? Weth : _tokenIn;
+      const tokenOut: ERC20Token =
+        _tokenOut instanceof NativeToken ? Weth : _tokenOut;
+      const amountIn = ethers.BigNumber.from(
+        toStringBaseUnitBN(_amountIn, tokenIn.decimals)
+      );
       let estimate;
 
       // Depositing BEAN
@@ -105,28 +130,36 @@ const SowForm : React.FC<
           [amountIn]
         );
       } else {
-        throw new Error(`Sowing from ${tokenIn.symbol} is not currently supported`);
+        throw new Error(
+          `Sowing from ${tokenIn.symbol} is not currently supported`
+        );
       }
-      
+
       return {
-        amountOut: toTokenUnitsBN(estimate.amountOut.toString(), tokenOut.decimals),
+        amountOut: toTokenUnitsBN(
+          estimate.amountOut.toString(),
+          tokenOut.decimals
+        ),
         steps: estimate.steps,
       };
     },
     [farm, Weth]
   );
 
-  const beans = values.tokens[0].token === Bean 
-    ? values.tokens[0]?.amount || ZERO_BN
-    : values.tokens[0]?.amountOut || ZERO_BN;
+  const beans =
+    values.tokens[0].token === Bean
+      ? values.tokens[0]?.amount || ZERO_BN
+      : values.tokens[0]?.amountOut || ZERO_BN;
 
   const isSubmittable = beans?.gt(0);
   const numPods = beans.multipliedBy(weather.div(100).plus(1));
-  const podLineLength = beanstalkField.podIndex.minus(beanstalkField.harvestableIndex);
+  const podLineLength = beanstalkField.podIndex.minus(
+    beanstalkField.harvestableIndex
+  );
 
   return (
     <Form autoComplete="off">
-      {/*<pre>{JSON.stringify(values, null, 2)}</pre>*/}
+      {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
       <TokenSelectDialog
         open={isTokenSelectVisible}
         handleClose={hideTokenSelect}
@@ -151,14 +184,16 @@ const SowForm : React.FC<
             <TxnSeparator />
             <Stack direction="row" justifyContent="space-between" sx={{ p: 1 }}>
               <Typography variant="body1">Place in Pod Line:</Typography>
-              <Typography variant="body1">{displayBN(podLineLength)}</Typography>
+              <Typography variant="body1">
+                {displayBN(podLineLength)}
+              </Typography>
             </Stack>
-            <TokenOutputField
-              token={PODS}
-              amount={numPods}
-            />
+            <TokenOutputField token={PODS} amount={numPods} />
             <Box sx={{ py: 1 }}>
-              <Typography variant="body1" textAlign="center">Upon harvest {displayBN(numPods)} PODS will be redeemable for {displayBN(numPods)} BEAN</Typography>
+              <Typography variant="body1" textAlign="center">
+                Upon harvest {displayBN(numPods)} PODS will be redeemable for{' '}
+                {displayBN(numPods)} BEAN
+              </Typography>
             </Box>
             <Box>
               <Accordion variant="outlined">
@@ -168,16 +203,22 @@ const SowForm : React.FC<
                     actions={[
                       {
                         type: ActionType.BASE,
-                        message: 'Do this.'
+                        message: 'Do this.',
                       },
                       {
                         type: ActionType.BASE,
-                        message: 'Then do this.'
+                        message: 'Then do this.',
                       },
                       {
                         type: ActionType.BASE,
-                        message: `Receive ${displayFullBN(numPods, 2)} Pods at ${displayFullBN(podLineLength, 0)} in the Pod Line`
-                      }
+                        message: `Receive ${displayFullBN(
+                          numPods,
+                          2
+                        )} Pods at ${displayFullBN(
+                          podLineLength,
+                          0
+                        )} in the Pod Line`,
+                      },
                     ]}
                   />
                 </AccordionDetails>
@@ -204,137 +245,161 @@ const SowForm : React.FC<
 
 // ---------------------------------------------------
 
-const PREFERRED_TOKENS : PreferredToken[] = [
+const PREFERRED_TOKENS: PreferredToken[] = [
   {
     token: BEAN,
-    minimum: new BigNumber(1),    // $1
+    minimum: new BigNumber(1), // $1
   },
   {
     token: ETH,
-    minimum: new BigNumber(0.001) // ~$2-4
+    minimum: new BigNumber(0.001), // ~$2-4
   },
   {
     token: WETH,
-    minimum: new BigNumber(0.001) // ~$2-4
-  }
+    minimum: new BigNumber(0.001), // ~$2-4
+  },
 ];
 
-const Sow : React.FC<{}> = () => {
+const Sow: React.FC<{}> = () => {
   const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
   const balances = useFarmerBalances();
   const Bean = useChainConstant(BEAN);
   const Eth = useChainConstant(ETH);
   const { data: signer } = useSigner();
   const provider = useProvider();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(
+    signer
+  ) as unknown as BeanstalkReplanted;
   const farm = useMemo(() => new Farm(provider), [provider]);
-  const weather = useSelector<AppState, AppState['_beanstalk']['field']['weather']['yield']>((state) => state._beanstalk.field.weather.yield);
+  const weather = useSelector<
+    AppState,
+    AppState['_beanstalk']['field']['weather']['yield']
+  >((state) => state._beanstalk.field.weather.yield);
 
   // Form setup
-  const initialValues : SowFormValues = useMemo(() => ({
-    settings: {
-      slippage: 0.1, // 0.1%
-    },
-    tokens: [
-      {
-        token: baseToken as (ERC20Token | NativeToken),
-        amount: null,
+  const initialValues: SowFormValues = useMemo(
+    () => ({
+      settings: {
+        slippage: 0.1, // 0.1%
       },
-    ],
-  }), [baseToken]);
+      tokens: [
+        {
+          token: baseToken as ERC20Token | NativeToken,
+          amount: null,
+        },
+      ],
+    }),
+    [baseToken]
+  );
 
   // Handlers
-  const onSubmit = useCallback(async (values: SowFormValues, formActions: FormikHelpers<SowFormValues>) => {
-    try {
-      const formData = values.tokens[0];
-      const inputToken = formData.token;
-      const amountBeans = inputToken === Bean ? formData.amount : formData.amountOut;
-      if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
-      if (!amountBeans || amountBeans.eq(0)) throw new Error('No amount set');
-      
-      // TEMP: recast as BeanstalkReplanted 
-      const data : string[] = [];
-      const amountPods = amountBeans.times(weather.div(100).plus(1));
-      let value = ZERO_BN;
-      
-      const txToast = new TransactionToast({
-        loading: `Sowing ${displayFullBN(amountBeans, Bean.decimals)} Beans for ${displayFullBN(amountPods, PODS.decimals)} Pods`,
-        success: 'Sow complete.',
-      });
-      
-      // Sow directly from BEAN
-      if (inputToken === Bean) {
-        // Nothing to do
-      } 
-      
-      // Swap to BEAN and Sow
-      else {
-        // Require a quote
-        if (!formData.steps || !formData.amountOut) throw new Error(`No quote available for ${formData.token.symbol}`);
+  const onSubmit = useCallback(
+    async (
+      values: SowFormValues,
+      formActions: FormikHelpers<SowFormValues>
+    ) => {
+      try {
+        const formData = values.tokens[0];
+        const inputToken = formData.token;
+        const amountBeans =
+          inputToken === Bean ? formData.amount : formData.amountOut;
+        if (values.tokens.length > 1)
+          throw new Error('Only one token supported at this time');
+        if (!amountBeans || amountBeans.eq(0)) throw new Error('No amount set');
 
-        if (inputToken === Eth) {
-          if (!formData.amount) throw new Error('No amount set');
-          value = value.plus(formData.amount);
-          data.push(beanstalk.interface.encodeFunctionData('wrapEth', [
-            toStringBaseUnitBN(value, Eth.decimals),
-            FarmToMode.INTERNAL,
-          ]));
+        // TEMP: recast as BeanstalkReplanted
+        const data: string[] = [];
+        const amountPods = amountBeans.times(weather.div(100).plus(1));
+        let value = ZERO_BN;
+
+        const txToast = new TransactionToast({
+          loading: `Sowing ${displayFullBN(
+            amountBeans,
+            Bean.decimals
+          )} Beans for ${displayFullBN(amountPods, PODS.decimals)} Pods`,
+          success: 'Sow complete.',
+        });
+
+        // Sow directly from BEAN
+        if (inputToken === Bean) {
+          // Nothing to do
         }
 
-        // Encode steps to get from token i to siloToken
-        const encoded = Farm.encodeStepsWithSlippage(
-          formData.steps,
-          0.1 / 100,
-          // ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage / 100, 6)), // slippage
-        );
-        data.push(...encoded);
-        encoded.forEach((_data, index) => 
-          console.debug(`[Deposit] step ${index}:`, formData.steps?.[index]?.decode(_data).map((elem) => (elem instanceof ethers.BigNumber ? elem.toString() : elem)))
-        );
-      }
-      
-      data.push(
-        beanstalk.interface.encodeFunctionData('sow', [
-          toStringBaseUnitBN(amountBeans, Bean.decimals),
-          FarmFromMode.INTERNAL_EXTERNAL,
-        ])
-      );
- 
-      //
-      return beanstalk.farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) })
-        .then((txn) => {
-          txToast.confirming(txn);
-          return txn.wait();
-        })
-        .then((receipt) => {
-          txToast.success(receipt);
-          formActions.resetForm();
-        })
-        .catch((err) => {
-          console.error(
-            txToast.error(err.error || err)
+        // Swap to BEAN and Sow
+        else {
+          // Require a quote
+          if (!formData.steps || !formData.amountOut)
+            throw new Error(`No quote available for ${formData.token.symbol}`);
+
+          if (inputToken === Eth) {
+            if (!formData.amount) throw new Error('No amount set');
+            value = value.plus(formData.amount);
+            data.push(
+              beanstalk.interface.encodeFunctionData('wrapEth', [
+                toStringBaseUnitBN(value, Eth.decimals),
+                FarmToMode.INTERNAL,
+              ])
+            );
+          }
+
+          // Encode steps to get from token i to siloToken
+          const encoded = Farm.encodeStepsWithSlippage(
+            formData.steps,
+            0.1 / 100
+            // ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage / 100, 6)), // slippage
           );
-        });
-    } catch (e) {
-      // txToast.error(err);
-      formActions.setSubmitting(false);
-    }
-  }, [
-    beanstalk,
-    weather,
-    Bean,
-    Eth
-  ]);
+          data.push(...encoded);
+          encoded.forEach((_data, index) =>
+            console.debug(
+              `[Deposit] step ${index}:`,
+              formData.steps?.[index]
+                ?.decode(_data)
+                .map((elem) =>
+                  elem instanceof ethers.BigNumber ? elem.toString() : elem
+                )
+            )
+          );
+        }
+
+        data.push(
+          beanstalk.interface.encodeFunctionData('sow', [
+            toStringBaseUnitBN(amountBeans, Bean.decimals),
+            FarmFromMode.INTERNAL_EXTERNAL,
+          ])
+        );
+
+        //
+        return beanstalk
+          .farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) })
+          .then((txn) => {
+            txToast.confirming(txn);
+            return txn.wait();
+          })
+          .then((receipt) => {
+            txToast.success(receipt);
+            formActions.resetForm();
+          })
+          .catch((err) => {
+            console.error(txToast.error(err.error || err));
+          });
+      } catch (e) {
+        // txToast.error(err);
+        formActions.setSubmitting(false);
+      }
+    },
+    [beanstalk, weather, Bean, Eth]
+  );
 
   return (
-    <Formik<SowFormValues>
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-    >
+    <Formik<SowFormValues> initialValues={initialValues} onSubmit={onSubmit}>
       {(formikProps: FormikProps<SowFormValues>) => (
         <>
           <TxnSettings placement="form-top-right">
-            <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
+            <SettingInput
+              name="settings.slippage"
+              label="Slippage Tolerance"
+              endAdornment="%"
+            />
           </TxnSettings>
           <SowForm
             balances={balances}

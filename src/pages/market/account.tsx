@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  Container,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Container, Stack, Typography } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
 import MyPlots from 'components/Market/MyPlots';
 import ComingSoonCard from 'components/Common/ComingSoonCard';
@@ -20,11 +16,9 @@ const MarketAccountPage: React.FC = () => {
 
   let content;
   if (chainId === SupportedChainId.MAINNET) {
-    content = (
-      <ComingSoonCard title="Pod Market" />
-    );
+    content = <ComingSoonCard title="Pod Market" />;
   } else {
-    content = (<MyPlots />);
+    content = <MyPlots />;
   }
 
   if (!account?.address) {
@@ -35,12 +29,14 @@ const MarketAccountPage: React.FC = () => {
     <Container maxWidth="lg">
       <Stack spacing={2}>
         <PageHeader
-          title={(
+          title={
             <Stack direction="row" gap={0.5} alignItems="center">
               <AddressIcon address={account.address} />
-              <Typography variant="h1">{`${getAccount(account.address).substring(0, 7)}...`}</Typography>
+              <Typography variant="h1">{`${getAccount(
+                account.address
+              ).substring(0, 7)}...`}</Typography>
             </Stack>
-          )}
+          }
           description="Browse my open Pod Orders and Listings"
           control={<CreateButtons />}
         />

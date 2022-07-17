@@ -12,7 +12,7 @@ import { BeanstalkSiloBalance } from '../../../state/beanstalk/silo';
 
 export type LiquidityBalancesProps = {
   balances: TokenMap<BeanstalkSiloBalance>;
-}
+};
 
 export interface MockPastSiloData {
   date: string;
@@ -45,8 +45,8 @@ const mockSiloData: MockPastSiloData[] = [
     date: '2022 Jun 19',
     '0x87898263B6C5BABe34b4ec53F22d98430b91e371': '10',
     '0xD652c40fBb3f06d6B58Cb9aa9CFF063eE63d465D': '15',
-    '0x3a70DfA7d2262988064A2D051dd47521E43c9BdD': '50'
-  }
+    '0x3a70DfA7d2262988064A2D051dd47521E43c9BdD': '50',
+  },
 ];
 
 const keys = Object.keys(mockSiloData[0]).filter((k) => k !== 'date') as any[];
@@ -77,7 +77,10 @@ const StackedAreaChart: React.FC<StackedAreasProps> = ({
   // scales
   const xScale = scaleTime<number>({
     range: [0, xMax],
-    domain: [Math.min(...mockSiloData.map(getDate)), Math.max(...mockSiloData.map(getDate))],
+    domain: [
+      Math.min(...mockSiloData.map(getDate)),
+      Math.max(...mockSiloData.map(getDate)),
+    ],
   });
 
   const yScale = scaleLinear<number>({
@@ -87,7 +90,14 @@ const StackedAreaChart: React.FC<StackedAreasProps> = ({
   return width < 10 ? null : (
     <svg width={width} height={height}>
       <GradientOrangeRed id="stacked-area-orangered" />
-      <rect x={0} y={0} width={width} height={height} fill={background} rx={14} />
+      <rect
+        x={0}
+        y={0}
+        width={width}
+        height={height}
+        fill={background}
+        rx={14}
+      />
       <AreaStack
         top={margin.top}
         left={margin.left}
@@ -98,23 +108,26 @@ const StackedAreaChart: React.FC<StackedAreasProps> = ({
         y1={(d) => yScale(getY1(d)) ?? 0}
       >
         {({ stacks, path }) =>
-          stacks.map((stack) =>
-            (
-              <>
-                {/* --- example of how to debug this: --- */}
-                {/* {console.log('STACK KEY', stack.key)} */}
-                {/* {console.log('POOL COLOR', ALL_POOLS[SupportedChainId.MAINNET][`${stack.key}`.toLowerCase()]?.color)} */}
-                <path
-                  key={`stack-${stack.key}`}
-                  d={path(stack) || ''}
-                  stroke="transparent"
-                  fill={`${ALL_POOLS[SupportedChainId.MAINNET][`${stack.key}`.toLowerCase()]?.color}`}
-                  onClick={() => {
-                    if (events) alert(`${stack.key}`);
-                  }}
-                />
-              </>
-            ))
+          stacks.map((stack) => (
+            <>
+              {/* --- example of how to debug this: --- */}
+              {/* {console.log('STACK KEY', stack.key)} */}
+              {/* {console.log('POOL COLOR', ALL_POOLS[SupportedChainId.MAINNET][`${stack.key}`.toLowerCase()]?.color)} */}
+              <path
+                key={`stack-${stack.key}`}
+                d={path(stack) || ''}
+                stroke="transparent"
+                fill={`${
+                  ALL_POOLS[SupportedChainId.MAINNET][
+                    `${stack.key}`.toLowerCase()
+                  ]?.color
+                }`}
+                onClick={() => {
+                  if (events) alert(`${stack.key}`);
+                }}
+              />
+            </>
+          ))
         }
       </AreaStack>
     </svg>

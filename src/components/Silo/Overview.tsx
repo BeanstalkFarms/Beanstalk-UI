@@ -49,7 +49,8 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
       </Box>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
         <MainnetBlur>
-          Historical Deposit value will be available once Beanstalk is Replanted.
+          Historical Deposit value will be available once Beanstalk is
+          Replanted.
         </MainnetBlur>
         <LineChart series={series} onCursor={handleCursor} />
       </Box>
@@ -57,7 +58,8 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
   );
 };
 
-const StalkOwnershipTab: React.FC<TabData
+const StalkOwnershipTab: React.FC<
+  TabData
   // & { beanstalkSilo: AppState['_beanstalk']['silo']; }
 > = ({ current, series, season }) => {
   // Display value is an array [stalk, pct]
@@ -95,7 +97,8 @@ const StalkOwnershipTab: React.FC<TabData
       </Stack>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
         <MainnetBlur>
-          Historical Stalk balance and ownership will be available once Beanstalk is Replanted.
+          Historical Stalk balance and ownership will be available once
+          Beanstalk is Replanted.
         </MainnetBlur>
         <LineChart series={series} onCursor={handleCursor} />
       </Box>
@@ -106,17 +109,17 @@ const StalkOwnershipTab: React.FC<TabData
 // ------------------------------------------------
 
 const Overview: React.FC<{
-  farmerSilo:     AppState['_farmer']['silo'];
-  beanstalkSilo:  AppState['_beanstalk']['silo'];
-  breakdown:      ReturnType<typeof useFarmerSiloBreakdown>;
-  season:         BigNumber;
+  farmerSilo: AppState['_farmer']['silo'];
+  beanstalkSilo: AppState['_beanstalk']['silo'];
+  breakdown: ReturnType<typeof useFarmerSiloBreakdown>;
+  season: BigNumber;
 }> = ({ farmerSilo, beanstalkSilo, breakdown, season }) => {
   const [tab, setTab] = useState(0);
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
   };
 
-  const [timeTab, setTimeTab] = useState([0,0]);
+  const [timeTab, setTimeTab] = useState([0, 0]);
   const handleChangeTimeTab = (i: number[]) => {
     setTimeTab(i);
   };
@@ -140,12 +143,8 @@ const Overview: React.FC<{
       </Stack>
       <Box sx={{ display: tab === 0 ? 'block' : 'none' }}>
         <DepositsTab
-          current={[
-            breakdown.states.deposited.value
-          ]}
-          series={[
-            mockDepositData
-          ]}
+          current={[breakdown.states.deposited.value]}
+          series={[mockDepositData]}
           season={season}
         />
       </Box>

@@ -3,28 +3,21 @@ import { Button, Stack, StackProps, Typography } from '@mui/material';
 import DropdownIcon from '../DropdownIcon';
 import { IconSize } from '../../App/muiTheme';
 
-const PillDialogField : React.FC<{
-  isOpen: boolean;
-  label: string;
-  onClick: () => void;
-} & StackProps> = ({
-  isOpen,
-  onClick,
-  label,
-  children,
-  sx,
-  ...props
-}) => (
+const PillDialogField: React.FC<
+  {
+    isOpen: boolean;
+    label: string;
+    onClick: () => void;
+  } & StackProps
+> = ({ isOpen, onClick, label, children, sx, ...props }) => (
   <Stack
     direction="row"
     justifyContent="space-between"
     alignItems="center"
     sx={{ ml: 0.5, py: 1, ...sx }}
     {...props}
-    >
-    <Typography color="gray">
-      {label}
-    </Typography>
+  >
+    <Typography color="gray">{label}</Typography>
     <Button
       variant="contained"
       onClick={onClick}
@@ -37,6 +30,6 @@ const PillDialogField : React.FC<{
       <DropdownIcon sx={{ height: IconSize.xs }} open={isOpen} />
     </Button>
   </Stack>
-  );
+);
 
 export default PillDialogField;

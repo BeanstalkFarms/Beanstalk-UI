@@ -42,5 +42,5 @@ export type BeanstalkField = {
     raining: Boolean;
     /** The season that it started raining. */
     rainStart: BigNumber;
-  }
-}
+  };
+};

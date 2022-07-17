@@ -18,7 +18,7 @@ import { displayFullBN } from 'util/index';
 import Token from 'classes/Token';
 import NumberFormatInput from '../NumberFormatInput';
 
-export type TokenInputField2CustomProps = { 
+export type TokenInputField2CustomProps = {
   /**
    * If provided, the Balance is displayed with respect
    * to this token's displayDecimals.
@@ -30,13 +30,12 @@ export type TokenInputField2CustomProps = {
   label?: string | null;
 };
 
-export type TokenInputField2Props = (
-  TokenInputField2CustomProps // custom
-  & { FormControlProps?: MUIFormControlProps }
-  & OutlinedInputProps        // MUI InputBase
-);
+export type TokenInputField2Props = TokenInputField2CustomProps & {
+  // custom
+  FormControlProps?: MUIFormControlProps;
+} & OutlinedInputProps; // MUI InputBase
 
-const TokenInputField : React.FC<TokenInputField2Props & FieldProps> = ({
+const TokenInputField: React.FC<TokenInputField2Props & FieldProps> = ({
   // -- Custom props
   token,
   balance,
@@ -59,31 +58,29 @@ const TokenInputField : React.FC<TokenInputField2Props & FieldProps> = ({
   const [displayAmount, setDisplayAmount] = useState<string>(field.value);
 
   // Derived
-  const isInputDisabled = (
-    disabled
-    || (balance && balance.eq(0))
-    || form.isSubmitting
+  const isInputDisabled =
+    disabled || (balance && balance.eq(0)) || form.isSubmitting;
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      // Always update the display amount right away.
+      setDisplayAmount(e.target.value);
+      const newValue = e.target.value ? new BigNumber(e.target.value) : null;
+      // Only push a new value to form state if the numeric
+      // value is different. For example, if the displayValue
+      // goes from '1.0' -> '1.00', don't trigger an update.
+      if (newValue === null || !newValue.eq(field.value)) {
+        form.setFieldValue(
+          field.name,
+          // If a balance is provided, enforce it as a maximum.
+          balance && newValue && newValue.gt(balance) ? balance : newValue
+        );
+      }
+    },
+    [form, field.name, field.value, balance]
   );
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    // Always update the display amount right away.
-    setDisplayAmount(e.target.value); 
-    const newValue = e.target.value ? new BigNumber(e.target.value) : null;
-    // Only push a new value to form state if the numeric
-    // value is different. For example, if the displayValue
-    // goes from '1.0' -> '1.00', don't trigger an update.
-    if (newValue === null || !newValue.eq(field.value)) {
-      form.setFieldValue(
-        field.name,
-        // If a balance is provided, enforce it as a maximum.
-        ((balance && newValue) && newValue.gt(balance))
-          ? balance
-          : newValue,
-      );
-    }
-  }, [form, field.name, field.value, balance]);
-
-  // 
+  //
   const handleMax = useCallback(() => {
     if (balance) {
       form.setFieldValue(field.name, balance);
@@ -96,7 +93,7 @@ const TokenInputField : React.FC<TokenInputField2Props & FieldProps> = ({
     // @ts-ignore
     e.target.blur();
   }, []);
-  
+
   // PROBLEM:
   // BigNumber('0') == BigNumber('0.0').
   // If a user were to try to type in a small number (0.001 ETH for example),
@@ -105,29 +102,26 @@ const TokenInputField : React.FC<TokenInputField2Props & FieldProps> = ({
   //
   // SOLUTION:
   // Allow TokenInputField to maintain `displayAmount`, an internal `string` representation of `field.value`.
-  // - On input change, store the input value (as a string) in displayAmount. Update form state 
+  // - On input change, store the input value (as a string) in displayAmount. Update form state
   // - In the below effect, check for edge cases:
   //    a. If `field.value === undefined`         (i.e. the value has been cleared), reset the input.
   //    b. If `field.value !== BN(displayAmount)` (i.e. a new value was provided),   update `displayAmount`.
   useEffect(() => {
     if (!field.value) setDisplayAmount('');
-    else if (!field.value.eq(new BigNumber(displayAmount))) setDisplayAmount(field.value.toString());
+    else if (!field.value.eq(new BigNumber(displayAmount)))
+      setDisplayAmount(field.value.toString());
   }, [field.value, displayAmount]);
 
   return (
     <Stack gap={0.5}>
-      {label && (
-        <Typography sx={{ fontSize: 15, px: 0.5 }}>
-          {label}
-        </Typography>
-      )}
+      {label && <Typography sx={{ fontSize: 15, px: 0.5 }}>{label}</Typography>}
       <OutlinedInput
         type="string"
         placeholder={placeholder || '0'}
         disabled={isInputDisabled}
         color="secondary"
         inputProps={{
-          min: 0.00,
+          min: 0.0,
           inputMode: 'numeric',
           ...inputProps,
         }}
@@ -140,30 +134,29 @@ const TokenInputField : React.FC<TokenInputField2Props & FieldProps> = ({
         onWheel={handleWheel}
         sx={{
           '& .MuiOutlinedInput-root': {
-            fontSize: '1.5rem'
+            fontSize: '1.5rem',
           },
-          ...sx
+          ...sx,
         }}
       />
       <Stack direction="row" alignItems="center" spacing={0.5} px={0.5}>
         {/* Leaving the Stack rendered regardless of whether `quote` is defined
-          * ensures that the Balance section gets flexed to the right side of
-          * the input. */}
+         * ensures that the Balance section gets flexed to the right side of
+         * the input. */}
         <Stack direction="row" alignItems="center" sx={{ flex: 1 }} spacing={1}>
           {quote}
         </Stack>
         {balance && (
           <>
             <Typography sx={{ fontSize: 13.5 }}>
-              {balanceLabel}: {(
-                balance 
-                  ? token
-                    // If `token` is provided, use its requested decimals
-                    ? `${displayFullBN(balance, token.displayDecimals)}` 
-                    // Otherwise... *shrug*
-                    : balance.toString() 
-                  : '0'
-              )}
+              {balanceLabel}:{' '}
+              {balance
+                ? token
+                  ? // If `token` is provided, use its requested decimals
+                    `${displayFullBN(balance, token.displayDecimals)}`
+                  : // Otherwise... *shrug*
+                    balance.toString()
+                : '0'}
             </Typography>
             <Typography
               variant="body1"
@@ -184,15 +177,15 @@ const TokenInputField : React.FC<TokenInputField2Props & FieldProps> = ({
   );
 };
 
-const TokenInputField2 : React.FC<TokenInputField2Props & { name: string }> = ({ name, ...tokenInputFieldProps }) => (
+const TokenInputField2: React.FC<TokenInputField2Props & { name: string }> = ({
+  name,
+  ...tokenInputFieldProps
+}) => (
   <Field name={name}>
     {(fieldProps: FieldProps) => (
-      <TokenInputField
-        {...fieldProps}
-        {...tokenInputFieldProps}
-        />
-      )}
+      <TokenInputField {...fieldProps} {...tokenInputFieldProps} />
+    )}
   </Field>
-  );
+);
 
 export default TokenInputField2;

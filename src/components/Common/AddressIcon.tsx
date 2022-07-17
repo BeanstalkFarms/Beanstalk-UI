@@ -6,23 +6,15 @@ import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 
 const FALLBACK_ADDRESS = BEANSTALK_ADDRESSES[1];
 
-const AddressIcon : React.FC<BoxProps & {
-  size?: number;
-  address?: string;
-}> = ({
-  size = 25,
-  address,
-  sx,
-  ...props
-}) => {
+const AddressIcon: React.FC<
+  BoxProps & {
+    size?: number;
+    address?: string;
+  }
+> = ({ size = 25, address, sx, ...props }) => {
   const { data: account } = useAccount();
   const addr = address || account?.address || FALLBACK_ADDRESS;
-  return (
-    <Jazzicon
-      diameter={size}
-      seed={jsNumberForAddress(addr)}
-    />
-  );
+  return <Jazzicon diameter={size} seed={jsNumberForAddress(addr)} />;
 };
 
 export default AddressIcon;

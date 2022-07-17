@@ -3,10 +3,10 @@ import { NEW_BN } from 'constants/index';
 import { FarmerBarn } from '.';
 import { resetFarmerBarn, updateFarmerBarn } from './actions';
 
-const initialState : FarmerBarn = {
-  fertilizer:           {},
-  unfertilizedSprouts:  NEW_BN,
-  fertilizedSprouts:    NEW_BN,
+const initialState: FarmerBarn = {
+  fertilizer: {},
+  unfertilizedSprouts: NEW_BN,
+  fertilizedSprouts: NEW_BN,
 };
 
 export default createReducer(initialState, (builder) =>

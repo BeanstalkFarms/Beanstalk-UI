@@ -13,7 +13,7 @@ const StatProps = {
 
 const PodRate: React.FC<{}> = () => {
   const podRate = usePodRate();
-  const season  = useSeason();
+  const season = useSeason();
   return (
     <SeasonPlot
       document={SeasonalPodRateDocument}

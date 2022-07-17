@@ -21,21 +21,24 @@ export interface TimeTabProps {
   setState: (s: TimeTabState) => void;
 }
 
-const TimeTabs: React.FC<
-  TimeTabProps & 
-  StackProps
-> = ({ 
-  sx, 
-  setState, 
-  state
+const TimeTabs: React.FC<TimeTabProps & StackProps> = ({
+  sx,
+  setState,
+  state,
 }) => {
-  const handleChange0 = useCallback((i: number) => {
-    setState([i, state[1]]);
-  }, [state, setState]);
+  const handleChange0 = useCallback(
+    (i: number) => {
+      setState([i, state[1]]);
+    },
+    [state, setState]
+  );
 
-  const handleChange1 = useCallback((i: number) => {
-    setState([state[0], i]);
-  }, [state, setState]);
+  const handleChange1 = useCallback(
+    (i: number) => {
+      setState([state[0], i]);
+    },
+    [state, setState]
+  );
 
   return (
     <Stack direction="row" sx={{ ...sx }} gap={0.2} alignItems="center">
@@ -53,16 +56,23 @@ const TimeTabs: React.FC<
             minWidth: 0,
             '&:hover': {
               // backgroundColor: 'transparent'
-            }
+            },
           }}
           disableRipple
         >
-          <Typography color={state[0] === d.index ? BeanstalkPalette.logoGreen : 'text.primary'}>
+          <Typography
+            color={
+              state[0] === d.index ? BeanstalkPalette.logoGreen : 'text.primary'
+            }
+          >
             {d.label}
           </Typography>
         </Button>
       ))}
-      <Divider orientation="vertical" sx={{ height: '14px', ml: 0.1, mr: 0.1 }} />
+      <Divider
+        orientation="vertical"
+        sx={{ height: '14px', ml: 0.1, mr: 0.1 }}
+      />
       {WINDOWS.map((w) => (
         <Button
           onClick={() => handleChange1(w.index)}
@@ -77,11 +87,15 @@ const TimeTabs: React.FC<
             minWidth: 0,
             '&:hover': {
               // backgroundColor: 'transparent'
-            }
+            },
           }}
           disableRipple
         >
-          <Typography color={state[1] === w.index ? BeanstalkPalette.logoGreen : 'text.primary'}>
+          <Typography
+            color={
+              state[1] === w.index ? BeanstalkPalette.logoGreen : 'text.primary'
+            }
+          >
             {w.label}
           </Typography>
         </Button>

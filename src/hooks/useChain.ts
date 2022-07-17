@@ -5,7 +5,7 @@ import { useNetwork } from 'wagmi';
 /**
  * Returns the current chainId, falling back to MAINNET
  * if one isn't provided by the wallet connector.
- * 
+ *
  * @returns SupportedChainId
  */
 export default function useChainId() {

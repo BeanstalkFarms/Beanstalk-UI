@@ -42,15 +42,13 @@ export type TokenInputCustomProps = {
   handleChange?: (finalValue: BigNumber | null) => void;
 };
 
-export type TokenInputProps = (
-  TokenInputCustomProps // custom
-  & Partial<TextFieldProps>  // MUI TextField
-);
+export type TokenInputProps = TokenInputCustomProps & // custom
+  Partial<TextFieldProps>; // MUI TextField
 
 export const VALID_INPUTS = /[0-9]*/;
 
-const TokenInput: React.FC<TokenInputProps
-  & FieldProps // Formik Field
+const TokenInput: React.FC<
+  TokenInputProps & FieldProps // Formik Field
 > = ({
   /// Custom props
   token,
@@ -72,68 +70,72 @@ const TokenInput: React.FC<TokenInputProps
   label,
   ...textFieldProps
 }) => {
-  const [displayAmount, setDisplayAmount] = useState<string>(field.value?.toString() || '');
-  const inputProps = useMemo(() => ({
-    inputProps: {
-      min: 0.00,
-      inputMode: 'numeric',
-    },
-    inputComponent: NumberFormatInput as any,
-    ...InputProps,
-  } as TextFieldProps['InputProps']), [InputProps]);
+  const [displayAmount, setDisplayAmount] = useState<string>(
+    field.value?.toString() || ''
+  );
+  const inputProps = useMemo(
+    () =>
+      ({
+        inputProps: {
+          min: 0.0,
+          inputMode: 'numeric',
+        },
+        inputComponent: NumberFormatInput as any,
+        ...InputProps,
+      } as TextFieldProps['InputProps']),
+    [InputProps]
+  );
 
   // Unpack balance
   const [balance, balanceTooltip] = useMemo(() => {
     if (!_balance) return [undefined, ''];
     if (_balance instanceof BigNumber) return [_balance, ''];
-    return [_balance.total, (
+    return [
+      _balance.total,
       <>
-        Farm Balance: {token ? displayTokenAmount(_balance.internal, token) : displayBN(_balance.internal)}<br />
-        Circulating Balance: {token ? displayTokenAmount(_balance.external, token) : displayBN(_balance.external)}
-      </>
-    )];
+        Farm Balance:{' '}
+        {token
+          ? displayTokenAmount(_balance.internal, token)
+          : displayBN(_balance.internal)}
+        <br />
+        Circulating Balance:{' '}
+        {token
+          ? displayTokenAmount(_balance.external, token)
+          : displayBN(_balance.external)}
+      </>,
+    ];
   }, [_balance, token]);
 
   // Automatically disable the input if
-  // the form it's contained within is 
+  // the form it's contained within is
   // submitting, or if a zero balance is provided.
   // Otherwise fall back to the disabled prop.
-  const isInputDisabled = (
-    disabled
-    || (balance && balance.eq(0))
-    || form.isSubmitting
+  const isInputDisabled =
+    disabled || (balance && balance.eq(0)) || form.isSubmitting;
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      // Always update the display amount right away.
+      setDisplayAmount(
+        // parseFloat converts 01 -> 1
+        e.target.value ? parseFloat(e.target.value).toString() : ''
+      );
+      const newValue = e.target.value ? new BigNumber(e.target.value) : null;
+      // Only push a new value to form state if the numeric
+      // value is different. For example, if the displayValue
+      // goes from '1.0' -> '1.00', don't trigger an update.
+      if (newValue === null || !newValue.eq(field.value)) {
+        // If a balance is provided, enforce it as a maximum.
+        const finalValue =
+          balance && newValue && newValue.gt(balance) ? balance : newValue;
+        form.setFieldValue(field.name, finalValue);
+        _handleChange?.(finalValue);
+      }
+    },
+    [form, field.name, field.value, balance, _handleChange]
   );
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    // Always update the display amount right away.
-    setDisplayAmount(
-      // parseFloat converts 01 -> 1
-      e.target.value ? parseFloat(e.target.value).toString() : ''
-    );
-    const newValue = e.target.value ? new BigNumber(e.target.value) : null;
-    // Only push a new value to form state if the numeric
-    // value is different. For example, if the displayValue
-    // goes from '1.0' -> '1.00', don't trigger an update.
-    if (newValue === null || !newValue.eq(field.value)) {
-      // If a balance is provided, enforce it as a maximum.
-      const finalValue = ((balance && newValue) && newValue.gt(balance))
-        ? balance
-        : newValue;
-      form.setFieldValue(
-        field.name,
-        finalValue,
-      );
-      _handleChange?.(finalValue);
-    }
-  }, [
-    form,
-    field.name,
-    field.value,
-    balance,
-    _handleChange
-  ]);
-
-  // 
+  //
   const handleMax = useCallback(() => {
     if (balance) {
       form.setFieldValue(field.name, balance);
@@ -156,14 +158,20 @@ const TokenInput: React.FC<TokenInputProps
   //
   // SOLUTION:
   // Allow TokenInputField to maintain `displayAmount`, an internal `string` representation of `field.value`.
-  // - On input change, store the input value (as a string) in displayAmount. Update form state 
+  // - On input change, store the input value (as a string) in displayAmount. Update form state
   // - In the below effect, check for edge cases:
   //    a. If `field.value === undefined`         (i.e. the value has been cleared), reset the input.
   //    b. If `field.value !== BN(displayAmount)` (i.e. a new value was provided),   update `displayAmount`.
   useEffect(() => {
-    console.debug('[TokenInputField] field.value or displayAmount changed', field.name, field.value, displayAmount);
+    console.debug(
+      '[TokenInputField] field.value or displayAmount changed',
+      field.name,
+      field.value,
+      displayAmount
+    );
     if (!field.value) setDisplayAmount('');
-    else if (!field.value.eq(new BigNumber(displayAmount))) setDisplayAmount(field.value.toString());
+    else if (!field.value.eq(new BigNumber(displayAmount)))
+      setDisplayAmount(field.value.toString());
   }, [field.value, field.name, displayAmount]);
 
   return (
@@ -182,29 +190,31 @@ const TokenInput: React.FC<TokenInputProps
         sx={sx}
       />
       {/* Bottom Adornment */}
-      {(balance && !hideBalance || quote) && (
+      {((balance && !hideBalance) || quote) && (
         <Stack direction="row" alignItems="center" gap={0.5} px={0.5} py={1}>
           {/* Leaving the Stack rendered regardless of whether `quote` is defined
-            * ensures that the Balance section gets flexed to the right side of
-            * the input. */}
-          <Stack direction="row" alignItems="center" sx={{ flex: 1 }} spacing={1}>
-            <Typography variant="bodySmall">
-              {quote}
-            </Typography>
+           * ensures that the Balance section gets flexed to the right side of
+           * the input. */}
+          <Stack
+            direction="row"
+            alignItems="center"
+            sx={{ flex: 1 }}
+            spacing={1}
+          >
+            <Typography variant="bodySmall">{quote}</Typography>
           </Stack>
-          {(balance && !hideBalance) && (
+          {balance && !hideBalance && (
             <>
               <Tooltip title={balanceTooltip}>
                 <Typography variant="body1">
-                  {balanceLabel}: {(
-                    balance
-                      ? token
-                        // If `token` is provided, use its requested decimals
-                        ? `${displayFullBN(balance, token.displayDecimals)}`
-                        // Otherwise... *shrug*
-                        : balance.toString()
-                      : '0'
-                  )}
+                  {balanceLabel}:{' '}
+                  {balance
+                    ? token
+                      ? // If `token` is provided, use its requested decimals
+                        `${displayFullBN(balance, token.displayDecimals)}`
+                      : // Otherwise... *shrug*
+                        balance.toString()
+                    : '0'}
                 </Typography>
               </Tooltip>
               <Typography
@@ -225,12 +235,7 @@ const TokenInput: React.FC<TokenInputProps
 
 const TokenInputField: React.FC<TokenInputProps> = ({ name, ...props }) => (
   <Field name={name}>
-    {(fieldProps: FieldProps) => (
-      <TokenInput
-        {...fieldProps}
-        {...props}
-      />
-    )}
+    {(fieldProps: FieldProps) => <TokenInput {...fieldProps} {...props} />}
   </Field>
 );
 

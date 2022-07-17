@@ -19,11 +19,11 @@ export type RouteData = {
   icon?: string;
   disabled?: boolean;
   small?: boolean;
-}
+};
 
-type RouteKeys = 'top' | 'market' | 'analytics' | 'more' | 'additional'
+type RouteKeys = 'top' | 'market' | 'analytics' | 'more' | 'additional';
 
-const ROUTES : { [key in RouteKeys] : RouteData[] } = {
+const ROUTES: { [key in RouteKeys]: RouteData[] } = {
   // Main Navigation
   top: [
     {
@@ -76,25 +76,25 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
     {
       path: 'analytics/field',
       title: 'Field Analytics',
-    }
+    },
   ],
   // More Menu
   more: [
     {
       path: 'nft',
       title: 'BeaNFTs',
-      icon: beanNFTIcon
+      icon: beanNFTIcon,
     },
     {
       path: 'trade',
       title: 'Trade',
-      icon: tradeIcon
+      icon: tradeIcon,
     },
     {
       path: 'governance',
       href: 'https://snapshot.org/#/beanstalkdao.eth',
       title: 'Governance',
-      icon: governanceIcon
+      icon: governanceIcon,
     },
   ],
   // About Button
@@ -103,31 +103,31 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       path: 'about',
       title: 'About',
       href: 'https://bean.money',
-      icon: aboutIcon
+      icon: aboutIcon,
     },
     {
       path: 'discord',
       href: 'https://discord.gg/beanstalk',
       title: 'Discord',
-      icon: discordIcon
+      icon: discordIcon,
     },
     {
       path: 'twitter',
       href: 'https://twitter.com/beanstalkfarms',
       title: 'Twitter',
-      icon: twitterIcon
+      icon: twitterIcon,
     },
     {
       path: 'github',
       href: 'https://github.com/beanstalkfarms',
       title: 'Github',
-      icon: githubIcon
+      icon: githubIcon,
     },
     {
       path: 'analytics',
       href: 'https://dune.xyz/tbiq/Beanstalk',
       title: 'Dune',
-      icon: beanNFTIcon
+      icon: beanNFTIcon,
     },
   ],
 };

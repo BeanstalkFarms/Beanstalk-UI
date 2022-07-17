@@ -33,7 +33,7 @@ const MyFertilizer: React.FC = () => {
   /// Data
   const beanstalkBarn = useSelector<AppState, AppState['_beanstalk']['barn']>(
     (state) => state._beanstalk.barn
-  )
+  );
   const farmerBarn = useSelector<AppState, AppState['_farmer']['barn']>(
     (state) => state._farmer.barn
   );
@@ -45,9 +45,7 @@ const MyFertilizer: React.FC = () => {
   /// Local data
   const tokenIds = useMemo(
     () =>
-      Object.keys(farmerBarn.fertilizer).filter(
-        () => tab === TabState.ACTIVE
-      ),
+      Object.keys(farmerBarn.fertilizer).filter(() => tab === TabState.ACTIVE),
     [farmerBarn.fertilizer, tab]
   );
 
@@ -76,7 +74,10 @@ const MyFertilizer: React.FC = () => {
             <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={SPROUTS} />
               <Typography>
-                {displayFullBN(farmerBarn.unfertilizedSprouts, SPROUTS.displayDecimals)}
+                {displayFullBN(
+                  farmerBarn.unfertilizedSprouts,
+                  SPROUTS.displayDecimals
+                )}
               </Typography>
             </Stack>
           </Stack>
@@ -99,7 +100,10 @@ const MyFertilizer: React.FC = () => {
             <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={FERTILIZED_SPROUTS} />
               <Typography>
-                {displayFullBN(farmerBarn.fertilizedSprouts, FERTILIZED_SPROUTS.displayDecimals)}
+                {displayFullBN(
+                  farmerBarn.fertilizedSprouts,
+                  FERTILIZED_SPROUTS.displayDecimals
+                )}
               </Typography>
             </Stack>
           </Stack>
@@ -123,11 +127,13 @@ const MyFertilizer: React.FC = () => {
           {tokenIds.length > 0 ? (
             <Grid container spacing={3}>
               {tokenIds.map((_id) => {
-                const id     = new BigNumber(_id);
+                const id = new BigNumber(_id);
                 const season = new BigNumber(6_074);
                 const amount = farmerBarn.fertilizer[_id];
-                const humidity  = humidityAt(id);
-                const remaining = humidity ? amount.multipliedBy(humidity.plus(1)) : undefined;
+                const humidity = humidityAt(id);
+                const remaining = humidity
+                  ? amount.multipliedBy(humidity.plus(1))
+                  : undefined;
                 return (
                   <Grid key={_id} item xs={12} md={3}>
                     <FertilizerItem

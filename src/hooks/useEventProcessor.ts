@@ -25,11 +25,11 @@ export type EventParsingParameters = {
 };
 
 export type EventParsingTokens = {
-  Bean:       ERC20Token;
-  BeanEthLP:  ERC20Token;
+  Bean: ERC20Token;
+  BeanEthLP: ERC20Token;
   BeanCrv3LP: ERC20Token;
   BeanLusdLP: ERC20Token;
-}
+};
 
 // ------------------------------------
 // Types from the prior codebase -
@@ -49,14 +49,14 @@ export type EventParsingTokens = {
  * }
  * IN REDUX STATE: claimable: [[], [], [], false, false, '0', '0'],
  */
- type Claimable = [
+type Claimable = [
   beanWithdrawals: any[],
   lpWithdrawals: any[],
   plots: any[],
   claimEth: boolean,
   convertLP: boolean,
   minBeanAmount: any,
-  minEthAmount: any,
+  minEthAmount: any
   // toWallet is used in claimable calls but not included here
 ];
 
@@ -97,11 +97,11 @@ export interface UserBalanceState {
   /** @publius */
   beanlusdBalance: BigNumber;
   /** @publius */
-  beanlusdSiloBalance: BigNumber,
+  beanlusdSiloBalance: BigNumber;
   /** @publius */
-  beanlusdTransitBalance: BigNumber,
+  beanlusdTransitBalance: BigNumber;
   /** @publius */
-  beanlusdReceivableBalance: BigNumber,
+  beanlusdReceivableBalance: BigNumber;
   /** @publius */
   /** The farmer's balance of Stalk */
   stalkBalance: BigNumber;
@@ -218,22 +218,23 @@ export interface UserBalanceState {
 // ------------------------------------
 
 export function addRewardedCrates(
-  crates: { [season: number] : BigNumber },
+  crates: { [season: number]: BigNumber },
   season: any,
   rewardedBeans: BigNumber
 ) {
   if (rewardedBeans.isEqualTo(0)) return crates;
   const ds = parseInt(season, 10);
-  const isTopCrate = crates[ds] !== undefined
-    ? crates[ds].isEqualTo(new BigNumber(rewardedBeans))
-    : false;
+  const isTopCrate =
+    crates[ds] !== undefined
+      ? crates[ds].isEqualTo(new BigNumber(rewardedBeans))
+      : false;
 
   crates[ds] =
     crates[ds] === undefined
       ? rewardedBeans
       : isTopCrate
-        ? crates[ds]
-        : crates[ds].plus(rewardedBeans);
+      ? crates[ds]
+      : crates[ds].plus(rewardedBeans);
   return crates;
 }
 
@@ -244,16 +245,16 @@ export function addRewardedCrates(
 export function parsePlots(
   plots: PlotMap<BigNumber>,
   index: BigNumber
-) : [
+): [
   pods: BigNumber,
   harvestablePods: BigNumber,
   unharvestablePlots: any,
-  harvestablePlots: any,
+  harvestablePlots: any
 ] {
   let pods = new BigNumber(0);
   let harvestablePods = new BigNumber(0);
-  const unharvestablePlots : PlotMap<BigNumber> = {};
-  const harvestablePlots : PlotMap<BigNumber> = {};
+  const unharvestablePlots: PlotMap<BigNumber> = {};
+  const harvestablePlots: PlotMap<BigNumber> = {};
   Object.keys(plots).forEach((p) => {
     if (plots[p].plus(p).isLessThanOrEqualTo(index)) {
       harvestablePods = harvestablePods.plus(plots[p]);
@@ -281,7 +282,7 @@ export function parsePlots(
 function _processFarmerEvents(
   events: Event[],
   params: EventParsingParameters,
-  tokens: EventParsingTokens,
+  tokens: EventParsingTokens
 ) {
   const {
     Bean,
@@ -292,20 +293,20 @@ function _processFarmerEvents(
 
   // These get piped into redux 1:1 and so need to match
   // the type defined in UserBalanceState.
-  let userLPSeedDeposits : UserBalanceState['lpSeedDeposits'] = {};
-  let userLPDeposits : UserBalanceState['lpDeposits'] = {};
-  let lpWithdrawals : UserBalanceState['lpWithdrawals'] = {};
-  let userCurveDeposits : UserBalanceState['curveDeposits'] = {};
-  let userCurveBDVDeposits : UserBalanceState['curveBDVDeposits'] = {};
-  let curveWithdrawals : UserBalanceState['curveWithdrawals'] = {};
-  let userBeanlusdDeposits : UserBalanceState['beanlusdDeposits'] = {};
-  let userBeanlusdBDVDeposits : UserBalanceState['beanlusdBDVDeposits'] = {};
-  let beanlusdWithdrawals : UserBalanceState['beanlusdWithdrawals'] = {};
-  let userPlots : UserBalanceState['plots'] = {};
-  let userBeanDeposits : UserBalanceState['beanDeposits'] = {};
-  let beanWithdrawals : UserBalanceState['beanWithdrawals'] = {};
-  const votedBips : UserBalanceState['votedBips'] = new Set();
-  
+  let userLPSeedDeposits: UserBalanceState['lpSeedDeposits'] = {};
+  let userLPDeposits: UserBalanceState['lpDeposits'] = {};
+  let lpWithdrawals: UserBalanceState['lpWithdrawals'] = {};
+  let userCurveDeposits: UserBalanceState['curveDeposits'] = {};
+  let userCurveBDVDeposits: UserBalanceState['curveBDVDeposits'] = {};
+  let curveWithdrawals: UserBalanceState['curveWithdrawals'] = {};
+  let userBeanlusdDeposits: UserBalanceState['beanlusdDeposits'] = {};
+  let userBeanlusdBDVDeposits: UserBalanceState['beanlusdBDVDeposits'] = {};
+  let beanlusdWithdrawals: UserBalanceState['beanlusdWithdrawals'] = {};
+  let userPlots: UserBalanceState['plots'] = {};
+  let userBeanDeposits: UserBalanceState['beanDeposits'] = {};
+  let beanWithdrawals: UserBalanceState['beanWithdrawals'] = {};
+  const votedBips: UserBalanceState['votedBips'] = new Set();
+
   events.forEach((event) => {
     if (event.event === 'BeanDeposit') {
       // `season` is a base-10 numerical string.
@@ -329,7 +330,7 @@ function _processFarmerEvents(
       if (userBeanDeposits[s].isEqualTo(0)) delete userBeanDeposits[s];
     }
     // BeanRemove is removing a deposit. It's issued at the same time as a
-    // Withdrawal. During convert you remove Deposits but don't Withdraw. 
+    // Withdrawal. During convert you remove Deposits but don't Withdraw.
     else if (event.event === 'BeanRemove') {
       // FIXME: define crates contract return value
       event.returnValues.crates.forEach((s: string, i: number) => {
@@ -406,7 +407,8 @@ function _processFarmerEvents(
           // Send partial plot
           if (!pods.isEqualTo(userPlots[indexStr])) {
             const newStartIndex = index.plus(pods);
-            userPlots[newStartIndex.toString()] = userPlots[indexStr].minus(pods);
+            userPlots[newStartIndex.toString()] =
+              userPlots[indexStr].minus(pods);
           }
           delete userPlots[indexStr];
         }
@@ -420,10 +422,15 @@ function _processFarmerEvents(
             const endIndex = new BigNumber(
               startIndex.plus(userPlots[startIndex.toString()])
             );
-            if (startIndex.isLessThanOrEqualTo(index) && endIndex.isGreaterThan(index)) {
-              userPlots[startIndex.toString()] = new BigNumber(index.minus(startIndex));
+            if (
+              startIndex.isLessThanOrEqualTo(index) &&
+              endIndex.isGreaterThan(index)
+            ) {
+              userPlots[startIndex.toString()] = new BigNumber(
+                index.minus(startIndex)
+              );
               if (!index.isEqualTo(endIndex)) {
-                const s2    = index.plus(pods);
+                const s2 = index.plus(pods);
                 if (!s2.isEqualTo(endIndex)) {
                   const s2Str = s2.toString();
                   userPlots[s2Str] = endIndex.minus(s2);
@@ -448,8 +455,7 @@ function _processFarmerEvents(
       );
       userLPDeposits = {
         ...userLPDeposits,
-        [s]:
-          userLPDeposits[s] !== undefined ? userLPDeposits[s].plus(lp) : lp,
+        [s]: userLPDeposits[s] !== undefined ? userLPDeposits[s].plus(lp) : lp,
       };
       userLPSeedDeposits = {
         ...userLPSeedDeposits,
@@ -475,7 +481,12 @@ function _processFarmerEvents(
           ...userLPSeedDeposits,
           [s]: userLPSeedDeposits[s].minus(seeds),
         };
-        console.debug('[processor:event/LPRemove]', userLPDeposits[s].toNumber(), userLPSeedDeposits[s].toNumber(), event);
+        console.debug(
+          '[processor:event/LPRemove]',
+          userLPDeposits[s].toNumber(),
+          userLPSeedDeposits[s].toNumber(),
+          event
+        );
         if (userLPDeposits[s].isEqualTo(0)) delete userLPDeposits[s];
         if (userLPSeedDeposits[s].isEqualTo(0)) {
           delete userLPSeedDeposits[s];
@@ -489,8 +500,7 @@ function _processFarmerEvents(
       );
       lpWithdrawals = {
         ...lpWithdrawals,
-        [s]:
-          lpWithdrawals[s] !== undefined ? lpWithdrawals[s].plus(lp) : lp,
+        [s]: lpWithdrawals[s] !== undefined ? lpWithdrawals[s].plus(lp) : lp,
       };
     } else if (event.event === 'Deposit') {
       const s = parseInt(event.returnValues.season, 10);
@@ -507,7 +517,9 @@ function _processFarmerEvents(
         userCurveDeposits = {
           ...userCurveDeposits,
           [s]:
-            userCurveDeposits[s] !== undefined ? userCurveDeposits[s].plus(lp) : lp,
+            userCurveDeposits[s] !== undefined
+              ? userCurveDeposits[s].plus(lp)
+              : lp,
         };
         userCurveBDVDeposits = {
           ...userCurveBDVDeposits,
@@ -520,7 +532,9 @@ function _processFarmerEvents(
         userBeanlusdDeposits = {
           ...userBeanlusdDeposits,
           [s]:
-            userBeanlusdDeposits[s] !== undefined ? userBeanlusdDeposits[s].plus(lp) : lp,
+            userBeanlusdDeposits[s] !== undefined
+              ? userBeanlusdDeposits[s].plus(lp)
+              : lp,
         };
         userBeanlusdBDVDeposits = {
           ...userBeanlusdBDVDeposits,
@@ -550,7 +564,8 @@ function _processFarmerEvents(
           [s]: userCurveBDVDeposits[s].minus(bdv),
         };
         if (userCurveDeposits[s].isEqualTo(0)) delete userCurveDeposits[s];
-        if (userCurveBDVDeposits[s].isEqualTo(0)) delete userCurveBDVDeposits[s];
+        if (userCurveBDVDeposits[s].isEqualTo(0))
+          delete userCurveBDVDeposits[s];
       } else {
         const bdv = userBeanlusdBDVDeposits[s]
           .multipliedBy(amount)
@@ -563,8 +578,10 @@ function _processFarmerEvents(
           ...userBeanlusdBDVDeposits,
           [s]: userBeanlusdBDVDeposits[s].minus(bdv),
         };
-        if (userBeanlusdDeposits[s].isEqualTo(0)) delete userBeanlusdDeposits[s];
-        if (userBeanlusdBDVDeposits[s].isEqualTo(0)) delete userBeanlusdBDVDeposits[s];
+        if (userBeanlusdDeposits[s].isEqualTo(0))
+          delete userBeanlusdDeposits[s];
+        if (userBeanlusdBDVDeposits[s].isEqualTo(0))
+          delete userBeanlusdBDVDeposits[s];
       }
     } else if (event.event === 'RemoveSeasons') {
       const t = event.returnValues.token.toLowerCase();
@@ -586,7 +603,8 @@ function _processFarmerEvents(
             [s]: userCurveBDVDeposits[s].minus(bdv),
           };
           if (userCurveDeposits[s].isEqualTo(0)) delete userCurveDeposits[s];
-          if (userCurveBDVDeposits[s].isEqualTo(0)) delete userCurveBDVDeposits[s];
+          if (userCurveBDVDeposits[s].isEqualTo(0))
+            delete userCurveBDVDeposits[s];
         } else {
           const bdv = userBeanlusdBDVDeposits[s]
             .multipliedBy(lp)
@@ -599,8 +617,10 @@ function _processFarmerEvents(
             ...userBeanlusdBDVDeposits,
             [s]: userBeanlusdBDVDeposits[s].minus(bdv),
           };
-          if (userBeanlusdDeposits[s].isEqualTo(0)) delete userBeanlusdDeposits[s];
-          if (userBeanlusdBDVDeposits[s].isEqualTo(0)) delete userBeanlusdBDVDeposits[s];
+          if (userBeanlusdDeposits[s].isEqualTo(0))
+            delete userBeanlusdDeposits[s];
+          if (userBeanlusdBDVDeposits[s].isEqualTo(0))
+            delete userBeanlusdBDVDeposits[s];
         }
       });
     } else if (event.event === 'Withdraw') {
@@ -614,13 +634,17 @@ function _processFarmerEvents(
         curveWithdrawals = {
           ...curveWithdrawals,
           [s]:
-            curveWithdrawals[s] !== undefined ? curveWithdrawals[s].plus(lp) : lp,
+            curveWithdrawals[s] !== undefined
+              ? curveWithdrawals[s].plus(lp)
+              : lp,
         };
       } else {
         beanlusdWithdrawals = {
           ...beanlusdWithdrawals,
           [s]:
-            beanlusdWithdrawals[s] !== undefined ? beanlusdWithdrawals[s].plus(lp) : lp,
+            beanlusdWithdrawals[s] !== undefined
+              ? beanlusdWithdrawals[s].plus(lp)
+              : lp,
         };
       }
     } else if (event.event === 'ClaimSeason') {
@@ -701,39 +725,35 @@ function _processFarmerEvents(
     (a, c) => a.plus(c),
     zeroBN
   );
-  const [
-    podBalance,
-    harvestablePodBalance,
-    plots,
-    harvestablePlots
-  ] = parsePlots(userPlots, params.harvestableIndex);
+  const [podBalance, harvestablePodBalance, plots, harvestablePlots] =
+    parsePlots(userPlots, params.harvestableIndex);
 
   return {
     // Bean
-    userBeanDeposits,         // crates
-    beanWithdrawals,          // crates
-    beanDepositsBalance,      // sum of deposits
+    userBeanDeposits, // crates
+    beanWithdrawals, // crates
+    beanDepositsBalance, // sum of deposits
     // LP
-    userLPSeedDeposits,       // crates where value is Seeds
-    userLPDeposits,           // crates
-    lpWithdrawals,            // crates
-    lpDepositsBalance,        // sum of deposits
+    userLPSeedDeposits, // crates where value is Seeds
+    userLPDeposits, // crates
+    lpWithdrawals, // crates
+    lpDepositsBalance, // sum of deposits
     // Curve
-    userCurveDeposits,        // crates
-    userCurveBDVDeposits,     // crates where value is BDV
-    curveWithdrawals,         // crates
-    curveDepositsBalance,     // sum of deposits
+    userCurveDeposits, // crates
+    userCurveBDVDeposits, // crates where value is BDV
+    curveWithdrawals, // crates
+    curveDepositsBalance, // sum of deposits
     // BEAN:LUSD
-    userBeanlusdDeposits,     // crates
-    userBeanlusdBDVDeposits,  // crates where value is BDV
-    beanlusdWithdrawals,      // crates
-    beanlusdDepositsBalance,  // sum of deposits
+    userBeanlusdDeposits, // crates
+    userBeanlusdBDVDeposits, // crates where value is BDV
+    beanlusdWithdrawals, // crates
+    beanlusdDepositsBalance, // sum of deposits
     // Field
-    userPlots,                // raw plots data (?)
-    podBalance,               // sum of pods that are unharvestable
-    harvestablePodBalance,    // sum of pods that are harvestable
-    plots,                    // parsed plots that are unharvestable
-    harvestablePlots,         // parsed plots that are harvestable
+    userPlots, // raw plots data (?)
+    podBalance, // sum of pods that are unharvestable
+    harvestablePodBalance, // sum of pods that are harvestable
+    plots, // parsed plots that are unharvestable
+    harvestablePlots, // parsed plots that are harvestable
   };
 }
 
@@ -743,18 +763,21 @@ function _processFarmerEvents(
 
 export default function useEventProcessor() {
   const getChainConstant = useGetChainConstant();
-  const Tokens = useMemo<EventParsingTokens>(() => ({
-    // FIXME: cast these to the correct types
-    // FIXME: duplicated from `processor.ts`
-    Bean:       getChainConstant(BEAN),
-    BeanEthLP:  getChainConstant(BEAN_ETH_UNIV2_LP),
-    BeanCrv3LP: getChainConstant(BEAN_CRV3_LP),
-    BeanLusdLP: getChainConstant(BEAN_LUSD_LP),
-  }), [getChainConstant]);
-  
+  const Tokens = useMemo<EventParsingTokens>(
+    () => ({
+      // FIXME: cast these to the correct types
+      // FIXME: duplicated from `processor.ts`
+      Bean: getChainConstant(BEAN),
+      BeanEthLP: getChainConstant(BEAN_ETH_UNIV2_LP),
+      BeanCrv3LP: getChainConstant(BEAN_CRV3_LP),
+      BeanLusdLP: getChainConstant(BEAN_LUSD_LP),
+    }),
+    [getChainConstant]
+  );
+
   return useCallback(
     (events: Event[], params: EventParsingParameters) =>
       _processFarmerEvents(events, params, Tokens),
-    [Tokens],
+    [Tokens]
   );
 }

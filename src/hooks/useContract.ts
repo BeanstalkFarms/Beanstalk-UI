@@ -8,7 +8,8 @@ import {
   ERC20,
 } from 'generated/index';
 import {
-  BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES,
+  BEANFT_GENESIS_ADDRESSES,
+  BEANFT_WINTER_ADDRESSES,
   BEANSTALK_ADDRESSES,
   BEANSTALK_FERTILIZER_ADDRESSES,
   BEANSTALK_PRICE_ADDRESSES,
@@ -40,24 +41,26 @@ export type AbiOrAbiMap = ContractInterface | ChainConstant<ContractInterface>;
 
 export function useContractReadOnly<T extends Contract = Contract>(
   addressOrAddressMap: AddressOrAddressMap,
-  abiOrAbiMap: AbiOrAbiMap,
+  abiOrAbiMap: AbiOrAbiMap
 ): [T | null, SupportedChainId] {
-  const provider  = useProvider();
-  const address   = typeof addressOrAddressMap === 'string' ? addressOrAddressMap : getChainConstant(addressOrAddressMap, provider.network.chainId);
-  const abi       = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : getChainConstant(abiOrAbiMap as ChainConstant<ContractInterface>, provider.network.chainId);
+  const provider = useProvider();
+  const address =
+    typeof addressOrAddressMap === 'string'
+      ? addressOrAddressMap
+      : getChainConstant(addressOrAddressMap, provider.network.chainId);
+  const abi = Array.isArray(abiOrAbiMap)
+    ? abiOrAbiMap
+    : getChainConstant(
+        abiOrAbiMap as ChainConstant<ContractInterface>,
+        provider.network.chainId
+      );
   return useMemo(
-    () => 
+    () =>
       // console.debug(`[useContractReadOnly] creating new instance of ${address}`);
-       [
-        address
-          ? new ethers.Contract(
-            address,
-            abi,
-            provider
-          ) as T
-          : null,
+      [
+        address ? (new ethers.Contract(address, abi, provider) as T) : null,
         provider.network.chainId,
-      ],    
+      ],
     [address, abi, provider]
   );
   // if (!address) throw new Error('Attempted to instantiate contract without address.')
@@ -79,25 +82,29 @@ export function useGetContract<T extends Contract = Contract>(
   abiOrAbiMap: AbiOrAbiMap,
   useSignerIfPossible: boolean = true
 ): (addressOrAddressMap: AddressOrAddressMap) => [T | null, SupportedChainId] {
-  const provider         = useProvider();
+  const provider = useProvider();
   const { data: signer } = useSigner();
-  const chainId          = provider.network.chainId;
-  const abi              = Array.isArray(abiOrAbiMap) ? abiOrAbiMap : getChainConstant(abiOrAbiMap as ChainConstant<ContractInterface>, chainId);
+  const chainId = provider.network.chainId;
+  const abi = Array.isArray(abiOrAbiMap)
+    ? abiOrAbiMap
+    : getChainConstant(
+        abiOrAbiMap as ChainConstant<ContractInterface>,
+        chainId
+      );
   const signerOrProvider = useSignerIfPossible && signer ? signer : provider;
   // useWhatChanged([abi,signerOrProvider,chainId], 'abi,signerOrProvider,chainId');
-  
-  // 
+
+  //
   return useCallback(
     (addressOrAddressMap: AddressOrAddressMap) => {
-      const address   = typeof addressOrAddressMap === 'string' ? addressOrAddressMap : getChainConstant(addressOrAddressMap, chainId);
+      const address =
+        typeof addressOrAddressMap === 'string'
+          ? addressOrAddressMap
+          : getChainConstant(addressOrAddressMap, chainId);
       // console.debug(`[useGetContract] creating new instance of ${address}, ${abi.length}, ${signerOrProvider}, ${chainId}`);
       return [
-        address 
-          ? new ethers.Contract(
-            address,
-            abi,
-            signerOrProvider
-          ) as T
+        address
+          ? (new ethers.Contract(address, abi, signerOrProvider) as T)
           : null,
         chainId,
       ];
@@ -134,7 +141,7 @@ const BEANSTALK_PRICE_ABIS = {
 export function useBeanstalkPriceContract() {
   return useContractReadOnly<BeanstalkPrice>(
     BEANSTALK_PRICE_ADDRESSES,
-    BEANSTALK_PRICE_ABIS,
+    BEANSTALK_PRICE_ABIS
   );
 }
 
@@ -147,10 +154,7 @@ export function useBeanstalkFertilizerContract() {
 }
 
 export function useGetERC20Contract() {
-  return useGetContract<ERC20>(
-    ERC20_ABI,
-    true
-  );
+  return useGetContract<ERC20>(ERC20_ABI, true);
 }
 
 export function useERC20Contract(addressOrAddressMap: AddressOrAddressMap) {
@@ -171,17 +175,17 @@ export function useFertilizerContract(signer?: ethers.Signer | null) {
 }
 
 const BEANSTALK_ABIS = {
-  [SupportedChainId.MAINNET]:   BEANSTALK_ABI,
-  [SupportedChainId.ROPSTEN]:   BEANSTALK_ABI,
-  [SupportedChainId.CUJO]:      BEANSTALK_REPLANTED_ABI,
-  [SupportedChainId.PHOENIX]:   BEANSTALK_REPLANTED_ABI,
+  [SupportedChainId.MAINNET]: BEANSTALK_ABI,
+  [SupportedChainId.ROPSTEN]: BEANSTALK_ABI,
+  [SupportedChainId.CUJO]: BEANSTALK_REPLANTED_ABI,
+  [SupportedChainId.PHOENIX]: BEANSTALK_REPLANTED_ABI,
   [SupportedChainId.LOCALHOST]: BEANSTALK_REPLANTED_ABI,
 };
 
 export function useBeanstalkContract(signer?: ethers.Signer | null) {
-  const address   = useChainConstant(BEANSTALK_ADDRESSES);
-  const abi       = useChainConstant(BEANSTALK_ABIS);
-  const provider  = useProvider();
+  const address = useChainConstant(BEANSTALK_ADDRESSES);
+  const abi = useChainConstant(BEANSTALK_ABIS);
+  const provider = useProvider();
   return useWagmiContract<Beanstalk>({
     addressOrName: address,
     contractInterface: abi,
@@ -190,16 +194,16 @@ export function useBeanstalkContract(signer?: ethers.Signer | null) {
 }
 
 const BEANFT_GENESIS_ABIS = {
-  [SupportedChainId.MAINNET]:   BEANFT_GENESIS_ABI,
-  [SupportedChainId.ROPSTEN]:   BEANFT_GENESIS_ABI,
+  [SupportedChainId.MAINNET]: BEANFT_GENESIS_ABI,
+  [SupportedChainId.ROPSTEN]: BEANFT_GENESIS_ABI,
   [SupportedChainId.LOCALHOST]: BEANFT_GENESIS_ABI,
-  [SupportedChainId.CUJO]:      BEANFT_GENESIS_ABI,
-  [SupportedChainId.PHOENIX]:   BEANFT_GENESIS_ABI,
+  [SupportedChainId.CUJO]: BEANFT_GENESIS_ABI,
+  [SupportedChainId.PHOENIX]: BEANFT_GENESIS_ABI,
 };
 
 export function useGenesisNFTContract(signer?: ethers.Signer | null) {
   const address = useChainConstant(BEANFT_GENESIS_ADDRESSES);
-  const abi     = useChainConstant(BEANFT_GENESIS_ABIS);
+  const abi = useChainConstant(BEANFT_GENESIS_ABIS);
   const provider = useProvider();
   return useWagmiContract<BeaNFTGenesis>({
     addressOrName: address,
@@ -209,16 +213,16 @@ export function useGenesisNFTContract(signer?: ethers.Signer | null) {
 }
 
 const BEANFT_WINTER_ABIS = {
-  [SupportedChainId.MAINNET]:   BEANFT_WINTER_ABI,
-  [SupportedChainId.ROPSTEN]:   BEANFT_WINTER_ABI,
+  [SupportedChainId.MAINNET]: BEANFT_WINTER_ABI,
+  [SupportedChainId.ROPSTEN]: BEANFT_WINTER_ABI,
   [SupportedChainId.LOCALHOST]: BEANFT_WINTER_ABI,
-  [SupportedChainId.CUJO]:      BEANFT_WINTER_ABI,
-  [SupportedChainId.PHOENIX]:   BEANFT_WINTER_ABI,
+  [SupportedChainId.CUJO]: BEANFT_WINTER_ABI,
+  [SupportedChainId.PHOENIX]: BEANFT_WINTER_ABI,
 };
 
 export function useWinterNFTContract(signer?: ethers.Signer | null) {
   const address = useChainConstant(BEANFT_WINTER_ADDRESSES);
-  const abi     = useChainConstant(BEANFT_WINTER_ABIS);
+  const abi = useChainConstant(BEANFT_WINTER_ABIS);
   const provider = useProvider();
   return useWagmiContract<BeaNFTWinter>({
     addressOrName: address,

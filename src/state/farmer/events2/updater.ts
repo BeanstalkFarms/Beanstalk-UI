@@ -18,17 +18,17 @@ export type GetQueryFilters = (
   account: string,
   /**
    * The start block from which to query. If not provided,
-   * the query filter should fall back to an appropriately 
+   * the query filter should fall back to an appropriately
    * placed block.
    */
   fromBlockOrBlockhash?: string | number | undefined,
   /**
    * The end block to query up until. If not provided,
-   * the query filter should fall back to an appropriately 
+   * the query filter should fall back to an appropriately
    * placed block or block tag (likely 'latest').
    */
-  toBlock?: number | undefined,
-) => (Promise<ethers.Event[]>)[];
+  toBlock?: number | undefined
+) => Promise<ethers.Event[]>[];
 
 export const reduceEvent = (prev: Event[], e: ethers.Event) => {
   try {
@@ -50,7 +50,11 @@ export const reduceEvent = (prev: Event[], e: ethers.Event) => {
       // returnValues,
     });
   } catch (err) {
-    console.error(`Failed to parse event ${e.event} ${e.transactionHash}`, err, e);
+    console.error(
+      `Failed to parse event ${e.event} ${e.transactionHash}`,
+      err,
+      e
+    );
   }
   return prev;
 };
@@ -61,11 +65,14 @@ export const sortEvents = (a: Event, b: Event) => {
   return a.logIndex - b.logIndex;
 };
 
-export default function useEvents(cacheName: EventCacheName, getQueryFilters: GetQueryFilters) {
-  const dispatch  = useDispatch();
-  const chainId   = useChainId();
-  const provider  = useProvider();
-  const account   = useAccount();
+export default function useEvents(
+  cacheName: EventCacheName,
+  getQueryFilters: GetQueryFilters
+) {
+  const dispatch = useDispatch();
+  const chainId = useChainId();
+  const provider = useProvider();
+  const account = useAccount();
 
   ///
   const cache = useEventCache(cacheName);
@@ -73,78 +80,84 @@ export default function useEvents(cacheName: EventCacheName, getQueryFilters: Ge
   /**
    * FIXME: most other similar "fetch" hooks related to the Farmer
    * accept an account as a parameter, however this hook wasn't designed
-   * 
+   *
    */
-  const fetch = useCallback(async (_startBlockNumber?: number) => {
-    if (!account) return;
-    const existingEvents = (cache?.events || []);
+  const fetch = useCallback(
+    async (_startBlockNumber?: number) => {
+      if (!account) return;
+      const existingEvents = cache?.events || [];
 
-    /// If a start block is provided, use it; otherwise fall back
-    /// to the most recent block queried in this cache.
-    const startBlockNumber = (
-      _startBlockNumber
-      || (cache?.endBlockNumber && cache.endBlockNumber + 1)
+      /// If a start block is provided, use it; otherwise fall back
+      /// to the most recent block queried in this cache.
+      const startBlockNumber =
+        _startBlockNumber ||
+        (cache?.endBlockNumber && cache.endBlockNumber + 1);
       // let the query filter decide
-    );
 
-    /// Set a deterministic latest block. This lets us know what range
-    /// of blocks have already been queried (even if they don't have
-    /// corresponding events). 
-    const endBlockNumber = await provider.getBlockNumber();
-    
-    /// FIXME: edge case where user does two transactions in one block
-    if (startBlockNumber && startBlockNumber > endBlockNumber) return existingEvents;
+      /// Set a deterministic latest block. This lets us know what range
+      /// of blocks have already been queried (even if they don't have
+      /// corresponding events).
+      const endBlockNumber = await provider.getBlockNumber();
 
-    /// if a starting block isn't provided, getQueryFilters will
-    /// fall back to the most efficient block for a given query.
-    const filters = getQueryFilters(account, startBlockNumber, endBlockNumber);
+      /// FIXME: edge case where user does two transactions in one block
+      if (startBlockNumber && startBlockNumber > endBlockNumber)
+        return existingEvents;
 
-    ///
-    console.debug(`[useEvents] ${cacheName}: fetching events`, {
-      cacheId: cacheName,
-      startBlockNumber,
-      endBlockNumber,
-      filterCount: filters.length,
-      cacheEndBlockNumber: cache?.endBlockNumber,
-    });
+      /// if a starting block isn't provided, getQueryFilters will
+      /// fall back to the most efficient block for a given query.
+      const filters = getQueryFilters(
+        account,
+        startBlockNumber,
+        endBlockNumber
+      );
 
-    ///
-    const results = await Promise.all(filters); // [[0,1,2],[0,1],...]
-    const newEvents = (
-      flattenDeep<ethers.Event>(results)
+      ///
+      console.debug(`[useEvents] ${cacheName}: fetching events`, {
+        cacheId: cacheName,
+        startBlockNumber,
+        endBlockNumber,
+        filterCount: filters.length,
+        cacheEndBlockNumber: cache?.endBlockNumber,
+      });
+
+      ///
+      const results = await Promise.all(filters); // [[0,1,2],[0,1],...]
+      const newEvents = flattenDeep<ethers.Event>(results)
         .reduce<Event[]>(reduceEvent, [])
-        .sort(sortEvents)
-    ); // [0,0,1,1,2]
+        .sort(sortEvents); // [0,0,1,1,2]
 
-    console.debug(`[useEvents] ${cacheName}: fetched ${newEvents.length} new events`);
+      console.debug(
+        `[useEvents] ${cacheName}: fetched ${newEvents.length} new events`
+      );
 
-    dispatch(ingestEvents({
-      // cache info
-      cache: cacheName,
+      dispatch(
+        ingestEvents({
+          // cache info
+          cache: cacheName,
+          account,
+          chainId,
+          /// if startBlockNumber wasn't set, use the earliest block found.
+          /// FIXME: handle undefined
+          startBlockNumber: startBlockNumber || newEvents[0]?.blockNumber,
+          endBlockNumber,
+          timestamp: new Date().getTime(),
+          events: newEvents,
+        })
+      );
+
+      return [...existingEvents, ...newEvents];
+    },
+    [
+      dispatch,
       account,
+      cache?.endBlockNumber,
+      cache?.events,
+      cacheName,
       chainId,
-      /// if startBlockNumber wasn't set, use the earliest block found.
-      /// FIXME: handle undefined
-      startBlockNumber: startBlockNumber || newEvents[0]?.blockNumber,
-      endBlockNumber,
-      timestamp: new Date().getTime(),
-      events: newEvents,
-    }));
-
-    return [
-      ...existingEvents,
-      ...newEvents,
-    ];
-  }, [
-    dispatch,
-    account,
-    cache?.endBlockNumber,
-    cache?.events,
-    cacheName,
-    chainId,
-    getQueryFilters,
-    provider,
-  ]);
+      getQueryFilters,
+      provider,
+    ]
+  );
 
   return [cache ? fetch : undefined];
 }

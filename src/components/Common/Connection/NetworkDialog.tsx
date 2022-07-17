@@ -1,6 +1,13 @@
 import React, { useCallback } from 'react';
 import { useNetwork } from 'wagmi';
-import { Alert, Button, Dialog, Stack, Typography, useMediaQuery } from '@mui/material';
+import {
+  Alert,
+  Button,
+  Dialog,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { useTheme } from '@mui/material/styles';
 import { SWITCH_NETWORK_ERRORS } from 'constants/wallets';
@@ -12,22 +19,20 @@ import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 const NetworkDialog: React.FC<{
   open: boolean;
   handleClose: () => void;
-}> = ({
-  open,
-  handleClose
-}) => {
+}> = ({ open, handleClose }) => {
   const getChainConstant = useGetChainConstant();
-  const { activeChain, chains, error, pendingChainId, switchNetwork } = useNetwork({
-    onSettled(data, err) {
-      if (!err) {
-        console.debug('[NetworkButton] settled network change...');
-        console.debug('');
-        console.debug('');
-        console.debug('');
-        // window.location.reload();
-      }
-    }
-  });
+  const { activeChain, chains, error, pendingChainId, switchNetwork } =
+    useNetwork({
+      onSettled(data, err) {
+        if (!err) {
+          console.debug('[NetworkButton] settled network change...');
+          console.debug('');
+          console.debug('');
+          console.debug('');
+          // window.location.reload();
+        }
+      },
+    });
   const handleSwitch = useCallback(
     (id) => () => {
       if (switchNetwork) {
@@ -38,20 +43,19 @@ const NetworkDialog: React.FC<{
     },
     [switchNetwork, handleClose]
   );
-  
+
   const theme = useTheme();
   const isMedium = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <StyledDialogTitle onClose={handleClose}>
-        Select chain
-      </StyledDialogTitle>
+      <StyledDialogTitle onClose={handleClose}>Select chain</StyledDialogTitle>
       <StyledDialogContent>
         <Stack gap={1}>
           {activeChain?.id && !SupportedChainId[activeChain.id] ? (
             <Alert severity="info">
-              {activeChain.name} is not supported. Please select another network below.
+              {activeChain.name} is not supported. Please select another network
+              below.
             </Alert>
           ) : null}
           {chains.map((chain) => (
@@ -63,10 +67,16 @@ const NetworkDialog: React.FC<{
               sx={{
                 py: 1,
                 minWidth: isMedium ? null : 400,
-                borderColor: grey[300]
+                borderColor: grey[300],
               }}
             >
-              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }} gap={3}>
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{ width: '100%' }}
+                gap={3}
+              >
                 <Typography color="text.primary" sx={{ fontSize: 20 }}>
                   {chain.name}
                 </Typography>
@@ -75,14 +85,23 @@ const NetworkDialog: React.FC<{
                     {TESTNET_RPC_ADDRESSES[chain.id]}
                   </Typography>
                 ) : (
-                  <img src={ETH[chain.id as keyof typeof ETH]?.logo || ETH[SupportedChainId.ROPSTEN].logo} alt="" style={{ height: 35 }} />
+                  <img
+                    src={
+                      ETH[chain.id as keyof typeof ETH]?.logo ||
+                      ETH[SupportedChainId.ROPSTEN].logo
+                    }
+                    alt=""
+                    style={{ height: 35 }}
+                  />
                 )}
               </Stack>
             </Button>
           ))}
           {error && (
             <Alert severity="error">
-              {SWITCH_NETWORK_ERRORS[error.name || error.message](pendingChainId) || error.message}
+              {SWITCH_NETWORK_ERRORS[error.name || error.message](
+                pendingChainId
+              ) || error.message}
             </Alert>
           )}
         </Stack>

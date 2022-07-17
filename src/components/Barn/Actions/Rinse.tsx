@@ -8,7 +8,12 @@ import { ZERO_BN } from 'constants/index';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useFarmerBalances from 'hooks/useFarmerBalances';
 import { useBeanstalkContract, useFertilizerContract } from 'hooks/useContract';
-import { TokenAdornment, TokenInputField, TokenOutputField, TxnSeparator } from 'components/Common/Form';
+import {
+  TokenAdornment,
+  TokenInputField,
+  TokenOutputField,
+  TxnSeparator,
+} from 'components/Common/Form';
 import TxnPreview from 'components/Common/Form/TxnPreview';
 import TxnAccordion from 'components/Common/TxnAccordion';
 import { useFetchFarmerBarn } from 'state/farmer/barn/updater';
@@ -31,9 +36,7 @@ type BuyFormValues = {
 
 // ---------------------------------------------------
 
-const RinseForm : React.FC<
-  FormikProps<BuyFormValues>
-> = ({
+const RinseForm: React.FC<FormikProps<BuyFormValues>> = ({
   values,
   isSubmitting,
 }) => {
@@ -56,29 +59,18 @@ const RinseForm : React.FC<
             // MUI
             fullWidth
             InputProps={{
-              endAdornment: (
-                <TokenAdornment
-                  token={FERTILIZED_SPROUTS}
-                />
-              )
+              endAdornment: <TokenAdornment token={FERTILIZED_SPROUTS} />,
             }}
           />
-          <DestinationField
-            name="destination"
-          />
+          <DestinationField name="destination" />
           {/* Outputs */}
           {amountSprouts?.gt(0) ? (
             <>
               <TxnSeparator />
-              <TokenOutputField
-                token={BEAN[1]}
-                amount={amountSprouts}
-              />
+              <TokenOutputField token={BEAN[1]} amount={amountSprouts} />
               <Box sx={{ width: '100%', mt: 0 }}>
                 <TxnAccordion defaultExpanded={false}>
-                  <TxnPreview
-                    actions={[]}
-                  />
+                  <TxnPreview actions={[]} />
                 </TxnAccordion>
               </Box>
             </>
@@ -93,7 +85,11 @@ const RinseForm : React.FC<
           loading={isSubmitting}
           disabled={!isValid}
         >
-          Rinse{amountSprouts && amountSprouts.gt(0) && ` ${displayBN(amountSprouts)}`} Sprouts
+          Rinse
+          {amountSprouts &&
+            amountSprouts.gt(0) &&
+            ` ${displayBN(amountSprouts)}`}{' '}
+          Sprouts
         </LoadingButton>
       </Stack>
     </Form>
@@ -102,78 +98,88 @@ const RinseForm : React.FC<
 
 // ---------------------------------------------------
 
-const Rinse : React.FC<{}> = () => {
+const Rinse: React.FC<{}> = () => {
   /// Wallet connection
   const { data: account } = useAccount();
   const provider = useProvider();
   const { data: signer } = useSigner();
   const chainId = useChainId();
-  
+
   /// Farmer data
   const farmerFertilizer = useFarmerFertilizer();
-  const farmerBalances   = useFarmerBalances();
+  const farmerBalances = useFarmerBalances();
 
   /// Data refreshing
   const [refetchFertilizer] = useFetchFarmerBarn();
-  
+
   /// Contracts
   const fertContract = useFertilizerContract(signer);
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
-  const farm = useMemo(() => new Farm(provider),   [provider]);
+  const beanstalk = useBeanstalkContract(
+    signer
+  ) as unknown as BeanstalkReplanted;
+  const farm = useMemo(() => new Farm(provider), [provider]);
 
-  const initialValues : BuyFormValues = useMemo(() => ({
-    destination: FarmToMode.INTERNAL,
-    amount: farmerFertilizer.fertilizedSprouts,
-  }), [farmerFertilizer.fertilizedSprouts]);
+  const initialValues: BuyFormValues = useMemo(
+    () => ({
+      destination: FarmToMode.INTERNAL,
+      amount: farmerFertilizer.fertilizedSprouts,
+    }),
+    [farmerFertilizer.fertilizedSprouts]
+  );
 
-  const onSubmit = useCallback(async (values: BuyFormValues, formActions: FormikHelpers<BuyFormValues>) => {
-    let txToast;
-    try {
-      if (!farmerFertilizer.fertilizedSprouts) throw new Error('No Fertilized Sprouts to Rinse.');
-      if (!values.destination)          throw new Error('No destination set.');
-      if (!account?.address)            throw new Error('Connect a wallet first.');
+  const onSubmit = useCallback(
+    async (
+      values: BuyFormValues,
+      formActions: FormikHelpers<BuyFormValues>
+    ) => {
+      let txToast;
+      try {
+        if (!farmerFertilizer.fertilizedSprouts)
+          throw new Error('No Fertilized Sprouts to Rinse.');
+        if (!values.destination) throw new Error('No destination set.');
+        if (!account?.address) throw new Error('Connect a wallet first.');
 
-      //
-      // console.log(await beanstalk.balanceOfFertilizer(account?.address || '', '6000000'))
-      // console.log(await beanstalk.balanceOfFertilized(account?.address || '', ['6000000']))
-      txToast = new TransactionToast({
-        loading: `Rinsing ${displayFullBN(farmerFertilizer.fertilizedSprouts)} Fertilized Sprouts`,
-        success: 'Rinse successfull.',
-      });
+        //
+        // console.log(await beanstalk.balanceOfFertilizer(account?.address || '', '6000000'))
+        // console.log(await beanstalk.balanceOfFertilized(account?.address || '', ['6000000']))
+        txToast = new TransactionToast({
+          loading: `Rinsing ${displayFullBN(
+            farmerFertilizer.fertilizedSprouts
+          )} Fertilized Sprouts`,
+          success: 'Rinse successfull.',
+        });
 
-      const txn = await beanstalk.claimFertilized(
-        Object.keys(farmerFertilizer.fertilizer),
-        values.destination
-      );
-      txToast.confirming(txn);
+        const txn = await beanstalk.claimFertilized(
+          Object.keys(farmerFertilizer.fertilizer),
+          values.destination
+        );
+        txToast.confirming(txn);
 
-      const receipt = await txn.wait();
-      await refetchFertilizer(account.address);
-      txToast.success(receipt);
-      formActions.resetForm({
-        values: {
-          destination: FarmToMode.INTERNAL,
-          amount: ZERO_BN,
-        }
-      });
-    } catch (err) {
-      txToast ? txToast.error(err) : toast.error(parseError(err));
-    }
-  }, [
-    beanstalk,
-    account?.address,
-    farmerFertilizer?.fertilizer,
-    farmerFertilizer?.fertilizedSprouts,
-    refetchFertilizer,
-  ]);
+        const receipt = await txn.wait();
+        await refetchFertilizer(account.address);
+        txToast.success(receipt);
+        formActions.resetForm({
+          values: {
+            destination: FarmToMode.INTERNAL,
+            amount: ZERO_BN,
+          },
+        });
+      } catch (err) {
+        txToast ? txToast.error(err) : toast.error(parseError(err));
+      }
+    },
+    [
+      beanstalk,
+      account?.address,
+      farmerFertilizer?.fertilizer,
+      farmerFertilizer?.fertilizedSprouts,
+      refetchFertilizer,
+    ]
+  );
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
-      {(formikProps) => (
-        <RinseForm
-          {...formikProps}
-        />
-      )}
+      {(formikProps) => <RinseForm {...formikProps} />}
     </Formik>
   );
 };

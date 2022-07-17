@@ -15,9 +15,9 @@ import ethereumLogoUrl from 'img/tokens/eth-logo.svg';
 export enum SupportedChainId {
   MAINNET = 1,
   ROPSTEN = 3,
-  ASTRO = 6074,     // pre-exploit, no changes
-  PHOENIX = 6075,   // pre-exploit, beanstalk replanted + migration script
-  CUJO = 31337,     // pre-exploit, beanstalk replanted
+  ASTRO = 6074, // pre-exploit, no changes
+  PHOENIX = 6075, // pre-exploit, beanstalk replanted + migration script
+  CUJO = 31337, // pre-exploit, beanstalk replanted
   LOCALHOST = 1337,
 }
 
@@ -46,11 +46,11 @@ export const TESTNET_CHAINS = new Set([
  * Unofficial testnets require a custom RPC URL.
  * Ropsten, Goerli etc. are supported by Alchemy.
  */
-export const TESTNET_RPC_ADDRESSES : { [chainId: number] : string } = {
+export const TESTNET_RPC_ADDRESSES: { [chainId: number]: string } = {
   [SupportedChainId.LOCALHOST]: 'http://localhost:8545',
-  [SupportedChainId.ASTRO]:     'https://astro.node.bean.money',
-  [SupportedChainId.PHOENIX]:   'https://phoenix.node.bean.money',
-  [SupportedChainId.CUJO]:      'https://bean-rpc.treetree.finance',
+  [SupportedChainId.ASTRO]: 'https://astro.node.bean.money',
+  [SupportedChainId.PHOENIX]: 'https://phoenix.node.bean.money',
+  [SupportedChainId.CUJO]: 'https://bean-rpc.treetree.finance',
 };
 
 // ---------------------------------
@@ -66,50 +66,52 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.ASTRO,
   SupportedChainId.PHOENIX,
   SupportedChainId.LOCALHOST,
-  SupportedChainId.CUJO
+  SupportedChainId.CUJO,
 ] as const;
 
 export const L2_CHAIN_IDS = [] as const;
 
-export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
-export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
+export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number];
+export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number];
 
 interface BaseChainInfo {
-  readonly networkType: NetworkType
-  readonly blockWaitMsBeforeWarning?: number
-  readonly docs?: string
-  readonly bridge?: string
-  readonly explorer: string
-  readonly infoLink?: string
-  readonly logoUrl: string
-  readonly label: string
-  readonly helpCenterUrl?: string
+  readonly networkType: NetworkType;
+  readonly blockWaitMsBeforeWarning?: number;
+  readonly docs?: string;
+  readonly bridge?: string;
+  readonly explorer: string;
+  readonly infoLink?: string;
+  readonly logoUrl: string;
+  readonly label: string;
+  readonly helpCenterUrl?: string;
   readonly nativeCurrency: {
-    name: string // e.g. 'Goerli ETH',
-    symbol: string // e.g. 'gorETH',
-    decimals: number // e.g. 18,
-  }
+    name: string; // e.g. 'Goerli ETH',
+    symbol: string; // e.g. 'gorETH',
+    decimals: number; // e.g. 18,
+  };
 }
 
 export interface L1ChainInfo extends BaseChainInfo {
-  readonly networkType: NetworkType.L1
+  readonly networkType: NetworkType.L1;
 }
 
 export interface L2ChainInfo extends BaseChainInfo {
-  readonly networkType: NetworkType.L2
-  readonly bridge: string
-  readonly statusPage?: string
-  readonly defaultListUrl: string
+  readonly networkType: NetworkType.L2;
+  readonly bridge: string;
+  readonly statusPage?: string;
+  readonly defaultListUrl: string;
 }
 
-export type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } 
-& { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
-& { readonly [chainId in SupportedL2ChainId]: L2ChainInfo }
+export type ChainInfoMap = {
+  readonly [chainId: number]: L1ChainInfo | L2ChainInfo;
+} & { readonly [chainId in SupportedL1ChainId]: L1ChainInfo } & {
+  readonly [chainId in SupportedL2ChainId]: L2ChainInfo;
+};
 
 /**
  * FIXME: this was forked from Uniswap's uI but we only use `explorer` here.
  */
-export const CHAIN_INFO : ChainInfoMap = {
+export const CHAIN_INFO: ChainInfoMap = {
   [SupportedChainId.MAINNET]: {
     networkType: NetworkType.L1,
     explorer: 'https://etherscan.io',
@@ -136,7 +138,11 @@ export const CHAIN_INFO : ChainInfoMap = {
     explorer: 'https://etherscan.io',
     label: 'Phoenix',
     logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'Phoenix Ether', symbol: 'phoenixETH', decimals: 18 },
+    nativeCurrency: {
+      name: 'Phoenix Ether',
+      symbol: 'phoenixETH',
+      decimals: 18,
+    },
   },
   [SupportedChainId.LOCALHOST]: {
     networkType: NetworkType.L1,
@@ -151,5 +157,5 @@ export const CHAIN_INFO : ChainInfoMap = {
     label: 'Harhat',
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'Hardhat Ether', symbol: 'hETH', decimals: 18 },
-  }
+  },
 };

@@ -1,9 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  Stack,
-  TextField,
-  TextFieldProps, Typography,
-} from '@mui/material';
+import { Stack, TextField, TextFieldProps, Typography } from '@mui/material';
 import { FieldProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { displayFullBN } from '../../../util';
@@ -11,20 +7,20 @@ import { displayFullBN } from '../../../util';
 type InputFieldProps = {
   maxValue?: BigNumber | undefined;
   minValue?: BigNumber | undefined;
-  showMaxButton?: boolean
+  showMaxButton?: boolean;
   handleChangeOverride?: any;
   balanceLabel?: string;
 };
 
 /**
  * FIXME: this was built for the Pod Marketplace as a
- * variant of TokenInputField that didn't require a token. 
+ * variant of TokenInputField that didn't require a token.
  * Can we reduce the duplicate code?
  */
-const InputField : React.FC<
-  InputFieldProps      // custom
-  & Partial<TextFieldProps> // MUI TextField
-  & FieldProps              // Formik Field
+const InputField: React.FC<
+  InputFieldProps & // custom
+    Partial<TextFieldProps> & // MUI TextField
+    FieldProps // Formik Field
 > = ({
   // -- Custom props
   maxValue,
@@ -44,14 +40,18 @@ const InputField : React.FC<
   ...props
 }) => {
   const [displayAmount, setDisplayAmount] = useState<string>(field.value);
-  const inputProps = useMemo(() => ({
-    // Styles
-    inputProps: {
-      min: 0.00,
-    },
-    classes: {},
-    ...InputProps,
-  } as TextFieldProps['InputProps']), [InputProps]);
+  const inputProps = useMemo(
+    () =>
+      ({
+        // Styles
+        inputProps: {
+          min: 0.0,
+        },
+        classes: {},
+        ...InputProps,
+      } as TextFieldProps['InputProps']),
+    [InputProps]
+  );
 
   // const handleChangeAmountOverride =handleChangeAmountOverride useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
   //   // Always update the display amount right away.
@@ -60,40 +60,39 @@ const InputField : React.FC<
 
   // Derived
   // Disable when: explicitly disabled, maxValue is undefined or zero
-  const isInputDisabled = (
-    disabled
-    || (maxValue && maxValue.eq(0))
-    || form.isSubmitting
-  );
+  const isInputDisabled =
+    disabled || (maxValue && maxValue.eq(0)) || form.isSubmitting;
 
   const handleMax = useCallback(() => {
     form.setFieldValue(field.name, maxValue);
   }, [form, field.name, maxValue]);
 
   // Handlers
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    // don't do anything if value entered is less than min
-    if (minValue && new BigNumber(e.target.value).lt(minValue)) {
-      return;
-    }
-    // Always update the display amount right away.
-    setDisplayAmount(e.target.value);
-    // If set, convert the value to a BigNumber
-    const newValue = e.target.value ? new BigNumber(e.target.value) : null;
-    // Only update form state if the value is different.
-    if (newValue === null || !newValue.eq(field.value)) {
-      const finalValue =  ((maxValue && newValue) && newValue.gt(maxValue))
-          ? maxValue
-          : newValue;
-      form.setFieldValue(
-        field.name,
-        // If a maxValue is provided, enforce it as a maximum.
-        finalValue,
-      );
-      //
-      handleChangeOverride?.(finalValue);
-    }
-  }, [form, field.name, field.value, maxValue, handleChangeOverride, minValue]);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      // don't do anything if value entered is less than min
+      if (minValue && new BigNumber(e.target.value).lt(minValue)) {
+        return;
+      }
+      // Always update the display amount right away.
+      setDisplayAmount(e.target.value);
+      // If set, convert the value to a BigNumber
+      const newValue = e.target.value ? new BigNumber(e.target.value) : null;
+      // Only update form state if the value is different.
+      if (newValue === null || !newValue.eq(field.value)) {
+        const finalValue =
+          maxValue && newValue && newValue.gt(maxValue) ? maxValue : newValue;
+        form.setFieldValue(
+          field.name,
+          // If a maxValue is provided, enforce it as a maximum.
+          finalValue
+        );
+        //
+        handleChangeOverride?.(finalValue);
+      }
+    },
+    [form, field.name, field.value, maxValue, handleChangeOverride, minValue]
+  );
 
   const handleWheel = useCallback((e) => {
     // @ts-ignore
@@ -105,7 +104,8 @@ const InputField : React.FC<
     // if the value has been removed elsewhere in the form, clear the display amount
     if (!field.value) setDisplayAmount('');
     //
-    else if (!field.value.eq(new BigNumber(displayAmount))) setDisplayAmount(field.value.toString());
+    else if (!field.value.eq(new BigNumber(displayAmount)))
+      setDisplayAmount(field.value.toString());
   }, [field.value, displayAmount]);
 
   // Update displayAmount and set field value when the max value changes
@@ -113,10 +113,7 @@ const InputField : React.FC<
     if (maxValue && field.value) {
       if (field.value.gt(maxValue)) {
         setDisplayAmount(maxValue.toString());
-        form.setFieldValue(
-          field.name,
-          maxValue
-        );
+        form.setFieldValue(field.name, maxValue);
       }
     }
   }, [maxValue, field.name, field.value, form]);
@@ -135,16 +132,23 @@ const InputField : React.FC<
         InputProps={inputProps}
         sx={{
           '& .MuiOutlinedInput-root': {
-            fontSize: '1.5rem'
+            fontSize: '1.5rem',
           },
-          ...sx
+          ...sx,
         }}
       />
       {/* Bottom Adornment */}
       {showMaxButton && (
-        <Stack direction="row" alignItems="center" justifyContent="end" spacing={0.5} px={0.75}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="end"
+          spacing={0.5}
+          px={0.75}
+        >
           <Typography variant="body1">
-            {balanceLabel !== undefined ? (balanceLabel) : ('Max Value')}: {maxValue ? `${displayFullBN(maxValue)}` : '0'}
+            {balanceLabel !== undefined ? balanceLabel : 'Max Value'}:{' '}
+            {maxValue ? `${displayFullBN(maxValue)}` : '0'}
           </Typography>
           <Typography
             variant="body1"

@@ -15,14 +15,15 @@ const rehydrateEvents2 = (events2: FarmerEvents | undefined) => {
     Object.keys(cache).forEach((key) => {
       if (cache[key].events?.length > 0) {
         cache[key].events = cache[key].events.map((event) => ({
-            ...event,
-            args: event.args?.map((arg: any) => {
+          ...event,
+          args:
+            event.args?.map((arg: any) => {
               if (typeof arg === 'object' && arg.type === 'BigNumber') {
                 return ethers.BigNumber.from(arg.hex);
               }
               return arg;
             }) || [],
-          }));
+        }));
       }
     });
     return cache;
@@ -47,12 +48,14 @@ const store = configureStore({
       serializableCheck: false,
     }),
   ],
-  preloadedState: {}
+  preloadedState: {},
 });
 
-store.subscribe(throttle(() => {
-  saveState(store.getState());
-}, 1000));
+store.subscribe(
+  throttle(() => {
+    saveState(store.getState());
+  }, 1000)
+);
 
 export default store;
 

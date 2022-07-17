@@ -10,15 +10,13 @@ import client from 'util/Client';
 import { ApolloProvider } from '@apollo/client';
 import { apolloClient } from 'graph/client';
 
-const Wrapper : React.FC = ({ children }) => (
+const Wrapper: React.FC = ({ children }) => (
   <HashRouter>
     <ReduxProvider store={store}>
       <ApolloProvider client={apolloClient}>
         <StyledEngineProvider injectFirst>
           <ThemeProvider theme={theme}>
-            <WagmiConfig client={client}>
-              {children}
-            </WagmiConfig>
+            <WagmiConfig client={client}>{children}</WagmiConfig>
           </ThemeProvider>
         </StyledEngineProvider>
       </ApolloProvider>

@@ -12,7 +12,7 @@ const useStyles = makeStyles({
   errorMessage: {
     wordBreak: 'break-all',
     '&:first-letter': { textTransform: 'capitalize' },
-  }
+  },
 });
 
 function dismissErrors(id?: any) {
@@ -23,27 +23,49 @@ function dismissErrors(id?: any) {
   }
 }
 
-export function ToastAlert({ desc, hash, msg, id }: { desc?: string, hash?: string, msg?: string, id?: any }) {
+export function ToastAlert({
+  desc,
+  hash,
+  msg,
+  id,
+}: {
+  desc?: string;
+  hash?: string;
+  msg?: string;
+  id?: any;
+}) {
   const classes = useStyles();
-  const handleClick = useCallback(() => (id !== null ? dismissErrors(id) : dismissErrors()), [id]);
+  const handleClick = useCallback(
+    () => (id !== null ? dismissErrors(id) : dismissErrors()),
+    [id]
+  );
   const chainInfo = useChainConstant(CHAIN_INFO);
   return (
-    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+    <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}
+    >
       <Typography sx={{ pl: 1, pr: 2, flex: 1, textAlign: 'center' }}>
         <span>
           {desc}
           {hash && (
             <>
               &nbsp;&middot;&nbsp;
-              <a href={`${chainInfo.explorer}/tx/${hash}`} target="_blank" rel="noreferrer">View on Etherscan</a>
+              <a
+                href={`${chainInfo.explorer}/tx/${hash}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                View on Etherscan
+              </a>
             </>
           )}
         </span>
-        {msg && (
-          <span className={classes.errorMessage}>
-            {msg}
-          </span>
-        )}
+        {msg && <span className={classes.errorMessage}>{msg}</span>}
       </Typography>
       {msg && (
         <IconButton
@@ -55,7 +77,7 @@ export function ToastAlert({ desc, hash, msg, id }: { desc?: string, hash?: stri
             '& svg': {
               width: '18px',
               height: '18px',
-            }
+            },
           }}
           size="small"
           onClick={handleClick}
@@ -75,7 +97,7 @@ type ToastMessages = {
   loading: string;
   success: string;
   error?: string;
-}
+};
 
 /**
  * A lightweight wrapper around react-hot-toast
@@ -90,13 +112,9 @@ export default class TransactionToast {
 
   constructor(messages: ToastMessages) {
     this.messages = messages;
-    this.toastId = toast.loading(
-      <ToastAlert
-        desc={this.messages.loading}
-      />, {
-        duration: Infinity,
-      }
-    );
+    this.toastId = toast.loading(<ToastAlert desc={this.messages.loading} />, {
+      duration: Infinity,
+    });
   }
 
   /**
@@ -141,14 +159,10 @@ export default class TransactionToast {
     const duration = Infinity;
     const msg = parseError(error);
     toast.error(
-      <ToastAlert
-        desc={this.messages.error}
-        msg={msg}
-        id={this.toastId}
-      />,
+      <ToastAlert desc={this.messages.error} msg={msg} id={this.toastId} />,
       {
         id: this.toastId,
-        duration: duration
+        duration: duration,
       }
     );
     return msg;

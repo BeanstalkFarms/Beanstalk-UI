@@ -10,20 +10,20 @@ type TokenOrTokenMap = Token | ChainConstant<Token>;
 export type PreferredToken = {
   token: TokenOrTokenMap;
   minimum?: BigNumber;
-}
+};
 
 type FallbackMode = 'use-best';
 
 /**
  * Select a single `Token` from a list of `PreferredToken[]` based on
  * the user's current balances and Token configuration.
- * 
+ *
  * Example: when instantiating the Sow form, we want the form to use
  * BEAN by default if the user has some minimum number of Beans in their
  * balance. Otherwise we move on to ETH, etc.
- * 
+ *
  * `list` should be ordered according to preference.
- * 
+ *
  * @param list An ordered list of Token to select from.
  * @param fallbackMode What to do if no Token meets the minimum amount requested.
  *    `use-best` Default to the first Token in the list.
@@ -31,10 +31,10 @@ type FallbackMode = 'use-best';
  */
 export default function usePreferredToken(
   list: PreferredToken[],
-  fallbackMode : FallbackMode = 'use-best'
+  fallbackMode: FallbackMode = 'use-best'
 ) {
   const getChainToken = useGetChainToken();
-  const balances      = useFarmerBalances();
+  const balances = useFarmerBalances();
   return useMemo(() => {
     const index = list.findIndex((pt) => {
       const tok = getChainToken(pt.token);
@@ -49,10 +49,5 @@ export default function usePreferredToken(
       case 'use-best':
         return getChainToken(list[0].token);
     }
-  }, [
-    list,
-    getChainToken,
-    balances,
-    fallbackMode
-  ]);
+  }, [list, getChainToken, balances, fallbackMode]);
 }

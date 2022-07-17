@@ -9,11 +9,11 @@ import useBeanstalkSiloBreakdown from '../../hooks/useBeanstalkSiloBreakdown';
 
 export type LiquidityOverviewProps = {
   balances: TokenMap<BeanstalkSiloBalance>;
-}
+};
 
 const LiquidityOverTime: React.FC<LiquidityOverviewProps & CardProps> = ({
   balances,
-  sx
+  sx,
 }) => {
   const breakdown = useBeanstalkSiloBreakdown();
 
@@ -25,9 +25,7 @@ const LiquidityOverTime: React.FC<LiquidityOverviewProps & CardProps> = ({
         amountIcon={undefined}
         gap={0}
       />
-      <LiquidityBalances
-        balances={balances}
-      />
+      <LiquidityBalances balances={balances} />
     </Card>
   );
 };

@@ -9,7 +9,7 @@ import useTabs from 'hooks/display/useTabs';
 const BeanAnalytics: React.FC<{}> = () => {
   const chainId = useChainId();
   const [tab, handleChangeTab] = useTabs();
-  
+
   if (chainId === SupportedChainId.MAINNET) {
     return (
       <Container maxWidth="lg">
@@ -17,7 +17,7 @@ const BeanAnalytics: React.FC<{}> = () => {
       </Container>
     );
   }
-  
+
   return (
     <Container maxWidth="lg">
       <Card>

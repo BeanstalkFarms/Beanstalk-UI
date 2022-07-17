@@ -15,7 +15,10 @@ import useChainId from 'hooks/useChain';
 import { PRE_EXPLOIT_BEAN_DATA } from 'state/bean/pools/updater';
 import { displayFullBN, trimAddress } from 'util/index';
 import usePools from 'hooks/usePools';
-import { StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
+import {
+  StyledDialogContent,
+  StyledDialogTitle,
+} from 'components/Common/Dialog';
 import WalletButton from 'components/Common/Connection/WalletButton';
 import NetworkButton from 'components/Common/Connection/NetworkButton';
 import PriceButton from './Buttons/PriceButton';
@@ -66,9 +69,9 @@ const NavBar: React.FC<{}> = () => {
           </StyledDialogTitle>
           <StyledDialogContent>
             <Typography>
-              Until Beanstalk is Replanted, some balances
-              displayed in the Beanstalk UI will remain fixed to their
-              values at the block before the exploit (14602789).
+              Until Beanstalk is Replanted, some balances displayed in the
+              Beanstalk UI will remain fixed to their values at the block before
+              the exploit (14602789).
             </Typography>
             <Divider sx={{ my: 2 }} />
             <Stack gap={1}>
@@ -90,7 +93,8 @@ const NavBar: React.FC<{}> = () => {
                     </Typography>
                     <ul>
                       {Object.keys(elem.pool).map((key) => {
-                        const thisElem = elem.pool[key as keyof typeof elem.pool];
+                        const thisElem =
+                          elem.pool[key as keyof typeof elem.pool];
                         return (
                           <li key={key}>
                             <Typography>
@@ -104,7 +108,9 @@ const NavBar: React.FC<{}> = () => {
                               >
                                 {key}:
                               </Box>
-                              {key === 'price' || key === 'liquidity' ? '$' : ''}
+                              {key === 'price' || key === 'liquidity'
+                                ? '$'
+                                : ''}
                               {Array.isArray(thisElem)
                                 ? thisElem
                                     .map(
@@ -168,7 +174,12 @@ const NavBar: React.FC<{}> = () => {
           px={1}
         >
           {/* Desktop: Left Side */}
-          <Stack direction="row" alignItems="center" sx={{ flex: 1 }} height="100%">
+          <Stack
+            direction="row"
+            alignItems="center"
+            sx={{ flex: 1 }}
+            height="100%"
+          >
             <PriceButton sx={{ height: 45 }} />
             <SunButton sx={{ height: 45 }} />
             <Stack
@@ -185,15 +196,9 @@ const NavBar: React.FC<{}> = () => {
                   tag={item.tag}
                 />
               ))}
-              <HoverMenu items={ROUTES.market}>
-                Market
-              </HoverMenu>
-              <HoverMenu items={ROUTES.analytics}>
-                Analytics
-              </HoverMenu>
-              <HoverMenu items={ROUTES.more}>
-                More
-              </HoverMenu>
+              <HoverMenu items={ROUTES.market}>Market</HoverMenu>
+              <HoverMenu items={ROUTES.analytics}>Analytics</HoverMenu>
+              <HoverMenu items={ROUTES.more}>More</HoverMenu>
             </Stack>
           </Stack>
           {/* Desktop: Right Side */}

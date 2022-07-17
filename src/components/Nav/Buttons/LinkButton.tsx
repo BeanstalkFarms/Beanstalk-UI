@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  Box,
-  Button, Stack,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Stack, Typography } from '@mui/material';
 import {
   Link as RouterLink,
   useMatch,
@@ -11,25 +7,31 @@ import {
 } from 'react-router-dom';
 
 /**
- * 
+ *
  */
-const LinkButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to, title, tag }) => {
+const LinkButton: React.FC<{ to: string; title: string; tag?: string }> = ({
+  to,
+  title,
+  tag,
+}) => {
   const resolved = useResolvedPath(to);
-  const match    = useMatch({ path: resolved.pathname, end: true });
-  
+  const match = useMatch({ path: resolved.pathname, end: true });
+
   return (
-    <Stack sx={{
-      // Set a default transparent bottom border.
-      // Switch to green when selected.
-      borderBottom: 3,
-      borderColor: 'transparent',
-      borderBottomColor: match ? '#67b761' : 'transparent',
-      // Pull the button down slightly so that it overlaps the Nav's
-      // bottom blue border.
-      mb: '-1.5px',
-      height: '100%',
-      justifyContent: 'center',
-    }}>
+    <Stack
+      sx={{
+        // Set a default transparent bottom border.
+        // Switch to green when selected.
+        borderBottom: 3,
+        borderColor: 'transparent',
+        borderBottomColor: match ? '#67b761' : 'transparent',
+        // Pull the button down slightly so that it overlaps the Nav's
+        // bottom blue border.
+        mb: '-1.5px',
+        height: '100%',
+        justifyContent: 'center',
+      }}
+    >
       <Button
         disableRipple
         component={RouterLink}
@@ -56,16 +58,18 @@ const LinkButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to,
           {title}
         </Typography>
         {tag && (
-          <Box sx={{
-            textDecoration: 'none !important',
-            display: 'inline-block',
-            ml: 0.5,
-            backgroundColor: 'rgba(255,255,255,.9)',
-            px: 1,
-            py: 0.1,
-            borderRadius: 1,
-            fontSize: '0.7em',
-          }}>
+          <Box
+            sx={{
+              textDecoration: 'none !important',
+              display: 'inline-block',
+              ml: 0.5,
+              backgroundColor: 'rgba(255,255,255,.9)',
+              px: 1,
+              py: 0.1,
+              borderRadius: 1,
+              fontSize: '0.7em',
+            }}
+          >
             {tag}
           </Box>
         )}

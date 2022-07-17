@@ -16,13 +16,7 @@ const UnripeTokenRow: React.FC<{
   bdv?: BigNumber;
   tooltip: string | React.ReactElement;
   token: Token;
-}> = ({
-  name,
-  amount,
-  bdv,
-  tooltip,
-  token,
-}) => {
+}> = ({ name, amount, bdv, tooltip, token }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const primaryColor = amount.eq(0) ? BeanstalkPalette.lightishGrey : null;
@@ -32,12 +26,14 @@ const UnripeTokenRow: React.FC<{
         {amount.gt(0) ? (
           <CheckIcon sx={{ fontSize: 16, color: BeanstalkPalette.logoGreen }} />
         ) : (
-          <CloseIcon sx={{ fontSize: 16, color: BeanstalkPalette.lightishGrey }} />
+          <CloseIcon
+            sx={{ fontSize: 16, color: BeanstalkPalette.lightishGrey }}
+          />
         )}
         <Typography
           sx={{
             color: primaryColor,
-            textTransform: 'capitalize'
+            textTransform: 'capitalize',
           }}
         >
           {name}
@@ -50,10 +46,18 @@ const UnripeTokenRow: React.FC<{
           </Tooltip>
         )}
       </Stack>
-      <Stack direction={isMobile ? 'column' : 'row'} alignItems="center" gap={0.3}>
-        {(amount && bdv) ? (
+      <Stack
+        direction={isMobile ? 'column' : 'row'}
+        alignItems="center"
+        gap={0.3}
+      >
+        {amount && bdv ? (
           // LP states
-          <Stack direction={isMobile ? 'column' : 'row'} sx={{ alignItems: isMobile ? 'end' : null }} gap={0.5}>
+          <Stack
+            direction={isMobile ? 'column' : 'row'}
+            sx={{ alignItems: isMobile ? 'end' : null }}
+            gap={0.5}
+          >
             <Stack direction="row" alignItems="center" gap={0.3}>
               <img src={token.logo} alt="Circulating Beans" height={13} />
               <Typography sx={{ color: primaryColor }}>
@@ -61,13 +65,10 @@ const UnripeTokenRow: React.FC<{
               </Typography>
             </Stack>
             <Stack direction="row" alignItems="center" gap={0.3}>
-              <Typography sx={{ color: primaryColor }}>
-                (
-              </Typography>
+              <Typography sx={{ color: primaryColor }}>(</Typography>
               <img src={greenBeanIcon} alt="Circulating Beans" width={13} />
               <Typography sx={{ color: primaryColor }}>
-                {displayFullBN(bdv)}
-                )
+                {displayFullBN(bdv)})
               </Typography>
             </Stack>
           </Stack>
@@ -75,10 +76,12 @@ const UnripeTokenRow: React.FC<{
           // Bean states
           <Stack direction="row" alignItems="center" gap={0.3}>
             <img src={greenBeanIcon} alt="Circulating Beans" width={13} />
-            <Typography sx={{
-              fontSize: '16px',
-              color: amount.eq(0) ? BeanstalkPalette.lightishGrey : null
-            }}>
+            <Typography
+              sx={{
+                fontSize: '16px',
+                color: amount.eq(0) ? BeanstalkPalette.lightishGrey : null,
+              }}
+            >
               {displayFullBN(amount)}
             </Typography>
           </Stack>

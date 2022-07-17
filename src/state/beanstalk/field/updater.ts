@@ -13,49 +13,43 @@ export const useBeanstalkField = () => {
   const fetch = useCallback(async () => {
     if (beanstalk) {
       console.debug('[beanstalk/field/useBeanstalkField] FETCH');
-      
-      const [
-        harvestableIndex,
-        podIndex,
-        soil,
-        weather,
-        rain
-      ] = await Promise.all([
-        beanstalk.harvestableIndex().then(tokenResult(BEAN)), // FIXME
-        beanstalk.podIndex().then(tokenResult(BEAN)),
-        beanstalk.totalSoil().then(tokenResult(BEAN)),
-        beanstalk.weather().then((_weather) => ({
-          didSowBelowMin: _weather.didSowBelowMin,
-          didSowFaster: _weather.didSowFaster,
-          lastDSoil: tokenResult(BEAN)(_weather.lastDSoil),
-          lastSoilPercent: bigNumberResult(_weather.lastSoilPercent),
-          lastSowTime: bigNumberResult(_weather.lastSowTime),
-          nextSowTime: bigNumberResult(_weather.nextSowTime),
-          startSoil: tokenResult(BEAN)(_weather.startSoil),
-          yield: bigNumberResult(_weather.yield),
-        })),
-        beanstalk.rain().then((_rain) => ({
-          raining: _rain.raining,
-          rainStart: bigNumberResult(_rain.start),
-        }))
-      ] as const);
+
+      const [harvestableIndex, podIndex, soil, weather, rain] =
+        await Promise.all([
+          beanstalk.harvestableIndex().then(tokenResult(BEAN)), // FIXME
+          beanstalk.podIndex().then(tokenResult(BEAN)),
+          beanstalk.totalSoil().then(tokenResult(BEAN)),
+          beanstalk.weather().then((_weather) => ({
+            didSowBelowMin: _weather.didSowBelowMin,
+            didSowFaster: _weather.didSowFaster,
+            lastDSoil: tokenResult(BEAN)(_weather.lastDSoil),
+            lastSoilPercent: bigNumberResult(_weather.lastSoilPercent),
+            lastSowTime: bigNumberResult(_weather.lastSowTime),
+            nextSowTime: bigNumberResult(_weather.nextSowTime),
+            startSoil: tokenResult(BEAN)(_weather.startSoil),
+            yield: bigNumberResult(_weather.yield),
+          })),
+          beanstalk.rain().then((_rain) => ({
+            raining: _rain.raining,
+            rainStart: bigNumberResult(_rain.start),
+          })),
+        ] as const);
 
       console.debug('[beanstalk/field/useBeanstalkField] RESULT');
 
-      dispatch(updateBeanstalkField({
-        harvestableIndex,
-        podIndex,
-        totalPods: harvestableIndex.plus(podIndex),
-        soil,
-        weather,
-        rain,
-      }));
+      dispatch(
+        updateBeanstalkField({
+          harvestableIndex,
+          podIndex,
+          totalPods: harvestableIndex.plus(podIndex),
+          soil,
+          weather,
+          rain,
+        })
+      );
     }
-  }, [
-    dispatch,
-    beanstalk,
-  ]);
-  
+  }, [dispatch, beanstalk]);
+
   const clear = useCallback(() => {
     console.debug('[beanstalk/field/useBeanstalkField] CLEAR');
     dispatch(resetBeanstalkField());

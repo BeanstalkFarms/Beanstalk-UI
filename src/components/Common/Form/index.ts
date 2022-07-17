@@ -6,12 +6,12 @@ export type FormState = {
   /** */
   tokens: FormTokenState[];
   /** */
-  approving?: FormApprovingState; 
-}
+  approving?: FormApprovingState;
+};
 
 export type FormStateWithPlotSelect = FormState & {
   plot?: BigNumber;
-}
+};
 
 export type FormTokenState = {
   /** */
@@ -24,7 +24,7 @@ export type FormTokenState = {
   amountOut?: BigNumber;
   /** */
   steps?: ChainableFunctionResult[];
-}
+};
 
 export type FormApprovingState = {
   /** */
@@ -33,7 +33,7 @@ export type FormApprovingState = {
   token: ERC20Token | NativeToken;
   /** */
   amount: BigNumber;
-}
+};
 
 // Settings
 export { default as SettingSwitch } from './SettingSwitch';

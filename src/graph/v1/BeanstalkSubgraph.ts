@@ -100,7 +100,7 @@ export async function beanstalkQuery() {
     const data = flatMap(results, (d: any) => d.data.seasons);
 
     const seasons = data.map((s) => {
-      const season : any = {};
+      const season: any = {};
       Object.keys(s).forEach((key) => {
         season[key] = roundTo4Digits(parseFloat(s[key]));
       });
@@ -141,9 +141,8 @@ export async function farmableMonthTotalQuery() {
       query: gql(FarmableMonthTotalQuery),
     });
 
-    const total = sumBy(
-      response.data.seasons,
-      (season: any) => parseInt(season.newFarmableBeans, 10),
+    const total = sumBy(response.data.seasons, (season: any) =>
+      parseInt(season.newFarmableBeans, 10)
     );
 
     return total;

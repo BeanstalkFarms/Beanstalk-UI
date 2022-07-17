@@ -1,5 +1,12 @@
 import React from 'react';
-import { Box, Button, ButtonProps, InputAdornment, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  ButtonProps,
+  InputAdornment,
+  Stack,
+  Typography,
+} from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { makeStyles } from '@mui/styles';
 import Token from 'classes/Token';
@@ -15,7 +22,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: 'primary.light',
     '&:hover': {
       backgroundColor: 'primary.light',
-    }
+    },
   },
   tokenIcon: {
     minWidth: IconSize.small,
@@ -28,20 +35,13 @@ const useStyles = makeStyles(() => ({
   },
   tokenLogo: {
     width: 40,
-    height: 40
-  }
+    height: 40,
+  },
 }));
 
-const TokenAdornment : React.FC<
-  { token: Token, buttonLabel?: string }
-  & ButtonProps
-> = ({
-  token,
-  buttonLabel,
-  disabled,
-  onClick,
-  ...props
-}) => {
+const TokenAdornment: React.FC<
+  { token: Token; buttonLabel?: string } & ButtonProps
+> = ({ token, buttonLabel, disabled, onClick, ...props }) => {
   const classes = useStyles();
   return (
     <InputAdornment position="end">
@@ -56,18 +56,28 @@ const TokenAdornment : React.FC<
         {...props}
       >
         <Stack direction="row" alignItems="center" gap={0.5}>
-          {token.logo ? <img src={token.logo} alt="" className={classes.tokenIcon} /> : null}
+          {token.logo ? (
+            <img src={token.logo} alt="" className={classes.tokenIcon} />
+          ) : null}
           {buttonLabel ? (
-            <Box className={classes.tokenName}><Typography variant="bodyMedium" fontWeight="fontWeightRegular">{buttonLabel}</Typography></Box>
+            <Box className={classes.tokenName}>
+              <Typography variant="bodyMedium" fontWeight="fontWeightRegular">
+                {buttonLabel}
+              </Typography>
+            </Box>
           ) : (
-            <Box className={classes.tokenName}><Typography variant="bodyMedium" fontWeight="fontWeightRegular">{token.symbol}</Typography></Box>
+            <Box className={classes.tokenName}>
+              <Typography variant="bodyMedium" fontWeight="fontWeightRegular">
+                {token.symbol}
+              </Typography>
+            </Box>
           )}
           {onClick && (
             <KeyboardArrowDownIcon
               sx={{
                 // marginLeft: 0.5,
                 fontSize: 18,
-                color: 'rgba(0,0,0,0.87)'
+                color: 'rgba(0,0,0,0.87)',
               }}
             />
           )}

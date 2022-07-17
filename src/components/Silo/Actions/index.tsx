@@ -18,9 +18,9 @@ import Send from './Send';
  *     up by tabs. Each tab contains a single form.
  * (2) a table of Deposits and Withdrawals, shown dependent on the
  *     selected tab. The Withdrawals table also displays an aggregated
- *     "claimable" row and is shown for both Withdraw & Claim tabs.    
+ *     "claimable" row and is shown for both Withdraw & Claim tabs.
  */
-const SiloActions : React.FC<{
+const SiloActions: React.FC<{
   pool: Pool;
   token: ERC20Token;
   siloBalance: FarmerSiloBalance;
@@ -31,12 +31,34 @@ const SiloActions : React.FC<{
     <>
       <Card sx={{ position: 'relative' }}>
         <Stack gap={1.5}>
-          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>
-            <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }} variant="scrollable">
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            sx={{ overflow: 'visible', px: 2, pt: 2 }}
+          >
+            <Tabs
+              value={tab}
+              onChange={handleChange}
+              sx={{
+                minHeight: 0,
+                overflow: 'visible',
+                '& .MuiTabs-scroller': { overflow: 'visible' },
+              }}
+              variant="scrollable"
+            >
               <Tab label="Deposit" />
               <Tab label="Withdraw" />
               <Tab
-                label={hasClaimable ? <Badge color="primary" variant="dot">Claim</Badge> : 'Claim'}
+                label={
+                  hasClaimable ? (
+                    <Badge color="primary" variant="dot">
+                      Claim
+                    </Badge>
+                  ) : (
+                    'Claim'
+                  )
+                }
                 sx={{ overflow: 'visible' }}
               />
               <Tab label="Send" />
@@ -44,43 +66,27 @@ const SiloActions : React.FC<{
           </Stack>
           <Box sx={{ px: 1, pb: 1 }}>
             {tab === 0 ? (
-              <Deposit
-                pool={props.pool}
-                token={props.token}
-            />
-          ) : null}
-            {tab === 1 ? (
-              <Withdraw
-                token={props.token}
-            />
-          ) : null}
+              <Deposit pool={props.pool} token={props.token} />
+            ) : null}
+            {tab === 1 ? <Withdraw token={props.token} /> : null}
             {tab === 2 ? (
-              <Claim
-                token={props.token}
-                siloBalance={props.siloBalance}
-            />
-          ) : null}
+              <Claim token={props.token} siloBalance={props.siloBalance} />
+            ) : null}
             {tab === 3 ? (
               <Send
               // token={props.token}
               // siloBalance={props.siloBalance}
-            />
-          ) : null}
+              />
+            ) : null}
           </Box>
         </Stack>
       </Card>
       {/* Tables */}
       <Box sx={{ display: tab === 0 || tab === 3 ? 'block' : 'none' }}>
-        <Deposits
-          token={props.token}
-          balance={props.siloBalance}
-        />
+        <Deposits token={props.token} balance={props.siloBalance} />
       </Box>
       <Box sx={{ display: tab === 1 || tab === 2 ? 'block' : 'none' }}>
-        <Withdrawals
-          token={props.token}
-          balance={props.siloBalance}
-        />
+        <Withdrawals token={props.token} balance={props.siloBalance} />
       </Box>
     </>
   );

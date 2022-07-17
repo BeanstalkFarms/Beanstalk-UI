@@ -18,14 +18,14 @@ const NFTDialog: React.FC<NFTDialogProps> = ({
   dialogOpen,
   handleMint,
   address,
-  nft
+  nft,
 }) => (
   <Dialog
     onClose={handleDialogClose}
     open={dialogOpen}
     fullWidth
     fullScreen={false}
-    >
+  >
     <StyledDialogTitle onClose={handleDialogClose}>BeaNFT</StyledDialogTitle>
     <StyledDialogContent>
       <Stack gap={2}>
@@ -35,10 +35,15 @@ const NFTDialog: React.FC<NFTDialogProps> = ({
         </Stack>
         <Divider />
         {/* FIXME: should be a LoadingButton */}
-        <Button onClick={handleMint} disabled={nft.claimed === ClaimStatus.CLAIMED}>Mint</Button>
+        <Button
+          onClick={handleMint}
+          disabled={nft.claimed === ClaimStatus.CLAIMED}
+        >
+          Mint
+        </Button>
       </Stack>
     </StyledDialogContent>
   </Dialog>
-  );
+);
 
 export default NFTDialog;

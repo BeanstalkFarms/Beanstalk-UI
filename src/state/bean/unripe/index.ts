@@ -3,4 +3,4 @@ import { AddressMap } from 'constants/index';
 
 export type Unripe = {
   penalties: AddressMap<BigNumber>;
-}
+};

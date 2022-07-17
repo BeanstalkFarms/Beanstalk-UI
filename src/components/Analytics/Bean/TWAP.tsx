@@ -1,6 +1,8 @@
 import React from 'react';
 import { CardProps, Card } from '@mui/material';
-import SeasonPlot, { SeasonPlotProps } from 'components/Common/Charts/SeasonPlot';
+import SeasonPlot, {
+  SeasonPlotProps,
+} from 'components/Common/Charts/SeasonPlot';
 import { Season, SeasonalTwapDocument } from 'generated/graphql';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BEAN } from 'constants/tokens';
@@ -21,7 +23,7 @@ const LineChartProps = {
 };
 
 const TWAP: React.FC<{ height?: SeasonPlotProps['height'] }> = ({ height }) => {
-  const price  = usePrice();
+  const price = usePrice();
   const season = useSeason();
   return (
     <SeasonPlot

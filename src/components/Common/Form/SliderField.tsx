@@ -1,9 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import {
-  Slider,
-  SliderProps,
-  Stack,
-} from '@mui/material';
+import { Slider, SliderProps, Stack } from '@mui/material';
 import { useFormikContext } from 'formik';
 import BigNumber from 'bignumber.js';
 
@@ -19,9 +15,8 @@ type SliderFieldProps = {
 /**
  * Double Slider: the form must have min & max value
  */
-const SliderField : React.FC<
-  SliderFieldProps
-  & SliderProps// Formik Field
+const SliderField: React.FC<
+  SliderFieldProps & SliderProps // Formik Field
 > = ({
   // -- Custom props
   initialState,
@@ -39,44 +34,35 @@ const SliderField : React.FC<
   // min or max value is changed (ex: adjusting 'amount' input)
   useEffect(() => {
     if (values[fields[0]] && values[fields[1]]) {
-      setValue([
-        values[fields[0]],
-        values[fields[1]]
-      ]);
+      setValue([values[fields[0]], values[fields[1]]]);
     }
   }, [values, fields]);
 
   const minVal = values[fields[0]];
   const maxVal = values[fields[1]];
 
-  const handleChange = useCallback((
-    event: Event,
-    newValue: number | number[],
-    activeThumb: number,
-  ) => {
-    // ----- single slider -----
-    if (!Array.isArray(newValue)) {
-      setValue(newValue);
-      setFieldValue(fields[0], new BigNumber(newValue));
-      return;
-    }
+  const handleChange = useCallback(
+    (event: Event, newValue: number | number[], activeThumb: number) => {
+      // ----- single slider -----
+      if (!Array.isArray(newValue)) {
+        setValue(newValue);
+        setFieldValue(fields[0], new BigNumber(newValue));
+        return;
+      }
 
-    // ----- double slider -----
-    if (newValue[0] !== minVal) {
-      setValue(newValue as number[]);
-      setFieldValue(fields[0], new BigNumber(newValue[0]));
-    }
+      // ----- double slider -----
+      if (newValue[0] !== minVal) {
+        setValue(newValue as number[]);
+        setFieldValue(fields[0], new BigNumber(newValue[0]));
+      }
 
-    if (newValue[1] !== maxVal) {
-      setValue(newValue as number[]);
-      setFieldValue(fields[1], new BigNumber(newValue[1]));
-    }
-  }, [
-    fields,
-    maxVal,
-    minVal,
-    setFieldValue
-  ]);
+      if (newValue[1] !== maxVal) {
+        setValue(newValue as number[]);
+        setFieldValue(fields[1], new BigNumber(newValue[1]));
+      }
+    },
+    [fields, maxVal, minVal, setFieldValue]
+  );
 
   // const valueLabelFormat = useCallback((value: string, index: number) => )
 
@@ -100,7 +86,7 @@ const SliderField : React.FC<
           '& .MuiSlider-thumb:before': {
             boxShadow: 'none',
           },
-          ...sx
+          ...sx,
         }}
         {...props}
       />

@@ -1,8 +1,5 @@
 import React, { useCallback } from 'react';
-import {
-  Connector,
-  useConnect,
-} from 'wagmi';
+import { Connector, useConnect } from 'wagmi';
 import {
   Alert,
   Button,
@@ -26,8 +23,8 @@ const WalletDialog: React.FC<{
     useConnect({
       onConnect() {
         handleClose();
-      }
-  });
+      },
+    });
   const handleConnect = useCallback(
     (connector: Connector) => () => connect(connector),
     [connect]
@@ -49,24 +46,42 @@ const WalletDialog: React.FC<{
               sx={{
                 py: 1,
                 minWidth: fullScreen ? null : 400,
-                borderColor: grey[300]
+                borderColor: grey[300],
               }}
             >
-              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }} gap={3}>
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{ width: '100%' }}
+                gap={3}
+              >
                 <Typography color="text.primary" sx={{ fontSize: 20 }}>
-                  {isConnecting && (connector.id === pendingConnector?.id)
-                    ? <CircularProgress variant="indeterminate" color="primary" size={20} />
-                    : connector.name}
+                  {isConnecting && connector.id === pendingConnector?.id ? (
+                    <CircularProgress
+                      variant="indeterminate"
+                      color="primary"
+                      size={20}
+                    />
+                  ) : (
+                    connector.name
+                  )}
                 </Typography>
                 {CONNECTOR_LOGOS[connector.name] && (
-                  <img src={CONNECTOR_LOGOS[connector.name]} alt="" style={{ height: 35 }} />
+                  <img
+                    src={CONNECTOR_LOGOS[connector.name]}
+                    alt=""
+                    style={{ height: 35 }}
+                  />
                 )}
               </Stack>
             </Button>
           ))}
           {error && (
             <Alert severity="error">
-              {CONNECT_WALLET_ERRORS[error.name || error.message](pendingConnector) || error.message}
+              {CONNECT_WALLET_ERRORS[error.name || error.message](
+                pendingConnector
+              ) || error.message}
             </Alert>
           )}
         </Stack>

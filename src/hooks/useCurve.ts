@@ -29,7 +29,7 @@ export default function useCurve() {
   const [_curve, setCurve] = useState<typeof curve | null>(null);
   const [initializing, setInitializing] = useState(false);
   const chainId = useChainId();
-  
+
   useEffect(() => {
     if (chainId) {
       setCurve(null);
@@ -44,11 +44,8 @@ export default function useCurve() {
           console.error('[curve/use]', e);
         });
     }
-  }, [
-    chainId,
-    initializing,
-  ]);
-  
+  }, [chainId, initializing]);
+
   return _curve;
 
   // return new Promise<typeof curve>((resolve, reject) => {

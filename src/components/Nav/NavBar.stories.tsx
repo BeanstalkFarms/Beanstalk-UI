@@ -10,7 +10,7 @@ export default {
   // parameters: {
   //   layout: 'fullscreen'
   // }
-};// as ComponentMeta<typeof NavBar>;
+}; // as ComponentMeta<typeof NavBar>;
 
 const Template = (args: any) => (
   <Box>
@@ -20,6 +20,4 @@ const Template = (args: any) => (
 );
 
 const Primary = Template.bind({});
-export {
-  Primary
-};
+export { Primary };

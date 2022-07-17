@@ -7,16 +7,15 @@ import { displayBN, displayFullBN } from 'util/index';
 import ResizablePieChart, { PieDataPoint } from 'components/Common/Charts/Pie';
 import StatCard from '../StatCard';
 
-export type StalkCardProps = (
-  {
-    token: typeof STALK;
-    state: AppState['_farmer']['silo']['stalk'];
-  }
+export type StalkCardProps =
   | {
-    token: typeof SEEDS;
-    state: AppState['_farmer']['silo']['seeds'];
-  }
-);
+      token: typeof STALK;
+      state: AppState['_farmer']['silo']['stalk'];
+    }
+  | {
+      token: typeof SEEDS;
+      state: AppState['_farmer']['silo']['seeds'];
+    };
 
 const MAPPING = {
   active: ['Active', 'rgba(31, 120, 180, 1)'],
@@ -24,21 +23,22 @@ const MAPPING = {
   earned: ['Earned', 'rgba(166, 206, 227, 0.5)'],
 };
 
-const SiloAssetCard: React.FC<StalkCardProps> = ({
-  token,
-  state,
-}) => {
-  const pieChartData = useMemo(() => Object.keys(state).reduce<PieDataPoint[]>((prev, _curr) => {
-    const curr = _curr as keyof typeof state; // ts hack
-    if (curr !== 'total' && state[curr]) {
-      prev.push({
-        label: MAPPING[curr][0],
-        value: state[curr].toNumber(),
-        color: MAPPING[curr][1],
-      });
-    }
-    return prev;
-  }, [] as PieDataPoint[]), [state]);
+const SiloAssetCard: React.FC<StalkCardProps> = ({ token, state }) => {
+  const pieChartData = useMemo(
+    () =>
+      Object.keys(state).reduce<PieDataPoint[]>((prev, _curr) => {
+        const curr = _curr as keyof typeof state; // ts hack
+        if (curr !== 'total' && state[curr]) {
+          prev.push({
+            label: MAPPING[curr][0],
+            value: state[curr].toNumber(),
+            color: MAPPING[curr][1],
+          });
+        }
+        return prev;
+      }, [] as PieDataPoint[]),
+    [state]
+  );
   return (
     <StatCard
       title={`My ${token.name}`}
@@ -62,7 +62,7 @@ const SiloAssetCard: React.FC<StalkCardProps> = ({
                 {displayFullBN(state[key as keyof typeof state], 0)}
               </Typography>
             </Stack>
-            ))}
+          ))}
         </Stack>
       </Stack>
     </StatCard>

@@ -3,7 +3,7 @@ import Token from 'classes/Token';
 import { Balance } from '.';
 
 export type UpdateBalancePayload = {
-  token: Token,
+  token: Token;
   balance: Balance;
   // internalBalance: BigNumber;
   // externalBalance: BigNumber;
@@ -17,6 +17,4 @@ export const updateBalance = createAction<UpdateBalancePayload>(
   'farmer/balances/update'
 );
 
-export const clearBalances = createAction(
-  'farmer/balances/clear'
-);
+export const clearBalances = createAction('farmer/balances/clear');

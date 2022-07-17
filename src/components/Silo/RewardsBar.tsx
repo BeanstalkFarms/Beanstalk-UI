@@ -17,7 +17,7 @@ export type RewardsBarProps = {
   revitalizedSeeds?: BigNumber;
 };
 
-const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
+const RewardsBar: React.FC<RewardsBarProps & { compact?: boolean }> = ({
   beans,
   stalk,
   seeds,
@@ -29,7 +29,11 @@ const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
   const GAP_MD = compact ? 1 : 2;
   const GAP_XS = compact ? 0.5 : 1;
   return (
-    <Stack direction={{ lg: 'row', xs: 'column' }} columnGap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }} rowGap={1.5}>
+    <Stack
+      direction={{ lg: 'row', xs: 'column' }}
+      columnGap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}
+      rowGap={1.5}
+    >
       {/* Earned */}
       <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
         <RewardItem

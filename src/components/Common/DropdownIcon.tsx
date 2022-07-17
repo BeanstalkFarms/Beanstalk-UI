@@ -3,7 +3,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IconProps } from '@mui/material';
 import { IconSize } from '../App/muiTheme';
 
-const DropdownIcon : React.FC<{ open: boolean; } & IconProps> = ({ open, sx }) => (
+const DropdownIcon: React.FC<{ open: boolean } & IconProps> = ({
+  open,
+  sx,
+}) => (
   <ExpandMoreIcon
     sx={{
       marginLeft: '-4px',

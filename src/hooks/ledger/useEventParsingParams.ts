@@ -6,14 +6,16 @@ import { AppState } from "state";
 import useAccount from "./useAccount";
 
 export default function useEventParsingParams() {
-  const account     = useAccount();
-  const season      = useSeason();
-  const earnedBeans = useSelector<AppState, AppState['_farmer']['silo']['beans']['earned']>(
-    (state) => state._farmer.silo.beans.earned
-  );
-  const harvestableIndex = useSelector<AppState, AppState['_beanstalk']['field']['harvestableIndex']>(
-    (state) => state._beanstalk.field.harvestableIndex,
-  );
+  const account = useAccount();
+  const season = useSeason();
+  const earnedBeans = useSelector<
+    AppState,
+    AppState['_farmer']['silo']['beans']['earned']
+  >((state) => state._farmer.silo.beans.earned);
+  const harvestableIndex = useSelector<
+    AppState,
+    AppState['_beanstalk']['field']['harvestableIndex']
+  >((state) => state._beanstalk.field.harvestableIndex);
   return useMemo<null | EventParsingParameters>(() => {
     if (account && season && earnedBeans && harvestableIndex) {
       return {
@@ -21,14 +23,9 @@ export default function useEventParsingParams() {
         season,
         // only needed for v1
         harvestableIndex: harvestableIndex,
-        farmableBeans:    earnedBeans,
+        farmableBeans: earnedBeans,
       };
     }
     return null;
-  }, [
-    account,
-    season,
-    earnedBeans,
-    harvestableIndex,
-  ]);
+  }, [account, season, earnedBeans, harvestableIndex]);
 }

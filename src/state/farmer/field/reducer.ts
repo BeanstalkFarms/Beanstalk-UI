@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { Field } from '.';
 import { updateFarmerField } from './actions';
 
-const initialState : Field = {
+const initialState: Field = {
   plots: {},
   harvestablePlots: {},
   pods: new BigNumber(0),
@@ -11,11 +11,10 @@ const initialState : Field = {
 };
 
 export default createReducer(initialState, (builder) =>
-  builder
-    .addCase(updateFarmerField, (state, { payload }) => {
-      state.plots = payload.plots;
-      state.harvestablePlots = payload.harvestablePlots;
-      state.pods = payload.pods;
-      state.harvestablePods = payload.harvestablePods;
-    })
+  builder.addCase(updateFarmerField, (state, { payload }) => {
+    state.plots = payload.plots;
+    state.harvestablePlots = payload.harvestablePlots;
+    state.pods = payload.pods;
+    state.harvestablePods = payload.harvestablePods;
+  })
 );

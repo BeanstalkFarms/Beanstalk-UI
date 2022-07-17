@@ -2,8 +2,8 @@ import { createReducer } from '@reduxjs/toolkit';
 import { Unripe } from '.';
 import { resetUnripe, updateUnripe } from './actions';
 
-export const initialState : Unripe = {
-  penalties: {}
+export const initialState: Unripe = {
+  penalties: {},
 };
 
 export default createReducer(initialState, (builder) =>

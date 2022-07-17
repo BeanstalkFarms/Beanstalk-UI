@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  Button,
-  Stack,
-  Typography,
-
-} from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
 
 const CreateButtons: React.FC = () => (
   <Stack direction="row" gap={1} alignItems="end" height="100%">
@@ -13,7 +8,7 @@ const CreateButtons: React.FC = () => (
       color="inverse"
       variant="contained"
       sx={{ py: 1 }}
-      >
+    >
       <Typography variant="h4">Create Buy Order</Typography>
     </Button>
     {/* ?t=1 sets the tab in Market/Actions/index.tsx */}
@@ -22,9 +17,9 @@ const CreateButtons: React.FC = () => (
       color="primary"
       variant="contained"
       sx={{ py: 1 }}
-      >
+    >
       <Typography variant="h4">Create Sell Listing</Typography>
     </Button>
   </Stack>
-  );
+);
 export default CreateButtons;

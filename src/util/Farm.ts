@@ -8,33 +8,38 @@ import { Balance } from 'state/farmer/balances';
  *      if (amountIn <= internal)      return INTERNAL
  *      else if (amountIn <= external) return EXTERNAL
  *      else                           return INTERNAL_EXTERNAL
- * @param amountIn 
- * @param balance 
- * @returns 
+ * @param amountIn
+ * @param balance
+ * @returns
  */
 export const optimizeFromMode = (
   amountIn: BigNumber,
-  balance: Balance,
-) : FarmFromMode => {
+  balance: Balance
+): FarmFromMode => {
   const { internal, external, total } = balance;
-  if (amountIn.gte(total))    throw new Error('Amount in is greater than total balance. INTERNAL_EXTERNAL_TOLERANT not yet supported.');
+  if (amountIn.gte(total))
+    throw new Error(
+      'Amount in is greater than total balance. INTERNAL_EXTERNAL_TOLERANT not yet supported.'
+    );
   if (amountIn.lte(internal)) return FarmFromMode.INTERNAL;
   if (amountIn.lte(external)) return FarmFromMode.EXTERNAL;
   return FarmFromMode.INTERNAL_EXTERNAL;
 };
 
 /**
- * 
+ *
  */
-export const combineBalances = (
-  ...balances: Balance[]
-) => [...balances].reduce((prev, curr) => {
-  prev.internal = prev.internal.plus(curr.internal);
-  prev.external = prev.external.plus(curr.external);
-  prev.total    = prev.total.plus(curr.total);
-  return prev;
-}, {
-  internal: ZERO_BN,
-  external: ZERO_BN,
-  total:    ZERO_BN,
-});
+export const combineBalances = (...balances: Balance[]) =>
+  [...balances].reduce(
+    (prev, curr) => {
+      prev.internal = prev.internal.plus(curr.internal);
+      prev.external = prev.external.plus(curr.external);
+      prev.total = prev.total.plus(curr.total);
+      return prev;
+    },
+    {
+      internal: ZERO_BN,
+      external: ZERO_BN,
+      total: ZERO_BN,
+    }
+  );

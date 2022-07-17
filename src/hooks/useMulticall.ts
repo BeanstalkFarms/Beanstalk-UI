@@ -1,4 +1,7 @@
-import { Contract as MulticallContract, Provider as MulticallProvider } from 'ethers-multicall';
+import {
+  Contract as MulticallContract,
+  Provider as MulticallProvider,
+} from 'ethers-multicall';
 import { ethers } from 'ethers';
 import { useProvider } from 'wagmi';
 import { useMemo } from 'react';
@@ -10,15 +13,19 @@ declare module 'ethers-multicall' {
   }
 }
 
-export const wrapMulticall = <T extends ethers.Contract>(contract: T) => new MulticallContract(
+export const wrapMulticall = <T extends ethers.Contract>(contract: T) =>
+  new MulticallContract(
     contract.address,
     contract.interface.fragments as Fragment[]
   ) as unknown as T;
 
 const useMulticall = () => {
   const provider = useProvider();
-  const multicallProvider = useMemo(() => new MulticallProvider(provider, provider.network.chainId), [provider]);
-  
+  const multicallProvider = useMemo(
+    () => new MulticallProvider(provider, provider.network.chainId),
+    [provider]
+  );
+
   return [multicallProvider, wrapMulticall] as const;
 };
 

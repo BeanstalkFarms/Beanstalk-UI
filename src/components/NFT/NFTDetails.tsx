@@ -11,15 +11,30 @@ export interface NFTContentProps {
 
 const NFTDetails: React.FC<NFTContentProps> = ({ nft, collection }) => (
   <Stack gap={1}>
-    <img src={`${BASE_IPFS_LINK}${nft.imageIpfsHash}`} alt="" width="100%" style={{ borderRadius: '7px' }} />
+    <img
+      src={`${BASE_IPFS_LINK}${nft.imageIpfsHash}`}
+      alt=""
+      width="100%"
+      style={{ borderRadius: '7px' }}
+    />
     <Stack direction="row" alignItems="start" justifyContent="space-between">
       <Typography variant="h3">{`BeaNFT ${nft.id}`}</Typography>
       <Stack>
-        <Typography color={BeanstalkPalette.lightishGrey}>BeaNFT {collection}</Typography>
-        {nft.claimed === ClaimStatus.UNCLAIMED && <Typography fontSize="14px" textAlign="right" color={BeanstalkPalette.logoGreen}>Ready to mint</Typography>}
+        <Typography color={BeanstalkPalette.lightishGrey}>
+          BeaNFT {collection}
+        </Typography>
+        {nft.claimed === ClaimStatus.UNCLAIMED && (
+          <Typography
+            fontSize="14px"
+            textAlign="right"
+            color={BeanstalkPalette.logoGreen}
+          >
+            Ready to mint
+          </Typography>
+        )}
       </Stack>
     </Stack>
   </Stack>
-  );
+);
 
 export default NFTDetails;

@@ -1,5 +1,14 @@
 import React from 'react';
-import { Stack, Typography, Card, ListItem, ListItemButton, ListItemIcon, ListItemText, List } from '@mui/material';
+import {
+  Stack,
+  Typography,
+  Card,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  List,
+} from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { makeStyles } from '@mui/styles';
 import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
@@ -13,16 +22,16 @@ const useStyles = makeStyles(() => ({
     minWidth: '18px',
     width: '18px',
     height: '18px',
-    marginRight: '5px'
+    marginRight: '5px',
   },
   tokenName: {
     color: '#3B3B3B',
-    fontSize: '20px'
+    fontSize: '20px',
   },
   tokenLogo: {
     width: IconSize.large,
     height: IconSize.large,
-  }
+  },
 }));
 
 export interface PlotSelectProps {
@@ -34,7 +43,11 @@ export interface PlotSelectProps {
   handlePlotSelect: any;
 }
 
-const PlotSelect: React.FC<PlotSelectProps> = ({ plots, harvestableIndex, handlePlotSelect }) => {
+const PlotSelect: React.FC<PlotSelectProps> = ({
+  plots,
+  harvestableIndex,
+  handlePlotSelect,
+}) => {
   const classes = useStyles();
   if (plots === null) {
     return null;
@@ -49,23 +62,23 @@ const PlotSelect: React.FC<PlotSelectProps> = ({ plots, harvestableIndex, handle
               color="primary"
               // selected={newSelection.has(_token)}
               disablePadding
-              secondaryAction={(
+              secondaryAction={
                 <Typography variant="bodyLarge">
                   {displayBN(new BigNumber(plots[index]))}
                 </Typography>
-              )}
+              }
               onClick={() => handlePlotSelect(index)}
               sx={{
                 // ListItem is used elsewhere so we define here
                 // instead of in muiTheme.ts
                 '& .MuiListItemText-primary': {
                   fontSize: FontSize['1xl'],
-                  lineHeight: '1.875rem'
+                  lineHeight: '1.875rem',
                 },
                 '& .MuiListItemText-secondary': {
                   fontSize: FontSize.base,
                   lineHeight: '1.25rem',
-                  color: BeanstalkPalette.lightishGrey
+                  color: BeanstalkPalette.lightishGrey,
                 },
               }}
             >
@@ -75,7 +88,9 @@ const PlotSelect: React.FC<PlotSelectProps> = ({ plots, harvestableIndex, handle
                 </ListItemIcon>
                 <ListItemText
                   primary="PODS"
-                  secondary={`Place in Line: ${displayBN(new BigNumber(index).minus(harvestableIndex))}`}
+                  secondary={`Place in Line: ${displayBN(
+                    new BigNumber(index).minus(harvestableIndex)
+                  )}`}
                   sx={{ my: 0 }}
                 />
               </ListItemButton>

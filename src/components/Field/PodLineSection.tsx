@@ -19,7 +19,7 @@ const PodLineSection: React.FC<PodLineSectionProps> = ({
   numPodsTitle,
   podLine,
   harvestableIndex,
-  plots
+  plots,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -32,7 +32,11 @@ const PodLineSection: React.FC<PodLineSectionProps> = ({
         borderRadius: 1.5,
       }}
     >
-      <Stack direction={isMobile ? 'column' : 'row'} gap={2} alignItems={isMobile ? 'left' : 'center'}>
+      <Stack
+        direction={isMobile ? 'column' : 'row'}
+        gap={2}
+        alignItems={isMobile ? 'left' : 'center'}
+      >
         <Stack width={isMobile ? '100%' : '20%'} gap={0.5}>
           <Typography variant="h4">{numPodsTitle}</Typography>
           <Typography variant="h1">{displayBN(numPodsDisplay)}</Typography>

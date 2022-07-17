@@ -1,8 +1,11 @@
 import { TESTNET_CHAINS, SupportedChainId } from 'constants/index';
 
-export type ConstantByChain = { [key: number] : any };
+export type ConstantByChain = { [key: number]: any };
 
-export function getChainConstant<T extends ConstantByChain>(map: T, chainId?: SupportedChainId) : T[keyof T] {
+export function getChainConstant<T extends ConstantByChain>(
+  map: T,
+  chainId?: SupportedChainId
+): T[keyof T] {
   // If no chain available, use the value for MAINNET.
   if (!chainId || !SupportedChainId[chainId]) {
     return map[SupportedChainId.MAINNET];

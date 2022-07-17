@@ -4,11 +4,14 @@ import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { BeanstalkPalette } from '../App/muiTheme';
 import { tableStyle } from '../Common/Table/styles';
 
-export type SeasonsTableProps = {}
+export type SeasonsTableProps = {};
 
 const MAX_ROWS = 5;
 
-const SeasonsTable: React.FC<SeasonsTableProps & DataGridProps> = ({ columns, rows }) => {
+const SeasonsTable: React.FC<SeasonsTableProps & DataGridProps> = ({
+  columns,
+  rows,
+}) => {
   const tableHeight = useMemo(() => {
     if (!rows || rows.length === 0) return '200px';
     return Math.min(rows.length, MAX_ROWS) * 40 + 112;
@@ -27,8 +30,9 @@ const SeasonsTable: React.FC<SeasonsTableProps & DataGridProps> = ({ columns, ro
           '& .MuiDataGrid-columnHeadersInner': {
             borderBottom: 2, // TODO: why 2 here but 1 above?
             borderColor: BeanstalkPalette.lightBlue,
-          }
-        }}>
+          },
+        }}
+      >
         <DataGrid
           columns={columns}
           rows={rows}

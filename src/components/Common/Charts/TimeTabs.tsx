@@ -18,13 +18,10 @@ export interface TimeTabProps {
   setState: (i: number[]) => void;
 }
 
-const TimeTabs: React.FC<
-  TimeTabProps & 
-  StackProps
-> = ({ 
-  sx, 
-  setState, 
-  tab 
+const TimeTabs: React.FC<TimeTabProps & StackProps> = ({
+  sx,
+  setState,
+  tab,
 }) => {
   const handleChangeX = (i: number) => {
     setState([i, tab[1]]);
@@ -50,16 +47,23 @@ const TimeTabs: React.FC<
             minWidth: 0,
             '&:hover': {
               // backgroundColor: 'transparent'
-            }
+            },
           }}
           disableRipple
         >
-          <Typography color={tab[0] === d.index ? BeanstalkPalette.logoGreen : 'text.primary'}>
+          <Typography
+            color={
+              tab[0] === d.index ? BeanstalkPalette.logoGreen : 'text.primary'
+            }
+          >
             {d.label}
           </Typography>
         </Button>
       ))}
-      <Divider orientation="vertical" sx={{ height: '14px', ml: 0.1, mr: 0.1 }} />
+      <Divider
+        orientation="vertical"
+        sx={{ height: '14px', ml: 0.1, mr: 0.1 }}
+      />
       {WINDOWS.map((w) => (
         <Button
           onClick={() => handleChangeY(w.index)}
@@ -74,11 +78,15 @@ const TimeTabs: React.FC<
             minWidth: 0,
             '&:hover': {
               // backgroundColor: 'transparent'
-            }
+            },
           }}
           disableRipple
         >
-          <Typography color={tab[1] === w.index ? BeanstalkPalette.logoGreen : 'text.primary'}>
+          <Typography
+            color={
+              tab[1] === w.index ? BeanstalkPalette.logoGreen : 'text.primary'
+            }
+          >
             {w.label}
           </Typography>
         </Button>

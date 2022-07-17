@@ -6,9 +6,9 @@ import React from 'react';
 
 export type SendFormValues = {
   to?: string;
-}
+};
 
-const SendForm : React.FC<FormikProps<SendFormValues>> = (props) => (
+const SendForm: React.FC<FormikProps<SendFormValues>> = (props) => (
   <Form autoComplete="off">
     <Stack gap={1}>
       <FieldWrapper label="Send Deposits to">
@@ -19,16 +19,14 @@ const SendForm : React.FC<FormikProps<SendFormValues>> = (props) => (
       </Button>
     </Stack>
   </Form>
-  );
+);
 
-const Send : React.FC<{}> = () => (
+const Send: React.FC<{}> = () => (
   <Formik initialValues={{ to: '' }} onSubmit={() => {}}>
     {(formikProps: FormikProps<SendFormValues>) => (
-      <SendForm
-        {...formikProps}
-        />
-      )}
+      <SendForm {...formikProps} />
+    )}
   </Formik>
-  );
+);
 
 export default Send;

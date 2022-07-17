@@ -3,7 +3,15 @@ import { Box, Stack, Typography } from '@mui/material';
 import groupBy from 'lodash/groupBy';
 import { SEEDS, STALK, USDC, SPROUTS } from 'constants/tokens';
 import TokenIcon from 'components/Common/TokenIcon';
-import { Action, ActionType, SiloDepositAction, parseActionMessage, SwapAction, SiloRewardsAction, SiloTransitAction } from 'util/Actions';
+import {
+  Action,
+  ActionType,
+  SiloDepositAction,
+  parseActionMessage,
+  SwapAction,
+  SiloRewardsAction,
+  SiloTransitAction,
+} from 'util/Actions';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import Token from 'classes/Token';
 import { FERTILIZER_ICONS } from 'components/Barn/FertilizerImage';
@@ -12,12 +20,20 @@ import siloIcon from 'img/beanstalk/silo-icon.svg';
 
 // -----------------------------------------------------------------------
 
-const IconRow : React.FC<{ spacing?: number }> = ({ children, spacing = 0.75 }) => (
-  <Stack direction="row" alignItems="center" sx={{ height: '100%' }} spacing={spacing}>
+const IconRow: React.FC<{ spacing?: number }> = ({
+  children,
+  spacing = 0.75,
+}) => (
+  <Stack
+    direction="row"
+    alignItems="center"
+    sx={{ height: '100%' }}
+    spacing={spacing}
+  >
     {children}
   </Stack>
 );
-const ActionTokenImage : React.FC<{ token: Token }> = ({ token }) => (
+const ActionTokenImage: React.FC<{ token: Token }> = ({ token }) => (
   <img
     key={token.address}
     src={token.logo}
@@ -26,33 +42,41 @@ const ActionTokenImage : React.FC<{ token: Token }> = ({ token }) => (
   />
 );
 
-const SwapStep : React.FC<{ actions: SwapAction[] }> = ({ actions }) => {
-  const data = actions.reduce((agg, a) => {
-    if (!agg.in.addrs.has(a.tokenIn.address)) {
-      agg.in.addrs.add(a.tokenIn.address);
-      agg.in.elems.push(
-        <ActionTokenImage key={a.tokenIn.address} token={a.tokenIn} />
-      );
-    }
-    if (!agg.out.addrs.has(a.tokenOut.address)) {
-      agg.out.addrs.add(a.tokenOut.address);
-      agg.out.elems.push(
-        <ActionTokenImage key={a.tokenOut.address} token={a.tokenOut} />
-      );
-    }
-    return agg;
-  }, {
-    in: {
-      addrs: new Set<string>(),
-      elems: [] as JSX.Element[],
+const SwapStep: React.FC<{ actions: SwapAction[] }> = ({ actions }) => {
+  const data = actions.reduce(
+    (agg, a) => {
+      if (!agg.in.addrs.has(a.tokenIn.address)) {
+        agg.in.addrs.add(a.tokenIn.address);
+        agg.in.elems.push(
+          <ActionTokenImage key={a.tokenIn.address} token={a.tokenIn} />
+        );
+      }
+      if (!agg.out.addrs.has(a.tokenOut.address)) {
+        agg.out.addrs.add(a.tokenOut.address);
+        agg.out.elems.push(
+          <ActionTokenImage key={a.tokenOut.address} token={a.tokenOut} />
+        );
+      }
+      return agg;
     },
-    out: {
-      addrs: new Set<string>(),
-      elems: [] as JSX.Element[],
+    {
+      in: {
+        addrs: new Set<string>(),
+        elems: [] as JSX.Element[],
+      },
+      out: {
+        addrs: new Set<string>(),
+        elems: [] as JSX.Element[],
+      },
     }
-  });
+  );
   return (
-    <Stack direction="row" alignItems="center" sx={{ height: '100%' }} spacing={0.33}>
+    <Stack
+      direction="row"
+      alignItems="center"
+      sx={{ height: '100%' }}
+      spacing={0.33}
+    >
       {data.in.elems}
       <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
       {data.out.elems}
@@ -60,22 +84,16 @@ const SwapStep : React.FC<{ actions: SwapAction[] }> = ({ actions }) => {
   );
 };
 
-const TxnStep : React.FC<{
+const TxnStep: React.FC<{
   type: ActionType;
   actions: Action[];
   highlighted: ActionType | undefined;
-}> = ({
-  type, 
-  actions,
-  highlighted,
-}) => {
+}> = ({ type, actions, highlighted }) => {
   let action;
   switch (type) {
     /// SWAP
     case ActionType.SWAP:
-      action = (
-        <SwapStep actions={actions as SwapAction[]} />
-      );
+      action = <SwapStep actions={actions as SwapAction[]} />;
       break;
     /// SILO
     case ActionType.DEPOSIT:
@@ -92,7 +110,9 @@ const TxnStep : React.FC<{
     case ActionType.UPDATE_SILO_REWARDS:
       action = (
         <IconRow spacing={0}>
-          <Typography fontWeight="bold" sx={{ fontSize: 20 }}>{(actions[0] as SiloRewardsAction).stalk.lt(0) ? '🔥' : '+'}</Typography>
+          <Typography fontWeight="bold" sx={{ fontSize: 20 }}>
+            {(actions[0] as SiloRewardsAction).stalk.lt(0) ? '🔥' : '+'}
+          </Typography>
           <TokenIcon token={STALK} style={{ height: '100%' }} />
           <TokenIcon token={SEEDS} style={{ height: '100%' }} />
         </IconRow>
@@ -109,18 +129,29 @@ const TxnStep : React.FC<{
     case ActionType.BUY_FERTILIZER:
       action = (
         <IconRow>
-          <TokenIcon token={USDC[SupportedChainId.MAINNET]} style={{ height: '100%', marginTop: 0, }} />
+          <TokenIcon
+            token={USDC[SupportedChainId.MAINNET]}
+            style={{ height: '100%', marginTop: 0 }}
+          />
           <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
-          <img src={FERTILIZER_ICONS.unused} alt="FERT" style={{ height: '100%' }} />
+          <img
+            src={FERTILIZER_ICONS.unused}
+            alt="FERT"
+            style={{ height: '100%' }}
+          />
         </IconRow>
       );
       break;
     case ActionType.RECEIVE_FERT_REWARDS:
       action = (
         <IconRow>
-          <img src={FERTILIZER_ICONS.active} alt="FERT" style={{ height: '100%' }} />
+          <img
+            src={FERTILIZER_ICONS.active}
+            alt="FERT"
+            style={{ height: '100%' }}
+          />
           <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
-          <TokenIcon token={SPROUTS} style={{ height: '100%', marginTop: 0, }} />
+          <TokenIcon token={SPROUTS} style={{ height: '100%', marginTop: 0 }} />
         </IconRow>
       );
       break;
@@ -129,30 +160,35 @@ const TxnStep : React.FC<{
   }
 
   return (
-    <Box sx={{ 
-      width: '80px', 
-      height: '100%', // of TXN_PREVIEW_HEIGHT
-      textAlign: 'center',
-      '&:first-child': {
-        textAlign: 'left',
-      },
-      '&:last-child': {
-        textAlign: 'right',
-      }
-    }}>
-      <Box sx={{
-        height: '100%',
-        display: 'inline-block',
-        py: 0.5,
-        px: 0.5,
-        mx: 'auto',
-        background: 'white',
-      }}>
+    <Box
+      sx={{
+        width: '80px',
+        height: '100%', // of TXN_PREVIEW_HEIGHT
+        textAlign: 'center',
+        '&:first-child': {
+          textAlign: 'left',
+        },
+        '&:last-child': {
+          textAlign: 'right',
+        },
+      }}
+    >
+      <Box
+        sx={{
+          height: '100%',
+          display: 'inline-block',
+          py: 0.5,
+          px: 0.5,
+          mx: 'auto',
+          background: 'white',
+        }}
+      >
         <Box
           display="inline-block"
           sx={{
             height: '100%',
-            opacity: (highlighted === undefined || highlighted === type) ? 1 : 0.2,
+            opacity:
+              highlighted === undefined || highlighted === type ? 1 : 0.2,
           }}
         >
           {action}
@@ -183,25 +219,29 @@ const EXECUTION_STEPS = [
 const TXN_PREVIEW_HEIGHT = 35;
 const TXN_PREVIEW_LINE_WIDTH = 5;
 
-const TxnPreview : React.FC<{ 
-  actions: Action[]
-}> = ({
-  actions
-}) => {
-  const instructionsByType = useMemo(() =>
-    // actions.reduce((prev, curr) => {
-    //   if (curr.type !== ActionType.BASE) {
-    //     prev.grouped[curr.type] = curr;
+const TxnPreview: React.FC<{
+  actions: Action[];
+}> = ({ actions }) => {
+  const instructionsByType = useMemo(
+    () =>
+      // actions.reduce((prev, curr) => {
+      //   if (curr.type !== ActionType.BASE) {
+      //     prev.grouped[curr.type] = curr;
 
-    //   }
-    //   return prev;
-    // }, { grouped: {}, total: 0 }),
-    // [actions]
-    groupBy(actions.filter((a) => a.type !== ActionType.BASE), 'type'),
+      //   }
+      //   return prev;
+      // }, { grouped: {}, total: 0 }),
+      // [actions]
+      groupBy(
+        actions.filter((a) => a.type !== ActionType.BASE),
+        'type'
+      ),
     [actions]
   );
   const instructionGroupCount = Object.keys(instructionsByType).length;
-  const [highlighted, setHighlighted] = useState<ActionType | undefined>(undefined);
+  const [highlighted, setHighlighted] = useState<ActionType | undefined>(
+    undefined
+  );
 
   if (actions.length === 0) {
     return (
@@ -214,10 +254,12 @@ const TxnPreview : React.FC<{
   return (
     <Stack gap={2}>
       {instructionGroupCount > 1 ? (
-        <Box sx={{
-          position: 'relative',
-          height: `${TXN_PREVIEW_HEIGHT}px`,
-        }}>
+        <Box
+          sx={{
+            position: 'relative',
+            height: `${TXN_PREVIEW_HEIGHT}px`,
+          }}
+        >
           {/* Dotted line */}
           <Box
             sx={{
@@ -232,31 +274,33 @@ const TxnPreview : React.FC<{
             }}
           />
           {/* Content */}
-          <Box sx={{
-            position: 'relative',
-            zIndex: 2,      // above the Divider
-            height: '100%'  // of TXN_PREVIEW_HEIGHT
-          }}>
+          <Box
+            sx={{
+              position: 'relative',
+              zIndex: 2, // above the Divider
+              height: '100%', // of TXN_PREVIEW_HEIGHT
+            }}
+          >
             {/* Distribute content equally spaced
-              * across the entire container */}
-            <Stack 
+             * across the entire container */}
+            <Stack
               direction="row"
               justifyContent="space-between"
               alignItems="center"
               sx={{
-                height: '100%' // of TXN_PREVIEW_HEIGHT
+                height: '100%', // of TXN_PREVIEW_HEIGHT
               }}
             >
-              {EXECUTION_STEPS.map((step, index) => (
+              {EXECUTION_STEPS.map((step, index) =>
                 instructionsByType[step] ? (
                   <TxnStep
                     key={index}
                     type={step}
                     actions={instructionsByType[step]}
                     highlighted={highlighted}
-                  /> 
-                ) : null 
-              ))}
+                  />
+                ) : null
+              )}
             </Stack>
           </Box>
         </Box>
@@ -267,8 +311,9 @@ const TxnPreview : React.FC<{
           <Box
             key={index}
             sx={{
-              opacity: (highlighted === undefined || a.type === highlighted) ? 1 : 0.3,
-              cursor: 'pointer'
+              opacity:
+                highlighted === undefined || a.type === highlighted ? 1 : 0.3,
+              cursor: 'pointer',
             }}
             onMouseOver={() => setHighlighted(a.type)}
             onMouseOut={() => setHighlighted(undefined)}

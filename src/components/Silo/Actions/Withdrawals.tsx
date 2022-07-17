@@ -13,19 +13,16 @@ import TableCard from '../../Common/TableCard';
 
 type RowData = WithdrawalCrate & { id: BigNumber };
 
-const Withdrawals : React.FC<{
+const Withdrawals: React.FC<{
   token: Token;
   balance: FarmerSiloBalance | undefined;
-}> = ({
-  token,
-  balance,
-}) => {
+}> = ({ token, balance }) => {
   const getUSD = useSiloTokenToUSD();
   const currentSeason = useSeason();
   const { data: account } = useAccount();
 
-  const rows : RowData[] = useMemo(() => {
-    const data : RowData[] = [];
+  const rows: RowData[] = useMemo(() => {
+    const data: RowData[] = [];
     if (balance) {
       if (balance.claimable.amount.gt(0)) {
         data.push({
@@ -36,72 +33,78 @@ const Withdrawals : React.FC<{
       }
       if (balance.withdrawn?.crates?.length > 0) {
         data.push(
-          ...(balance.withdrawn.crates.map((crate) => ({
+          ...balance.withdrawn.crates.map((crate) => ({
             id: crate.season,
-            ...crate
-          })))
+            ...crate,
+          }))
         );
       }
     }
     return data;
-  }, [
-    balance,
-    currentSeason,
-  ]);
+  }, [balance, currentSeason]);
 
-  const columns = useMemo(() => ([
-    {
-      field: 'season',
-      flex: 1,
-      headerName: 'Seasons to Arrival',
-      align: 'left',
-      headerAlign: 'left',
-      valueParser: (value: BigNumber) => value.toNumber(),
-      renderCell: (params) => {
-        const seasonsToArrival = params.value.minus(currentSeason);
-        return seasonsToArrival.lte(0) ? (
-          <Typography color="primary">Claimable</Typography>
-        ) : (
-          <Typography>{seasonsToArrival.toFixed()}</Typography>
-        );
-      },
-      sortable: false,
-    },
-    {
-      field: 'amount',
-      flex: 2,
-      headerName: 'Withdrawn',
-      align: 'right',
-      headerAlign: 'right',
-      // valueFormatter: (params) => displayFullBN(params.value, token.displayDecimals, token.displayDecimals),
-      renderCell: (params) => (
-        <Tooltip
-          title={(
-            <>
-              Tooltip
-              {/* <Typography>BDV: {displayBN(params.row.bdv)}</Typography>
+  const columns = useMemo(
+    () =>
+      [
+        {
+          field: 'season',
+          flex: 1,
+          headerName: 'Seasons to Arrival',
+          align: 'left',
+          headerAlign: 'left',
+          valueParser: (value: BigNumber) => value.toNumber(),
+          renderCell: (params) => {
+            const seasonsToArrival = params.value.minus(currentSeason);
+            return seasonsToArrival.lte(0) ? (
+              <Typography color="primary">Claimable</Typography>
+            ) : (
+              <Typography>{seasonsToArrival.toFixed()}</Typography>
+            );
+          },
+          sortable: false,
+        },
+        {
+          field: 'amount',
+          flex: 2,
+          headerName: 'Withdrawn',
+          align: 'right',
+          headerAlign: 'right',
+          // valueFormatter: (params) => displayFullBN(params.value, token.displayDecimals, token.displayDecimals),
+          renderCell: (params) => (
+            <Tooltip
+              title={
+                <>
+                  Tooltip
+                  {/* <Typography>BDV: {displayBN(params.row.bdv)}</Typography>
               <Typography>Value: ${displayBN(getUSD(Bean, params.row.bdv))}</Typography> */}
-            </>
-          )}
-        >
-          <Typography>
-            {displayFullBN(params.value, token.displayDecimals, token.displayDecimals)} 
-            <Typography display="inline" color="text.secondary">
-              {' '}(~{displayUSD(getUSD(token, params.row.amount))})
-            </Typography>
-          </Typography>
-        </Tooltip>
-      ),
-      sortable: false,
-    },
-  ] as GridColumns), [
-    token,
-    getUSD,
-    currentSeason
-  ]);
+                </>
+              }
+            >
+              <Typography>
+                {displayFullBN(
+                  params.value,
+                  token.displayDecimals,
+                  token.displayDecimals
+                )}
+                <Typography display="inline" color="text.secondary">
+                  {' '}
+                  (~{displayUSD(getUSD(token, params.row.amount))})
+                </Typography>
+              </Typography>
+            </Tooltip>
+          ),
+          sortable: false,
+        },
+      ] as GridColumns,
+    [token, getUSD, currentSeason]
+  );
 
   const amount = balance?.withdrawn.amount;
-  const state = !account ? 'disconnected' : !currentSeason ? 'loading' : 'ready';
+  const state = !account
+    ? 'disconnected'
+    : !currentSeason
+    ? 'loading'
+    : 'ready';
 
   return (
     <TableCard

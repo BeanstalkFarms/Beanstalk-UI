@@ -1,5 +1,13 @@
 import React, { useCallback, useMemo } from 'react';
-import { Accordion, AccordionDetails, Box, Button, Stack, Tooltip, Typography } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  Box,
+  Button,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useAccount, useProvider } from 'wagmi';
@@ -21,13 +29,20 @@ import {
   TokenQuoteProvider,
   TokenSelectDialog,
   TxnPreview,
-  TxnSeparator
+  TxnSeparator,
 } from 'components/Common/Form';
 import { BeanstalkReplanted } from 'generated/index';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import useGetChainToken from 'hooks/useGetChainToken';
 import { ZERO_BN } from 'constants/index';
-import { displayBN, displayFullBN, displayTokenAmount, parseError, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
+import {
+  displayBN,
+  displayFullBN,
+  displayTokenAmount,
+  parseError,
+  toStringBaseUnitBN,
+  toTokenUnitsBN,
+} from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
 import useToggle from 'hooks/display/useToggle';
 import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
@@ -46,11 +61,11 @@ type HarvestFormValues = {
   token: FormTokenState;
   destination: FarmToMode;
   tokenOut: ERC20Token;
-}
+};
 
 // -----------------------------------------------------------------------
 
-const HarvestForm : React.FC<
+const HarvestForm: React.FC<
   FormikProps<HarvestFormValues> & {
     token: Token;
     harvestablePods: BigNumber;
@@ -74,28 +89,24 @@ const HarvestForm : React.FC<
   // ASSUMPTION: Pool address === LP Token address
   // Lazy way to do this. Should key pools by lpToken.address.
   const pool = pools[token.address];
-  const claimableTokens = useMemo(() => ([
-    token,
-    ...(token.isLP && pool?.tokens || []),
-  ]), [pool, token]);
+  const claimableTokens = useMemo(
+    () => [token, ...((token.isLP && pool?.tokens) || [])],
+    [pool, token]
+  );
 
   //
   const amount = harvestablePods;
-  const isSubmittable = (
-    amount
-    && amount.gt(0)
-    && values.destination !== undefined
-  );
-  const destination = (
+  const isSubmittable =
+    amount && amount.gt(0) && values.destination !== undefined;
+  const destination =
     values.destination === FarmToMode.EXTERNAL
       ? 'to your wallet'
-      : 'to your internal balance'
-  );
+      : 'to your internal balance';
 
   // const handleQuote = () => {
   //
   // };
-  
+
   const handleQuote = useCallback<QuoteHandler>(
     async (_tokenIn, _amountIn, _tokenOut) => {
       if (_tokenIn === _tokenOut) return { amountOut: _amountIn };
@@ -110,19 +121,34 @@ const HarvestForm : React.FC<
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
 
   //
-  const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
-    const _token = Array.from(_tokens)[0];
-    setFieldValue('tokenOut', _token);
-  }, [setFieldValue]);
+  const handleSelectTokens = useCallback(
+    (_tokens: Set<Token>) => {
+      const _token = Array.from(_tokens)[0];
+      setFieldValue('tokenOut', _token);
+    },
+    [setFieldValue]
+  );
 
   // This should be memoized to prevent an infinite reset loop
-  const quoteSettings = useMemo(() => ({
-    ignoreSameToken: false,
-    onReset: () => ({ amountOut: harvestablePods }),
-  }), [harvestablePods]);
+  const quoteSettings = useMemo(
+    () => ({
+      ignoreSameToken: false,
+      onReset: () => ({ amountOut: harvestablePods }),
+    }),
+    [harvestablePods]
+  );
 
   return (
-    <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
+    <Tooltip
+      title={
+        isMainnet ? (
+          <>Deposits will be available once Beanstalk is Replanted.</>
+        ) : (
+          ''
+        )
+      }
+      followCursor
+    >
       <Form noValidate>
         <Stack gap={1}>
           {/* Form Content */}
@@ -147,14 +173,13 @@ const HarvestForm : React.FC<
               hideQuote
             />
             {/* Setting: Destination */}
-            <DestinationField
-              name="destination"
-            />
+            <DestinationField name="destination" />
             {/* Setting: Claim LP */}
             <PillRow
               isOpen={isTokenSelectVisible}
               label="Deposit as"
-              onClick={showTokenSelect}>
+              onClick={showTokenSelect}
+            >
               <TokenIcon token={values.tokenOut} />
               <Typography variant="body1">{values.tokenOut.name}</Typography>
             </PillRow>
@@ -185,23 +210,33 @@ const HarvestForm : React.FC<
                     actions={[
                       {
                         type: ActionType.BASE,
-                        message: `Claim ${displayTokenAmount(amount, token)}.`
+                        message: `Claim ${displayTokenAmount(amount, token)}.`,
                       },
                       {
                         type: ActionType.BASE,
-                        message: values.tokenOut === token ? (
-                          `Unpack ${displayTokenAmount(amount, token)} into 3CRV and send ${destination}.`
-                        ) : (
-                          `Send ${displayTokenAmount(amount, token)} and send ${destination}.`
-                        )
-                      }
+                        message:
+                          values.tokenOut === token
+                            ? `Unpack ${displayTokenAmount(
+                                amount,
+                                token
+                              )} into 3CRV and send ${destination}.`
+                            : `Send ${displayTokenAmount(
+                                amount,
+                                token
+                              )} and send ${destination}.`,
+                      },
                     ]}
                   />
                 </AccordionDetails>
               </Accordion>
             </Box>
           </>
-          <Button disabled={!isSubmittable || isSubmitting || isMainnet} type="submit" size="large" fullWidth>
+          <Button
+            disabled={!isSubmittable || isSubmitting || isMainnet}
+            type="submit"
+            size="large"
+            fullWidth
+          >
             Harvest
           </Button>
         </Stack>
@@ -212,51 +247,71 @@ const HarvestForm : React.FC<
 
 // -----------------------------------------------------------------------
 
-const Harvest : React.FC<{}> = () => {
+const Harvest: React.FC<{}> = () => {
   const { data: account } = useAccount();
   const provider = useProvider();
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(
+    signer
+  ) as unknown as BeanstalkReplanted;
   const farm = useMemo(() => new Farm(provider), [provider]);
-  
-  const farmerField  = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
+
+  const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
+    (state) => state._farmer.field
+  );
 
   // Form
-  const initialValues : HarvestFormValues = useMemo(() => ({
-    destination: FarmToMode.INTERNAL,
-    tokenOut: BEAN_CRV3_LP[1],
-    token: {
-      token: BEAN[1],
-      amount: farmerField.harvestablePods,
-      amountOut: farmerField.harvestablePods
-    }
-  }), [farmerField.harvestablePods]);
+  const initialValues: HarvestFormValues = useMemo(
+    () => ({
+      destination: FarmToMode.INTERNAL,
+      tokenOut: BEAN_CRV3_LP[1],
+      token: {
+        token: BEAN[1],
+        amount: farmerField.harvestablePods,
+        amountOut: farmerField.harvestablePods,
+      },
+    }),
+    [farmerField.harvestablePods]
+  );
 
-  const onSubmit = useCallback(async (values: HarvestFormValues, formActions: FormikHelpers<HarvestFormValues>) => {
-    let txToast;
-    try {
-      if (!farmerField.harvestablePods.gt(0)) throw new Error('No Harvestable Pods.');
-      if (!farmerField.harvestablePlots) throw new Error('No Harvestable Plots.');
-      if (!account?.address) throw new Error('Connect a wallet first.');
+  const onSubmit = useCallback(
+    async (
+      values: HarvestFormValues,
+      formActions: FormikHelpers<HarvestFormValues>
+    ) => {
+      let txToast;
+      try {
+        if (!farmerField.harvestablePods.gt(0))
+          throw new Error('No Harvestable Pods.');
+        if (!farmerField.harvestablePlots)
+          throw new Error('No Harvestable Plots.');
+        if (!account?.address) throw new Error('Connect a wallet first.');
 
-      txToast = new TransactionToast({
-        loading: `Harvesting ${displayBN(farmerField.harvestablePods)} pods.`,
-        success: 'Harvest successful.',
-      });
+        txToast = new TransactionToast({
+          loading: `Harvesting ${displayBN(farmerField.harvestablePods)} pods.`,
+          success: 'Harvest successful.',
+        });
 
-      const txn = await beanstalk.harvest(
-        Object.keys(farmerField.harvestablePlots),
-        values.destination
-      );
+        const txn = await beanstalk.harvest(
+          Object.keys(farmerField.harvestablePlots),
+          values.destination
+        );
 
-      txToast.confirming(txn);
+        txToast.confirming(txn);
 
-      const receipt = await txn.wait();
-      txToast.success(receipt);
-    } catch (err) {
-      txToast ? txToast.error(err) : toast.error(parseError(err));
-    }
-  }, [account?.address, beanstalk, farmerField.harvestablePlots, farmerField.harvestablePods]);
+        const receipt = await txn.wait();
+        txToast.success(receipt);
+      } catch (err) {
+        txToast ? txToast.error(err) : toast.error(parseError(err));
+      }
+    },
+    [
+      account?.address,
+      beanstalk,
+      farmerField.harvestablePlots,
+      farmerField.harvestablePods,
+    ]
+  );
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>

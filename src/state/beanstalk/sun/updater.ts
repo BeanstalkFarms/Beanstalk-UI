@@ -13,10 +13,10 @@ export const useSun = () => {
   const fetch = useCallback(async () => {
     try {
       if (beanstalk) {
-        console.debug(`[beanstalk/sun/useSun] FETCH (contract = ${beanstalk.address})`);
-        const [
-          season
-        ] = await Promise.all([
+        console.debug(
+          `[beanstalk/sun/useSun] FETCH (contract = ${beanstalk.address})`
+        );
+        const [season] = await Promise.all([
           beanstalk.season().then(bigNumberResult),
         ] as const);
 
@@ -27,11 +27,8 @@ export const useSun = () => {
       console.debug('[beanstalk/sun/useSun] FAILED', e);
       console.error(e);
     }
-  }, [
-    dispatch,
-    beanstalk,
-  ]);
-  
+  }, [dispatch, beanstalk]);
+
   const clear = useCallback(() => {
     console.debug('[farmer/silo/useSun] clear');
     dispatch(resetSun());
@@ -43,7 +40,10 @@ export const useSun = () => {
 const SunUpdater = () => {
   const [fetch, clear] = useSun();
   const dispatch = useDispatch();
-  const { season, sunrise } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
+  const { season, sunrise } = useSelector<
+    AppState,
+    AppState['_beanstalk']['sun']
+  >((state) => state._beanstalk.sun);
   const { awaiting } = sunrise;
 
   // Update sunrise timer
@@ -64,7 +64,10 @@ const SunUpdater = () => {
   // When the season changes
   useEffect(() => {
     if (awaiting) {
-      console.debug('[beanstalk/sun/updater] caught new season = ', season?.toNumber());
+      console.debug(
+        '[beanstalk/sun/updater] caught new season = ',
+        season?.toNumber()
+      );
       dispatch(setAwaitingSunrise(false));
     }
   }, [dispatch, awaiting, season]);
@@ -73,10 +76,7 @@ const SunUpdater = () => {
   useEffect(() => {
     clear();
     fetch();
-  }, [
-    fetch,
-    clear
-  ]);
+  }, [fetch, clear]);
 
   return null;
 };

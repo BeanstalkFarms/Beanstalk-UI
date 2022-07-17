@@ -4,21 +4,15 @@ import { BeanstalkPalette } from '../App/muiTheme';
 
 const GAP = 2;
 
-const DescriptionButton : React.FC<ButtonProps & {
-  title?: string;
-  description?: string;
-  icon?: React.ReactNode | string;
-  recommended?: boolean;
-  forceHover?: boolean;
-}> = ({
-  title,
-  description,
-  recommended,
-  forceHover,
-  icon,
-  sx,
-  ...props
-}) => (
+const DescriptionButton: React.FC<
+  ButtonProps & {
+    title?: string;
+    description?: string;
+    icon?: React.ReactNode | string;
+    recommended?: boolean;
+    forceHover?: boolean;
+  }
+> = ({ title, description, recommended, forceHover, icon, sx, ...props }) => (
   <Button
     variant="outlined"
     color="secondary"
@@ -35,21 +29,23 @@ const DescriptionButton : React.FC<ButtonProps & {
       backgroundColor: forceHover ? BeanstalkPalette.lightestBlue : null,
       '&:hover': {
         backgroundColor: forceHover ? BeanstalkPalette.lightestBlue : null,
-      }
+      },
     }}
   >
     <Stack>
       <Stack direction="row" gap={0.5} alignItems="center">
         {icon && (
           <Typography variant="bodyMedium" alignItems="center">
-            <Stack alignItems="center">
-              {icon}
-            </Stack>
+            <Stack alignItems="center">{icon}</Stack>
           </Typography>
         )}
         <Typography variant="bodyMedium">{title}</Typography>
         {recommended && (
-          <Typography variant="bodyMedium" fontWeight="fontWeightBold" sx={{ color: BeanstalkPalette.logoGreen }}>
+          <Typography
+            variant="bodyMedium"
+            fontWeight="fontWeightBold"
+            sx={{ color: BeanstalkPalette.logoGreen }}
+          >
             (Recommended)
           </Typography>
         )}

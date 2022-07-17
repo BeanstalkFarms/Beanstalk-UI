@@ -13,10 +13,9 @@ import { SupportedChainId } from 'constants/index';
 import useTabs from 'hooks/display/useTabs';
 
 const BarnraiseAnalytics: React.FC<{}> = () => {
-  const fertilizer = useSelector<
-    AppState,
-    AppState['_beanstalk']['barn']
-  >((state) => state._beanstalk.barn);
+  const fertilizer = useSelector<AppState, AppState['_beanstalk']['barn']>(
+    (state) => state._beanstalk.barn
+  );
 
   const chainId = useChainId();
   const [tab, handleChangeTab] = useTabs();
@@ -28,7 +27,7 @@ const BarnraiseAnalytics: React.FC<{}> = () => {
       </Container>
     );
   }
-  
+
   return (
     <Container maxWidth="lg">
       <Stack gap={2}>

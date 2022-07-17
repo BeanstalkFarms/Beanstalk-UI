@@ -14,10 +14,8 @@ export const setAwaitingSunrise = createAction<Sun['sunrise']['awaiting']>(
   'beanstalk/sun/setAwaitingSunrise'
 );
 
-export const setRemainingUntilSunrise = createAction<Sun['sunrise']['remaining']>(
-  'beanstalk/sun/setRemainingUntilSunrise'
-);
+export const setRemainingUntilSunrise = createAction<
+  Sun['sunrise']['remaining']
+>('beanstalk/sun/setRemainingUntilSunrise');
 
-export const resetSun = createAction(
-  'beanstalk/sun/reset'
-);
+export const resetSun = createAction('beanstalk/sun/reset');

@@ -7,29 +7,31 @@ export type SelectorCardProps = {
   description: string;
   handleClick: any;
   recommendOption?: boolean;
-}
+};
 
 const SelectorCard: React.FC<SelectorCardProps> = ({
   title,
   description,
   handleClick,
-  recommendOption
+  recommendOption,
 }) => (
   <Card
     sx={{
-        p: 2.5,
-        cursor: 'pointer',
-        '&:hover': {
-          backgroundColor: BeanstalkPalette.hoverBlue
-        }
-      }}
+      p: 2.5,
+      cursor: 'pointer',
+      '&:hover': {
+        backgroundColor: BeanstalkPalette.hoverBlue,
+      },
+    }}
     onClick={handleClick}
-    >
+  >
     <Stack justifyContent="center" alignItems="start" spacing={0.3}>
       <Stack direction="row" gap={0.3}>
         <Typography sx={{ fontSize: '20px' }}>{title}</Typography>
         {recommendOption && (
-          <Typography sx={{ fontSize: '15px', color: BeanstalkPalette.logoGreen }}>
+          <Typography
+            sx={{ fontSize: '15px', color: BeanstalkPalette.logoGreen }}
+          >
             (Recommended)
           </Typography>
         )}
@@ -39,6 +41,6 @@ const SelectorCard: React.FC<SelectorCardProps> = ({
       </Typography>
     </Stack>
   </Card>
-  );
+);
 
 export default SelectorCard;

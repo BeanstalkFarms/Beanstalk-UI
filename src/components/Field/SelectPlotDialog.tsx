@@ -22,7 +22,7 @@ const SelectPlotDialog: React.FC<SelectPlotDialogProps & DialogProps> = ({
   handlePlotSelect,
   handleClose,
   onClose,
-  open
+  open,
 }) => {
   // sets plot index then closes dialog
   const handleSelectAndClose = (index: string) => {
@@ -31,11 +31,7 @@ const SelectPlotDialog: React.FC<SelectPlotDialogProps & DialogProps> = ({
   };
 
   return (
-    <Dialog
-      onClose={onClose}
-      open={open}
-      fullWidth
-    >
+    <Dialog onClose={onClose} open={open} fullWidth>
       <StyledDialogTitle onClose={handleClose}>My Plots</StyledDialogTitle>
       <StyledDialogContent>
         <Stack gap={2}>
@@ -46,7 +42,9 @@ const SelectPlotDialog: React.FC<SelectPlotDialogProps & DialogProps> = ({
               harvestableIndex={beanstalkField?.harvestableIndex}
             />
           ) : (
-            <Typography sx={{ textAlign: 'center', pt: 1, pb: 4 }}>You don&apos;t have any plots to send!</Typography>
+            <Typography sx={{ textAlign: 'center', pt: 1, pb: 4 }}>
+              You don&apos;t have any plots to send!
+            </Typography>
           )}
         </Stack>
       </StyledDialogContent>

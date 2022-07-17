@@ -1,12 +1,12 @@
 import { createReducer } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
 import { getNextExpectedSunrise, Sun } from '.';
-import { 
+import {
   setNextSunrise,
   setRemainingUntilSunrise,
   setAwaitingSunrise,
   updateSeason,
-  resetSun
+  resetSun,
 } from './actions';
 
 const NEG1 = new BigNumber(-1);
@@ -19,11 +19,11 @@ const getInitialState = () => {
       awaiting: false,
       next: nextSunrise,
       remaining: nextSunrise.diffNow(),
-    }
+    },
   };
 };
 
-const initialState : Sun = getInitialState();
+const initialState: Sun = getInitialState();
 
 export default createReducer(initialState, (builder) =>
   builder

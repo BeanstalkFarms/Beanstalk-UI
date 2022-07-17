@@ -1,17 +1,35 @@
-import { Accordion, AccordionDetails, Box, Button, InputAdornment, Stack, Typography } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  Box,
+  Button,
+  InputAdornment,
+  Stack,
+  Typography,
+} from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
   FormState,
   FormTokenState,
-  SettingInput, TokenOutputField,
+  SettingInput,
+  TokenOutputField,
   TokenQuoteProvider,
-  TokenSelectDialog, TxnPreview, TxnSeparator,
-  TxnSettings
+  TokenSelectDialog,
+  TxnPreview,
+  TxnSeparator,
+  TxnSettings,
 } from 'components/Common/Form';
 import { SupportedChainId, ZERO_BN } from 'constants/index';
 import { BEAN, ETH, PODS } from 'constants/tokens';
-import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import {
+  Field,
+  FieldProps,
+  Form,
+  Formik,
+  FormikHelpers,
+  FormikProps,
+} from 'formik';
 import useChainId from 'hooks/useChain';
 import useChainConstant from 'hooks/useChainConstant';
 import useFarmerBalances from 'hooks/useFarmerBalances';
@@ -32,11 +50,10 @@ import { PodListing } from '../Plots.mock';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 
-export type BuyNowFormValues = FormState
+export type BuyNowFormValues = FormState;
 
-const BuyNowForm : React.FC<
-  FormikProps<BuyNowFormValues>
-  & {
+const BuyNowForm: React.FC<
+  FormikProps<BuyNowFormValues> & {
     token: ERC20Token | NativeToken;
     podListing: PodListing;
   }
@@ -54,36 +71,47 @@ const BuyNowForm : React.FC<
   const curve = useCurve();
   const handleClose = useCallback(() => setShowTokenSelect(false), []);
   const handleOpen = useCallback(() => setShowTokenSelect(true), []);
-  const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
-    // If the user has typed some existing values in,
-    // save them. Add new tokens to the end of the list.
-    // FIXME: match sorting of erc20TokenList
-    const copy = new Set(_tokens);
-    const v = values.tokens.filter((x) => {
-      copy.delete(x.token);
-      return _tokens.has(x.token);
-    });
-    setFieldValue('tokens', [
-      ...v,
-      ...Array.from(copy).map((_token) => ({ token: _token, amount: undefined })),
-    ]);
-  }, [values.tokens, setFieldValue]);
+  const handleSelectTokens = useCallback(
+    (_tokens: Set<Token>) => {
+      // If the user has typed some existing values in,
+      // save them. Add new tokens to the end of the list.
+      // FIXME: match sorting of erc20TokenList
+      const copy = new Set(_tokens);
+      const v = values.tokens.filter((x) => {
+        copy.delete(x.token);
+        return _tokens.has(x.token);
+      });
+      setFieldValue('tokens', [
+        ...v,
+        ...Array.from(copy).map((_token) => ({
+          token: _token,
+          amount: undefined,
+        })),
+      ]);
+    },
+    [values.tokens, setFieldValue]
+  );
 
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
     (state) => state._beanstalk.field
   );
 
-  const handleQuote = useCallback<QuoteHandler>((tokenIn, amountIn, tokenOut): Promise<BigNumber> => {
-    console.debug('[handleQuote] curve: ', curve);
-    if (curve) {
-      return curve.router.getBestRouteAndOutput(
-        tokenIn.address,
-        tokenOut.address,
-        toStringBaseUnitBN(amountIn, tokenIn.decimals),
-      ).then((result) => toTokenUnitsBN(result.output, tokenOut.decimals));
-    }
-    return Promise.reject();
-  }, [curve]);
+  const handleQuote = useCallback<QuoteHandler>(
+    (tokenIn, amountIn, tokenOut): Promise<BigNumber> => {
+      console.debug('[handleQuote] curve: ', curve);
+      if (curve) {
+        return curve.router
+          .getBestRouteAndOutput(
+            tokenIn.address,
+            tokenOut.address,
+            toStringBaseUnitBN(amountIn, tokenIn.decimals)
+          )
+          .then((result) => toTokenUnitsBN(result.output, tokenOut.decimals));
+      }
+      return Promise.reject();
+    },
+    [curve]
+  );
 
   const balances = useFarmerBalances();
   const erc20TokenMap = useTokenMap([BEAN, ETH, depositToken]);
@@ -121,29 +149,31 @@ const BuyNowForm : React.FC<
         <TxnSeparator mt={0} />
         <Stack direction="row" justifyContent="space-between" sx={{ p: 1 }}>
           <Typography variant="body1">Place in Pod Line:</Typography>
-          <Typography variant="body1">{displayBN(podListing.index.minus(beanstalkField.harvestableIndex))}</Typography>
+          <Typography variant="body1">
+            {displayBN(podListing.index.minus(beanstalkField.harvestableIndex))}
+          </Typography>
         </Stack>
         <TokenOutputField
           token={PODS}
           amount={podListing.remainingAmount}
           isLoading={false}
-          />
+        />
         <Box>
           <Accordion variant="outlined">
             <StyledAccordionSummary title="Transaction Details" />
             <AccordionDetails>
               <TxnPreview
                 actions={[
-                    {
-                      type: ActionType.BASE,
-                      message: 'DO SOMETHING'
-                    },
-                    {
-                      type: ActionType.BASE,
-                      message: 'DO SOMETHING!'
-                    }
-                  ]}
-                />
+                  {
+                    type: ActionType.BASE,
+                    message: 'DO SOMETHING',
+                  },
+                  {
+                    type: ActionType.BASE,
+                    message: 'DO SOMETHING!',
+                  },
+                ]}
+              />
             </AccordionDetails>
           </Accordion>
         </Box>
@@ -157,31 +187,41 @@ const BuyNowForm : React.FC<
 
 // ---------------------------------------------------
 
-const BuyNow : React.FC<{podListing: PodListing}> = ({ podListing }) => {
+const BuyNow: React.FC<{ podListing: PodListing }> = ({ podListing }) => {
   const Eth = useChainConstant(ETH);
 
-  const initialValues: BuyNowFormValues = useMemo(() => ({
-    tokens: [
-      {
-        token: Eth,
-        amount: null,
-      },
-    ],
-  }), [Eth]);
+  const initialValues: BuyNowFormValues = useMemo(
+    () => ({
+      tokens: [
+        {
+          token: Eth,
+          amount: null,
+        },
+      ],
+    }),
+    [Eth]
+  );
 
-  const onSubmit = useCallback((values: BuyNowFormValues, formActions: FormikHelpers<BuyNowFormValues>) => {
-    Promise.resolve();
-  }, []);
+  const onSubmit = useCallback(
+    (
+      values: BuyNowFormValues,
+      formActions: FormikHelpers<BuyNowFormValues>
+    ) => {
+      Promise.resolve();
+    },
+    []
+  );
 
   return (
-    <Formik<BuyNowFormValues>
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-    >
+    <Formik<BuyNowFormValues> initialValues={initialValues} onSubmit={onSubmit}>
       {(formikProps: FormikProps<BuyNowFormValues>) => (
         <>
           <TxnSettings placement="form-top-right">
-            <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
+            <SettingInput
+              name="settings.slippage"
+              label="Slippage Tolerance"
+              endAdornment="%"
+            />
           </TxnSettings>
           <BuyNowForm
             token={BEAN[1]}

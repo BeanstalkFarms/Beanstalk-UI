@@ -1,20 +1,36 @@
 import { BigNumber as EBN } from 'ethers';
-import { AddDepositEvent, AddWithdrawalEvent, PlotTransferEvent, RemoveDepositEvent, RemoveWithdrawalEvent, RemoveWithdrawalsEvent, SowEvent } from 'generated/Beanstalk/BeanstalkReplanted';
-import { BEAN, BEAN_CRV3_LP, ERC20_TOKENS, SILO_WHITELIST } from 'constants/tokens';
+import {
+  AddDepositEvent,
+  AddWithdrawalEvent,
+  PlotTransferEvent,
+  RemoveDepositEvent,
+  RemoveWithdrawalEvent,
+  RemoveWithdrawalsEvent,
+  SowEvent,
+} from 'generated/Beanstalk/BeanstalkReplanted';
+import {
+  BEAN,
+  BEAN_CRV3_LP,
+  ERC20_TOKENS,
+  SILO_WHITELIST,
+} from 'constants/tokens';
 import BigNumber from 'bignumber.js';
 import { HarvestEvent } from 'generated/Beanstalk/Beanstalk';
 import { TokenMap } from 'constants/index';
-import EventProcessor, { BN, EventProcessingParameters } from './EventProcessor';
+import EventProcessor, {
+  BN,
+  EventProcessingParameters,
+} from './EventProcessor';
 
 // ------------------------------------------
 
 const Bean = BEAN[1];
 const BeanCrv3 = BEAN_CRV3_LP[1];
 const account = '0xFARMER';
-const epp : EventProcessingParameters = {
+const epp: EventProcessingParameters = {
   farmableBeans: BN(0),
   season: BN(6074),
-  harvestableIndex: BN(100),  // fixme
+  harvestableIndex: BN(100), // fixme
   whitelist: SILO_WHITELIST.reduce<TokenMap>((prev, curr) => {
     prev[curr[1].address] = curr[1];
     return prev;
@@ -23,12 +39,12 @@ const epp : EventProcessingParameters = {
 
 // ------------------------------------------
 
-const propArray = (o: { [key: string] : any }) => 
-  Object.keys(o).reduce((prev, key) => { 
+const propArray = (o: { [key: string]: any }) =>
+  Object.keys(o).reduce((prev, key) => {
     prev[prev.length] = o[key];
     prev[key] = o[key];
     return prev;
-  }, [] as ((keyof typeof o)[] & typeof o));
+  }, [] as (keyof typeof o)[] & typeof o);
 
 const mockProcessor = () => new EventProcessor(account, epp);
 
@@ -57,8 +73,8 @@ describe('the Field', () => {
       event: 'Sow',
       args: propArray({
         index: EBN.from(10 * 10 ** Bean.decimals),
-        pods:  EBN.from(42 * 10 ** Bean.decimals)
-      })
+        pods: EBN.from(42 * 10 ** Bean.decimals),
+      }),
     } as SowEvent);
 
     expect(Object.keys(p.plots).length === 1);
@@ -72,15 +88,15 @@ describe('the Field', () => {
       event: 'Sow',
       args: propArray({
         index: EBN.from(10 * 10 ** Bean.decimals),
-        pods:  EBN.from(42 * 10 ** Bean.decimals)
-      })
+        pods: EBN.from(42 * 10 ** Bean.decimals),
+      }),
     } as SowEvent);
     p.ingest({
       event: 'Harvest',
       args: propArray({
         beans: EBN.from(5 * 10 ** Bean.decimals),
-        plots: [EBN.from(10 * 10 ** Bean.decimals)]
-      })
+        plots: [EBN.from(10 * 10 ** Bean.decimals)],
+      }),
     } as HarvestEvent);
 
     expect(Object.keys(p.plots).length === 1);
@@ -91,8 +107,8 @@ describe('the Field', () => {
       event: 'Harvest',
       args: propArray({
         beans: EBN.from(37 * 10 ** Bean.decimals),
-        plots: [EBN.from(15 * 10 ** Bean.decimals)]
-      })
+        plots: [EBN.from(15 * 10 ** Bean.decimals)],
+      }),
     } as HarvestEvent);
 
     expect(Object.keys(p.plots).length === 0);
@@ -107,8 +123,8 @@ describe('the Field', () => {
       event: 'Sow',
       args: propArray({
         index: EBN.from(10 * 10 ** Bean.decimals),
-        pods:  EBN.from(42 * 10 ** Bean.decimals)
-      })
+        pods: EBN.from(42 * 10 ** Bean.decimals),
+      }),
     } as SowEvent);
     p.ingest({
       event: 'PlotTransfer',
@@ -116,8 +132,8 @@ describe('the Field', () => {
         from: '0xFARMER',
         to: '0xPUBLIUS',
         id: EBN.from(10 * 10 ** Bean.decimals),
-        pods: EBN.from(42 * 10 ** Bean.decimals)
-      })
+        pods: EBN.from(42 * 10 ** Bean.decimals),
+      }),
     } as PlotTransferEvent);
 
     expect(Object.keys(p.plots).length).toBe(0);
@@ -130,17 +146,17 @@ describe('the Field', () => {
       event: 'Sow',
       args: propArray({
         index: EBN.from(10 * 10 ** Bean.decimals),
-        pods:  EBN.from(42 * 10 ** Bean.decimals)
-      })
+        pods: EBN.from(42 * 10 ** Bean.decimals),
+      }),
     } as SowEvent);
     p.ingest({
       event: 'PlotTransfer',
       args: propArray({
         from: '0xFARMER',
-        to:   '0xPUBLIUS',
-        id:   EBN.from(10 * 10 ** Bean.decimals), // front of the Plot
-        pods: EBN.from(22 * 10 ** Bean.decimals)  // don't send the whole Plot
-      })
+        to: '0xPUBLIUS',
+        id: EBN.from(10 * 10 ** Bean.decimals), // front of the Plot
+        pods: EBN.from(22 * 10 ** Bean.decimals), // don't send the whole Plot
+      }),
     } as PlotTransferEvent);
 
     // Since the Plot is sent from the front, index starts at 10 + 22 = 32.
@@ -155,12 +171,12 @@ describe('the Field', () => {
       event: 'Sow',
       args: propArray({
         index: EBN.from('737663715081254'),
-        pods:  EBN.from('57980000'),
-      })
+        pods: EBN.from('57980000'),
+      }),
     } as SowEvent);
 
     expect(p.plots['737663715.081254']).toBeDefined();
-    expect(p.plots['737663715.081254'].eq(57.980000)).toBe(true);
+    expect(p.plots['737663715.081254'].eq(57.98)).toBe(true);
   });
 });
 
@@ -169,12 +185,14 @@ describe('the Field', () => {
 describe('the Silo', () => {
   it('throws when processing unknown tokens', () => {
     const p = mockProcessor();
-    expect(() => p.ingest({
-      event: 'AddDeposit',
-      args: propArray({
-        token: '0xUNKNOWN',
-      })
-    } as AddDepositEvent)).toThrow();
+    expect(() =>
+      p.ingest({
+        event: 'AddDeposit',
+        args: propArray({
+          token: '0xUNKNOWN',
+        }),
+      } as AddDepositEvent)
+    ).toThrow();
   });
 
   it('runs a simple deposit sequence (three deposits, two tokens, two seasons)', () => {
@@ -187,16 +205,16 @@ describe('the Silo', () => {
       event: 'AddDeposit',
       args: propArray({
         account,
-        token:  t1,
+        token: t1,
         season: EBN.from(6074),
         amount: EBN.from(1000 * 10 ** Bean.decimals), // Deposited 1,000 Bean
-        bdv:    EBN.from(1000 * 10 ** Bean.decimals), 
+        bdv: EBN.from(1000 * 10 ** Bean.decimals),
       }),
     } as AddDepositEvent);
 
     expect(p.deposits[t1]['6074']).toStrictEqual({
       amount: BN(1000),
-      bdv:    BN(1000),
+      bdv: BN(1000),
     });
 
     // Deposit: 500 Bean, Season 6074
@@ -204,16 +222,16 @@ describe('the Silo', () => {
       event: 'AddDeposit',
       args: propArray({
         account,
-        token:  t1,
+        token: t1,
         season: EBN.from(6074),
         amount: EBN.from(500 * 10 ** Bean.decimals), // Deposited 500 Bean
-        bdv:    EBN.from(500 * 10 ** Bean.decimals), 
+        bdv: EBN.from(500 * 10 ** Bean.decimals),
       }),
     } as AddDepositEvent);
 
     expect(p.deposits[t1]['6074']).toStrictEqual({
       amount: BN(1500),
-      bdv:    BN(1500),
+      bdv: BN(1500),
     });
 
     // Deposit: 1000 Bean:CRV3 LP, Season 6100
@@ -221,16 +239,16 @@ describe('the Silo', () => {
       event: 'AddDeposit',
       args: propArray({
         account,
-        token:  t2,
+        token: t2,
         season: EBN.from(6100),
         amount: EBN.from(1000).mul(EBN.from(10).pow(BeanCrv3.decimals)), // Deposited 1,000 Bean:CRV3
-        bdv:    EBN.from(900).mul(EBN.from(10).pow(Bean.decimals))
+        bdv: EBN.from(900).mul(EBN.from(10).pow(Bean.decimals)),
       }),
     } as AddDepositEvent);
 
     expect(p.deposits[t2]['6100']).toStrictEqual({
       amount: BN(1000),
-      bdv:    BN(900),
+      bdv: BN(900),
     });
   });
 
@@ -244,7 +262,7 @@ describe('the Silo', () => {
       event: 'AddWithdrawal',
       args: propArray({
         account,
-        token:  t1,
+        token: t1,
         season: EBN.from(6074),
         amount: EBN.from(1000 * 10 ** Bean.decimals), // Withdrew 1,000 Bean
       }),
@@ -259,7 +277,7 @@ describe('the Silo', () => {
       event: 'AddWithdrawal',
       args: propArray({
         account,
-        token:  t1,
+        token: t1,
         season: EBN.from(6074),
         amount: EBN.from(500 * 10 ** Bean.decimals), // Withdrew 500 Bean
       }),
@@ -274,7 +292,7 @@ describe('the Silo', () => {
       event: 'AddWithdrawal',
       args: propArray({
         account,
-        token:  t2,
+        token: t2,
         season: EBN.from(6100),
         amount: EBN.from(1000).mul(EBN.from(10).pow(BeanCrv3.decimals)), // Deposited 1,000 Bean:CRV3
       }),
@@ -294,10 +312,10 @@ describe('the Silo', () => {
       event: 'AddDeposit',
       args: propArray({
         account,
-        token:  t1,
+        token: t1,
         season: EBN.from(6074),
         amount: EBN.from(1000 * 10 ** Bean.decimals), // Deposited 1,000 Bean
-        bdv:    EBN.from(1000 * 10 ** Bean.decimals), 
+        bdv: EBN.from(1000 * 10 ** Bean.decimals),
       }),
     } as AddDepositEvent);
 
@@ -305,11 +323,11 @@ describe('the Silo', () => {
       event: 'RemoveDeposit',
       args: propArray({
         account,
-        token:  t1,
+        token: t1,
         season: EBN.from(6074),
         amount: EBN.from(600 * 10 ** Bean.decimals),
-        bdv:    EBN.from(600 * 10 ** Bean.decimals),
-      })
+        bdv: EBN.from(600 * 10 ** Bean.decimals),
+      }),
     } as RemoveDepositEvent);
 
     expect(p.deposits[t1]['6074']).toStrictEqual({
@@ -321,11 +339,11 @@ describe('the Silo', () => {
       event: 'RemoveDeposit',
       args: propArray({
         account,
-        token:  t1,
+        token: t1,
         season: EBN.from(6074),
         amount: EBN.from(400 * 10 ** Bean.decimals),
-        bdv:    EBN.from(400 * 10 ** Bean.decimals),
-      })
+        bdv: EBN.from(400 * 10 ** Bean.decimals),
+      }),
     } as RemoveDepositEvent);
 
     expect(p.deposits[t1]['6074']).toBeUndefined();
@@ -340,7 +358,7 @@ describe('the Silo', () => {
       event: 'AddWithdrawal',
       args: propArray({
         account,
-        token:  t1,
+        token: t1,
         season: EBN.from(6074),
         amount: EBN.from(1000 * 10 ** Bean.decimals), // Deposited 1,000 Bean
       }),
@@ -351,7 +369,7 @@ describe('the Silo', () => {
       event: 'RemoveWithdrawal',
       args: propArray({
         account,
-        token:  t1,
+        token: t1,
         season: EBN.from(6074),
         amount: EBN.from(1000 * 10 ** Bean.decimals),
       }),
@@ -370,7 +388,7 @@ describe('the Silo', () => {
       event: 'AddWithdrawal',
       args: propArray({
         account,
-        token:  t1,
+        token: t1,
         season: EBN.from(6074),
         amount: EBN.from(1000 * 10 ** Bean.decimals), // Withdraw 1,000 Bean
       }),
@@ -385,7 +403,7 @@ describe('the Silo', () => {
       event: 'AddWithdrawal',
       args: propArray({
         account,
-        token:  t1,
+        token: t1,
         season: EBN.from(6100),
         amount: EBN.from(5000 * 10 ** Bean.decimals), // Withdraw 1,000 Bean
       }),
@@ -395,12 +413,12 @@ describe('the Silo', () => {
       amount: BN(5000),
     });
 
-    // Claim: 
+    // Claim:
     p.ingest({
       event: 'RemoveWithdrawals',
       args: propArray({
         account,
-        token:  t1,
+        token: t1,
         seasons: ['6074', '6100'],
         amount: EBN.from(6000 * 10 ** Bean.decimals), // Claim 2000 Bean
       }),
@@ -414,15 +432,17 @@ describe('the Silo', () => {
     const p = mockProcessor();
     const t1 = Bean.address.toLowerCase();
 
-    expect(() => p.ingest({
-      event: 'RemoveWithdrawal',
-      args: propArray({
-        account,
-        token:  t1,
-        season: EBN.from(6074),
-        amount: EBN.from(0), // amount is empty is Withdrawal couldn't be processed
-      }),
-    } as RemoveWithdrawalEvent)).not.toThrow();
+    expect(() =>
+      p.ingest({
+        event: 'RemoveWithdrawal',
+        args: propArray({
+          account,
+          token: t1,
+          season: EBN.from(6074),
+          amount: EBN.from(0), // amount is empty is Withdrawal couldn't be processed
+        }),
+      } as RemoveWithdrawalEvent)
+    ).not.toThrow();
 
     // No deposit made in t1
     expect(p.withdrawals[t1]).toStrictEqual({});

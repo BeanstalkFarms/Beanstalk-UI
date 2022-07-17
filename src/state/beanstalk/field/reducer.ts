@@ -1,9 +1,13 @@
 import { createReducer } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
 import { BeanstalkField } from '.';
-import { resetBeanstalkField, updateBeanstalkField, updateHarvestableIndex } from './actions';
+import {
+  resetBeanstalkField,
+  updateBeanstalkField,
+  updateHarvestableIndex,
+} from './actions';
 
-const initialState : BeanstalkField = {
+const initialState: BeanstalkField = {
   harvestableIndex: new BigNumber(-1),
   podIndex: new BigNumber(-1),
   totalPods: new BigNumber(-1),

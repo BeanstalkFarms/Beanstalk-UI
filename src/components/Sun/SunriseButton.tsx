@@ -7,29 +7,35 @@ import { useSigner } from 'hooks/ledger/useSigner';
 import TransactionToast from 'components/Common/TxnToast';
 import { LoadingButton } from '@mui/lab';
 
-const SunriseButton : React.FC = () => {
+const SunriseButton: React.FC = () => {
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
-  const onSubmit = useCallback(async (_, formActions: FormikHelpers<{}>) => {
-    const txToast = new TransactionToast({
-      loading: 'Calling Sunrise...',
-      success: 'The Sun has risen.',
-    });
-
-    ///
-    beanstalk.sunrise()
-      .then((txn) => {
-        txToast.confirming(txn);
-        return txn.wait();
-      })
-      .then((receipt) => {
-        txToast.success(receipt);
-        formActions.resetForm();
-      })
-      .catch((err) => {
-        console.error(txToast.error(err.error || err));
+  const beanstalk = useBeanstalkContract(
+    signer
+  ) as unknown as BeanstalkReplanted;
+  const onSubmit = useCallback(
+    async (_, formActions: FormikHelpers<{}>) => {
+      const txToast = new TransactionToast({
+        loading: 'Calling Sunrise...',
+        success: 'The Sun has risen.',
       });
-  }, [beanstalk]);
+
+      ///
+      beanstalk
+        .sunrise()
+        .then((txn) => {
+          txToast.confirming(txn);
+          return txn.wait();
+        })
+        .then((receipt) => {
+          txToast.success(receipt);
+          formActions.resetForm();
+        })
+        .catch((err) => {
+          console.error(txToast.error(err.error || err));
+        });
+    },
+    [beanstalk]
+  );
   return (
     <Formik initialValues={{}} onSubmit={onSubmit}>
       {(formikProps: FormikProps<{}>) => (
@@ -45,13 +51,17 @@ const SunriseButton : React.FC = () => {
               borderColor: '#F7CF2D',
               borderWidth: 1,
               borderStyle: 'solid',
-              color: 'text.primary'
+              color: 'text.primary',
             }}
             fullWidth
           >
             {!formikProps.isSubmitting && (
-              <><img src={sunIcon} alt="Sunrise" style={{ height: 28 }} />&nbsp;</>
-            )}Sunrise
+              <>
+                <img src={sunIcon} alt="Sunrise" style={{ height: 28 }} />
+                &nbsp;
+              </>
+            )}
+            Sunrise
           </LoadingButton>
         </Form>
       )}

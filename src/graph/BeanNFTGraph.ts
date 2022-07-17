@@ -67,7 +67,7 @@ export async function queryWinterNFTs(): Promise<any> {
   });
 
   const investments = data.data.investments.map((i: any) => {
-    const investment : any = {};
+    const investment: any = {};
     investment.account = i.user.id;
     investment.beans = i.beans;
     investment.type = i.type;
@@ -75,8 +75,8 @@ export async function queryWinterNFTs(): Promise<any> {
     return investment;
   });
 
-  const accounts = data.data.users.map((a : any) => {
-    const account : any = {};
+  const accounts = data.data.users.map((a: any) => {
+    const account: any = {};
     account.account = a.id;
     account.investedBeans = a.investedBeans;
     account.nfts = a.earnedNFTs;
@@ -115,7 +115,7 @@ export async function queryAccountNFTStats(account: string) {
 
   const user = data.data.users[0];
   if (!user) {
-      return {};
+    return {};
   }
   return user;
 }

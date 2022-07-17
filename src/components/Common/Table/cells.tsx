@@ -3,9 +3,11 @@ import { Typography } from '@mui/material';
 import { GridColumns, GridRenderCellParams } from '@mui/x-data-grid';
 import { displayBN } from 'util/index';
 
-const basicCell = (params : GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
+const basicCell = (params: GridRenderCellParams) => (
+  <Typography>{params.formattedValue}</Typography>
+);
 
-const COLUMNS : { [key: string]: GridColumns[number] } = {
+const COLUMNS: { [key: string]: GridColumns[number] } = {
   //
   season: {
     field: 'season',
@@ -26,7 +28,7 @@ const COLUMNS : { [key: string]: GridColumns[number] } = {
     valueFormatter: (params) => displayBN(params.value),
     renderCell: basicCell,
     sortable: false,
-  }
+  },
 };
 
 export default COLUMNS;

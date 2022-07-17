@@ -10,36 +10,38 @@ import { useAccount } from 'wagmi';
 // ----------------------------------------
 
 /**
- * 
+ *
  * @param contractAddress The contract that needs approval.
- * @param tokens Tokens 
- * @param config 
- * @returns 
+ * @param tokens Tokens
+ * @param config
+ * @returns
  */
 export default function useAllowances(
   contractAddress: string | undefined,
   tokens: Token[],
   config: { loadIfAbsent: boolean } = {
-    loadIfAbsent: true
+    loadIfAbsent: true,
   }
 ) {
-  const allowances = useSelector<AppState, AppState['_farmer']['allowances']>((state) => state._farmer.allowances);
+  const allowances = useSelector<AppState, AppState['_farmer']['allowances']>(
+    (state) => state._farmer.allowances
+  );
   const { data: account } = useAccount();
   const [fetchAllowances] = useFetchFarmerAllowances();
 
   // If a provided Token is a NativeToken, there is no allowance.
   // Otherwise, see if we've loaded an approval for this contract + token combo.
-  const currentAllowances : (null | BigNumber)[] = useMemo(() => tokens.map((curr) => {
-    if (curr instanceof NativeToken) return new BigNumber(MAX_UINT256);
-    if (!contractAddress) return null;
-    return allowances[contractAddress]
-      ? (allowances[contractAddress][curr.address] || null)
-      : null;
-  }), [
-    tokens,
-    allowances,
-    contractAddress
-  ]);
+  const currentAllowances: (null | BigNumber)[] = useMemo(
+    () =>
+      tokens.map((curr) => {
+        if (curr instanceof NativeToken) return new BigNumber(MAX_UINT256);
+        if (!contractAddress) return null;
+        return allowances[contractAddress]
+          ? allowances[contractAddress][curr.address] || null
+          : null;
+      }),
+    [tokens, allowances, contractAddress]
+  );
 
   // If requested, the component will automatically load any
   // allowances that aren't present in state.
@@ -53,11 +55,7 @@ export default function useAllowances(
       }, [] as Token[]);
       // console.debug(`[hooks/useAllowance] found ${absent.length} absent tokens for ${contractAddress}`);
       if (absent.length > 0) {
-        fetchAllowances(
-          account?.address,
-          contractAddress,
-          absent
-        );
+        fetchAllowances(account?.address, contractAddress, absent);
       }
     }
   }, [
@@ -71,16 +69,19 @@ export default function useAllowances(
 
   // Allow a component to refetch initial allowances,
   // or to specify new ones to grab.
-  const refetch = useCallback((_tokens?: Token[]) => {
-    if (account?.address && contractAddress) {
-      return fetchAllowances(
-        account.address,
-        contractAddress,
-        _tokens || tokens
-      );
-    }
-    return Promise.resolve();
-  }, [fetchAllowances, account?.address, tokens, contractAddress]);
+  const refetch = useCallback(
+    (_tokens?: Token[]) => {
+      if (account?.address && contractAddress) {
+        return fetchAllowances(
+          account.address,
+          contractAddress,
+          _tokens || tokens
+        );
+      }
+      return Promise.resolve();
+    },
+    [fetchAllowances, account?.address, tokens, contractAddress]
+  );
 
   return [currentAllowances, refetch] as const;
 }

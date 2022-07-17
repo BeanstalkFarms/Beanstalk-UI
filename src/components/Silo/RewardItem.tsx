@@ -1,4 +1,10 @@
-import { Typography, Tooltip, Box, Stack, CircularProgress } from '@mui/material';
+import {
+  Typography,
+  Tooltip,
+  Box,
+  Stack,
+  CircularProgress,
+} from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import React from 'react';
 import BigNumber from 'bignumber.js';
@@ -13,7 +19,7 @@ export type RewardItemProps = {
   isClaimable?: boolean;
   /** */
   compact?: boolean;
-}
+};
 
 const RewardItem: React.FC<RewardItemProps> = ({
   amount,
@@ -22,7 +28,12 @@ const RewardItem: React.FC<RewardItemProps> = ({
   icon,
   isClaimable,
 }) => (
-  <Box sx={{ flex: { lg: 'auto', xs: 1 }, opacity: isClaimable === false ? 0.2 : 1 }}>
+  <Box
+    sx={{
+      flex: { lg: 'auto', xs: 1 },
+      opacity: isClaimable === false ? 0.2 : 1,
+    }}
+  >
     <Typography>
       {title}
       <Tooltip title={tooltip} placement="top">
@@ -34,7 +45,9 @@ const RewardItem: React.FC<RewardItemProps> = ({
     <Stack direction="row" gap={0.4} alignItems="center">
       {icon && <img src={icon} alt="" height="17px" />}
       {amount && (
-        <Typography variant="h3">{amount.lt(0) ? '-' : displayFullBN(amount, 2)}</Typography>
+        <Typography variant="h3">
+          {amount.lt(0) ? '-' : displayFullBN(amount, 2)}
+        </Typography>
       )}
     </Stack>
   </Box>

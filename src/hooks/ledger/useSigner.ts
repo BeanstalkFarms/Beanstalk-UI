@@ -6,23 +6,32 @@ import { useSigner as useWagmiSigner } from 'wagmi';
 
 export let useSigner = useWagmiSigner;
 
-if (process.env.NODE_ENV === 'development' && process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT) {
-  console.warn(`Using overridden Farmer account: ${process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT}`);
+if (
+  process.env.NODE_ENV === 'development' &&
+  process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT
+) {
+  console.warn(
+    `Using overridden Farmer account: ${process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT}`
+  );
 
   // @ts-ignore
   useSigner = () => {
     const [signer, setSigner] = useState<ethers.Signer | undefined>(undefined);
     const chainId = useChainId();
     const wagmiSigner = useWagmiSigner();
-    const account   = { address: process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT };
+    const account = { address: process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT };
     const isTestnet = TESTNET_CHAINS.has(chainId);
 
     useEffect(() => {
       (async () => {
         if (account.address && isTestnet) {
           try {
-            const provider = new ethers.providers.JsonRpcProvider(TESTNET_RPC_ADDRESSES[chainId]);
-            await provider.send('hardhat_impersonateAccount', [account.address]);
+            const provider = new ethers.providers.JsonRpcProvider(
+              TESTNET_RPC_ADDRESSES[chainId]
+            );
+            await provider.send('hardhat_impersonateAccount', [
+              account.address,
+            ]);
             setSigner(provider.getSigner(account.address));
           } catch (e) {
             console.error(e);
@@ -31,11 +40,7 @@ if (process.env.NODE_ENV === 'development' && process.env.REACT_APP_OVERRIDE_FAR
           console.error('Missing send on provider');
         }
       })();
-    }, [
-      account?.address,
-      chainId,
-      isTestnet
-    ]);
+    }, [account?.address, chainId, isTestnet]);
 
     /// If we're on a development machine but not connected to a testnet,
     /// we can't impersonate addresses. Just use the normal signer.

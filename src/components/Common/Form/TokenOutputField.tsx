@@ -7,7 +7,7 @@ import TokenIcon from '../TokenIcon';
 import OutputField from './OutputField';
 import { IconSize } from '../../App/muiTheme';
 
-const TokenOutputField : React.FC<{
+const TokenOutputField: React.FC<{
   /** */
   token: Token;
   /** */
@@ -28,16 +28,26 @@ const TokenOutputField : React.FC<{
   isDelta = true,
   isLoading = false,
 }) => {
-  const isZero     = amount.eq(0);
+  const isZero = amount.eq(0);
   const isNegative = amount.lt(0);
-  const prefix     = (!isDelta || isZero) ? '' : isNegative ? '- ' : '+ ';
+  const prefix = !isDelta || isZero ? '' : isNegative ? '- ' : '+ ';
   return (
     <OutputField isNegative={isNegative}>
       {!isLoading ? (
         <Typography display="inline" variant="bodyLarge">
-          {prefix}{displayFullBN(amount.abs(), token.displayDecimals, token.displayDecimals)}
+          {prefix}
+          {displayFullBN(
+            amount.abs(),
+            token.displayDecimals,
+            token.displayDecimals
+          )}
           {value && (
-            <>&nbsp;&nbsp;<Typography display="inline" variant="bodySmall">(~{displayUSD(value)})</Typography></>
+            <>
+              &nbsp;&nbsp;
+              <Typography display="inline" variant="bodySmall">
+                (~{displayUSD(value)})
+              </Typography>
+            </>
           )}
         </Typography>
       ) : (
@@ -47,13 +57,14 @@ const TokenOutputField : React.FC<{
         {token.logo && (
           <TokenIcon
             token={token}
-            style={{ 
+            style={{
               height: IconSize.small,
             }}
           />
         )}
         <Typography variant="bodyMedium">
-          {modifier && `${modifier} `}{token.name}
+          {modifier && `${modifier} `}
+          {token.name}
         </Typography>
       </Stack>
     </OutputField>

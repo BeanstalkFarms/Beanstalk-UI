@@ -4,16 +4,13 @@ import beanCircleIcon from 'img/tokens/bean-logo-circled.svg';
 
 const PROGRESS_THICKNESS = 2;
 const PROGRESS_GAP = 3.5;
-const BeanProgressIcon : React.FC<CircularProgressProps & {
-  size: number;
-  enabled: boolean;
-  progress?: number;
-}> = ({
-  size,
-  enabled,
-  variant,
-  progress
-}) => (
+const BeanProgressIcon: React.FC<
+  CircularProgressProps & {
+    size: number;
+    enabled: boolean;
+    progress?: number;
+  }
+> = ({ size, enabled, variant, progress }) => (
   <Stack sx={{ position: 'relative' }}>
     {enabled ? (
       <CircularProgress
@@ -30,11 +27,7 @@ const BeanProgressIcon : React.FC<CircularProgressProps & {
         thickness={PROGRESS_THICKNESS}
       />
     ) : null}
-    <img
-      src={beanCircleIcon}
-      alt="Bean"
-      style={{ height: size }}
-    />
+    <img src={beanCircleIcon} alt="Bean" style={{ height: size }} />
   </Stack>
 );
 
