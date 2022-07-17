@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import stalkIcon from 'img/beanstalk/stalk-icon.svg';
 import seedIcon from 'img/beanstalk/seed-icon.svg';
-import { ZERO_BN } from 'constants/index';
+import { NEW_BN } from 'constants/index';
 import RewardItem from './RewardItem';
 
 export type RewardsBarProps = {
@@ -21,8 +21,8 @@ const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
   beans,
   stalk,
   seeds,
-  revitalizedStalk = ZERO_BN,
-  revitalizedSeeds = ZERO_BN,
+  revitalizedStalk = NEW_BN,
+  revitalizedSeeds = NEW_BN,
   compact = false,
 }) => {
   const GAP_LG = compact ? 2 : 3.5;

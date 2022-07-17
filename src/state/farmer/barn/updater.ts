@@ -2,16 +2,15 @@ import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import useChainConstant from 'hooks/useChainConstant';
 import { useBeanstalkContract, useFertilizerContract } from 'hooks/useContract';
-import { useAccount } from 'wagmi';
 import { REPLANT_INITIAL_ID } from 'hooks/useHumidity';
 import useChainId from 'hooks/useChain';
-import { getAccount } from 'util/Account';
 import { BeanstalkReplanted } from 'generated';
 import { toTokenUnitsBN } from 'util/index';
 import BigNumber from 'bignumber.js';
 import { ZERO_BN } from 'constants/index';
 import useBlocks from 'hooks/useBlocks';
 import ERC1155EventProcessor from 'lib/ERC1155/ERC1155EventProcessor';
+import useAccount from 'hooks/ledger/useAccount';
 import { resetFarmerBarn, updateFarmerBarn } from './actions';
 import useEvents, { GetQueryFilters } from '../events2/updater';
 import { EventCacheName } from '../events2';
@@ -86,10 +85,11 @@ export const useFetchFarmerBarn = () => {
   const fertContract = useFertilizerContract();
   const beanstalk    = useBeanstalkContract() as unknown as BeanstalkReplanted;
   const blocks       = useBlocks();
+  const account      = useAccount();
 
   /// Events
   const getQueryFilters = useCallback<GetQueryFilters>((
-    account,
+    _account,
     fromBlock,
     toBlock,
   ) => [
@@ -97,7 +97,7 @@ export const useFetchFarmerBarn = () => {
     fertContract.queryFilter(
       fertContract.filters.TransferSingle(
         null,     // operator
-        account,  // from
+        _account,  // from
         null,     // to
         null,     // id
         null,     // value
@@ -108,7 +108,7 @@ export const useFetchFarmerBarn = () => {
     fertContract.queryFilter(
       fertContract.filters.TransferBatch(
         null,     // operator
-        account,  // from
+        _account,  // from
         null,     // to
         null,     // ids
         null,     // values
@@ -121,7 +121,7 @@ export const useFetchFarmerBarn = () => {
       fertContract.filters.TransferSingle(
         null,     // operator
         null,     // from
-        account,  // to
+        _account,  // to
         null,     // id
         null,     // value
       ),
@@ -132,7 +132,7 @@ export const useFetchFarmerBarn = () => {
       fertContract.filters.TransferBatch(
         null,     // operator
         null,     // from
-        account,  // to
+        _account,  // to
         null,     // ids
         null,     // values
       ),
@@ -143,10 +143,15 @@ export const useFetchFarmerBarn = () => {
 
   const [fetchEvents] = useEvents(EventCacheName.FERTILIZER, getQueryFilters);
 
+  const initialized = (
+    fertContract
+    && account 
+    && fetchEvents
+  );
+
   /// Handlers 
-  const fetch = useCallback(async (_account: string) => {
-    const account = getAccount(_account);
-    if (fertContract && account && fetchEvents) {
+  const fetch = useCallback(async () => {
+    if (initialized) {
       console.debug('[farmer/fertilizer/updater] FETCH: ', replantId.toString());
 
       /// Fetch new events and re-run the processor.
@@ -188,8 +193,9 @@ export const useFetchFarmerBarn = () => {
   }, [
     dispatch,
     beanstalk,
-    fertContract,
     replantId,
+    initialized,
+    account,
     fetchEvents,
   ]); 
 
@@ -197,25 +203,20 @@ export const useFetchFarmerBarn = () => {
     dispatch(resetFarmerBarn());
   }, [dispatch]);
 
-  return [fetch, clear] as const;
+  return [fetch, Boolean(initialized), clear] as const;
 };
 
 const FarmerBarnUpdater = () => {
-  const [fetch, clear]    = useFetchFarmerBarn();
-  const { data: account } = useAccount();
-  const chainId           = useChainId();
+  const [fetch, initialized, clear] = useFetchFarmerBarn();
+  const account = useAccount();
+  const chainId = useChainId();
 
   ///
   useEffect(() => {
     clear();
-    if (account?.address) {
-      fetch(account.address);
-    }
+    if (account && initialized) fetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    account?.address,
-    chainId
-  ]);
+  }, [account, chainId, initialized]);
 
   return null;
 };

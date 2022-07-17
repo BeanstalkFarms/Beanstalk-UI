@@ -15,7 +15,7 @@ export default function useEventParsingParams() {
     (state) => state._beanstalk.field.harvestableIndex,
   );
   return useMemo<null | EventParsingParameters>(() => {
-    if (account && season && earnedBeans && harvestableIndex) {
+    if (account && earnedBeans && season?.gt(0) && harvestableIndex?.gt(0)) {
       return {
         account,
         season,

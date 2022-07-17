@@ -38,6 +38,7 @@ import { useSigner } from 'hooks/ledger/useSigner';
 import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
 import { parseError } from 'util/index';
 import toast from 'react-hot-toast';
+import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 
 // -----------------------------------------------------------------------
 
@@ -232,7 +233,8 @@ const Deposit : React.FC<{
 
   /// Farmer
   const balances = useFarmerBalances();
-  const [refetchFarmerSilo] = useFetchFarmerSilo();
+  const [refetchFarmerSilo]     = useFetchFarmerSilo();
+  const [refetchFarmerBalances] = useFetchFarmerBalances();
 
   /// Network
   const provider = useProvider();
@@ -251,6 +253,8 @@ const Deposit : React.FC<{
       {
         token: baseToken,
         amount: null,
+        quoting: false,
+        amountOut: undefined,
       },
     ],
   }), [baseToken]);
@@ -487,18 +491,19 @@ const Deposit : React.FC<{
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
-      await refetchFarmerSilo();
+      await Promise.all([refetchFarmerSilo(), refetchFarmerBalances()]);
       txToast.success(receipt);
       formActions.resetForm();
     } catch (err) {
       txToast ? txToast.error(err) : toast.error(parseError(err));
-      formActions.setSubmitting(false);      
+      formActions.setSubmitting(false);
     }
   }, [
     Eth,
     beanstalk,
     whitelistedToken,
     refetchFarmerSilo,
+    refetchFarmerBalances,
   ]);
 
   return (

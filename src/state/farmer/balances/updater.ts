@@ -1,7 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import flatMap from 'lodash/flatMap';
-import { useAccount } from 'wagmi';
 import { ZERO_BN } from 'constants/index';
 import { Beanstalk, BeanstalkReplanted } from 'generated/index';
 import { BALANCE_TOKENS, ERC20_TOKENS, ETH } from 'constants/tokens';
@@ -9,8 +8,9 @@ import useChainId from 'hooks/useChain';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useMigrateCall from 'hooks/useMigrateCall';
 import useTokenMap from 'hooks/useTokenMap';
-import { getAccount, tokenResult } from 'util/index';
+import { tokenResult } from 'util/index';
 import useChainConstant from 'hooks/useChainConstant';
+import useAccount from 'hooks/ledger/useAccount';
 import { clearBalances, updateBalances } from './actions';
 
 // -- Hooks
@@ -18,6 +18,7 @@ import { clearBalances, updateBalances } from './actions';
 export const useFetchFarmerBalances = () => {
   // State
   const dispatch = useDispatch();
+  const account  = useAccount();
   
   // Constants
   const Eth = useChainConstant(ETH);
@@ -30,8 +31,7 @@ export const useFetchFarmerBalances = () => {
 
   // Handlers
   // FIXME: make this callback accept a tokens array to prevent reloading all balances on every call
-  const fetch = useCallback(async (_account: string/* , _tokens? : any */) => {
-    const account = getAccount(_account);
+  const fetch = useCallback(async () => {
     try {
       if (account && tokenMap) {
         const balancePromises = migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
@@ -117,7 +117,8 @@ export const useFetchFarmerBalances = () => {
     beanstalk,
     Eth,
     erc20TokenMap,
-    migrate
+    migrate,
+    account,
   ]);
 
   const clear = useCallback(() => {
@@ -131,17 +132,17 @@ export const useFetchFarmerBalances = () => {
 
 const FarmerBalancesUpdater = () => {
   const [fetch, clear] = useFetchFarmerBalances();
-  const { data: account } = useAccount();
+  const account = useAccount();
   const chainId = useChainId();
 
   useEffect(() => {
     clear();
-    if (account?.address) {
-      fetch(account.address);
+    if (account) {
+      fetch();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    account?.address,
+    account,
     chainId,
   ]);
 

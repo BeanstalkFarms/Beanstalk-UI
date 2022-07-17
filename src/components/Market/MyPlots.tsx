@@ -211,9 +211,7 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
               onRowClick={handleListingClick}
             />
           )}
-
         </Stack>
-
       </Card>
     </>
   );

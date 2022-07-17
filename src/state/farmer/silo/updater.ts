@@ -169,10 +169,18 @@ export const useFetchFarmerSilo = () => {
   ]);
   
   const [fetchSiloEvents] = useEvents(EventCacheName.SILO, getQueryFilters);
+  
+  ///
+  const initialized = (
+    beanstalk
+    && account
+    && fetchSiloEvents
+    && eventParsingParameters
+  );
 
   /// Handlers
   const fetch = useCallback(async () => {
-    if (beanstalk && account && fetchSiloEvents && eventParsingParameters) {
+    if (initialized) {
       console.debug('[farmer/silo/useFarmerSilo] FETCH');
 
       const [
@@ -372,6 +380,7 @@ export const useFetchFarmerSilo = () => {
     season,
     whitelist,
     account,
+    initialized,
     // v1
     SiloTokens,
     chainId,
@@ -384,21 +393,21 @@ export const useFetchFarmerSilo = () => {
     dispatch(resetFarmerSilo());
   }, [dispatch]);
 
-  return [fetch, clear] as const;
+  return [fetch, Boolean(initialized), clear] as const;
 };
 
 // -- Updater
 
 const FarmerSiloUpdater = () => {
-  const [fetch, clear] = useFetchFarmerSilo();
+  const [fetch, initialized, clear] = useFetchFarmerSilo();
   const account = useAccount();
   const chainId = useChainId();
 
   useEffect(() => {
     clear();
-    if (account) fetch();
+    if (account && initialized) fetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account, chainId]);
+  }, [account, chainId, initialized]);
 
   return null;
 };

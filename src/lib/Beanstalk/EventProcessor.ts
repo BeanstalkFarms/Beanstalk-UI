@@ -314,6 +314,8 @@ export default class EventProcessor {
     plots: EventProcessorData['plots'],
     index: BigNumber
   ) {
+    console.debug(`[EventProcessor] Parsing plots with index ${index.toString()}`);
+          
     let pods = new BigNumber(0);
     let harvestablePods = new BigNumber(0);
     const unharvestablePlots  : PlotMap<BigNumber> = {};

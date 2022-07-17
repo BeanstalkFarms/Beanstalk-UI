@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
+import { ZERO_BN } from 'constants/index';
 import { AppState } from '../state';
 import { useHumidityFromId } from './useHumidity';
 
@@ -21,8 +21,8 @@ export default function useFarmerTotalFertilizer(tokenIds?: string[]) {
           return agg;
         },
         {
-          unfertilized: new BigNumber(0),
-          fertilizer:   new BigNumber(0),
+          unfertilized: ZERO_BN,
+          fertilizer:   ZERO_BN,
         }
       ),
     [farmerFertilizer, getHumidity, ids]

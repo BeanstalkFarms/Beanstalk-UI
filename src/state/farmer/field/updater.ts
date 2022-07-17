@@ -65,9 +65,15 @@ export const useFetchFarmerField = () => {
   
   const [fetchFieldEvents] = useEvents(EventCacheName.FIELD, getQueryFilters);
 
+  const initialized = (
+    account
+    && fetchFieldEvents
+    && eventParsingParameters
+  );
+
   /// Handlers
   const fetch = useCallback(async () => {
-    if (beanstalk && account && fetchFieldEvents && eventParsingParameters) {
+    if (initialized) {
       const allEvents = await fetchFieldEvents();
 
       if (!allEvents) return;
@@ -82,7 +88,7 @@ export const useFetchFarmerField = () => {
         ));
       } else {
         const results = processFarmerEventsV1(allEvents, eventParsingParameters);
-
+        
         // TEMP:
         // Hardcode this because the event process returns `beanDepositsBalance`, etc.
         dispatch(updateFarmerField({
@@ -96,7 +102,7 @@ export const useFetchFarmerField = () => {
   }, [
     dispatch,
     fetchFieldEvents,
-    beanstalk,
+    initialized,
     // v2
     season,
     whitelist,
@@ -112,21 +118,21 @@ export const useFetchFarmerField = () => {
     dispatch(resetFarmerField());
   }, [dispatch]);
 
-  return [fetch, clear] as const;
+  return [fetch, Boolean(initialized), clear] as const;
 };
 
 // -- Updater
 
 const FarmerFieldUpdater = () => {
-  const [fetch, clear] = useFetchFarmerField();
+  const [fetch, initialized, clear] = useFetchFarmerField();
   const account = useAccount();
   const chainId = useChainId();
 
   useEffect(() => {
     clear();
-    if (account) fetch();
+    if (account && initialized) fetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account, chainId]);
+  }, [account, chainId, initialized]);
 
   return null;
 };

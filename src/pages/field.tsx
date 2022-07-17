@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import {
   Container,
   Stack,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
@@ -37,15 +38,16 @@ const columns: DataGridProps['columns'] = [
     headerAlign: 'left',
     valueFormatter: (params) =>
       `${displayFullBN(params.value as BigNumber, 2)}`,
-    renderCell: (params) => <Typography>{displayBN(params.value, true)}</Typography>,
+    renderCell: (params) => (
+      <Tooltip title={<>{displayFullBN(params.value)}</>}>
+        <Typography>{displayBN(params.value, true)}</Typography>
+      </Tooltip>
+    ),
   },
 ];
 
 const FieldPage: React.FC = () => {
-  //
-  // const [modalOpen, handleOpen, handleClose] = useToggle();
-
-  // Data
+  /// Data
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
     (state) => state._farmer.field
   );
@@ -86,9 +88,6 @@ const FieldPage: React.FC = () => {
         />
         <FieldConditions
           beanstalkField={beanstalkField}
-          // farmerField={farmerField}
-          // podLine={podLine}
-          // handleOpenDialog={handleOpen}
         />
         <FieldActions />
         <TableCard
@@ -101,15 +100,6 @@ const FieldPage: React.FC = () => {
           token={PODS}
         />
       </Stack>
-      {/* <MyPlotsDialog
-        beanstalkField={beanstalkField}
-        handleCloseDialog={handleClose}
-        farmerField={farmerField}
-        modalOpen={modalOpen}
-        podLine={podLine}
-        columns={columns}
-        rows={rows}
-      /> */}
     </Container>
   );
 };
