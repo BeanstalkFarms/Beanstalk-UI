@@ -18,7 +18,7 @@ import FertilizerItem from 'components/Barn/FertilizerItem';
 import { ZERO_BN } from 'constants/index';
 import { SPROUTS, FERTILIZED_SPROUTS } from 'constants/tokens';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { displayBN } from 'util/Tokens';
+import { displayBN, displayFullBN } from 'util/Tokens';
 import { MY_FERTILIZER } from 'components/Barn/FertilizerItemTooltips';
 import useFarmerTotalFertilizer from 'hooks/useFarmerTotalFertilizer';
 import useTabs from 'hooks/display/useTabs';
@@ -73,7 +73,7 @@ const MyFertilizer: React.FC = () => {
             <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={SPROUTS} />
               <Typography>
-                {displayBN(farmerFertilizer.unfertilized)}
+                {displayFullBN(farmerFertilizer.unfertilized, SPROUTS.displayDecimals)}
               </Typography>
             </Stack>
           </Stack>
@@ -96,7 +96,7 @@ const MyFertilizer: React.FC = () => {
             <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={FERTILIZED_SPROUTS} />
               <Typography>
-                {displayBN(farmerFertilizer.fertilized)}
+                {displayFullBN(farmerFertilizer.fertilized, FERTILIZED_SPROUTS.displayDecimals)}
               </Typography>
             </Stack>
           </Stack>

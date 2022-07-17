@@ -14,9 +14,9 @@ import { AppState } from 'state';
 import { getAccount } from 'util/Account';
 import { parseWithdrawals } from 'util/Crates';
 import { useAccount } from 'wagmi';
-import { updateFarmerField } from './field/actions';
-import { DepositCrate } from './silo';
-import { updateFarmerSiloBalances, UpdateFarmerSiloBalancesPayload } from './silo/actions';
+import { updateFarmerField } from '../field/actions';
+import { DepositCrate } from '../silo';
+import { updateFarmerSiloBalances, UpdateFarmerSiloBalancesPayload } from '../silo/actions';
 
 const FarmerEventsProcessor = () => {
   const { data: account } = useAccount();

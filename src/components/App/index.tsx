@@ -18,7 +18,7 @@ import FertilizerUpdater from 'state/beanstalk/fertilizer/updater';
 import SiloUpdater from 'state/beanstalk/silo/updater';
 import FarmerSiloUpdater from 'state/farmer/silo/updater';
 import FarmerEventsUpdater from 'state/farmer/events/updater';
-import FarmerEventsProcessor from 'state/farmer/processor';
+import FarmerEventsProcessor from 'state/farmer/events/processor';
 import FarmerBalancesUpdater from 'state/farmer/balances/updater';
 import FarmerFertilizerUpdater from 'state/farmer/fertilizer/updater';
 import FieldUpdater from 'state/beanstalk/field/updater';
