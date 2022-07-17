@@ -88,7 +88,6 @@
     "eslint-plugin-react-hooks": "4.2.0",
     "eslint-plugin-storybook": "^0.5.12",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
     "netlify-cli": "^10.10.0",
     "prettier": "^2.3.0",
@@ -116,18 +115,11 @@
     "build-storybook": "build-storybook -s public",
     "generate": "yarn generate:typechain && yarn generate:graphql",
     "generate:typechain": "typechain --target=ethers-v5 --ts-nocheck --out-dir=./src/generated './src/constants/abi/**/*.json'",
-    "generate:graphql": "graphql-codegen --config codegen.yml"
+    "generate:graphql": "graphql-codegen --config codegen.yml",
+    "postpack": "yarn generate"
   },
   "engines": {
     "node": ">=14"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{ts,tsx,json}": "eslint"
   },
   "packageManager": "yarn@3.2.1",
   "browserslist": {
