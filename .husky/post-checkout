@@ -1,10 +1,22 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-yarn run generate
+echo "post-checkout: diff $1 $2"
 
-# ABIS_CHANGED=`git diff $1 $2 --stat -- $GIT_DIR/../src/constants/abi/**/*.json | wc -l`
-# if [ $ABIS_CHANGED -gt 0 ];
-# then
-#     echo "ABIs have changed!"
-# fi
+ABIS_CHANGED=`git diff $1 $2 --stat -- $0/src/constants/abi/**/*.json | wc -l`
+if [ $ABIS_CHANGED -gt 0 ];
+then
+  echo "post-checkout: abis have changed, running typechain"
+  yarn run generate:typechain
+else
+  echo "post-checkout: no abi changes"
+fi
+
+GQLS_CHANGED=`git diff $1 $2 --stat -- $0/src/**/*.graphql | wc -l`
+if [ $GQLS_CHANGED -gt 0 ];
+then
+  echo "post-checkout: gql queries have changed, running generator"
+  yarn run generate:graphql
+else
+  echo "post-checkout: no gql changes"
+fi
