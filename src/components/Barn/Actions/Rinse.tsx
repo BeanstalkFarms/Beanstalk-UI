@@ -19,6 +19,7 @@ import useFarmerFertilizer from 'hooks/redux/useFarmerFertilizer';
 import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import useAccount from 'hooks/ledger/useAccount';
+import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 
 // ---------------------------------------------------
 
@@ -108,6 +109,7 @@ const Rinse : React.FC<{}> = () => {
   /// Farmer data
   const farmerFertilizer    = useFarmerFertilizer();
   const [refetchFertilizer] = useFetchFarmerBarn();
+  const [refetchBalances]   = useFetchFarmerBalances();
   
   /// Contracts
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
@@ -136,7 +138,7 @@ const Rinse : React.FC<{}> = () => {
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
-      await refetchFertilizer(account);
+      await Promise.all([refetchFertilizer(), refetchBalances()]);
       txToast.success(receipt);
       formActions.resetForm({
         values: {
@@ -153,6 +155,7 @@ const Rinse : React.FC<{}> = () => {
     farmerFertilizer?.fertilizer,
     farmerFertilizer?.fertilizedSprouts,
     refetchFertilizer,
+    refetchBalances,
   ]);
 
   return (
