@@ -26,11 +26,11 @@ export type FertilizerData = {
   /**
    * The Humidity at which this Fertilizer was bought.
    */
-  humidity: BigNumber;
+  humidity: BigNumber | undefined;
   /**
    * The amount of Beans remaining to be paid to this Fertilizer.
    */
-  remaining: BigNumber;
+  remaining: BigNumber | undefined;
   /**
    * The percentage this Fertilizer has been paid back.
    */
@@ -56,7 +56,6 @@ const FertilizerItem: React.FC<FertilizerData & {
    */
   tooltip: FertilizerTooltip;
 }> = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   id,
   amount,
   humidity,
@@ -69,12 +68,17 @@ const FertilizerItem: React.FC<FertilizerData & {
   state,
   isNew,
 }) => {
-  const fertilizedBeans = new BigNumber(0); // TODO: update this
-  const unfertilizedBeans = amount.multipliedBy(humidity.plus(1));
+  const fertilizedBeans   = new BigNumber(0); // TODO: update this
+  const unfertilizedBeans = remaining;
 
   return (
     <Stack width="100%" alignItems="center" rowGap={0.75}>
-      <FertilizerImage isNew={isNew} state={state} progress={progress} />
+      <FertilizerImage
+        isNew={isNew}
+        state={state}
+        progress={progress}
+        id={id}
+      />
       {amount.eq(0) ? (
         <Typography textAlign="center">x0</Typography>
       ) : (
@@ -93,11 +97,10 @@ const FertilizerItem: React.FC<FertilizerData & {
               </Typography>
             </Tooltip>
             <Tooltip title={tooltip.humidity} placement="right">
-              {/* <OpacityIcon sx={{ fontSize: 14 }} /> */}
               <Stack direction="row" gap={0.2} alignItems="center">
                 <img alt="" src={humidityIcon} height="13px" />
                 <Typography sx={{ fontSize: '14px', opacity: 0.6 }} color="text.secondary">
-                  {displayBN(humidity.times(100))}%
+                  {humidity ? `${displayBN(humidity.times(100))}%` : '---'}
                 </Typography>
               </Stack>
             </Tooltip>
@@ -107,12 +110,12 @@ const FertilizerItem: React.FC<FertilizerData & {
             placement="right">
             <Stack direction="row" justifyContent="space-between">
               <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
-                {isNew ? 'Sprouts' : 'Remaining'}
+                Sprouts
               </Typography>
               <Stack direction="row" alignItems="center" gap={0.2}>
                 <TokenIcon token={SPROUTS} style={{ width: '14px' }} />
                 <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
-                  {displayBN(remaining)}
+                  {remaining ? displayBN(remaining) : '?'}
                 </Typography>
               </Stack>
             </Stack>

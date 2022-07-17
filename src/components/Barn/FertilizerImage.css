@@ -1,9 +1,13 @@
-.fert {
+.fert-anim {
   animation-duration: 3s;
   animation-iteration-count: infinite;
   transform-origin: bottom;
 }
 .bounce {
+  animation-name: bounce;
+  animation-timing-function: cubic-bezier(0.280, 0.840, 0.420, 1);
+}
+.fert-item:hover .bounce-hover {
   animation-name: bounce;
   animation-timing-function: cubic-bezier(0.280, 0.840, 0.420, 1);
 }

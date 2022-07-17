@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import { useHumidityFromId } from 'hooks/useHumidity';
+import { useHumidityAtId, useHumidityFromId } from 'hooks/useHumidity';
 import { AppState } from 'state';
 import FertilizerItem from 'components/Barn/FertilizerItem';
 import { ZERO_BN } from 'constants/index';
@@ -30,23 +30,26 @@ enum TabState {
 }
 
 const MyFertilizer: React.FC = () => {
-  const farmerFertilizer = useSelector<AppState, AppState['_farmer']['barn']>(
+  /// Data
+  const beanstalkBarn = useSelector<AppState, AppState['_beanstalk']['barn']>(
+    (state) => state._beanstalk.barn
+  )
+  const farmerBarn = useSelector<AppState, AppState['_farmer']['barn']>(
     (state) => state._farmer.barn
   );
-  const getHumidity = useHumidityFromId();
 
+  /// Helpers
+  const humidityAt = useHumidityAtId();
   const [tab, handleChange] = useTabs();
 
-  ///
+  /// Local data
   const tokenIds = useMemo(
     () =>
-      Object.keys(farmerFertilizer.fertilizer).filter(
+      Object.keys(farmerBarn.fertilizer).filter(
         () => tab === TabState.ACTIVE
       ),
-    [farmerFertilizer.fertilizer, tab]
+    [farmerBarn.fertilizer, tab]
   );
-
-  // const fertilizerSummary = useFarmerTotalFertilizer(tokenIds);
 
   return (
     <Card>
@@ -73,7 +76,7 @@ const MyFertilizer: React.FC = () => {
             <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={SPROUTS} />
               <Typography>
-                {displayFullBN(farmerFertilizer.unfertilizedSprouts, SPROUTS.displayDecimals)}
+                {displayFullBN(farmerBarn.unfertilizedSprouts, SPROUTS.displayDecimals)}
               </Typography>
             </Stack>
           </Stack>
@@ -96,7 +99,7 @@ const MyFertilizer: React.FC = () => {
             <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={FERTILIZED_SPROUTS} />
               <Typography>
-                {displayFullBN(farmerFertilizer.fertilizedSprouts, FERTILIZED_SPROUTS.displayDecimals)}
+                {displayFullBN(farmerBarn.fertilizedSprouts, FERTILIZED_SPROUTS.displayDecimals)}
               </Typography>
             </Stack>
           </Stack>
@@ -118,15 +121,15 @@ const MyFertilizer: React.FC = () => {
         </Stack>
         <Box>
           {tokenIds.length > 0 ? (
-            <Grid container spacing={4.5}>
+            <Grid container spacing={3}>
               {tokenIds.map((_id) => {
                 const id     = new BigNumber(_id);
                 const season = new BigNumber(6_074);
-                const amount = farmerFertilizer.fertilizer[_id];
-                const [humidity] = getHumidity(); // Until Unpause, fixed to 6_074.
-                const remaining = amount.multipliedBy(humidity.plus(1));
+                const amount = farmerBarn.fertilizer[_id];
+                const humidity  = humidityAt(id);
+                const remaining = humidity ? amount.multipliedBy(humidity.plus(1)) : undefined;
                 return (
-                  <Grid key={_id} item xs={12} md={4}>
+                  <Grid key={_id} item xs={12} md={3}>
                     <FertilizerItem
                       id={id}
                       season={season}
@@ -134,6 +137,7 @@ const MyFertilizer: React.FC = () => {
                       humidity={humidity}
                       remaining={remaining}
                       amount={amount}
+                      progress={beanstalkBarn.currentBpf.div(id).toNumber()}
                       // season={season}
                       tooltip={MY_FERTILIZER}
                     />

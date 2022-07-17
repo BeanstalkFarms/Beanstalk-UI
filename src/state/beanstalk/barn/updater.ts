@@ -10,7 +10,7 @@ import useMigrateCall from 'hooks/useMigrateCall';
 import { Beanstalk, BeanstalkReplanted } from 'generated/index';
 import { ZERO_BN } from 'constants/index';
 import BigNumber from 'bignumber.js';
-import { resetBarn, setRemaining, setTotalRaised, setHumidity } from './actions';
+import { resetBarn, setRemaining, setTotalRaised, setHumidity, updateBarn } from './actions';
 
 export const useBarn = () => {
   const dispatch        = useDispatch();
@@ -28,7 +28,9 @@ export const useBarn = () => {
         remaining,
         totalRaised,
         fundedPercent,
-        humidity
+        humidity,
+        currentBpf,
+        endBpf,
       ] = await Promise.all([
         // Amount of Fertilizer remaining to be sold
         migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
@@ -49,12 +51,26 @@ export const useBarn = () => {
         migrate(beanstalk, [
           () => Promise.resolve(new BigNumber(500)),
           () => beanstalk.getCurrentHumidity().then(bigNumberResult)
-        ])
+        ]),
+        // Current BPF
+        migrate(beanstalk, [
+          () => Promise.resolve(ZERO_BN),
+          () => beanstalk.beansPerFertilizer().then(bigNumberResult)
+        ]),
+        // End BPF
+        migrate(beanstalk, [
+          () => Promise.resolve(ZERO_BN),
+          () => beanstalk.getEndBpf().then(bigNumberResult)
+        ]),
       ] as const);
       console.debug(`[beanstalk/fertilizer/updater] RESULT: remaining = ${remaining.toFixed(2)}`);
-      dispatch(setRemaining(remaining));
-      dispatch(setTotalRaised(totalRaised));
-      dispatch(setHumidity(humidity));
+      dispatch(updateBarn({
+        remaining,
+        totalRaised,
+        humidity,
+        currentBpf,
+        endBpf
+      }));
     }
   }, [
     dispatch,

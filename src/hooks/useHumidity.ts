@@ -54,6 +54,16 @@ export const useHumidityAtSeason = () => {
 // be hard-coded to these values.
 export const useHumidityFromId = () => useCallback(() => [INITIAL_HUMIDITY, HUMIDITY_DECREASE_AT_REPLANT] as const, []);
 
+export const useHumidityAtId = () => {
+  return useCallback((id: BigNumber) => {
+    if (id.eq(REPLANT_INITIAL_ID[1])) {
+      return INITIAL_HUMIDITY;
+    }
+    // Need to look up via subgraph
+    return undefined;
+  }, [])
+}
+
 // ----------------------------------------
 
 export default function useHumidity() {
