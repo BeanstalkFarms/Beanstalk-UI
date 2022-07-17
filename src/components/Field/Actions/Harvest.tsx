@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Accordion, AccordionDetails, Box, Button, Stack, Tooltip, Typography } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
-import { useProvider } from 'wagmi';
+import { useAccount, useProvider } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
 import { Token } from 'classes';
 import { BEAN, BEAN_CRV3_LP, PODS } from 'constants/tokens';
@@ -27,16 +27,18 @@ import { BeanstalkReplanted } from 'generated/index';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import useGetChainToken from 'hooks/useGetChainToken';
 import { ZERO_BN } from 'constants/index';
-import { displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
+import { displayBN, displayFullBN, displayTokenAmount, parseError, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
 import useToggle from 'hooks/display/useToggle';
 import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import PillRow from 'components/Common/Form/PillRow';
 import { useSelector } from 'react-redux';
 import { ethers } from 'ethers';
+import toast from 'react-hot-toast';
 import { AppState } from '../../../state';
 import { QuoteHandler } from '../../../hooks/useQuote';
 import DestinationField from '../DestinationField';
+import TransactionToast from '../../Common/TxnToast';
 
 // -----------------------------------------------------------------------
 
@@ -211,7 +213,10 @@ const HarvestForm : React.FC<
 // -----------------------------------------------------------------------
 
 const Harvest : React.FC<{}> = () => {
+  const { data: account } = useAccount();
   const provider = useProvider();
+  const { data: signer } = useSigner();
+  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
   const farm = useMemo(() => new Farm(provider), [provider]);
   
   const farmerField  = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
@@ -227,9 +232,31 @@ const Harvest : React.FC<{}> = () => {
     }
   }), [farmerField.harvestablePods]);
 
-  const onSubmit = useCallback((values: HarvestFormValues, formActions: FormikHelpers<HarvestFormValues>) => {
+  const onSubmit = useCallback(async (values: HarvestFormValues, formActions: FormikHelpers<HarvestFormValues>) => {
+    let txToast;
+    try {
+      if (!farmerField.harvestablePods.gt(0)) throw new Error('No Harvestable Pods.');
+      if (!farmerField.harvestablePlots) throw new Error('No Harvestable Plots.');
+      if (!account?.address) throw new Error('Connect a wallet first.');
 
-  }, []);
+      txToast = new TransactionToast({
+        loading: `Harvesting ${displayBN(farmerField.harvestablePods)} pods.`,
+        success: 'Harvest successful.',
+      });
+
+      const txn = await beanstalk.harvest(
+        Object.keys(farmerField.harvestablePlots),
+        values.destination
+      );
+
+      txToast.confirming(txn);
+
+      const receipt = await txn.wait();
+      txToast.success(receipt);
+    } catch (err) {
+      txToast ? txToast.error(err) : toast.error(parseError(err));
+    }
+  }, [account?.address, beanstalk, farmerField.harvestablePlots, farmerField.harvestablePods]);
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
