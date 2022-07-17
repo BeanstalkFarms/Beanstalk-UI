@@ -35,6 +35,9 @@ import { combineBalances, optimizeFromMode } from 'util/Farm';
 import usePreferredToken from 'hooks/usePreferredToken';
 import useTokenMap from 'hooks/useTokenMap';
 import { useSigner } from 'hooks/ledger/useSigner';
+import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
+import { parseError } from 'util/index';
+import toast from 'react-hot-toast';
 
 // -----------------------------------------------------------------------
 
@@ -229,6 +232,7 @@ const Deposit : React.FC<{
 
   /// Farmer
   const balances = useFarmerBalances();
+  const [refetchFarmerSilo] = useFetchFarmerSilo();
 
   /// Network
   const provider = useProvider();
@@ -238,9 +242,7 @@ const Deposit : React.FC<{
   /// Farm
   const farm = useMemo(() => new Farm(provider), [provider]);
 
-  // const 
-
-  // Form setup
+  /// Form setup
   const initialValues : DepositFormValues = useMemo(() => ({
     settings: {
       slippage: 0.1,
@@ -397,23 +399,22 @@ const Deposit : React.FC<{
   );
 
   const onSubmit = useCallback(async (values: DepositFormValues, formActions: FormikHelpers<DepositFormValues>) => {
-    if (!values.settings.slippage) throw new Error('No slippage value set.');
-
-    console.debug('Settings', values.settings);
-
-    // FIXME: getting BDV per amount here
-    const { amount } = Beanstalk.Silo.Deposit.deposit(
-      whitelistedToken,
-      values.tokens,
-      (_amount: BigNumber) => _amount,
-    );
-
-    const txToast = new TransactionToast({
-      loading: `Depositing ${displayFullBN(amount.abs(), whitelistedToken.displayDecimals, whitelistedToken.displayDecimals)} ${whitelistedToken.name} to the Silo`,
-      success: 'Deposit successful.',
-    });
-    
+    let txToast;
     try {
+      if (!values.settings.slippage) throw new Error('No slippage value set.');
+
+      // FIXME: getting BDV per amount here
+      const { amount } = Beanstalk.Silo.Deposit.deposit(
+        whitelistedToken,
+        values.tokens,
+        (_amount: BigNumber) => _amount,
+      );
+
+      txToast = new TransactionToast({
+        loading: `Depositing ${displayFullBN(amount.abs(), whitelistedToken.displayDecimals, whitelistedToken.displayDecimals)} ${whitelistedToken.name} to the Silo`,
+        success: 'Deposit successful.',
+      });
+      
       const formData = values.tokens[0];
       if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
       if (!formData?.amount || formData.amount.eq(0)) throw new Error('No amount set');
@@ -480,38 +481,23 @@ const Deposit : React.FC<{
           depositFrom,
         ])
       );
+    
+      const txn = await b.farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) });
+      txToast.confirming(txn);
 
-      // CALL: FARM
-      console.debug('[Deposit] data: ', data);
-      console.debug('[Deposit] gas: ', await b.estimateGas.farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) }));
-     
-      return b.farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) })
-        .then((txn) => {
-          txToast.confirming(txn);
-          return txn.wait();
-        })
-        .then((receipt) => {
-          txToast.success(receipt);
-          formActions.resetForm();
-        })
-        .catch((err) => {
-          console.error(
-            txToast.error(err.error || err),
-            {
-              calldata: {
-                amount: toStringBaseUnitBN(amount, whitelistedToken.decimals)
-              }
-            }
-          );
-        });
-      } catch (err) {
-        txToast.error(err);
-        formActions.setSubmitting(false);
-      }
+      const receipt = await txn.wait();
+      await refetchFarmerSilo()
+      txToast.success(receipt);
+      formActions.resetForm();
+    } catch (err) {
+      txToast ? txToast.error(err) : toast.error(parseError(err));
+      formActions.setSubmitting(false);      
+    }
   }, [
     Eth,
     beanstalk,
     whitelistedToken,
+    refetchFarmerSilo,
   ]);
 
   return (

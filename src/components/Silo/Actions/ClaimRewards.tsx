@@ -14,7 +14,7 @@ import stalkIcon from 'img/beanstalk/stalk-icon.svg';
 import seedIcon from 'img/beanstalk/seed-icon.svg';
 import toast from 'react-hot-toast';
 import { parseError } from 'util/index'; 
-import { useFarmerSilo } from 'state/farmer/silo/updater';
+import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
 import RewardItem from '../RewardItem';
 import DescriptionButton from '../../Common/DescriptionButton';
 import { AppState } from '../../../state';
@@ -237,7 +237,7 @@ const ClaimRewards: React.FC<{}> = () => {
   const { data: account } = useAccount();
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
-  const [fetchFarmerSilo] = useFarmerSilo();
+  const [fetchFarmerSilo] = useFetchFarmerSilo();
 
   // Form
   const initialValues: ClaimRewardsFormValues = useMemo(() => ({

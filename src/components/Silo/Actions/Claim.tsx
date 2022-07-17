@@ -21,7 +21,7 @@ import { BeanstalkReplanted } from 'generated/index';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import useGetChainToken from 'hooks/useGetChainToken';
 import { ZERO_BN } from 'constants/index';
-import { displayFullBN, displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
+import { displayFullBN, displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN, parseError } from 'util/index';
 import DestinationField from 'components/Common/Form/DestinationField';
 import TokenIcon from 'components/Common/TokenIcon';
 import useToggle from 'hooks/display/useToggle';
@@ -31,6 +31,8 @@ import { QuoteHandler } from 'hooks/useQuote';
 import { ethers } from 'ethers';
 import { LoadingButton } from '@mui/lab';
 import TransactionToast from 'components/Common/TxnToast';
+import toast from 'react-hot-toast';
+import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
 
 // -----------------------------------------------------------------------
 
@@ -276,6 +278,7 @@ const Claim : React.FC<{
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
   const currentSeason = useSeason();
+  const [refetchFarmerSilo] = useFetchFarmerSilo();
   const provider = useProvider();
   const farm = useMemo(() => new Farm(provider), [provider]);
 
@@ -295,84 +298,82 @@ const Claim : React.FC<{
       amountOut: claimableBalance
     }
   }), [token, claimableBalance]);
-  const onSubmit = useCallback((values: ClaimFormValues, formActions: FormikHelpers<ClaimFormValues>) => {
-    let call;
-    const crates = siloBalance?.claimable?.crates;
-    if (!crates || crates.length === 0) throw new Error('No claimable crates');
+  const onSubmit = useCallback(async (values: ClaimFormValues, formActions: FormikHelpers<ClaimFormValues>) => {
+    let txToast;
+    try {
+      let call;
+      const crates = siloBalance?.claimable?.crates;
+      if (!crates || crates.length === 0) throw new Error('No claimable crates');
 
-    const txToast = new TransactionToast({
-      loading: `Claiming ${displayFullBN(claimableBalance)} ${token.name} from the Silo`,
-      success: 'Claiming successful',
-    });
-    
-    // If the user wants to swap their LP token for something else,
-    // we send their Claimable `token` to their internal balance for
-    // ease of interaction and gas efficiency.
-    const removeLiquidity  = (values.tokenOut !== token);
-    const claimDestination = token.isLP && removeLiquidity
-      ? FarmToMode.INTERNAL
-      : values.destination;
-
-    console.debug(`[Claim] claimDestination = ${claimDestination}, crates = `, crates);
-
-    const data : string[] = [];
-    
-    // Claim multiple withdrawals of `token` in one call
-    if (crates.length > 1) {
-      console.debug(`[Claim] claiming ${crates.length} withdrawals`);
-      data.push(
-        beanstalk.interface.encodeFunctionData('claimWithdrawals', [
-          token.address,
-          crates.map((crate) => crate.season.toString()),
-          claimDestination,
-        ])
-      );
-    } 
-    
-    // Claim a single withdrawal of `token` in one call. Gas efficient.
-    else {
-      console.debug('[Claim] claiming a single withdrawal');
-      data.push(
-        beanstalk.interface.encodeFunctionData('claimWithdrawal', [
-          token.address,
-          crates[0].season.toString(),
-          claimDestination,
-        ])
-      );
-    }
-
-    //
-    if (token.isLP && removeLiquidity) {
-      if (!values.token.steps) throw new Error('No quote found.');
-      const encoded = Farm.encodeStepsWithSlippage(
-        values.token.steps,
-        values.settings.slippage / 100,
-        // ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage / 100, 6))
-      );
-      values?.token?.steps.forEach((step, i) => console.debug(`step ${i}:`, step.decode(encoded[i])));
-      data.push(...encoded);
-    }
-
-    beanstalk.farm(data, {})
-      .then((txn) => {
-        txToast.confirming(txn);
-        return txn.wait();
-      })
-      .then((receipt) => {
-        txToast.success(receipt);
-        formActions.resetForm();
-      })
-      .catch((err) => {
-        console.error(
-          txToast.error(err.error || err)
-        );
-        formActions.setSubmitting(false);
+      txToast = new TransactionToast({
+        loading: `Claiming ${displayFullBN(claimableBalance)} ${token.name} from the Silo`,
+        success: 'Claiming successful',
       });
+      
+      // If the user wants to swap their LP token for something else,
+      // we send their Claimable `token` to their internal balance for
+      // ease of interaction and gas efficiency.
+      const removeLiquidity  = (values.tokenOut !== token);
+      const claimDestination = token.isLP && removeLiquidity
+        ? FarmToMode.INTERNAL
+        : values.destination;
+
+      console.debug(`[Claim] claimDestination = ${claimDestination}, crates = `, crates);
+
+      const data : string[] = [];
+      
+      // Claim multiple withdrawals of `token` in one call
+      if (crates.length > 1) {
+        console.debug(`[Claim] claiming ${crates.length} withdrawals`);
+        data.push(
+          beanstalk.interface.encodeFunctionData('claimWithdrawals', [
+            token.address,
+            crates.map((crate) => crate.season.toString()),
+            claimDestination,
+          ])
+        );
+      } 
+      
+      // Claim a single withdrawal of `token` in one call. Gas efficient.
+      else {
+        console.debug('[Claim] claiming a single withdrawal');
+        data.push(
+          beanstalk.interface.encodeFunctionData('claimWithdrawal', [
+            token.address,
+            crates[0].season.toString(),
+            claimDestination,
+          ])
+        );
+      }
+
+      if (token.isLP && removeLiquidity) {
+        if (!values.token.steps) throw new Error('No quote found.');
+        const encoded = Farm.encodeStepsWithSlippage(
+          values.token.steps,
+          values.settings.slippage / 100,
+        );
+        values?.token?.steps.forEach((step, i) => console.debug(`step ${i}:`, step.decode(encoded[i])));
+        data.push(...encoded);
+      }
+
+      const txn = await beanstalk.farm(data, {});
+      txToast.confirming(txn);
+
+      const receipt = await txn.wait();
+      await refetchFarmerSilo();
+      txToast.success(receipt);
+      formActions.resetForm();
+
+    } catch (err) {
+      txToast ? txToast.error(err) : toast.error(parseError(err));
+      formActions.setSubmitting(false);
+    }
   }, [
     beanstalk,
     siloBalance?.claimable,
     claimableBalance,
     token,
+    refetchFarmerSilo,
     // Bean,
     // beanstalk,
     // token

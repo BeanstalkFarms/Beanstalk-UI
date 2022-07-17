@@ -23,7 +23,7 @@ import { useGetChainConstant } from 'hooks/useChainConstant';
 import { AppState } from 'state';
 import { parseWithdrawals } from 'util/Crates';
 
-export const useFarmerSilo = () => {
+export const useFetchFarmerSilo = () => {
   /// Helpers
   const dispatch  = useDispatch();
   const account   = useAccount()
@@ -416,7 +416,7 @@ export const useFarmerSilo = () => {
 // -- Updater
 
 const FarmerSiloUpdater = () => {
-  const [fetch, clear] = useFarmerSilo();
+  const [fetch, clear] = useFetchFarmerSilo();
   const account = useAccount()
   const chainId = useChainId();
 
