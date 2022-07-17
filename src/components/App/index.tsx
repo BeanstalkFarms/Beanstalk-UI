@@ -18,6 +18,7 @@ import SunUpdater from 'state/beanstalk/sun/updater';
 import BarnUpdater from 'state/beanstalk/barn/updater';
 import SiloUpdater from 'state/beanstalk/silo/updater';
 import FarmerSiloUpdater from 'state/farmer/silo/updater';
+import FarmerFieldUpdater from 'state/farmer/field/updater';
 import FarmerEventsUpdater from 'state/farmer/events/updater';
 import FarmerEventsProcessor from 'state/farmer/events/processor';
 import FarmerBalancesUpdater from 'state/farmer/balances/updater';
@@ -107,6 +108,7 @@ export default function App() {
       {/* -----------------------
         * Farmer Updaters
         * ----------------------- */}
+      <FarmerFieldUpdater />
       <FarmerEventsUpdater />
       <FarmerEventsProcessor />
       <FarmerBalancesUpdater />
