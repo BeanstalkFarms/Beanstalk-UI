@@ -29,6 +29,7 @@ import { LoadingButton } from '@mui/lab';
 import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
+import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 
 // -----------------------------------------------------------------------
 
@@ -275,7 +276,8 @@ const Claim : React.FC<{
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
 
   /// Data
-  const [refetchFarmerSilo] = useFetchFarmerSilo();
+  const [refetchFarmerSilo]     = useFetchFarmerSilo();
+  const [refetchFarmerBalances] = useFetchFarmerBalances();
   const claimableBalance = siloBalance?.claimable.amount;
 
   // Form
@@ -353,7 +355,7 @@ const Claim : React.FC<{
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
-      await refetchFarmerSilo();
+      await Promise.all([refetchFarmerSilo(), refetchFarmerBalances()]);
       txToast.success(receipt);
       formActions.resetForm();
     } catch (err) {
@@ -366,6 +368,7 @@ const Claim : React.FC<{
     claimableBalance,
     token,
     refetchFarmerSilo,
+    refetchFarmerBalances,
     // Bean,
     // beanstalk,
     // token
