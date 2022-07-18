@@ -25,6 +25,7 @@ module.exports = {
     'src/state/v1/**/*',
     'src/util/v1/**/*',
     'src/constants/v1/**/*',
+    'src/constants/abi/**/*.json',
     'src/generated/**/*'
   ],
   plugins: [

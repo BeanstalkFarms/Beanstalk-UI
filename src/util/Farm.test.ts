@@ -43,6 +43,16 @@ describe('optimize from mode', () => {
       }
     )).toEqual(FarmFromMode.INTERNAL_EXTERNAL);
   });
+  it('works for max amount', () => {
+    expect(optimizeFromMode(
+      BN(150),
+      {
+        internal: BN(100),
+        external: BN(50),
+        total:    BN(150),
+      }
+    )).toEqual(FarmFromMode.INTERNAL_EXTERNAL);
+  });
 });
 
 describe('combines balances', () => {

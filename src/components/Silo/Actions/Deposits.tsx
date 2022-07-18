@@ -51,7 +51,7 @@ const Deposits : React.FC<{
         <Tooltip
           title={(
             <>
-              <Typography>BDV: {displayBN(params.row.bdv)}</Typography>
+              <Typography>BDV: {displayFullBN(params.row.bdv, token.displayDecimals)}</Typography>
               <Typography>Value: {displayUSD(getUSD(Bean, params.row.bdv))}</Typography>
             </>
           )}

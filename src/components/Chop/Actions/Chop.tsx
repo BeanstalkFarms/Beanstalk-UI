@@ -21,55 +21,61 @@ import useToggle from 'hooks/display/useToggle';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useFarmerBalances from 'hooks/useFarmerBalances';
 import useTokenMap from 'hooks/useTokenMap';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { displayBN, displayFullBN, getChainConstant, parseError, toStringBaseUnitBN } from 'util/index';
 import { useSigner } from 'hooks/ledger/useSigner';
 import toast from 'react-hot-toast';
-import { useAccount } from 'wagmi';
-import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
-import { ActionType } from '../../../util/Actions';
-import TokenInputField from '../../Common/Form/TokenInputField';
-import { BeanstalkPalette } from '../../App/muiTheme';
-import useChainId from '../../../hooks/useChain';
-import TransactionToast from '../../Common/TxnToast';
-import { FarmToMode } from '../../../lib/Beanstalk/Farm';
-import DestinationField from '../../Field/DestinationField';
+import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
+import { ActionType } from 'util/Actions';
+import TokenInputField from 'components/Common/Form/TokenInputField';
+import { BeanstalkPalette } from 'components/App/muiTheme';
+import useChainId from 'hooks/useChain';
+import TransactionToast from 'components/Common/TxnToast';
+import { FarmToMode } from 'lib/Beanstalk/Farm';
+import DestinationField from 'components/Field/DestinationField';
+import useAccount from 'hooks/ledger/useAccount';
+import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
+import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
+import { optimizeFromMode } from 'util/Farm';
 
 type ChopFormValues = FormState & {
-  settings: {
-    slippage: number;
-  },
-  amount: BigNumber;
   destination: FarmToMode;
 };
 
-const ChopForm: React.FC<FormikProps<ChopFormValues>
-  & {
-  balances: ReturnType<typeof useFarmerBalances>;
-  beanstalk: BeanstalkReplanted;
-  // chopPenalty: BigNumber;
-}> = ({
+const ChopForm: React.FC<
+  FormikProps<ChopFormValues> & {
+    balances: ReturnType<typeof useFarmerBalances>;
+    beanstalk: BeanstalkReplanted;
+  }
+> = ({
   values,
   setFieldValue,
-  //
   balances,
   beanstalk,
-  // chopPenalty
 }) => {
-  // TODO: constrain this when siloToken = Unripe
   const chainId = useChainId();
   const erc20TokenMap = useTokenMap<ERC20Token | NativeToken>([UNRIPE_BEAN, UNRIPE_BEAN_CRV3]);
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
+  const penalties = useSelector<AppState, AppState['_bean']['unripe']>((state) => state._bean.unripe);
 
-  // Maps an unripe token to its output token
+  /// Maps an unripe token to its output token
   const tokenOutputMap = {
-    [getChainConstant(UNRIPE_BEAN, chainId).address]: getChainConstant(BEAN, chainId),
+    [getChainConstant(UNRIPE_BEAN, chainId).address]:      getChainConstant(BEAN, chainId),
     [getChainConstant(UNRIPE_BEAN_CRV3, chainId).address]: getChainConstant(BEAN_CRV3_LP, chainId),
   };
 
-  //
+  /// Derived values
+  const state          = values.tokens[0];
+  const inputToken     = state.token;
+  const tokenBalance   = balances[inputToken.address];
+  const chopPenalty    = penalties.penalties[inputToken.address];
+  const outputToken    = tokenOutputMap[inputToken.address];
+  const amountOut      = state.amount?.multipliedBy(chopPenalty);
+  const displayPenalty = new BigNumber(1).minus(chopPenalty).multipliedBy(100);
+
+  ///
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
     // If the user has typed some existing values in,
     // save them. Add new tokens to the end of the list.
@@ -81,21 +87,16 @@ const ChopForm: React.FC<FormikProps<ChopFormValues>
     });
     setFieldValue('tokens', [
       ...newValue,
-      ...Array.from(copy).map((_token) => ({ token: _token, amount: undefined })),
+      ...Array.from(copy).map((_token) => ({ 
+        token: _token, 
+        amount: undefined // balances[_token.address]?.total || 
+      })),
     ]);
   }, [values.tokens, setFieldValue]);
 
-  const penalties = useSelector<AppState, AppState['_bean']['unripe']>((state) => state._bean.unripe);
-  const selectedTokenAddress = values.tokens[0].token.address;
-  const chopPenalty = penalties.penalties[selectedTokenAddress];
-  const displayPenalty = new BigNumber(1).minus(chopPenalty).multipliedBy(100);
-  const tokenBalance = values.amount;
-  const amountOut = tokenBalance?.multipliedBy(chopPenalty);
-  const outputToken = tokenOutputMap[values.tokens[0].token.address];
-
-  useEffect(() => {
-    setFieldValue('amount', balances[selectedTokenAddress]?.total);
-  }, [balances, selectedTokenAddress, setFieldValue]);
+  const isValid = (
+    amountOut?.gt(0)
+  );
 
   return (
     <Form autoComplete="off">
@@ -109,36 +110,36 @@ const ChopForm: React.FC<FormikProps<ChopFormValues>
         mode={TokenSelectMode.SINGLE}
       />
       <Stack gap={1}>
-        {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
         <TokenInputField
-          token={values.tokens[0].token}
+          token={inputToken}
           balance={tokenBalance || ZERO_BN}
-          name="amount"
-          disabled
+          name="tokens.0.amount"
           // MUI 
           fullWidth
           InputProps={{
             endAdornment: (
               <TokenAdornment
-                token={values.tokens[0].token}
+                token={inputToken}
                 onClick={showTokenSelect}
               />
             )
           }}
         />
-        <DestinationField
-          name="destination"
-        />
-        {tokenBalance?.gt(0) ? (
+        <Stack gap={0.5}>
+          <DestinationField
+            name="destination"
+          />
+          <Stack direction="row" justifyContent="space-between" px={0.5}>
+            <Typography variant="body1" color="gray">Chop Penalty</Typography>
+            <Typography variant="body1" color={BeanstalkPalette.washedRed}>{displayFullBN(displayPenalty, 5)}%</Typography>
+          </Stack>
+        </Stack>
+        {isValid ? (
           <>
             <TxnSeparator />
-            <Stack direction="row" justifyContent="space-between" sx={{ p: 1 }}>
-              <Typography variant="body1" color={BeanstalkPalette.washedRed}>Chop Penalty:</Typography>
-              <Typography variant="body1" color={BeanstalkPalette.washedRed}>{displayBN(displayPenalty)}%</Typography>
-            </Stack>
             <TokenOutputField
               token={outputToken}
-              amount={amountOut}
+              amount={amountOut || ZERO_BN}
             />
             <Box>
               <Accordion variant="outlined">
@@ -148,11 +149,11 @@ const ChopForm: React.FC<FormikProps<ChopFormValues>
                     actions={[
                       {
                         type: ActionType.BASE,
-                        message: `Chop ${displayBN(values.amount)} Unripe ${values.tokens[0].token.symbol}`
+                        message: `Chop ${displayBN(state.amount || ZERO_BN)} ${inputToken}`
                       },
                       {
                         type: ActionType.BASE,
-                        message: `Receive ${displayBN(amountOut)} ${outputToken}`
+                        message: `Receive ${displayBN(amountOut || ZERO_BN)} ${outputToken}`
                       },
                     ]}
                   />
@@ -166,7 +167,7 @@ const ChopForm: React.FC<FormikProps<ChopFormValues>
           variant="contained"
           color="primary"
           size="large"
-          disabled={!tokenBalance?.gt(0)}
+          disabled={!isValid}
           contract={beanstalk}
           tokens={values.tokens}
           mode="auto"
@@ -180,60 +181,83 @@ const ChopForm: React.FC<FormikProps<ChopFormValues>
 
 // ---------------------------------------------------
 
+const PREFERRED_TOKENS : PreferredToken[] = [
+  {
+    token: UNRIPE_BEAN,
+    minimum: new BigNumber(1),
+  },
+  {
+    token: UNRIPE_BEAN_CRV3,
+    minimum: new BigNumber(1),
+  }
+];
+
 const Chop: React.FC<{}> = () => {
-  const { data: account } = useAccount();
-  const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
-  const farmerBalances   = useFarmerBalances();
-  const chainId = useChainId();
-  const urBean = getChainConstant(UNRIPE_BEAN, chainId);
+  ///
+  const account           = useAccount();
+  const { data: signer }  = useSigner();
+  const beanstalk         = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+
+  ///
+  const baseToken         = usePreferredToken(PREFERRED_TOKENS, 'use-best');
+  const farmerBalances    = useFarmerBalances();
+  const [refetchFarmerBalances] = useFetchFarmerBalances();
 
   // Form setup
   const initialValues: ChopFormValues = useMemo(() => ({
-    settings: {
-      slippage: 0.1, // 0.1%
-    },
     tokens: [
       {
-        token: urBean,
+        token:  baseToken as ERC20Token,
         amount: null,
       },
     ],
     destination: FarmToMode.INTERNAL,
-    amount: farmerBalances[urBean.address]?.total, // VERIFY: internal, external, or total?
-  }), [farmerBalances, urBean]);
+  }), [baseToken]);
 
-  const onSubmit = useCallback(async (values: ChopFormValues, formActions: FormikHelpers<ChopFormValues>) => {
-    let txToast;
-    try {
-      if (!farmerBalances[urBean.address]?.total.gt(0)) throw new Error('No Unfertilized token to Chop.');
-      if (!account?.address) throw new Error('Connect a wallet first.');
+  const onSubmit = useCallback(
+    async (
+      values: ChopFormValues,
+      formActions: FormikHelpers<ChopFormValues>
+    ) => {
+      let txToast;
+      try {
+        if (!account) throw new Error('Connect a wallet first.');
+        const state = values.tokens[0];
+        if (!state.amount?.gt(0)) { throw new Error('No Unfertilized token to Chop.'); }
 
-      const token = values.tokens[0].token;
+        txToast = new TransactionToast({
+          loading: `Chopping ${displayFullBN(state.amount)} ${state.token.symbol}`,
+          success: 'Chop successful.',
+        });
 
-      txToast = new TransactionToast({
-        loading: `Chopping ${displayFullBN(values.amount)} ${token.symbol}`,
-        success: 'Chop successful.',
-      });
+        const txn = await beanstalk.chop(
+          state.token.address,
+          toStringBaseUnitBN(state.amount, state.token.decimals),
+          optimizeFromMode(state.amount, farmerBalances[state.token.address]),
+          values.destination
+        );
+        txToast.confirming(txn);
 
-      const txn = await beanstalk.ripen(
-        token.address,
-        toStringBaseUnitBN(values.amount, token.decimals),
-        values.destination
-      );
-
-      txToast.confirming(txn);
-
-      const receipt = await txn.wait();
-      txToast.success(receipt);
-    } catch (err) {
-      txToast ? txToast.error(err) : toast.error(parseError(err));
-      formActions.setSubmitting(false);
-    }
-  }, [account?.address, beanstalk, farmerBalances, urBean.address]);
+        const receipt = await txn.wait();
+        await Promise.all([refetchFarmerBalances()]); // should we also refetch the penalty?
+        txToast.success(receipt);
+        formActions.resetForm();
+      } catch (err) {
+        txToast ? txToast.error(err) : toast.error(parseError(err));
+        formActions.setSubmitting(false);
+      }
+    },
+    [
+      account,
+      beanstalk,
+      refetchFarmerBalances,
+      farmerBalances,
+    ]
+  );
 
   return (
     <Formik<ChopFormValues>
+      enableReinitialize
       initialValues={initialValues}
       onSubmit={onSubmit}
     >
