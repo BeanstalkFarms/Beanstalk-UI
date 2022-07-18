@@ -1,4 +1,6 @@
 #!/usr/bin/env sh
+echo "CI = $CI"
+echo -n "$CI"
 [ -n "$CI" ] && exit 0
 
 . "$(dirname -- "$0")/_/husky.sh"
