@@ -1,60 +1,55 @@
 import React, { useCallback, useMemo } from 'react';
-import { Accordion, AccordionDetails, Box, Button, Stack, Tooltip, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Button, Link, Stack, Tooltip, Typography } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useAccount, useProvider } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
-import { Token } from 'classes';
-import { BEAN, BEAN_CRV3_LP } from 'constants/tokens';
+import { BEAN, BEAN_CRV3_LP, PODS } from 'constants/tokens';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { ActionType } from 'util/Actions';
-import usePools from 'hooks/usePools';
-import { ERC20Token } from 'classes/Token';
 import {
-  FormTokenState,
-  TokenOutputField,
+  FormTokenState, TokenOutputField,
   TokenQuoteProvider,
-  TokenSelectDialog,
   TxnPreview,
   TxnSeparator
 } from 'components/Common/Form';
 import { BeanstalkReplanted } from 'generated/index';
 import Farm, { FarmToMode } from 'lib/Beanstalk/Farm';
-import { ZERO_BN } from 'constants/index';
-import { displayBN, displayTokenAmount, parseError, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
-import TokenIcon from 'components/Common/TokenIcon';
-import useToggle from 'hooks/display/useToggle';
-import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
-import PillRow from 'components/Common/Form/PillRow';
+import {
+  displayBN,
+  displayTokenAmount,
+  getChainConstant,
+  parseError,
+  toStringBaseUnitBN,
+  toTokenUnitsBN
+} from 'util/index';
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import { AppState } from '../../../state';
 import { QuoteHandler } from '../../../hooks/useQuote';
 import DestinationField from '../DestinationField';
 import TransactionToast from '../../Common/TxnToast';
+import { ZERO_BN } from '../../../constants';
+import Warning from '../../Common/Form/Warning';
+import TokenAdornment from '../../Common/Form/TokenAdornment';
 
 // -----------------------------------------------------------------------
 
 type HarvestFormValues = {
   token: FormTokenState;
   destination: FarmToMode;
-  tokenOut: ERC20Token;
 }
 
 // -----------------------------------------------------------------------
 
-const HarvestForm : React.FC<
-  FormikProps<HarvestFormValues> & {
-    token: Token;
-    harvestablePods: BigNumber;
-    farm: Farm;
-  }
-> = ({
+const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
+  harvestablePods: BigNumber;
+  farm: Farm;
+}> = ({
   // Custom
-  token,
   harvestablePods,
   // eslint-disable-next-line
   farm,
@@ -64,16 +59,9 @@ const HarvestForm : React.FC<
   setFieldValue,
 }) => {
   const chainId = useChainId();
-  const pools = usePools();
   const isMainnet = chainId === SupportedChainId.MAINNET;
-
-  // ASSUMPTION: Pool address === LP Token address
-  // Lazy way to do this. Should key pools by lpToken.address.
-  const pool = pools[token.address];
-  const claimableTokens = useMemo(() => ([
-    token,
-    ...(token.isLP && pool?.tokens || []),
-  ]), [pool, token]);
+  const bean = getChainConstant(BEAN, chainId);
+  const lp = getChainConstant(BEAN_CRV3_LP, chainId);
 
   //
   const amount = harvestablePods;
@@ -82,16 +70,7 @@ const HarvestForm : React.FC<
     && amount.gt(0)
     && values.destination !== undefined
   );
-  const destination = (
-    values.destination === FarmToMode.EXTERNAL
-      ? 'to your wallet'
-      : 'to your internal balance'
-  );
 
-  // const handleQuote = () => {
-  //
-  // };
-  
   const handleQuote = useCallback<QuoteHandler>(
     async (_tokenIn, _amountIn, _tokenOut) => {
       if (_tokenIn === _tokenOut) return { amountOut: _amountIn };
@@ -101,15 +80,6 @@ const HarvestForm : React.FC<
     },
     []
   );
-
-  // const [result, quoting, refreshQuote] = useQuote(values.tokenOut, handleQuote, { ignoreSameToken: false })
-  const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
-
-  //
-  const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
-    const _token = Array.from(_tokens)[0];
-    setFieldValue('tokenOut', _token);
-  }, [setFieldValue]);
 
   // This should be memoized to prevent an infinite reset loop
   const quoteSettings = useMemo(() => ({
@@ -126,51 +96,39 @@ const HarvestForm : React.FC<
             {/* Claimable Token */}
             <TokenQuoteProvider
               name="token"
-              tokenOut={values.tokenOut}
-              // balance={amount}
-              balance={undefined}
+              tokenOut={BEAN[1]}
+              balance={amount}
+              balanceLabel="Harvestable Pod Balance"
               state={values.token}
               disabled
-              // FIXME:
-              // "disableTokenSelect" applies the disabled prop to
-              // the TokenSelect button. However if we don't pass
-              // a handler to the button then it's effectively disabled
-              // but shows with stronger-colored text. param names are
-              // a bit confusing.
-              // disableTokenSelect={true}
               quoteSettings={quoteSettings}
               handleQuote={handleQuote}
               hideQuote
+              InputProps={{
+                endAdornment: (
+                  <TokenAdornment
+                    token={PODS}
+                  />
+                )
+              }}
             />
             {/* Setting: Destination */}
             <DestinationField
               name="destination"
-            />
-            {/* Setting: Claim LP */}
-            <PillRow
-              isOpen={isTokenSelectVisible}
-              label="Deposit as"
-              onClick={showTokenSelect}>
-              <TokenIcon token={values.tokenOut} />
-              <Typography variant="body1">{values.tokenOut.name}</Typography>
-            </PillRow>
-            <TokenSelectDialog
-              open={isTokenSelectVisible}
-              handleClose={hideTokenSelect}
-              handleSubmit={handleSelectTokens}
-              selected={[values.tokenOut]}
-              balances={undefined} // hide balances from right side of selector
-              tokenList={claimableTokens}
-              mode={TokenSelectMode.SINGLE}
             />
           </Stack>
           {/* Transaction Details */}
           <>
             <TxnSeparator mt={-1} />
             <TokenOutputField
-              token={values.tokenOut}
+              token={BEAN[1]}
               amount={values.token.amountOut || ZERO_BN}
               isLoading={values.token.quoting}
+            />
+            <Warning
+              message={(
+                <Typography variant="body1">You can Harvest your Pods and Deposit Beans into the Silo in one transaction on the <Link href={`/#/silo/${bean.address}`}>Bean</Link> or <Link href={`/#/silo/${lp.address}`}>LP</Link> Deposit page.</Typography>
+              )}
             />
             <Box>
               <Accordion variant="outlined">
@@ -180,16 +138,12 @@ const HarvestForm : React.FC<
                     actions={[
                       {
                         type: ActionType.BASE,
-                        message: `Claim ${displayTokenAmount(amount, token)}.`
+                        message: `Harvest ${displayTokenAmount(amount, PODS)}.`
                       },
                       {
                         type: ActionType.BASE,
-                        message: values.tokenOut === token ? (
-                          `Unpack ${displayTokenAmount(amount, token)} into 3CRV and send ${destination}.`
-                        ) : (
-                          `Send ${displayTokenAmount(amount, token)} and send ${destination}.`
-                        )
-                      }
+                        message: `Receive ${displayTokenAmount(amount, BEAN[1])}.`
+                      },
                     ]}
                   />
                 </AccordionDetails>
@@ -207,19 +161,18 @@ const HarvestForm : React.FC<
 
 // -----------------------------------------------------------------------
 
-const Harvest : React.FC<{}> = () => {
+const Harvest: React.FC<{}> = () => {
   const { data: account } = useAccount();
   const provider = useProvider();
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
   const farm = useMemo(() => new Farm(provider), [provider]);
-  
-  const farmerField  = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
+
+  const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
 
   // Form
-  const initialValues : HarvestFormValues = useMemo(() => ({
+  const initialValues: HarvestFormValues = useMemo(() => ({
     destination: FarmToMode.INTERNAL,
-    tokenOut: BEAN_CRV3_LP[1],
     token: {
       token: BEAN[1],
       amount: farmerField.harvestablePods,
@@ -260,9 +213,7 @@ const Harvest : React.FC<{}> = () => {
         <Stack spacing={1}>
           {/* <pre>{JSON.stringify(formikProps.values, null, 2)}</pre> */}
           <HarvestForm
-            token={BEAN[1]}
             harvestablePods={farmerField.harvestablePods}
-            // harvestablePods={new BigNumber(100)}
             farm={farm}
             {...formikProps}
           />

@@ -4,7 +4,7 @@ import { Stack, Typography } from '@mui/material';
 import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
 
 const Warning : React.FC<{
-  message: string;
+  message: string | JSX.Element;
 }> = React.memo(({
   message
 }) => (
