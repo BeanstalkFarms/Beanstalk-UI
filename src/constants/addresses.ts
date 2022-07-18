@@ -48,12 +48,12 @@ export const BEAN_ADDRESSES = {
   [SupportedChainId.MAINNET]:   '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db'.toLowerCase(),
   [SupportedChainId.ROPSTEN]:   '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db'.toLowerCase(),
   [SupportedChainId.PHOENIX]:   '0xBEA0003eA948Db32082Fc6F4EC0729D258a0444c'.toLowerCase(),
-  [SupportedChainId.LOCALHOST]: '0xBEA0003eA948Db32082Fc6F4EC0729D258a0444c'.toLowerCase(),
+  [SupportedChainId.LOCALHOST]: '0xBEA0000029AD1c77D3d5D23Ba2D8893dB9d1Efab'.toLowerCase(),
 };
 
 export const UNRIPE_BEAN_ADDRESSES = {
   // --------------------------------------------------
-  // "Unripe Bean": Unripe vesting asset for the Bean token, Localhost 
+  // "Unripe Bean": Unripe vesting asset for the Bean token, Localhost
   // -------------------------------------------------
   [SupportedChainId.MAINNET]:   '0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449'.toLowerCase(),
   [SupportedChainId.PHOENIX]:   '0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449'.toLowerCase(),
@@ -156,16 +156,16 @@ export const BEAN_CRV3_ADDRESSES = {
   // coins[0] = 0xDC59ac4FeFa32293A95889Dc396682858d52e5Db (BEAN)
   // coins[1] = 0x3D1449b23Ed2Eff19c2da41170d0760299eE9dbD (b3CRV)
   //
-  // NOTE: On Ropsten, there is a broken copy of this contract. The correct contract 
+  // NOTE: On Ropsten, there is a broken copy of this contract. The correct contract
   // is 0x9ED0380C5dedadd3b2a32f5D5FD6B3929f8d39d9.
   // https://ropsten.etherscan.io/address/0x8e0dc2f6e8fb8712bc1e3c411609e581077cd1d6
-  // 
+  //
   // NOTE: On Ropsten, there was an ERC-20 token called "MockSiloToken" deployed
   // for testing of Generalized Silo functionality. This was prior to Beanstalk's
   // deployment of the BEAN:3CRV Metapool on Ropsten. It is now deprecated.
   // https://ropsten.etherscan.io/address/0xC20628FFFF326c80056e35E39308e4eE0Ff44fFC
   [SupportedChainId.ROPSTEN]: '0x9ED0380C5dedadd3b2a32f5D5FD6B3929f8d39d9'.toLowerCase(),
-  
+
   // --------------------------------------------------
   // Below is the address for the new BEAN:3CRV
   // metapool deployed as part of Replanting Beanstalk.
