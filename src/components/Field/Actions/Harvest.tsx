@@ -24,7 +24,7 @@ import {
 import { BeanstalkReplanted } from 'generated/index';
 import Farm, { FarmToMode } from 'lib/Beanstalk/Farm';
 import { ZERO_BN } from 'constants/index';
-import { displayBN, displayTokenAmount, parseError, toTokenUnitsBN } from 'util/index';
+import { displayBN, displayTokenAmount, parseError, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
 import useToggle from 'hooks/display/useToggle';
 import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
@@ -240,7 +240,7 @@ const Harvest : React.FC<{}> = () => {
       });
 
       const txn = await beanstalk.harvest(
-        Object.keys(farmerField.harvestablePlots),
+        Object.keys(farmerField.harvestablePlots).map((harvestIndex) => toStringBaseUnitBN(harvestIndex, 6)),
         values.destination
       );
 
