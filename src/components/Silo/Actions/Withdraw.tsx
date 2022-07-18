@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Accordion, AccordionDetails, Box, Button, Stack, Tooltip, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Button, Divider, Stack, Tooltip, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { LoadingButton } from '@mui/lab';
@@ -56,7 +56,7 @@ const WithdrawForm : React.FC<
   isSubmitting,
   submitForm,
   // Custom
-  token,
+  token: whitelistedToken,
   siloBalances,
   depositedBalance,
   withdrawSeasons,
@@ -69,9 +69,9 @@ const WithdrawForm : React.FC<
   // Input props
   const InputProps = useMemo(() => ({
     endAdornment: (
-      <TokenAdornment token={token} />
+      <TokenAdornment token={whitelistedToken} />
     )
-  }), [token]);
+  }), [whitelistedToken]);
 
   // Confirmation dialog
   const CONFIRM_DELAY = 2000; // ms
@@ -99,9 +99,9 @@ const WithdrawForm : React.FC<
 
   // Results
   const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
-    token,
+    whitelistedToken,
     values.tokens,
-    siloBalances[token.address]?.deposited.crates || [], // fallback
+    siloBalances[whitelistedToken.address]?.deposited.crates || [], // fallback
     season,
   );
   const isReady = (withdrawResult && withdrawResult.amount.lt(0));
@@ -116,6 +116,17 @@ const WithdrawForm : React.FC<
           <TokenOutputField
             token={STALK}
             amount={withdrawResult.stalk}
+            valueTooltip={(
+              <>
+                <div>Withdrawing from {withdrawResult.deltaCrates.length} Deposit{withdrawResult.deltaCrates.length === 1 ? '' : 's'}:</div>
+                <Divider sx={{ opacity: 0.2, my: 1 }} />
+                {withdrawResult.deltaCrates.map((_crate, i) => (
+                  <div key={i}>
+                    Season {_crate.season.toString()}: {displayFullBN(_crate.bdv, whitelistedToken.displayDecimals)} BDV, {displayFullBN(_crate.stalk, STALK.displayDecimals)} STALK, {displayFullBN(_crate.seeds, SEEDS.displayDecimals)} SEEDS
+                  </div>
+                ))}
+              </>
+            )}
           />
         </Box>
         <Box sx={{ flex: 1 }}>
@@ -126,9 +137,9 @@ const WithdrawForm : React.FC<
         </Box>
       </Stack>
       <TokenOutputField
-        token={token}
+        token={whitelistedToken}
         amount={withdrawResult.amount.abs()}
-        value={getUSD(token, withdrawResult.amount).abs()}
+        value={getUSD(whitelistedToken, withdrawResult.amount).abs()}
         modifier="Withdrawn"
       />
     </>
@@ -177,7 +188,7 @@ const WithdrawForm : React.FC<
         <Stack gap={1}>
           <TokenInputField
             name="tokens.0.amount"
-            token={token}
+            token={whitelistedToken}
             disabled={!depositedBalance || depositedBalance.eq(0)}
             balance={depositedBalance || ZERO_BN}
             balanceLabel="Deposited Balance"
@@ -196,7 +207,7 @@ const WithdrawForm : React.FC<
                         {
                           type: ActionType.WITHDRAW,
                           amount: withdrawResult.amount,
-                          token: token,
+                          token: whitelistedToken,
                         },
                         {
                           type: ActionType.UPDATE_SILO_REWARDS,
@@ -206,7 +217,7 @@ const WithdrawForm : React.FC<
                         {
                           type: ActionType.IN_TRANSIT,
                           amount: withdrawResult.amount,
-                          token: token,
+                          token: whitelistedToken,
                           withdrawSeasons
                         }
                       ]}

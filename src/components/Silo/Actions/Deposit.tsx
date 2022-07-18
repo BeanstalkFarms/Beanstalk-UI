@@ -39,6 +39,8 @@ import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
 import { parseError } from 'util/index';
 import toast from 'react-hot-toast';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 
 // -----------------------------------------------------------------------
 
@@ -54,6 +56,7 @@ const DepositForm : React.FC<
   FormikProps<DepositFormValues> & {
     tokenList: (ERC20Token | NativeToken)[];
     whitelistedToken: ERC20Token | NativeToken;
+    amountToBdv: (amount: BigNumber) => BigNumber;
     balances: FarmerBalances;
     contract: ethers.Contract;
     handleQuote: QuoteHandler;
@@ -61,7 +64,8 @@ const DepositForm : React.FC<
 > = ({
   // Custom
   tokenList,
-  whitelistedToken: siloToken,
+  whitelistedToken,
+  amountToBdv,
   balances,
   contract,
   handleQuote,
@@ -75,10 +79,10 @@ const DepositForm : React.FC<
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
 
   //
-  const { bdv, stalk, seeds, actions } = Beanstalk.Silo.Deposit.deposit(
-    siloToken,
+  const { amount, bdv, stalk, seeds, actions } = Beanstalk.Silo.Deposit.deposit(
+    whitelistedToken,
     values.tokens,
-    (amount: BigNumber) => amount,
+    amountToBdv,
   );
   const isMainnet = chainId === SupportedChainId.MAINNET;
   const isReady   = bdv.gt(0);
@@ -95,7 +99,10 @@ const DepositForm : React.FC<
     });
     setFieldValue('tokens', [
       ...newValue,
-      ...Array.from(copy).map((_token) => ({ token: _token, amount: undefined })),
+      ...Array.from(copy).map((_token) => ({
+        token: _token,
+        amount: undefined
+      })),
     ]);
   }, [values.tokens, setFieldValue]);
 
@@ -117,7 +124,7 @@ const DepositForm : React.FC<
               <TokenQuoteProvider
                 key={`tokens.${index}`}
                 name={`tokens.${index}`}
-                tokenOut={siloToken}
+                tokenOut={whitelistedToken}
                 balance={balances[tokenState.token.address] || ZERO_BN}
                 state={tokenState}
                 showTokenSelect={showTokenSelect}
@@ -129,22 +136,36 @@ const DepositForm : React.FC<
           </Stack>
           {isReady ? (
             <>
-              <TxnSeparator />
+              <TxnSeparator mt={-1} />
               <TokenOutputField
-                token={siloToken}
-                amount={bdv}
+                token={whitelistedToken}
+                amount={amount}
               />
               <Stack direction="row" gap={1} justifyContent="center">
                 <Box sx={{ flex: 1 }}>
                   <TokenOutputField
                     token={STALK}
                     amount={stalk}
+                    valueTooltip={(
+                      <>
+                        1 {whitelistedToken.symbol} &rarr; {displayFullBN(amountToBdv(new BigNumber(1)))} BDV<br />
+                        1 BDV = {whitelistedToken.getStalk().toString()} STALK
+                        {/* {displayFullBN(bdv, BEAN[1].displayDecimals)} BDV &rarr; {displayFullBN(stalk, STALK.displayDecimals)} STALK */}
+                      </>
+                    )}
                   />
                 </Box>
                 <Box sx={{ flex: 1 }}>
                   <TokenOutputField
                     token={SEEDS}
                     amount={seeds}
+                    valueTooltip={(
+                      <>
+                        1 {whitelistedToken.symbol} &rarr; {displayFullBN(amountToBdv(new BigNumber(1)))} BDV<br />
+                        1 BDV = {whitelistedToken.getSeeds().toString()} SEEDS
+                        {/* {displayFullBN(bdv, BEAN[1].displayDecimals)} BDV &rarr; {displayFullBN(seeds, SEEDS.displayDecimals)} SEED */}
+                      </>
+                    )}
                   />
                 </Box>
               </Stack>
@@ -203,6 +224,8 @@ const Deposit : React.FC<{
     USDC,
     USDT
   ]);
+
+  /// Derived
   const isUnripe = (
     whitelistedToken === urBean || 
     whitelistedToken === urBeanCrv3
@@ -230,6 +253,12 @@ const Deposit : React.FC<{
     allAvailableTokens,
   ]);
   const baseToken = usePreferredToken(preferredTokens, 'use-best') as (ERC20Token | NativeToken);
+
+  /// Beanstalk
+  const bdvPerToken = useSelector<AppState, AppState['_beanstalk']['silo']['balances'][string]['bdvPerToken'] | BigNumber>(
+    (state) => state._beanstalk.silo.balances[whitelistedToken.address]?.bdvPerToken || ZERO_BN
+  );
+  const amountToBdv = useCallback((amount: BigNumber) => bdvPerToken.times(amount), [bdvPerToken]);
 
   /// Farmer
   const balances = useFarmerBalances();
@@ -412,7 +441,7 @@ const Deposit : React.FC<{
       const { amount } = Beanstalk.Silo.Deposit.deposit(
         whitelistedToken,
         values.tokens,
-        (_amount: BigNumber) => _amount,
+        amountToBdv,
       );
 
       txToast = new TransactionToast({
@@ -505,6 +534,7 @@ const Deposit : React.FC<{
     Eth,
     beanstalk,
     whitelistedToken,
+    amountToBdv,
     refetchFarmerSilo,
     refetchFarmerBalances,
   ]);
@@ -518,6 +548,7 @@ const Deposit : React.FC<{
           </TxnSettings>
           <DepositForm
             handleQuote={handleQuote}
+            amountToBdv={amountToBdv}
             tokenList={tokenList as (ERC20Token | NativeToken)[]}
             whitelistedToken={whitelistedToken}
             balances={balances}

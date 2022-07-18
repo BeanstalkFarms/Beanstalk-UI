@@ -4,7 +4,7 @@ import { AppState } from 'state';
 import Token from 'classes/Token';
 import { NEW_BN } from 'constants/index';
 
-export default function useTVL() {
+export default function useBDV() {
   const beanstalkSiloBalances = useSelector<
     AppState,
     AppState['_beanstalk']['silo']['balances']
