@@ -31,9 +31,12 @@ import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { displayBN, displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
+import { displayBN, displayFullBN, parseError, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
 import { useProvider } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
+import toast from 'react-hot-toast';
+import { useFetchFarmerField } from 'state/farmer/field/updater';
+import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 
@@ -49,6 +52,7 @@ const SowForm : React.FC<
     balances: ReturnType<typeof useFarmerBalances>;
     beanstalk: BeanstalkReplanted;
     weather: BigNumber;
+    soil: BigNumber;
     farm: Farm;
   }
 > = ({
@@ -58,6 +62,7 @@ const SowForm : React.FC<
   balances,
   beanstalk,
   weather,
+  soil,
   farm,
 }) => {
   const erc20TokenMap = useTokenMap<ERC20Token | NativeToken>([BEAN, ETH, WETH]);
@@ -123,7 +128,6 @@ const SowForm : React.FC<
 
   return (
     <Form autoComplete="off">
-      {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
       <TokenSelectDialog
         open={isTokenSelectVisible}
         handleClose={hideTokenSelect}
@@ -142,6 +146,7 @@ const SowForm : React.FC<
           state={values.tokens[0]}
           showTokenSelect={showTokenSelect}
           handleQuote={handleQuote}
+          max={soil}
         />
         {isSubmittable ? (
           <>
@@ -219,13 +224,18 @@ const PREFERRED_TOKENS : PreferredToken[] = [
 const Sow : React.FC<{}> = () => {
   const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
   const balances = useFarmerBalances();
-  const Bean = useChainConstant(BEAN);
+  const Bean  = useChainConstant(BEAN);
   const Eth = useChainConstant(ETH);
-  const { data: signer } = useSigner();
   const provider = useProvider();
+  const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
   const farm = useMemo(() => new Farm(provider), [provider]);
   const weather = useSelector<AppState, AppState['_beanstalk']['field']['weather']['yield']>((state) => state._beanstalk.field.weather.yield);
+  const soil    = useSelector<AppState, AppState['_beanstalk']['field']['soil']>((state) => state._beanstalk.field.soil);
+
+  /// Refetchers
+  const [refetchFarmerField]    = useFetchFarmerField();
+  const [refetchFarmerBalances] = useFetchFarmerBalances();
 
   // Form setup
   const initialValues : SowFormValues = useMemo(() => ({
@@ -242,6 +252,7 @@ const Sow : React.FC<{}> = () => {
 
   // Handlers
   const onSubmit = useCallback(async (values: SowFormValues, formActions: FormikHelpers<SowFormValues>) => {
+    let txToast;
     try {
       const formData = values.tokens[0];
       const inputToken = formData.token;
@@ -254,7 +265,7 @@ const Sow : React.FC<{}> = () => {
       const amountPods = amountBeans.times(weather.div(100).plus(1));
       let value = ZERO_BN;
       
-      const txToast = new TransactionToast({
+      txToast = new TransactionToast({
         loading: `Sowing ${displayFullBN(amountBeans, Bean.decimals)} Beans for ${displayFullBN(amountPods, PODS.decimals)} Pods`,
         success: 'Sow complete.',
       });
@@ -297,30 +308,26 @@ const Sow : React.FC<{}> = () => {
         ])
       );
  
-      //
-      return beanstalk.farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) })
-        .then((txn) => {
-          txToast.confirming(txn);
-          return txn.wait();
-        })
-        .then((receipt) => {
-          txToast.success(receipt);
-          formActions.resetForm();
-        })
-        .catch((err) => {
-          console.error(
-            txToast.error(err.error || err)
-          );
-        });
-    } catch (e) {
-      // txToast.error(err);
+      const txn = await beanstalk.farm(data, { value: toStringBaseUnitBN(value, Eth.decimals) });
+      txToast.confirming(txn);
+      
+      const receipt = await txn.wait();
+      await Promise.all([refetchFarmerField(), refetchFarmerBalances()]);  
+      txToast.success(receipt);
+      formActions.resetForm();
+    } catch (err) {
+      console.error(err);
+      txToast?.error(err) || toast.error(parseError(err));
+    } finally {
       formActions.setSubmitting(false);
     }
   }, [
     beanstalk,
     weather,
     Bean,
-    Eth
+    Eth,
+    refetchFarmerField,
+    refetchFarmerBalances,
   ]);
 
   return (
@@ -337,6 +344,7 @@ const Sow : React.FC<{}> = () => {
             balances={balances}
             beanstalk={beanstalk}
             weather={weather}
+            soil={soil}
             farm={farm}
             {...formikProps}
           />

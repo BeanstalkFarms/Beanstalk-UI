@@ -29,6 +29,10 @@ export type TokenInputCustomProps = {
    */
   balanceLabel?: string;
   /**
+   * 
+   */
+  max?: BigNumber | 'use-balance';
+  /**
    *
    */
   hideBalance?: boolean;
@@ -49,20 +53,19 @@ export type TokenInputProps = (
 
 export const VALID_INPUTS = /[0-9]*/;
 
-const TokenInput: React.FC<TokenInputProps
-  & FieldProps // Formik Field
+const TokenInput: React.FC<
+  TokenInputProps & FieldProps
 > = ({
-  /// Custom props
+  /// Balances
   token,
-  // Balance
   balance: _balance,
   balanceLabel = 'Balance',
   hideBalance = false,
   quote,
+  max: _max = 'use-balance',
   /// Formik props
   field,
   form,
-  // meta,
   /// TextField props
   handleChange: _handleChange,
   placeholder,
@@ -104,6 +107,13 @@ const TokenInput: React.FC<TokenInputProps
     || form.isSubmitting
   );
 
+  const clamp = useCallback((amount: BigNumber | null) => {
+    if (!amount) return null;
+    const max = _max === 'use-balance' ? balance : _max;
+    if (max?.lt(amount)) return max;
+    return amount;
+  }, [_max, balance]);
+
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     // Always update the display amount right away.
     setDisplayAmount(
@@ -115,31 +125,20 @@ const TokenInput: React.FC<TokenInputProps
     // value is different. For example, if the displayValue
     // goes from '1.0' -> '1.00', don't trigger an update.
     if (newValue === null || !newValue.eq(field.value)) {
-      // If a balance is provided, enforce it as a maximum.
-      const finalValue = ((balance && newValue) && newValue.gt(balance))
-        ? balance
-        : newValue;
-      form.setFieldValue(
-        field.name,
-        finalValue,
-      );
-      _handleChange?.(finalValue);
+      const clampedValue = clamp(newValue);
+      form.setFieldValue(field.name, clampedValue);
+      _handleChange?.(clampedValue); // bubble up if necessary
     }
-  }, [
-    form,
-    field.name,
-    field.value,
-    balance,
-    _handleChange
-  ]);
+  }, [form, field.name, field.value, _handleChange, clamp]);
 
   // 
   const handleMax = useCallback(() => {
     if (balance) {
-      form.setFieldValue(field.name, balance);
-      _handleChange?.(balance);
+      const clampedValue = clamp(balance);
+      form.setFieldValue(field.name, clampedValue);
+      _handleChange?.(clampedValue);
     }
-  }, [balance, form, field.name, _handleChange]);
+  }, [balance, clamp, form, field.name, _handleChange]);
 
   // Ignore scroll events on the input. Prevents
   // accidentally scrolling up/down the number input.
