@@ -2,7 +2,6 @@ import React, { useCallback, useEffect } from 'react';
 import {
   Slider,
   SliderProps,
-  Stack,
 } from '@mui/material';
 import { useFormikContext } from 'formik';
 import BigNumber from 'bignumber.js';
@@ -79,30 +78,28 @@ const SliderField : React.FC<
   ]);
 
   return (
-    <Stack gap={0.5} py={1.5}>
-      <Slider
-        min={min}
-        max={max}
-        getAriaLabel={() => 'Minimum distance shift'}
-        value={value}
-        onChange={handleChange}
-        // valueLabelFormat={}
-        valueLabelDisplay="auto"
-        disableSwap
-        sx={{
-          '& .MuiSlider-thumb': {
-            backgroundColor: '#FFFFFF',
-            border: 2.5,
-            boxShadow: 'none',
-          },
-          '& .MuiSlider-thumb:before': {
-            boxShadow: 'none',
-          },
-          ...sx
-        }}
-        {...props}
-      />
-    </Stack>
+    <Slider
+      min={min}
+      max={max}
+      getAriaLabel={() => 'Minimum distance shift'}
+      value={value}
+      onChange={handleChange}
+      // valueLabelFormat={}
+      valueLabelDisplay="auto"
+      disableSwap
+      sx={{
+        '& .MuiSlider-thumb': {
+          backgroundColor: '#FFFFFF',
+          border: 2.5,
+          boxShadow: 'none',
+        },
+        '& .MuiSlider-thumb:before': {
+          boxShadow: 'none',
+        },
+        ...sx
+      }}
+      {...props}
+    />
   );
 };
 

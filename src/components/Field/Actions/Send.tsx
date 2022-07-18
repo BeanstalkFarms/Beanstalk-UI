@@ -9,11 +9,11 @@ import useToggle from 'hooks/display/useToggle';
 import { TokenAdornment, TokenInputField, TxnPreview } from 'components/Common/Form';
 import { PODS } from 'constants/tokens';
 import { LoadingButton } from '@mui/lab';
-import { useAccount } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { BeanstalkReplanted } from 'generated/index';
 import TransactionToast from 'components/Common/TxnToast';
+import useAccount from 'hooks/ledger/useAccount';
 import SelectPlotDialog from '../SelectPlotDialog';
 import { AppState } from '../../../state';
 import { ZERO_BN } from '../../../constants';
@@ -234,7 +234,7 @@ const SendForm: React.FC<SendFormProps &
 };
 
 const Send: React.FC<{}> = () => {
-  const { data: account } = useAccount();
+  const account = useAccount();
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
 
@@ -251,11 +251,11 @@ const Send: React.FC<{}> = () => {
   }), []);
 
   const onSubmit = useCallback(async (values: SendFormValues, formActions: FormikHelpers<SendFormValues>) => {
-    if (!account?.address) throw new Error('Connect a wallet first.');
+    if (!account) throw new Error('Connect a wallet first.');
     const { to, plotIndex, start, end, amount } = values;
     if (!to || !plotIndex || !start || !end || !amount) throw new Error('Missing data.');
     const call = beanstalk.transferPlot(
-      account.address,
+      account,
       to.toString(),
       toStringBaseUnitBN(plotIndex, PODS.decimals),
       toStringBaseUnitBN(start, PODS.decimals),
@@ -275,6 +275,7 @@ const Send: React.FC<{}> = () => {
       success: 'Plot sent.',
     });
 
+    /// TODO: refresh field
     return call
       .then((txn) => {
         txToast.confirming(txn);
@@ -290,7 +291,7 @@ const Send: React.FC<{}> = () => {
         );
       });
   }, [
-    account?.address,
+    account,
     beanstalk
   ]);
 

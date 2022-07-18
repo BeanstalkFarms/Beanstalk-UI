@@ -169,7 +169,7 @@ const TokenInput: React.FC<
     <FieldWrapper label={label}>
       {/* Input */}
       <TextField
-        type="string"
+        type="text"
         placeholder={placeholder || '0'}
         disabled={isInputDisabled}
         {...textFieldProps}
