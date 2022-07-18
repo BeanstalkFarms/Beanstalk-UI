@@ -118,8 +118,7 @@
     "generate:typechain": "typechain --target=ethers-v5 --ts-nocheck --out-dir=./src/generated './src/constants/abi/**/*.json'",
     "generate:graphql": "graphql-codegen --config codegen.yml",
     "postpack": "yarn generate",
-    "postinstall": "husky install",
-    "prepare": ""
+    "postinstall": "husky install"
   },
   "engines": {
     "node": ">=14"
