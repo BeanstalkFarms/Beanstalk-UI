@@ -69,14 +69,6 @@ export function _selectCratesToWithdraw(
   };
 }
 
-/* export function _selectCratesToClaim(
-  amount: BigNumber,
-  withdrawnCrates: WithdrawalCrate[],
-  currentSeason: BigNumber,
-) {
-  const sortedCrates = _sortCratesBySeason<WithdrawalCrate>(withdrawnCrates);
-} */
-
 /**
  * Summarize the Actions that will occur when making a Withdrawal.
  * This includes pre-deposit Swaps, the Deposit itself, and resulting
@@ -111,7 +103,7 @@ export function withdraw(
     amount: deltaAmount,
     bdv:    deltaBDV,
     stalk:  deltaStalk,
-    seeds:  from.getSeeds(deltaAmount),
+    seeds:  from.getSeeds(deltaBDV),
     actions: [],
     deltaCrates,
   };
