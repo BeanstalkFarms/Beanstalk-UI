@@ -12,6 +12,8 @@ import useChainConstant from 'hooks/useChainConstant';
 import { useGetERC20Contract } from 'hooks/useContract';
 import { useConnect } from 'wagmi';
 import Token from 'classes/Token';
+import { parseError } from 'util/index';
+import toast from 'react-hot-toast';
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import TransactionToast from '../TxnToast';
 import { FormState, FormTokenState } from '.';
@@ -44,6 +46,9 @@ const SmartSubmitButton : React.FC<{
    * manual = show a modal to let the user decide their allowance.
    */
   mode: 'auto' | 'manual';
+  /**
+   * 
+   */
 } & {
   /**
    * LoadingButton
@@ -94,49 +99,34 @@ const SmartSubmitButton : React.FC<{
   const [open, setOpen] = useState(false);
   const handleOpen  = useCallback(() => setOpen(true),  []);
   const handleClose = useCallback(() => setOpen(false), []);
-  const handleApproval = useCallback(() => {
-    if (nextApprovalToken && contract?.address) {
+  const handleApproval = useCallback(async () => {
+    let txToast;
+    try {
+      if (!nextApprovalToken) throw new Error('Nothing to approve.');
+      if (!contract?.address) throw new Error('Missing ERC20 contract to approve.');
+      const [tokenContract] = getErc20Contract(nextApprovalToken.address);
+      if (!tokenContract) throw new Error(`Failed to instantiate tokenContract for token ${nextApprovalToken.address}`);
       const amount = MAX_UINT256;
-
-      // State
-      const txToast = new TransactionToast({
+      txToast = new TransactionToast({
         loading: `Approving ${nextApprovalToken.symbol}`,
         success: 'Success!',
       });
       setFieldValue('approving', {
         contract: contract.address,
-        token: nextApprovalToken,
-        amount: new BigNumber(MAX_UINT256),
+        token:    nextApprovalToken,
+        amount:   new BigNumber(MAX_UINT256),
       });
-
+      
       // Execute
-      const [tokenContract] = getErc20Contract(nextApprovalToken.address);
-      if (!tokenContract) throw new Error(`Failed to instantiate tokenContract for token ${nextApprovalToken.address}`);
-      tokenContract.approve(
-        contract.address,
-        amount,
-      )
-      .then((txn) => {
-        // submitted
-        // TODO: some sort of global txn tracker here
-        txToast.confirming(txn);
-        return txn.wait();
-      })
-      .then((receipt) => {
-        // confirmed
-        if (refetchAllowances) {
-          refetchAllowances()
-            .then(() => {
-              txToast.success(receipt);
-              setFieldValue('approving', undefined);
-            });
-        }
-      })
-      .catch((err) => {
-        // failed
-        txToast.error(err);
-        setFieldValue('approving', undefined);
-      });
+      const txn = await tokenContract.approve(contract.address, amount);
+      txToast.confirming(txn);
+      const receipt = await txn.wait();
+      if (refetchAllowances) await refetchAllowances();
+      txToast.success(receipt);
+    } catch (err) {
+      txToast?.error(err) || toast.error(parseError(err));
+    } finally {
+      setFieldValue('approving', undefined);
     }
   }, [
     contract?.address,
@@ -214,7 +204,8 @@ const SmartSubmitButton : React.FC<{
           onClick={handleClickApproveButton}
           loading={isApproving}
         >
-          Approve {nextApprovalToken.symbol}
+          {/* If the button is disabled & not loading, let the parent choose the display text. */}
+          {(props.disabled && !props.loading && children) ? children : <>Approve {nextApprovalToken.symbol}</>}
         </LoadingButton>
       ) : (
         <LoadingButton {...props}>

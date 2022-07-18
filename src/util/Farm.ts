@@ -17,7 +17,7 @@ export const optimizeFromMode = (
   balance: Balance,
 ) : FarmFromMode => {
   const { internal, external, total } = balance;
-  if (amountIn.gte(total))    throw new Error('Amount in is greater than total balance. INTERNAL_EXTERNAL_TOLERANT not yet supported.');
+  if (amountIn.gt(total))    throw new Error('Amount in is greater than total balance. INTERNAL_EXTERNAL_TOLERANT not yet supported.');
   if (amountIn.lte(internal)) return FarmFromMode.INTERNAL;
   if (amountIn.lte(external)) return FarmFromMode.EXTERNAL;
   return FarmFromMode.INTERNAL_EXTERNAL;

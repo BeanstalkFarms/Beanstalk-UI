@@ -37,16 +37,19 @@ import { FarmToMode } from 'lib/Beanstalk/Farm';
 import DestinationField from 'components/Field/DestinationField';
 import useAccount from 'hooks/ledger/useAccount';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
+import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
+import { optimizeFromMode } from 'util/Farm';
 
 type ChopFormValues = FormState & {
   destination: FarmToMode;
 };
 
-const ChopForm: React.FC<FormikProps<ChopFormValues>
-  & {
-  balances: ReturnType<typeof useFarmerBalances>;
-  beanstalk: BeanstalkReplanted;
-}> = ({
+const ChopForm: React.FC<
+  FormikProps<ChopFormValues> & {
+    balances: ReturnType<typeof useFarmerBalances>;
+    beanstalk: BeanstalkReplanted;
+  }
+> = ({
   values,
   setFieldValue,
   balances,
@@ -66,10 +69,10 @@ const ChopForm: React.FC<FormikProps<ChopFormValues>
   /// Derived values
   const state          = values.tokens[0];
   const inputToken     = state.token;
-  const tokenBalance   = state.amount;
+  const tokenBalance   = balances[inputToken.address];
   const chopPenalty    = penalties.penalties[inputToken.address];
   const outputToken    = tokenOutputMap[inputToken.address];
-  const amountOut      = tokenBalance?.multipliedBy(chopPenalty);
+  const amountOut      = state.amount?.multipliedBy(chopPenalty);
   const displayPenalty = new BigNumber(1).minus(chopPenalty).multipliedBy(100);
 
   ///
@@ -86,13 +89,13 @@ const ChopForm: React.FC<FormikProps<ChopFormValues>
       ...newValue,
       ...Array.from(copy).map((_token) => ({ 
         token: _token, 
-        amount: balances[_token.address]?.total || undefined
+        amount: undefined // balances[_token.address]?.total || 
       })),
     ]);
-  }, [values.tokens, setFieldValue, balances]);
-  
+  }, [values.tokens, setFieldValue]);
+
   const isValid = (
-    tokenBalance?.gt(0)
+    amountOut?.gt(0)
   );
 
   return (
@@ -111,7 +114,6 @@ const ChopForm: React.FC<FormikProps<ChopFormValues>
           token={inputToken}
           balance={tokenBalance || ZERO_BN}
           name="tokens.0.amount"
-          disabled
           // MUI 
           fullWidth
           InputProps={{
@@ -123,16 +125,18 @@ const ChopForm: React.FC<FormikProps<ChopFormValues>
             )
           }}
         />
-        <DestinationField
-          name="destination"
-        />
+        <Stack gap={0.5}>
+          <DestinationField
+            name="destination"
+          />
+          <Stack direction="row" justifyContent="space-between" px={0.5}>
+            <Typography variant="body1" color="gray">Chop Penalty</Typography>
+            <Typography variant="body1" color={BeanstalkPalette.washedRed}>{displayFullBN(displayPenalty, 5)}%</Typography>
+          </Stack>
+        </Stack>
         {isValid ? (
           <>
             <TxnSeparator />
-            <Stack direction="row" justifyContent="space-between" sx={{ p: 0.5 }}>
-              <Typography variant="body1" color={BeanstalkPalette.washedRed}>Chop Penalty</Typography>
-              <Typography variant="body1" color={BeanstalkPalette.washedRed}>{displayFullBN(displayPenalty, 5)}%</Typography>
-            </Stack>
             <TokenOutputField
               token={outputToken}
               amount={amountOut || ZERO_BN}
@@ -145,7 +149,7 @@ const ChopForm: React.FC<FormikProps<ChopFormValues>
                     actions={[
                       {
                         type: ActionType.BASE,
-                        message: `Chop ${displayBN(tokenBalance || ZERO_BN)} ${inputToken}`
+                        message: `Chop ${displayBN(state.amount || ZERO_BN)} ${inputToken}`
                       },
                       {
                         type: ActionType.BASE,
@@ -177,31 +181,38 @@ const ChopForm: React.FC<FormikProps<ChopFormValues>
 
 // ---------------------------------------------------
 
+const PREFERRED_TOKENS : PreferredToken[] = [
+  {
+    token: UNRIPE_BEAN,
+    minimum: new BigNumber(1),
+  },
+  {
+    token: UNRIPE_BEAN_CRV3,
+    minimum: new BigNumber(1),
+  }
+];
+
 const Chop: React.FC<{}> = () => {
   ///
   const account           = useAccount();
   const { data: signer }  = useSigner();
-  const chainId           = useChainId();
   const beanstalk         = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
 
   ///
+  const baseToken         = usePreferredToken(PREFERRED_TOKENS, 'use-best');
   const farmerBalances    = useFarmerBalances();
-  const urBean            = getChainConstant(UNRIPE_BEAN, chainId);
   const [refetchFarmerBalances] = useFetchFarmerBalances();
 
   // Form setup
   const initialValues: ChopFormValues = useMemo(() => ({
     tokens: [
       {
-        token: urBean,
-        amount: farmerBalances[urBean.address]?.total || null, // VERIFY: internal, external, or total?,
+        token:  baseToken as ERC20Token,
+        amount: null,
       },
     ],
     destination: FarmToMode.INTERNAL,
-  }), [
-    farmerBalances,
-    urBean
-  ]);
+  }), [baseToken]);
 
   const onSubmit = useCallback(
     async (
@@ -214,15 +225,15 @@ const Chop: React.FC<{}> = () => {
         const state = values.tokens[0];
         if (!state.amount?.gt(0)) { throw new Error('No Unfertilized token to Chop.'); }
 
-        const token = state.token;
         txToast = new TransactionToast({
-          loading: `Chopping ${displayFullBN(state.amount)} ${token.symbol}`,
+          loading: `Chopping ${displayFullBN(state.amount)} ${state.token.symbol}`,
           success: 'Chop successful.',
         });
 
-        const txn = await beanstalk.ripen(
-          token.address,
-          toStringBaseUnitBN(state.amount, token.decimals),
+        const txn = await beanstalk.chop(
+          state.token.address,
+          toStringBaseUnitBN(state.amount, state.token.decimals),
+          optimizeFromMode(state.amount, farmerBalances[state.token.address]),
           values.destination
         );
         txToast.confirming(txn);
@@ -240,11 +251,13 @@ const Chop: React.FC<{}> = () => {
       account,
       beanstalk,
       refetchFarmerBalances,
+      farmerBalances,
     ]
   );
 
   return (
     <Formik<ChopFormValues>
+      enableReinitialize
       initialValues={initialValues}
       onSubmit={onSubmit}
     >
