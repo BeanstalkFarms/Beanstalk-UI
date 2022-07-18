@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
+echo "CI = $CI"
+echo "NETLIFY = $NETLIFY"
+
 [ -n "$CI" ] || [ -n "$NETLIFY" ] && exit 0
 
 . "$(dirname -- "$0")/_/husky.sh"
