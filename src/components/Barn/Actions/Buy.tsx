@@ -387,7 +387,7 @@ const Buy : React.FC<{}> = () => {
       const receipt = await txn.wait();
       txToast.success(receipt);
       formActions.resetForm();
-      refetchFertilizer(account.address as string);
+      // refetchFertilizer(account.address as string);
       refetchBalances();
       refetchAllowances(account.address as string, fertContract.address, Usdc);
     } catch (err) {
@@ -405,7 +405,7 @@ const Buy : React.FC<{}> = () => {
     // tokenOut,
     fertContract,
     account?.address,
-    refetchFertilizer,
+    // refetchFertilizer,
     refetchBalances,
     refetchAllowances
   ]);

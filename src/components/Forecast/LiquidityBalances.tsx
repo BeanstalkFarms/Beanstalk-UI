@@ -47,7 +47,9 @@ const LiquidityBalances: React.FC<LiquidityBalancesProps> = ({ balances }) => {
     >
       {/* Chart */}
       <Stack width={{ xs: '100%', md: '75%' }} justifyContent="end">
-        <SimpleStackedAreaChart />
+        <Box height="200px">
+          <SimpleStackedAreaChart />
+        </Box>
         <Stack direction="row" justifyContent="space-between" sx={{ pt: 0.75, pr: 2, pl: 2, pb: 0 }}>
           <Typography color={BeanstalkPalette.lightishGrey}>2/21</Typography>
           <Typography color={BeanstalkPalette.lightishGrey}>3/21</Typography>

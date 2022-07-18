@@ -124,7 +124,7 @@ const StackedAreaChart: React.FC<StackedAreasProps> = ({
 const SimpleStackedAreaChart: React.FC<{}> = () => (
   <ParentSize debounceTime={10}>
     {({ width: visWidth, height: visHeight }) => (
-      <StackedAreaChart height={200} width={visWidth} />
+      <StackedAreaChart height={visHeight} width={visWidth} />
     )}
   </ParentSize>
 );
