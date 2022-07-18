@@ -1,4 +1,4 @@
-import { CircularProgress, Stack, Typography } from '@mui/material';
+import { CircularProgress, Stack, Tooltip, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { Token } from 'classes';
 import React from 'react';
@@ -10,21 +10,24 @@ import { IconSize } from '../../App/muiTheme';
 const TokenOutputField : React.FC<{
   /** */
   token: Token;
-  /** */
+  /** The `amount` of `token` */
   amount: BigNumber;
-  /** */
+  /** The $ value (or other derived value) of the `amount` */
   value?: BigNumber;
-  /** */
+  /** Annotate the token with some modifier ("Claimable", "Harvestable") */
   modifier?: string;
   /** Display as a delta (show +/-). */
   isDelta?: boolean;
-  /** */
+  /** Display a loading spinner */
   isLoading?: boolean;
+  /** */
+  valueTooltip?: string | JSX.Element;
 }> = ({
   token,
   amount,
   value,
   modifier,
+  valueTooltip = '',
   isDelta = true,
   isLoading = false,
 }) => {
@@ -34,12 +37,14 @@ const TokenOutputField : React.FC<{
   return (
     <OutputField isNegative={isNegative}>
       {!isLoading ? (
-        <Typography display="inline" variant="bodyLarge">
-          {prefix}{displayFullBN(amount.abs(), token.displayDecimals, token.displayDecimals)}
-          {value && (
-            <>&nbsp;&nbsp;<Typography display="inline" variant="bodySmall">(~{displayUSD(value)})</Typography></>
-          )}
-        </Typography>
+        <Tooltip title={valueTooltip}>
+          <Typography display="inline" variant="bodyLarge">
+            {prefix}{displayFullBN(amount.abs(), token.displayDecimals, token.displayDecimals)}
+            {value && (
+              <>&nbsp;&nbsp;<Typography display="inline" variant="bodySmall">(~{displayUSD(value)})</Typography></>
+            )}
+          </Typography>
+        </Tooltip>
       ) : (
         <CircularProgress size={16} thickness={5} />
       )}
