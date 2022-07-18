@@ -21,7 +21,7 @@ const PillDialogField : React.FC<{
     alignItems="center"
     sx={{ ml: 0.5, py: 1, ...sx }}
     {...props}
-    >
+  >
     <Typography color="gray">
       {label}
     </Typography>
@@ -37,6 +37,6 @@ const PillDialogField : React.FC<{
       <DropdownIcon sx={{ height: IconSize.xs }} open={isOpen} />
     </Button>
   </Stack>
-  );
+);
 
 export default PillDialogField;

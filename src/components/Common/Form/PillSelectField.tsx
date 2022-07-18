@@ -49,8 +49,8 @@ const PillSelectField : React.FC<{
                   onClick={set(option.value)}
                   fullWidth
                   disableRipple
-                  />
-                ))}
+                />
+              ))}
             </Stack>
           </PillDialogField>
         );
