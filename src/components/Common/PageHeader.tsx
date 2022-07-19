@@ -20,8 +20,7 @@ const PageHeader : React.FC<{
         <Button
           to={props.returnPath}
           component={RouterLink}
-          variant="contained"
-          color="light"
+          color="naked"
           sx={{ p: 1, borderRadius: 1 }}
         >
           <Stack direction="row" gap={0.5} alignItems="center">

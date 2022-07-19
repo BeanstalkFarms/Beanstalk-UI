@@ -155,43 +155,6 @@ const SendForm: React.FC<SendFormProps &
                 sliderFields={['start', 'end']}
                 disableSlider={isSubmitting}
               />
-              {/* <Box px={1}> */}
-              {/*  <SliderField */}
-              {/*    min={0} */}
-              {/*    max={numPods.toNumber()} */}
-              {/*    fields={['start', 'end']} */}
-              {/*    initialState={[0, numPods.toNumber()]} */}
-              {/*    disabled={isSubmitting} */}
-              {/*  /> */}
-              {/* </Box> */}
-              {/* <Grid container spacing={1}> */}
-              {/*  <Grid item xs={6}> */}
-              {/*    <TokenInputField */}
-              {/*      name="start" */}
-              {/*      token={PODS} */}
-              {/*      placeholder="0.0000" */}
-              {/*      balance={numPods || ZERO_BN} */}
-              {/*      hideBalance */}
-              {/*      InputProps={{ */}
-              {/*        endAdornment: 'Start' */}
-              {/*      }} */}
-              {/*      size="small" */}
-              {/*    /> */}
-              {/*  </Grid> */}
-              {/*  <Grid item xs={6}> */}
-              {/*    <TokenInputField */}
-              {/*      name="end" */}
-              {/*      token={PODS} */}
-              {/*      placeholder="0.0000" */}
-              {/*      balance={numPods || ZERO_BN} */}
-              {/*      hideBalance */}
-              {/*      InputProps={{ */}
-              {/*        endAdornment: 'End' */}
-              {/*      }} */}
-              {/*      size="small" */}
-              {/*    /> */}
-              {/*  </Grid> */}
-              {/* </Grid> */}
             </FieldWrapper>
             <FieldWrapper label="Recipient Address">
               <AddressInputField name="to" />
