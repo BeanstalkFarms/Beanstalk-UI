@@ -7,6 +7,7 @@ import Token from 'classes/Token';
 import { displayBN } from 'util/index';
 import { ZERO_BN } from 'constants/index';
 import { FarmerBalances } from 'state/farmer/balances';
+import { FarmerSilo } from 'state/farmer/silo';
 import { BeanstalkPalette, FontSize, IconSize } from '../../App/muiTheme';
 
 const useStyles = makeStyles(() => ({
@@ -28,7 +29,12 @@ const useStyles = makeStyles(() => ({
 
 export enum TokenSelectMode { MULTI, SINGLE }
 
-const TokenSelectDialog: React.FC<{
+export type TokenBalanceMode = {
+  'farm': FarmerBalances;
+  'silo-deposits': FarmerSilo['balances'];
+}
+
+export type TokenSelectDialogProps<K extends keyof TokenBalanceMode> = {
   /** Show the dialog. */
   open: boolean;
   /** Close the dialog. */
@@ -37,25 +43,41 @@ const TokenSelectDialog: React.FC<{
   selected: ({ token: Token } & any)[];
   /** Called when the user "submits" their changes to selected tokens. */
   handleSubmit: (s: Set<Token>) => void;
+  /**
+   * 
+   */
+  balancesType?: K;
   /** The Farmer's current balances. Displayed alongside each token.
    * Shows 0 for missing balances if `balances` is an object.
    * Shows nothing if `balances` is undefined`. */
-  balances: FarmerBalances | undefined;
+  balances: TokenBalanceMode[K] | undefined;
+  // balances: FarmerSiloBalance['deposited'] | FarmerBalances | undefined;
   /** A list of tokens to show in the Dialog. */
   tokenList: Token[];
   /** Single or multi-select */
   mode?: TokenSelectMode;
-}> = React.memo(({
+}
+
+type TokenSelectDialogC = React.FC<TokenSelectDialogProps<keyof TokenBalanceMode>>;
+
+const TokenSelectDialog : TokenSelectDialogC = React.memo(({
  open,
  handleClose,
  selected,
  handleSubmit,
- balances,
+ balancesType = 'farm',
+ balances: _balances,
  tokenList,
  mode = TokenSelectMode.MULTI,
 }) => {
   const classes = useStyles();
   const [newSelection, setNewSelection] = useState<Set<Token>>(new Set());
+
+  const getBalance = useCallback((addr: string) => {
+    if (!_balances) return ZERO_BN;
+    if (balancesType === 'farm') return (_balances as TokenBalanceMode['farm'])?.[addr]?.total || ZERO_BN;
+    return (_balances as TokenBalanceMode['silo-deposits'])?.[addr]?.deposited?.amount || ZERO_BN;
+  }, [_balances, balancesType]);
 
   // Toggle the selection state of a token.
   const toggle = useCallback((token: Token) => {
@@ -123,9 +145,9 @@ const TokenSelectDialog: React.FC<{
                 color="primary"
                 selected={newSelection.has(_token)}
                 disablePadding
-                secondaryAction={balances ? (
+                secondaryAction={_balances ? (
                   <Typography variant="bodyLarge">
-                    {displayBN(balances?.[_token.address]?.total || ZERO_BN)}
+                    {displayBN(getBalance(_token.address))}
                   </Typography>
                 ) : null}
                 onClick={onClickItem(_token)}

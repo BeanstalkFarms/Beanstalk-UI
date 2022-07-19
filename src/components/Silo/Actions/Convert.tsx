@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
@@ -48,17 +48,25 @@ type ConvertFormValues = FormState & {
 
 // -----------------------------------------------------------------------
 
+const INIT_CONVERSION = {
+  amount: ZERO_BN,
+  bdv:    ZERO_BN,
+  stalk:  ZERO_BN,
+  seeds:  ZERO_BN,
+  actions: []
+};
+
 const ConvertForm : React.FC<
   FormikProps<ConvertFormValues> & {
+    /** List of tokens that can be converted to. */
     tokenList: (ERC20Token | NativeToken)[];
-    whitelistedToken: ERC20Token | NativeToken;
+    /** Farmer's silo balances */
     siloBalances: FarmerSilo['balances'];
     beanstalk: BeanstalkReplanted;
     handleQuote: QuoteHandler;
     currentSeason: BigNumber;
   }
 > = ({
-  // Custom
   tokenList,
   siloBalances,
   beanstalk,
@@ -73,14 +81,7 @@ const ConvertForm : React.FC<
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
   const getBDV = useBDV();
 
-  /// If available, convert an amount of the destination token to BDV.
-  // const bdvPerAmountOut = useSelector<AppState, AppState['_beanstalk']['silo']['balances'][string]['bdvPerToken'] | BigNumber>(
-  //   (state) => (
-  //     values.tokenOut && state._beanstalk.silo.balances[values.tokenOut.address]?.bdvPerToken || ZERO_BN
-  //   )
-  // );
-  // const amountOutToBDV = useCallback((amount: BigNumber) => bdvPerAmountOut.times(amount), [bdvPerAmountOut]);
-
+  /// Extract values from form state
   const tokenIn   = values.tokens[0].token;     // converting from token
   const amountIn  = values.tokens[0].amount;    // amount of from token
   const tokenOut  = values.tokenOut;            // converting to token
@@ -88,34 +89,93 @@ const ConvertForm : React.FC<
   const canConvert      = values.maxAmountIn?.gt(0) || false;
   const siloBalance     = siloBalances[tokenIn.address];
   const depositedAmount = siloBalance?.deposited?.amount || ZERO_BN;
+  const isQuoting = values.tokens[0].quoting || false;
 
-  /// If a conversion destination is selected, calculate
-  /// the optimal crates to convert.
-  const converted = useMemo(() => (
-    tokenOut ? Beanstalk.Silo.Convert.convert(
-      tokenIn,   // from
-      tokenOut,  // to
-      amountIn || ZERO_BN, // amount
-      siloBalance?.deposited?.crates, // depositedCrates
-      currentSeason,
-    ) : {
-      amount: ZERO_BN,
-      bdv:    ZERO_BN,
-      stalk:  ZERO_BN,
-      seeds:  ZERO_BN,
-      actions: []
+  /// Derived form state
+  let isReady        = false;
+  let buttonLoading  = false;
+  let buttonContent;
+  let bdvOut;     // the BDV received after re-depositing `amountOut` of `tokenOut`.
+  let deltaBDV;   // the change in BDV during the convert. should always be >= 0.
+  let deltaStalk; // the change in Stalk during the convert. should always be >= 0.
+  let deltaSeedsPerBDV; // change in seeds per BDV for this pathway. ex: bean (2 seeds) -> bean:3crv (4 seeds) = +2 seeds.
+  let deltaSeeds; // the change in seeds during the convert.
+
+  ///
+  const [conversion, setConversion] = useState(INIT_CONVERSION);
+  const runConversion = useCallback((_amountIn: BigNumber) => {
+    if (!tokenOut) {
+      setConversion(INIT_CONVERSION);
+    } else if (tokenOut && !isQuoting) {
+      console.debug('[Convert] setting conversion, ', tokenOut, isQuoting);
+      setConversion(
+        Beanstalk.Silo.Convert.convert(
+          tokenIn,   // from
+          tokenOut,  // to
+          _amountIn, // amount
+          siloBalance?.deposited?.crates, // depositedCrates
+          currentSeason,
+        )
+      );
     }
-  ), [amountIn, currentSeason, siloBalance?.deposited?.crates, tokenIn, tokenOut]);
+  }, [currentSeason, isQuoting, siloBalance?.deposited?.crates, tokenIn, tokenOut]);
+
+  /// FIXME: is there a better pattern for this?
+  /// we want to refresh the conversion info only
+  /// when the quoting is complete and amountOut
+  /// has been updated respectively. if runConversion
+  /// depends on amountIn it will run every time the user
+  /// types something into the input.
+  useEffect(() => {
+    runConversion(amountIn || ZERO_BN);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [amountOut, runConversion]);
+
+  /// Change button state and prepare outputs
+  if (values.maxAmountIn === null) {
+    if (values.tokenOut) {
+      buttonContent = 'Refreshing convert data...';
+      buttonLoading = false;
+    } else {
+      buttonContent = 'No output selected';
+      buttonLoading = false;
+    }
+  } else if (!canConvert) {
+    buttonContent = 'Pathway unavailable';
+  } else {
+    buttonContent = 'Convert';
+    if (tokenOut && amountOut?.gt(0)) {
+      isReady    = true;
+      bdvOut     = getBDV(tokenOut).times(amountOut);
+      deltaBDV   = (
+        bdvOut
+          .minus(conversion.bdv.abs())
+      );
+      deltaStalk = (
+        tokenOut.getStalk(deltaBDV)
+      );
+      deltaSeedsPerBDV = (
+        tokenOut.getSeeds()
+          .minus(tokenIn.getSeeds())
+      );
+      deltaSeeds = (
+        tokenOut.getSeeds(bdvOut)  // seeds for depositing this token with new BDV
+          .minus(conversion.seeds.abs())   // seeds lost when converting
+      );
+    }
+  }
   
   /// When a new output token is selected, reset maxAmountIn.
-  /// This triggers 
   const handleSelectTokenOut = useCallback(async (_tokens: Set<Token>) => {
     const arr = Array.from(_tokens);
     if (arr.length !== 1) throw new Error();
     const _tokenOut = arr[0];
-    setFieldValue('tokenOut', _tokenOut);
-    setFieldValue('maxAmountIn', null);
-  }, [setFieldValue]);
+    /// only reset if the user clicked a different token
+    if (tokenOut !== _tokenOut) {
+      setFieldValue('tokenOut', _tokenOut);
+      setFieldValue('maxAmountIn', null);
+    }
+  }, [setFieldValue, tokenOut]);
 
   /// When `tokenIn` or `tokenOut` changes, refresh the
   /// max amount that the user can input of `tokenIn`.
@@ -135,47 +195,6 @@ const ConvertForm : React.FC<
     })();
   }, [beanstalk, setFieldValue, tokenIn, tokenOut]);
 
-  let isReady        = false;
-  let buttonLoading  = false;
-  let buttonContent;
-  let bdvOut;     // the BDV received after re-depositing `amountOut` of `tokenOut`.
-  let deltaBDV;   // the change in BDV during the convert. should always be >= 0.
-  let deltaStalk; // the change in Stalk during the convert. should always be >= 0.
-  let deltaSeedsPerBDV; // change in seeds per BDV for this pathway. ex: bean (2 seeds) -> bean:3crv (4 seeds) = +2 seeds.
-  let deltaSeeds; // the change in seeds during the convert.
-  if (values.maxAmountIn === null) {
-    if (values.tokenOut) {
-      buttonContent = 'Refreshing convert data...';
-      buttonLoading = false;
-    } else {
-      buttonContent = 'No output selected';
-      buttonLoading = false;
-    }
-  } else if (!canConvert) {
-    buttonContent = 'Pathway unavailable';
-  } else {
-    buttonContent = 'Convert';
-    if (tokenOut && amountOut?.gt(0)) {
-      isReady    = true;
-      bdvOut     = getBDV(tokenOut).times(amountOut); // amountOutToBDV(values.tokens[0].amountOut);
-      deltaBDV   = (
-        bdvOut
-          .minus(converted.bdv.abs())
-      );
-      deltaStalk = (
-        tokenOut.getStalk(deltaBDV)
-      );
-      deltaSeedsPerBDV = (
-        tokenOut.getSeeds()
-          .minus(values.tokens[0].token.getSeeds())
-      );
-      deltaSeeds = (
-        tokenOut.getSeeds(bdvOut)  // seeds for depositing this token with new BDV
-          .minus(converted.seeds.abs())   // seeds lost when converting
-      );
-    }
-  }
-  
   return (
     <Form noValidate autoComplete="off">
       <TokenSelectDialog
@@ -183,8 +202,9 @@ const ConvertForm : React.FC<
         handleClose={hideTokenSelect}
         handleSubmit={handleSelectTokenOut}
         selected={values.tokens}
-        balances={{}}
-        tokenList={[]}
+        balancesType="silo-deposits"
+        balances={siloBalances}
+        tokenList={tokenList}
         mode={TokenSelectMode.SINGLE}
       />
       <Stack gap={1}>
@@ -252,7 +272,7 @@ const ConvertForm : React.FC<
                 <StyledAccordionSummary title="Transaction Details" />
                 <AccordionDetails>
                   <TxnPreview
-                    actions={converted.actions}
+                    actions={conversion.actions}
                   />
                 </AccordionDetails>
               </Accordion>
@@ -260,7 +280,7 @@ const ConvertForm : React.FC<
           </>
         ) : null}
         <LoadingButton
-          loading={buttonLoading}
+          loading={buttonLoading || isQuoting}
           loadingPosition={
             isSubmitting
               ? 'center'  // when submitting, hide the button text
@@ -474,7 +494,6 @@ const Convert : React.FC<{
           <ConvertForm
             handleQuote={handleQuote}
             tokenList={tokenList as (ERC20Token | NativeToken)[]}
-            whitelistedToken={fromToken}
             siloBalances={siloBalances}
             beanstalk={beanstalk}
             currentSeason={season}
