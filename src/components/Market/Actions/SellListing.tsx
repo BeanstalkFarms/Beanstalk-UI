@@ -1,4 +1,4 @@
-import { Box, Button, Grid, InputAdornment, Stack, Typography } from '@mui/material';
+import { Box, Button, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { SettingInput, TokenAdornment, TokenInputField, TxnSettings } from 'components/Common/Form';
 import { ZERO_BN } from 'constants/index';
@@ -9,12 +9,12 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { MaxBN, MinBN } from 'util/index';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
-import SliderField from '../../Common/Form/SliderField';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import RadioCardField from '../../Common/Form/RadioCardField';
 import Warning from '../../Common/Form/Warning';
 import useToggle from '../../../hooks/display/useToggle';
 import SelectPlotDialog from '../../Field/SelectPlotDialog';
+import DoubleSliderField from '../../Common/Form/DoubleSliderField';
 
 export type SellListingFormValues = {
   option: number | null;
@@ -114,42 +114,12 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
                   handleChange={handleChangeAmount as any}
                 />
               </FieldWrapper>
-              <Box px={1}>
-                <SliderField
-                  min={0}
-                  fields={['min', 'max']}
-                  max={numPods?.toNumber()}
-                  initialState={[0, numPods?.toNumber()]}
+              <FieldWrapper>
+                <DoubleSliderField
+                  balance={numPods}
+                  sliderFields={['min', 'max']}
                 />
-              </Box>
-              <Grid container spacing={1}>
-                <Grid item xs={6}>
-                  <TokenInputField
-                    name="min"
-                    token={PODS}
-                    placeholder="0.0000"
-                    balance={numPods || ZERO_BN}
-                    hideBalance
-                    InputProps={{
-                      endAdornment: 'Start'
-                    }}
-                    size="small"
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TokenInputField
-                    name="max"
-                    token={PODS}
-                    placeholder="0.0000"
-                    balance={numPods || ZERO_BN}
-                    hideBalance
-                    InputProps={{
-                      endAdornment: 'End'
-                    }}
-                    size="small"
-                  />
-                </Grid>
-              </Grid>
+              </FieldWrapper>
               <FieldWrapper label="Price Per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
                 <Field name="pricePerPod">
                   {(fieldProps: FieldProps) => (
