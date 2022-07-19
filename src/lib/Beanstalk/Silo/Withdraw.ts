@@ -3,7 +3,7 @@ import { FormState } from 'components/Common/Form';
 // import { Action, ActionType } from 'util/Actions';
 import { DepositCrate } from 'state/farmer/silo';
 import BigNumber from 'bignumber.js';
-import { _sortCratesBySeason } from './Utils';
+import { sortCratesBySeason } from './Utils';
 
 /**
  * Select how much to Withdraw from Crates.
@@ -24,7 +24,7 @@ export function _selectCratesToWithdraw(
   let totalBDVRemoved    = new BigNumber(0);
   let totalStalkRemoved  = new BigNumber(0);
   const deltaCrates : DepositCrate[] = [];
-  const sortedCrates = _sortCratesBySeason<DepositCrate>(depositedCrates);
+  const sortedCrates = sortCratesBySeason<DepositCrate>(depositedCrates);
 
   sortedCrates.some((crate) => {
     // How much to remove from the current crate.

@@ -55,9 +55,7 @@ export type BeanstalkSiloAssets = {
 }
 
 export type BeanstalkSilo = (
-  BeanstalkSiloAssets
-  & BeanstalkSiloBalances
-  & {
-    withdrawSeasons: BigNumber;
-  } 
+  BeanstalkSiloBalances
+  & BeanstalkSiloAssets
+  & { withdrawSeasons: BigNumber; }
 );

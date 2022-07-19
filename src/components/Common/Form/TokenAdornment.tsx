@@ -33,7 +33,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 const TokenAdornment : React.FC<
-  { token: Token, buttonLabel?: string }
+  {
+    token: Token,
+    buttonLabel?: string | JSX.Element;
+  }
   & ButtonProps
 > = ({
   token,

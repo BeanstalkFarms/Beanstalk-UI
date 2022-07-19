@@ -20,6 +20,8 @@ type TokenQuoteProviderCustomProps = {
   showTokenSelect?: () => void;
   /** Disable the token selector button inside the input. */
   disableTokenSelect?: boolean;
+  /** Text to show isnide the clickable TokenAdornment */
+  tokenSelectLabel?: string | JSX.Element;
   /** */
   handleQuote: QuoteHandler;
   /** */
@@ -33,17 +35,20 @@ type TokenQuoteProviderProps = (
 );
 
 const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
-  // Custom
+  /// Field
   name,
   state,
   balance,
   tokenOut,
+  /// Token selection
   showTokenSelect,
   disableTokenSelect,
+  tokenSelectLabel,
+  /// Quoting
   handleQuote,
   hideQuote = false,
   quoteSettings,
-  // 
+  /// Other props
   ...props
 }) => {
   // Setup a price quote for this token
@@ -99,13 +104,15 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
           // reduce the opacity to make it less obvious.
           opacity: disableTokenSelect ? 0.3 : 1,
         }}
+        buttonLabel={tokenSelectLabel}
       />
     )
   }), [
     state.token,
     showTokenSelect,
     isSubmitting,
-    disableTokenSelect
+    disableTokenSelect,
+    tokenSelectLabel
   ]);
 
   // Render info about the quote beneath the input.
@@ -141,7 +148,7 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
       {...props}
       // Other
       balance={balance}
-      quote={Quote}
+      quote={props.quote || Quote}
       token={state.token}
     />
   );

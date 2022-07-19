@@ -3,6 +3,7 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { Stack, Typography } from '@mui/material';
 import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
 
+/// FIXME: use this or <Alert>?
 const Warning : React.FC<{
   message: string | JSX.Element;
 }> = React.memo(({

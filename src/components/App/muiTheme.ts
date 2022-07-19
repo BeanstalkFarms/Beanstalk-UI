@@ -317,6 +317,15 @@ let muiTheme = createTheme({
         })
       },
     },
+    MuiAlert: {
+      defaultProps: {
+      },
+      styleOverrides: {
+        root: {
+          alignItems: 'center',
+        }
+      }
+    },
     MuiAccordion: {
       defaultProps: {
         elevation: 0,
