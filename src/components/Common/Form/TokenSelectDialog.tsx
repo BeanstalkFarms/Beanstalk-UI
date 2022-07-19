@@ -50,7 +50,7 @@ export type TokenSelectDialogProps<K extends keyof TokenBalanceMode> = {
   /** The Farmer's current balances. Displayed alongside each token.
    * Shows 0 for missing balances if `balances` is an object.
    * Shows nothing if `balances` is undefined`. */
-  balances: TokenBalanceMode[K] | undefined;
+  balances?: TokenBalanceMode[K] | undefined;
   // balances: FarmerSiloBalance['deposited'] | FarmerBalances | undefined;
   /** A list of tokens to show in the Dialog. */
   tokenList: Token[];

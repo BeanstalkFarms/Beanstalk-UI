@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Accordion, AccordionDetails, Box, Stack, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, Alert, Box, Stack, Typography } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useProvider } from 'wagmi';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { BEAN, BEAN_CRV3_LP, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from 'constants/tokens';
 import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
@@ -87,7 +88,8 @@ const ConvertForm : React.FC<
   const amountIn  = values.tokens[0].amount;    // amount of from token
   const tokenOut  = values.tokenOut;            // converting to token
   const amountOut = values.tokens[0].amountOut; // amount of to token
-  const canConvert      = values.maxAmountIn?.gt(0) || false;
+  const maxAmountIn     = values.maxAmountIn;
+  const canConvert      = maxAmountIn?.gt(0) || false;
   const siloBalance     = siloBalances[tokenIn.address];
   const depositedAmount = siloBalance?.deposited?.amount || ZERO_BN;
   const isQuoting = values.tokens[0].quoting || false;
@@ -133,7 +135,9 @@ const ConvertForm : React.FC<
   }, [amountOut, runConversion]);
 
   /// Change button state and prepare outputs
-  if (values.maxAmountIn === null) {
+  if (depositedAmount.eq(0)) {
+    buttonContent = 'Nothing to convert';
+  } else if (values.maxAmountIn === null) {
     if (values.tokenOut) {
       buttonContent = 'Refreshing convert data...';
       buttonLoading = false;
@@ -143,7 +147,7 @@ const ConvertForm : React.FC<
     }
   } else if (!canConvert) {
     buttonContent = 'Pathway unavailable';
-  } else {
+  } else  {
     buttonContent = 'Convert';
     if (tokenOut && amountOut?.gt(0)) {
       isReady    = true;
@@ -196,6 +200,8 @@ const ConvertForm : React.FC<
     })();
   }, [beanstalk, setFieldValue, tokenIn, tokenOut]);
 
+  const conversionPct = (amountIn && maxAmountIn) ? amountIn.div(maxAmountIn) : null;
+
   return (
     <Form noValidate autoComplete="off">
       <TokenSelectDialog
@@ -213,6 +219,7 @@ const ConvertForm : React.FC<
           tokenOut={(tokenOut || tokenIn) as ERC20Token}
           max={MinBN(values.maxAmountIn || ZERO_BN, depositedAmount)}
           balance={depositedAmount}
+          balanceLabel="Deposited Balance"
           state={values.tokens[0]}
           handleQuote={handleQuote}
           tokenSelectLabel={`Deposited ${tokenIn.symbol}`}
@@ -222,15 +229,17 @@ const ConvertForm : React.FC<
           )}
         />
         {/* Output token */}
-        <PillRow
-          isOpen={isTokenSelectVisible}
-          label="Convert to"
-          onClick={showTokenSelect}
-        >
-          {tokenOut ? <TokenIcon token={tokenOut} /> : null}
-          <Typography>{tokenOut?.name || 'Select token'}</Typography>
-        </PillRow>
-        {(tokenOut && amountOut?.gt(0)) ? (
+        {depositedAmount.gt(0) ? (
+          <PillRow
+            isOpen={isTokenSelectVisible}
+            label="Convert to"
+            onClick={showTokenSelect}
+          >
+            {tokenOut ? <TokenIcon token={tokenOut} /> : null}
+            <Typography>{tokenOut?.name || 'Select token'}</Typography>
+          </PillRow>
+        ) : null}
+        {(amountIn && tokenOut && maxAmountIn && amountOut?.gt(0)) ? (
           <>
             <TxnSeparator mt={-1} />
             <TokenOutputField
@@ -267,6 +276,14 @@ const ConvertForm : React.FC<
                 />
               </Box>
             </Stack>
+            {(conversionPct && conversionPct.gt(0.9)) ? (
+              <Box>
+                <Alert color="warning" icon={<WarningAmberIcon sx={{ fontSize: 22 }} />}>
+                  You are converting {displayFullBN(conversionPct.times(100), 4, 0)}% of the way to the peg. 
+                  When Converting all the way to the peg, the Convert may fail due to a small amount of slippage in the direction of the peg.
+                </Alert>
+              </Box>
+            ) : null}
             <Box>
               <Accordion variant="outlined">
                 <StyledAccordionSummary title="Transaction Details" />
