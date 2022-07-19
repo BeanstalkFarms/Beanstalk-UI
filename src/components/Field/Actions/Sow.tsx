@@ -37,8 +37,11 @@ import { useSigner } from 'hooks/ledger/useSigner';
 import toast from 'react-hot-toast';
 import { useFetchFarmerField } from 'state/farmer/field/updater';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
+import podIconGreen from 'img/beanstalk/pod-icon-green.svg';
+import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
+import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
 
 type SowFormValues = FormState & {
   settings: {
@@ -73,6 +76,10 @@ const SowForm : React.FC<
 
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
     (state) => state._beanstalk.field
+  );
+
+  const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>(
+    (state) => state._bean.token.price
   );
 
   //
@@ -159,8 +166,14 @@ const SowForm : React.FC<
               token={PODS}
               amount={numPods}
             />
-            <Box sx={{ py: 1 }}>
-              <Typography variant="body1" textAlign="center">Upon harvest {displayBN(numPods)} PODS will be redeemable for {displayBN(numPods)} BEAN</Typography>
+            <Box
+              sx={{
+                py: 1,
+                backgroundColor: BeanstalkPalette.washedGreen,
+                borderRadius: 1
+            }}
+            >
+              <Typography variant="body1" textAlign="center" color="primary" alignItems="center">Upon <strong>Harvest</strong>, <span><img src={podIconGreen} alt="" height={IconSize.xs} /></span> {displayBN(numPods)} PODS will be redeemable for <span><img src={beanIcon} alt="" height={IconSize.xs} /></span> {displayBN(numPods)}</Typography>
             </Box>
             <Box>
               <Accordion variant="outlined">
@@ -169,16 +182,20 @@ const SowForm : React.FC<
                   <TxnPreview
                     actions={[
                       {
-                        type: ActionType.BASE,
-                        message: 'Do this.'
+                        type: ActionType.BUY_BEANS,
+                        beanAmount: beans,
+                        beanPrice: beanPrice,
+                        token: values.tokens[0].token,
+                        tokenAmount: values.tokens[0].amount ? values.tokens[0].amount : ZERO_BN
                       },
                       {
-                        type: ActionType.BASE,
-                        message: 'Then do this.'
+                        type: ActionType.BURN_BEANS,
+                        amount: beans
                       },
                       {
-                        type: ActionType.BASE,
-                        message: `Receive ${displayFullBN(numPods, 2)} Pods at ${displayFullBN(podLineLength, 0)} in the Pod Line`
+                        type: ActionType.RECEIVE_PODS,
+                        podAmount: numPods,
+                        placeInLine: podLineLength
                       }
                     ]}
                   />

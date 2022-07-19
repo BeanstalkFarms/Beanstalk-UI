@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import groupBy from 'lodash/groupBy';
-import { SEEDS, STALK, USDC, SPROUTS } from 'constants/tokens';
+import { SEEDS, STALK, USDC, SPROUTS, PODS, BEAN } from 'constants/tokens';
 import TokenIcon from 'components/Common/TokenIcon';
 import { Action, ActionType, SiloDepositAction, parseActionMessage, SwapAction, SiloRewardsAction, SiloTransitAction } from 'util/Actions';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
@@ -105,6 +105,29 @@ const TxnStep : React.FC<{
         </IconRow>
       );
       break;
+    /// Field
+    case ActionType.BUY_BEANS:
+      action = (
+        <IconRow>
+          <TokenIcon token={(actions[0] as SiloTransitAction).token} style={{ height: '100%' }} />
+        </IconRow>
+      );
+      break;
+    case ActionType.BURN_BEANS:
+      action = (
+        <IconRow spacing={0.3}>
+          <Typography fontWeight="bold" sx={{ fontSize: 20 }}>🔥</Typography>
+          <TokenIcon token={BEAN[1]} />
+        </IconRow>
+      );
+      break;
+    case ActionType.RECEIVE_PODS:
+      action = (
+        <IconRow>
+          <TokenIcon token={PODS} style={{ height: '100%' }} />
+        </IconRow>
+      );
+      break;
     /// FERTILIZER
     case ActionType.BUY_FERTILIZER:
       action = (
@@ -164,6 +187,7 @@ const TxnStep : React.FC<{
 
 // -----------------------------------------------------------------------
 
+// order matters
 const EXECUTION_STEPS = [
   // Group 1
   ActionType.SWAP,
@@ -178,6 +202,12 @@ const EXECUTION_STEPS = [
   ActionType.IN_TRANSIT,
   //
   ActionType.CLAIM_WITHDRAWAL,
+  // Field
+  ActionType.HARVEST,
+  ActionType.SEND,
+  ActionType.BUY_BEANS,
+  ActionType.BURN_BEANS,
+  ActionType.RECEIVE_PODS,
 ];
 
 const TXN_PREVIEW_HEIGHT = 35;

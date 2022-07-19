@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
 import { displayFullBN, displayTokenAmount } from 'util/Tokens';
+import { BEAN, PODS } from '../constants/tokens';
 
 export enum ActionType {
   BASE,
@@ -12,6 +13,12 @@ export enum ActionType {
   IN_TRANSIT,
   UPDATE_SILO_REWARDS,
   CLAIM_WITHDRAWAL,
+  // Field
+  BURN_BEANS,
+  HARVEST,
+  SEND,
+  BUY_BEANS,
+  RECEIVE_PODS,
   // Fertilizer
   BUY_FERTILIZER,
   RECEIVE_FERT_REWARDS,
@@ -55,6 +62,29 @@ export type SiloClaimAction = SiloAction & {
   type: ActionType.CLAIM_WITHDRAWAL;
 }
 
+type FieldAction = {
+
+}
+
+export type BurnBeansAction = FieldAction & {
+  type: ActionType.BURN_BEANS;
+  amount: BigNumber;
+}
+
+export type ReceivePodsAction = FieldAction & {
+  type: ActionType.RECEIVE_PODS;
+  podAmount: BigNumber;
+  placeInLine: BigNumber;
+}
+
+export type BuyBeansAction = {
+  type: ActionType.BUY_BEANS;
+  beanAmount: BigNumber;
+  beanPrice: BigNumber;
+  token: Token;
+  tokenAmount: BigNumber;
+}
+
 export type FertilizerBuyAction = {
   type: ActionType.BUY_FERTILIZER;
   amountIn: BigNumber;
@@ -74,6 +104,9 @@ export type Action = (
   | SiloTransitAction
   | SiloRewardsAction
   | SiloClaimAction
+  | BurnBeansAction
+  | ReceivePodsAction
+  | BuyBeansAction
   | FertilizerBuyAction
   | FertilizerRewardsAction
 );
@@ -97,6 +130,14 @@ export const parseActionMessage = (a: Action) => {
       return `${a.stalk.lt(0) ? 'Burn' : 'Receive'} ${displayFullBN(a.stalk.abs(), 2)} Stalk and ${displayFullBN(a.seeds.abs(), 2)} Seeds.`;
     case ActionType.CLAIM_WITHDRAWAL:
       return `Claim ${displayFullBN(a.amount, 2)} ${a.token.symbol}.`;
+
+    /// FIELD
+    case ActionType.BUY_BEANS:
+      return `Buy ${displayFullBN(a.beanAmount, BEAN[1].decimals)} BEAN with ${a.tokenAmount} ${a.token.symbol} for $${displayFullBN(a.beanPrice, BEAN[1].decimals)} each.`;
+    case ActionType.BURN_BEANS:
+      return `Burn ${displayFullBN(a.amount, BEAN[1].decimals)} BEAN.`;
+    case ActionType.RECEIVE_PODS:
+      return `Receive ${displayTokenAmount(a.podAmount, PODS)} Pods at ${a.placeInLine} in the Pod Line.`;
 
     /// FERTILIZER
     case ActionType.BUY_FERTILIZER:
