@@ -1,4 +1,4 @@
-import { Box, Button, InputAdornment, Stack, Typography } from '@mui/material';
+import { Box, Button, Grid, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { SettingInput, TokenAdornment, TokenInputField, TxnSettings } from 'components/Common/Form';
 import { ZERO_BN } from 'constants/index';
@@ -10,7 +10,6 @@ import { AppState } from 'state';
 import { MaxBN, MinBN } from 'util/index';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
 import SliderField from '../../Common/Form/SliderField';
-import InputField from '../../Common/Form/InputField';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import RadioCardField from '../../Common/Form/RadioCardField';
 import Warning from '../../Common/Form/Warning';
@@ -115,9 +114,7 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
                   handleChange={handleChangeAmount as any}
                 />
               </FieldWrapper>
-              <Box px={3}>
-                {/* double slider sets the form's 'min' and 'max' values */}
-                {/* so we leave the name field blank */}
+              <Box px={1}>
                 <SliderField
                   min={0}
                   fields={['min', 'max']}
@@ -125,46 +122,42 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
                   initialState={[0, numPods?.toNumber()]}
                 />
               </Box>
-              <Stack direction="row" gap={1}>
-                <Box width="50%">
-                  <FieldWrapper label="Start" tooltip={POD_MARKET_TOOLTIPS.start}>
-                    <Field name="min">
-                      {(fieldProps: FieldProps) => (
-                        <InputField
-                          {...fieldProps}
-                          placeholder="0.0000"
-                          minValue={new BigNumber(0)}
-                          maxValue={values.max ? values.max.minus(1) : numPods?.minus(1)}
-                        />
-                      )}
-                    </Field>
-                  </FieldWrapper>
-                </Box>
-                <Box width="50%">
-                  <Stack gap={0.8}>
-                    <FieldWrapper label="End" tooltip={POD_MARKET_TOOLTIPS.end}>
-                      <Field name="max">
-                        {(fieldProps: FieldProps) => (
-                          <InputField
-                            {...fieldProps}
-                            placeholder="0.0000"
-                            minValue={new BigNumber(0)}
-                            maxValue={numPods}
-                          />
-                        )}
-                      </Field>
-                    </FieldWrapper>
-                  </Stack>
-                </Box>
-              </Stack>
+              <Grid container spacing={1}>
+                <Grid item xs={6}>
+                  <TokenInputField
+                    name="min"
+                    token={PODS}
+                    placeholder="0.0000"
+                    balance={numPods || ZERO_BN}
+                    hideBalance
+                    InputProps={{
+                      endAdornment: 'Start'
+                    }}
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TokenInputField
+                    name="max"
+                    token={PODS}
+                    placeholder="0.0000"
+                    balance={numPods || ZERO_BN}
+                    hideBalance
+                    InputProps={{
+                      endAdornment: 'End'
+                    }}
+                    size="small"
+                  />
+                </Grid>
+              </Grid>
               <FieldWrapper label="Price Per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
                 <Field name="pricePerPod">
                   {(fieldProps: FieldProps) => (
                     // FIXME: delete InputField and use TokenInputField
-                    <InputField
+                    <TokenInputField
                       {...fieldProps}
                       placeholder="0.0000"
-                      showMaxButton
+                      balance={new BigNumber(1)}
                       balanceLabel="Maximum Price Per Pod"
                       InputProps={{
                         inputProps: { step: '0.01' },
@@ -174,8 +167,6 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
                           />
                         )
                       }}
-                      maxValue={new BigNumber(1)}
-                      minValue={new BigNumber(0)}
                     />
                   )}
                 </Field>
@@ -183,12 +174,11 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
               <FieldWrapper label="Expires At" tooltip={POD_MARKET_TOOLTIPS.expiresAt}>
                 <Field name="expiresAt">
                   {(fieldProps: FieldProps) => (
-                    <InputField
+                    <TokenInputField
                       {...fieldProps}
                       placeholder="0.0000"
-                      showMaxButton
-                      minValue={new BigNumber(0)}
-                      maxValue={placeInLine.plus(values.min ? values.min : ZERO_BN)}
+                      balanceLabel="Max Value"
+                      balance={placeInLine.plus(values.min ? values.min : ZERO_BN)}
                       InputProps={{
                         endAdornment: (
                           <InputAdornment position="end">

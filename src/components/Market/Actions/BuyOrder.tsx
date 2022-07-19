@@ -22,7 +22,6 @@ import { AppState } from 'state';
 import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
 import SliderField from '../../Common/Form/SliderField';
-import InputField from '../../Common/Form/InputField';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import useCurve from '../../../hooks/useCurve';
@@ -129,10 +128,10 @@ const BuyOrderForm : React.FC<
           <Field name="pricePerPod">
             {(fieldProps: FieldProps) => (
               // FIXME: delete InputField and use TokenInputField
-              <InputField
+              <TokenInputField
                 {...fieldProps}
                 placeholder="0.0000"
-                showMaxButton
+                balance={new BigNumber(1)}
                 balanceLabel="Maximum Price Per Pod"
                 InputProps={{
                   inputProps: { step: '0.01' },
@@ -142,8 +141,6 @@ const BuyOrderForm : React.FC<
                     />
                   )
                 }}
-                maxValue={new BigNumber(1)}
-                minValue={new BigNumber(0)}
               />
             )}
           </Field>
