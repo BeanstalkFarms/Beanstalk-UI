@@ -56,6 +56,8 @@ export type TokenSelectDialogProps<K extends keyof TokenBalanceMode> = {
   tokenList: Token[];
   /** Single or multi-select */
   mode?: TokenSelectMode;
+  /** Override the dialog title */
+  title?: string | JSX.Element;
 }
 
 type TokenSelectDialogC = React.FC<TokenSelectDialogProps<keyof TokenBalanceMode>>;
@@ -69,6 +71,7 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
  balances: _balances,
  tokenList,
  mode = TokenSelectMode.MULTI,
+ title,
 }) => {
   const classes = useStyles();
   const [newSelection, setNewSelection] = useState<Set<Token>>(new Set());
@@ -134,9 +137,10 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
       TransitionProps={{}}
     >
       <StyledDialogTitle id="customized-dialog-title" onClose={handleClose}>
-        {mode === TokenSelectMode.MULTI ? 'Select Tokens' : 'Select Token'}
+        {title || mode === TokenSelectMode.MULTI ? 'Select Tokens' : 'Select Token'}
       </StyledDialogTitle>
       <StyledDialogContent sx={{ padding: 1, pb: mode === TokenSelectMode.MULTI ? 0 : 2 }}>
+        <Typography />
         <List sx={{ p: 0 }}>
           <Stack gap={1}>
             {tokenList ? tokenList.map((_token) => (

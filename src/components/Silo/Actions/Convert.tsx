@@ -203,8 +203,6 @@ const ConvertForm : React.FC<
         handleClose={hideTokenSelect}
         handleSubmit={handleSelectTokenOut}
         selected={values.tokens}
-        balancesType="silo-deposits"
-        balances={siloBalances}
         tokenList={tokenList}
         mode={TokenSelectMode.SINGLE}
       />
