@@ -11,6 +11,7 @@ import Claim from './Claim';
 import Deposits from './Deposits';
 import Withdrawals from './Withdrawals';
 import Send from './Send';
+import Convert from './Convert';
 
 /**
  * Show the three primary Silo actions: Deposit, Withdraw, Claim.
@@ -35,6 +36,7 @@ const SiloActions : React.FC<{
           <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>
             <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }} variant="scrollable">
               <Tab label="Deposit" />
+              <Tab label="Convert" />
               <Tab label="Withdraw" />
               <BadgeTab
                 showBadge={hasClaimable}
@@ -49,36 +51,39 @@ const SiloActions : React.FC<{
               <Deposit
                 pool={props.pool}
                 token={props.token}
-            />
-          ) : null}
+              />
+            ) : null}
             {tab === 1 ? (
+              <Convert
+                pool={props.pool}
+                fromToken={props.token}
+              />
+            ) : null}
+            {tab === 2 ? (
               <Withdraw
                 token={props.token}
-            />
-          ) : null}
-            {tab === 2 ? (
+              />
+            ) : null}
+            {tab === 3 ? (
               <Claim
                 token={props.token}
                 siloBalance={props.siloBalance}
-            />
-          ) : null}
-            {tab === 3 ? (
-              <Send
-              // token={props.token}
-              // siloBalance={props.siloBalance}
-            />
-          ) : null}
+              />
+            ) : null}
+            {tab === 4 ? (
+              <Send />
+            ) : null}
           </Box>
         </Stack>
       </Card>
       {/* Tables */}
-      <Box sx={{ display: tab === 0 || tab === 3 ? 'block' : 'none' }}>
+      <Box sx={{ display: tab === 0 || tab === 1 || tab === 4 ? 'block' : 'none' }}>
         <Deposits
           token={props.token}
           balance={props.siloBalance}
         />
       </Box>
-      <Box sx={{ display: tab === 1 || tab === 2 ? 'block' : 'none' }}>
+      <Box sx={{ display: tab === 2 || tab === 3 ? 'block' : 'none' }}>
         <Withdrawals
           token={props.token}
           balance={props.siloBalance}

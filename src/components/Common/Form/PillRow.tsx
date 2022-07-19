@@ -3,7 +3,7 @@ import { Button, Stack, StackProps, Typography } from '@mui/material';
 import DropdownIcon from '../DropdownIcon';
 import { IconSize } from '../../App/muiTheme';
 
-const PillDialogField : React.FC<{
+const PillRow : React.FC<{
   isOpen: boolean;
   label: string;
   onClick: () => void;
@@ -39,4 +39,4 @@ const PillDialogField : React.FC<{
   </Stack>
 );
 
-export default PillDialogField;
+export default PillRow;
