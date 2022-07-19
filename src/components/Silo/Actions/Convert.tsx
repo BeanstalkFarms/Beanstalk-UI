@@ -24,8 +24,6 @@ import useToggle from 'hooks/display/useToggle';
 import { useSigner } from 'hooks/ledger/useSigner';
 import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
 import { tokenResult, parseError } from 'util/index';
-import { useSelector } from 'react-redux';
-import { AppState } from 'state';
 import useFarmerSiloBalances from 'hooks/useFarmerSiloBalances';
 import { FarmerSilo } from 'state/farmer/silo';
 import PillRow from 'components/Common/Form/PillRow';
@@ -36,6 +34,7 @@ import { Encoder as ConvertEncoder } from 'lib/Beanstalk/Silo/Convert';
 import { ethers } from 'ethers';
 import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
+import useBDV from 'hooks/useBDV';
 
 // -----------------------------------------------------------------------
 
@@ -61,7 +60,6 @@ const ConvertForm : React.FC<
 > = ({
   // Custom
   tokenList,
-  whitelistedToken,
   siloBalances,
   beanstalk,
   handleQuote,
@@ -73,22 +71,32 @@ const ConvertForm : React.FC<
 }) => {
   /// Local state
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
+  const getBDV = useBDV();
 
-  ///
-  const bdvPerAmountOut = useSelector<AppState, AppState['_beanstalk']['silo']['balances'][string]['bdvPerToken'] | BigNumber>(
-    (state) => (
-      values.tokenOut && state._beanstalk.silo.balances[values.tokenOut.address]?.bdvPerToken || ZERO_BN
-    )
-  );
-  const amountOutToBDV = useCallback((amount: BigNumber) => bdvPerAmountOut.times(amount), [bdvPerAmountOut]);
+  /// If available, convert an amount of the destination token to BDV.
+  // const bdvPerAmountOut = useSelector<AppState, AppState['_beanstalk']['silo']['balances'][string]['bdvPerToken'] | BigNumber>(
+  //   (state) => (
+  //     values.tokenOut && state._beanstalk.silo.balances[values.tokenOut.address]?.bdvPerToken || ZERO_BN
+  //   )
+  // );
+  // const amountOutToBDV = useCallback((amount: BigNumber) => bdvPerAmountOut.times(amount), [bdvPerAmountOut]);
 
-  ///
+  const tokenIn   = values.tokens[0].token;     // converting from token
+  const amountIn  = values.tokens[0].amount;    // amount of from token
+  const tokenOut  = values.tokenOut;            // converting to token
+  const amountOut = values.tokens[0].amountOut; // amount of to token
+  const canConvert      = values.maxAmountIn?.gt(0) || false;
+  const siloBalance     = siloBalances[tokenIn.address];
+  const depositedAmount = siloBalance?.deposited?.amount || ZERO_BN;
+
+  /// If a conversion destination is selected, calculate
+  /// the optimal crates to convert.
   const converted = useMemo(() => (
-    values.tokenOut ? Beanstalk.Silo.Convert.convert(
-      whitelistedToken, // from
-      values.tokenOut,  // to
-      values.tokens[0].amount || ZERO_BN, // amount
-      siloBalances[whitelistedToken.address]?.deposited?.crates, // depositedCrates
+    tokenOut ? Beanstalk.Silo.Convert.convert(
+      tokenIn,   // from
+      tokenOut,  // to
+      amountIn || ZERO_BN, // amount
+      siloBalance?.deposited?.crates, // depositedCrates
       currentSeason,
     ) : {
       amount: ZERO_BN,
@@ -97,27 +105,44 @@ const ConvertForm : React.FC<
       seeds:  ZERO_BN,
       actions: []
     }
-  ), [currentSeason, siloBalances, values.tokenOut, values.tokens, whitelistedToken]);
+  ), [amountIn, currentSeason, siloBalance?.deposited?.crates, tokenIn, tokenOut]);
   
-  ///
-  const handleSelectTokens = useCallback(async (_tokens: Set<Token>) => {
+  /// When a new output token is selected, reset maxAmountIn.
+  /// This triggers 
+  const handleSelectTokenOut = useCallback(async (_tokens: Set<Token>) => {
     const arr = Array.from(_tokens);
     if (arr.length !== 1) throw new Error();
-    const tokenOut = arr[0];
-    setFieldValue('tokenOut', tokenOut);
+    const _tokenOut = arr[0];
+    setFieldValue('tokenOut', _tokenOut);
     setFieldValue('maxAmountIn', null);
   }, [setFieldValue]);
 
-  const balance      = siloBalances[whitelistedToken.address]?.deposited?.amount || ZERO_BN;
-  const canConvert   = values.maxAmountIn?.gt(0) || false;
+  /// When `tokenIn` or `tokenOut` changes, refresh the
+  /// max amount that the user can input of `tokenIn`.
+  useEffect(() => {
+    (async () => {
+      if (tokenOut) {
+        const _maxAmountIn = (
+          await beanstalk.getMaxAmountIn(
+            tokenIn.address,
+            tokenOut.address,
+          )
+          .then(tokenResult(tokenIn))
+          .catch(() => ZERO_BN) // if calculation fails, consider this pathway unavailable
+        );
+        setFieldValue('maxAmountIn', _maxAmountIn);
+      }
+    })();
+  }, [beanstalk, setFieldValue, tokenIn, tokenOut]);
+
   let isReady        = false;
   let buttonLoading  = false;
   let buttonContent;
-  let bdvOut;
-  let deltaBDV;
-  let deltaStalk;
-  let deltaSeedsPerBDV = ZERO_BN;
-  let deltaSeeds;
+  let bdvOut;     // the BDV received after re-depositing `amountOut` of `tokenOut`.
+  let deltaBDV;   // the change in BDV during the convert. should always be >= 0.
+  let deltaStalk; // the change in Stalk during the convert. should always be >= 0.
+  let deltaSeedsPerBDV; // change in seeds per BDV for this pathway. ex: bean (2 seeds) -> bean:3crv (4 seeds) = +2 seeds.
+  let deltaSeeds; // the change in seeds during the convert.
   if (values.maxAmountIn === null) {
     if (values.tokenOut) {
       buttonContent = 'Refreshing convert data...';
@@ -130,50 +155,33 @@ const ConvertForm : React.FC<
     buttonContent = 'Pathway unavailable';
   } else {
     buttonContent = 'Convert';
-    if (values.tokens[0].amountOut?.gt(0) && values.tokenOut) {
+    if (tokenOut && amountOut?.gt(0)) {
       isReady    = true;
-      bdvOut     = amountOutToBDV(values.tokens[0].amountOut);
+      bdvOut     = getBDV(tokenOut).times(amountOut); // amountOutToBDV(values.tokens[0].amountOut);
       deltaBDV   = (
         bdvOut
           .minus(converted.bdv.abs())
       );
       deltaStalk = (
-        values.tokenOut.getStalk(deltaBDV)
+        tokenOut.getStalk(deltaBDV)
       );
       deltaSeedsPerBDV = (
-        values.tokenOut.getSeeds()
+        tokenOut.getSeeds()
           .minus(values.tokens[0].token.getSeeds())
       );
       deltaSeeds = (
-        values.tokenOut.getSeeds(bdvOut)  // seeds for depositing this token with new BDV
+        tokenOut.getSeeds(bdvOut)  // seeds for depositing this token with new BDV
           .minus(converted.seeds.abs())   // seeds lost when converting
       );
     }
   }
-
-  ///
-  useEffect(() => {
-    (async () => {
-      if (values.tokenOut) {
-        const _maxAmountIn = (
-          await beanstalk.getMaxAmountIn(
-            whitelistedToken.address,
-            values.tokenOut.address,
-          )
-          .then(tokenResult(whitelistedToken))
-          .catch(() => ZERO_BN) // if calculation fails, consider this pathway unavailable
-        );
-        setFieldValue('maxAmountIn', _maxAmountIn);
-      }
-    })();
-  }, [beanstalk, setFieldValue, values.tokenOut, whitelistedToken]);
-
+  
   return (
     <Form noValidate autoComplete="off">
       <TokenSelectDialog
         open={isTokenSelectVisible}
         handleClose={hideTokenSelect}
-        handleSubmit={handleSelectTokens}
+        handleSubmit={handleSelectTokenOut}
         selected={values.tokens}
         balances={{}}
         tokenList={[]}
@@ -183,14 +191,16 @@ const ConvertForm : React.FC<
         {/* Input token */}
         <TokenQuoteProvider
           name="tokens.0"
-          tokenOut={(values.tokenOut || whitelistedToken) as ERC20Token}
-          max={MinBN(values.maxAmountIn || ZERO_BN, balance)}
-          balance={balance}
+          tokenOut={(tokenOut || tokenIn) as ERC20Token}
+          max={MinBN(values.maxAmountIn || ZERO_BN, depositedAmount)}
+          balance={depositedAmount}
           state={values.tokens[0]}
           handleQuote={handleQuote}
-          tokenSelectLabel={`Deposited ${whitelistedToken.symbol}`}
-          disabled={!values.maxAmountIn || values.maxAmountIn.eq(0)}
-          // quote={values.maxAmountIn ? <>To peg: {displayFullBN(values.maxAmountIn, whitelistedToken.decimals)}</> : undefined}
+          tokenSelectLabel={`Deposited ${tokenIn.symbol}`}
+          disabled={(
+            !values.maxAmountIn         // still loading `maxAmountIn`
+            || values.maxAmountIn.eq(0) // = 0 means we can't make this conversion
+          )}
         />
         {/* Output token */}
         <PillRow
@@ -198,14 +208,14 @@ const ConvertForm : React.FC<
           label="Convert to"
           onClick={showTokenSelect}
         >
-          {values.tokenOut?.name || 'Select token'}
+          {tokenOut?.name || 'Select token'}
         </PillRow>
-        {(values.tokenOut && values.tokens[0].amountOut?.gt(0)) ? (
+        {(tokenOut && amountOut?.gt(0)) ? (
           <>
             <TxnSeparator mt={-1} />
             <TokenOutputField
-              token={values.tokenOut!}
-              amount={values.tokens[0].amountOut || ZERO_BN}
+              token={tokenOut}
+              amount={amountOut || ZERO_BN}
             />
             <Stack direction="row" gap={1} justifyContent="center">
               <Box sx={{ flex: 1 }}>
@@ -227,7 +237,11 @@ const ConvertForm : React.FC<
                   amount={deltaSeeds || ZERO_BN}
                   valueTooltip={(
                     <>
-                      Converting from {values.tokens[0].token.symbol} to {values.tokenOut.symbol} results in a {deltaSeedsPerBDV.gt(0) ? 'gain' : 'loss'} of {deltaSeedsPerBDV.abs().toString()} SEEDS per BDV.
+                      Converting from {tokenIn.symbol} to {tokenOut.symbol} results in {(
+                        (!deltaSeedsPerBDV || deltaSeedsPerBDV.eq(0)) 
+                          ? 'no change in SEEDS per BDV'
+                          : `a ${deltaSeedsPerBDV.gt(0) ? 'gain' : 'loss'} of ${deltaSeedsPerBDV.abs().toString()} SEEDS per BDV`
+                      )}.
                     </>
                   )}
                 />
@@ -247,12 +261,16 @@ const ConvertForm : React.FC<
         ) : null}
         <LoadingButton
           loading={buttonLoading}
-          loadingPosition="start"
+          loadingPosition={
+            isSubmitting
+              ? 'center'  // when submitting, hide the button text
+              : 'start'   // when loading convert data, show button text
+          }
           type="submit"
           variant="contained"
           color="primary"
           size="large"
-          disabled={!isReady}
+          disabled={!isReady || isSubmitting}
         >
           {buttonContent}
         </LoadingButton>
@@ -277,15 +295,9 @@ const Convert : React.FC<{
   const urBean        = getChainToken(UNRIPE_BEAN);
   const urBeanCrv3    = getChainToken(UNRIPE_BEAN_CRV3);
 
-  /// Derived
-  const isUnripe = (
-    fromToken === urBean || 
-    fromToken === urBeanCrv3
-  );
-
   /// Token List
   const [tokenList, initialTokenOut] = useMemo(() => {
-    const allTokens = isUnripe
+    const allTokens = (fromToken === urBean || fromToken === urBeanCrv3)
       ? [
         urBean,
         urBeanCrv3,
@@ -299,7 +311,7 @@ const Convert : React.FC<{
       _tokenList,     // all available tokens to convert to
       _tokenList[0],  // tokenOut is the first available token that isn't the fromToken
     ];
-  }, [isUnripe, urBean, urBeanCrv3, Bean, BeanCrv3, fromToken]);
+  }, [urBean, urBeanCrv3, Bean, BeanCrv3, fromToken]);
 
   /// Beanstalk
   const season = useSeason();
@@ -428,16 +440,6 @@ const Convert : React.FC<{
         amounts
       });
 
-      // const txn = await beanstalk.convert(
-      //   ConvertEncoder.beansToCurveLP(
-      //     toStringBaseUnitBN(new BigNumber(1000), 6),   // bean
-      //     toStringBaseUnitBN(new BigNumber(1000), 18),  // bean:3crv
-      //     '0xc9C32cd16Bf7eFB85Ff14e0c8603cc90F6F2eE49', // bean:3crv
-      //   ),
-      //   ['6074'],
-      //   [toStringBaseUnitBN(new BigNumber(1000), 6)]
-      // );
-
       ///
       const txn = await beanstalk.convert(
         convertData,
@@ -449,13 +451,18 @@ const Convert : React.FC<{
       const receipt = await txn.wait();
       await Promise.all([refetchFarmerSilo()]);
       txToast.success(receipt);
-      formActions.resetForm();
+      formActions.resetForm({
+        values: {
+          ...initialValues,
+          tokenOut: null,
+        }
+      });
     } catch (err) {
       console.error(err);
       txToast ? txToast.error(err) : toast.error(parseError(err));
       formActions.setSubmitting(false);
     }
-  }, [Bean, BeanCrv3, beanstalk, refetchFarmerSilo, season, siloBalances, urBean, urBeanCrv3]);
+  }, [Bean, BeanCrv3, urBean, urBeanCrv3, beanstalk, initialValues, refetchFarmerSilo, season, siloBalances]);
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
