@@ -2,9 +2,11 @@ import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
 import { displayFullBN, displayTokenAmount } from 'util/Tokens';
 import { BEAN, PODS } from '../constants/tokens';
+import { getAccount, trimAddress } from './index';
 
 export enum ActionType {
   BASE,
+  END_TOKEN,
   // Generic: Swap
   SWAP,
   // Silo
@@ -19,7 +21,7 @@ export enum ActionType {
   RECEIVE_PODS,
   HARVEST,
   RECEIVE_BEANS,
-  SEND,
+  SEND_PODS,
   // Fertilizer
   BUY_FERTILIZER,
   RECEIVE_FERT_REWARDS,
@@ -28,6 +30,11 @@ export enum ActionType {
 export type BaseAction = {
   type: ActionType.BASE;
   message?: string;
+}
+
+export type EndTokenAction = {
+  type: ActionType.END_TOKEN;
+  token: Token;
 }
 
 export type SwapAction = {
@@ -96,6 +103,13 @@ export type ReceiveBeansAction = {
   amount: BigNumber;
 }
 
+export type SendPodsAction = {
+  type: ActionType.SEND_PODS;
+  start: BigNumber;
+  end: BigNumber;
+  address: string;
+}
+
 export type FertilizerBuyAction = {
   type: ActionType.BUY_FERTILIZER;
   amountIn: BigNumber;
@@ -120,8 +134,10 @@ export type Action = (
   | FieldHarvestAction
   | ReceiveBeansAction
   | BuyBeansAction
+  | SendPodsAction
   | FertilizerBuyAction
   | FertilizerRewardsAction
+  | EndTokenAction
 );
 
 // -----------------------------------------------------------------------
@@ -157,12 +173,18 @@ export const parseActionMessage = (a: Action) => {
       return `Harvest ${displayFullBN(a.amount, PODS.decimals)} Harvestable Pods.`;
     case ActionType.RECEIVE_BEANS:
       return `Receive ${displayFullBN(a.amount, BEAN[1].decimals)} Beans.`;
+    case ActionType.SEND_PODS:
+      return `Send Pods ${displayFullBN(a.start, BEAN[1].decimals)} - ${displayFullBN(a.end, BEAN[1].decimals)} to ${trimAddress(getAccount(a.address), true)}.`;
 
     /// FERTILIZER
     case ActionType.BUY_FERTILIZER:
       return `Buy ${displayFullBN(a.amountIn, 2)} Fertilizer at ${displayFullBN(a.humidity.multipliedBy(100), 1)}% Humidity.`;
     case ActionType.RECEIVE_FERT_REWARDS:
       return `Receive ${displayFullBN(a.amountOut, 2)} Sprouts. Sprouts become Fertilized pro rata as the Bean supply increases.`;
+
+    /// ALL
+    case ActionType.END_TOKEN:
+      return null;
 
     /// DEFAULT
     default: 

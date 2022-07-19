@@ -151,6 +151,13 @@ const TxnStep : React.FC<{
         </IconRow>
       );
       break;
+    case ActionType.SEND_PODS:
+      action = (
+        <IconRow>
+          <TokenIcon token={PODS} style={{ height: '100%' }} />
+        </IconRow>
+      );
+      break;
     /// FERTILIZER
     case ActionType.BUY_FERTILIZER:
       action = (
@@ -167,6 +174,13 @@ const TxnStep : React.FC<{
           <img src={FERTILIZER_ICONS.active} alt="FERT" style={{ height: '100%' }} />
           <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
           <TokenIcon token={SPROUTS} style={{ height: '100%', marginTop: 0, }} />
+        </IconRow>
+      );
+      break;
+    case ActionType.END_TOKEN:
+      action = (
+        <IconRow>
+          <TokenIcon token={(actions[0] as SiloTransitAction).token} style={{ height: '100%' }} />
         </IconRow>
       );
       break;
@@ -231,7 +245,9 @@ const EXECUTION_STEPS = [
   ActionType.RECEIVE_PODS,
   ActionType.HARVEST,
   ActionType.RECEIVE_BEANS,
-  ActionType.SEND,
+  ActionType.SEND_PODS,
+  // End
+  ActionType.END_TOKEN
 ];
 
 const TXN_PREVIEW_HEIGHT = 35;
