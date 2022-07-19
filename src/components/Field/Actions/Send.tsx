@@ -149,11 +149,6 @@ const SendForm: React.FC<SendFormProps &
                 handleChange={handleChangeAmount}
               />
             </FieldWrapper>
-            {/* <PlotDetails */}
-            {/*  placeInLine={new BigNumber(values?.plotIndex).minus(beanstalkField?.harvestableIndex)} */}
-            {/*  numPods={new BigNumber(farmerField.plots[values?.plotIndex])} */}
-            {/*  onClick={showDialog} */}
-            {/* /> */}
             <FieldWrapper>
               <Box px={1}>
                 <SliderField

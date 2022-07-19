@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
   FormTokenState,
-  SettingInput, TokenAdornment,
+  SettingInput, TokenAdornment, TokenInputField,
   TokenQuoteProvider,
   TokenSelectDialog,
   TxnSettings
@@ -19,7 +19,7 @@ import useTokenMap from 'hooks/useTokenMap';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
+import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
 import SliderField from '../../Common/Form/SliderField';
 import InputField from '../../Common/Form/InputField';
@@ -94,6 +94,7 @@ const BuyOrderForm : React.FC<
           balances={balances}
           tokenList={Object.values(erc20TokenMap)}
         />
+        {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
         <FieldWrapper label="Place in Line">
           <Box px={2}>
             <SliderField
@@ -106,16 +107,15 @@ const BuyOrderForm : React.FC<
         </FieldWrapper>
         <Field name="placeInLine">
           {(fieldProps: FieldProps) => (
-            <InputField
+            <TokenInputField
               {...fieldProps}
-              minValue={new BigNumber(0)}
-              placeholder={podLine.toNumber().toString()}
-              maxValue={podLine}
+              placeholder={displayFullBN(podLine, 0).toString()}
+              balance={podLine}
+              balanceLabel="Pod Line Size"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
                     <Stack sx={{ pr: 0 }} alignItems="center">
-                      {/* <img src={podsIcon} alt="" height="30px" /> */}
                       <Typography color={BeanstalkPalette.black} sx={{ mt: 0.09, mr: -0.2, fontSize: '1.5rem' }}>0
                         -
                       </Typography>
