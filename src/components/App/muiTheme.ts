@@ -13,12 +13,14 @@ declare module '@mui/material/styles' {
     dark: Palette['primary'];
     cancel: Palette['primary'];
     inverse: Palette['primary'];
+    naked: Palette['primary'];
   }
   interface PaletteOptions {
     light: PaletteOptions['primary'];
     dark: PaletteOptions['primary'];
     cancel: PaletteOptions['primary']
     inverse: PaletteOptions['primary'];
+    naked: PaletteOptions['primary'];
   }
   interface TypographyVariants {
     bodySmall: React.CSSProperties;
@@ -39,6 +41,7 @@ declare module '@mui/material/Button' {
     dark: true;
     cancel: true;
     inverse: true;
+    naked: true;
   }
 }
 declare module '@mui/material/IconButton' {
@@ -47,6 +50,7 @@ declare module '@mui/material/IconButton' {
     dark: true;
     cancel: true;
     inverse: true;
+    naked: true;
   }
 }
 
@@ -181,6 +185,10 @@ let muiTheme = createTheme({
     cancel: {
       main: BeanstalkPalette.washedRed,
       contrastText: 'white'
+    },
+    naked: {
+      main: 'transparent',
+      contrastText: BeanstalkPalette.black,
     },
     //
     text: {

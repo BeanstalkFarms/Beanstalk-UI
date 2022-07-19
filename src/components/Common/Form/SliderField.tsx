@@ -34,14 +34,22 @@ const SliderField : React.FC<
   const [value, setValue] = React.useState<number[] | number>(initialState);
   const { values, setFieldValue } = useFormikContext<any>();
 
-  // update double slider values when the form's
-  // min or max value is changed (ex: adjusting 'amount' input)
+  // update single & double sliders' values when the form's
+  // values are changed (ex: adjusting 'amount' input)
   useEffect(() => {
-    if (values[fields[0]] && values[fields[1]]) {
-      setValue([
-        values[fields[0]],
-        values[fields[1]]
-      ]);
+    if (fields) {
+      // single slider
+      if (fields.length === 1) {
+        setValue(values[fields[0]]);
+        // double slider
+      } else if (fields.length === 2) {
+        if (values[fields[0]] && values[fields[1]]) {
+          setValue([
+            values[fields[0]],
+            values[fields[1]]
+          ]);
+        }
+      }
     }
   }, [values, fields]);
 

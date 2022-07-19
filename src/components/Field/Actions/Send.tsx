@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, Box, Grid, Stack } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
 import AddressInputField from 'components/Common/Form/AddressInputField';
 import FieldWrapper from 'components/Common/Form/FieldWrapper';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
@@ -18,10 +18,10 @@ import SelectPlotDialog from '../SelectPlotDialog';
 import { AppState } from '../../../state';
 import { ZERO_BN } from '../../../constants';
 import { displayFullBN, MaxBN, MinBN, toStringBaseUnitBN, trimAddress } from '../../../util';
-import SliderField from '../../Common/Form/SliderField';
 import Warning from '../../Common/Form/Warning';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
+import DoubleSliderField from '../../Common/Form/DoubleSliderField';
 
 export type SendFormValues = {
   to: string | null;
@@ -119,7 +119,7 @@ const SendForm: React.FC<SendFormProps &
                   <TokenAdornment
                     token={PODS}
                     onClick={showDialog}
-                    buttonLabel="SELECT PLOT"
+                    buttonLabel="Select Plot"
                   />
                 ),
               }}
@@ -149,49 +149,12 @@ const SendForm: React.FC<SendFormProps &
                 handleChange={handleChangeAmount}
               />
             </FieldWrapper>
-            {/* <PlotDetails */}
-            {/*  placeInLine={new BigNumber(values?.plotIndex).minus(beanstalkField?.harvestableIndex)} */}
-            {/*  numPods={new BigNumber(farmerField.plots[values?.plotIndex])} */}
-            {/*  onClick={showDialog} */}
-            {/* /> */}
             <FieldWrapper>
-              <Box px={1}>
-                <SliderField
-                  min={0}
-                  max={numPods.toNumber()}
-                  fields={['start', 'end']}
-                  initialState={[0, numPods.toNumber()]}
-                  disabled={isSubmitting}
-                />
-              </Box>
-              <Grid container spacing={1}>
-                <Grid item xs={6}>
-                  <TokenInputField
-                    name="start"
-                    token={PODS}
-                    placeholder="0.0000"
-                    balance={numPods || ZERO_BN}
-                    hideBalance
-                    InputProps={{
-                      endAdornment: 'Start'
-                    }}
-                    size="small"
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TokenInputField
-                    name="end"
-                    token={PODS}
-                    placeholder="0.0000"
-                    balance={numPods || ZERO_BN}
-                    hideBalance
-                    InputProps={{
-                      endAdornment: 'End'
-                    }}
-                    size="small"
-                  />
-                </Grid>
-              </Grid>
+              <DoubleSliderField
+                balance={numPods}
+                sliderFields={['start', 'end']}
+                disableSlider={isSubmitting}
+              />
             </FieldWrapper>
             <FieldWrapper label="Recipient Address">
               <AddressInputField name="to" />

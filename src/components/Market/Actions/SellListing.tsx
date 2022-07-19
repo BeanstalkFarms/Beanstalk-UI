@@ -9,13 +9,12 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { MaxBN, MinBN } from 'util/index';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
-import SliderField from '../../Common/Form/SliderField';
-import InputField from '../../Common/Form/InputField';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import RadioCardField from '../../Common/Form/RadioCardField';
 import Warning from '../../Common/Form/Warning';
 import useToggle from '../../../hooks/display/useToggle';
 import SelectPlotDialog from '../../Field/SelectPlotDialog';
+import DoubleSliderField from '../../Common/Form/DoubleSliderField';
 
 export type SellListingFormValues = {
   option: number | null;
@@ -87,7 +86,7 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
                     <TokenAdornment
                       token={PODS}
                       onClick={showDialog}
-                      buttonLabel="SELECT PLOT"
+                      buttonLabel="Select Plot"
                     />
                   ),
                 }}
@@ -115,56 +114,20 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
                   handleChange={handleChangeAmount as any}
                 />
               </FieldWrapper>
-              <Box px={3}>
-                {/* double slider sets the form's 'min' and 'max' values */}
-                {/* so we leave the name field blank */}
-                <SliderField
-                  min={0}
-                  fields={['min', 'max']}
-                  max={numPods?.toNumber()}
-                  initialState={[0, numPods?.toNumber()]}
+              <FieldWrapper>
+                <DoubleSliderField
+                  balance={numPods}
+                  sliderFields={['min', 'max']}
                 />
-              </Box>
-              <Stack direction="row" gap={1}>
-                <Box width="50%">
-                  <FieldWrapper label="Start" tooltip={POD_MARKET_TOOLTIPS.start}>
-                    <Field name="min">
-                      {(fieldProps: FieldProps) => (
-                        <InputField
-                          {...fieldProps}
-                          placeholder="0.0000"
-                          minValue={new BigNumber(0)}
-                          maxValue={values.max ? values.max.minus(1) : numPods?.minus(1)}
-                        />
-                      )}
-                    </Field>
-                  </FieldWrapper>
-                </Box>
-                <Box width="50%">
-                  <Stack gap={0.8}>
-                    <FieldWrapper label="End" tooltip={POD_MARKET_TOOLTIPS.end}>
-                      <Field name="max">
-                        {(fieldProps: FieldProps) => (
-                          <InputField
-                            {...fieldProps}
-                            placeholder="0.0000"
-                            minValue={new BigNumber(0)}
-                            maxValue={numPods}
-                          />
-                        )}
-                      </Field>
-                    </FieldWrapper>
-                  </Stack>
-                </Box>
-              </Stack>
+              </FieldWrapper>
               <FieldWrapper label="Price Per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
                 <Field name="pricePerPod">
                   {(fieldProps: FieldProps) => (
                     // FIXME: delete InputField and use TokenInputField
-                    <InputField
+                    <TokenInputField
                       {...fieldProps}
                       placeholder="0.0000"
-                      showMaxButton
+                      balance={new BigNumber(1)}
                       balanceLabel="Maximum Price Per Pod"
                       InputProps={{
                         inputProps: { step: '0.01' },
@@ -174,8 +137,6 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
                           />
                         )
                       }}
-                      maxValue={new BigNumber(1)}
-                      minValue={new BigNumber(0)}
                     />
                   )}
                 </Field>
@@ -183,12 +144,11 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
               <FieldWrapper label="Expires At" tooltip={POD_MARKET_TOOLTIPS.expiresAt}>
                 <Field name="expiresAt">
                   {(fieldProps: FieldProps) => (
-                    <InputField
+                    <TokenInputField
                       {...fieldProps}
                       placeholder="0.0000"
-                      showMaxButton
-                      minValue={new BigNumber(0)}
-                      maxValue={placeInLine.plus(values.min ? values.min : ZERO_BN)}
+                      balanceLabel="Max Value"
+                      balance={placeInLine.plus(values.min ? values.min : ZERO_BN)}
                       InputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
