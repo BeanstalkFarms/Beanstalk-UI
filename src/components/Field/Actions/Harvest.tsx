@@ -18,7 +18,6 @@ import { BeanstalkReplanted } from 'generated/index';
 import Farm, { FarmToMode } from 'lib/Beanstalk/Farm';
 import {
   displayBN,
-  displayTokenAmount,
   getChainConstant,
   parseError,
   toStringBaseUnitBN
@@ -108,12 +107,12 @@ const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
                     <TxnPreview
                       actions={[
                         {
-                          type: ActionType.BASE,
-                          message: `Harvest ${displayTokenAmount(amount, PODS)}.`
+                          type: ActionType.HARVEST,
+                          amount: amount
                         },
                         {
-                          type: ActionType.BASE,
-                          message: `Receive ${displayTokenAmount(amount, BEAN[1])}.`
+                          type: ActionType.RECEIVE_BEANS,
+                          amount: amount
                         },
                       ]}
                     />

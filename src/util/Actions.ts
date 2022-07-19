@@ -14,11 +14,12 @@ export enum ActionType {
   UPDATE_SILO_REWARDS,
   CLAIM_WITHDRAWAL,
   // Field
-  BURN_BEANS,
-  HARVEST,
-  SEND,
   BUY_BEANS,
+  BURN_BEANS,
   RECEIVE_PODS,
+  HARVEST,
+  RECEIVE_BEANS,
+  SEND,
   // Fertilizer
   BUY_FERTILIZER,
   RECEIVE_FERT_REWARDS,
@@ -66,6 +67,14 @@ type FieldAction = {
 
 }
 
+export type BuyBeansAction = {
+  type: ActionType.BUY_BEANS;
+  beanAmount: BigNumber;
+  beanPrice: BigNumber;
+  token: Token;
+  tokenAmount: BigNumber;
+}
+
 export type BurnBeansAction = FieldAction & {
   type: ActionType.BURN_BEANS;
   amount: BigNumber;
@@ -77,12 +86,14 @@ export type ReceivePodsAction = FieldAction & {
   placeInLine: BigNumber;
 }
 
-export type BuyBeansAction = {
-  type: ActionType.BUY_BEANS;
-  beanAmount: BigNumber;
-  beanPrice: BigNumber;
-  token: Token;
-  tokenAmount: BigNumber;
+export type FieldHarvestAction = {
+  type: ActionType.HARVEST;
+  amount: BigNumber;
+}
+
+export type ReceiveBeansAction = {
+  type: ActionType.RECEIVE_BEANS;
+  amount: BigNumber;
 }
 
 export type FertilizerBuyAction = {
@@ -106,6 +117,8 @@ export type Action = (
   | SiloClaimAction
   | BurnBeansAction
   | ReceivePodsAction
+  | FieldHarvestAction
+  | ReceiveBeansAction
   | BuyBeansAction
   | FertilizerBuyAction
   | FertilizerRewardsAction
@@ -133,13 +146,17 @@ export const parseActionMessage = (a: Action) => {
 
     /// FIELD
     case ActionType.BUY_BEANS:
-      // if user sows with beans, this step is skipped
+      // if user sows with beans, skip this step
       if (a.token.symbol === BEAN[1].symbol) return null;
-      return `Buy ${displayFullBN(a.beanAmount, BEAN[1].decimals)} BEAN with ${a.tokenAmount} ${a.token.symbol} for $${displayFullBN(a.beanPrice, BEAN[1].decimals)} each.`;
+      return `Buy ${displayFullBN(a.beanAmount, BEAN[1].decimals)} Beans with ${a.tokenAmount} ${a.token.symbol} for $${displayFullBN(a.beanPrice, BEAN[1].decimals)} each.`;
     case ActionType.BURN_BEANS:
-      return `Burn ${displayFullBN(a.amount, BEAN[1].decimals)} BEAN.`;
+      return `Burn ${displayFullBN(a.amount, BEAN[1].decimals)} Beans.`;
     case ActionType.RECEIVE_PODS:
       return `Receive ${displayTokenAmount(a.podAmount, PODS)} Pods at ${a.placeInLine} in the Pod Line.`;
+    case ActionType.HARVEST:
+      return `Harvest ${displayFullBN(a.amount, PODS.decimals)} Harvestable Pods.`;
+    case ActionType.RECEIVE_BEANS:
+      return `Receive ${displayFullBN(a.amount, BEAN[1].decimals)} Beans.`;
 
     /// FERTILIZER
     case ActionType.BUY_FERTILIZER:

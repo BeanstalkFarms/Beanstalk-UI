@@ -37,7 +37,7 @@ import { useSigner } from 'hooks/ledger/useSigner';
 import toast from 'react-hot-toast';
 import { useFetchFarmerField } from 'state/farmer/field/updater';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
-import podIconGreen from 'img/beanstalk/pod-icon-green.svg';
+import podIconGreen from 'img/beanstalk/harvestable-pod-icon.svg';
 import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';

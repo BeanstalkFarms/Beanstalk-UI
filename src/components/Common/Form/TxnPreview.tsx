@@ -1,14 +1,23 @@
 import React, { useMemo, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import groupBy from 'lodash/groupBy';
-import { SEEDS, STALK, USDC, SPROUTS, PODS, BEAN } from 'constants/tokens';
+import { BEAN, PODS, SEEDS, SPROUTS, STALK, USDC } from 'constants/tokens';
 import TokenIcon from 'components/Common/TokenIcon';
-import { Action, ActionType, SiloDepositAction, parseActionMessage, SwapAction, SiloRewardsAction, SiloTransitAction } from 'util/Actions';
+import {
+  Action,
+  ActionType,
+  parseActionMessage,
+  SiloDepositAction,
+  SiloRewardsAction,
+  SiloTransitAction,
+  SwapAction
+} from 'util/Actions';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import Token from 'classes/Token';
 import { FERTILIZER_ICONS } from 'components/Barn/FertilizerImage';
 import { SupportedChainId } from 'constants/chains';
 import siloIcon from 'img/beanstalk/silo-icon.svg';
+import harvestablePodIcon from 'img/beanstalk/harvestable-pod-icon.svg';
 
 // -----------------------------------------------------------------------
 
@@ -128,6 +137,20 @@ const TxnStep : React.FC<{
         </IconRow>
       );
       break;
+    case ActionType.HARVEST:
+      action = (
+        <IconRow>
+          <img src={harvestablePodIcon} style={{ height: '100%' }} alt="" />
+        </IconRow>
+      );
+      break;
+    case ActionType.RECEIVE_BEANS:
+      action = (
+        <IconRow>
+          <TokenIcon token={BEAN[1]} style={{ height: '100%' }} />
+        </IconRow>
+      );
+      break;
     /// FERTILIZER
     case ActionType.BUY_FERTILIZER:
       action = (
@@ -203,11 +226,12 @@ const EXECUTION_STEPS = [
   //
   ActionType.CLAIM_WITHDRAWAL,
   // Field
-  ActionType.HARVEST,
-  ActionType.SEND,
   ActionType.BUY_BEANS,
   ActionType.BURN_BEANS,
   ActionType.RECEIVE_PODS,
+  ActionType.HARVEST,
+  ActionType.RECEIVE_BEANS,
+  ActionType.SEND,
 ];
 
 const TXN_PREVIEW_HEIGHT = 35;
