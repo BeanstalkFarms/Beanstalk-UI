@@ -87,7 +87,7 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
                     <TokenAdornment
                       token={PODS}
                       onClick={showDialog}
-                      buttonLabel="SELECT PLOT"
+                      buttonLabel="Select Plot"
                     />
                   ),
                 }}

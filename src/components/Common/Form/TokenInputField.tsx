@@ -201,7 +201,8 @@ const TokenInput: React.FC<
                         // If `token` is provided, use its requested decimals
                         ? `${displayFullBN(balance, token.displayDecimals)}`
                         // Otherwise... *shrug*
-                        : balance.toString()
+                        // : balance.toString()
+                        : `${displayFullBN(balance, 2)}`
                       : '0'
                   )}
                 </Typography>

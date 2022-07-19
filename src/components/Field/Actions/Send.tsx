@@ -119,7 +119,7 @@ const SendForm: React.FC<SendFormProps &
                   <TokenAdornment
                     token={PODS}
                     onClick={showDialog}
-                    buttonLabel="SELECT PLOT"
+                    buttonLabel="Select Plot"
                   />
                 ),
               }}
