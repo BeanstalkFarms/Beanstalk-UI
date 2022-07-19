@@ -41,6 +41,7 @@ const SendForm: React.FC<SendFormProps &
                                     isSubmitting,
                                     setFieldValue
                                   }) => {
+  const account = useAccount();
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
     (state) => state._farmer.field
   );
@@ -168,12 +169,14 @@ const SendForm: React.FC<SendFormProps &
                   <TxnPreview
                     actions={[
                       {
-                        type: ActionType.BASE,
-                        message: 'Do this.'
+                        type: ActionType.SEND_PODS,
+                        start: values.start ? values.start : ZERO_BN,
+                        end: values.end ? values.end : ZERO_BN,
+                        address: values.to !== null ? values.to : ''
                       },
                       {
-                        type: ActionType.BASE,
-                        message: 'Then do this.'
+                        type: ActionType.END_TOKEN,
+                        token: PODS
                       }
                     ]}
                   />

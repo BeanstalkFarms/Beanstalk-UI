@@ -123,11 +123,6 @@ const TokenSelectDialog: React.FC<{
                 color="primary"
                 selected={newSelection.has(_token)}
                 disablePadding
-                secondaryAction={balances ? (
-                  <Typography variant="bodyLarge">
-                    {displayBN(balances?.[_token.address]?.total || ZERO_BN)}
-                  </Typography>
-                ) : null}
                 onClick={onClickItem(_token)}
                 sx={{
                   // ListItem is used elsewhere so we define here
@@ -143,15 +138,24 @@ const TokenSelectDialog: React.FC<{
                   },
                 }}
               >
-                <ListItemButton disableRipple>
-                  <ListItemIcon sx={{ pr: 1 }}>
-                    <img src={_token.logo} alt="" className={classes.tokenLogo} />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={_token.symbol}
-                    secondary={_token.name}
-                    sx={{ my: 0 }}
-                  />
+                <ListItemButton disableRipple sx={{ width: '100%' }}>
+                  <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }}>
+                    <Stack direction="row" justifyContent="center">
+                      <ListItemIcon sx={{ pr: 1 }}>
+                        <img src={_token.logo} alt="" className={classes.tokenLogo} />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={_token.symbol}
+                        secondary={_token.name}
+                        sx={{ my: 0 }}
+                      />
+                    </Stack>
+                    {balances ? (
+                      <Typography variant="bodyLarge">
+                        {displayBN(balances?.[_token.address]?.total || ZERO_BN)}
+                      </Typography>
+                    ) : null}
+                  </Stack>
                 </ListItemButton>
               </ListItem>
             )) : null}

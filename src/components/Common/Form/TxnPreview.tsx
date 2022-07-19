@@ -1,14 +1,23 @@
 import React, { useMemo, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import groupBy from 'lodash/groupBy';
-import { SEEDS, STALK, USDC, SPROUTS } from 'constants/tokens';
+import { BEAN, PODS, SEEDS, SPROUTS, STALK, USDC } from 'constants/tokens';
 import TokenIcon from 'components/Common/TokenIcon';
-import { Action, ActionType, SiloDepositAction, parseActionMessage, SwapAction, SiloRewardsAction, SiloTransitAction } from 'util/Actions';
+import {
+  Action,
+  ActionType,
+  parseActionMessage,
+  SiloDepositAction,
+  SiloRewardsAction,
+  SiloTransitAction,
+  SwapAction
+} from 'util/Actions';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import Token from 'classes/Token';
 import { FERTILIZER_ICONS } from 'components/Barn/FertilizerImage';
 import { SupportedChainId } from 'constants/chains';
 import siloIcon from 'img/beanstalk/silo-icon.svg';
+import harvestablePodIcon from 'img/beanstalk/harvestable-pod-icon.svg';
 
 // -----------------------------------------------------------------------
 
@@ -105,6 +114,50 @@ const TxnStep : React.FC<{
         </IconRow>
       );
       break;
+    /// Field
+    case ActionType.BUY_BEANS:
+      action = (
+        <IconRow>
+          <TokenIcon token={(actions[0] as SiloTransitAction).token} style={{ height: '100%' }} />
+        </IconRow>
+      );
+      break;
+    case ActionType.BURN_BEANS:
+      action = (
+        <IconRow spacing={0.3}>
+          <Typography fontWeight="bold" sx={{ fontSize: 20 }}>🔥</Typography>
+          <TokenIcon token={BEAN[1]} />
+        </IconRow>
+      );
+      break;
+    case ActionType.RECEIVE_PODS:
+      action = (
+        <IconRow>
+          <TokenIcon token={PODS} style={{ height: '100%' }} />
+        </IconRow>
+      );
+      break;
+    case ActionType.HARVEST:
+      action = (
+        <IconRow>
+          <img src={harvestablePodIcon} style={{ height: '100%' }} alt="" />
+        </IconRow>
+      );
+      break;
+    case ActionType.RECEIVE_BEANS:
+      action = (
+        <IconRow>
+          <TokenIcon token={BEAN[1]} style={{ height: '100%' }} />
+        </IconRow>
+      );
+      break;
+    case ActionType.SEND_PODS:
+      action = (
+        <IconRow>
+          <TokenIcon token={PODS} style={{ height: '100%' }} />
+        </IconRow>
+      );
+      break;
     /// FERTILIZER
     case ActionType.BUY_FERTILIZER:
       action = (
@@ -121,6 +174,13 @@ const TxnStep : React.FC<{
           <img src={FERTILIZER_ICONS.active} alt="FERT" style={{ height: '100%' }} />
           <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
           <TokenIcon token={SPROUTS} style={{ height: '100%', marginTop: 0, }} />
+        </IconRow>
+      );
+      break;
+    case ActionType.END_TOKEN:
+      action = (
+        <IconRow>
+          <TokenIcon token={(actions[0] as SiloTransitAction).token} style={{ height: '100%' }} />
         </IconRow>
       );
       break;
@@ -164,6 +224,7 @@ const TxnStep : React.FC<{
 
 // -----------------------------------------------------------------------
 
+// order matters
 const EXECUTION_STEPS = [
   // Group 1
   ActionType.SWAP,
@@ -178,6 +239,15 @@ const EXECUTION_STEPS = [
   ActionType.IN_TRANSIT,
   //
   ActionType.CLAIM_WITHDRAWAL,
+  // Field
+  ActionType.BUY_BEANS,
+  ActionType.BURN_BEANS,
+  ActionType.RECEIVE_PODS,
+  ActionType.HARVEST,
+  ActionType.RECEIVE_BEANS,
+  ActionType.SEND_PODS,
+  // End
+  ActionType.END_TOKEN
 ];
 
 const TXN_PREVIEW_HEIGHT = 35;
