@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Stack, Typography } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useProvider } from 'wagmi';
@@ -35,6 +35,7 @@ import { ethers } from 'ethers';
 import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import useBDV from 'hooks/useBDV';
+import TokenIcon from 'components/Common/TokenIcon';
 
 // -----------------------------------------------------------------------
 
@@ -228,7 +229,8 @@ const ConvertForm : React.FC<
           label="Convert to"
           onClick={showTokenSelect}
         >
-          {tokenOut?.name || 'Select token'}
+          {tokenOut ? <TokenIcon token={tokenOut} /> : null}
+          <Typography>{tokenOut?.name || 'Select token'}</Typography>
         </PillRow>
         {(tokenOut && amountOut?.gt(0)) ? (
           <>
