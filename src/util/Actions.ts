@@ -166,7 +166,7 @@ export const parseActionMessage = (a: Action) => {
       if (a.token.symbol === BEAN[1].symbol) return null;
       return `Buy ${displayFullBN(a.beanAmount, BEAN[1].decimals)} Beans with ${a.tokenAmount} ${a.token.symbol} for $${displayFullBN(a.beanPrice, BEAN[1].decimals)} each.`;
     case ActionType.BURN_BEANS:
-      return `Burn ${displayFullBN(a.amount, BEAN[1].decimals)} Beans.`;
+      return `Burn ${displayFullBN(a.amount, BEAN[1].decimals)} ${a.amount.eq(new BigNumber(1)) ? 'Bean' : 'Beans'}.`;
     case ActionType.RECEIVE_PODS:
       return `Receive ${displayTokenAmount(a.podAmount, PODS)} Pods at ${a.placeInLine} in the Pod Line.`;
     case ActionType.HARVEST:
