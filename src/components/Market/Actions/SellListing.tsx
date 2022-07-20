@@ -20,11 +20,11 @@ export type SellListingFormValues = {
   //
   plotIndex: string | null;
   //
-  min: BigNumber;
-  max: BigNumber | null;
   amount: BigNumber | null;
+  start:  BigNumber;
+  end:    BigNumber | null;
   pricePerPod: BigNumber | null;
-  expiresAt: BigNumber | null;
+  expiresAt:   BigNumber | null;
   //
   destination: FarmToMode
 }
@@ -66,28 +66,28 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
   
   const handlePlotSelect = useCallback((index: string) => {
     setFieldValue('plotIndex', index);
-    setFieldValue('min', ZERO_BN);
-    setFieldValue('max', new BigNumber(farmerField.plots[index]));
-    setFieldValue('amount', values.max?.minus(values.min ? values.min : ZERO_BN));
+    setFieldValue('start', ZERO_BN);
+    setFieldValue('end', new BigNumber(farmerField.plots[index]));
+    setFieldValue('amount', values.end?.minus(values.start ? values.start : ZERO_BN));
     setFieldValue('expiresAt', new BigNumber(index).minus(beanstalkField?.harvestableIndex));
-  }, [beanstalkField?.harvestableIndex, farmerField.plots, setFieldValue, values.max, values.min]);
+  }, [beanstalkField?.harvestableIndex, farmerField.plots, setFieldValue, values.end, values.start]);
   
   const handleChangeAmount = (amount: BigNumber | null) => {
     if (!amount) {
-      setFieldValue('min', numPods);
-      setFieldValue('max', numPods);
+      setFieldValue('start', numPods);
+      setFieldValue('end', numPods);
     } else {
-      const delta = (values?.max || ZERO_BN).minus(amount);
-      setFieldValue('min', MaxBN(ZERO_BN, delta));
+      const delta = (values?.end || ZERO_BN).minus(amount);
+      setFieldValue('start', MaxBN(ZERO_BN, delta));
       if (delta.lt(0)) {
-        setFieldValue('max', MinBN(numPods, (values?.max || ZERO_BN).plus(delta.abs())));
+        setFieldValue('end', MinBN(numPods, (values?.end || ZERO_BN).plus(delta.abs())));
       }
     }
   };
 
   useEffect(() => {
-    setFieldValue('amount', values.max?.minus(values.min ? values.min : ZERO_BN));
-  }, [values.min, values.max, setFieldValue]);
+    setFieldValue('amount', values.end?.minus(values.start ? values.start : ZERO_BN));
+  }, [values.start, values.end, setFieldValue]);
 
   return (
     <Form noValidate>
@@ -140,7 +140,7 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
               <FieldWrapper>
                 <DoubleSliderField
                   balance={numPods}
-                  sliderFields={['min', 'max']}
+                  sliderFields={['start', 'end']}
                 />
               </FieldWrapper>
               <FieldWrapper label="Price Per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
@@ -155,7 +155,7 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
                   name="expiresAt"
                   placeholder="0.0000"
                   balanceLabel="Max Value"
-                  balance={placeInLine.plus(values.min ? values.min : ZERO_BN)}
+                  balance={placeInLine.plus(values.start ? values.start : ZERO_BN)}
                   InputProps={ExpiresAtInputProps}
                 />
               </FieldWrapper>
@@ -180,12 +180,12 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
 
 const SellListing: React.FC<{}> = () => {
   const initialValues: SellListingFormValues = useMemo(() => ({
-    plotIndex: null,
-    min: ZERO_BN,
-    max: null,
-    amount: null,
+    plotIndex:   null,
+    amount:      null,
+    start:       ZERO_BN,
+    end:         null,
     pricePerPod: null,
-    expiresAt: null,
+    expiresAt:   null,
     destination: FarmToMode.INTERNAL,
   }), []);
 
