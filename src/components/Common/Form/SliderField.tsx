@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import {
   Slider,
   SliderProps,
 } from '@mui/material';
 import { useFormikContext } from 'formik';
+import throttle from 'lodash/throttle';
 import BigNumber from 'bignumber.js';
 
 type SliderFieldProps = {
@@ -13,6 +14,14 @@ type SliderFieldProps = {
    * and two fields if it is a double slider
    */
   fields: string[];
+  /**
+   * 
+   */
+  changeMode?: 'onChange' | 'onChangeCommitted';
+  /**
+   * 
+   */
+  throttleMs?: number;
 };
 
 /**
@@ -25,74 +34,88 @@ const SliderField : React.FC<
   /// Custom props
   initialState,
   fields,
+  changeMode = 'onChange',
+  throttleMs = 25,
   /// Slider Props
   min,
   max,
   sx,
   ...props
 }) => {
-  const [value, setValue] = React.useState<number[] | number>(initialState);
+  /// story a copy of the form's value
+  const [internalValue, setInternalValue] = React.useState<number | number[]>(initialState);
+
+  ///
   const { values, setFieldValue } = useFormikContext<any>();
 
   // update single & double sliders' values when the form's
   // values are changed (ex: adjusting 'amount' input)
   useEffect(() => {
-    if (fields) {
-      // single slider
-      if (fields.length === 1) {
-        setValue(values[fields[0]]);
-        // double slider
-      } else if (fields.length === 2) {
-        if (values[fields[0]] && values[fields[1]]) {
-          setValue([
-            values[fields[0]],
-            values[fields[1]]
-          ]);
-        }
+    // single slider
+    if (fields.length === 1) {
+      setInternalValue(values[fields[0]]);
+      // double slider
+    } else if (fields.length === 2) {
+      if (values[fields[0]] && values[fields[1]]) {
+        setInternalValue([
+          values[fields[0]],
+          values[fields[1]]
+        ]);
       }
     }
-  }, [values, fields]);
+  }, [
+    values,
+    fields
+  ]);
 
-  const minVal = values[fields[0]];
-  const maxVal = values[fields[1]];
-
-  // FIXME: throttle
-  const handleChange = useCallback((
-    event: Event,
-    newValue: number | number[],
-    // activeThumb: number,
-  ) => {
-    // ----- single slider -----
-    if (!Array.isArray(newValue)) {
-      setValue(newValue);
+  /// @note `fields` needs to be memoized elsewhere if it's an array,
+  /// otherwise this callback refreshes on every render (and thus, so
+  /// does throttling).
+  const updateExternal = useCallback((newValue: number | number[], activeThumb?: number) => {
+    /// Single slider
+    if (typeof newValue === 'number') {
       setFieldValue(fields[0], new BigNumber(newValue));
-      return;
     }
-
-    // ----- double slider -----
-    if (newValue[0] !== minVal) {
-      setValue(newValue as number[]);
+    /// Double slider
+    else if (activeThumb) {
+      /// optimization: onChange provides the slider handle that changed
+      setFieldValue(fields[activeThumb], new BigNumber(newValue[activeThumb]));
+    } else {
       setFieldValue(fields[0], new BigNumber(newValue[0]));
-    }
-
-    if (newValue[1] !== maxVal) {
-      setValue(newValue as number[]);
       setFieldValue(fields[1], new BigNumber(newValue[1]));
     }
-  }, [
-    fields,
-    maxVal,
-    minVal,
-    setFieldValue
-  ]);
+  }, [fields, setFieldValue]);
+
+  const updateExternalThrottled = useMemo(
+    () => throttle(updateExternal, throttleMs),
+    [updateExternal, throttleMs]
+  );
+  
+  const changeHandlers = useMemo(() => ({
+    onChange: (event: Event, newValue: number | number[], activeThumb: number) => {
+      /// Always update internal state immediately.
+      setInternalValue(newValue);
+      /// If requested, push throttled change to the form.
+      if (changeMode === 'onChange') {
+        updateExternalThrottled(newValue, activeThumb);
+      }
+    },
+    onChangeCommitted: (event: React.SyntheticEvent | Event, newValue: number | number[]) => {
+      if (changeMode === 'onChangeCommitted') {
+        updateExternalThrottled(newValue);
+      } else {
+        /// flush the existing onChange call
+        updateExternalThrottled.flush();
+      }
+    }
+  }), [changeMode, updateExternalThrottled]);
 
   return (
     <Slider
       min={min}
       max={max}
-      value={value}
-      onChange={handleChange}
-      // valueLabelFormat={}
+      value={internalValue}
+      {...changeHandlers}
       valueLabelDisplay="auto"
       disableSwap
       sx={{

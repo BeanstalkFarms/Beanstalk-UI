@@ -52,6 +52,8 @@ const ExpiresAtInputProps = {
   )
 };
 
+const SLIDER_FIELD_KEYS = ['start', 'end'];
+
 const SellListingForm: React.FC<
   FormikProps<SellListingFormValues> & {
     farmerField:    Field;
@@ -151,7 +153,7 @@ const SellListingForm: React.FC<
               <FieldWrapper>
                 <DoubleSliderField
                   balance={numPods}
-                  sliderFields={['start', 'end']}
+                  sliderFields={SLIDER_FIELD_KEYS}
                 />
               </FieldWrapper>
               <FieldWrapper label="Price Per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>

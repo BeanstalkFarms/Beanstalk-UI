@@ -5,7 +5,7 @@ import SliderField from './SliderField';
 import { TokenInputField } from './index';
 import { ZERO_BN } from '../../../constants';
 
-export type RadioCardFieldProps = {
+export type DoubleSliderFieldProps = {
   balance: BigNumber;
   sliderFields: string[];
   disableSlider?: boolean;
@@ -14,7 +14,7 @@ export type RadioCardFieldProps = {
 const InputPropsLeft  = { endAdornment: 'Start' };
 const InputPropsRight = { endAdornment: 'End' };
 
-const DoubleSliderField: React.FC<RadioCardFieldProps> = React.memo(({
+const DoubleSliderField: React.FC<DoubleSliderFieldProps> = React.memo(({
   balance,
   sliderFields,
   disableSlider = false,
@@ -29,7 +29,8 @@ const DoubleSliderField: React.FC<RadioCardFieldProps> = React.memo(({
           fields={sliderFields}
           initialState={[0, balanceNum]}
           disabled={disableSlider}
-      />
+          // changeMode="onChangeCommitted"
+        />
       </Box>
       <Grid container spacing={1}>
         <Grid item xs={6}>
