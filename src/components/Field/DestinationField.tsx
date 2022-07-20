@@ -8,8 +8,10 @@ import { IconSize } from '../App/muiTheme';
 
 const DestinationField : React.FC<{
   name: string;
+  label?: string;
 }> = ({
-  name
+  name,
+  label
 }) => {
   const options = useMemo(() => ([
     {
@@ -37,7 +39,7 @@ const DestinationField : React.FC<{
   return (
     <PillSelectField
       name={name}
-      label="Destination"
+      label={label !== undefined ? label : 'Destination'}
       options={options}
     />
   );

@@ -1,12 +1,10 @@
-import { Accordion, AccordionDetails, Box, Stack, Typography } from '@mui/material';
-import BigNumber from 'bignumber.js';
+import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
-  FormState,
+  FormApprovingState, FormTokenState,
   SettingInput,
   SmartSubmitButton,
   TokenAdornment,
-  TokenOutputField,
   TokenSelectDialog,
   TxnPreview,
   TxnSeparator,
@@ -15,113 +13,122 @@ import {
 import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import { BeanstalkReplanted } from 'generated/index';
 import { ZERO_BN } from 'constants/index';
-import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from 'constants/tokens';
+import { BEAN, ETH, USDC } from 'constants/tokens';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useToggle from 'hooks/display/useToggle';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useFarmerBalances from 'hooks/useFarmerBalances';
 import useTokenMap from 'hooks/useTokenMap';
 import React, { useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import { displayBN, displayFullBN, getChainConstant, parseError, toStringBaseUnitBN } from 'util/index';
 import { useSigner } from 'hooks/ledger/useSigner';
-import toast from 'react-hot-toast';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import { ActionType } from 'util/Actions';
 import TokenInputField from 'components/Common/Form/TokenInputField';
-import { BeanstalkPalette } from 'components/App/muiTheme';
-import useChainId from 'hooks/useChain';
-import TransactionToast from 'components/Common/TxnToast';
 import { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import DestinationField from 'components/Field/DestinationField';
-import useAccount from 'hooks/ledger/useAccount';
-import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
-import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
-import { optimizeFromMode } from 'util/Farm';
+import useChainConstant from '../../../hooks/useChainConstant';
 
-type TradeFormValues = FormState & {
+type TradeFormValues = {
+  fromTokens: FormTokenState[];
+  toTokens: FormTokenState[];
   fromDestination: FarmFromMode;
   toDestination: FarmToMode;
+  approving?: FormApprovingState;
 };
 
-const TradeForm: React.FC<
-  FormikProps<TradeFormValues> & {
-    balances: ReturnType<typeof useFarmerBalances>;
-    beanstalk: BeanstalkReplanted;
-  }
-> = ({
-  values,
-  setFieldValue,
-  balances,
-  beanstalk,
-}) => {
-  const chainId = useChainId();
-  const erc20TokenMap = useTokenMap<ERC20Token | NativeToken>([UNRIPE_BEAN, UNRIPE_BEAN_CRV3]);
-  const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
-  const penalties = useSelector<AppState, AppState['_bean']['unripe']>((state) => state._bean.unripe);
+const TradeForm: React.FC<FormikProps<TradeFormValues> & {
+  balances: ReturnType<typeof useFarmerBalances>;
+  beanstalk: BeanstalkReplanted;
+}> = ({
+        values,
+        setFieldValue,
+        balances,
+        beanstalk,
+      }) => {
+  // Hide token in "from" dropdown if it is selected in "to"
+  const fromTokensMap = useTokenMap<ERC20Token | NativeToken>(
+    [
+      useChainConstant(ETH),
+      useChainConstant(BEAN),
+      useChainConstant(USDC)
+    ]
+      .filter((token) => token.address !== values.toTokens[0].token.address)
+  );
 
-  /// Maps an unripe token to its output token
-  const tokenOutputMap = {
-    [getChainConstant(UNRIPE_BEAN, chainId).address]:      getChainConstant(BEAN, chainId),
-    [getChainConstant(UNRIPE_BEAN_CRV3, chainId).address]: getChainConstant(BEAN_CRV3_LP, chainId),
-  };
+  // Hide token in "to" dropdown if it is selected in "from"
+  const toTokensMap = useTokenMap<ERC20Token | NativeToken>(
+    [
+      useChainConstant(ETH),
+      useChainConstant(BEAN),
+      useChainConstant(USDC)
+    ]
+      .filter((token) => token.address !== values.fromTokens[0].token.address)
+  );
+
+  // fromToken
+  const [isFromTokenSelectVisible, showFromTokenSelect, hideFromTokenSelect] = useToggle();
+  // toToken
+  const [isToTokenSelectVisible, showToTokenSelect, hideToTokenSelect] = useToggle();
 
   /// Derived values
-  const state          = values.tokens[0];
-  const inputToken     = state.token;
-  const tokenBalance   = balances[inputToken.address];
-  const chopPenalty    = penalties.penalties[inputToken.address];
-  const outputToken    = tokenOutputMap[inputToken.address];
-  const amountOut      = state.amount?.multipliedBy(chopPenalty);
-  const displayPenalty = new BigNumber(1).minus(chopPenalty).multipliedBy(100);
+  const fromState = values.fromTokens[0];
+  const fromToken = fromState.token;
+  const fromTokenBalance = balances[fromToken.address];
+
+  const toState = values.toTokens[0];
+  const toToken = toState.token;
+  const toTokenBalance = balances[toToken.address];
 
   ///
-  const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
-    // If the user has typed some existing values in,
-    // save them. Add new tokens to the end of the list.
-    // FIXME: match sorting of erc20TokenList
+  const handleSelectTokens = useCallback((_tokens: Set<Token>, formTokens: FormTokenState[], fieldName: string) => {
     const copy = new Set(_tokens);
-    const newValue = values.tokens.filter((x) => {
+    const newValue = formTokens.filter((x) => {
       copy.delete(x.token);
       return _tokens.has(x.token);
     });
-    setFieldValue('tokens', [
+    setFieldValue(fieldName, [
       ...newValue,
       ...Array.from(copy).map((_token) => ({
         token: _token,
         amount: undefined // balances[_token.address]?.total ||
       })),
     ]);
-  }, [values.tokens, setFieldValue]);
+  }, [setFieldValue]);
 
-  const isValid = (
-    amountOut?.gt(0)
-  );
+  const handleSelectFromTokens = useCallback((_tokens: Set<Token>) => {
+    handleSelectTokens(_tokens, values.fromTokens, 'fromTokens');
+  }, [handleSelectTokens, values.fromTokens]);
+
+  const handleSelectToTokens = useCallback((_tokens: Set<Token>) => {
+    handleSelectTokens(_tokens, values.toTokens, 'toTokens');
+  }, [handleSelectTokens, values.toTokens]);
+
+  const isValid = true;
 
   return (
     <Form autoComplete="off">
       <TokenSelectDialog
-        open={isTokenSelectVisible}
-        handleClose={hideTokenSelect}
-        handleSubmit={handleSelectTokens}
-        selected={values.tokens}
+        open={isFromTokenSelectVisible || isToTokenSelectVisible}
+        handleClose={isFromTokenSelectVisible ? hideFromTokenSelect : hideToTokenSelect}
+        handleSubmit={isFromTokenSelectVisible ? handleSelectFromTokens : handleSelectToTokens}
+        selected={isFromTokenSelectVisible ? values.fromTokens : values.toTokens}
         balances={balances}
-        tokenList={Object.values(erc20TokenMap)}
+        tokenList={isFromTokenSelectVisible ? Object.values(fromTokensMap) : Object.values(toTokensMap)}
         mode={TokenSelectMode.SINGLE}
       />
+      {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
       <Stack gap={1}>
         <TokenInputField
-          token={inputToken}
-          balance={tokenBalance || ZERO_BN}
-          name="tokens.0.amount"
+          token={fromToken}
+          balance={fromTokenBalance || ZERO_BN}
+          name="fromTokens.0.amount"
           // MUI
           fullWidth
           InputProps={{
             endAdornment: (
               <TokenAdornment
-                token={inputToken}
-                onClick={showTokenSelect}
+                token={fromToken}
+                onClick={showFromTokenSelect}
               />
             )
           }}
@@ -129,19 +136,33 @@ const TradeForm: React.FC<
         <Stack gap={0.5}>
           <DestinationField
             name="toDestination"
+            label="To"
           />
-          <Stack direction="row" justifyContent="space-between" px={0.5}>
-            <Typography variant="body1" color="gray">Chop Penalty</Typography>
-            <Typography variant="body1" color={BeanstalkPalette.washedRed}>{displayFullBN(displayPenalty, 5)}%</Typography>
-          </Stack>
         </Stack>
         {isValid ? (
           <>
             <TxnSeparator />
-            <TokenOutputField
-              token={outputToken}
-              amount={amountOut || ZERO_BN}
+            <TokenInputField
+              token={toToken}
+              balance={toTokenBalance || ZERO_BN}
+              name="toTokens.0.amount"
+              // MUI
+              fullWidth
+              InputProps={{
+                endAdornment: (
+                  <TokenAdornment
+                    token={toToken}
+                    onClick={showToTokenSelect}
+                  />
+                )
+              }}
             />
+            <Stack gap={0.5}>
+              <DestinationField
+                name="fromDestination"
+                label="From"
+              />
+            </Stack>
             <Box>
               <Accordion variant="outlined">
                 <StyledAccordionSummary title="Transaction Details" />
@@ -150,11 +171,7 @@ const TradeForm: React.FC<
                     actions={[
                       {
                         type: ActionType.BASE,
-                        message: `Chop ${displayBN(state.amount || ZERO_BN)} ${inputToken}`
-                      },
-                      {
-                        type: ActionType.BASE,
-                        message: `Receive ${displayBN(amountOut || ZERO_BN)} ${outputToken}`
+                        message: 'Trade!'
                       },
                     ]}
                   />
@@ -170,7 +187,7 @@ const TradeForm: React.FC<
           size="large"
           disabled={!isValid}
           contract={beanstalk}
-          tokens={values.tokens}
+          tokens={values.toTokens.concat(values.fromTokens)}
           mode="auto"
         >
           Trade
@@ -182,79 +199,42 @@ const TradeForm: React.FC<
 
 // ---------------------------------------------------
 
-const PREFERRED_TOKENS : PreferredToken[] = [
-  {
-    token: UNRIPE_BEAN,
-    minimum: new BigNumber(1),
-  },
-  {
-    token: UNRIPE_BEAN_CRV3,
-    minimum: new BigNumber(1),
-  }
-];
-
 const Trade: React.FC<{}> = () => {
   ///
-  const account           = useAccount();
-  const { data: signer }  = useSigner();
-  const beanstalk         = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const { data: signer } = useSigner();
+  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
 
   ///
-  const baseToken         = usePreferredToken(PREFERRED_TOKENS, 'use-best');
-  const farmerBalances    = useFarmerBalances();
-  const [refetchFarmerBalances] = useFetchFarmerBalances();
+  const farmerBalances = useFarmerBalances();
+  const Eth = useChainConstant(ETH);
+  const Bean = useChainConstant(BEAN);
 
   // Form setup
   const initialValues: TradeFormValues = useMemo(() => ({
-    tokens: [
+    fromTokens: [
       {
-        token:  baseToken as ERC20Token,
+        token: Eth,
         amount: null,
-      },
+      }
+    ],
+    toTokens: [
+      {
+        token: Bean,
+        amount: null,
+      }
     ],
     fromDestination: FarmFromMode.INTERNAL,
     toDestination: FarmToMode.INTERNAL,
-  }), [baseToken]);
+  }), [Bean, Eth]);
 
   const onSubmit = useCallback(
     async (
       values: TradeFormValues,
       formActions: FormikHelpers<TradeFormValues>
     ) => {
-      let txToast;
-      try {
-        if (!account) throw new Error('Connect a wallet first.');
-        const state = values.tokens[0];
-        if (!state.amount?.gt(0)) { throw new Error('No Unfertilized token to Chop.'); }
-
-        txToast = new TransactionToast({
-          loading: `Chopping ${displayFullBN(state.amount)} ${state.token.symbol}`,
-          success: 'Chop successful.',
-        });
-
-        const txn = await beanstalk.chop(
-          state.token.address,
-          toStringBaseUnitBN(state.amount, state.token.decimals),
-          optimizeFromMode(state.amount, farmerBalances[state.token.address]),
-          values.fromDestination
-        );
-        txToast.confirming(txn);
-
-        const receipt = await txn.wait();
-        await Promise.all([refetchFarmerBalances()]); // should we also refetch the penalty?
-        txToast.success(receipt);
-        formActions.resetForm();
-      } catch (err) {
-        txToast ? txToast.error(err) : toast.error(parseError(err));
-        formActions.setSubmitting(false);
-      }
+      console.log('SUBMIT');
     },
-    [
-      account,
-      beanstalk,
-      refetchFarmerBalances,
-      farmerBalances,
-    ]
+    []
   );
 
   return (
