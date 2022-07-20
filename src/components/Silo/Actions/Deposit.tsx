@@ -436,6 +436,9 @@ const Deposit : React.FC<{
     let txToast;
     try {
       if (!values.settings.slippage) throw new Error('No slippage value set.');
+      const formData = values.tokens[0];
+      if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
+      if (!formData?.amount || formData.amount.eq(0)) throw new Error('No amount set');
 
       // FIXME: getting BDV per amount here
       const { amount } = Beanstalk.Silo.Deposit.deposit(
@@ -448,16 +451,10 @@ const Deposit : React.FC<{
         loading: `Depositing ${displayFullBN(amount.abs(), whitelistedToken.displayDecimals, whitelistedToken.displayDecimals)} ${whitelistedToken.name} to the Silo`,
         success: 'Deposit successful.',
       });
-      
-      const formData = values.tokens[0];
-      if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
-      if (!formData?.amount || formData.amount.eq(0)) throw new Error('No amount set');
 
       // TEMP: recast as BeanstalkReplanted 
       const b = ((beanstalk as unknown) as BeanstalkReplanted);
       const data : string[] = [];
-      
-      //
       const inputToken = formData.token;
       let value = ZERO_BN;
       let depositAmount;
@@ -493,13 +490,7 @@ const Deposit : React.FC<{
         // Encode steps to get from token i to siloToken
         const encoded = Farm.encodeStepsWithSlippage(
           formData.steps,
-          0.1 / 100,
-          // ethers.BigNumber.from(
-          //   toStringBaseUnitBN(
-          //     values.settings.slippage / 100,
-          //     Farm.SLIPPAGE_PRECISION.toNumber()
-          //   )
-          // ), // slippage
+          values.settings.slippage / 100,
         );
         data.push(...encoded);
         encoded.forEach((_data, index) => 
