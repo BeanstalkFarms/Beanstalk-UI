@@ -168,7 +168,7 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.BURN_BEANS:
       return `Burn ${displayFullBN(a.amount, BEAN[1].decimals)} ${a.amount.eq(new BigNumber(1)) ? 'Bean' : 'Beans'}.`;
     case ActionType.RECEIVE_PODS:
-      return `Receive ${displayTokenAmount(a.podAmount, PODS)} Pods at ${a.placeInLine} in the Pod Line.`;
+      return `Receive ${displayTokenAmount(a.podAmount, PODS)} Pods at ${displayFullBN(a.placeInLine)} in the Pod Line.`;
     case ActionType.HARVEST:
       return `Harvest ${displayFullBN(a.amount, PODS.decimals)} Harvestable Pods.`;
     case ActionType.RECEIVE_BEANS:

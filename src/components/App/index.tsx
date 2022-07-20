@@ -41,6 +41,7 @@ import OrderPage from '../../pages/market/order';
 import ListingPage from '../../pages/market/listing';
 import EditListingPage from '../../pages/market/edit-listing';
 import EditOrderPage from '../../pages/market/edit-order';
+import TradePage from '../../pages/trade';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -142,10 +143,15 @@ export default function App() {
         }}>
         <Routes>
           <Route path="/" element={<ForecastPage />} />
-          <Route path="/silo" element={<SiloPage />} />
-          <Route path="/silo/:address" element={<SiloTokenPage />} />
-          <Route path="/field" element={<FieldPage />} />
+          <Route path="/analytics/bean" element={<BeanAnalytics />} />
+          <Route path="/analytics/silo" element={<SiloAnalytics />} />
+          <Route path="/analytics/field" element={<FieldAnalytics />} />
+          <Route path="/analytics/barnraise" element={<BarnraiseAnalytics />} />
+          <Route path="/balances" element={<BalancesPage />} />
           <Route path="/barn" element={<Barn />} />
+          <Route path="/chop" element={<ChopPage />} />
+          <Route path="/field" element={<FieldPage />} />
+          <Route path="/history" element={<TransactionHistoryPage />} />
           <Route path="/market" element={<PodMarketPage />} />
           <Route path="/market/account" element={<MarketAccountPage />} />
           <Route path="/market/activity" element={<MarketActivityPage />} />
@@ -154,14 +160,10 @@ export default function App() {
           <Route path="/market/order/:id/edit" element={<EditOrderPage />} />
           <Route path="/market/listing/:id" element={<ListingPage />} />
           <Route path="/market/listing/:id/edit" element={<EditListingPage />} />
-          <Route path="/analytics/bean" element={<BeanAnalytics />} />
-          <Route path="/analytics/silo" element={<SiloAnalytics />} />
-          <Route path="/analytics/field" element={<FieldAnalytics />} />
-          <Route path="/analytics/barnraise" element={<BarnraiseAnalytics />} />
           <Route path="/nft" element={<NFTPage />} />
-          <Route path="/history" element={<TransactionHistoryPage />} />
-          <Route path="/balances" element={<BalancesPage />} />
-          <Route path="/chop" element={<ChopPage />} />
+          <Route path="/silo" element={<SiloPage />} />
+          <Route path="/silo/:address" element={<SiloTokenPage />} />
+          <Route path="/trade" element={<TradePage />} />
         </Routes>
       </Box>
     </>
