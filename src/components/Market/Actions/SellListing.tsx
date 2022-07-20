@@ -3,28 +3,49 @@ import BigNumber from 'bignumber.js';
 import { SettingInput, TokenAdornment, TokenInputField, TxnSettings } from 'components/Common/Form';
 import { ZERO_BN } from 'constants/index';
 import { BEAN, PODS } from 'constants/tokens';
-import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { MaxBN, MinBN } from 'util/index';
+import DestinationField from 'components/Field/DestinationField';
+import { FarmToMode } from 'lib/Beanstalk/Farm';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
-import RadioCardField from '../../Common/Form/RadioCardField';
-import Warning from '../../Common/Form/Warning';
 import useToggle from '../../../hooks/display/useToggle';
 import SelectPlotDialog from '../../Field/SelectPlotDialog';
 import DoubleSliderField from '../../Common/Form/DoubleSliderField';
 
 export type SellListingFormValues = {
-  option: number | null;
+  //
+  plotIndex: string | null;
+  //
   min: BigNumber;
   max: BigNumber | null;
   amount: BigNumber | null;
   pricePerPod: BigNumber | null;
   expiresAt: BigNumber | null;
-  plotIndex: string | null;
+  //
+  destination: FarmToMode
 }
+
+const PricePerPodInputProps = {
+  inputProps: { step: '0.01' },
+  endAdornment: (
+    <TokenAdornment
+      token={BEAN[1]}
+    />
+  )
+};
+const ExpiresAtInputProps = {
+  endAdornment: (
+    <InputAdornment position="end">
+      <Box sx={{ pr: 1 }}>
+        <Typography sx={{ fontSize: '18px' }}>Place in Line</Typography>
+      </Box>
+    </InputAdornment>
+  )
+};
 
 const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
   values,
@@ -51,11 +72,16 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
     setFieldValue('expiresAt', new BigNumber(index).minus(beanstalkField?.harvestableIndex));
   }, [beanstalkField?.harvestableIndex, farmerField.plots, setFieldValue, values.max, values.min]);
   
-  const handleChangeAmount = (amount: BigNumber) => {
-    const delta = (values?.max || ZERO_BN).minus(amount);
-    setFieldValue('min', MaxBN(ZERO_BN, delta));
-    if (delta.lt(0)) {
-      setFieldValue('max', MinBN(numPods, (values?.max || ZERO_BN).plus(delta.abs())));
+  const handleChangeAmount = (amount: BigNumber | null) => {
+    if (!amount) {
+      setFieldValue('min', numPods);
+      setFieldValue('max', numPods);
+    } else {
+      const delta = (values?.max || ZERO_BN).minus(amount);
+      setFieldValue('min', MaxBN(ZERO_BN, delta));
+      if (delta.lt(0)) {
+        setFieldValue('max', MinBN(numPods, (values?.max || ZERO_BN).plus(delta.abs())));
+      }
     }
   };
 
@@ -73,13 +99,13 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
         open={dialogOpen}
       />
       <Stack gap={1}>
-        {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
         {(values?.plotIndex === null)
           ? (
             <FieldWrapper>
               <TokenInputField
                 name="amount"
-                // MUI
+                handleChange={handleChangeAmount}
+                disabled
                 fullWidth
                 InputProps={{
                   endAdornment: (
@@ -90,8 +116,6 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
                     />
                   ),
                 }}
-                disabled
-                handleChange={handleChangeAmount as any}
               />
             </FieldWrapper>
           ) : (
@@ -99,6 +123,7 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
               <FieldWrapper>
                 <TokenInputField
                   name="amount"
+                  handleChange={handleChangeAmount}
                   fullWidth
                   InputProps={{
                     endAdornment: (
@@ -108,10 +133,8 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
                       />
                     ),
                   }}
-                  // Other
-                  balance={new BigNumber(farmerField.plots[values?.plotIndex])}
+                  balance={farmerField.plots[values.plotIndex]}
                   balanceLabel="Plot Size"
-                  handleChange={handleChangeAmount as any}
                 />
               </FieldWrapper>
               <FieldWrapper>
@@ -121,77 +144,31 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
                 />
               </FieldWrapper>
               <FieldWrapper label="Price Per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
-                <Field name="pricePerPod">
-                  {(fieldProps: FieldProps) => (
-                    // FIXME: delete InputField and use TokenInputField
-                    <TokenInputField
-                      {...fieldProps}
-                      placeholder="0.0000"
-                      balance={new BigNumber(1)}
-                      balanceLabel="Maximum Price Per Pod"
-                      InputProps={{
-                        inputProps: { step: '0.01' },
-                        endAdornment: (
-                          <TokenAdornment
-                            token={BEAN[1]}
-                          />
-                        )
-                      }}
-                    />
-                  )}
-                </Field>
-              </FieldWrapper>
-              <FieldWrapper label="Expires At" tooltip={POD_MARKET_TOOLTIPS.expiresAt}>
-                <Field name="expiresAt">
-                  {(fieldProps: FieldProps) => (
-                    <TokenInputField
-                      {...fieldProps}
-                      placeholder="0.0000"
-                      balanceLabel="Max Value"
-                      balance={placeInLine.plus(values.min ? values.min : ZERO_BN)}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <Box sx={{ pr: 1 }}>
-                              <Typography sx={{ fontSize: '18px' }}>Place in Line</Typography>
-                            </Box>
-                          </InputAdornment>)
-                      }}
-                    />
-                  )}
-                </Field>
-              </FieldWrapper>
-              <FieldWrapper label="Receive Beans to">
-                <RadioCardField
-                  name="option"
-                  // Grid Props
-                  spacing={1}
-                  direction="row"
-                  xs={12}
-                  md={6}
-                  options={[
-                    {
-                      title: 'Wallet',
-                      description: 'Beans will be delivered directly to your wallet',
-                      value: 0,
-                    },
-                    {
-                      title: 'Farmable Balance',
-                      description: 'Beans will be made Farmable within Beanstalk',
-                      value: 1,
-                    }
-                  ]}
-                  sx={{
-                    width: '100%'
-                  }}
+                <TokenInputField
+                  name="pricePerPod"
+                  placeholder="0.0000"
+                  InputProps={PricePerPodInputProps}
                 />
               </FieldWrapper>
-              <Warning
-                message="Pods in this Plot are already Listed on the Pod Market. Listing Pods from the same Plot will replace the previous Pod Listing." />
+              <FieldWrapper label="Expires At" tooltip={POD_MARKET_TOOLTIPS.expiresAt}>
+                <TokenInputField
+                  name="expiresAt"
+                  placeholder="0.0000"
+                  balanceLabel="Max Value"
+                  balance={placeInLine.plus(values.min ? values.min : ZERO_BN)}
+                  InputProps={ExpiresAtInputProps}
+                />
+              </FieldWrapper>
+              <DestinationField
+                name="destination"
+              />
+              {/* <Warning
+                message="Pods in this Plot are already Listed on the Pod Market. Listing Pods from the same Plot will replace the previous Pod Listing."
+              /> */}
             </>
           )}
 
-        <Button sx={{ p: 1, height: '60px' }} type="submit" disabled>
+        <Button fullWidth size="large" type="submit">
           Create Listing
         </Button>
       </Stack>
@@ -203,18 +180,18 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
 
 const SellListing: React.FC<{}> = () => {
   const initialValues: SellListingFormValues = useMemo(() => ({
-    option: null,
+    plotIndex: null,
     min: ZERO_BN,
     max: null,
     amount: null,
     pricePerPod: null,
     expiresAt: null,
-    plotIndex: null,
+    destination: FarmToMode.INTERNAL,
   }), []);
 
   // eslint-disable-next-line unused-imports/no-unused-vars
   const onSubmit = useCallback((values: SellListingFormValues, formActions: FormikHelpers<SellListingFormValues>) => {
-    console.log('CARD: ', values.option);
+    // console.log('CARD: ', values.destination);
     Promise.resolve();
   }, []);
 

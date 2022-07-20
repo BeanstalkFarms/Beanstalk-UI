@@ -9,8 +9,8 @@ import {
   TxnSettings
 } from 'components/Common/Form';
 import { SupportedChainId } from 'constants/index';
-import { BEAN, ETH } from 'constants/tokens';
-import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { BEAN, ETH, WETH } from 'constants/tokens';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useChainId from 'hooks/useChain';
 import useChainConstant from 'hooks/useChainConstant';
 import useFarmerBalances from 'hooks/useFarmerBalances';
@@ -20,11 +20,18 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
-import FieldWrapper from '../../Common/Form/FieldWrapper';
-import SliderField from '../../Common/Form/SliderField';
-import { BeanstalkPalette } from '../../App/muiTheme';
-import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
+import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
+import { ethers } from 'ethers';
+import useGetChainToken from 'hooks/useGetChainToken';
+import { combineBalances } from 'util/Farm';
+import Farm from 'lib/Beanstalk/Farm';
+import { useProvider } from 'wagmi';
+import { Balance } from 'state/farmer/balances';
 import useCurve from '../../../hooks/useCurve';
+import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
+import { BeanstalkPalette } from '../../App/muiTheme';
+import SliderField from '../../Common/Form/SliderField';
+import FieldWrapper from '../../Common/Form/FieldWrapper';
 
 export type BuyOrderFormValues = {
   placeInLine: BigNumber | null;
@@ -47,6 +54,12 @@ const BuyOrderForm : React.FC<
 }) => {
   const chainId = useChainId();
   const [showTokenSelect, setShowTokenSelect] = useState(false);
+  const getChainToken = useGetChainToken();
+  const Weth = getChainToken(WETH);
+  const balances = useFarmerBalances();
+  const provider = useProvider();
+  const farm = useMemo(() => new Farm(provider), [provider]);
+  const erc20TokenMap = useTokenMap([BEAN, ETH, depositToken]);
 
   const isMainnet = chainId === SupportedChainId.MAINNET;
   const curve = useCurve();
@@ -67,20 +80,37 @@ const BuyOrderForm : React.FC<
     ]);
   }, [values.tokens, setFieldValue]);
 
-  const handleQuote = useCallback<QuoteHandler>((tokenIn, amountIn, tokenOut): Promise<BigNumber> => {
-    console.debug('[handleQuote] curve: ', curve);
-    if (curve) {
-      return curve.router.getBestRouteAndOutput(
-        tokenIn.address,
-        tokenOut.address,
-        toStringBaseUnitBN(amountIn, tokenIn.decimals),
-      ).then((result) => toTokenUnitsBN(result.output, tokenOut.decimals));
-    }
-    return Promise.reject();
-  }, [curve]);
+  const handleQuote = useCallback<QuoteHandler>(
+    async (_tokenIn, _amountIn, _tokenOut) => {
+      // tokenOut is fixed to BEAN.
+      const tokenIn  : ERC20Token = _tokenIn  instanceof NativeToken ? Weth : _tokenIn;
+      const tokenOut : ERC20Token = _tokenOut instanceof NativeToken ? Weth : _tokenOut;
+      const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, tokenIn.decimals));
+      const balanceIn : Balance   = _tokenIn  instanceof NativeToken 
+        ? combineBalances(balances[Weth.address], balances[ETH[1].address])
+        : balances[_tokenIn.address];
 
-  const balances = useFarmerBalances();
-  const erc20TokenMap = useTokenMap([BEAN, ETH, depositToken]);
+      //
+      let estimate;
+
+      // Depositing BEAN
+      if (tokenIn === Weth) {
+        estimate = await Farm.estimate(
+          farm.buyBeans(), // this assumes we're coming from WETH
+          [amountIn]
+        );
+      }
+
+      if (!estimate) throw new Error();
+      console.debug('[chain] estimate = ', estimate);
+
+      return {
+        amountOut: toTokenUnitsBN(estimate.amountOut.toString(), tokenOut.decimals),
+        steps: estimate.steps,
+      };
+    },
+    [Weth, balances, farm]
+  );
 
   return (
     <Form noValidate>
@@ -92,10 +122,11 @@ const BuyOrderForm : React.FC<
           handleSubmit={handleSelectTokens}
           balances={balances}
           tokenList={Object.values(erc20TokenMap)}
+          mode={TokenSelectMode.SINGLE}
         />
         {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
-        <FieldWrapper label="Place in Line">
-          <Box px={2}>
+        <FieldWrapper label="Max Place in Line" tooltip="The maximum place in line where you're willing to buy Pods at this price.">
+          <Box px={1}>
             <SliderField
               min={0}
               fields={['placeInLine']}
@@ -104,46 +135,37 @@ const BuyOrderForm : React.FC<
             />
           </Box>
         </FieldWrapper>
-        <Field name="placeInLine">
-          {(fieldProps: FieldProps) => (
-            <TokenInputField
-              {...fieldProps}
-              placeholder={displayFullBN(podLine, 0).toString()}
-              balance={podLine}
-              balanceLabel="Pod Line Size"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Stack sx={{ pr: 0 }} alignItems="center">
-                      <Typography color={BeanstalkPalette.black} sx={{ mt: 0.09, mr: -0.2, fontSize: '1.5rem' }}>0
-                        -
-                      </Typography>
-                    </Stack>
-                  </InputAdornment>)
-              }}
-            />
-          )}
-        </Field>
+        <TokenInputField
+          name="placeInLine"
+          placeholder={displayFullBN(podLine, 0).toString()}
+          balance={podLine}
+          balanceLabel="Pod Line"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Stack sx={{ pr: 0 }} alignItems="center">
+                  <Typography color={BeanstalkPalette.black} sx={{ mt: 0.09, mr: -0.2, fontSize: '1.5rem' }}>0
+                    -
+                  </Typography>
+                </Stack>
+              </InputAdornment>)
+          }}
+        />
         <FieldWrapper label="Price Per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
-          <Field name="pricePerPod">
-            {(fieldProps: FieldProps) => (
-              // FIXME: delete InputField and use TokenInputField
-              <TokenInputField
-                {...fieldProps}
-                placeholder="0.0000"
-                balance={new BigNumber(1)}
-                balanceLabel="Maximum Price Per Pod"
-                InputProps={{
-                  inputProps: { step: '0.01' },
-                  endAdornment: (
-                    <TokenAdornment
-                      token={BEAN[1]}
-                    />
-                  )
-                }}
-              />
-            )}
-          </Field>
+          <TokenInputField
+            name="pricePerPod"
+            placeholder="0.0000"
+            balance={new BigNumber(1)}
+            balanceLabel="Maximum Price Per Pod"
+            InputProps={{
+              inputProps: { step: '0.01' },
+              endAdornment: (
+                <TokenAdornment
+                  token={BEAN[1]}
+                />
+              )
+            }}
+          />
         </FieldWrapper>
         <FieldWrapper label="Number of Beans">
           <>

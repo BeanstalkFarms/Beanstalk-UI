@@ -56,6 +56,7 @@ const SliderField : React.FC<
   const minVal = values[fields[0]];
   const maxVal = values[fields[1]];
 
+  // FIXME: throttle
   const handleChange = useCallback((
     event: Event,
     newValue: number | number[],
@@ -89,7 +90,6 @@ const SliderField : React.FC<
     <Slider
       min={min}
       max={max}
-      getAriaLabel={() => 'Minimum distance shift'}
       value={value}
       onChange={handleChange}
       // valueLabelFormat={}
