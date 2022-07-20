@@ -1,4 +1,4 @@
-import { Box, Button, InputAdornment, Stack, Typography } from '@mui/material';
+import { Box, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { SettingInput, TokenAdornment, TokenInputField, TxnSettings } from 'components/Common/Form';
 import { ONE_BN, ZERO_BN } from 'constants/index';
@@ -18,6 +18,7 @@ import { Field } from 'state/farmer/field';
 import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import { useSigner } from 'hooks/ledger/useSigner';
+import { LoadingButton } from '@mui/lab';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import useToggle from '../../../hooks/display/useToggle';
@@ -53,6 +54,13 @@ const ExpiresAtInputProps = {
 };
 
 const SLIDER_FIELD_KEYS = ['start', 'end'];
+const REQUIRED_KEYS = [
+  'plotIndex',
+  'start',
+  'end',
+  'pricePerPod',
+  'expiresAt'
+] as (keyof CreateListingFormValues)[];
 
 const CreateListingForm: React.FC<
   FormikProps<CreateListingFormValues> & {
@@ -62,6 +70,7 @@ const CreateListingForm: React.FC<
 > = ({
   values,
   setFieldValue,
+  isSubmitting,
   farmerField,
   beanstalkField,
 }) => {
@@ -102,6 +111,11 @@ const CreateListingForm: React.FC<
     setFieldValue('amount', values.end?.minus(values.start ? values.start : ZERO_BN));
   }, [values.start, values.end, setFieldValue]);
 
+  ///
+  const isReady = (
+    !REQUIRED_KEYS.some((k) => values[k] === null)
+  );
+
   return (
     <Form noValidate>
       <SelectPlotDialog
@@ -112,94 +126,95 @@ const CreateListingForm: React.FC<
         open={dialogOpen}
       />
       <Stack gap={1}>
-        {(values?.plotIndex === null)
-          ? (
+        {(values?.plotIndex === null) ? (
+          <FieldWrapper>
+            <TokenInputField
+              name="amount"
+              handleChange={handleChangeAmount}
+              disabled
+              fullWidth
+              InputProps={{
+                endAdornment: (
+                  <TokenAdornment
+                    token={PODS}
+                    onClick={showDialog}
+                    buttonLabel="Select Plot"
+                  />
+                ),
+              }}
+            />
+          </FieldWrapper>
+        ) : (
+          <>
             <FieldWrapper>
               <TokenInputField
                 name="amount"
                 handleChange={handleChangeAmount}
-                disabled
                 fullWidth
                 InputProps={{
                   endAdornment: (
                     <TokenAdornment
                       token={PODS}
                       onClick={showDialog}
-                      buttonLabel="Select Plot"
                     />
                   ),
                 }}
+                balance={farmerField.plots[values.plotIndex]}
+                balanceLabel="Plot Size"
               />
             </FieldWrapper>
-          ) : (
-            <>
-              <FieldWrapper>
-                <TokenInputField
-                  name="amount"
-                  handleChange={handleChangeAmount}
-                  fullWidth
-                  InputProps={{
-                    endAdornment: (
-                      <TokenAdornment
-                        token={PODS}
-                        onClick={showDialog}
-                      />
-                    ),
-                  }}
-                  balance={farmerField.plots[values.plotIndex]}
-                  balanceLabel="Plot Size"
-                />
-              </FieldWrapper>
-              <FieldWrapper>
-                <DoubleSliderField
-                  balance={numPods}
-                  sliderFields={SLIDER_FIELD_KEYS}
-                />
-              </FieldWrapper>
-              <FieldWrapper label="Price Per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
-                <TokenInputField
-                  name="pricePerPod"
-                  placeholder="0.0000"
-                  InputProps={PricePerPodInputProps}
-                  max={ONE_BN}
-                />
-              </FieldWrapper>
-              <FieldWrapper label="Expires At" tooltip={POD_MARKET_TOOLTIPS.expiresAt}>
-                <TokenInputField
-                  name="expiresAt"
-                  placeholder="0.0000"
-                  // balanceLabel="Max Value"
-                  // balance={placeInLine.plus(values.start ? values.start : ZERO_BN)}
-                  InputProps={ExpiresAtInputProps}
-                  // max={}
-                />
-              </FieldWrapper>
-              <DestinationField
-                name="destination"
+            <FieldWrapper>
+              <DoubleSliderField
+                balance={numPods}
+                sliderFields={SLIDER_FIELD_KEYS}
               />
-              {/* <Warning
-                message="Pods in this Plot are already Listed on the Pod Market. Listing Pods from the same Plot will replace the previous Pod Listing."
-              /> */}
-            </>
-          )}
-
-        <Button fullWidth size="large" type="submit">
+            </FieldWrapper>
+            <FieldWrapper label="Price Per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
+              <TokenInputField
+                name="pricePerPod"
+                placeholder="0.0000"
+                InputProps={PricePerPodInputProps}
+                max={ONE_BN}
+              />
+            </FieldWrapper>
+            <FieldWrapper label="Expires At" tooltip={POD_MARKET_TOOLTIPS.expiresAt}>
+              <TokenInputField
+                name="expiresAt"
+                placeholder="0.0000"
+                // balanceLabel="Max Value"
+                // balance={placeInLine.plus(values.start ? values.start : ZERO_BN)}
+                InputProps={ExpiresAtInputProps}
+                // max={}
+              />
+            </FieldWrapper>
+            <DestinationField
+              name="destination"
+              walletDesc="When Pods are sold, send Beans to your wallet."
+              farmDesc="When Pods are sold, send Beans to your Beanstalk farm balance."
+              label="Send proceeds to"
+            />
+            {/* <Warning
+              message="Pods in this Plot are already Listed on the Pod Market. Listing Pods from the same Plot will replace the previous Pod Listing."
+            /> */}
+          </>
+        )}
+        <LoadingButton
+          variant="contained"
+          color="primary"
+          loading={isSubmitting}
+          disabled={isSubmitting || !isReady}
+          fullWidth
+          size="large"
+          type="submit"
+        >
           Create Listing
-        </Button>
+        </LoadingButton>
       </Stack>
     </Form>
   );
 };
 
 // ---------------------------------------------------
-
-// const REQUIRED_KEYS = [
-//   'plotIndex',
-//   'start',
-//   'end',
-//   'pricePerPod',
-//   'expiresAt'
-// ] as (keyof SellListingFormValues)[];
 
 const CreateListing: React.FC<{}> = () => {
   const initialValues: CreateListingFormValues = useMemo(() => ({

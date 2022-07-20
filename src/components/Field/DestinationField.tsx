@@ -1,44 +1,41 @@
 import React, { useMemo } from 'react';
 import { Typography } from '@mui/material';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
-// import siloIcon from 'img/beanstalk/silo-icon.svg';
 import AddressIcon from '../Common/AddressIcon';
-import PillSelectField from '../Common/Form/PillSelectField';
+import PillSelectField, { PillSelectFieldProps } from '../Common/Form/PillSelectField';
 import { IconSize } from '../App/muiTheme';
 
-const DestinationField : React.FC<{
-  name: string;
+const DestinationField : React.FC<Partial<PillSelectFieldProps> & {
+  walletDesc?: string;
+  farmDesc?:   string;
+  name:        string; // force required
 }> = ({
-  name
+  walletDesc = 'Send assets to your wallet.',
+  farmDesc = 'Send assets to your Beanstalk farm balance.',
+  ...props
 }) => {
   const options = useMemo(() => ([
     {
       title: 'Wallet',
-      description: 'Transfer Harvestable Pods to your wallet as Beans.',
+      description: walletDesc,
       pill: <><AddressIcon size={14} /><Typography variant="body1">Wallet</Typography></>,
       icon: <AddressIcon size={IconSize.small} width={IconSize.small} height={IconSize.small} />,
       value: FarmToMode.EXTERNAL,
     },
     {
       title: 'Farm Balance',
-      description: 'Transfer Harvestable Pods to your internal Beanstalk balance as Beans.',
+      description: farmDesc,
       pill: <Typography variant="body1">🚜 Farm Balance</Typography>,
       icon: '🚜',
       value: FarmToMode.INTERNAL,
     },
-    // {
-    //   title: 'The Silo ',
-    //   description: 'Transfer Harvestable Pods to the Silo as Deposited Beans to earn yield.',
-    //   pill: <Typography variant="body1">🚜 The Silo</Typography>,
-    //   icon: <img src={siloIcon} alt="" height={IconSize.small} />,
-    //   value: FarmToMode.DEPOSIT,
-    // }
-  ]), []);
+    ...(props.options || [])
+  ]), [farmDesc, props.options, walletDesc]);
   return (
     <PillSelectField
-      name={name}
-      label="Destination"
-      options={options}
+      label="Destination" // override this label if provided in ...props
+      {...props}          //
+      options={options}   // always deterministically set options
     />
   );
 };
