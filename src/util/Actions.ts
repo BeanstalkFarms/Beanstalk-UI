@@ -164,7 +164,7 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.BUY_BEANS:
       // if user sows with beans, skip this step
       if (a.token.symbol === BEAN[1].symbol) return null;
-      return `Buy ${displayFullBN(a.beanAmount, BEAN[1].decimals)} Beans with ${a.tokenAmount} ${a.token.symbol} for $${displayFullBN(a.beanPrice, BEAN[1].decimals)} each.`;
+      return `Buy ${displayFullBN(a.beanAmount, BEAN[1].decimals)} Beans with ${displayFullBN(a.tokenAmount, a.token.decimals)} ${a.token.symbol} for $${displayFullBN(a.beanPrice, BEAN[1].decimals)} each.`;
     case ActionType.BURN_BEANS:
       return `Burn ${displayFullBN(a.amount, BEAN[1].decimals)} ${a.amount.eq(new BigNumber(1)) ? 'Bean' : 'Beans'}.`;
     case ActionType.RECEIVE_PODS:
