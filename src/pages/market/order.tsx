@@ -9,7 +9,7 @@ import PageHeader from 'components/Common/PageHeader';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { mockPodOrderData } from '../../components/Market/Plots.mock';
-import SellNow from '../../components/Market/Actions/SellNow';
+import FillOrder from '../../components/Market/Actions/FillOrder';
 import PlotOrderDetails from '../../components/Market/Cards/PlotOrderDetails';
 import { AppState } from '../../state';
 
@@ -35,7 +35,7 @@ const OrderPage: React.FC = () => {
               <Typography variant="h4">Sell Pods to Pod Order</Typography>
             </Stack>
             <Box sx={{ px: 1, pb: 1 }}>
-              <SellNow podOrder={mockPodOrderData[0]} />
+              <FillOrder podOrder={mockPodOrderData[0]} />
             </Box>
           </Stack>
         </Card>

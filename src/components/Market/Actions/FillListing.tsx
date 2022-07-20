@@ -26,10 +26,10 @@ import { PodListing } from '../Plots.mock';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 
-export type BuyNowFormValues = FormState
+export type FillListingFormValues = FormState
 
-const BuyNowForm : React.FC<
-  FormikProps<BuyNowFormValues>
+const FillListingForm : React.FC<
+  FormikProps<FillListingFormValues>
   & {
     token: ERC20Token | NativeToken;
     podListing: PodListing;
@@ -151,10 +151,10 @@ const BuyNowForm : React.FC<
 
 // ---------------------------------------------------
 
-const BuyNow : React.FC<{podListing: PodListing}> = ({ podListing }) => {
+const FillListing : React.FC<{podListing: PodListing}> = ({ podListing }) => {
   const Eth = useChainConstant(ETH);
 
-  const initialValues: BuyNowFormValues = useMemo(() => ({
+  const initialValues: FillListingFormValues = useMemo(() => ({
     tokens: [
       {
         token: Eth,
@@ -164,21 +164,21 @@ const BuyNow : React.FC<{podListing: PodListing}> = ({ podListing }) => {
   }), [Eth]);
 
   // eslint-disable-next-line unused-imports/no-unused-vars
-  const onSubmit = useCallback((values: BuyNowFormValues, formActions: FormikHelpers<BuyNowFormValues>) => {
+  const onSubmit = useCallback((values: FillListingFormValues, formActions: FormikHelpers<FillListingFormValues>) => {
     Promise.resolve();
   }, []);
 
   return (
-    <Formik<BuyNowFormValues>
+    <Formik<FillListingFormValues>
       initialValues={initialValues}
       onSubmit={onSubmit}
     >
-      {(formikProps: FormikProps<BuyNowFormValues>) => (
+      {(formikProps: FormikProps<FillListingFormValues>) => (
         <>
           <TxnSettings placement="form-top-right">
             <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
           </TxnSettings>
-          <BuyNowForm
+          <FillListingForm
             token={BEAN[1]}
             podListing={podListing}
             {...formikProps}
@@ -189,4 +189,4 @@ const BuyNow : React.FC<{podListing: PodListing}> = ({ podListing }) => {
   );
 };
 
-export default BuyNow;
+export default FillListing;

@@ -39,7 +39,7 @@ export type BuyOrderFormValues = {
   tokens: FormTokenState[];
 }
 
-const BuyOrderForm : React.FC<
+const CreateOrderForm : React.FC<
   FormikProps<BuyOrderFormValues>
   & {
     podLine: BigNumber;
@@ -194,7 +194,7 @@ const BuyOrderForm : React.FC<
 
 // ---------------------------------------------------
 
-const BuyOrder : React.FC<{}> = () => {
+const CreateOrder : React.FC<{}> = () => {
   const Eth = useChainConstant(ETH);
 
   const initialValues: BuyOrderFormValues = useMemo(() => ({
@@ -226,7 +226,7 @@ const BuyOrder : React.FC<{}> = () => {
           <TxnSettings placement="form-top-right">
             <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
           </TxnSettings>
-          <BuyOrderForm
+          <CreateOrderForm
             token={BEAN[1]}
             podLine={beanstalkField.totalPods.minus(beanstalkField.harvestableIndex)}
             {...formikProps}
@@ -237,4 +237,4 @@ const BuyOrder : React.FC<{}> = () => {
   );
 };
 
-export default BuyOrder;
+export default CreateOrder;

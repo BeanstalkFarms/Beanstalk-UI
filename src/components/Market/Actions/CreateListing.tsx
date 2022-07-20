@@ -24,7 +24,7 @@ import useToggle from '../../../hooks/display/useToggle';
 import SelectPlotDialog from '../../Field/SelectPlotDialog';
 import DoubleSliderField from '../../Common/Form/DoubleSliderField';
 
-export type SellListingFormValues = {
+export type CreateListingFormValues = {
   plotIndex:   string    | null;
   amount:      BigNumber | null;
   start:       BigNumber | null;
@@ -54,8 +54,8 @@ const ExpiresAtInputProps = {
 
 const SLIDER_FIELD_KEYS = ['start', 'end'];
 
-const SellListingForm: React.FC<
-  FormikProps<SellListingFormValues> & {
+const CreateListingForm: React.FC<
+  FormikProps<CreateListingFormValues> & {
     farmerField:    Field;
     beanstalkField: BeanstalkField;
   }
@@ -201,8 +201,8 @@ const SellListingForm: React.FC<
 //   'expiresAt'
 // ] as (keyof SellListingFormValues)[];
 
-const SellListing: React.FC<{}> = () => {
-  const initialValues: SellListingFormValues = useMemo(() => ({
+const CreateListing: React.FC<{}> = () => {
+  const initialValues: CreateListingFormValues = useMemo(() => ({
     plotIndex:   null,
     amount:      null,
     start:       null,
@@ -224,7 +224,7 @@ const SellListing: React.FC<{}> = () => {
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
 
   // eslint-disable-next-line unused-imports/no-unused-vars
-  const onSubmit = useCallback(async (values: SellListingFormValues, formActions: FormikHelpers<SellListingFormValues>) => {
+  const onSubmit = useCallback(async (values: CreateListingFormValues, formActions: FormikHelpers<CreateListingFormValues>) => {
     const Bean = getChainToken(BEAN);
     let txToast;
     try {
@@ -264,16 +264,16 @@ const SellListing: React.FC<{}> = () => {
   }, [beanstalk, beanstalkField.harvestableIndex, farmerField.plots, getChainToken]);
 
   return (
-    <Formik<SellListingFormValues>
+    <Formik<CreateListingFormValues>
       initialValues={initialValues}
       onSubmit={onSubmit}
     >
-      {(formikProps: FormikProps<SellListingFormValues>) => (
+      {(formikProps: FormikProps<CreateListingFormValues>) => (
         <>
           <TxnSettings placement="form-top-right">
             <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
           </TxnSettings>
-          <SellListingForm
+          <CreateListingForm
             farmerField={farmerField}
             beanstalkField={beanstalkField}
             {...formikProps}
@@ -284,4 +284,4 @@ const SellListing: React.FC<{}> = () => {
   );
 };
 
-export default SellListing;
+export default CreateListing;
