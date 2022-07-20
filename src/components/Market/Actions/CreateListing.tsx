@@ -181,10 +181,8 @@ const CreateListingForm: React.FC<
               <TokenInputField
                 name="expiresAt"
                 placeholder="0.0000"
-                // balanceLabel="Max Value"
-                // balance={placeInLine.plus(values.start ? values.start : ZERO_BN)}
                 InputProps={ExpiresAtInputProps}
-                // max={}
+                max={placeInLine.plus(values.start || ZERO_BN)}
               />
             </FieldWrapper>
             <DestinationField
@@ -244,14 +242,15 @@ const CreateListing: React.FC<{}> = () => {
     let txToast;
     try {
       // if (REQUIRED_KEYS.some((k) => values[k] === null)) throw new Error('Missing data');
-      const { plotIndex, start, end, pricePerPod, expiresAt } = values;
-      if (!plotIndex || !start || !end || !pricePerPod || !expiresAt) throw new Error('Missing data');
+      const { plotIndex, start, end, amount, pricePerPod, expiresAt } = values;
+      if (!plotIndex || !start || !end || !amount || !pricePerPod || !expiresAt) throw new Error('Missing data');
 
       const plotIndexBN = new BigNumber(plotIndex);
       const numPods     = farmerField.plots[plotIndex];
 
       if (!numPods) throw new Error('Plot not found.');
       if (start.gte(end)) throw new Error('Invalid start/end parameter.');
+      if (!end.minus(start).eq(amount)) throw new Error('Malformatted amount.');
       if (pricePerPod.gt(1)) throw new Error('Price per pod cannot be more than 1.');
       if (expiresAt.gt(plotIndexBN.minus(beanstalkField.harvestableIndex).plus(start))) throw new Error('This listing would expire after the Plot harvests.');
 
@@ -260,18 +259,23 @@ const CreateListing: React.FC<{}> = () => {
         success: 'Listing created',
       });
 
+      /// expiresAt is relative (ie 0 = front of pod line)
+      /// add harvestableIndex to make it absolute
+      const maxHarvestableIndex = expiresAt.plus(beanstalkField.harvestableIndex);
       const txn = await beanstalk.createPodListing(
-        toStringBaseUnitBN(plotIndex, Bean.decimals),
-        toStringBaseUnitBN(start,     Bean.decimals),
-        toStringBaseUnitBN(end,       Bean.decimals),
-        toStringBaseUnitBN(pricePerPod, Bean.decimals),
-        toStringBaseUnitBN(expiresAt, Bean.decimals),
+        toStringBaseUnitBN(plotIndex,   Bean.decimals),   // absolute plot index
+        toStringBaseUnitBN(start,       Bean.decimals),   // relative start index
+        toStringBaseUnitBN(amount,      Bean.decimals),   // relative amount
+        toStringBaseUnitBN(pricePerPod, Bean.decimals),   // price per pod
+        toStringBaseUnitBN(maxHarvestableIndex, Bean.decimals),   // absolute index of expiry
         values.destination,
       );
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
+      /// TODO: refresh farmer listings/market
       txToast.success(receipt);
+      formActions.resetForm();
     } catch (err) {
       txToast?.error(err) || toast.error(parseError(err));
       console.error(err);
