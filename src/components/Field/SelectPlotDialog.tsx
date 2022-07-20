@@ -13,6 +13,8 @@ export interface SelectPlotDialogProps {
   farmerField: AppState['_farmer']['field'];
   /** Beanstalk field app state */
   beanstalkField: AppState['_beanstalk']['field'];
+  /** index of the selected plot */
+  selected?: string | null;
 }
 
 const SelectPlotDialog: React.FC<SelectPlotDialogProps & DialogProps> = ({
@@ -21,7 +23,8 @@ const SelectPlotDialog: React.FC<SelectPlotDialogProps & DialogProps> = ({
   handlePlotSelect,
   handleClose,
   onClose,
-  open
+  open,
+  selected
 }) => {
   // sets plot index then closes dialog
   const handleSelectAndClose = (index: string) => {
@@ -43,6 +46,7 @@ const SelectPlotDialog: React.FC<SelectPlotDialogProps & DialogProps> = ({
               handlePlotSelect={handleSelectAndClose}
               plots={farmerField?.plots}
               harvestableIndex={beanstalkField?.harvestableIndex}
+              selected={selected}
             />
           ) : (
             <Typography sx={{ textAlign: 'center', pt: 1, pb: 4 }}>You don&apos;t have any plots to send!</Typography>

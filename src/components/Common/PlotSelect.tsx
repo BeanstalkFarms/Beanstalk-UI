@@ -31,9 +31,11 @@ export interface PlotSelectProps {
   harvestableIndex: BigNumber;
   /** Custom function to set the selected plot index */
   handlePlotSelect: any;
+  /** index of the selected plot */
+  selected?: string | null;
 }
 
-const PlotSelect: React.FC<PlotSelectProps> = ({ plots, harvestableIndex, handlePlotSelect }) => {
+const PlotSelect: React.FC<PlotSelectProps> = ({ plots, harvestableIndex, handlePlotSelect, selected }) => {
   const classes = useStyles();
   if (plots === null) {
     return null;
@@ -46,13 +48,8 @@ const PlotSelect: React.FC<PlotSelectProps> = ({ plots, harvestableIndex, handle
             <ListItem
               key={index}
               color="primary"
-              // selected={newSelection.has(_token)}
+              selected={selected ? selected === index : undefined}
               disablePadding
-              secondaryAction={(
-                <Typography variant="bodyLarge">
-                  {displayBN(new BigNumber(plots[index]))}
-                </Typography>
-              )}
               onClick={() => handlePlotSelect(index)}
               sx={{
                 // ListItem is used elsewhere so we define here
@@ -69,14 +66,23 @@ const PlotSelect: React.FC<PlotSelectProps> = ({ plots, harvestableIndex, handle
               }}
             >
               <ListItemButton disableRipple>
-                <ListItemIcon sx={{ pr: 1 }}>
-                  <img src={podIcon} alt="" className={classes.tokenLogo} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="PODS"
-                  secondary={`Place in Line: ${displayBN(new BigNumber(index).minus(harvestableIndex))}`}
-                  sx={{ my: 0 }}
-                />
+                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }}>
+                  <Stack direction="row" justifyContent="center">
+                    <ListItemIcon sx={{ pr: 1 }}>
+                      <img src={podIcon} alt="" className={classes.tokenLogo} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="PODS"
+                      secondary={`Place in Line: ${displayBN(new BigNumber(index).minus(harvestableIndex))}`}
+                      sx={{ my: 0 }}
+                    />
+                  </Stack>
+                  {plots[index] ? (
+                    <Typography variant="bodyLarge">
+                      {displayBN(new BigNumber(plots[index]))}
+                    </Typography>
+                  ) : null}
+                </Stack>
               </ListItemButton>
             </ListItem>
           ))}

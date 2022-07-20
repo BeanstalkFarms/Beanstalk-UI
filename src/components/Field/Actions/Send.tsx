@@ -106,6 +106,7 @@ const SendForm: React.FC<SendFormProps &
         beanstalkField={beanstalkField}
         handlePlotSelect={handlePlotSelect}
         handleClose={hideDialog}
+        selected={values.plotIndex}
         open={dialogOpen}
       />
       <Stack gap={1}>

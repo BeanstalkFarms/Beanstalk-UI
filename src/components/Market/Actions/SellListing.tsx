@@ -70,6 +70,7 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
         beanstalkField={beanstalkField}
         handlePlotSelect={handlePlotSelect}
         handleClose={hideDialog}
+        selected={values.plotIndex}
         open={dialogOpen}
       />
       <Stack gap={1}>
