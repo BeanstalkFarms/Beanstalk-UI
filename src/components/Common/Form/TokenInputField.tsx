@@ -111,7 +111,7 @@ const TokenInput: React.FC<
     if (!amount) return null;
     const max = _max === 'use-balance' ? balance : _max;
     if (max?.lt(amount)) return max;
-    return amount;
+    return amount; // no max; always return amount
   }, [_max, balance]);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

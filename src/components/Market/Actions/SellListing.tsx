@@ -1,15 +1,23 @@
 import { Box, Button, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { SettingInput, TokenAdornment, TokenInputField, TxnSettings } from 'components/Common/Form';
-import { ZERO_BN } from 'constants/index';
+import { ONE_BN, ZERO_BN } from 'constants/index';
 import { BEAN, PODS } from 'constants/tokens';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { MaxBN, MinBN } from 'util/index';
+import { MaxBN, MinBN, toStringBaseUnitBN , parseError } from 'util/index';
 import DestinationField from 'components/Field/DestinationField';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
+import { useBeanstalkContract } from 'hooks/useContract';
+import { BeanstalkReplanted } from 'generated';
+import useGetChainToken from 'hooks/useGetChainToken';
+import { BeanstalkField } from 'state/beanstalk/field';
+import { Field } from 'state/farmer/field';
+import TransactionToast from 'components/Common/TxnToast';
+import toast from 'react-hot-toast';
+import { useSigner } from 'hooks/ledger/useSigner';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import useToggle from '../../../hooks/display/useToggle';
@@ -17,15 +25,12 @@ import SelectPlotDialog from '../../Field/SelectPlotDialog';
 import DoubleSliderField from '../../Common/Form/DoubleSliderField';
 
 export type SellListingFormValues = {
-  //
-  plotIndex: string | null;
-  //
-  amount: BigNumber | null;
-  start:  BigNumber;
-  end:    BigNumber | null;
+  plotIndex:   string    | null;
+  amount:      BigNumber | null;
+  start:       BigNumber | null;
+  end:         BigNumber | null;
   pricePerPod: BigNumber | null;
   expiresAt:   BigNumber | null;
-  //
   destination: FarmToMode
 }
 
@@ -47,22 +52,28 @@ const ExpiresAtInputProps = {
   )
 };
 
-const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
+const SellListingForm: React.FC<
+  FormikProps<SellListingFormValues> & {
+    farmerField:    Field;
+    beanstalkField: BeanstalkField;
+  }
+> = ({
   values,
   setFieldValue,
+  farmerField,
+  beanstalkField,
 }) => {
   const [dialogOpen, showDialog, hideDialog] = useToggle();
   
-  const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
-    (state) => state._farmer.field
+  /// Derived
+  const placeInLine = useMemo(
+    () => (values.plotIndex ? new BigNumber(values.plotIndex).minus(beanstalkField?.harvestableIndex) : ZERO_BN),
+    [beanstalkField?.harvestableIndex, values.plotIndex]
   );
-
-  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
-    (state) => state._beanstalk.field
+  const numPods     = useMemo(
+    () => (values.plotIndex ? farmerField.plots[values.plotIndex] : ZERO_BN),
+    [farmerField.plots, values.plotIndex]
   );
-  
-  const placeInLine = values.plotIndex !== null ? new BigNumber(values.plotIndex).minus(beanstalkField?.harvestableIndex) : ZERO_BN;
-  const numPods = values.plotIndex !== null ? new BigNumber(farmerField.plots[values.plotIndex]) : ZERO_BN;
   
   const handlePlotSelect = useCallback((index: string) => {
     setFieldValue('plotIndex', index);
@@ -72,7 +83,7 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
     setFieldValue('expiresAt', new BigNumber(index).minus(beanstalkField?.harvestableIndex));
   }, [beanstalkField?.harvestableIndex, farmerField.plots, setFieldValue, values.end, values.start]);
   
-  const handleChangeAmount = (amount: BigNumber | null) => {
+  const handleChangeAmount = useCallback((amount: BigNumber | null) => {
     if (!amount) {
       setFieldValue('start', numPods);
       setFieldValue('end', numPods);
@@ -83,7 +94,7 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
         setFieldValue('end', MinBN(numPods, (values?.end || ZERO_BN).plus(delta.abs())));
       }
     }
-  };
+  }, [numPods, setFieldValue, values?.end]);
 
   useEffect(() => {
     setFieldValue('amount', values.end?.minus(values.start ? values.start : ZERO_BN));
@@ -148,15 +159,17 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
                   name="pricePerPod"
                   placeholder="0.0000"
                   InputProps={PricePerPodInputProps}
+                  max={ONE_BN}
                 />
               </FieldWrapper>
               <FieldWrapper label="Expires At" tooltip={POD_MARKET_TOOLTIPS.expiresAt}>
                 <TokenInputField
                   name="expiresAt"
                   placeholder="0.0000"
-                  balanceLabel="Max Value"
-                  balance={placeInLine.plus(values.start ? values.start : ZERO_BN)}
+                  // balanceLabel="Max Value"
+                  // balance={placeInLine.plus(values.start ? values.start : ZERO_BN)}
                   InputProps={ExpiresAtInputProps}
+                  // max={}
                 />
               </FieldWrapper>
               <DestinationField
@@ -178,22 +191,75 @@ const SellListingForm: React.FC<FormikProps<SellListingFormValues>> = ({
 
 // ---------------------------------------------------
 
+// const REQUIRED_KEYS = [
+//   'plotIndex',
+//   'start',
+//   'end',
+//   'pricePerPod',
+//   'expiresAt'
+// ] as (keyof SellListingFormValues)[];
+
 const SellListing: React.FC<{}> = () => {
   const initialValues: SellListingFormValues = useMemo(() => ({
     plotIndex:   null,
     amount:      null,
-    start:       ZERO_BN,
+    start:       null,
     end:         null,
     pricePerPod: null,
     expiresAt:   null,
     destination: FarmToMode.INTERNAL,
   }), []);
 
+  ///
+  const getChainToken = useGetChainToken();
+  
+  ///
+  const { data: signer } = useSigner();
+  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  
+  ///
+  const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
+  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
+
   // eslint-disable-next-line unused-imports/no-unused-vars
-  const onSubmit = useCallback((values: SellListingFormValues, formActions: FormikHelpers<SellListingFormValues>) => {
-    // console.log('CARD: ', values.destination);
-    Promise.resolve();
-  }, []);
+  const onSubmit = useCallback(async (values: SellListingFormValues, formActions: FormikHelpers<SellListingFormValues>) => {
+    const Bean = getChainToken(BEAN);
+    let txToast;
+    try {
+      // if (REQUIRED_KEYS.some((k) => values[k] === null)) throw new Error('Missing data');
+      const { plotIndex, start, end, pricePerPod, expiresAt } = values;
+      if (!plotIndex || !start || !end || !pricePerPod || !expiresAt) throw new Error('Missing data');
+
+      const plotIndexBN = new BigNumber(plotIndex);
+      const numPods     = farmerField.plots[plotIndex];
+
+      if (!numPods) throw new Error('Plot not found.');
+      if (start.gte(end)) throw new Error('Invalid start/end parameter.');
+      if (pricePerPod.gt(1)) throw new Error('Price per pod cannot be more than 1.');
+      if (expiresAt.gt(plotIndexBN.minus(beanstalkField.harvestableIndex).plus(start))) throw new Error('This listing would expire after the Plot harvests.');
+
+      txToast = new TransactionToast({
+        loading: 'Creating listing',
+        success: 'Listing created',
+      });
+
+      const txn = await beanstalk.createPodListing(
+        toStringBaseUnitBN(plotIndex, Bean.decimals),
+        toStringBaseUnitBN(start,     Bean.decimals),
+        toStringBaseUnitBN(end,       Bean.decimals),
+        toStringBaseUnitBN(pricePerPod, Bean.decimals),
+        toStringBaseUnitBN(expiresAt, Bean.decimals),
+        values.destination,
+      );
+      txToast.confirming(txn);
+
+      const receipt = await txn.wait();
+      txToast.success(receipt);
+    } catch (err) {
+      txToast?.error(err) || toast.error(parseError(err));
+      console.error(err);
+    }
+  }, [beanstalk, beanstalkField.harvestableIndex, farmerField.plots, getChainToken]);
 
   return (
     <Formik<SellListingFormValues>
@@ -206,6 +272,8 @@ const SellListing: React.FC<{}> = () => {
             <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
           </TxnSettings>
           <SellListingForm
+            farmerField={farmerField}
+            beanstalkField={beanstalkField}
             {...formikProps}
           />
         </>
