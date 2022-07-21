@@ -17,7 +17,7 @@ export type FormTokenState = {
   /** */
   token: ERC20Token | NativeToken;
   /** */
-  amount: BigNumber | null;
+  amount: BigNumber | undefined;
   /** */
   quoting?: boolean;
   /** */

@@ -74,7 +74,8 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
  title,
 }) => {
   const classes = useStyles();
-  const [newSelection, setNewSelection] = useState<Set<Token>>(new Set());
+  /** keep an internal copy of selected tokens */
+  const [selectedInternal, setSelectedInternal] = useState<Set<Token>>(new Set());
 
   const getBalance = useCallback((addr: string) => {
     if (!_balances) return ZERO_BN;
@@ -84,15 +85,15 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
 
   // Toggle the selection state of a token.
   const toggle = useCallback((token: Token) => {
-    const copy = new Set(newSelection);
-    if (newSelection.has(token)) {
+    const copy = new Set(selectedInternal);
+    if (selectedInternal.has(token)) {
       copy.delete(token);
-      setNewSelection(copy);
+      setSelectedInternal(copy);
     } else {
       copy.add(token);
-      setNewSelection(copy);
+      setSelectedInternal(copy);
     }
-  }, [newSelection]);
+  }, [selectedInternal]);
 
   // Whenever the Dialog opens, store a temporary copy of the currently
   // selected tokens so we can manipulate them quickly here without
@@ -100,9 +101,11 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
   useEffect(() => {
     if (open) {
       console.debug('[TokenSelectDialog] resetting _selected');
-      setNewSelection(
+      setSelectedInternal(
         new Set(selected.map(({ token }) => token))
       );
+    } else {
+      setSelectedInternal(new Set());
     }
   }, [open, selected]);
 
@@ -121,7 +124,7 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
     return onClickSubmit(new Set([_token])); // submit just this token
   }, [mode, onClickSubmit, toggle]);
 
-  if (!newSelection) return null;
+  if (!selectedInternal) return null;
 
   return (
     <StyledDialog
@@ -147,7 +150,7 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
               <ListItem
                 key={_token.address}
                 color="primary"
-                selected={newSelection.has(_token)}
+                selected={selectedInternal.has(_token)}
                 disablePadding
                 onClick={onClickItem(_token)}
                 sx={{
@@ -191,16 +194,16 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
       {mode === TokenSelectMode.MULTI && (
         <StyledDialogActions sx={{ pb: 2 }}>
           <Button
-            onClick={onClickSubmit(newSelection)}
-            disabled={newSelection.size === 0}
+            onClick={onClickSubmit(selectedInternal)}
+            disabled={selectedInternal.size === 0}
             variant="outlined"
             fullWidth
             color="primary"
             size="large"
           >
-            {newSelection.size === 0
+            {selectedInternal.size === 0
               ? 'Select Token to Continue'
-              : `Select ${newSelection.size} Token${newSelection.size === 1 ? '' : 's'}`}
+              : `Select ${selectedInternal.size} Token${selectedInternal.size === 1 ? '' : 's'}`}
           </Button>
         </StyledDialogActions>
       )}
