@@ -10,7 +10,7 @@ import {
   TxnSeparator,
   TxnSettings
 } from 'components/Common/Form';
-import { SupportedChainId, ZERO_BN } from 'constants/index';
+import { ONE_BN, SupportedChainId, ZERO_BN } from 'constants/index';
 import { BEAN, ETH, PODS, WETH } from 'constants/tokens';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useChainId from 'hooks/useChain';
@@ -35,6 +35,7 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import { useSigner } from 'hooks/ledger/useSigner';
 import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
+import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import SliderField from '../../Common/Form/SliderField';
@@ -158,6 +159,7 @@ const CreateOrderForm : React.FC<
             name="pricePerPod"
             placeholder="0.0000"
             InputProps={PricePerPodInputProps}
+            max={ONE_BN}
             // balance={new BigNumber(1)}
             // balanceLabel="Maximum Price Per Pod"
           />
@@ -237,6 +239,9 @@ const CreateOrder : React.FC<{}> = () => {
     }
   }), [Eth]);
   
+  ///
+  const [refetchFarmerBalances] = useFetchFarmerBalances();
+
   ///
   const { data: signer } = useSigner();
   const provider = useProvider();
@@ -347,14 +352,14 @@ const CreateOrder : React.FC<{}> = () => {
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
-      /// TODO: refresh data
+      await Promise.all([refetchFarmerBalances()]);
       txToast.success(receipt);
       formActions.resetForm();
     } catch (err) {
       txToast?.error(err) || toast.error(parseError(err));
       console.error(err);
     }
-  }, [Bean, Eth, balances, beanstalk]);
+  }, [Bean, Eth, balances, beanstalk, refetchFarmerBalances]);
   
   return (
     <Formik<CreateOrderFormValues>
