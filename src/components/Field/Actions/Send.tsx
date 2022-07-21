@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import useToggle from 'hooks/display/useToggle';
-import { TokenAdornment, TokenInputField, TxnPreview } from 'components/Common/Form';
+import { TokenAdornment, TokenInputField, TxnPreview, TxnSeparator } from 'components/Common/Form';
 import { PODS } from 'constants/tokens';
 import { LoadingButton } from '@mui/lab';
 import { useSigner } from 'hooks/ledger/useSigner';
@@ -14,6 +14,7 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import { BeanstalkReplanted } from 'generated/index';
 import TransactionToast from 'components/Common/TxnToast';
 import useAccount from 'hooks/ledger/useAccount';
+import AdvancedButton from 'components/Common/Form/AdvancedButton';
 import SelectPlotDialog from '../SelectPlotDialog';
 import { AppState } from '../../../state';
 import { ZERO_BN } from '../../../constants';
@@ -29,18 +30,25 @@ export type SendFormValues = {
   start: BigNumber | null;
   end: BigNumber | null;
   amount: BigNumber | null;
+  settings: {
+    slippage: number, // 0.1%
+    showRangeSelect: boolean,
+  }
 }
 
-export interface SendFormProps {
-}
+export interface SendFormProps {}
 
-const SendForm: React.FC<SendFormProps &
-  FormikProps<SendFormValues>> = ({
-                                    values,
-                                    isValid,
-                                    isSubmitting,
-                                    setFieldValue
-                                  }) => {
+const SliderFieldKeys = ['start', 'end'];
+
+const SendForm: React.FC<
+  SendFormProps &
+  FormikProps<SendFormValues>
+> = ({
+  values,
+  isValid,
+  isSubmitting,
+  setFieldValue
+}) => {
   const account = useAccount();
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
     (state) => state._farmer.field
@@ -146,18 +154,30 @@ const SendForm: React.FC<SendFormProps &
                   ),
                 }}
                 // Other 
-                balance={new BigNumber(farmerField.plots[values?.plotIndex])}
+                balance={farmerField.plots[values?.plotIndex]}
                 balanceLabel="Plot Size"
                 handleChange={handleChangeAmount}
+                quote={(
+                  <AdvancedButton
+                    open={values.settings.showRangeSelect}
+                    onClick={() => setFieldValue(
+                      'settings.showRangeSelect',
+                      !values.settings.showRangeSelect
+                    )}
+                  />
+                )}
               />
             </FieldWrapper>
-            <FieldWrapper>
-              <DoubleSliderField
-                balance={numPods}
-                sliderFields={['start', 'end']}
-                disableSlider={isSubmitting}
-              />
-            </FieldWrapper>
+            {values.settings.showRangeSelect && (
+              <FieldWrapper>
+                <DoubleSliderField
+                  balance={numPods}
+                  sliderFields={SliderFieldKeys}
+                  disableSlider={isSubmitting}
+                />
+              </FieldWrapper>
+            )}
+            <TxnSeparator />
             <FieldWrapper label="Recipient Address">
               <AddressInputField name="to" />
             </FieldWrapper>
@@ -209,6 +229,7 @@ const Send: React.FC<{}> = () => {
   const initialValues: SendFormValues = useMemo(() => ({
     settings: {
       slippage: 0.1, // 0.1%
+      showRangeSelect: false,
     },
     to: null,
     plotIndex: null,

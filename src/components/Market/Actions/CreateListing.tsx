@@ -19,6 +19,7 @@ import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import { useSigner } from 'hooks/ledger/useSigner';
 import { LoadingButton } from '@mui/lab';
+import AdvancedButton from 'components/Common/Form/AdvancedButton';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import useToggle from '../../../hooks/display/useToggle';
@@ -32,7 +33,10 @@ export type CreateListingFormValues = {
   end:         BigNumber | null;
   pricePerPod: BigNumber | null;
   expiresAt:   BigNumber | null;
-  destination: FarmToMode
+  destination: FarmToMode;
+  settings: {
+    showRangeSelect: boolean;
+  }
 }
 
 const PricePerPodInputProps = {
@@ -170,14 +174,25 @@ const CreateListingForm: React.FC<
                 }}
                 balance={farmerField.plots[values.plotIndex]}
                 balanceLabel="Plot Size"
+                quote={(
+                  <AdvancedButton
+                    open={values.settings.showRangeSelect}
+                    onClick={() => setFieldValue(
+                      'settings.showRangeSelect',
+                      !values.settings.showRangeSelect
+                    )}
+                  />
+                )}
               />
             </FieldWrapper>
-            <FieldWrapper>
-              <DoubleSliderField
-                balance={numPods}
-                sliderFields={SLIDER_FIELD_KEYS}
-              />
-            </FieldWrapper>
+            {values.settings.showRangeSelect && (
+              <FieldWrapper>
+                <DoubleSliderField
+                  balance={numPods}
+                  sliderFields={SLIDER_FIELD_KEYS}
+                />
+              </FieldWrapper>
+            )}
             <FieldWrapper label="Price Per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
               <TokenInputField
                 name="pricePerPod"
@@ -232,6 +247,9 @@ const CreateListing: React.FC<{}> = () => {
     pricePerPod: null,
     expiresAt:   null,
     destination: FarmToMode.INTERNAL,
+    settings: {
+      showRangeSelect: false,
+    }
   }), []);
 
   ///
