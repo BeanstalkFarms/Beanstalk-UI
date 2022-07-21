@@ -70,7 +70,7 @@ const SendForm: React.FC<SendFormProps &
     setFieldValue('amount', numPods);
   }, [setFieldValue, numPods]);
 
-  const handleChangeAmount = (amount: BigNumber | null) => {
+  const handleChangeAmount = (amount: BigNumber | undefined) => {
     if (amount) {
       const delta = (values?.end || ZERO_BN).minus(amount);
       setFieldValue('start', MaxBN(ZERO_BN, delta));

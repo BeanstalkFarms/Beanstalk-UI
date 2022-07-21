@@ -260,7 +260,7 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
     tokens: [
       {
         token: token,
-        amount: null,
+        amount: undefined,
       },
     ],
   }), [token]);

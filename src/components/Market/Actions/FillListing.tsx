@@ -84,8 +84,6 @@ const FillListingForm : React.FC<
 
   return (
     <Form noValidate>
-      {/* Selected value: {values.option?.toString()} */}
-      {/* <pre>{JSON.stringify({ ...values }, null, 2)}</pre> */}
       <Stack gap={1}>
         <TokenSelectDialog
           open={showTokenSelect}
@@ -158,7 +156,7 @@ const FillListing : React.FC<{podListing: PodListing}> = ({ podListing }) => {
     tokens: [
       {
         token: Eth,
-        amount: null,
+        amount: undefined,
       },
     ],
   }), [Eth]);
