@@ -12,8 +12,8 @@ export const BEANSTALK_ADDRESSES = {
 export const BEANSTALK_PRICE_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0xcB64964117ae6dc6FaB049531Ed63dF949dCf6aF'.toLowerCase(),
   [SupportedChainId.ROPSTEN]: '0xB721C3386052389892A898EC700619A7Ab20C6B7'.toLowerCase(),
-  [SupportedChainId.PHOENIX]:   '0x34cd75271fcf6a733a6f069f2afbd6c223811334'.toLowerCase(),
-  [SupportedChainId.LOCALHOST]: '0x34cd75271fcf6a733a6f069f2afbd6c223811334'.toLowerCase(),
+  [SupportedChainId.PHOENIX]:   '0xA57289161FF18D67A68841922264B317170b0b81'.toLowerCase(),
+  [SupportedChainId.LOCALHOST]: '0xA57289161FF18D67A68841922264B317170b0b81'.toLowerCase(),
 };
 
 export const BEANSTALK_FERTILIZER_ADDRESSES = {
