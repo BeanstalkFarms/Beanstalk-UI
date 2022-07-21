@@ -9,13 +9,13 @@ import { Crate, FarmerSiloBalance, WithdrawalCrate } from 'state/farmer/silo';
  * Split Withdrawals into
  *    "withdrawn" (aka "transit")
  *    "claimable" (aka "receivable")
- * 
- * @param withdrawals 
- * @param currentSeason 
- * @returns 
+ *
+ * @param withdrawals
+ * @param currentSeason
+ * @returns
  */
 export function parseWithdrawals(
-  withdrawals: Withdrawals, 
+  withdrawals: Withdrawals,
   currentSeason: BigNumber
 ) : {
   withdrawn: FarmerSiloBalance['withdrawn'];
@@ -68,7 +68,7 @@ export const encodeCratesForEnroot = (
       if (crates.length === 1) {
         prev[addr] = beanstalk.interface.encodeFunctionData('updateUnripeDeposit', [
           addr,
-          crates[0].toString(),
+          crates[0].season.toString(),
           unripeTokens[addr].stringify(crates[0].amount),
         ]);
       } else {
