@@ -105,7 +105,10 @@ const CreateOrderForm : React.FC<
     });
     setFieldValue('tokens', [
       ...v,
-      ...Array.from(copy).map((_token) => ({ token: _token, amount: undefined })),
+      ...Array.from(copy).map((_token) => ({
+        token: _token,
+        amount: undefined
+      })),
     ]);
   }, [values.tokens, setFieldValue]);
 
@@ -116,7 +119,7 @@ const CreateOrderForm : React.FC<
   );
 
   const isReady = (
-    values.placeInLine
+    values.placeInLine?.gt(0)
     && values.pricePerPod?.gt(0)
     && amountBeans
   );
@@ -166,7 +169,7 @@ const CreateOrderForm : React.FC<
                 key={`tokens.${index}`}
                 name={`tokens.${index}`}
                 tokenOut={getChainToken(BEAN)}
-                balance={balances[state.token.address] || undefined}
+                balance={balances[state.token.address] || ZERO_BN}
                 state={state}
                 showTokenSelect={handleOpen}
                 disabled={isMainnet}
@@ -214,25 +217,25 @@ const CreateOrder : React.FC<{}> = () => {
   const tokenMap = useTokenMap<ERC20Token | NativeToken>([BEAN, ETH]);
 
   ///
+  const balances = useFarmerBalances();
+  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
+    (state) => state._beanstalk.field
+  );
+
+  ///
   const initialValues: CreateOrderFormValues = useMemo(() => ({
-    placeInLine: null,
+    placeInLine: ZERO_BN,
     pricePerPod: null,
     tokens: [
       {
         token: Eth,
-        amount: null,
+        amount: undefined,
       },
     ],
     settings: {
       slippage: 0.1,
     }
   }), [Eth]);
-
-  ///
-  const balances = useFarmerBalances();
-  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
-    (state) => state._beanstalk.field
-  );
   
   ///
   const { data: signer } = useSigner();
@@ -357,6 +360,7 @@ const CreateOrder : React.FC<{}> = () => {
     <Formik<CreateOrderFormValues>
       initialValues={initialValues}
       onSubmit={onSubmit}
+      enableReinitialize
     >
       {(formikProps: FormikProps<CreateOrderFormValues>) => (
         <>

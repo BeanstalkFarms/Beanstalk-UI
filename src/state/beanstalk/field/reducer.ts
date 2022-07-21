@@ -1,27 +1,27 @@
 import { createReducer } from '@reduxjs/toolkit';
-import BigNumber from 'bignumber.js';
+import { NEW_BN, ZERO_BN } from 'constants/index';
 import { BeanstalkField } from '.';
 import { resetBeanstalkField, updateBeanstalkField, updateHarvestableIndex } from './actions';
 
 const initialState : BeanstalkField = {
-  harvestableIndex: new BigNumber(-1),
-  podIndex: new BigNumber(-1),
-  podLine: new BigNumber(-1),
-  soil: new BigNumber(-1),
+  harvestableIndex: NEW_BN,
+  podIndex: NEW_BN,
+  podLine: ZERO_BN,
+  soil: NEW_BN,
   weather: {
     didSowBelowMin: false,
     didSowFaster: false,
-    lastDSoil: new BigNumber(-1),
-    lastSoilPercent: new BigNumber(-1),
-    lastSowTime: new BigNumber(-1),
-    nextSowTime: new BigNumber(-1),
-    startSoil: new BigNumber(-1),
-    yield: new BigNumber(-1),
+    lastDSoil: NEW_BN,
+    lastSoilPercent: NEW_BN,
+    lastSowTime: NEW_BN,
+    nextSowTime: NEW_BN,
+    startSoil: NEW_BN,
+    yield: NEW_BN,
   },
   // FIXME: move under Weather?
   rain: {
     raining: false,
-    rainStart: new BigNumber(-1),
+    rainStart: NEW_BN,
   },
 };
 
