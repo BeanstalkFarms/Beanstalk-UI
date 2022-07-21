@@ -14,7 +14,7 @@ const CreateButtons: React.FC = () => (
       variant="contained"
       sx={{ py: 1 }}
       >
-      <Typography variant="h4">Create Buy Order</Typography>
+      <Typography variant="h4">Create Pod Order</Typography>
     </Button>
     {/* ?t=1 sets the tab in Market/Actions/index.tsx */}
     <Button
@@ -23,7 +23,7 @@ const CreateButtons: React.FC = () => (
       variant="contained"
       sx={{ py: 1 }}
       >
-      <Typography variant="h4">Create Sell Listing</Typography>
+      <Typography variant="h4">Create Pod Listing</Typography>
     </Button>
   </Stack>
   );

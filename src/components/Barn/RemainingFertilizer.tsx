@@ -31,7 +31,7 @@ const RemainingFertilizer: React.FC = () => {
   return (
     <Card sx={{ p: 2 }}>
       <Stack gap={1}>
-        <Typography variant="h4">Remaining Fertilizer</Typography>
+        <Typography variant="h4">Fertilizer</Typography>
         <Stack
           direction={{ xs: 'column', md: 'row' }}
           // alignItems={{ xs: 'left', md: 'center' }}
@@ -50,7 +50,7 @@ const RemainingFertilizer: React.FC = () => {
               <Typography variant="body1">
                 Available Fertilizer&nbsp;
                 <Tooltip
-                  title="Once bought, Available Fertilizer becomes Active. Active Fertilizer comes with Sprouts, the number of Beans to be earned from Active Fertilizer. One-third of Bean mints go towards ripening Sprouts when there is Active Fertilizer."
+                  title="Once bought, Available Fertilizer becomes Active. Active Fertilizer comes with Sprouts, the number of Beans to be earned from Active Fertilizer. One-third of Bean mints go towards Fertilizing Sprouts when there is Active Fertilizer."
                   placement="top-start"
                 >
                   <HelpOutlineIcon
@@ -106,7 +106,7 @@ const RemainingFertilizer: React.FC = () => {
             </Stack>
             <Stack>
               <Link
-                href="https://bean.money/blog/a-farmers-guide-to-the-barn-raise"
+                href="https://docs.bean.money/farm/barn"
                 rel="noreferrer"
                 color="text.secondary"
               >

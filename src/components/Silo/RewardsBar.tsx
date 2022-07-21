@@ -34,14 +34,14 @@ const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
       <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
         <RewardItem
           title="Earned Beans"
-          tooltip="The number of Beans earned since your last Mow, or last interaction with the Silo. Earned Beans are already Deposited in the Silo."
+          tooltip="The number of Beans earned since your last Plant. Earned Beans are already Deposited in the Silo."
           amount={beans.earned}
           icon={beanIcon}
           compact={compact}
         />
         <RewardItem
           title="Earned Stalk"
-          tooltip="The number of Stalk earned from Earned Beans. Earned Stalk automatically contribute to your Stalk ownership and do not require any action to activate them."
+          tooltip="Stalk earned from Earned Beans. Earned Stalk automatically contribute to Stalk ownership and do not require any action to claim them."
           amount={stalk.earned}
           icon={stalkIcon}
           compact={compact}
@@ -55,14 +55,14 @@ const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
       <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
         <RewardItem
           title="Plantable Seeds"
-          tooltip="The number of Seeds earned from Earned Beans. Plantable Seeds do not grow Stalk until they are Planted."
+          tooltip="Seeds earned in conjuction with Earned Beans. Plantable Seeds must be Planted in order to grow Stalk."
           amount={seeds.plantable}
           icon={seedIcon}
           compact={compact}
         />
         <RewardItem
           title="Grown Stalk"
-          tooltip="The number of Stalk earned from Seeds. Grown Stalk does not contribute to your Stalk ownership and must be Mown to add it to your Stalk balance."
+          tooltip="Stalk earned from Seeds. Grown Stalk does not contribute to Stalk ownership until it is Mown. Mow can be called on its own, and it is also called at the beginning of any Silo interaction."
           amount={stalk.grown}
           icon={stalkIcon}
           compact={compact}
@@ -75,14 +75,14 @@ const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
       <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
         <RewardItem
           title="Revitalized Stalk"
-          tooltip="The number of pre-exploit Stalk that has vested as a function of Fertilizer sold. Revitalized Stalk does not contribute to your Stalk ownership and must be Enrooted to add it to your Stalk balance."
+          tooltip="Stalk that are minted for pre-exploit Silo Members as Fertilizer is sold. Revitalized Stalk must be Enrooted in order to contribute to Stalk ownership."
           amount={revitalizedStalk}
           icon={stalkIcon}
           compact={compact}
         />
         <RewardItem
           title="Revitalized Seeds"
-          tooltip="The number of pre-exploit Seeds that have vested as a function of Fertilizer sold. Revitalized Seeds do not grow Stalk until they are Enrooted."
+          tooltip="Seeds that are minted for pre-exploit Silo Members as Fertilizer is sold. Revitalized Seeds must be Enrooted in order grow Stalk."
           amount={revitalizedSeeds}
           icon={seedIcon}
           compact={compact}

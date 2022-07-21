@@ -75,8 +75,8 @@ const Deposits : React.FC<{
           <Tooltip
             title={(
               <>
-                <Typography>Base: {displayBN(params.row.stalk)} Stalk</Typography>
-                <Typography>Accrued: {displayBN(accruedStalk)} Stalk</Typography>
+                <Typography>At Deposit: {displayBN(params.row.stalk)} Stalk</Typography>
+                <Typography>Since Deposit: {displayBN(accruedStalk)} Stalk</Typography>
                 <Typography>Earning {displayBN(seedsPerSeason)} Stalk per Season</Typography>
               </>
             )}

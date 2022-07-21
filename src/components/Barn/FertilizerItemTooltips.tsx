@@ -2,7 +2,7 @@ import React from 'react';
 import BigNumber from 'bignumber.js';
 import { Stack, Typography } from '@mui/material';
 import { displayBN } from 'util/index';
-import { SPROUTS, FERTILIZED_SPROUTS } from 'constants/tokens';
+import { SPROUTS, RINSABLE_SPROUTS } from 'constants/tokens';
 import TokenIcon from '../Common/TokenIcon';
 
 export type FertilizerTooltip = {
@@ -26,9 +26,9 @@ export const MY_FERTILIZER: FertilizerTooltip = {
   reward: (fertilized: BigNumber, unfertilized: BigNumber) => ((
     <Stack width={200}>
       <Stack direction="row" justifyContent="space-between">
-        <Typography>Fertilized Sprouts:</Typography>
+        <Typography>Rinsable Sprouts:</Typography>
         <Stack direction="row" alignItems="center" gap={0.2}>
-          <TokenIcon token={FERTILIZED_SPROUTS} style={{ width: '14px' }} />
+          <TokenIcon token={RINSABLE_SPROUTS} style={{ width: '14px' }} />
           <Typography>{displayBN(fertilized)}</Typography>
         </Stack>
       </Stack>

@@ -16,7 +16,7 @@ import { useHumidityAtId } from 'hooks/useHumidity';
 import { AppState } from 'state';
 import FertilizerItem from 'components/Barn/FertilizerItem';
 import { ZERO_BN } from 'constants/index';
-import { SPROUTS, FERTILIZED_SPROUTS } from 'constants/tokens';
+import { SPROUTS, RINSABLE_SPROUTS } from 'constants/tokens';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { displayFullBN } from 'util/Tokens';
 import { MY_FERTILIZER } from 'components/Barn/FertilizerItemTooltips';
@@ -85,9 +85,9 @@ const MyFertilizer: React.FC = () => {
             justifyContent="space-between"
           >
             <Typography variant="body1">
-              Fertilized Sprouts&nbsp;
+              Rinsable Sprouts&nbsp;
               <Tooltip
-                title="The number of Beans earned from your Fertilizer that can be Rinsed, or redeemed for 1 Bean each. Upon Rinse, they can be transferred to your wallet or Deposited in the Silo."
+                title="Sprouts that are redeemable for 1 Bean each. Rinsable Sprouts must be Rinsed in order to use them."
                 placement="right"
               >
                 <HelpOutlineIcon
@@ -96,9 +96,9 @@ const MyFertilizer: React.FC = () => {
               </Tooltip>
             </Typography>
             <Stack direction="row" alignItems="center" gap={0.2}>
-              <TokenIcon token={FERTILIZED_SPROUTS} />
+              <TokenIcon token={RINSABLE_SPROUTS} />
               <Typography>
-                {displayFullBN(farmerBarn.fertilizedSprouts, FERTILIZED_SPROUTS.displayDecimals)}
+                {displayFullBN(farmerBarn.fertilizedSprouts, RINSABLE_SPROUTS.displayDecimals)}
               </Typography>
             </Stack>
           </Stack>
