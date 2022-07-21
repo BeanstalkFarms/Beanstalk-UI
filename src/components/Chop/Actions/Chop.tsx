@@ -208,7 +208,7 @@ const Chop: React.FC<{}> = () => {
     tokens: [
       {
         token:  baseToken as ERC20Token,
-        amount: null,
+        amount: undefined,
       },
     ],
     destination: FarmToMode.INTERNAL,

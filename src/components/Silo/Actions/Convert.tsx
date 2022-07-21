@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Accordion, AccordionDetails, Alert, Box, Stack, Typography } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
-import { useProvider } from 'wagmi';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { BEAN, BEAN_CRV3_LP, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from 'constants/tokens';
 import TokenOutputField from 'components/Common/Form/TokenOutputField';
@@ -44,8 +43,8 @@ type ConvertFormValues = FormState & {
   settings: {
     slippage: number;
   };
-  maxAmountIn: BigNumber | null;
-  tokenOut: Token | null;
+  maxAmountIn: BigNumber | undefined;
+  tokenOut: Token | undefined;
 };
 
 // -----------------------------------------------------------------------
@@ -358,10 +357,10 @@ const Convert : React.FC<{
   const [refetchFarmerSilo]     = useFetchFarmerSilo();
 
   /// Network
-  const provider          = useProvider();
   const { data: signer }  = useSigner();
   const beanstalk         = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
-  const farm              = useMemo(() => new Farm(provider), [provider]);
+  // const provider          = useProvider();
+  // const farm              = useMemo(() => new Farm(provider), [provider]);
 
   /// Form setup
   const initialValues : ConvertFormValues = useMemo(() => ({
@@ -373,13 +372,13 @@ const Convert : React.FC<{
     tokens: [
       {
         token:      fromToken,
-        amount:     null,
+        amount:     undefined,
         quoting:    false,
         amountOut:  undefined,
       },
     ],
     // Convert data
-    maxAmountIn:    null,
+    maxAmountIn:    undefined,
     // Token Outputs
     tokenOut:       initialTokenOut,
   }), [fromToken, initialTokenOut]);
@@ -491,7 +490,7 @@ const Convert : React.FC<{
       formActions.resetForm({
         values: {
           ...initialValues,
-          tokenOut: null,
+          tokenOut: undefined,
         }
       });
     } catch (err) {

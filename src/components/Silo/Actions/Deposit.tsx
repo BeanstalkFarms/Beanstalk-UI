@@ -281,7 +281,7 @@ const Deposit : React.FC<{
     tokens: [
       {
         token: baseToken,
-        amount: null,
+        amount: undefined,
         quoting: false,
         amountOut: undefined,
       },
