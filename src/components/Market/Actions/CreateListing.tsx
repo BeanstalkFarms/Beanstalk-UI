@@ -94,11 +94,20 @@ const CreateListingForm: React.FC<
     setFieldValue('expiresAt', new BigNumber(index).minus(beanstalkField?.harvestableIndex));
   }, [beanstalkField?.harvestableIndex, farmerField.plots, setFieldValue, values.end, values.start]);
   
-  const handleChangeAmount = useCallback((amount: BigNumber | null) => {
+  const handleChangeAmount = useCallback((amount: BigNumber | undefined) => {
     if (!amount) {
+      /// If the user clears the amount input, set default value
       setFieldValue('start', numPods);
       setFieldValue('end', numPods);
     } else {
+      /// Expand the plot plot range assuming that the right handle is fixed:
+      ///
+      /// plot                              start     end     amount    next action
+      /// -----------------------------------------------------------------------------------
+      /// 0 [     |---------|     ] 1000    300       600     300       increase amount by 150
+      /// 0 [  |------------|     ] 1000    150       600     450       increase amount by 300
+      /// 0 [------------------|  ] 1000    0         750     750       increase amount by 150
+      /// 0 [---------------------] 1000    0         1000    1000      reached maximum amount
       const delta = (values?.end || ZERO_BN).minus(amount);
       setFieldValue('start', MaxBN(ZERO_BN, delta));
       if (delta.lt(0)) {

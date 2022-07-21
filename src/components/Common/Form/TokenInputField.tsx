@@ -129,6 +129,9 @@ const TokenInput: React.FC<
     /// this number trims at 16 decimals to "1.0421629357343056".
     /// when re-initializing this as a BigNumber the numbers will fail comparison,
     /// causing an infinite loop.
+    ///
+    /// FIXME: throws an error if e.target.value === '.'
+    /// FIXME: throws an error if e.target.value === '-'
     const newValue = e.target.value ? new BigNumber(e.target.value) : null;
 
     /// Always update the display amount right away.
