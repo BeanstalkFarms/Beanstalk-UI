@@ -35,7 +35,7 @@ const FertilizerImage : React.FC<FertilizerImageProps> = ({
         width: '100%',
         aspectRatio: '1/1',
         borderColor: isNew ? BeanstalkPalette.logoGreen : grey[300],
-        borderWidth: 1,
+        borderWidth: id ? 0 : 1, // if ID is present, use button border
         borderStyle: 'solid',
         borderRadius: 1,
         position: 'relative',
@@ -52,7 +52,7 @@ const FertilizerImage : React.FC<FertilizerImageProps> = ({
         style={{ position: 'relative', zIndex: 2 }}
         className={isNew ? 'fert-anim bounce' : id ? 'fert-anim bounce-hover' : undefined}
       />
-      {id && (
+      {id ? (
         <Box
           className="id" 
           sx={{
@@ -66,8 +66,8 @@ const FertilizerImage : React.FC<FertilizerImageProps> = ({
             #{id.toString()}
           </Typography>
         </Box>
-      )}
-      {progress && (
+      ) : null}
+      {progress ? (
         <Box
           sx={{
             background: BeanstalkPalette.logoGreen,
@@ -82,7 +82,7 @@ const FertilizerImage : React.FC<FertilizerImageProps> = ({
             borderBottomRightRadius: 9
           }}
         />
-      )}
+      ) : null}
     </Stack>
   );
 
