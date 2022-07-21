@@ -108,7 +108,7 @@ const TokenRow: React.FC<{
 const STATE_CONFIG: { [key: string]: [name: string, color: string, tooltip: string] } = {
   // Silo
   deposited:    ['Deposited', 'rgba(70, 185, 85, 1)', 'Assets that are Deposited in the Silo.'],
-  withdrawn:    ['Withdrawn', 'rgba(31, 120, 180, 0.3)', 'Assets being Withdrawn from the Silo. Once the Withdrawal timer elapses, Withdrawn assets become Claimable.'],
+  withdrawn:    ['Withdrawn', 'rgba(31, 120, 180, 0.3)', 'Assets being Withdrawn from the Silo. At the end of the current Season, Withdrawn assets become Claimable.'],
   claimable:    ['Claimable', 'rgba(178, 223, 138, 0.3)', 'Assets that can be claimed to your wallet, Deposited in the Silo, etc.'],
   // Farm
   farm:         ['Farm', 'rgba(25, 135, 59, 0.5)', 'Assets stored in Beanstalk but not Deposited.'],

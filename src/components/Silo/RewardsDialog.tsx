@@ -35,7 +35,7 @@ const options = [
   },
   {
     title: 'Plant',
-    description: 'Add Plantable Seeds to your Seed balance. Also Mows Grown Stalk.',
+    description: 'Add Plantable Seeds to your Seed balance. Also Mows Grown Stalk, claims Earned Beans and claims Earned Stalk.',
     value: ClaimRewardsAction.PLANT_AND_MOW,
   },
   {
@@ -44,7 +44,7 @@ const options = [
     value: ClaimRewardsAction.ENROOT_AND_MOW,
   },
   {
-    title: 'Claim all Silo rewards',
+    title: 'Claim all Silo Rewards',
     description: 'Add all Stalk and Seed rewards to your Stalk and Seed balances.',
     value: ClaimRewardsAction.CLAIM_ALL,
   }

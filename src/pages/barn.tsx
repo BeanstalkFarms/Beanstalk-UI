@@ -27,7 +27,7 @@ const Barn: React.FC = () => (
               Analytics
             </Button>
             <Button
-              href="https://bean.money/blog/how-to-purchase-fertilizer"
+              href="https://docs.bean.money/guides/earn-interest-on-beans/buy-fertilizer"
               target="_blank"
               rel="noreferrer"
               color="light"

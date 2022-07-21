@@ -448,7 +448,7 @@ const Deposit : React.FC<{
       );
 
       txToast = new TransactionToast({
-        loading: `Depositing ${displayFullBN(amount.abs(), whitelistedToken.displayDecimals, whitelistedToken.displayDecimals)} ${whitelistedToken.name} to the Silo`,
+        loading: `Depositing ${displayFullBN(amount.abs(), whitelistedToken.displayDecimals, whitelistedToken.displayDecimals)} ${whitelistedToken.name} into the Silo`,
         success: 'Deposit successful.',
       });
 
