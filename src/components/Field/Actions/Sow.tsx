@@ -262,7 +262,7 @@ const Sow : React.FC<{}> = () => {
     tokens: [
       {
         token: baseToken as (ERC20Token | NativeToken),
-        amount: null,
+        amount: undefined,
       },
     ],
   }), [baseToken]);

@@ -214,13 +214,13 @@ const Trade: React.FC<{}> = () => {
     fromTokens: [
       {
         token: Eth,
-        amount: null,
+        amount: undefined,
       }
     ],
     toTokens: [
       {
         token: Bean,
-        amount: null,
+        amount: undefined,
       }
     ],
     fromDestination: FarmFromMode.INTERNAL,
