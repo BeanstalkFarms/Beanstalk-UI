@@ -55,7 +55,7 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
   const [result, quoting, getAmountOut] = useQuote(tokenOut, handleQuote, quoteSettings);
   const { isSubmitting, setFieldValue } = useFormikContext<FormState>();
 
-  // Run getAmountOut selected token changes.
+  // Run getAmountOut when selected token changes.
   // ------------------------------------------
   // NOTE: because the getAmountOut function is debounced,
   // it returns undefined in some cases, so instead we 
@@ -63,7 +63,7 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
   // via effects and update form state accordingly.
   useEffect(() => {
     if (state.token !== tokenOut) {
-      console.debug(`[TokenQuoteProvider] getting amount out: ${state.amount} ${state.token.symbol} => X ${tokenOut.symbol}`);
+      console.debug(`[TokenQuoteProvider] Inputs changed. Refreshing amount out: ${state.amount} ${state.token.symbol} => X ${tokenOut.symbol}`);
       getAmountOut(
         state.token,                      // tokenIn
         new BigNumber(state.amount || 0)  // amountIn

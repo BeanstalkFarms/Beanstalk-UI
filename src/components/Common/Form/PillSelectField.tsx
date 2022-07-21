@@ -5,7 +5,7 @@ import useToggle from 'hooks/display/useToggle';
 import DescriptionButton from '../DescriptionButton';
 import PillDialogField from './PillDialogField';
 
-const PillSelectField : React.FC<{
+export type PillSelectFieldProps = {
   /** */
   options: ({
     title: string;
@@ -18,16 +18,20 @@ const PillSelectField : React.FC<{
   name: string;
   /** Field label */
   label: string;
-}> = ({
+  /** Tooltip */
+  tooltip?: string,
+};
+const PillSelectField : React.FC<PillSelectFieldProps> = ({
   options,
   name,
   label,
+  tooltip,
 }) => {
   const [isOpen, show, hide] = useToggle();
   return (
     <Field name={name}>
       {(fieldProps: FieldProps<any>) => {
-        const pill = options.find((x) => x.value === fieldProps.field.value)?.pill;
+        const pill = options.find((x) => x.value === fieldProps.field.value)?.pill; // FIXME: inefficient
         const set = (v: any) => () => {
           fieldProps.form.setFieldValue(name, v);
           hide();
@@ -38,10 +42,12 @@ const PillSelectField : React.FC<{
             show={show}
             hide={hide}
             label={label}
+            tooltip={tooltip}
             pill={pill}
             pl={0.5}
           >
-            <Stack gap={1}>
+            {/* Dialog contents */}
+            <Stack gap={1} sx={{ minWidth: 400 }}>
               {options.map((option, index) => (
                 <DescriptionButton
                   key={index}

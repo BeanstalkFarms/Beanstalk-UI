@@ -24,14 +24,14 @@ import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 import { PodOrder } from '../Plots.mock';
 
-export type SellNowFormValues = {
+export type FillOrderFormValues = {
   plotIndex: string | null;
   min: BigNumber | null;
   max: BigNumber | null;
   amount: BigNumber | null;
 }
 
-const SellNowForm: React.FC<FormikProps<SellNowFormValues>
+const FillOrderForm: React.FC<FormikProps<FillOrderFormValues>
   & {
     podOrder: PodOrder;
   }
@@ -196,10 +196,10 @@ const SellNowForm: React.FC<FormikProps<SellNowFormValues>
 
 // ---------------------------------------------------
 
-const SellNow: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
+const FillOrder: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
   const Eth = useChainConstant(ETH);
 
-  const initialValues: SellNowFormValues = useMemo(() => ({
+  const initialValues: FillOrderFormValues = useMemo(() => ({
     tokens: [
       {
         token: Eth,
@@ -213,21 +213,21 @@ const SellNow: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
   }), [Eth]);
 
   // eslint-disable-next-line unused-imports/no-unused-vars
-  const onSubmit = useCallback((values: SellNowFormValues, formActions: FormikHelpers<SellNowFormValues>) => {
+  const onSubmit = useCallback((values: FillOrderFormValues, formActions: FormikHelpers<FillOrderFormValues>) => {
     Promise.resolve();
   }, []);
 
   return (
-    <Formik<SellNowFormValues>
+    <Formik<FillOrderFormValues>
       initialValues={initialValues}
       onSubmit={onSubmit}
     >
-      {(formikProps: FormikProps<SellNowFormValues>) => (
+      {(formikProps: FormikProps<FillOrderFormValues>) => (
         <>
           <TxnSettings placement="form-top-right">
             <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
           </TxnSettings>
-          <SellNowForm
+          <FillOrderForm
             podOrder={podOrder}
             {...formikProps}
           />
@@ -237,4 +237,4 @@ const SellNow: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
   );
 };
 
-export default SellNow;
+export default FillOrder;

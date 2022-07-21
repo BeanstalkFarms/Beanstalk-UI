@@ -15,6 +15,6 @@ const CreatePage: React.FC = () => (
       <MarketActions />
     </Stack>
   </Container>
-  );
+);
 
 export default CreatePage;

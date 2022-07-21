@@ -43,7 +43,7 @@ export type TokenInputCustomProps = {
   /**
    *
    */
-  handleChange?: (finalValue: BigNumber | null) => void;
+  handleChange?: (finalValue: BigNumber | undefined) => void;
 };
 
 export type TokenInputProps = (
@@ -108,22 +108,38 @@ const TokenInput: React.FC<
   );
 
   const clamp = useCallback((amount: BigNumber | null) => {
-    if (!amount) return null;
-    const max = _max === 'use-balance' ? balance : _max;
-    if (max?.lt(amount)) return max;
-    return amount;
+    const max = _max === 'use-balance' ? balance : _max; // fallback to balance
+    console.debug('[TokenInputField] clamp: ', {
+      amount,
+      max,
+      balance,
+    });
+    if (!amount) return undefined; // if no amount, exit
+    if (max?.lt(amount)) return max; // clamp @ max
+    return amount; // no max; always return amount
   }, [_max, balance]);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    // Always update the display amount right away.
-    setDisplayAmount(
-      // parseFloat converts 01 -> 1
-      e.target.value ? parseFloat(e.target.value).toString() : ''
-    );
+    /// If e.target.value is non-empty string, parse it into a BigNumber.
+    /// Using BigNumber here is necessary to prevent roundoff errors
+    /// caused by parseFloat.
+    ///
+    /// Example: consider a case where the max button is pressed
+    /// when the user has `balance = 1.042162935734305698 ETH`.
+    /// this number trims at 16 decimals to "1.0421629357343056".
+    /// when re-initializing this as a BigNumber the numbers will fail comparison,
+    /// causing an infinite loop.
+    ///
+    /// FIXME: throws an error if e.target.value === '.'
+    /// FIXME: throws an error if e.target.value === '-'
     const newValue = e.target.value ? new BigNumber(e.target.value) : null;
-    // Only push a new value to form state if the numeric
-    // value is different. For example, if the displayValue
-    // goes from '1.0' -> '1.00', don't trigger an update.
+
+    /// Always update the display amount right away.
+    setDisplayAmount(newValue?.toString() || '');
+
+    /// Only push a new value to form state if the numeric
+    /// value is different. For example, if the displayValue
+    /// goes from '1.0' -> '1.00', don't trigger an update.
     if (newValue === null || !newValue.eq(field.value)) {
       const clampedValue = clamp(newValue);
       form.setFieldValue(field.name, clampedValue);
@@ -133,10 +149,15 @@ const TokenInput: React.FC<
 
   // 
   const handleMax = useCallback(() => {
+    console.debug('[TokenInputField] handleMax');
     if (balance) {
       const clampedValue = clamp(balance);
+      console.debug('[TokenInputField] handleMax: balance exists', {
+        balance,
+        clampedValue,
+      });
       form.setFieldValue(field.name, clampedValue);
-      _handleChange?.(clampedValue);
+      _handleChange?.(clampedValue);  // bubble up if necessary
     }
   }, [balance, clamp, form, field.name, _handleChange]);
 
@@ -159,11 +180,22 @@ const TokenInput: React.FC<
   // - In the below effect, check for edge cases:
   //    a. If `field.value === undefined`         (i.e. the value has been cleared), reset the input.
   //    b. If `field.value !== BN(displayAmount)` (i.e. a new value was provided),   update `displayAmount`.
+  //
+  // Called after:
+  // (1) user clicks max (via setFieldValue)
+  // (2) handleChange
+  //
   useEffect(() => {
-    console.debug('[TokenInputField] field.value or displayAmount changed', field.name, field.value, displayAmount);
+    console.debug('[TokenInputField] field.value or displayAmount changed:', {
+      name: field.name,
+      value: field.value,
+      valueString: field.value?.toString(),
+      displayAmount: displayAmount,
+      updatingDisplayValue: field.value?.toString() !== displayAmount,
+    });
     if (!field.value) setDisplayAmount('');
-    else if (!field.value.eq(new BigNumber(displayAmount))) setDisplayAmount(field.value.toString());
-  }, [field.value, field.name, displayAmount]);
+    else if (field.value.toString() !== displayAmount) setDisplayAmount(field.value.toString()); // 
+  }, [field.name, field.value, displayAmount]);
 
   return (
     <FieldWrapper label={label}>

@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
 import { useParams } from 'react-router-dom';
-import BuyNow from '../../components/Market/Actions/BuyNow';
+import FillListing from '../../components/Market/Actions/FillListing';
 import PlotListingDetails from '../../components/Market/Cards/PlotListingDetails';
 import { mockPodListingData } from '../../components/Market/Plots.mock';
 
@@ -30,7 +30,7 @@ const ListingPage: React.FC = () => {
               <Typography variant="h4">Buy Pods from Pod Listing</Typography>
             </Stack>
             <Box sx={{ px: 1, pb: 1 }}>
-              <BuyNow podListing={mockPodListingData[0]} />
+              <FillListing podListing={mockPodListingData[0]} />
             </Box>
           </Stack>
         </Card>

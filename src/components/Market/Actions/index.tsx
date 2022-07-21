@@ -1,8 +1,8 @@
 import { Box, Card, Stack, Tab, Tabs } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import BuyOrder from './BuyOrder';
-import SellListing from './SellListing';
+import CreateOrder from './CreateOrder';
+import CreateListing from './CreateListing';
 
 const MarketActions : React.FC<{}> = () => {
   const [tab, setTab] = useState(0);
@@ -25,13 +25,13 @@ const MarketActions : React.FC<{}> = () => {
         {/* Header */}
         <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>
           <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }} variant="scrollable">
-            <Tab label="Create Buy Order" />
-            <Tab label="Create Sell Listing" />
+            <Tab label="Create Order" />
+            <Tab label="Create Listing" />
           </Tabs>
         </Stack>
         <Box sx={{ px: 1, pb: 1 }}>
-          {tab === 0 && <BuyOrder />}
-          {tab === 1 && <SellListing />}
+          {tab === 0 && <CreateOrder />}
+          {tab === 1 && <CreateListing />}
         </Box>
       </Stack>
     </Card>

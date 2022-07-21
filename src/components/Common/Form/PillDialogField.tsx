@@ -9,12 +9,14 @@ const PillDialogField : React.FC<{
   hide: () => void;
   label: string;
   pill: React.ReactNode;
+  tooltip?: string;
 } & StackProps> = ({
   isOpen,
   show,
   hide,
   label,
   pill: selected,
+  tooltip,
   children,
 }) => (
   <>
@@ -27,9 +29,11 @@ const PillDialogField : React.FC<{
       </StyledDialogContent>
     </StyledDialog>
     <PillRow
-      isOpen={isOpen}
       label={label}
-      onClick={show}>
+      tooltip={tooltip}
+      isOpen={isOpen}
+      onClick={show}
+    >
       {selected}
     </PillRow>
   </>

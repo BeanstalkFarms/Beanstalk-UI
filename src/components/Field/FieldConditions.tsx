@@ -24,7 +24,7 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
               title="The number of Beans that can currently be Sown, or lent to Beanstalk."
               placement="top"
             >
-              <Typography variant="body1">Available Soil&nbsp;</Typography>
+              <Typography variant="body1">Available Soil</Typography>
             </Tooltip>
             <Typography variant="bodyLarge" fontWeight="400">
               {displayBN(beanstalkField.soil)}
@@ -34,7 +34,7 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
         <Grid item xs={12} md={3}>
           <Stack gap={0.5}>
             <Tooltip title="The interest rate for Sowing Beans, or lending your Beans to Beanstalk." placement="top">
-              <Typography variant="body1">Temperature&nbsp;</Typography>
+              <Typography variant="body1">Temperature</Typography>
             </Tooltip>
             <Typography variant="bodyLarge" fontWeight="400">
               {displayBN(beanstalkField.weather.yield)}%
@@ -44,20 +44,20 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
         <Grid item xs={12} md={3}>
           <Stack gap={0.5}>
             <Tooltip title="The interest rate for Sowing Beans, or lending your Beans to Beanstalk." placement="top">
-              <Typography variant="body1">Pod Line&nbsp;</Typography>
+              <Typography variant="body1">Pod Line</Typography>
             </Tooltip>
             <Typography variant="bodyLarge" fontWeight="400">
-              {displayBN(beanstalkField?.podIndex.minus(beanstalkField.harvestableIndex))}
+              {displayBN(beanstalkField.podLine)}
             </Typography>
           </Stack>
         </Grid>
         <Grid item xs={12} md={3}>
           <Stack gap={0.5}>
             <Tooltip title="The number of Beans that Beanstalk has paid back to Sowers." placement="top">
-              <Typography variant="body1">Pods Harvested&nbsp;</Typography>
+              <Typography variant="body1">Pods Harvested</Typography>
             </Tooltip>
             <Typography variant="bodyLarge" fontWeight="400">
-              {displayBN(beanstalkField?.harvestableIndex)}
+              {displayBN(beanstalkField.harvestableIndex)}
             </Typography>
           </Stack>
         </Grid>

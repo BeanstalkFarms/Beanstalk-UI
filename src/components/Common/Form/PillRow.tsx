@@ -1,16 +1,18 @@
 import React from 'react';
-import { Button, Stack, StackProps, Typography } from '@mui/material';
+import { Button, Stack, StackProps, Tooltip, Typography } from '@mui/material';
 import DropdownIcon from '../DropdownIcon';
 import { IconSize } from '../../App/muiTheme';
 
 const PillRow : React.FC<{
-  isOpen: boolean;
   label: string;
+  tooltip?: string;
+  isOpen: boolean;
   onClick: () => void;
 } & StackProps> = ({
+  label,
+  tooltip = '',
   isOpen,
   onClick,
-  label,
   children,
   sx,
   ...props
@@ -22,9 +24,11 @@ const PillRow : React.FC<{
     sx={{ ml: 0.5, py: 1, ...sx }}
     {...props}
   >
-    <Typography color="gray">
-      {label}
-    </Typography>
+    <Tooltip title={tooltip}>
+      <Typography color="gray">
+        {label}
+      </Typography>
+    </Tooltip>
     <Button
       variant="contained"
       onClick={onClick}
