@@ -1,6 +1,6 @@
 import { Box, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { SettingInput, TokenAdornment, TokenInputField, TxnSettings } from 'components/Common/Form';
+import { TokenAdornment, TokenInputField } from 'components/Common/Form';
 import { ONE_BN, ZERO_BN } from 'constants/index';
 import { BEAN, PODS } from 'constants/tokens';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
@@ -315,16 +315,11 @@ const CreateListing: React.FC<{}> = () => {
       onSubmit={onSubmit}
     >
       {(formikProps: FormikProps<CreateListingFormValues>) => (
-        <>
-          <TxnSettings placement="form-top-right">
-            <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
-          </TxnSettings>
-          <CreateListingForm
-            farmerField={farmerField}
-            beanstalkField={beanstalkField}
-            {...formikProps}
-          />
-        </>
+        <CreateListingForm
+          farmerField={farmerField}
+          beanstalkField={beanstalkField}
+          {...formikProps}
+        />
       )}
     </Formik>
   );
