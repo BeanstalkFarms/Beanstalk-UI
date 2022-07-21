@@ -11,6 +11,7 @@ export type DoubleSliderFieldProps = {
   disableSlider?: boolean;
 }
 
+const SLIDER_FIELD_KEYS = ['start', 'end'];
 const InputPropsLeft  = { endAdornment: 'Start' };
 const InputPropsRight = { endAdornment: 'End' };
 

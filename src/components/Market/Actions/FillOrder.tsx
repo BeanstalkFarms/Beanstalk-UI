@@ -1,12 +1,10 @@
-import { Accordion, AccordionDetails, Box, Button, Grid, Stack } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Button, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import {
-  SettingInput,
   TokenAdornment,
   TokenInputField,
   TokenOutputField, TxnPreview,
-  TxnSeparator,
-  TxnSettings
+  TxnSeparator
 } from 'components/Common/Form';
 import { ZERO_BN } from 'constants/index';
 import { BEAN, ETH, PODS } from 'constants/tokens';
@@ -15,9 +13,10 @@ import useChainConstant from 'hooks/useChainConstant';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { MaxBN, MinBN } from 'util/index';
+import { displayBN, MaxBN, MinBN } from 'util/index';
+import AdvancedButton from 'components/Common/Form/AdvancedButton';
+import DoubleSliderField from 'components/Common/Form/DoubleSliderField';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
-import SliderField from '../../Common/Form/SliderField';
 import useToggle from '../../../hooks/display/useToggle';
 import SelectPlotDialog from '../../Field/SelectPlotDialog';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
@@ -25,11 +24,18 @@ import { ActionType } from '../../../util/Actions';
 import { PodOrder } from '../Plots.mock';
 
 export type FillOrderFormValues = {
-  plotIndex: string | null;
-  min: BigNumber | null;
-  max: BigNumber | null;
-  amount: BigNumber | null;
+  plot: {
+    index:  string | null;
+    start:  BigNumber | null;
+    end:    BigNumber | null;
+    amount: BigNumber | null;
+  }
+  settings: {
+    showRangeSelect: boolean;
+  }
 }
+
+const SLIDER_FIELD_KEYS = ['start', 'end'];
 
 const FillOrderForm: React.FC<FormikProps<FillOrderFormValues>
   & {
@@ -54,26 +60,39 @@ const FillOrderForm: React.FC<FormikProps<FillOrderFormValues>
   
   const handlePlotSelect = useCallback((index: string) => {
     setFieldValue('plotIndex', index);
-    setFieldValue('min', ZERO_BN);
-    setFieldValue('max', new BigNumber(farmerField.plots[index]));
+    setFieldValue('start', ZERO_BN);
+    setFieldValue('end', new BigNumber(farmerField.plots[index]));
     setFieldValue('amount', new BigNumber(farmerField.plots[index]));
   }, [farmerField.plots, setFieldValue]);
 
-  const handleChangeAmount = (amount: BigNumber) => {
-    const delta = (values?.max || ZERO_BN).minus(amount);
-    setFieldValue('min', MaxBN(ZERO_BN, delta));
-    if (delta.lt(0)) {
-      setFieldValue('max', MinBN(numPods, (values?.max || ZERO_BN).plus(delta.abs())));
+  const handleChangeAmount = (amount: BigNumber | undefined) => {
+    if (!amount) {
+      /// If the user clears the amount input, set default value
+      setFieldValue('start', numPods);
+      setFieldValue('end', numPods);
+    } else {
+      /// Expand the plot plot range assuming that the right handle is fixed:
+      ///
+      /// plot                              start     end     amount    next action
+      /// -----------------------------------------------------------------------------------
+      /// 0 [     |---------|     ] 1000    300       600     300       increase amount by 150
+      /// 0 [  |------------|     ] 1000    150       600     450       increase amount by 300
+      /// 0 [------------------|  ] 1000    0         750     750       increase amount by 150
+      /// 0 [---------------------] 1000    0         1000    1000      reached maximum amount
+      const delta = (values?.end || ZERO_BN).minus(amount);
+      setFieldValue('start', MaxBN(ZERO_BN, delta));
+      if (delta.lt(0)) {
+        setFieldValue('end', MinBN(numPods, (values?.end || ZERO_BN).plus(delta.abs())));
+      }
     }
   };
 
   useEffect(() => {
-    setFieldValue('amount', values.max?.minus(values.min ? values.min : ZERO_BN));
-  }, [values.min, values.max, setFieldValue]);
+    setFieldValue('amount', values.end?.minus(values.start ? values.start : ZERO_BN));
+  }, [values.start, values.end, setFieldValue]);
 
   return (
     <Form noValidate>
-      {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
       <SelectPlotDialog
         farmerField={farmerField}
         beanstalkField={beanstalkField}
@@ -83,7 +102,7 @@ const FillOrderForm: React.FC<FormikProps<FillOrderFormValues>
         open={dialogOpen}
       />
       <Stack gap={1}>
-        {(values?.plotIndex === null) ? (
+        {(!values?.plotIndex) ? (
           <FieldWrapper>
             <TokenInputField
               name="amount"
@@ -102,7 +121,7 @@ const FillOrderForm: React.FC<FormikProps<FillOrderFormValues>
             />
           </FieldWrapper>
         ) : (
-          <Stack gap={1}>
+          <>
             <FieldWrapper>
               <TokenInputField
                 name="amount"
@@ -112,53 +131,38 @@ const FillOrderForm: React.FC<FormikProps<FillOrderFormValues>
                     <TokenAdornment
                       token={PODS}
                       onClick={showDialog}
+                      buttonLabel={(
+                        <Stack direction="row" alignItems="center" gap={0.75}>
+                          <Typography display="inline" fontSize={16}>@</Typography>
+                          {displayBN(new BigNumber(values.plotIndex))}
+                        </Stack>
+                      )}
                     />
                   ),
                 }}
                 // Other
-                balance={new BigNumber(farmerField.plots[values?.plotIndex])}
+                balance={farmerField.plots[values.plotIndex]}
                 balanceLabel="Plot Size"
-                handleChange={handleChangeAmount as any}
+                handleChange={handleChangeAmount}
+                quote={(
+                  <AdvancedButton
+                    open={values.settings.showRangeSelect}
+                    onClick={() => setFieldValue(
+                      'settings.showRangeSelect',
+                      !values.settings.showRangeSelect
+                    )}
+                  />
+                )}
               />
             </FieldWrapper>
-            <Box px={3}>
-              {/* double slider sets the form's 'min' and 'max' values */}
-              {/* so we leave the name field blank */}
-              <SliderField
-                min={0}
-                fields={['min', 'max']}
-                max={numPods.toNumber()}
-                initialState={[0, numPods.toNumber()]}
-              />
-            </Box>
-            <Grid container spacing={1}>
-              <Grid item xs={6}>
-                <TokenInputField
-                  name="min"
-                  token={PODS}
-                  placeholder="0.0000"
-                  balance={numPods || ZERO_BN}
-                  hideBalance
-                  InputProps={{
-                    endAdornment: 'Start'
-                  }}
-                  size="small"
+            {values.settings.showRangeSelect && (
+              <FieldWrapper>
+                <DoubleSliderField
+                  balance={numPods}
+                  sliderFields={SLIDER_FIELD_KEYS}
                 />
-              </Grid>
-              <Grid item xs={6}>
-                <TokenInputField
-                  name="max"
-                  token={PODS}
-                  placeholder="0.0000"
-                  balance={numPods || ZERO_BN}
-                  hideBalance
-                  InputProps={{
-                    endAdornment: 'End'
-                  }}
-                  size="small"
-                />
-              </Grid>
-            </Grid>
+              </FieldWrapper>
+            )}
             <TxnSeparator mt={0} />
             <TokenOutputField
               token={BEAN[1]}
@@ -184,7 +188,7 @@ const FillOrderForm: React.FC<FormikProps<FillOrderFormValues>
                 </AccordionDetails>
               </Accordion>
             </Box>
-          </Stack>
+          </>
         )}
         <Button sx={{ p: 1, height: '60px' }} type="submit" disabled>
           Create Listing
@@ -200,16 +204,22 @@ const FillOrder: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
   const Eth = useChainConstant(ETH);
 
   const initialValues: FillOrderFormValues = useMemo(() => ({
+    ///
     tokens: [
       {
         token: Eth,
         amount: null,
       },
     ],
+    ///
     plotIndex: null,
-    min: ZERO_BN,
-    max: null,
-    amount: null
+    start: ZERO_BN,
+    end: null,
+    amount: null,
+    ///
+    settings: {
+      showRangeSelect: false,
+    }
   }), [Eth]);
 
   // eslint-disable-next-line unused-imports/no-unused-vars
@@ -224,9 +234,6 @@ const FillOrder: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
     >
       {(formikProps: FormikProps<FillOrderFormValues>) => (
         <>
-          <TxnSettings placement="form-top-right">
-            <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
-          </TxnSettings>
           <FillOrderForm
             podOrder={podOrder}
             {...formikProps}
