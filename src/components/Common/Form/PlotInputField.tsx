@@ -18,7 +18,7 @@ const InputPropsLeft  = { endAdornment: 'Start' };
 const InputPropsRight = { endAdornment: 'End' };
 
 const PlotInputField : React.FC = () => {
-  const { values, setFieldValue } = useFormikContext<{ 
+  const { values, setFieldValue, isSubmitting } = useFormikContext<{ 
     /// These fields are required in Formik state
     plot: PlotFragment,
     settings: PlotSettingsFragment,
@@ -47,13 +47,13 @@ const PlotInputField : React.FC = () => {
           plot.index ? (
             <Stack direction="row" alignItems="center" gap={0.75}>
               <Typography display="inline" fontSize={16}>@</Typography>
-              {displayBN(new BigNumber(plot.index))}
+              {displayBN(new BigNumber(plot.index).minus(beanstalkField.harvestableIndex))}
             </Stack>
           ) : 'Select Plot'
         )}
       />
     ),
-  }), [plot.index, showDialog]);
+  }), [beanstalkField.harvestableIndex, plot.index, showDialog]);
   const Quote = useMemo(() => (
     <AdvancedButton
       open={values.settings.showRangeSelect}
@@ -115,7 +115,6 @@ const PlotInputField : React.FC = () => {
         name="plot.amount"
         fullWidth
         InputProps={InputProps}
-        // Other
         balance={numPods}
         hideBalance={!plot.index}
         balanceLabel={plot.index ? 'Plot Size' : undefined}
@@ -135,7 +134,7 @@ const PlotInputField : React.FC = () => {
                 plot.start?.toNumber() || 0,
                 plot.end?.toNumber()   || numPodsFloat,
               ]}
-              disabled={false}
+              disabled={isSubmitting}
               // changeMode="onChangeCommitted"
             />
           </Box>
