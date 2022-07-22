@@ -10929,6 +10929,7 @@ __metadata:
     react-dom: ^17.0.2
     react-error-overlay: 6.0.9
     react-hot-toast: ^2.2.0
+    react-hotkeys-hook: ^3.4.6
     react-jazzicon: ^1.0.4
     react-number-format: ^4.9.3
     react-redux: ^7.2.2
@@ -18129,6 +18130,13 @@ __metadata:
   dependencies:
     lru-cache: ^6.0.0
   checksum: c3f87b3c2f7eb8c2748c8f49c0c2517c9a95f35d26f4bf54b2a8cba05d2e668f3753548b6ea366b18ec8dadb4e12066e19fa382a01496b0ffa0497eb23cbe461
+  languageName: node
+  linkType: hard
+
+"hotkeys-js@npm:3.9.3":
+  version: 3.9.3
+  resolution: "hotkeys-js@npm:3.9.3"
+  checksum: cb18742598098935d2af50372eb185c4d24a1641872c9aed617d11606b66bf8402eee943abf9dc15ff1d612a5e84df5251746dc738fe0c2d3f33b294a1038ff4
   languageName: node
   linkType: hard
 
@@ -26144,6 +26152,18 @@ __metadata:
     react: ">=16"
     react-dom: ">=16"
   checksum: bb34ddc8ada14cbd75a37f14d2563412174e23276eb05e9fb23a031b6d8374ca190cefa1940692f4371529ddafeb2d4b8d3e5023187c2851ec8cb247461553ee
+  languageName: node
+  linkType: hard
+
+"react-hotkeys-hook@npm:^3.4.6":
+  version: 3.4.6
+  resolution: "react-hotkeys-hook@npm:3.4.6"
+  dependencies:
+    hotkeys-js: 3.9.3
+  peerDependencies:
+    react: ">=16.8.1"
+    react-dom: ">=16.8.1"
+  checksum: df9268ec61d7b7d590397383a2b6d568f2068d894b8cead5ca60a06645c16183f1d11f4bc295933fd0b67ea9fee36d5e33a43fa0907c3e847ebac37add58ec40
   languageName: node
   linkType: hard
 

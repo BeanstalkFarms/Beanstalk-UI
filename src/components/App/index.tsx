@@ -24,6 +24,7 @@ import FarmerEventsProcessor from 'state/farmer/events/processor';
 import FarmerBalancesUpdater from 'state/farmer/balances/updater';
 import FarmerBarnUpdater from 'state/farmer/barn/updater';
 import FieldUpdater from 'state/beanstalk/field/updater';
+import AppUpdater from 'state/app/updater';
 import { BeanstalkPalette } from './muiTheme';
 import './App.css';
 import WelcomeBackModal from '../Common/WelcomeBackModal';
@@ -94,6 +95,7 @@ export default function App() {
   return (
     <>
       <CssBaseline />
+      <AppUpdater />
       {/* -----------------------
         * Bean Updaters
         * ----------------------- */}
