@@ -19,20 +19,18 @@ type EtherscanEthPriceResponse = {
   ethusd_timestamp: string;
 }
 
-export type EthPriceResponse = (
-  {
-    block: string;
-    gas: {
-      safe: string;
-      propose: string;
-      fast: string;
-      suggestBaseFee: string;
-    };
-    ethusd: string;
-    ethusdTimestamp: string;
-    lastRefreshed: string
-  }
-);
+export type EthPriceResponse = {
+  block: string;
+  gas: {
+    safe: string;
+    propose: string;
+    fast: string;
+    suggestBaseFee: string;
+  };
+  ethusd: string;
+  ethusdTimestamp: string;
+  lastRefreshed: string
+}
 
 let data : null | EthPriceResponse = null;
 let lastRefreshed = new Date().getTime();

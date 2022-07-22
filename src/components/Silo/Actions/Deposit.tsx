@@ -119,21 +119,19 @@ const DepositForm : React.FC<
           mode={TokenSelectMode.SINGLE}
         />
         <Stack gap={1}>
-          <Stack gap={1.5}>
-            {values.tokens.map((tokenState, index) => (
-              <TokenQuoteProvider
-                key={`tokens.${index}`}
-                name={`tokens.${index}`}
-                tokenOut={whitelistedToken}
-                balance={balances[tokenState.token.address] || ZERO_BN}
-                state={tokenState}
-                showTokenSelect={showTokenSelect}
-                disabled={isMainnet}
-                disableTokenSelect={isMainnet}
-                handleQuote={handleQuote}
-              />
-            ))}
-          </Stack>
+          {values.tokens.map((tokenState, index) => (
+            <TokenQuoteProvider
+              key={`tokens.${index}`}
+              name={`tokens.${index}`}
+              tokenOut={whitelistedToken}
+              balance={balances[tokenState.token.address] || ZERO_BN}
+              state={tokenState}
+              showTokenSelect={showTokenSelect}
+              disabled={isMainnet}
+              disableTokenSelect={isMainnet}
+              handleQuote={handleQuote}
+            />
+          ))}
           {isReady ? (
             <>
               <TxnSeparator />

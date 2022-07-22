@@ -15,9 +15,11 @@ import { UNRIPE_TOKENS } from 'constants/tokens';
 import useTokenMap from 'hooks/useTokenMap';
 import { encodeCratesForEnroot } from 'util/Crates';
 import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
-import useTimedRefresh from 'hooks/useTimedRefresh';
 import useAccount from 'hooks/ledger/useAccount';
 import { ethers } from 'ethers';
+import BigNumber from 'bignumber.js';
+import useTimedRefresh from 'hooks/useTimedRefresh';
+import GasTag from 'components/Common/GasTag';
 import TransactionToast from '../Common/TxnToast';
 import DescriptionButton from '../Common/DescriptionButton';
 import RewardsBar, { RewardsBarProps } from './RewardsBar';
@@ -60,11 +62,15 @@ const hoverMap = {
   [ClaimRewardsAction.CLAIM_ALL]:       [ClaimRewardsAction.MOW, ClaimRewardsAction.PLANT_AND_MOW, ClaimRewardsAction.ENROOT_AND_MOW, ClaimRewardsAction.CLAIM_ALL],
 };
 
-type ClaimGasResults = { [key in ClaimRewardsAction]? : ethers.BigNumber };
-type ClaimCalls = { [key in ClaimRewardsAction]? : { 
-  estimateGas: () => Promise<ethers.BigNumber>;
-  execute: () => Promise<ethers.ContractTransaction>;
-} };
+type ClaimCalls = {
+  [key in ClaimRewardsAction] : { 
+    estimateGas: () => Promise<ethers.BigNumber>;
+    execute: () => Promise<ethers.ContractTransaction>;
+  }
+};
+type ClaimGasResults = {
+  [key in ClaimRewardsAction]? : BigNumber
+};
 
 // ------------------------------------------
 
@@ -72,7 +78,7 @@ const ClaimRewardsForm : React.FC<
   FormikProps<ClaimRewardsFormValues>
   & RewardsBarProps
   & {
-    gas: ClaimGasResults;
+    gas: ClaimGasResults | null;
   }
 > = ({
   submitForm,
@@ -123,12 +129,14 @@ const ClaimRewardsForm : React.FC<
                     <DescriptionButton
                       key={option.value}
                       title={option.title}
-                      description={`${option.description} ${gas?.[option.value]?.toString() || 'No gas'}`}
+                      description={`${option.description}`}
+                      tag={<GasTag gasLimit={gas?.[option.value] || null} />}
+                      // Button
+                      fullWidth
                       onClick={set(option.value)}
                       onMouseOver={onMouseOver(option.value)}
                       onMouseLeave={onMouseOutContainer}
                       selected={isHovering(option.value)}
-                      fullWidth
                     />
                   ))}
                 </Stack>
@@ -193,60 +201,53 @@ const RewardsDialog: React.FC<RewardsBarProps & {
     if (!account) return;
     if (!signer) throw new Error('No signer');
     
-    const _calls : ClaimCalls = {};
-
-    /// #1 Mow
-    _calls[ClaimRewardsAction.MOW] = {
-      estimateGas: () => beanstalk.estimateGas.update(account),
-      execute: () => beanstalk.update(account),
-      
-    };
-
-    /// #2 Plant and Mow
-    _calls[ClaimRewardsAction.PLANT_AND_MOW] = {
-      estimateGas: () => beanstalk.estimateGas.earn(account),
-      execute: () => beanstalk.earn(account)
-    };
-
-    /// #3 Enroot and Mow
     const encodedDataByToken  = encodeCratesForEnroot(beanstalk, unripeTokens, siloBalances);
     const encodedData         = Object.values(encodedDataByToken);
-    _calls[ClaimRewardsAction.ENROOT_AND_MOW] = (
-      encodedData.length > 0 
-      ? {
-        estimateGas: () => beanstalk.estimateGas.farm(encodedData),
-        execute: () => beanstalk.farm(encodedData),
-      }
-      : {
-        estimateGas: () => provider.estimateGas(
-          signer.checkTransaction({
-            to: beanstalk.address,
-            data: encodedData[0],
-          })
-        ),
-        execute: () => provider.sendTransaction(
-          signer.signTransaction({
-            to: beanstalk.address,
-            data: encodedData[0],
-          })
-        ),
-      }
-    );
 
-    /// #4 Claim All
-    _calls[ClaimRewardsAction.CLAIM_ALL] = {
-      estimateGas: () => beanstalk.estimateGas.farm([
-        // PLANT_AND_MOW
-        beanstalk.interface.encodeFunctionData('earn', [account]),
-        // ENROOT_AND_MOW
-        ...encodedData,
-      ]),
-      execute: () => beanstalk.farm([
-        // PLANT_AND_MOW
-        beanstalk.interface.encodeFunctionData('earn', [account]),
-        // ENROOT_AND_MOW
-        ...encodedData,
-      ])
+    const _calls : ClaimCalls = {
+      [ClaimRewardsAction.MOW]: {
+        estimateGas: () => beanstalk.estimateGas.update(account),
+        execute: () => beanstalk.update(account),
+      },
+      [ClaimRewardsAction.PLANT_AND_MOW]: {
+        estimateGas: () => beanstalk.estimateGas.earn(account),
+        execute: () => beanstalk.earn(account)
+      },
+      [ClaimRewardsAction.ENROOT_AND_MOW]: (
+        encodedData.length > 0 
+        ? {
+          estimateGas: () => beanstalk.estimateGas.farm(encodedData),
+          execute: () => beanstalk.farm(encodedData),
+        }
+        : {
+          estimateGas: () => provider.estimateGas(
+            signer.checkTransaction({
+              to: beanstalk.address,
+              data: encodedData[0],
+            })
+          ),
+          execute: () => provider.sendTransaction(
+            signer.signTransaction({
+              to: beanstalk.address,
+              data: encodedData[0],
+            })
+          ),
+        }
+      ),
+      [ClaimRewardsAction.CLAIM_ALL]: {
+        estimateGas: () => beanstalk.estimateGas.farm([
+          // PLANT_AND_MOW
+          beanstalk.interface.encodeFunctionData('earn', [account]),
+          // ENROOT_AND_MOW
+          ...encodedData,
+        ]),
+        execute: () => beanstalk.farm([
+          // PLANT_AND_MOW
+          beanstalk.interface.encodeFunctionData('earn', [account]),
+          // ENROOT_AND_MOW
+          ...encodedData,
+        ])
+      },
     };
 
     /// Push calls
@@ -257,9 +258,9 @@ const RewardsDialog: React.FC<RewardsBarProps & {
     const keys = Object.keys(_calls);
     const _gas = await Promise.all(
       keys.map((key) => _calls[key as ClaimRewardsAction]!.estimateGas())
-    ).then((results) => results.reduce<ClaimGasResults>(
+    ).then((results) => results.reduce<Partial<ClaimGasResults>>(
       (prev, curr, index) => {
-        prev[keys[index] as ClaimRewardsAction] = curr;
+        prev[keys[index] as ClaimRewardsAction] = new BigNumber(curr.toString());
         return prev;
       },
       {}
@@ -267,7 +268,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
     setGas(_gas);
   }, [account, beanstalk, provider, signer, siloBalances, unripeTokens]);
 
-  useTimedRefresh(estimateGas, 10 * 1000, open);
+  useTimedRefresh(estimateGas, 20 * 1000, open);
 
   /// Handlers
   const onSubmit = useCallback(async (values: ClaimRewardsFormValues, formActions: FormikHelpers<ClaimRewardsFormValues>) => {
@@ -307,7 +308,6 @@ const RewardsDialog: React.FC<RewardsBarProps & {
       maxWidth="md"
     >
       <StyledDialogTitle onClose={handleClose}>Claim Rewards</StyledDialogTitle>
-      <pre>{JSON.stringify(gas)}</pre>
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {(formikProps: FormikProps<ClaimRewardsFormValues>) => (
           <ClaimRewardsForm
