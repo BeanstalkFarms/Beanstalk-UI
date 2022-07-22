@@ -104,14 +104,10 @@ export const BeanstalkPalette = {
 };
 
 export const IconSize = {
-  // xs: '14px',
-  // small: '20px',
-  // medium: '25px',
-  // large: '50px',
   xs: 14,
   small: 20,
   medium: 25,
-  large: 50
+  large: 50,
 };
 
 export const FontSize = {
@@ -303,10 +299,19 @@ let muiTheme = createTheme({
       styleOverrides: {
         root: sx({
           textTransform: 'none',
-          fontWeight: 'bold',
+          // fontWeight: 'bold',
           '&.MuiLoadingButton-root:hover': {
             backgroundColor: BeanstalkPalette.supportGreen,
-          }
+          },
+          fontWeight: 700,
+          fontSize: '1rem',
+          lineHeight: '1.25rem',
+          // FIXME: overrides button primary element and breaks the fixed height
+          // typography: 'h4',
+        }),
+        sizeMedium: sx({
+          py: 1,
+          // height: '45px',
         }),
         sizeLarge: sx({
           py: 1.5,
@@ -324,6 +329,21 @@ let muiTheme = createTheme({
         root: {
           alignItems: 'center',
         }
+      }
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: sx({
+          typography: 'body1',
+          borderColor: BeanstalkPalette.lightBlue,
+          borderWidth: 1,
+          borderStyle: 'solid',
+          backgroundColor: BeanstalkPalette.lightestBlue,
+          color: 'text.primary',
+          p: 1,
+          px: 1.25,
+        }),
+        
       }
     },
     MuiAccordion: {
@@ -360,6 +380,14 @@ let muiTheme = createTheme({
         }),
       },
     },
+    MuiAccordionDetails: {
+      styleOverrides: {
+        root: sx({
+          pt: 0,
+          pb: 1,
+        })
+      }
+    },
     MuiTextField: {
       defaultProps: {
         color: 'secondary',
@@ -394,7 +422,8 @@ let muiTheme = createTheme({
         root: sx({
           borderRadius: 1,
           px: 1,
-          py: 1
+          py: 1,
+          border: '2px solid white',
         }),
       }
     },
@@ -495,6 +524,7 @@ let muiTheme = createTheme({
       styleOverrides: {
         root: sx({
           px: 1,
+          // pb: 0.5,
         })
       }
     },

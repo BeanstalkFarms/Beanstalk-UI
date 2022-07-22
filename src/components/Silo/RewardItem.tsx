@@ -35,7 +35,9 @@ const RewardItem: React.FC<RewardItemProps> = ({
     <Stack direction="row" gap={0.4} alignItems="center">
       {icon && <img src={icon} alt="" height="17px" />}
       {amount && (
-        <Typography variant="h3">{amount.lt(0) ? '-' : displayFullBN(amount, 2)}</Typography>
+        <Typography variant="h3">
+          {amount.lt(0) ? '-' : displayFullBN(amount, 2)}
+        </Typography>
       )}
     </Stack>
   </Box>

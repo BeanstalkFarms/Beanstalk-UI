@@ -10399,6 +10399,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios@npm:^0.27.2":
+  version: 0.27.2
+  resolution: "axios@npm:0.27.2"
+  dependencies:
+    follow-redirects: ^1.14.9
+    form-data: ^4.0.0
+  checksum: 38cb7540465fe8c4102850c4368053c21683af85c5fdf0ea619f9628abbcb59415d1e22ebc8a6390d2bbc9b58a9806c874f139767389c862ec9b772235f06854
+  languageName: node
+  linkType: hard
+
 "axobject-query@npm:^2.2.0":
   version: 2.2.0
   resolution: "axobject-query@npm:2.2.0"
@@ -10899,6 +10909,7 @@ __metadata:
     "@visx/xychart": ^2.1.0
     "@visx/zoom": ^2.6.1
     apollo3-cache-persist: ^0.14.1
+    axios: ^0.27.2
     babel-plugin-import: ^1.13.5
     babel-plugin-transform-remove-console: ^6.9.4
     bignumber.js: ^9.0.1
@@ -10929,6 +10940,7 @@ __metadata:
     react-dom: ^17.0.2
     react-error-overlay: 6.0.9
     react-hot-toast: ^2.2.0
+    react-hotkeys-hook: ^3.4.6
     react-jazzicon: ^1.0.4
     react-number-format: ^4.9.3
     react-redux: ^7.2.2
@@ -16799,7 +16811,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.0":
+"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.9":
   version: 1.15.1
   resolution: "follow-redirects@npm:1.15.1"
   peerDependenciesMeta:
@@ -16887,6 +16899,17 @@ __metadata:
     combined-stream: ^1.0.8
     mime-types: ^2.1.12
   checksum: b019e8d35c8afc14a2bd8a7a92fa4f525a4726b6d5a9740e8d2623c30e308fbb58dc8469f90415a856698933c8479b01646a9dff33c87cc4e76d72aedbbf860d
+  languageName: node
+  linkType: hard
+
+"form-data@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "form-data@npm:4.0.0"
+  dependencies:
+    asynckit: ^0.4.0
+    combined-stream: ^1.0.8
+    mime-types: ^2.1.12
+  checksum: 01135bf8675f9d5c61ff18e2e2932f719ca4de964e3be90ef4c36aacfc7b9cb2fceb5eca0b7e0190e3383fe51c5b37f4cb80b62ca06a99aaabfcfd6ac7c9328c
   languageName: node
   linkType: hard
 
@@ -18129,6 +18152,13 @@ __metadata:
   dependencies:
     lru-cache: ^6.0.0
   checksum: c3f87b3c2f7eb8c2748c8f49c0c2517c9a95f35d26f4bf54b2a8cba05d2e668f3753548b6ea366b18ec8dadb4e12066e19fa382a01496b0ffa0497eb23cbe461
+  languageName: node
+  linkType: hard
+
+"hotkeys-js@npm:3.9.3":
+  version: 3.9.3
+  resolution: "hotkeys-js@npm:3.9.3"
+  checksum: cb18742598098935d2af50372eb185c4d24a1641872c9aed617d11606b66bf8402eee943abf9dc15ff1d612a5e84df5251746dc738fe0c2d3f33b294a1038ff4
   languageName: node
   linkType: hard
 
@@ -26144,6 +26174,18 @@ __metadata:
     react: ">=16"
     react-dom: ">=16"
   checksum: bb34ddc8ada14cbd75a37f14d2563412174e23276eb05e9fb23a031b6d8374ca190cefa1940692f4371529ddafeb2d4b8d3e5023187c2851ec8cb247461553ee
+  languageName: node
+  linkType: hard
+
+"react-hotkeys-hook@npm:^3.4.6":
+  version: 3.4.6
+  resolution: "react-hotkeys-hook@npm:3.4.6"
+  dependencies:
+    hotkeys-js: 3.9.3
+  peerDependencies:
+    react: ">=16.8.1"
+    react-dom: ">=16.8.1"
+  checksum: df9268ec61d7b7d590397383a2b6d568f2068d894b8cead5ca60a06645c16183f1d11f4bc295933fd0b67ea9fee36d5e33a43fa0907c3e847ebac37add58ec40
   languageName: node
   linkType: hard
 

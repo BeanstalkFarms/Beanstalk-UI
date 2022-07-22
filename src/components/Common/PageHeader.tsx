@@ -1,5 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Box, Button, Link, Stack, Typography } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import React from 'react';
 import { IconSize } from '../App/muiTheme';
@@ -29,8 +29,7 @@ const PageHeader : React.FC<{
           </Stack>
         </Button>
       )}
-
-      {/* --- THE OLD CIRCLE BACK-BUTTON ---*/}
+      {/* --- THE OLD CIRCLE BACK BUTTON ---*/}
       {/* {props.returnPath && ( */}
       {/*  <Button */}
       {/*    to={props.returnPath} */}
@@ -42,20 +41,25 @@ const PageHeader : React.FC<{
       {/*    <ChevronLeftIcon /> */}
       {/*  </Button> */}
       {/* )} */}
-
       <Stack direction="column" gap={0}>
         {props.title && (
           <Box>
             <Typography variant="h1">
-              {props.title}
+              <Link href="https://docs.bean.money" target="_blank" underline="hover" color="inherit">
+                <span>{props.title}</span>
+              </Link>
             </Typography>
+              {/* <Typography variant="bodySmall" display="inline">
+                Docs
+              </Typography> */}
+            {/* </Typography> */}
           </Box>
         )}
         {props.description && (
           <Box>
-            <Typography
-              variant="subtitle1">
-              {props.description}
+            <Typography variant="subtitle1">
+              {/* <Link href="#" underline="hover" fontWeight={700}>Docs</Link> &middot; */}
+              {props.description}.
             </Typography>
           </Box>
         )}
@@ -63,6 +67,6 @@ const PageHeader : React.FC<{
     </Stack>
     {props.control && <Box>{props.control}</Box>}
   </Stack>
-  );
+);
 
 export default PageHeader;

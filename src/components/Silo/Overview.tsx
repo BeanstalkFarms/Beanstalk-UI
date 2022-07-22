@@ -43,7 +43,7 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
           amount={displayUSD(displayValue[0])}
           color="primary"
           amountIcon={undefined}
-          gap={0.5}
+          gap={0.25}
           sx={{ ml: 0 }}
         />
       </Box>
@@ -81,7 +81,7 @@ const StalkOwnershipTab: React.FC<TabData
           color="primary"
           sx={{ minWidth: 180, ml: 0 }}
           amountIcon={undefined}
-          gap={0.5}
+          gap={0.25}
         />
         <Stat
           title="Ownership"
@@ -89,7 +89,7 @@ const StalkOwnershipTab: React.FC<TabData
           amount={`${displayValue[1].multipliedBy(100).toFixed(3)}%`}
           color="secondary.dark"
           amountIcon={undefined}
-          gap={0.5}
+          gap={0.25}
           sx={{ ml: 0 }}
         />
       </Stack>
@@ -126,10 +126,14 @@ const Overview: React.FC<{
       <Stack
         direction="row"
         justifyContent="space-between"
-        sx={{ px: 2, pt: 2 }}
+        sx={{
+          px: 2,
+          pt: 2,
+          pb: 1.5,
+        }}
       >
         {/* Tabs */}
-        <Tabs value={tab} onChange={handleChangeTab}>
+        <Tabs value={tab} onChange={handleChangeTab} sx={{ minHeight: 0 }}>
           <Tab label="Deposits" />
           <Tab label="Stalk Ownership" />
         </Tabs>

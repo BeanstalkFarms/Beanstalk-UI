@@ -8,7 +8,7 @@ import { displayBN } from 'util/index';
 import { ZERO_BN } from 'constants/index';
 import { FarmerBalances } from 'state/farmer/balances';
 import { FarmerSilo } from 'state/farmer/silo';
-import { BeanstalkPalette, FontSize, IconSize } from '../../App/muiTheme';
+import { BeanstalkPalette, FontSize } from '../../App/muiTheme';
 
 const useStyles = makeStyles(() => ({
   tokenIcon: {
@@ -22,8 +22,8 @@ const useStyles = makeStyles(() => ({
     fontSize: '20px'
   },
   tokenLogo: {
-    width: IconSize.large,
-    height: IconSize.large,
+    width: 44,
+    height: 44,
   }
 }));
 
@@ -142,10 +142,10 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
       <StyledDialogTitle id="customized-dialog-title" onClose={handleClose}>
         {title || mode === TokenSelectMode.MULTI ? 'Select Tokens' : 'Select Token'}
       </StyledDialogTitle>
-      <StyledDialogContent sx={{ padding: 1, pb: mode === TokenSelectMode.MULTI ? 0 : 2 }}>
+      <StyledDialogContent sx={{ pb: mode === TokenSelectMode.MULTI ? 0 : 1 }}>
         <Typography />
         <List sx={{ p: 0 }}>
-          <Stack gap={1}>
+          <Stack>
             {tokenList ? tokenList.map((_token) => (
               <ListItem
                 key={_token.address}
@@ -168,9 +168,11 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
                 }}
               >
                 <ListItemButton disableRipple>
+                  {/* Top-level button stack */}
                   <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }}>
-                    <Stack direction="row" justifyContent="center">
-                      <ListItemIcon sx={{ pr: 1 }}>
+                    {/* Icon & text left side */}
+                    <Stack direction="row" justifyContent="center" alignItems="center" gap={0}>
+                      <ListItemIcon>
                         <img src={_token.logo} alt="" className={classes.tokenLogo} />
                       </ListItemIcon>
                       <ListItemText
@@ -179,6 +181,7 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
                         sx={{ my: 0 }}
                       />
                     </Stack>
+                    {/* Balances right side */}
                     {_balances ? (
                       <Typography variant="bodyLarge">
                         {displayBN(getBalance(_token.address))}

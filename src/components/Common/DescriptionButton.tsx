@@ -1,20 +1,30 @@
 import React from 'react';
 import { Button, ButtonProps, Stack, Typography } from '@mui/material';
-import { BeanstalkPalette } from '../App/muiTheme';
 
 const GAP = 2;
 
+/**
+ * Used in:
+ *  - Rewards dialog (Mow, Plant, Enroot, Claim All buttons)
+ *  - Pick dialog (Pick, Pick and Deposit)
+ *  - PillSelectField (provides buttons for things like DestinationField)
+ */
 const DescriptionButton : React.FC<ButtonProps & {
+  /** */
   title?: string;
+  /** */
   description?: string;
+  /** */
   icon?: React.ReactNode | string;
-  recommended?: boolean;
-  forceHover?: boolean;
+  /** */
+  selected?: boolean;
+  /** */
+  tag?: JSX.Element;
 }> = ({
   title,
   description,
-  recommended,
-  forceHover,
+  selected,
+  tag,
   icon,
   sx,
   ...props
@@ -32,29 +42,42 @@ const DescriptionButton : React.FC<ButtonProps & {
       // changing the internal layout.
       display: 'block',
       color: 'inherit',
-      backgroundColor: forceHover ? BeanstalkPalette.lightestBlue : null,
+      backgroundColor: selected ? '#F6FAFE' : null,
       '&:hover': {
-        backgroundColor: forceHover ? BeanstalkPalette.lightestBlue : null,
+        backgroundColor: selected ? '#F6FAFE' : null,
       }
+      // backgroundColor: selected ? BeanstalkPalette.lightBlue : null,
+      // '&:hover': {
+      //   backgroundColor: selected ? BeanstalkPalette.lightBlue : null,
+      // }
     }}
   >
-    <Stack>
-      <Stack direction="row" gap={0.5} alignItems="center">
-        {icon && (
-          <Typography variant="bodyMedium" alignItems="center">
-            <Stack alignItems="center">
-              {icon}
-            </Stack>
+    <Stack direction="row" gap={0.5} justifyContent="space-between" alignItems="center">
+      {/* Icon + Title */}
+      <div>
+        <Stack direction="row" gap={0.5} alignItems="center">
+          {icon && (
+            <Typography variant="bodyMedium">
+              {/* FIXME: why the extra stack here? */}
+              <Stack alignItems="center">
+                {icon}
+              </Stack>
+            </Typography>
+          )}
+          <Typography variant="bodyMedium">
+            {title}
           </Typography>
-        )}
-        <Typography variant="bodyMedium">{title}</Typography>
-        {recommended && (
-          <Typography variant="bodyMedium" fontWeight="fontWeightBold" sx={{ color: BeanstalkPalette.logoGreen }}>
-            (Recommended)
-          </Typography>
-        )}
-      </Stack>
-      <Typography variant="bodySmall">{description}</Typography>
+        </Stack>
+        {/* Description */}
+        <Typography variant="bodySmall">
+          {description}
+        </Typography>
+      </div>
+      {tag && (
+        <div>
+          {tag}
+        </div>
+      )}
     </Stack>
   </Button>
 );

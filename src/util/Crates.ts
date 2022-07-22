@@ -62,7 +62,8 @@ export const encodeCratesForEnroot = (
   beanstalk:    BeanstalkReplanted,
   unripeTokens: TokenMap<Token>,
   siloBalances: TokenMap<FarmerSiloBalance>,
-) => Object.keys(unripeTokens).reduce<{ [addr: string]: string }>((prev, addr) => {
+) => (
+  Object.keys(unripeTokens).reduce<{ [addr: string]: string }>((prev, addr) => {
     const crates = siloBalances[addr]?.deposited.crates;
     if (crates && crates.length > 0) {
       if (crates.length === 1) {
@@ -81,4 +82,5 @@ export const encodeCratesForEnroot = (
       }
     }
     return prev;
-  }, {});
+  }, {})
+);

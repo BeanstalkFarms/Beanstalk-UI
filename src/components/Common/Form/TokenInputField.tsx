@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
+  Divider,
   Stack,
   TextField,
   TextFieldProps,
@@ -92,7 +93,9 @@ const TokenInput: React.FC<
     return [_balance.total, (
       <>
         Farm Balance: {token ? displayTokenAmount(_balance.internal, token) : displayBN(_balance.internal)}<br />
-        Circulating Balance: {token ? displayTokenAmount(_balance.external, token) : displayBN(_balance.external)}
+        Circulating Balance: {token ? displayTokenAmount(_balance.external, token) : displayBN(_balance.external)}<br />
+        <Divider color="secondary" sx={{ my: 1 }} />
+        The Beanstalk UI uses your Farm Balance first
       </>
     )];
   }, [_balance, token]);
@@ -214,7 +217,7 @@ const TokenInput: React.FC<
       />
       {/* Bottom Adornment */}
       {(balance && !hideBalance || quote) && (
-        <Stack direction="row" alignItems="center" gap={0.5} px={0.5} py={1}>
+        <Stack direction="row" alignItems="center" gap={0.5} px={0.5} pt={0.5}>
           {/* Leaving the Stack rendered regardless of whether `quote` is defined
             * ensures that the Balance section gets flexed to the right side of
             * the input. */}

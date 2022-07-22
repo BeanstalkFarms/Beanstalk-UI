@@ -4,7 +4,13 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 
 const PLACEMENTS = {
-  'form-top-right': { position: 'absolute', top: 0, right: 0, pr: 1.3, pt: 1.53 },
+  'form-top-right': {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    pr: 1.3,
+    pt: 1.45
+  },
 };
 
 const TxnSettings : React.FC<{

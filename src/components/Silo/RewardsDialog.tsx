@@ -1,7 +1,7 @@
 import { Box, Dialog, Stack } from '@mui/material';
 import { Field, FieldProps, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo, useState } from 'react';
-import { useAccount, useProvider } from 'wagmi';
+import { useProvider } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
 import { LoadingButton } from '@mui/lab';
 import { ClaimRewardsAction } from 'lib/Beanstalk/Farm';
@@ -15,6 +15,11 @@ import { UNRIPE_TOKENS } from 'constants/tokens';
 import useTokenMap from 'hooks/useTokenMap';
 import { encodeCratesForEnroot } from 'util/Crates';
 import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
+import useAccount from 'hooks/ledger/useAccount';
+import { ethers } from 'ethers';
+import BigNumber from 'bignumber.js';
+import useTimedRefresh from 'hooks/useTimedRefresh';
+import GasTag from 'components/Common/GasTag';
 import TransactionToast from '../Common/TxnToast';
 import DescriptionButton from '../Common/DescriptionButton';
 import RewardsBar, { RewardsBarProps } from './RewardsBar';
@@ -57,15 +62,29 @@ const hoverMap = {
   [ClaimRewardsAction.CLAIM_ALL]:       [ClaimRewardsAction.MOW, ClaimRewardsAction.PLANT_AND_MOW, ClaimRewardsAction.ENROOT_AND_MOW, ClaimRewardsAction.CLAIM_ALL],
 };
 
+type ClaimCalls = {
+  [key in ClaimRewardsAction] : { 
+    estimateGas: () => Promise<ethers.BigNumber>;
+    execute: () => Promise<ethers.ContractTransaction>;
+  }
+};
+type ClaimGasResults = {
+  [key in ClaimRewardsAction]? : BigNumber
+};
+
 // ------------------------------------------
 
 const ClaimRewardsForm : React.FC<
   FormikProps<ClaimRewardsFormValues>
   & RewardsBarProps
+  & {
+    gas: ClaimGasResults | null;
+  }
 > = ({
   submitForm,
   isSubmitting,
   values,
+  gas,
   ...rewardsBarProps
 }) => {
   /** The currently hovered action. */
@@ -106,47 +125,20 @@ const ClaimRewardsForm : React.FC<
               };
               return (
                 <Stack gap={1}>
-                  <DescriptionButton
-                    {...options[0]}
-                    key={ClaimRewardsAction.MOW}
-                    onClick={set(ClaimRewardsAction.MOW)}
-                    onMouseOver={onMouseOver(ClaimRewardsAction.MOW)}
-                    onMouseLeave={onMouseOutContainer}
-                    forceHover={isHovering(ClaimRewardsAction.MOW)}
-                    fullWidth
-                    disableRipple
-                  />
-                  <DescriptionButton
-                    {...options[1]}
-                    key={ClaimRewardsAction.PLANT_AND_MOW}
-                    onClick={set(ClaimRewardsAction.PLANT_AND_MOW)}
-                    onMouseOver={onMouseOver(ClaimRewardsAction.PLANT_AND_MOW)}
-                    onMouseLeave={onMouseOutContainer}
-                    forceHover={isHovering(ClaimRewardsAction.PLANT_AND_MOW)}
-                    fullWidth
-                    disableRipple
-                  />
-                  <DescriptionButton
-                    {...options[2]}
-                    key={ClaimRewardsAction.ENROOT_AND_MOW}
-                    onClick={set(ClaimRewardsAction.ENROOT_AND_MOW)}
-                    onMouseOver={onMouseOver(ClaimRewardsAction.ENROOT_AND_MOW)}
-                    onMouseLeave={onMouseOutContainer}
-                    forceHover={isHovering(ClaimRewardsAction.ENROOT_AND_MOW)}
-                    fullWidth
-                    disableRipple
-                  />
-                  <DescriptionButton
-                    {...options[3]}
-                    key={ClaimRewardsAction.CLAIM_ALL}
-                    onClick={set(ClaimRewardsAction.CLAIM_ALL)}
-                    onMouseOver={onMouseOver(ClaimRewardsAction.CLAIM_ALL)}
-                    onMouseLeave={onMouseOutContainer}
-                    forceHover={isHovering(ClaimRewardsAction.CLAIM_ALL)}
-                    recommended
-                    fullWidth
-                    disableRipple
-                  />
+                  {options.map((option) => (
+                    <DescriptionButton
+                      key={option.value}
+                      title={option.title}
+                      description={`${option.description}`}
+                      tag={<GasTag gasLimit={gas?.[option.value] || null} />}
+                      // Button
+                      fullWidth
+                      onClick={set(option.value)}
+                      onMouseOver={onMouseOver(option.value)}
+                      onMouseLeave={onMouseOutContainer}
+                      selected={isHovering(option.value)}
+                    />
+                  ))}
                 </Stack>
               );
             }}
@@ -183,7 +175,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
   ...rewardsBarProps
 }) => {
   /// Wallet
-  const { data: account } = useAccount();
+  const account           = useAccount();
   const { data: signer }  = useSigner();
   const provider          = useProvider();
   
@@ -202,54 +194,91 @@ const RewardsDialog: React.FC<RewardsBarProps & {
     action: undefined,
   }), []);
 
-  /// Handlers
-  const onSubmit = useCallback(async (values: ClaimRewardsFormValues, formActions: FormikHelpers<ClaimRewardsFormValues>) => {
-    let txToast;
-    try {
-      if (!account?.address)  throw new Error('Connect a wallet first.');
-      if (!values.action)     throw new Error('No action selected.');
+  /// Gas calculations
+  const [gas,   setGas]   = useState<ClaimGasResults | null>(null);
+  const [calls, setCalls] = useState<ClaimCalls | null>(null);
+  const estimateGas = useCallback(async () => {
+    if (!account) return;
+    if (!signer) throw new Error('No signer');
+    
+    const encodedDataByToken  = encodeCratesForEnroot(beanstalk, unripeTokens, siloBalances);
+    const encodedData         = Object.values(encodedDataByToken);
 
-      // FIXME: suggest using "call" here for consistency with other forms
-      // but this is perfectly functional
-      let call;
-      if (values.action === ClaimRewardsAction.MOW) {
-        call = beanstalk.update(account.address);
-      }
-      else if (values.action === ClaimRewardsAction.PLANT_AND_MOW) {
-        call = beanstalk.earn(account.address);
-      }
-      else if (values.action === ClaimRewardsAction.ENROOT_AND_MOW) {
-        const encodedDataByToken  = encodeCratesForEnroot(beanstalk, unripeTokens, siloBalances);
-        const encodedData         = Object.values(encodedDataByToken);
-
-        /// If enrooting across multiple tokens, use the Farm function
-        if (encodedData.length > 0) {
-          call = beanstalk.farm(encodedData);
+    const _calls : ClaimCalls = {
+      [ClaimRewardsAction.MOW]: {
+        estimateGas: () => beanstalk.estimateGas.update(account),
+        execute: () => beanstalk.update(account),
+      },
+      [ClaimRewardsAction.PLANT_AND_MOW]: {
+        estimateGas: () => beanstalk.estimateGas.earn(account),
+        execute: () => beanstalk.earn(account)
+      },
+      [ClaimRewardsAction.ENROOT_AND_MOW]: (
+        encodedData.length > 0 
+        ? {
+          estimateGas: () => beanstalk.estimateGas.farm(encodedData),
+          execute: () => beanstalk.farm(encodedData),
         }
-        
-        /// Send a single raw transaction with the lone piece of encoded
-        /// function data; this is more gas efficient than a farm() call
-        else {
-          if (!signer) throw new Error('No signer');
-          call = provider.sendTransaction(
+        : {
+          estimateGas: () => provider.estimateGas(
+            signer.checkTransaction({
+              to: beanstalk.address,
+              data: encodedData[0],
+            })
+          ),
+          execute: () => provider.sendTransaction(
             signer.signTransaction({
               to: beanstalk.address,
               data: encodedData[0],
             })
-          );
+          ),
         }
-      }
-
-      else if (values.action === ClaimRewardsAction.CLAIM_ALL) {
-        const encodedDataByToken  = encodeCratesForEnroot(beanstalk, unripeTokens, siloBalances);
-        const encodedData         = Object.values(encodedDataByToken);
-        call = beanstalk.farm([
+      ),
+      [ClaimRewardsAction.CLAIM_ALL]: {
+        estimateGas: () => beanstalk.estimateGas.farm([
           // PLANT_AND_MOW
-          beanstalk.interface.encodeFunctionData('earn', [account.address]),
+          beanstalk.interface.encodeFunctionData('earn', [account]),
           // ENROOT_AND_MOW
           ...encodedData,
-        ]);
-      }
+        ]),
+        execute: () => beanstalk.farm([
+          // PLANT_AND_MOW
+          beanstalk.interface.encodeFunctionData('earn', [account]),
+          // ENROOT_AND_MOW
+          ...encodedData,
+        ])
+      },
+    };
+
+    /// Push calls
+    setCalls(_calls);
+    
+    /// For each reward type, run the estimateGas function in parallel
+    /// and then match outputs to their corresponding keys.
+    const keys = Object.keys(_calls);
+    const _gas = await Promise.all(
+      keys.map((key) => _calls[key as ClaimRewardsAction]!.estimateGas())
+    ).then((results) => results.reduce<Partial<ClaimGasResults>>(
+      (prev, curr, index) => {
+        prev[keys[index] as ClaimRewardsAction] = new BigNumber(curr.toString());
+        return prev;
+      },
+      {}
+    ));
+    setGas(_gas);
+  }, [account, beanstalk, provider, signer, siloBalances, unripeTokens]);
+
+  useTimedRefresh(estimateGas, 20 * 1000, open);
+
+  /// Handlers
+  const onSubmit = useCallback(async (values: ClaimRewardsFormValues, formActions: FormikHelpers<ClaimRewardsFormValues>) => {
+    let txToast;
+    try {
+      if (!account)  throw new Error('Connect a wallet first.');
+      if (!values.action)     throw new Error('No action selected.');
+      if (!calls)    throw new Error('Waiting for gas data.');
+
+      const call = calls[values.action];
 
       // FIXME: set the name of the action to Mow, etc. depending on `values.action`
       txToast = new TransactionToast({
@@ -259,26 +288,17 @@ const RewardsDialog: React.FC<RewardsBarProps & {
 
       if (!call) throw new Error('Unknown action.');
 
-      const txn = await call;
+      const txn = await call.execute();
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
       await fetchFarmerSilo();
-      // if (values.action === ClaimRewards)
       txToast.success(receipt);
       formActions.resetForm();
     } catch (err) {
       txToast ? txToast.error(err) : toast.error(parseError(err));
     }
-  }, [
-    account?.address,
-    beanstalk,
-    fetchFarmerSilo,
-    provider,
-    signer,
-    siloBalances,
-    unripeTokens,
-  ]);
+  }, [account, calls, fetchFarmerSilo]);
 
   return (
     <Dialog
@@ -291,6 +311,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {(formikProps: FormikProps<ClaimRewardsFormValues>) => (
           <ClaimRewardsForm
+            gas={gas}
             {...formikProps}
             {...rewardsBarProps}
           />
