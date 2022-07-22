@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Box, Stack } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { useSigner } from 'hooks/ledger/useSigner';
-import { BEAN, FERTILIZED_SPROUTS } from 'constants/tokens';
+import { BEAN, RINSABLE_SPROUTS } from 'constants/tokens';
 import { ZERO_BN } from 'constants/index';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { useBeanstalkContract } from 'hooks/useContract';
@@ -47,7 +47,7 @@ const RinseForm : React.FC<
         <Stack gap={1}>
           {/* Inputs */}
           <TokenInputField
-            token={FERTILIZED_SPROUTS}
+            token={RINSABLE_SPROUTS}
             balanceLabel="Fertilized Sprout Balance"
             balance={amountSprouts || ZERO_BN}
             name="amount"
@@ -57,7 +57,7 @@ const RinseForm : React.FC<
             InputProps={{
               endAdornment: (
                 <TokenAdornment
-                  token={FERTILIZED_SPROUTS}
+                  token={RINSABLE_SPROUTS}
                 />
               )
             }}

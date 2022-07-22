@@ -33,7 +33,7 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
         </Grid>
         <Grid item xs={12} md={3}>
           <Stack gap={0.5}>
-            <Tooltip title="The interest rate for Sowing Beans, or lending your Beans to Beanstalk." placement="top">
+            <Tooltip title="The interest rate for Sowing Beans." placement="top">
               <Typography variant="body1">Temperature</Typography>
             </Tooltip>
             <Typography variant="bodyLarge" fontWeight="400">
@@ -43,7 +43,7 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
         </Grid>
         <Grid item xs={12} md={3}>
           <Stack gap={0.5}>
-            <Tooltip title="The interest rate for Sowing Beans, or lending your Beans to Beanstalk." placement="top">
+            <Tooltip title="The order Pods will become Harvestable based on the FIFO Harvest schedule." placement="top">
               <Typography variant="body1">Pod Line</Typography>
             </Tooltip>
             <Typography variant="bodyLarge" fontWeight="400">
@@ -53,7 +53,7 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
         </Grid>
         <Grid item xs={12} md={3}>
           <Stack gap={0.5}>
-            <Tooltip title="The number of Beans that Beanstalk has paid back to Sowers." placement="top">
+            <Tooltip title="The number of Beans that Beanstalk has paid back to lenders." placement="top">
               <Typography variant="body1">Pods Harvested</Typography>
             </Tooltip>
             <Typography variant="bodyLarge" fontWeight="400">

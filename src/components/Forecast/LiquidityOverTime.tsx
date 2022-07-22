@@ -20,7 +20,7 @@ const LiquidityOverTime: React.FC<LiquidityOverviewProps & CardProps> = ({
   return (
     <Card sx={{ p: 2, width: '100%', ...sx }}>
       <Stat
-        title="Total Liquidity"
+        title="Total Bean Liquidity"
         amount={displayUSD(breakdown.totalValue.abs())}
         amountIcon={undefined}
         gap={0}

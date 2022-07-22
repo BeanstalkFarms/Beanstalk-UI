@@ -1,168 +1,42 @@
-import { Accordion, AccordionDetails, Box, Button, Grid, Stack } from '@mui/material';
-import BigNumber from 'bignumber.js';
+import { Accordion, AccordionDetails, Box, Button, Stack } from '@mui/material';
 import {
-  SettingInput,
-  TokenAdornment,
-  TokenInputField,
+  PlotFragment,
+  PlotSettingsFragment,
   TokenOutputField, TxnPreview,
-  TxnSeparator,
-  TxnSettings
+  TxnSeparator
 } from 'components/Common/Form';
 import { ZERO_BN } from 'constants/index';
-import { BEAN, ETH, PODS } from 'constants/tokens';
+import { BEAN } from 'constants/tokens';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import useChainConstant from 'hooks/useChainConstant';
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import { MaxBN, MinBN } from 'util/index';
-import FieldWrapper from '../../Common/Form/FieldWrapper';
-import SliderField from '../../Common/Form/SliderField';
-import useToggle from '../../../hooks/display/useToggle';
-import SelectPlotDialog from '../../Field/SelectPlotDialog';
+import React, { useCallback, useMemo } from 'react';
+import PlotInputField from 'components/Common/Form/PlotInputField';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 import { PodOrder } from '../Plots.mock';
 
 export type FillOrderFormValues = {
-  plotIndex: string | null;
-  min: BigNumber | null;
-  max: BigNumber | null;
-  amount: BigNumber | null;
+  plot: PlotFragment;
+  settings: PlotSettingsFragment & {};
 }
 
-const FillOrderForm: React.FC<FormikProps<FillOrderFormValues>
-  & {
-    podOrder: PodOrder;
-  }
+const FillOrderForm: React.FC<
+  FormikProps<FillOrderFormValues>
+  & { podOrder: PodOrder; }
 > = ({
   values,
-  setFieldValue,
   podOrder,
 }) => {
-  const [dialogOpen, showDialog, hideDialog] = useToggle();
-
-  const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
-    (state) => state._farmer.field
-  );
-  
-  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
-    (state) => state._beanstalk.field
-  );
-
-  const numPods = useMemo(() => (values.plotIndex !== null ? new BigNumber(farmerField.plots[values.plotIndex]) : ZERO_BN), [farmerField.plots, values.plotIndex]);
-  
-  const handlePlotSelect = useCallback((index: string) => {
-    setFieldValue('plotIndex', index);
-    setFieldValue('min', ZERO_BN);
-    setFieldValue('max', new BigNumber(farmerField.plots[index]));
-    setFieldValue('amount', new BigNumber(farmerField.plots[index]));
-  }, [farmerField.plots, setFieldValue]);
-
-  const handleChangeAmount = (amount: BigNumber) => {
-    const delta = (values?.max || ZERO_BN).minus(amount);
-    setFieldValue('min', MaxBN(ZERO_BN, delta));
-    if (delta.lt(0)) {
-      setFieldValue('max', MinBN(numPods, (values?.max || ZERO_BN).plus(delta.abs())));
-    }
-  };
-
-  useEffect(() => {
-    setFieldValue('amount', values.max?.minus(values.min ? values.min : ZERO_BN));
-  }, [values.min, values.max, setFieldValue]);
-
+  const plot = values.plot;
   return (
     <Form noValidate>
-      {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
-      <SelectPlotDialog
-        farmerField={farmerField}
-        beanstalkField={beanstalkField}
-        handlePlotSelect={handlePlotSelect}
-        handleClose={hideDialog}
-        selected={values.plotIndex}
-        open={dialogOpen}
-      />
       <Stack gap={1}>
-        {(values?.plotIndex === null) ? (
-          <FieldWrapper>
-            <TokenInputField
-              name="amount"
-              // MUI
-              fullWidth
-              InputProps={{
-                endAdornment: (
-                  <TokenAdornment
-                    token={PODS}
-                    onClick={showDialog}
-                    buttonLabel="Select Plot"
-                  />
-                ),
-              }}
-              disabled
-            />
-          </FieldWrapper>
-        ) : (
-          <Stack gap={1}>
-            <FieldWrapper>
-              <TokenInputField
-                name="amount"
-                fullWidth
-                InputProps={{
-                  endAdornment: (
-                    <TokenAdornment
-                      token={PODS}
-                      onClick={showDialog}
-                    />
-                  ),
-                }}
-                // Other
-                balance={new BigNumber(farmerField.plots[values?.plotIndex])}
-                balanceLabel="Plot Size"
-                handleChange={handleChangeAmount as any}
-              />
-            </FieldWrapper>
-            <Box px={3}>
-              {/* double slider sets the form's 'min' and 'max' values */}
-              {/* so we leave the name field blank */}
-              <SliderField
-                min={0}
-                fields={['min', 'max']}
-                max={numPods.toNumber()}
-                initialState={[0, numPods.toNumber()]}
-              />
-            </Box>
-            <Grid container spacing={1}>
-              <Grid item xs={6}>
-                <TokenInputField
-                  name="min"
-                  token={PODS}
-                  placeholder="0.0000"
-                  balance={numPods || ZERO_BN}
-                  hideBalance
-                  InputProps={{
-                    endAdornment: 'Start'
-                  }}
-                  size="small"
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TokenInputField
-                  name="max"
-                  token={PODS}
-                  placeholder="0.0000"
-                  balance={numPods || ZERO_BN}
-                  hideBalance
-                  InputProps={{
-                    endAdornment: 'End'
-                  }}
-                  size="small"
-                />
-              </Grid>
-            </Grid>
+        <PlotInputField />
+        {plot.index && (
+          <>
             <TxnSeparator mt={0} />
             <TokenOutputField
               token={BEAN[1]}
-              amount={podOrder.pricePerPod.multipliedBy(values.amount ? values.amount : ZERO_BN)}
+              amount={podOrder.pricePerPod.multipliedBy(plot.amount || ZERO_BN)}
               isLoading={false}
             />
             <Box>
@@ -184,7 +58,7 @@ const FillOrderForm: React.FC<FormikProps<FillOrderFormValues>
                 </AccordionDetails>
               </Accordion>
             </Box>
-          </Stack>
+          </>
         )}
         <Button sx={{ p: 1, height: '60px' }} type="submit" disabled>
           Create Listing
@@ -197,20 +71,17 @@ const FillOrderForm: React.FC<FormikProps<FillOrderFormValues>
 // ---------------------------------------------------
 
 const FillOrder: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
-  const Eth = useChainConstant(ETH);
-
   const initialValues: FillOrderFormValues = useMemo(() => ({
-    tokens: [
-      {
-        token: Eth,
-        amount: null,
-      },
-    ],
-    plotIndex: null,
-    min: ZERO_BN,
-    max: null,
-    amount: null
-  }), [Eth]);
+    plot: {
+      index:  null,
+      start:  ZERO_BN,
+      end:    null,
+      amount: null,
+    },
+    settings: {
+      showRangeSelect: false,
+    }
+  }), []);
 
   // eslint-disable-next-line unused-imports/no-unused-vars
   const onSubmit = useCallback((values: FillOrderFormValues, formActions: FormikHelpers<FillOrderFormValues>) => {
@@ -223,15 +94,10 @@ const FillOrder: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
       onSubmit={onSubmit}
     >
       {(formikProps: FormikProps<FillOrderFormValues>) => (
-        <>
-          <TxnSettings placement="form-top-right">
-            <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
-          </TxnSettings>
-          <FillOrderForm
-            podOrder={podOrder}
-            {...formikProps}
-          />
-        </>
+        <FillOrderForm
+          podOrder={podOrder}
+          {...formikProps}
+        />
       )}
     </Formik>
   );

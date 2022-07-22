@@ -46,25 +46,29 @@ const SliderField : React.FC<
   const [internalValue, setInternalValue] = React.useState<number | number[]>(initialState);
 
   ///
-  const { values, setFieldValue } = useFormikContext<any>();
+  const { setFieldValue, getFieldProps } = useFormikContext<any>();
+
+  const v0 = getFieldProps(fields[0]).value;
+  const v1 = fields.length > 1 ? getFieldProps(fields[1]).value : undefined;
 
   // update single & double sliders' values when the form's
   // values are changed (ex: adjusting 'amount' input)
   useEffect(() => {
     // single slider
     if (fields.length === 1) {
-      setInternalValue(values[fields[0]]);
-      // double slider
+      setInternalValue(v0);
+    // double slider
     } else if (fields.length === 2) {
-      if (values[fields[0]] && values[fields[1]]) {
+      if (v0 && v1) {
         setInternalValue([
-          values[fields[0]],
-          values[fields[1]]
+          v0,
+          v1,
         ]);
       }
     }
   }, [
-    values,
+    v0,
+    v1,
     fields
   ]);
 

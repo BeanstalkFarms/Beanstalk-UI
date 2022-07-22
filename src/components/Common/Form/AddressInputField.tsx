@@ -100,9 +100,9 @@ const AddressInputField : React.FC<AddressInputFieldProps> = ({
         name={name}
         {...props}
         {...fieldProps}
-        />
-      )}
+      />
+    )}
   </Field>
-  );
+);
 
 export default AddressInputField;

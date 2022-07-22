@@ -57,7 +57,7 @@ const ForecastPage: React.FC = () => {
       <Stack gap={2}>
         <PageHeader
           title="Forecast"
-          description="View conditions on the Bean Farm"
+          description="View conditions on the Farm"
           control={(
             <Button
               href={ANALYTICS_LINK}
@@ -67,7 +67,7 @@ const ForecastPage: React.FC = () => {
               variant="contained"
               endIcon={<ArrowForwardIcon sx={{ transform: 'rotate(-45deg)' }} />}
             >
-              More Analytics
+              Pre-exploit Analytics
             </Button>
           )}
         />

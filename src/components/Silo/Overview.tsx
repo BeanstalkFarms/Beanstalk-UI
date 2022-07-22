@@ -85,7 +85,7 @@ const StalkOwnershipTab: React.FC<TabData
         />
         <Stat
           title="Ownership"
-          tooltip="Your current ownership of Beanstalk is displayed as a percent. Ownership is determined by your proportional ownership of Stalk."
+          tooltip="Your current ownership of Beanstalk is displayed as a percentage. Ownership is determined by your proportional ownership of the total Stalk supply."
           amount={`${displayValue[1].multipliedBy(100).toFixed(3)}%`}
           color="secondary.dark"
           amountIcon={undefined}

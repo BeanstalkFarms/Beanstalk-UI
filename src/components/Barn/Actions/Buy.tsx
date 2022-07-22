@@ -385,30 +385,19 @@ const Buy : React.FC<{}> = () => {
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
+      await Promise.all([
+        refetchFertilizer(),
+        refetchBalances(),
+        refetchAllowances(account.address, fertContract.address, Usdc),
+      ]);
       txToast.success(receipt);
       formActions.resetForm();
-      // refetchFertilizer(account.address as string);
-      refetchBalances();
-      refetchAllowances(account.address as string, fertContract.address, Usdc);
     } catch (err) {
       // this sucks
       txToast ? txToast.error(err) : toast.error(parseError(err));
       console.error(err);
     }
-  }, [
-    Eth,
-    Usdc,
-    // balances,
-    beanstalk,
-    farm,
-    isReplanted,
-    // tokenOut,
-    fertContract,
-    account?.address,
-    // refetchFertilizer,
-    refetchBalances,
-    refetchAllowances
-  ]);
+  }, [fertContract, beanstalk, account?.address, Eth, Usdc, isReplanted, refetchFertilizer, refetchBalances, refetchAllowances, farm.contracts.curve.zap.callStatic, farm.contracts.curve.pools.beanCrv3.address]);
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
