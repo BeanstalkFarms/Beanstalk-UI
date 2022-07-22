@@ -131,7 +131,7 @@ export const FontWeight = {
 let muiTheme = createTheme({
   breakpoints: {
     values: {
-      xs: 0,
+      xs: 400,
       sm: 600,
       md: 800,
       lg: 1200,

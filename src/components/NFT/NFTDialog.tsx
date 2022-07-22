@@ -24,10 +24,9 @@ const NFTDialog: React.FC<NFTDialogProps> = ({
     open={dialogOpen}
     // fullWidth
     fullScreen={false}
-    sx={{
-      maxWidth: '400px',
-      alignItems: 'center'
-    }}
+    // maxWidth={'xs'}
+    sx={{ width: '400px' }}
+
     >
     <StyledDialogTitle onClose={handleDialogClose}>BeaNFT</StyledDialogTitle>
     <StyledDialogContent sx={{ px: 1, pb: 1 }}>
