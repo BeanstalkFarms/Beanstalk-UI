@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button, Card, Container, Divider, Stack, Tab, Tabs, Typography, } from '@mui/material';
+import { Button, Card, Container, Stack, Tab, Tabs, Typography, } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
 import { useAccount } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
@@ -7,11 +7,11 @@ import fetch from 'node-fetch';
 import { getAccount } from 'util/Account';
 import { ClaimStatus, loadNFTs, Nft } from 'util/BeaNFTs';
 import NFTDialog from '../components/NFT/NFTDialog';
-import WalletCard from '../components/NFT/WalletCard';
 import { BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES } from '../constants';
 import NFTGrid from '../components/NFT/NFTGrid';
 import { useGenesisNFTContract, useWinterNFTContract } from '../hooks/useContract';
 import TransactionToast from '../components/Common/TxnToast';
+import AddressIcon from '../components/Common/AddressIcon';
 
 const NFTPage: React.FC = () => {
   const { data: account } = useAccount();
@@ -26,7 +26,7 @@ const NFTPage: React.FC = () => {
   // NFT state
   const [selectedNFT, setSelectedNFT] = useState<Nft | null>(null);
   const [genesisNFTs, setGenesisNFTs] = useState<Nft[] | null>(null);
-  const [winterNFTs, setWinterNFTs]   = useState<Nft[] | null>(null);
+  const [winterNFTs, setWinterNFTs] = useState<Nft[] | null>(null);
   const unmintedGenesis = genesisNFTs?.filter((nft) => nft.claimed === ClaimStatus.UNCLAIMED);
   const unmintedWinter = winterNFTs?.filter((nft) => nft.claimed === ClaimStatus.UNCLAIMED);
 
@@ -80,7 +80,7 @@ const NFTPage: React.FC = () => {
         loading: `Minting Genesis BeaNFT ${selectedNFT.id}`,
         success: 'Mint complete!',
       });
-      
+
       genesisContract.mint(getAccount(account.address), selectedNFT.id, selectedNFT.metadataIpfsHash as string, selectedNFT.signature as string)
         .then((txn) => {
           txToast.confirming(txn);
@@ -104,9 +104,9 @@ const NFTPage: React.FC = () => {
         loading: 'Minting all Genesis BeaNFTs',
         success: 'Mint complete!',
       });
-      
-      const accounts   = Array(unmintedGenesis.length).fill(getAccount(account.address));
-      const tokenIds   = unmintedGenesis.map((nft) => nft.id);
+
+      const accounts = Array(unmintedGenesis.length).fill(getAccount(account.address));
+      const tokenIds = unmintedGenesis.map((nft) => nft.id);
       const ipfsHashes = unmintedGenesis.map((nft) => (nft.metadataIpfsHash as string));
       const signatures = unmintedGenesis.map((nft) => (nft.signature as string));
       genesisContract.batchMint(accounts, tokenIds, ipfsHashes, signatures)
@@ -124,7 +124,7 @@ const NFTPage: React.FC = () => {
         });
     }
   };
-  
+
   // Mint Single Winter BeaNFT
   const mintWinter = () => {
     if (selectedNFT?.claimed === ClaimStatus.UNCLAIMED && account?.address) {
@@ -132,7 +132,7 @@ const NFTPage: React.FC = () => {
         loading: `Minting Winter BeaNFT ${selectedNFT.id}`,
         success: 'Mint complete!',
       });
-      
+
       winterContract.mint(getAccount(account.address), selectedNFT.id, selectedNFT.signature2 as string)
         .then((txn) => {
           txToast.confirming(txn);
@@ -156,8 +156,8 @@ const NFTPage: React.FC = () => {
         loading: 'Minting all Winter BeaNFTs',
         success: 'Mint complete!',
       });
-      
-      const tokenIds   = unmintedWinter.map((nft) => nft.id);
+
+      const tokenIds = unmintedWinter.map((nft) => nft.id);
       const signatures = unmintedWinter.map((nft) => (nft.signature2 as string));
       winterContract.batchMintAccount(getAccount(account.address), tokenIds, signatures)
         .then((txn) => {
@@ -176,7 +176,7 @@ const NFTPage: React.FC = () => {
   };
 
   // maps a NFT collection to a mint function
-  const contractMap: {[s: string]: any} = {
+  const contractMap: { [s: string]: any } = {
     Genesis: mintGenesis,
     Winter: mintWinter,
   };
@@ -202,26 +202,38 @@ const NFTPage: React.FC = () => {
     <Container maxWidth="lg">
       <Stack spacing={2}>
         <PageHeader
-          title="BeaNFTs"
-          description="View and mint your BeaNFTs"
+          title={(
+            <Stack direction="row" gap={0.5} alignItems="center">
+              <AddressIcon address={account.address} />
+              <Typography variant="h1">{`${getAccount(account.address).substring(0, 7)}...'s BeaNFTs`}</Typography>
+            </Stack>
+          )}
+          control={
+            <Stack height="100%" justifyContent="end">
+              {tab === 0 && genesisNFTs && (
+                <Button disabled={!unmintedGenesis || unmintedGenesis.length === 0} onClick={mintAllGenesis}>Mint All
+                  Genesis
+                </Button>
+              )}
+              {tab === 1 && winterNFTs && (
+                <Button disabled={!unmintedWinter || unmintedWinter.length === 0} onClick={mintAllWinter}>Mint All
+                  Winter
+                </Button>
+              )}
+            </Stack>
+          }
         />
         <Card sx={{ p: 2 }}>
-          <Stack gap={1}>
-            <Typography variant="h2">My BeaNFTs</Typography>
-            <WalletCard address={account.address} />
+          <Stack gap={1.5}>
+            {/* <Typography variant="h2">My BeaNFTs</Typography> */}
+            {/* <WalletCard address={account.address} /> */}
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ px: 0.5 }}>
-              <Tabs value={tab} onChange={handleChangeTab} sx={{ alignItems: 'center' }}>
+              <Tabs value={tab} onChange={handleChangeTab} sx={{ minHeight: 0 }}>
                 <Tab label={`Genesis (${genesisNFTs === null ? 0 : genesisNFTs?.length})`} />
                 <Tab label={`Winter (${winterNFTs === null ? 0 : winterNFTs?.length})`} />
               </Tabs>
-              {tab === 0 && genesisNFTs && (
-                <Button disabled={!unmintedGenesis || unmintedGenesis.length === 0} onClick={mintAllGenesis}>Mint All Genesis</Button>
-              )}
-              {tab === 1 && winterNFTs && (
-                <Button disabled={!unmintedWinter || unmintedWinter.length === 0} onClick={mintAllWinter}>Mint All Winter</Button>
-              )}
             </Stack>
-            <Divider />
+            {/* <Divider /> */}
             {/* genesis */}
             {tab === 0 && (
               <NFTGrid
@@ -246,8 +258,8 @@ const NFTPage: React.FC = () => {
         handleDialogClose={handleDialogClose}
         address={account.address}
         handleMint={contractMap[selectedNFT.subcollection]}
-      />}
-      
+          />}
+
     </Container>
   );
 };

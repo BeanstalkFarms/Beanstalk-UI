@@ -30,13 +30,13 @@ const NFTGrid: React.FC<NFTGridProps> = ({
             <Typography>You don&apos;t have any NFTs from this collection!</Typography>
           </Box>
         ) : (
-          <Grid container spacing={3} sx={{ px: 3 }}>
+          <Grid container spacing={3}>
             {nfts.map((nft) => (
               <Grid key={nft.id} item md={4} xs={12}>
                 <Card
                   onClick={() => handleDialogOpen(nft)}
                   sx={{
-                    p: 1.5,
+                    p: 1,
                     cursor: 'pointer',
                     '&:hover': {
                       backgroundColor: BeanstalkPalette.hoverBlue,
