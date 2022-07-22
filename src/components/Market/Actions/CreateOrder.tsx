@@ -36,6 +36,7 @@ import { useSigner } from 'hooks/ledger/useSigner';
 import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
+import { useFetchFarmerMarket } from 'state/farmer/market/updater';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import SliderField from '../../Common/Form/SliderField';
@@ -213,16 +214,18 @@ const CreateOrderForm : React.FC<
 const CreateOrder : React.FC<{}> = () => {
   ///
   const getChainToken = useGetChainToken();
-  const Eth = useChainConstant(ETH);
-  const Bean = getChainToken(BEAN);
-  const Weth = getChainToken(WETH);
+  const Eth   = useChainConstant(ETH);
+  const Bean  = getChainToken(BEAN);
+  const Weth  = getChainToken(WETH);
   const tokenMap = useTokenMap<ERC20Token | NativeToken>([BEAN, ETH]);
 
   ///
   const balances = useFarmerBalances();
-  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
-    (state) => state._beanstalk.field
-  );
+  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
+  
+  ///
+  const [refetchFarmerBalances] = useFetchFarmerBalances();
+  const [refetchFarmerMarket]   = useFetchFarmerMarket();
 
   ///
   const initialValues: CreateOrderFormValues = useMemo(() => ({
@@ -238,9 +241,6 @@ const CreateOrder : React.FC<{}> = () => {
       slippage: 0.1,
     }
   }), [Eth]);
-  
-  ///
-  const [refetchFarmerBalances] = useFetchFarmerBalances();
 
   ///
   const { data: signer } = useSigner();
@@ -352,14 +352,17 @@ const CreateOrder : React.FC<{}> = () => {
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
-      await Promise.all([refetchFarmerBalances()]);
+      await Promise.all([
+        refetchFarmerBalances(),
+        refetchFarmerMarket(),
+      ]);
       txToast.success(receipt);
       formActions.resetForm();
     } catch (err) {
       txToast?.error(err) || toast.error(parseError(err));
       console.error(err);
     }
-  }, [Bean, Eth, balances, beanstalk, refetchFarmerBalances]);
+  }, [Bean, Eth, balances, beanstalk, refetchFarmerBalances, refetchFarmerMarket]);
   
   return (
     <Formik<CreateOrderFormValues>

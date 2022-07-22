@@ -6,6 +6,7 @@ import barn from './barn/reducer';
 import events from './events/reducer';
 import events2 from './events2/reducer';
 import field from './field/reducer';
+import market from './market/reducer';
 import silo from './silo/reducer';
 
 export default combineReducers({
@@ -15,5 +16,6 @@ export default combineReducers({
   events,
   events2,
   field,
+  market,
   silo,
 });

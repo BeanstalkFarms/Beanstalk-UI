@@ -4,6 +4,7 @@ export enum EventCacheName {
   SILO = 'silo',
   FIELD = 'field',
   FERTILIZER = 'fert',
+  MARKET = 'market',
 }
 
 export type FarmerEvents = {

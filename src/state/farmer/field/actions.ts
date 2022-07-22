@@ -5,5 +5,5 @@ export const resetFarmerField = createAction(
   'farmer/field/reset'
 );
 export const updateFarmerField = createAction<Field>(
-  'farmer/field/updateFarmerField'
+  'farmer/field/update'
 );

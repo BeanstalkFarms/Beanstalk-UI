@@ -16,19 +16,31 @@ import Token from 'classes/Token';
 import { TokenMap } from 'constants/index';
 import { PlotMap } from 'state/farmer/field';
 import { FarmerSiloBalance, WithdrawalCrate } from 'state/farmer/silo';
+import { PodListing, PodOrder } from 'state/farmer/market';
+import { PodListingCancelledEvent, PodListingCreatedEvent, PodListingFilledEvent, PodOrderCancelledEvent, PodOrderCreatedEvent, PodOrderFilledEvent } from 'generated/Beanstalk/Beanstalk';
 
 // ----------------------------------------
 
-const SupportedEvents = [
+// : Readonly<(keyof BeanstalkReplanted['filters'])[]>
+const SupportedEvents  = [
+  // Field
   'Sow',
   'Harvest',
   'PlotTransfer',
+  // Silo
   'AddDeposit',
   'RemoveDeposit',
   'RemoveDeposits',
   'AddWithdrawal',
   'RemoveWithdrawal',
   'RemoveWithdrawals',
+  // Market
+  'PodListingCreated',
+  'PodListingCancelled',
+  'PodListingFilled',
+  'PodOrderCreated',
+  'PodOrderCancelled',
+  'PodOrderFilled',
 ] as const;
 const SupportedEventsSet = new Set(SupportedEvents);
 const Bean = BEAN[1];
@@ -70,7 +82,14 @@ export type EventProcessorData = {
       amount: BigNumber;
     }
   }>;
+  listings: {
+    [plotIndex: string]: PodListing;
+  };
+  orders: {
+    [orderId: string]: PodOrder;
+  }
 }
+
 export type EventKeys = 'event' | 'args' | 'blockNumber' | 'transactionIndex' | 'transactionHash' | 'logIndex'
 export type Simplify<T extends ethers.Event> = Pick<T, EventKeys> & { facet?: string, returnValues?: any };
 export type Event = Simplify<ethers.Event>;
@@ -93,6 +112,10 @@ export default class EventProcessor {
 
   withdrawals : EventProcessorData['withdrawals']; // token => season => amount
 
+  listings    : EventProcessorData['listings'];
+
+  orders    : EventProcessorData['orders'];
+
   // ----------------------------
   // |      SETUP + UTILS       |
   // ----------------------------
@@ -108,6 +131,8 @@ export default class EventProcessor {
     this.plots       = initialState?.plots       || {};
     this.deposits    = initialState?.deposits    || initTokens(this.epp.whitelist);
     this.withdrawals = initialState?.withdrawals || initTokens(this.epp.whitelist);
+    this.listings    = initialState?.listings    || {};
+    this.orders      = initialState?.orders      || {};
   }
   
   ingest<T extends Event>(event: T) {
@@ -126,6 +151,8 @@ export default class EventProcessor {
       plots: this.plots,
       deposits: this.deposits,
       withdrawals: this.withdrawals,
+      listings: this.listings,
+      orders: this.orders,
     };
   }
 
@@ -570,4 +597,97 @@ export default class EventProcessor {
   // ----------------------------
   // |          MARKET          |
   // ----------------------------
+
+  PodListingCreated(event: Simplify<PodListingCreatedEvent>) {
+    const id          = event.args.index.toString();
+    const amount      = tokenBN(event.args.amount, BEAN[1]);
+    this.listings[id] = {
+      account:          event.args.account.toLowerCase(),
+      index:            tokenBN(event.args.index, BEAN[1]),
+      start:            tokenBN(event.args.start, BEAN[1]),
+      pricePerPod:      tokenBN(event.args.pricePerPod, BEAN[1]),
+      maxHarvestableIndex: tokenBN(event.args.maxHarvestableIndex, BEAN[1]),
+      toWallet:         event.args.toWallet,
+      // extra
+      totalAmount:      amount,
+      remainingAmount:  amount,
+      filledAmount:     BN(0),
+      status:           'active',
+    };
+  }
+
+  PodListingCancelled(event: Simplify<PodListingCancelledEvent>) {
+    const id = event.args.index.toString();
+    if (this.listings[id]) delete this.listings[id];
+  }
+
+  PodListingFilled(event: Simplify<PodListingFilledEvent>) {
+    const id = event.args.index.toString();
+    if (!this.listings[id]) return;
+    
+    const indexBN = BN(event.args.index);
+    const amount  = tokenBN(event.args.amount, BEAN[1]); 
+    // const start   = tokenBN(event.args.start,  BEAN[1]); 
+
+    /// Move current listing's index up by |amount|
+    ///  FIXME: does this match the new marketplace behavior? Believe
+    ///  this assumes we are selling from the front (such that, as a listing
+    ///  is sold, the index increases).
+    const prevKey = id;
+    const currentListing = this.listings[prevKey];
+    delete this.listings[prevKey];
+
+    /// The new index of the Plot, now that some of it has been sold.
+    const newIndex       = indexBN.plus(BN(event.args.amount)).plus(BN(event.args.start)); // no decimals
+    const newID          = newIndex.toString();
+    this.listings[newID] = currentListing;
+
+    /// Bump up |amountSold| for this listing
+    this.listings[newID].index           = tokenBN(newIndex, BEAN[1]);
+    this.listings[newID].start           = new BigNumber(0); // start ?
+    this.listings[newID].filledAmount    = currentListing.filledAmount.plus(amount);
+    this.listings[newID].remainingAmount = currentListing.totalAmount.minus(currentListing.filledAmount);
+
+    /// Update status
+    const isFilled = this.listings[newID].remainingAmount.isEqualTo(0);
+    if (isFilled) {
+      this.listings[newID].status = 'filled';
+      // delete this.listings[newID];
+    }
+  }
+  
+  PodOrderCreated(event: Simplify<PodOrderCreatedEvent>) {
+    const id = event.args.id.toString();
+    this.orders[id] = {
+      account:          event.args.account.toLowerCase(),
+      id:               event.args.id.toString(),
+      maxPlaceInLine:   tokenBN(event.args.maxPlaceInLine, BEAN[1]),
+      totalAmount:      tokenBN(event.args.amount, BEAN[1]),
+      pricePerPod:      tokenBN(event.args.pricePerPod, BEAN[1]),
+      remainingAmount:  tokenBN(event.args.amount, BEAN[1]),
+      filledAmount:     new BigNumber(0),
+      status:           'active',
+    };
+  }
+
+  PodOrderCancelled(event: Simplify<PodOrderCancelledEvent>) {
+    const id = event.args.id.toString();
+    if (this.orders[id]) delete this.orders[id];
+  }
+  
+  PodOrderFilled(event: Simplify<PodOrderFilledEvent>) {
+    const id = event.args.id.toString();
+    if (!this.listings[id]) return;
+
+    const amount = tokenBN(event.args.amount, BEAN[1]);
+    this.orders[id].filledAmount    = this.orders[id].filledAmount.plus(amount);
+    this.orders[id].remainingAmount = this.orders[id].totalAmount.minus(this.orders[id].filledAmount);
+
+    /// Update status
+    const isFilled = this.orders[id].remainingAmount.isEqualTo(0);
+    if (isFilled) {
+      this.orders[id].status = 'filled';
+      // delete this.orders[id];
+    }
+  }
 }

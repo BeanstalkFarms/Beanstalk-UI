@@ -20,6 +20,7 @@ import toast from 'react-hot-toast';
 import { useSigner } from 'hooks/ledger/useSigner';
 import { LoadingButton } from '@mui/lab';
 import PlotInputField from 'components/Common/Form/PlotInputField';
+import { useFetchFarmerMarket } from 'state/farmer/market/updater';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 
@@ -162,6 +163,9 @@ const CreateListing: React.FC<{}> = () => {
   ///
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
+  
+  ///
+  const [refetchFarmerMarket] = useFetchFarmerMarket();
 
   // eslint-disable-next-line unused-imports/no-unused-vars
   const onSubmit = useCallback(async (values: CreateListingFormValues, formActions: FormikHelpers<CreateListingFormValues>) => {
@@ -200,14 +204,17 @@ const CreateListing: React.FC<{}> = () => {
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
-      /// TODO: refresh farmer listings/market
+      await Promise.all([
+        refetchFarmerMarket()
+      ]);
+
       txToast.success(receipt);
       formActions.resetForm();
     } catch (err) {
       txToast?.error(err) || toast.error(parseError(err));
       console.error(err);
     }
-  }, [beanstalk, beanstalkField.harvestableIndex, farmerField.plots, getChainToken]);
+  }, [beanstalk, beanstalkField.harvestableIndex, farmerField.plots, getChainToken, refetchFarmerMarket]);
 
   return (
     <Formik<CreateListingFormValues>
