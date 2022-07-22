@@ -12,7 +12,7 @@ export interface NFTContentProps {
 const NFTDetails: React.FC<NFTContentProps> = ({ nft, collection }) => {
   const [loaded, setLoaded] = useState<boolean>(false);
   return (
-    <Stack gap={1} sx={{ width: '100%', aspectRatio: '1/1' }}>
+    <Stack gap={0.5} sx={{ width: '100%', aspectRatio: '1/1' }}>
       <Box display={loaded ? 'block' : 'none'}>
         <img
           onLoad={() => setLoaded(true)}
@@ -38,9 +38,9 @@ const NFTDetails: React.FC<NFTContentProps> = ({ nft, collection }) => {
       <Stack direction="row" alignItems="start" justifyContent="space-between">
         <Typography variant="h3">{`BeaNFT ${nft.id}`}</Typography>
         <Stack>
-          <Typography color={BeanstalkPalette.lightishGrey}>BeaNFT {collection}</Typography>
+          <Typography variant="body1" color={BeanstalkPalette.lightishGrey}>BeaNFT {collection}</Typography>
           {nft.claimed === ClaimStatus.UNCLAIMED &&
-          <Typography fontSize="14px" textAlign="right" color={BeanstalkPalette.logoGreen}>Ready to
+          <Typography variant="bodySmall" textAlign="right" color={BeanstalkPalette.logoGreen}>Ready to
             mint
           </Typography>}
         </Stack>
