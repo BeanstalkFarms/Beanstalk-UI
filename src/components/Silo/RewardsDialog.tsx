@@ -123,7 +123,7 @@ const ClaimRewardsForm : React.FC<
                     <DescriptionButton
                       key={option.value}
                       title={option.title}
-                      description={`${option.description} ${gas[option.value]?.toString() || 'No gas'}`}
+                      description={`${option.description} ${gas?.[option.value]?.toString() || 'No gas'}`}
                       onClick={set(option.value)}
                       onMouseOver={onMouseOver(option.value)}
                       onMouseLeave={onMouseOutContainer}

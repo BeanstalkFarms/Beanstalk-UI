@@ -13,6 +13,7 @@ import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
 import useTVL from 'hooks/useTVL';
 import useChainConstant from 'hooks/useChainConstant';
 import useBDV from 'hooks/useBDV';
+import { IconSize } from 'components/App/muiTheme';
 
 const ARROW_CONTAINER_WIDTH = 20;
 
@@ -103,7 +104,7 @@ const Whitelist : React.FC<{
                       <img
                         src={token.logo}
                         alt={token.name}
-                        style={{ height: 20, display: 'inline' }}
+                        style={{ height: IconSize.medium, display: 'inline' }}
                       />
                       <Typography color="black" display="inline">
                         {token.name}

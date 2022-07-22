@@ -6,9 +6,7 @@ import Overview from 'components/Silo/Overview';
 import RewardsBar from 'components/Silo/RewardsBar';
 import Whitelist from 'components/Silo/Whitelist';
 import PageHeader from 'components/Common/PageHeader';
-import { SNAPSHOT_LINK, SupportedChainId } from 'constants/index';
-import snapshotIcon from 'img/ecosystem/snapshot-logo.svg';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { SupportedChainId } from 'constants/index';
 import useWhitelist from 'hooks/useWhitelist';
 import usePools from 'hooks/usePools';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
@@ -50,19 +48,6 @@ const SiloPage : React.FC = () => {
         <PageHeader
           title="The Silo"
           description="Earn yield by depositing liquidity and participate in protocol governance"
-          control={(
-            <Button
-              href={SNAPSHOT_LINK}
-              target="_blank"
-              rel="noreferrer"
-              color="light"
-              variant="contained"
-              startIcon={<img src={snapshotIcon} alt="Snapshot" style={{ height: 20 }} />}
-              endIcon={<ArrowForwardIcon sx={{ transform: 'rotate(-45deg)' }} />}
-            >
-              Governance
-            </Button>
-          )}
         />
         <Overview
           farmerSilo={farmerSilo}
@@ -97,6 +82,7 @@ const SiloPage : React.FC = () => {
                 <span>
                   <Button
                     disabled={chainId === SupportedChainId.MAINNET}
+                    size="medium"
                     variant="contained"
                     sx={{ height: '100%', width: { xs: '100%', lg: 'auto' } }}
                     endIcon={<DropdownIcon open={false} />}

@@ -104,10 +104,6 @@ export const BeanstalkPalette = {
 };
 
 export const IconSize = {
-  // xs: '14px',
-  // small: '20px',
-  // medium: '25px',
-  // large: '50px',
   xs: 14,
   small: 20,
   medium: 25,
@@ -303,10 +299,19 @@ let muiTheme = createTheme({
       styleOverrides: {
         root: sx({
           textTransform: 'none',
-          fontWeight: 'bold',
+          // fontWeight: 'bold',
           '&.MuiLoadingButton-root:hover': {
             backgroundColor: BeanstalkPalette.supportGreen,
-          }
+          },
+          fontWeight: 700,
+          fontSize: '1rem',
+          lineHeight: '1.25rem',
+          // FIXME: overrides button primary element and breaks the fixed height
+          // typography: 'h4',
+        }),
+        sizeMedium: sx({
+          py: 1,
+          // height: '45px',
         }),
         sizeLarge: sx({
           py: 1.5,
@@ -324,6 +329,21 @@ let muiTheme = createTheme({
         root: {
           alignItems: 'center',
         }
+      }
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: sx({
+          typography: 'body1',
+          borderColor: BeanstalkPalette.lightBlue,
+          borderWidth: 1,
+          borderStyle: 'solid',
+          backgroundColor: BeanstalkPalette.lightestBlue,
+          color: 'text.primary',
+          p: 1,
+          px: 1.25,
+        }),
+        
       }
     },
     MuiAccordion: {

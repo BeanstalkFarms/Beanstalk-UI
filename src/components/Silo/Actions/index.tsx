@@ -5,6 +5,7 @@ import { ERC20Token } from 'classes/Token';
 import { FarmerSiloBalance } from 'state/farmer/silo';
 import useTabs from 'hooks/display/useTabs';
 import BadgeTab from 'components/Common/BadgeTab';
+import AlmTab from 'components/Common/Almanac/AlmTab';
 import Deposit from './Deposit';
 import Withdraw from './Withdraw';
 import Claim from './Claim';
@@ -32,20 +33,35 @@ const SiloActions : React.FC<{
   return (
     <>
       <Card sx={{ position: 'relative' }}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{
+            overflow: 'visible',
+            px: 2,
+            pt: 2,
+            pb: 1.5,
+          }}
+        >
+          <Tabs
+            value={tab}
+            onChange={handleChange}
+            sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }}
+            variant="scrollable"
+          >
+            <AlmTab label="Deposit" almHref="https://docs.bean.money/farm/silo#withdraw" />
+            <Tab label="Convert" />
+            <Tab label="Withdraw" />
+            <BadgeTab
+              showBadge={hasClaimable}
+              label="Claim"
+              sx={{ overflow: 'visible' }}
+            />
+            <Tab label="Send" />
+          </Tabs>
+        </Stack>
         <Stack gap={1.5}>
-          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>
-            <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }} variant="scrollable">
-              <Tab label="Deposit" />
-              <Tab label="Convert" />
-              <Tab label="Withdraw" />
-              <BadgeTab
-                showBadge={hasClaimable}
-                label="Claim"
-                sx={{ overflow: 'visible' }}
-              />
-              <Tab label="Send" />
-            </Tabs>
-          </Stack>
           <Box sx={{ px: 1, pb: 1 }}>
             {tab === 0 ? (
               <Deposit
