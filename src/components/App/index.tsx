@@ -31,7 +31,7 @@ import BeanAnalytics from '../../pages/analytics/bean';
 import SiloAnalytics from '../../pages/analytics/silo';
 import FieldAnalytics from '../../pages/analytics/field';
 import BarnraiseAnalytics from '../../pages/analytics/barnraise';
-import PodMarketPage from '../../pages/market/pod-market';
+import PodMarketPage from '../../pages/market';
 import NFTPage from '../../pages/nft';
 import ChopPage from '../../pages/chop';
 import MarketAccountPage from '../../pages/market/account';

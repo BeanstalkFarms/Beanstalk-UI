@@ -440,8 +440,13 @@ let muiTheme = createTheme({
           color: 'gray',
           // fontSize: 20,
           '&:active': {},
+          '&.MuiTab-iconWrapper': {
+            color: BeanstalkPalette.black,
+            mr: 0
+          },
           '&:hover': {
             color: BeanstalkPalette.black,
+
           },
           // FIXME: unsure why `selected` style
           // override doesn't work here.
@@ -469,6 +474,10 @@ let muiTheme = createTheme({
           '&:not(:last-child)': {
             borderColor: 'transparent !important',
             border: 'none',
+          },
+          '&.MuiTab-iconWrapper': {
+            color: BeanstalkPalette.black,
+            mr: 0
           },
         },
       },

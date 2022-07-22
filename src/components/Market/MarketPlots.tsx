@@ -4,6 +4,8 @@ import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import buyNowIcon from 'img/interface/buy-pods.svg';
+import sellNowIcon from 'img/interface/sell-pods.svg';
 import PlotTable from './Tables/PlotTable';
 import { mockPodListingData, mockPodOrderData } from './Plots.mock';
 import { displayBN, displayFullBN } from '../../util';
@@ -181,10 +183,9 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
             sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }}
             variant="scrollable"
           >
-            <Tab label="Buy Now" />
-            <Tab label="Sell Now" />
+            <Tab label="Buy Now" icon={<img src={buyNowIcon} alt="" />} iconPosition="start" sx={{ '&:hover': { opacity: 0.5 }  }} />
+            <Tab label="Sell Now" icon={<img src={sellNowIcon} alt="" />} iconPosition="start" />
           </Tabs>
-
           {/* Buy Now tab */}
           {tab === 0 && (
             <PlotTable
@@ -194,7 +195,6 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
               onRowClick={handleBuyNowClick}
             />
           )}
-
           {/* Sell Now tab */}
           {tab === 1 && (
             <PlotTable
@@ -204,9 +204,7 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
               onRowClick={handleSellNowClick}
             />
           )}
-
         </Stack>
-
       </Card>
     </>
   );
