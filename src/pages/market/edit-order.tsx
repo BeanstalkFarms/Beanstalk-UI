@@ -11,7 +11,6 @@ import { useAccount } from 'wagmi';
 import { mockPodOrderData } from '../../components/Market/Plots.mock';
 import PlotOrderDetails from '../../components/Market/Cards/PlotOrderDetails';
 import { AppState } from '../../state';
-import CancelButton from '../../components/Common/CancelButton';
 import AddressIcon from '../../components/Common/AddressIcon';
 import { getAccount } from '../../util/Account';
 
@@ -36,11 +35,11 @@ const EditOrderPage: React.FC = () => {
           title={(
             <Stack direction="row" gap={0.5} alignItems="center">
               <AddressIcon address={account.address} />
-              <Typography variant="h1">{`${getAccount(account.address).substring(0, 7)}...'s Pod Order`}</Typography>
+              <Typography variant="h2">{`${getAccount(account.address).substring(0, 7)}...'s Pod Order`}</Typography>
             </Stack>
           )}
           returnPath="/market/account"
-          control={<CancelButton buttonText="Cancel Order" onClick={() => {}} />} // FIXME
+          // control={<CancelButton buttonText="Cancel Order" onClick={() => {}} />} // FIXME
         />
         <PlotOrderDetails podListing={mockPodOrderData[0]} harvestableIndex={beanstalkField.harvestableIndex} />
       </Stack>

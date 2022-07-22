@@ -15,7 +15,7 @@ const PageHeader : React.FC<{
   control?: React.ReactElement;
 }> = (props) => (
   <Stack direction={{ md: 'row', xs: 'column' }} justifyContent="space-between" gap={1}>
-    <Stack direction="column" alignItems="start" gap={1.5}>
+    <Stack direction="row" alignItems="center" gap={1.5}>
       {props.returnPath && (
         <Button
           to={props.returnPath}
@@ -30,7 +30,7 @@ const PageHeader : React.FC<{
         </Button>
       )}
 
-      {/* --- THE OLD CIRCLE BACK BUTTON ---*/}
+      {/* --- THE OLD CIRCLE BACK-BUTTON ---*/}
       {/* {props.returnPath && ( */}
       {/*  <Button */}
       {/*    to={props.returnPath} */}

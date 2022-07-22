@@ -12,6 +12,8 @@ import { mockPodOrderData } from '../../components/Market/Plots.mock';
 import FillOrder from '../../components/Market/Actions/FillOrder';
 import PlotOrderDetails from '../../components/Market/Cards/PlotOrderDetails';
 import { AppState } from '../../state';
+import AddressIcon from '../../components/Common/AddressIcon';
+import { getAccount } from '../../util';
 
 const OrderPage: React.FC = () => {
   // id of pod order
@@ -27,6 +29,12 @@ const OrderPage: React.FC = () => {
       <Stack spacing={2}>
         <PageHeader
           returnPath="/market"
+          title={(
+            <Stack direction="row" gap={0.5} alignItems="center">
+              <AddressIcon address={mockPodOrderData[0].account} />
+              <Typography variant="h2">{`${getAccount(mockPodOrderData[0].account).substring(0, 7)}...'s Pod Order`}</Typography>
+            </Stack>
+          )}
         />
         <PlotOrderDetails podListing={mockPodOrderData[0]} harvestableIndex={beanstalkField.harvestableIndex} />
         <Card sx={{ position: 'relative' }}>

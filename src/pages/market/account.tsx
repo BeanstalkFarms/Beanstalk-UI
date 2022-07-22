@@ -38,7 +38,7 @@ const MarketAccountPage: React.FC = () => {
           title={(
             <Stack direction="row" gap={0.5} alignItems="center">
               <AddressIcon address={account.address} />
-              <Typography variant="h1">{`${getAccount(account.address).substring(0, 7)}...`}</Typography>
+              <Typography variant="h2">{`${getAccount(account.address).substring(0, 7)}...`}</Typography>
             </Stack>
           )}
           description="Browse my open Pod Orders and Listings"

@@ -47,15 +47,15 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
   // Market Menu
   market: [
     {
-      path: 'market',
+      path: '/market',
       title: 'Pod Market',
     },
     {
-      path: 'market/account',
+      path: '/market/account',
       title: 'My Orders/Listings',
     },
     {
-      path: 'market/activity',
+      path: '/market/activity',
       title: 'Activity',
     },
   ],

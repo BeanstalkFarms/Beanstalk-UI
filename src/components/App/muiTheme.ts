@@ -414,9 +414,9 @@ let muiTheme = createTheme({
     MuiTabs: {
       defaultProps: {},
       styleOverrides: {
-        root: {
+        root: sx({
           fontWeight: 'normal',
-        },
+        }),
         indicator: {
           display: 'none',
         },
@@ -442,13 +442,16 @@ let muiTheme = createTheme({
           '&:active': {},
           '&:hover': {
             color: BeanstalkPalette.black,
+            labelIcon: {
+              color: BeanstalkPalette.black,
+            }
           },
           // FIXME: unsure why `selected` style
           // override doesn't work here.
           '&.Mui-selected': {
             // fontWeight: 'bold',
             fontWeight: 700,
-          fontSize: '1rem', // 1*16 = 16px
+            fontSize: '1rem', // 1*16 = 16px
             color: BeanstalkPalette.black,
           },
         }),
@@ -469,6 +472,10 @@ let muiTheme = createTheme({
           '&:not(:last-child)': {
             borderColor: 'transparent !important',
             border: 'none',
+          },
+          '&.MuiTab-iconWrapper': {
+            color: BeanstalkPalette.black,
+            mr: 0
           },
         },
       },
