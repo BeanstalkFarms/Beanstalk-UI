@@ -2,7 +2,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Box, Button, Link, Stack, Typography } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import React from 'react';
-import { IconSize } from '../App/muiTheme';
+import { BeanstalkPalette, IconSize } from '../App/muiTheme';
 
 const PageHeader : React.FC<{
   /** The Field: The Decentralized Credit Facility */
@@ -21,7 +21,13 @@ const PageHeader : React.FC<{
           to={props.returnPath}
           component={RouterLink}
           color="naked"
-          sx={{ p: 1, borderRadius: 1 }}
+          sx={{
+            p: 1,
+            borderRadius: 1,
+            '&:hover': {
+              color: BeanstalkPalette.logoGreen,
+            }
+        }}
         >
           <Stack direction="row" gap={0.5} alignItems="center">
             <KeyboardBackspaceIcon sx={{ width: IconSize.small }} height="auto" />
