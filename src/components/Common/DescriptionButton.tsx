@@ -9,12 +9,12 @@ const DescriptionButton : React.FC<ButtonProps & {
   description?: string;
   icon?: React.ReactNode | string;
   recommended?: boolean;
-  forceHover?: boolean;
+  selected?: boolean;
 }> = ({
   title,
   description,
   recommended,
-  forceHover,
+  selected,
   icon,
   sx,
   ...props
@@ -32,10 +32,14 @@ const DescriptionButton : React.FC<ButtonProps & {
       // changing the internal layout.
       display: 'block',
       color: 'inherit',
-      backgroundColor: forceHover ? BeanstalkPalette.lightestBlue : null,
+      backgroundColor: selected ? '#F6FAFE' : null,
       '&:hover': {
-        backgroundColor: forceHover ? BeanstalkPalette.lightestBlue : null,
+        backgroundColor: selected ? '#F6FAFE' : null,
       }
+      // backgroundColor: selected ? BeanstalkPalette.lightBlue : null,
+      // '&:hover': {
+      //   backgroundColor: selected ? BeanstalkPalette.lightBlue : null,
+      // }
     }}
   >
     <Stack>
@@ -54,7 +58,9 @@ const DescriptionButton : React.FC<ButtonProps & {
           </Typography>
         )}
       </Stack>
-      <Typography variant="bodySmall">{description}</Typography>
+      <Typography variant="bodySmall">
+        {description}
+      </Typography>
     </Stack>
   </Button>
 );
