@@ -30,6 +30,8 @@ import {
   chainId,
 } from './index';
 
+import { Beanstalk } from 'beanstalk-sdk';
+
 /* Client is responsible for calling execute() */
 export const createLedgerBatch = () => new web3.BatchRequest();
 
@@ -165,64 +167,6 @@ export const getTokenBalances = async (batch: BatchRequest) => {
   );
 };
 
-export const getTotalBalances = async (batch: BatchRequest) => {
-  const bean = tokenContractReadOnly(BEAN);
-  const lp = tokenContractReadOnly(UNI_V2_ETH_BEAN_LP);
-  const beanstalk = beanstalkContractReadOnly();
-  const curve = beanCrv3ContractReadOnly();
-  const exec = setupBatch(batch);
-
-  return Promise.all([
-    // Supply
-    exec(bean.methods.totalSupply()).then(tokenResult(BEAN)),
-    exec(lp.methods.totalSupply()).then(tokenResult(UNI_V2_ETH_BEAN_LP)),
-    exec(curve.methods.totalSupply()).then(tokenResult(CURVE)),
-    exec(beanstalk.methods.totalSeeds()).then(tokenResult(SEEDS)),
-    exec(beanstalk.methods.totalStalk()).then(tokenResult(STALK)),
-    exec(beanstalk.methods.totalDepositedBeans()).then(tokenResult(BEAN)),
-    exec(beanstalk.methods.totalDepositedLP()).then(tokenResult(UNI_V2_ETH_BEAN_LP)),
-    exec(beanstalk.methods.getTotalDeposited(CURVE.addr)).then(tokenResult(CURVE)),
-    exec(beanstalk.methods.totalWithdrawnBeans()).then(tokenResult(BEAN)),
-    exec(beanstalk.methods.totalWithdrawnLP()).then(tokenResult(UNI_V2_ETH_BEAN_LP)),
-    exec(beanstalk.methods.getTotalWithdrawn(CURVE.addr)).then(tokenResult(CURVE)),
-    // Field
-    exec(beanstalk.methods.totalSoil()).then(tokenResult(BEAN)),
-    exec(beanstalk.methods.podIndex()).then(tokenResult(BEAN)),
-    exec(beanstalk.methods.harvestableIndex()).then(tokenResult(BEAN)),
-    exec(beanstalk.methods.totalRoots()).then(bigNumberResult),
-    exec(beanstalk.methods.weather()).then((stringWeather : any) => ({
-      didSowBelowMin: stringWeather.didSowBelowMin,
-      didSowFaster: stringWeather.didSowFaster,
-      lastDSoil: tokenResult(BEAN)(stringWeather.lastDSoil),
-      lastSoilPercent: bigNumberResult(stringWeather.lastSoilPercent),
-      lastSowTime: bigNumberResult(stringWeather.lastSowTime),
-      nextSowTime: bigNumberResult(stringWeather.nextSowTime),
-      startSoil: tokenResult(BEAN)(stringWeather.startSoil),
-      weather: bigNumberResult(stringWeather.yield),
-    }) as Weather),
-    exec(beanstalk.methods.rain()).then((stringRain) => ({
-      raining: stringRain.raining,
-      rainStart: bigNumberResult(stringRain.start),
-    }) as Rain),
-    exec(beanstalk.methods.time()).then((time) => ({
-      season: bigNumberResult(time.current),
-      start: bigNumberResult(time.start),
-      period: bigNumberResult(time.period),
-      timestamp: bigNumberResult(time.timestamp),
-    }) as Time),
-    // Budgets
-    // FIXME: Automate this:
-    exec(bean.methods.balanceOf(BUDGETS[0])).then(tokenResult(BEAN)),
-    exec(bean.methods.balanceOf(BUDGETS[1])).then(tokenResult(BEAN)),
-    exec(bean.methods.balanceOf(BUDGETS[2])).then(tokenResult(BEAN)),
-    exec(bean.methods.balanceOf(BUDGETS[3])).then(tokenResult(BEAN)),
-    // Misc
-    // FIXME: needs to be rekeyed or placed in right array spot
-    exec(bean.methods.balanceOf(CURVE.addr)).then(tokenResult(BEAN)),
-    exec(beanstalk.methods.withdrawSeasons()).then(bigNumberResult)
-  ] as const);
-};
-
 export const getVotes = async () => {
   const beanstalk = beanstalkContractReadOnly();
   const activeBips = await beanstalk.methods.activeBips().call();
@@ -319,7 +263,7 @@ export const getFundraisers = async () : Promise<[Fundraiser[], boolean]> => {
  */
 export const getPrices = async (batch: BatchRequest) => {
   const beanstalk = beanstalkContractReadOnly();
-  const referenceLPContract = pairContractReadOnly(UNI_V2_USDC_ETH_LP);
+    const referenceLPContract = pairContractReadOnly(UNI_V2_USDC_ETH_LP);
   const lpContract = pairContractReadOnly(UNI_V2_ETH_BEAN_LP);
   const bean3crvContract = beanCrv3ContractReadOnly();
   const curveContract = curveContractReadOnly();

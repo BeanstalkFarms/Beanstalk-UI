@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ReactDOM from 'react-dom';
 import BigNumber from 'bignumber.js';
 import { EventData } from 'web3-eth-contract';
-import { Beanstalk, CURVE_BEAN_3CRV_LP, MulticallResult, UNISWAP_V2_ROUTER } from 'beanstalk-sdk';
+import { Beanstalk, BUDGETS, MulticallResult, UNISWAP_V2_ROUTER } from 'beanstalk-sdk';
 
 import {
   updateBeanstalkBeanAllowance,
@@ -39,7 +39,6 @@ import {
   getEtherBalance,
   // getUSDCBalance,
   getPrices,
-  getTotalBalances,
   initialize,
   initializeCallback,
   initializeEventListener,
@@ -166,7 +165,7 @@ export default function Updater() {
         ethBalance: ethBalance,
         beanBalance: toTokenUnitsBN(accountBalances[BEAN.addr].balanceOf, BEAN.decimals),
         lpBalance: toTokenUnitsBN(accountBalances[UNI_V2_ETH_BEAN_LP.addr].balanceOf, UNI_V2_ETH_BEAN_LP.decimals),
-        curveBalance: toTokenUnitsBN(accountBalances[CURVE_BEAN_3CRV_LP.addr].balanceOf, CURVE.decimals),
+        curveBalance: toTokenUnitsBN(accountBalances[CURVE.addr].balanceOf, CURVE.decimals),
         seedBalance: toTokenUnitsBN(accountBalances[BEANSTALK].balanceOfSeeds, SEEDS.decimals),
         stalkBalance: toTokenUnitsBN(accountBalances[BEANSTALK].balanceOfStalk, STALK.decimals),
         // locked, @DEPRECATED
@@ -185,85 +184,55 @@ export default function Updater() {
      * 
      */
     function processTotalBalances(
-      totalBalances: any[], // FIXME
+      totalBalances: MulticallResult,
       bipInfo: AsyncReturnType<typeof getBips>,
       fundraiserInfo: AsyncReturnType<typeof getFundraisers>
     ) {
-      const [
-        // Silo
-        totalBeans,
-        totalLP,
-        totalCrv3,
-        totalSeeds,
-        totalStalk,
-        totalSiloBeans,
-        totalSiloLP,
-        totalSiloCurve,
-        totalTransitBeans,
-        totalTransitLP,
-        totalTransitCurve,
-        // Field
-        soil,
-        podIndex,
-        harvestableIndex,
-        totalRoots,
-        _weather,
-        rain,
-        _season,
-        // Budgets
-        // FIXME: Automate budget beans
-        budget0,
-        budget1,
-        budget2,
-        budget3,
-        // More
-        totalCurveBeans,
-        withdrawSeasons,
-      ] = totalBalances;
 
       // Calculations
-      const totalBudgetBeans = (
-        budget0
-          .plus(budget1)
-          .plus(budget2)
-          .plus(budget3)
-      );
+      const totalBudgetBeans = new BigNumber(0);
+      BUDGETS.forEach((budgetAddress) => {
+        totalBudgetBeans.plus(totalBalances[BEAN.addr].balanceOf[budgetAddress]);
+      });
+      
       const [bips, hasActiveBIP] = bipInfo;
       const [fundraisers, hasActiveFundraiser] = fundraiserInfo;
-      const totalPods = podIndex.minus(harvestableIndex);
+      const podLine = totalBalances[BEANSTALK].podIndex.minus(totalBalances[BEANSTALK].harvestableIndex);
 
       // Dispatchers
+      // NOTE(funderberker): The naming convention of TotalBalanceState does not match the rest of
+      //  the protocol. It should be updated.
       dispatch(setTotalBalance({
-        totalBeans,
-        totalBudgetBeans,
-        totalLP,
-        totalCurveBeans,
-        totalCrv3,
-        totalSiloBeans,
-        totalSiloLP,
-        totalSiloCurve,
-        totalTransitBeans,
-        totalTransitLP,
-        totalTransitCurve,
-        totalSeeds,
-        totalStalk,
-        totalPods,
-        totalRoots,
-        withdrawSeasons,
+        totalBeans: toTokenUnitsBN(totalBalances[BEAN.addr].totalSupply, BEAN.decimals),
+        totalBudgetBeans: toTokenUnitsBN(totalBudgetBeans, BEAN.decimals),
+        totalLP: toTokenUnitsBN(totalBalances[UNI_V2_ETH_BEAN_LP.addr].totalSupply, UNI_V2_ETH_BEAN_LP.decimals),
+        totalCurveBeans: toTokenUnitsBN(totalBalances[BEAN.addr].balanceOf[CURVE.addr], CURVE.decimals),
+        totalCrv3: toTokenUnitsBN(totalBalances[CURVE.addr].totalSupply, CURVE.decimals),
+        totalSiloBeans: toTokenUnitsBN(totalBalances[BEANSTALK].totalDepositedBeans, BEAN.decimals),
+        totalSiloLP: toTokenUnitsBN(totalBalances[BEANSTALK].totalDepositedLP, UNI_V2_ETH_BEAN_LP.decimals),
+        totalSiloCurve: toTokenUnitsBN(totalBalances[BEANSTALK].getTotalDeposited, CURVE.decimals), // Will need to use argument key after more generalized pools are incorporated.
+        totalTransitBeans: toTokenUnitsBN(totalBalances[BEANSTALK].totalWithdrawnBeans, BEAN.decimals),
+        totalTransitLP: toTokenUnitsBN(totalBalances[BEANSTALK].totalWithdrawnLP, UNI_V2_ETH_BEAN_LP.decimals),
+        totalTransitCurve: toTokenUnitsBN(totalBalances[BEANSTALK].getTotalWithdrawn, CURVE.decimals), // Will need to use argument key after more generalized pools are incorporated.
+        totalSeeds: toTokenUnitsBN(totalBalances[BEANSTALK].totalSeeds, SEEDS.decimals),
+        totalStalk: toTokenUnitsBN(totalBalances[BEANSTALK].totalStalk, STALK.decimals),
+        totalPods: toTokenUnitsBN(podLine, BEAN.decimals),
+        totalRoots: toTokenUnitsBN(totalBalances[BEANSTALK].totalRoots, SEEDS.decimals),
+        withdrawSeasons: totalBalances[BEANSTALK].withdrawnSeasons,
       }));
       dispatch(setWeather({
-        ..._weather,
-        ...rain,
-        harvestableIndex,
-        soil,
+        ...totalBalances[BEANSTALK].weather,
+        ...totalBalances[BEANSTALK].rain,
+        harvestableIndex: toTokenUnitsBN(totalBalances[BEANSTALK].harvestableIndex, BEAN.decimals),
+        soil: toTokenUnitsBN(totalBalances[BEANSTALK].soil, BEAN.decimals)
       }));
       dispatch(setBips(bips));
       dispatch(setHasActiveBIP(hasActiveBIP));
       dispatch(setFundraisers(fundraisers));
       dispatch(setHasActiveFundraiser(hasActiveFundraiser));
-      dispatch(setSeason(_season));
+      dispatch(setSeason({ season: totalBalances[BEANSTALK].season }));
 
-      return _season.season;
+      return totalBalances[BEANSTALK].season;
     }
 
     /**
@@ -823,7 +792,7 @@ export default function Updater() {
       // values.
       const batch = createLedgerBatch();
       const accountBalances = await beanstalk.getAccountBalances(account);
-      const totalBalancePromises = getTotalBalances(batch);
+      const totalBalances = beanstalk.getTotalBalances();
       const pricePromises = getPrices(batch);
       batch.execute(); 
 
@@ -831,7 +800,6 @@ export default function Updater() {
         bipInfo,                // 0
         fundraiserInfo,         // 1
         ethBalance,             // 2
-        totalBalances,          // 4
         _prices,                // 5
         // usdcBalance,            // 6
         votedBips,              // 7
@@ -841,7 +809,6 @@ export default function Updater() {
         getBips(), // 0
         getFundraisers(),       // 1
         getEtherBalance(),      // 2
-        totalBalancePromises,   // 4: uses `exec` -> tuple
         pricePromises,          // 5: uses `exec` -> tuple
         // getUSDCBalance(),       // 6
         getVotes(),                // 7
@@ -863,8 +830,8 @@ export default function Updater() {
 
       // Parameters needed to parse events
       const eventParsingParameters : EventParsingParameters = [
-        totalBalances[17].season  /* season */,
-        totalBalances[13]         /* harvestableIndex */,
+        totalBalances[BEANSTALK].season,
+        totalBalances[BEANSTALK].harvestableIndex,
         toTokenUnitsBN(accountBalances[BEANSTALK].balanceOfFarmableBeans, BEAN.decimals)    /* farmableBeanBalance */,
         toTokenUnitsBN(accountBalances[BEANSTALK].balanceOfGrownStalk, STALK.decimals)      /* grownStalkBalance */,
         toTokenUnitsBN(accountBalances[BEANSTALK].balanceOfEth, ETH.decimals)        /* claimableEthBalance */,
@@ -903,17 +870,16 @@ export default function Updater() {
 
       //
       const batch = createLedgerBatch();
-      const totalBalancePromises = getTotalBalances(batch);
+      const beanstalk = new Beanstalk();
+      const totalBalances = beanstalk.getTotalBalances();
       batch.execute();
 
       const [
         bipInfo,
         fundraiserInfo,
-        totalBalances
       ] = await Promise.all([
         getBips(),
         getFundraisers(),
-        totalBalancePromises,
       ]);
 
       ReactDOM.unstable_batchedUpdates(() => {
