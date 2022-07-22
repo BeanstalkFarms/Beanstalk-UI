@@ -4,8 +4,8 @@ import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import buyNowIcon from 'img/interface/buy-pods.svg';
-import sellNowIcon from 'img/interface/sell-pods.svg';
+// import buyNowIcon from 'img/interface/buy-pods.svg';
+// import sellNowIcon from 'img/interface/sell-pods.svg';
 import PlotTable from './Tables/PlotTable';
 import { mockPodListingData, mockPodOrderData } from './Plots.mock';
 import { displayBN, displayFullBN } from '../../util';
@@ -21,48 +21,20 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
 
   const LISTING_COLUMNS: DataGridProps['columns'] = [
     {
-      field: 'account',
-      headerName: 'Listing',
-      flex: 1.5,
-      renderCell: (params) => (
-        <Stack direction="row" gap={1} alignItems="center">
-          <Typography>Pod Listing</Typography>
-          <Box
-            sx={{
-              borderRadius: 1,
-              px: 0.8,
-              py: 0.5,
-              backgroundColor: BeanstalkPalette.lightGreen,
-              color: BeanstalkPalette.logoGreen
-            }}
-          >
-            <Typography>{params.value.substring(0, 6)}</Typography>
-          </Box>
-        </Stack>
-      ),
-    },
-    {
       field: 'index',
       headerName: 'Place In Line',
-      flex: 1.5,
+      flex: 1,
       valueFormatter: (params) =>
         `${displayFullBN(params.value as BigNumber, 0)}`,
       renderCell: (params) => (
-        <Stack direction="row" gap={1}>
-          <Typography>{displayFullBN(new BigNumber(params.value).minus(beanstalkField.harvestableIndex), 0)} in
-            Line
-          </Typography>
-          <Typography color={BeanstalkPalette.lightishGrey}>expires
-            at {displayFullBN(new BigNumber(params.row.maxHarvestableIndex).minus(beanstalkField.harvestableIndex), 0)}
-          </Typography>
-        </Stack>
+        <Typography>{displayFullBN(new BigNumber(params.value).minus(beanstalkField.harvestableIndex), 0)}</Typography>
       ),
     },
     {
       field: 'pricePerPod',
-      headerName: 'Price',
-      align: 'right',
-      headerAlign: 'right',
+      headerName: 'Price Per Pod',
+      align: 'left',
+      headerAlign: 'left',
       flex: 1,
       valueFormatter: (params) =>
         `${displayFullBN(params.value as BigNumber, 0)}`,
@@ -70,8 +42,17 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
         <Stack direction="row" gap={0.3} alignItems="center">
           <img src={beanIcon} alt="Bean Icon" height="18px" />
           <Typography>{displayBN(params.value)}</Typography>
-          <Typography color={BeanstalkPalette.lightishGrey}>Per Pod</Typography>
         </Stack>
+      ),
+    },
+    {
+      field: 'maxHarvestableIndex',
+      headerName: 'Expiration',
+      flex: 1,
+      valueFormatter: (params) =>
+        `${displayFullBN(params.value as BigNumber, 0)}`,
+      renderCell: (params) => (
+        <Typography>{displayFullBN(new BigNumber(params.row.maxHarvestableIndex).minus(beanstalkField.harvestableIndex), 0)}</Typography>
       ),
     },
     {
@@ -79,8 +60,8 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
       headerName: 'Number of Pods',
       flex: 1,
       disableColumnMenu: true,
-      align: 'right',
-      headerAlign: 'right',
+      align: 'left',
+      headerAlign: 'left',
       valueFormatter: (params) => (
         `${displayFullBN(params.value as BigNumber, 2)}`
       ),
@@ -89,6 +70,14 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
           <img src={podIcon} alt="Pods Icon" height="18px" />
           <Typography>{displayBN(params.value)}</Typography>
         </Stack>
+      ),
+    },
+    {
+      field: 'account',
+      headerName: 'From',
+      flex: 1,
+      renderCell: (params) => (
+        <Typography color="primary">{params.value.substring(0, 6)}</Typography>
       ),
     },
   ];
@@ -183,8 +172,16 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
             sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }}
             variant="scrollable"
           >
-            <Tab label="Buy Now" icon={<img src={buyNowIcon} alt="" />} iconPosition="start" sx={{ '&:hover': { opacity: 0.5 }  }} />
-            <Tab label="Sell Now" icon={<img src={sellNowIcon} alt="" />} iconPosition="start" />
+            <Tab
+              label="Buy Now"
+              // iconPosition="start"
+              // icon={<img src={buyNowIcon} alt="" />}
+            />
+            <Tab
+              label="Sell Now"
+              // icon={<img src={sellNowIcon} alt="" />}
+              // iconPosition="start"
+            />
           </Tabs>
           {/* Buy Now tab */}
           {tab === 0 && (
