@@ -4,7 +4,6 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import PageHeader from 'components/Common/PageHeader';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useAccount } from 'wagmi';
@@ -13,6 +12,7 @@ import PlotOrderDetails from '../../components/Market/Cards/PlotOrderDetails';
 import { AppState } from '../../state';
 import AddressIcon from '../../components/Common/AddressIcon';
 import { getAccount } from '../../util/Account';
+import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 
 const EditOrderPage: React.FC = () => {
   // index of plot
@@ -31,7 +31,7 @@ const EditOrderPage: React.FC = () => {
   return (
     <Container maxWidth="sm">
       <Stack spacing={2}>
-        <PageHeader
+        <PageHeaderSecondary
           title={(
             <Stack direction="row" gap={0.5} alignItems="center">
               <AddressIcon address={account.address} />
@@ -39,7 +39,6 @@ const EditOrderPage: React.FC = () => {
             </Stack>
           )}
           returnPath="/market/account"
-          // control={<CancelButton buttonText="Cancel Order" onClick={() => {}} />} // FIXME
         />
         <PlotOrderDetails podListing={mockPodOrderData[0]} harvestableIndex={beanstalkField.harvestableIndex} />
       </Stack>

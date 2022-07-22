@@ -24,7 +24,7 @@ const AlmTab : React.FC<TabProps & AlmProps> = ({ ...props }) => {
   return (
     <Tab
       {...props}
-      {...almProps(props, pressed)}
+      {...almProps(props, pressed as boolean)}
     />
   );
 };

@@ -4,13 +4,13 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import PageHeader from 'components/Common/PageHeader';
 import { useParams } from 'react-router-dom';
 import { useAccount } from 'wagmi';
 import PlotListingDetails from '../../components/Market/Cards/PlotListingDetails';
 import { mockPodListingData } from '../../components/Market/Plots.mock';
 import AddressIcon from '../../components/Common/AddressIcon';
 import { getAccount } from '../../util/Account';
+import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 
 const EditListingPage: React.FC = () => {
   // index of plot
@@ -25,7 +25,7 @@ const EditListingPage: React.FC = () => {
   return (
     <Container maxWidth="sm">
       <Stack spacing={2}>
-        <PageHeader
+        <PageHeaderSecondary
           title={(
             <Stack direction="row" gap={0.5} alignItems="center">
               <AddressIcon address={account.address} />

@@ -6,13 +6,13 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import PageHeader from 'components/Common/PageHeader';
 import { useParams } from 'react-router-dom';
 import FillListing from '../../components/Market/Actions/FillListing';
 import PlotListingDetails from '../../components/Market/Cards/PlotListingDetails';
 import { mockPodListingData } from '../../components/Market/Plots.mock';
 import AddressIcon from '../../components/Common/AddressIcon';
 import { getAccount } from '../../util';
+import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 
 const ListingPage: React.FC = () => {
   // index of plot
@@ -22,14 +22,14 @@ const ListingPage: React.FC = () => {
   return (
     <Container maxWidth="sm">
       <Stack spacing={2}>
-        <PageHeader
-          returnPath="/market"
+        <PageHeaderSecondary
           title={(
             <Stack direction="row" gap={0.5} alignItems="center">
               <AddressIcon address={mockPodListingData[0].account} />
               <Typography variant="h2">{`${getAccount(mockPodListingData[0].account).substring(0, 7)}...'s Pod Listing`}</Typography>
             </Stack>
           )}
+          returnPath="/market"
         />
         <PlotListingDetails podListing={mockPodListingData[0]} harvestableIndex={mockPodListingData[0].index} />
         <Card sx={{ position: 'relative' }}>

@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from 'react';
 import fetch from 'node-fetch';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { useDispatch } from 'react-redux';
 import useAppFlag from 'hooks/display/useAppFlag';
 import useTimedRefresh from 'hooks/useTimedRefresh';
+import { useHotkeys } from 'react-hotkeys-hook';
 import { setAlmanacView, setEthPrices } from './actions';
 
 export const useEthPrices = () => {
