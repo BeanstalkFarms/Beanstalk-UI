@@ -32,6 +32,7 @@ const HoverMenu: React.FC<{
       onClose={hide}
       enterTouchDelay={50}
       leaveTouchDelay={10000}
+      disableFocusListener
       placement="bottom-start"
       sx={{ marginTop: 10 }}
       componentsProps={{
