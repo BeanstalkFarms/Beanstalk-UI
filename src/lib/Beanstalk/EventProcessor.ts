@@ -602,6 +602,7 @@ export default class EventProcessor {
     const id          = event.args.index.toString();
     const amount      = tokenBN(event.args.amount, BEAN[1]);
     this.listings[id] = {
+      id:               id,
       account:          event.args.account.toLowerCase(),
       index:            tokenBN(event.args.index, BEAN[1]),
       start:            tokenBN(event.args.start, BEAN[1]),
@@ -633,9 +634,9 @@ export default class EventProcessor {
     ///  FIXME: does this match the new marketplace behavior? Believe
     ///  this assumes we are selling from the front (such that, as a listing
     ///  is sold, the index increases).
-    const prevKey = id;
-    const currentListing = this.listings[prevKey];
-    delete this.listings[prevKey];
+    const prevID = id;
+    const currentListing = this.listings[prevID];
+    delete this.listings[prevID];
 
     /// The new index of the Plot, now that some of it has been sold.
     const newIndex       = indexBN.plus(BN(event.args.amount)).plus(BN(event.args.start)); // no decimals
@@ -643,6 +644,7 @@ export default class EventProcessor {
     this.listings[newID] = currentListing;
 
     /// Bump up |amountSold| for this listing
+    this.listings[newID].id              = newID;
     this.listings[newID].index           = tokenBN(newIndex, BEAN[1]);
     this.listings[newID].start           = new BigNumber(0); // start ?
     this.listings[newID].filledAmount    = currentListing.filledAmount.plus(amount);
@@ -659,8 +661,8 @@ export default class EventProcessor {
   PodOrderCreated(event: Simplify<PodOrderCreatedEvent>) {
     const id = event.args.id.toString();
     this.orders[id] = {
+      id:               id,
       account:          event.args.account.toLowerCase(),
-      id:               event.args.id.toString(),
       maxPlaceInLine:   tokenBN(event.args.maxPlaceInLine, BEAN[1]),
       totalAmount:      tokenBN(event.args.amount, BEAN[1]),
       pricePerPod:      tokenBN(event.args.pricePerPod, BEAN[1]),

@@ -2,6 +2,13 @@ import BigNumber from 'bignumber.js';
 
 export type PodListing = {
   /**
+   * The ID of the Pod Listing. Equivalent to the
+   * `index` with no decimals.
+   * `id = BigNumber(index) * 10**6`
+   */
+  id: string
+
+  /**
    * The address of the Farmer that owns the Listing.
    */
   account: string;

@@ -25,10 +25,9 @@ import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN, parseError } from 'u
 import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import { ethers } from 'ethers';
 import useGetChainToken from 'hooks/useGetChainToken';
-import { combineBalances, optimizeFromMode } from 'util/Farm';
+import { optimizeFromMode } from 'util/Farm';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import { useProvider } from 'wagmi';
-import { Balance } from 'state/farmer/balances';
 import useToggle from 'hooks/display/useToggle';
 import { BeanstalkReplanted } from 'generated';
 import { useBeanstalkContract } from 'hooks/useContract';
@@ -220,7 +219,13 @@ const CreateOrder : React.FC<{}> = () => {
   const tokenMap = useTokenMap<ERC20Token | NativeToken>([BEAN, ETH]);
 
   ///
-  const balances = useFarmerBalances();
+  const { data: signer } = useSigner();
+  const provider  = useProvider();
+  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const farm      = useMemo(() => new Farm(provider), [provider]);
+
+  ///
+  const balances       = useFarmerBalances();
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
   
   ///
@@ -243,20 +248,15 @@ const CreateOrder : React.FC<{}> = () => {
   }), [Eth]);
 
   ///
-  const { data: signer } = useSigner();
-  const provider = useProvider();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
-  const farm = useMemo(() => new Farm(provider), [provider]);
-
   const handleQuote = useCallback<QuoteHandler>(
     async (_tokenIn, _amountIn, _tokenOut) => {
       // tokenOut is fixed to BEAN.
       const tokenIn  : ERC20Token = _tokenIn  instanceof NativeToken ? Weth : _tokenIn;
       const tokenOut : ERC20Token = _tokenOut instanceof NativeToken ? Weth : _tokenOut;
       const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, tokenIn.decimals));
-      const balanceIn : Balance   = _tokenIn  instanceof NativeToken 
-        ? combineBalances(balances[Weth.address], balances[ETH[1].address])
-        : balances[_tokenIn.address];
+      // const balanceIn : Balance   = _tokenIn  instanceof NativeToken 
+      //   ? combineBalances(balances[Weth.address], balances[ETH[1].address])
+      //   : balances[_tokenIn.address];
 
       //
       let estimate;
@@ -277,10 +277,10 @@ const CreateOrder : React.FC<{}> = () => {
         steps: estimate.steps,
       };
     },
-    [Weth, balances, farm]
+    [Weth, farm]
   );
 
-  // eslint-disable-next-line unused-imports/no-unused-vars
+  ///
   const onSubmit = useCallback(async (values: CreateOrderFormValues, formActions: FormikHelpers<CreateOrderFormValues>) => {
     let txToast;
     try {

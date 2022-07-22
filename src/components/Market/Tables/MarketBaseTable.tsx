@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Box, BoxProps } from '@mui/material';
+import { Box } from '@mui/material';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { BeanstalkPalette, FontSize } from 'components/App/muiTheme';
 
@@ -68,45 +68,51 @@ const marketplaceTableStyle = {
     }
   }
 };
+
 const MAX_ROWS = 5;
 
-export type BuySellTableProps = {
-  // hideHeader?: boolean;
+export type MarketBaseTableProps = {
   maxRows?: number;
 }
 
-const PlotTable: React.FC<BuySellTableProps & DataGridProps & BoxProps> = ({ rows, columns, maxRows, onRowClick }) => {
+const MarketBaseTable: React.FC<
+  MarketBaseTableProps & 
+  DataGridProps
+> = ({
+  rows,
+  columns,
+  maxRows,
+  onRowClick,
+  ...props
+}) => {
+  ///
   const tableHeight = useMemo(() => {
-    if (!rows || rows.length === 0) return '200px';
-    if (maxRows !== undefined) return maxRows * 56 + 112;
-    return MAX_ROWS * 56 + 112;
+    if (!rows || rows.length === 0) return '150px';
+    return 39 + 58 + Math.min(rows.length, maxRows || MAX_ROWS) * 58;
   }, [rows, maxRows]);
 
   return (
-    <Box display="flex" alignItems="center" justifyContent="center">
-      <Box
-        sx={{
-          height: tableHeight,
-          width: '100%',
-          ...marketplaceTableStyle,
+    <Box sx={{
+      height: tableHeight,
+      width: '100%',
+      ...marketplaceTableStyle,
+    }}>
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        pageSize={maxRows !== undefined ? maxRows : MAX_ROWS}
+        disableSelectionOnClick
+        density="compact"
+        onRowClick={onRowClick !== undefined ? onRowClick : () => {}}
+        initialState={{
+          sorting: {
+            sortModel: [{ field: 'placeInLine', sort: 'asc' }],
+          }
         }}
-      >
-        <DataGrid
-          columns={columns}
-          rows={rows}
-          pageSize={maxRows !== undefined ? maxRows : MAX_ROWS}
-          disableSelectionOnClick
-          density="compact"
-          onRowClick={onRowClick !== undefined ? onRowClick : () => {}}
-          initialState={{
-            sorting: {
-              sortModel: [{ field: 'placeInLine', sort: 'asc' }],
-            }
-          }}
-        />
-      </Box>
+        {...props}
+      />
     </Box>
   );
 };
 
-export default PlotTable;
+export default MarketBaseTable;

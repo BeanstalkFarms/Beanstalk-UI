@@ -138,6 +138,21 @@ const CreateListingForm: React.FC<
 // ---------------------------------------------------
 
 const CreateListing: React.FC<{}> = () => {
+  /// 
+  const getChainToken = useGetChainToken();
+  
+  ///
+  const { data: signer } = useSigner();
+  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  
+  ///
+  const farmerField    = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
+  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
+  
+  ///
+  const [refetchFarmerMarket] = useFetchFarmerMarket();
+
+  ///
   const initialValues: CreateListingFormValues = useMemo(() => ({
     plot: {
       index:       null,
@@ -152,20 +167,6 @@ const CreateListing: React.FC<{}> = () => {
       showRangeSelect: false,
     }
   }), []);
-
-  ///
-  const getChainToken = useGetChainToken();
-  
-  ///
-  const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
-  
-  ///
-  const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
-  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
-  
-  ///
-  const [refetchFarmerMarket] = useFetchFarmerMarket();
 
   // eslint-disable-next-line unused-imports/no-unused-vars
   const onSubmit = useCallback(async (values: CreateListingFormValues, formActions: FormikHelpers<CreateListingFormValues>) => {

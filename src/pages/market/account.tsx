@@ -1,22 +1,31 @@
 import React from 'react';
 import {
+  Box,
+  Card,
   Container,
   Stack,
+  Tab,
+  Tabs,
   Typography,
 } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
-import MyPlots from 'components/Market/MyPlots';
 import ComingSoonCard from 'components/Common/ComingSoonCard';
 import useChainId from 'hooks/useChain';
-import { useAccount } from 'wagmi';
-import { SupportedChainId } from '../../constants';
-import { getAccount } from '../../util/Account';
-import AddressIcon from '../../components/Common/AddressIcon';
-import CreateButtons from '../../components/Market/CreateButtons';
+import useAccount from 'hooks/ledger/useAccount';
+import useTabs from 'hooks/display/useTabs';
+import MyOrdersTable from 'components/Market/Tables/MyOrdersTable';
+import AddressIcon from 'components/Common/AddressIcon';
+import CreateButtons from 'components/Market/CreateButtons';
+import { SupportedChainId } from 'constants/index';
+import MyListingsTable from 'components/Market/Tables/MyListingsTable';
 
 const MarketAccountPage: React.FC = () => {
-  const { data: account } = useAccount();
+  ///
+  const account = useAccount();
   const chainId = useChainId();
+
+  ///
+  const [tab, handleChangeTab] = useTabs();
 
   let content;
   if (chainId === SupportedChainId.MAINNET) {
@@ -24,21 +33,38 @@ const MarketAccountPage: React.FC = () => {
       <ComingSoonCard title="Pod Market" />
     );
   } else {
-    content = (<MyPlots />);
+    content = (
+      <Card>
+        <Box sx={{ pt: 2, px: 2, pb: 1.5 }}>
+          <Tabs
+            value={tab}
+            onChange={handleChangeTab}
+            sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }}
+            variant="scrollable"
+          >
+            <Tab label="My Orders" />
+            <Tab label="My Listings" />
+          </Tabs>
+        </Box>
+        <Box px={1}>
+          {tab === 0 && <MyOrdersTable />}
+          {tab === 1 && <MyListingsTable />}
+        </Box>
+      </Card>
+    );
   }
-
-  if (!account?.address) {
-    return null;
-  }
+      
+  if (!account) return null;
 
   return (
     <Container maxWidth="lg">
       <Stack spacing={2}>
         <PageHeader
+          // fixme: trim account on mobile only
           title={(
             <Stack direction="row" gap={0.5} alignItems="center">
-              <AddressIcon address={account.address} />
-              <Typography variant="h2">{`${getAccount(account.address).substring(0, 7)}...`}</Typography>
+              <AddressIcon />
+              <Typography variant="h2">{account}</Typography>
             </Stack>
           )}
           description="Browse my open Pod Orders and Listings"
