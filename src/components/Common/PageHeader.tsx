@@ -29,7 +29,6 @@ const PageHeader : React.FC<{
           </Stack>
         </Button>
       )}
-
       {/* --- THE OLD CIRCLE BACK BUTTON ---*/}
       {/* {props.returnPath && ( */}
       {/*  <Button */}
@@ -42,7 +41,6 @@ const PageHeader : React.FC<{
       {/*    <ChevronLeftIcon /> */}
       {/*  </Button> */}
       {/* )} */}
-
       <Stack direction="column" gap={0}>
         {props.title && (
           <Box>
@@ -60,7 +58,8 @@ const PageHeader : React.FC<{
         {props.description && (
           <Box>
             <Typography variant="subtitle1">
-              <Link href="#" underline="hover" fontWeight={700}>Docs</Link> &middot; {props.description}.
+              {/* <Link href="#" underline="hover" fontWeight={700}>Docs</Link> &middot; */}
+              {props.description}.
             </Typography>
           </Box>
         )}
