@@ -8,6 +8,10 @@ import { Balance } from 'state/farmer/balances';
  *      if (amountIn <= internal)      return INTERNAL
  *      else if (amountIn <= external) return EXTERNAL
  *      else                           return INTERNAL_EXTERNAL
+ * 
+ * Farm assets strategy:
+ *      always use some internal if it exists
+ * 
  * @param amountIn 
  * @param balance 
  * @returns 

@@ -282,7 +282,7 @@ const TxnPreview : React.FC<{
   }
 
   return (
-    <Stack gap={2}>
+    <Stack gap={1.5}>
       {instructionGroupCount > 1 ? (
         <Box sx={{
           position: 'relative',
@@ -332,20 +332,21 @@ const TxnPreview : React.FC<{
         </Box>
       ) : null}
       {/* Show highlightable explanations of each action */}
-      <Stack gap={0.5}>
+      <Stack>
         {actions.map((a, index) => (
           <Box
             key={index}
             sx={{
               opacity: (highlighted === undefined || a.type === highlighted) ? 1 : 0.3,
-              cursor: 'pointer'
+              cursor: 'pointer',
+              py: 0.5,
             }}
             onMouseOver={() => setHighlighted(a.type)}
             onMouseOut={() => setHighlighted(undefined)}
             onFocus={() => setHighlighted(a.type)}
             onBlur={() => setHighlighted(undefined)}
           >
-            <Typography variant="bodySmall" color="grey[300]">
+            <Typography variant="body1" color="grey[300]">
               {parseActionMessage(a)}
             </Typography>
           </Box>

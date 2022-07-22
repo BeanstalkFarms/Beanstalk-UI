@@ -136,7 +136,7 @@ const DepositForm : React.FC<
           </Stack>
           {isReady ? (
             <>
-              <TxnSeparator mt={-1} />
+              <TxnSeparator />
               <TokenOutputField
                 token={whitelistedToken}
                 amount={amount}

@@ -107,7 +107,7 @@ export const IconSize = {
   xs: 14,
   small: 20,
   medium: 25,
-  large: 50
+  large: 50,
 };
 
 export const FontSize = {
@@ -380,6 +380,14 @@ let muiTheme = createTheme({
         }),
       },
     },
+    MuiAccordionDetails: {
+      styleOverrides: {
+        root: sx({
+          pt: 0,
+          pb: 1,
+        })
+      }
+    },
     MuiTextField: {
       defaultProps: {
         color: 'secondary',
@@ -414,7 +422,8 @@ let muiTheme = createTheme({
         root: sx({
           borderRadius: 1,
           px: 1,
-          py: 1
+          py: 1,
+          border: '2px solid white',
         }),
       }
     },
@@ -508,6 +517,7 @@ let muiTheme = createTheme({
       styleOverrides: {
         root: sx({
           px: 1,
+          // pb: 0.5,
         })
       }
     },
