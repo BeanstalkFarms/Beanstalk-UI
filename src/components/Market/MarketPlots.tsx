@@ -12,6 +12,7 @@ import { displayBN, displayFullBN } from '../../util';
 import beanIcon from '../../img/tokens/bean-logo-circled.svg';
 import podIcon from '../../img/beanstalk/pod-icon.svg';
 import { AppState } from '../../state';
+import { BeanstalkPalette } from '../App/muiTheme';
 
 const MarketPlots: React.FC<CardProps> = ({ sx }) => {
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
@@ -51,7 +52,7 @@ const MarketPlots: React.FC<CardProps> = ({ sx }) => {
       valueFormatter: (params) =>
         `${displayFullBN(params.value as BigNumber, 0)}`,
       renderCell: (params) => (
-        <Typography>{displayFullBN(new BigNumber(params.row.maxHarvestableIndex).minus(beanstalkField.harvestableIndex), 0)}</Typography>
+        <Typography color={BeanstalkPalette.lightishGrey}>{displayFullBN(new BigNumber(params.row.maxHarvestableIndex).minus(beanstalkField.harvestableIndex), 0)} in Line</Typography>
       ),
     },
     {
