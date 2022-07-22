@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Dialog, Divider, Stack } from '@mui/material';
-import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
+import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
 import NFTDetails from './NFTDetails';
 import { ClaimStatus } from '../../util/BeaNFTs';
 
@@ -32,12 +32,14 @@ const NFTDialog: React.FC<NFTDialogProps> = ({
           <NFTDetails nft={nft} collection={nft.subcollection} />
         </Stack>
         <Divider />
-        {/* FIXME: should be a LoadingButton */}
-        <Button onClick={handleMint} disabled={nft.claimed === ClaimStatus.CLAIMED} sx={{ height: '45px' }}>
-          {nft.claimed === ClaimStatus.CLAIMED ? 'Minted' : 'Mint'}
-        </Button>
       </Stack>
     </StyledDialogContent>
+    <StyledDialogActions sx={{ pt: 0 }}>
+      {/* FIXME: should be a LoadingButton */}
+      <Button onClick={handleMint} disabled={nft.claimed === ClaimStatus.CLAIMED} sx={{ height: '45px', width: '100%' }}>
+        {nft.claimed === ClaimStatus.CLAIMED ? 'Minted' : 'Mint'}
+      </Button>
+    </StyledDialogActions>
   </Dialog>
   );
 
