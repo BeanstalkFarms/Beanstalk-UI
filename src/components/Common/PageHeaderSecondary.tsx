@@ -2,7 +2,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import React from 'react';
-import { IconSize } from '../App/muiTheme';
+import { BeanstalkPalette, IconSize } from '../App/muiTheme';
 
 const PageHeader : React.FC<{
   /** The Field: The Decentralized Credit Facility */
@@ -26,6 +26,9 @@ const PageHeader : React.FC<{
             float: 'left',
             display: 'inline',
             mb: '-2.5px',
+            '&:hover': {
+              color: BeanstalkPalette.logoGreen,
+            }
           }}
         >
           <Stack direction="row" gap={0.5} alignItems="center">

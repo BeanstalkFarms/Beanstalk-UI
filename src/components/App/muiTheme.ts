@@ -185,6 +185,7 @@ let muiTheme = createTheme({
     naked: {
       main: 'transparent',
       contrastText: BeanstalkPalette.black,
+      // contrastText: BeanstalkPalette.logoGreen
     },
     //
     text: {
@@ -319,7 +320,7 @@ let muiTheme = createTheme({
         }),
         disabled: sx({
           pointerEvents: 'auto',
-        })
+        }),
       },
     },
     MuiAlert: {
