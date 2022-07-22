@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Box, Card, CardProps, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Card, CardProps, Stack, Tab, Tabs, Typography } from '@mui/material';
 import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
@@ -19,41 +19,18 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
 
   const myOrdersColumns: DataGridProps['columns'] = [
     {
-      field: 'account',
-      headerName: 'Order',
-      flex: 1.5,
-      renderCell: (params) => (
-        <Stack direction="row" gap={1} alignItems="center">
-          <Typography>Pod Order</Typography>
-          <Box
-            sx={{
-              borderRadius: 1,
-              px: 0.8,
-              py: 0.5,
-              backgroundColor: BeanstalkPalette.lightGreen,
-              color: BeanstalkPalette.logoGreen
-            }}
-          >
-            <Typography>{params.value.substring(0, 6)}</Typography>
-          </Box>
-        </Stack>
-      ),
-    },
-    {
       field: 'maxPlaceInLine',
       headerName: 'Place In Line',
       flex: 1,
       renderCell: (params) => (
-        <Typography>0 - {displayFullBN(new BigNumber(params.value).minus(beanstalkField.harvestableIndex), 0)}
-          <Typography display="inline" color={BeanstalkPalette.lightishGrey}>in Line</Typography>
-        </Typography>
+        <Typography>0 - {displayFullBN(new BigNumber(params.value).minus(beanstalkField.harvestableIndex), 0)}</Typography>
       ),
     },
     {
       field: 'pricePerPod',
       headerName: 'Price',
-      align: 'right',
-      headerAlign: 'right',
+      align: 'left',
+      headerAlign: 'left',
       flex: 1,
       valueFormatter: (params) =>
         `${displayFullBN(params.value as BigNumber, 0)}`,
@@ -61,17 +38,16 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
         <Stack direction="row" gap={0.3} alignItems="center">
           <img src={beanIcon} alt="Bean Icon" height="18px" />
           <Typography>{displayBN(params.value)}</Typography>
-          <Typography color={BeanstalkPalette.lightishGrey}>Per Pod</Typography>
         </Stack>
       ),
     },
     {
       field: 'totalAmount',
-      headerName: 'Status',
+      headerName: 'Number of Pods',
       flex: 1,
       disableColumnMenu: true,
-      align: 'right',
-      headerAlign: 'right',
+      align: 'left',
+      headerAlign: 'left',
       valueFormatter: (params) => (
         `${displayFullBN(params.value as BigNumber, 2)}`
       ),
@@ -79,11 +55,11 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
         <Stack direction="row" gap={0.3} alignItems="center">
           <img src={podIcon} alt="Pods Icon" height="18px" />
           <Typography>{displayBN(params.row.filledAmount)}
-            /{displayBN(params.row.totalAmount)}
-            <Typography
-              display="inline"
-              color={BeanstalkPalette.lightishGrey}>Purchased
-            </Typography>
+            {/* /{displayBN(params.row.totalAmount)} */}
+            {/* <Typography */}
+            {/*  display="inline" */}
+            {/*  color={BeanstalkPalette.lightishGrey}>Purchased */}
+            {/* </Typography> */}
           </Typography>
         </Stack>
       ),
@@ -92,46 +68,18 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
 
   const myListingsColumns: DataGridProps['columns'] = [
     {
-      field: 'account',
-      headerName: 'Listing',
-      flex: 1.5,
-      renderCell: (params) => (
-        <Stack direction="row" gap={1} alignItems="center">
-          <Typography>Pod Listing</Typography>
-          <Box
-            sx={{
-              borderRadius: 1,
-              px: 0.8,
-              py: 0.5,
-              backgroundColor: BeanstalkPalette.lightGreen,
-              color: BeanstalkPalette.logoGreen
-            }}
-          >
-            <Typography>{params.value.substring(0, 6)}</Typography>
-          </Box>
-        </Stack>
-      ),
-    },
-    {
       field: 'index',
       headerName: 'Place In Line',
       flex: 1.5,
       renderCell: (params) => (
-        <Stack direction="row" gap={1}>
-          <Typography>{displayFullBN(new BigNumber(params.value).minus(beanstalkField.harvestableIndex), 0)} in
-            Line
-          </Typography>
-          <Typography color={BeanstalkPalette.lightishGrey}>expires
-            at {displayFullBN(new BigNumber(params.row.maxHarvestableIndex).minus(beanstalkField.harvestableIndex), 0)}
-          </Typography>
-        </Stack>
+        <Typography>{displayFullBN(new BigNumber(params.value).minus(beanstalkField.harvestableIndex), 0)}</Typography>
       ),
     },
     {
       field: 'pricePerPod',
       headerName: 'Price',
-      align: 'right',
-      headerAlign: 'right',
+      align: 'left',
+      headerAlign: 'left',
       flex: 1,
       valueFormatter: (params) =>
         `${displayFullBN(params.value as BigNumber, 0)}`,
@@ -139,17 +87,16 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
         <Stack direction="row" gap={0.3} alignItems="center">
           <img src={beanIcon} alt="Bean Icon" height="18px" />
           <Typography>{displayBN(params.value)}</Typography>
-          <Typography color={BeanstalkPalette.lightishGrey}>Per Pod</Typography>
         </Stack>
       ),
     },
     {
       field: 'totalAmount',
-      headerName: 'Status',
+      headerName: 'Number of Pods',
       flex: 1,
       disableColumnMenu: true,
-      align: 'right',
-      headerAlign: 'right',
+      align: 'left',
+      headerAlign: 'left',
       valueFormatter: (params) => (
         `${displayFullBN(params.value as BigNumber, 2)}`
       ),
@@ -157,13 +104,21 @@ const MyPlots: React.FC<CardProps> = ({ sx }) => {
         <Stack direction="row" gap={0.3} alignItems="center">
           <img src={podIcon} alt="Pods Icon" height="18px" />
           <Typography>{displayBN(params.row.filledAmount)}
-            /{displayBN(params.row.totalAmount)}
-            <Typography
-              display="inline"
-              color={BeanstalkPalette.lightishGrey}>Sold
-            </Typography>
+            {/* /{displayBN(params.row.totalAmount)} */}
+            {/* <Typography */}
+            {/*  display="inline" */}
+            {/*  color={BeanstalkPalette.lightishGrey}>Sold */}
+            {/* </Typography> */}
           </Typography>
         </Stack>
+      ),
+    },
+    {
+      field: 'maxHarvestableIndex',
+      headerName: 'Expiry',
+      flex: 1.5,
+      renderCell: (params) => (
+        <Typography color={BeanstalkPalette.lightishGrey}>{displayFullBN(new BigNumber(params.row.maxHarvestableIndex).minus(beanstalkField.harvestableIndex), 0)} in Line</Typography>
       ),
     },
   ];
