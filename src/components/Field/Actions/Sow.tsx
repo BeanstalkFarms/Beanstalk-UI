@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, Box, Stack, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, Alert, Box, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
@@ -18,9 +18,9 @@ import { BeanstalkReplanted } from 'generated/index';
 import { ZERO_BN } from 'constants/index';
 import { BEAN, ETH, PODS, WETH } from 'constants/tokens';
 import { ethers } from 'ethers';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useToggle from 'hooks/display/useToggle';
-import useChainConstant from 'hooks/useChainConstant';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useFarmerBalances from 'hooks/useFarmerBalances';
 import useGetChainToken from 'hooks/useGetChainToken';
@@ -28,10 +28,10 @@ import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
 import { QuoteHandler } from 'hooks/useQuote';
 import useTokenMap from 'hooks/useTokenMap';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { displayBN, displayFullBN, parseError, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
+import { displayBN, displayFullBN, MinBN, parseError, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
 import { useProvider } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
 import toast from 'react-hot-toast';
@@ -39,6 +39,7 @@ import { useFetchFarmerField } from 'state/farmer/field/updater';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import podIconGreen from 'img/beanstalk/harvestable-pod-icon.svg';
 import beanIcon from 'img/tokens/bean-logo-circled.svg';
+import { useFetchBeanstalkField } from 'state/beanstalk/field/updater';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
@@ -46,12 +47,14 @@ import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
 type SowFormValues = FormState & {
   settings: {
     slippage: number;
-  }
+  },
+  maxAmountIn: BigNumber | undefined;
 };
 
 const SowForm : React.FC<
   FormikProps<SowFormValues>
   & {
+    handleQuote: QuoteHandler;
     balances: ReturnType<typeof useFarmerBalances>;
     beanstalk: BeanstalkReplanted;
     weather: BigNumber;
@@ -67,20 +70,38 @@ const SowForm : React.FC<
   weather,
   soil,
   farm,
+  handleQuote,
 }) => {
-  const erc20TokenMap = useTokenMap<ERC20Token | NativeToken>([BEAN, ETH, WETH]);
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
+
+  ///
   const getChainToken = useGetChainToken();
-  const Bean = getChainToken(BEAN);
-  const Weth = getChainToken<ERC20Token>(WETH);
+  const Bean          = getChainToken(BEAN);
+  const Eth           = getChainToken<NativeToken>(ETH);
+  const Weth          = getChainToken<ERC20Token>(WETH);
+  const erc20TokenMap = useTokenMap<ERC20Token | NativeToken>([BEAN, ETH, WETH]);
 
-  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
-    (state) => state._beanstalk.field
-  );
+  ///
+  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
+  const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>((state) => state._bean.token.price);
 
-  const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>(
-    (state) => state._bean.token.price
-  );
+  /// Extract values from form state
+  const tokenIn   = values.tokens[0].token;     // converting from token
+  const amount    = values.tokens[0].amount;    // amount of from token
+  const tokenOut  = Bean;                       // converting to token
+  const amountOut = values.tokens[0].amountOut; // amount of to token
+  const maxAmountIn    = values.maxAmountIn;
+  const tokenInBalance = balances[tokenIn.address];
+  // const isQuoting = values.tokens[0].quoting || false;
+
+  ///
+  const canSow = soil.gt(0);
+  const beans = tokenIn === Bean 
+    ? amount  || ZERO_BN
+    : amountOut || ZERO_BN;
+  const isSubmittable = canSow && beans?.gt(0);
+  const numPods = beans.multipliedBy(weather.div(100).plus(1));
+  const podLineLength = beanstalkField.podIndex.minus(beanstalkField.harvestableIndex);
 
   //
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
@@ -98,40 +119,40 @@ const SowForm : React.FC<
     ]);
   }, [values.tokens, setFieldValue]);
 
-  // This handler does not run when _tokenIn = _tokenOut
-  // _tokenOut === Bean 
-  const handleQuote = useCallback<QuoteHandler>(
-    async (_tokenIn, _amountIn, _tokenOut) => {
-      const tokenIn  : ERC20Token = _tokenIn  instanceof NativeToken ? Weth : _tokenIn;
-      const tokenOut : ERC20Token = _tokenOut instanceof NativeToken ? Weth : _tokenOut;
-      const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, tokenIn.decimals));
-      let estimate;
-
-      // Depositing BEAN
-      if (tokenIn === Weth) {
-        estimate = await Farm.estimate(
-          farm.buyBeans(), // this assumes we're coming from WETH
-          [amountIn]
-        );
+  /// When `tokenIn` or `tokenOut` changes, refresh the
+  /// max amount that the user can input of `tokenIn`.
+  useEffect(() => {
+    (async () => {
+      if (canSow) {
+        if (tokenIn === Bean) {
+          /// 1 SOIL is consumed by 1 BEAN
+          setFieldValue('maxAmountIn', soil);
+        } else if (tokenIn === Eth || tokenIn === Weth) {
+          /// Estimate how many ETH it will take to buy `soil` BEAN. 
+          /// TODO: across different forms of `tokenIn`.
+          /// This (obviously) only works for Eth and Weth.
+          const estimate = await Farm.estimate(
+            farm.buyBeans(),
+            [ethers.BigNumber.from(Bean.stringify(soil))],
+            false, // forward = false -> run the calc backwards
+          );
+          setFieldValue(
+            'maxAmountIn',
+            toTokenUnitsBN(
+              estimate.amountOut.toString(), 
+              tokenIn.decimals
+            ),
+          );
+        } else {
+          throw new Error(`Unsupported tokenIn: ${tokenIn.symbol}`);
+        }
       } else {
-        throw new Error(`Sowing from ${tokenIn.symbol} is not currently supported`);
+        setFieldValue('maxAmountIn', ZERO_BN);
       }
-      
-      return {
-        amountOut: toTokenUnitsBN(estimate.amountOut.toString(), tokenOut.decimals),
-        steps: estimate.steps,
-      };
-    },
-    [farm, Weth]
-  );
+    })();
+  }, [Bean, Eth, Weth, beanstalk, canSow, farm, setFieldValue, soil, tokenIn, tokenOut]);
 
-  const beans = values.tokens[0].token === Bean 
-    ? values.tokens[0]?.amount || ZERO_BN
-    : values.tokens[0]?.amountOut || ZERO_BN;
-
-  const isSubmittable = beans?.gt(0);
-  const numPods = beans.multipliedBy(weather.div(100).plus(1));
-  const podLineLength = beanstalkField.podIndex.minus(beanstalkField.harvestableIndex);
+  const maxAmountUsed = (amount && maxAmountIn) ? amount.div(maxAmountIn) : null;
 
   return (
     <Form autoComplete="off">
@@ -145,15 +166,17 @@ const SowForm : React.FC<
         mode={TokenSelectMode.SINGLE}
       />
       <Stack gap={1}>
+        {/* <div>Soil: {soil.toString()} Max amount in: {values.maxAmountIn?.toString() || 'none'}</div> */}
         <TokenQuoteProvider
           key="tokens.0"
           name="tokens.0"
           tokenOut={Bean}
-          balance={balances[values.tokens[0].token.address] || undefined}
+          disabled={!canSow || !values.maxAmountIn}
+          max={MinBN(values.maxAmountIn || ZERO_BN, tokenInBalance?.total || ZERO_BN)}
+          balance={tokenInBalance || undefined}
           state={values.tokens[0]}
           showTokenSelect={showTokenSelect}
           handleQuote={handleQuote}
-          max={soil}
         />
         {isSubmittable ? (
           <>
@@ -166,6 +189,13 @@ const SowForm : React.FC<
               token={PODS}
               amount={numPods}
             />
+            {(maxAmountUsed && maxAmountUsed.gt(0.9)) ? (
+              <Box>
+                <Alert color="warning" icon={<WarningAmberIcon sx={{ fontSize: 22 }} />}>
+                  You are Sowing {displayFullBN(maxAmountUsed.times(100), 4, 0)}% of remaining Soil. 
+                </Alert>
+              </Box>
+            ) : null}
             <Box
               sx={{
                 py: 1,
@@ -239,22 +269,32 @@ const PREFERRED_TOKENS : PreferredToken[] = [
 ];
 
 const Sow : React.FC<{}> = () => {
+  /// Form
   const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
-  const balances = useFarmerBalances();
-  const Bean  = useChainConstant(BEAN);
-  const Eth = useChainConstant(ETH);
-  const provider = useProvider();
+
+  /// Tokens
+  const getChainToken = useGetChainToken();
+  const Bean          = getChainToken(BEAN);
+  const Eth           = getChainToken(ETH);
+  const Weth          = getChainToken(WETH);
+
+  /// Ledger
   const { data: signer } = useSigner();
+  const provider  = useProvider();
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
-  const farm = useMemo(() => new Farm(provider), [provider]);
+  const farm      = useMemo(() => new Farm(provider), [provider]);
+
+  /// Data
   const weather = useSelector<AppState, AppState['_beanstalk']['field']['weather']['yield']>((state) => state._beanstalk.field.weather.yield);
   const soil    = useSelector<AppState, AppState['_beanstalk']['field']['soil']>((state) => state._beanstalk.field.soil);
-
+  
   /// Refetchers
+  const balances                = useFarmerBalances();
+  const [refetchBeanstalkField] = useFetchBeanstalkField();
   const [refetchFarmerField]    = useFetchFarmerField();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
 
-  // Form setup
+  /// Form setup
   const initialValues : SowFormValues = useMemo(() => ({
     settings: {
       slippage: 0.1, // 0.1%
@@ -265,9 +305,37 @@ const Sow : React.FC<{}> = () => {
         amount: undefined,
       },
     ],
+    maxAmountIn: undefined,
   }), [baseToken]);
 
-  // Handlers
+  /// Handlers
+  // This handler does not run when _tokenIn = _tokenOut
+  // _tokenOut === Bean 
+  const handleQuote = useCallback<QuoteHandler>(
+    async (_tokenIn, _amountIn, _tokenOut) => {
+      const tokenIn  : ERC20Token = _tokenIn  instanceof NativeToken ? Weth : _tokenIn;
+      const tokenOut : ERC20Token = _tokenOut instanceof NativeToken ? Weth : _tokenOut;
+      const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, tokenIn.decimals));
+      let estimate;
+
+      // Depositing BEAN
+      if (tokenIn === Weth) {
+        estimate = await Farm.estimate(
+          farm.buyBeans(), // this assumes we're coming from WETH
+          [amountIn]
+        );
+      } else {
+        throw new Error(`Sowing from ${tokenIn.symbol} is not currently supported`);
+      }
+      
+      return {
+        amountOut: toTokenUnitsBN(estimate.amountOut.toString(), tokenOut.decimals),
+        steps: estimate.steps,
+      };
+    },
+    [farm, Weth]
+  );
+
   const onSubmit = useCallback(async (values: SowFormValues, formActions: FormikHelpers<SowFormValues>) => {
     let txToast;
     try {
@@ -277,7 +345,6 @@ const Sow : React.FC<{}> = () => {
       if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
       if (!amountBeans || amountBeans.eq(0)) throw new Error('No amount set');
       
-      // TEMP: recast as BeanstalkReplanted 
       const data : string[] = [];
       const amountPods = amountBeans.times(weather.div(100).plus(1));
       let value = ZERO_BN;
@@ -287,12 +354,12 @@ const Sow : React.FC<{}> = () => {
         success: 'Sow complete.',
       });
       
-      // Sow directly from BEAN
+      /// Sow directly from BEAN
       if (inputToken === Bean) {
         // Nothing to do
       } 
       
-      // Swap to BEAN and Sow
+      /// Swap to BEAN and Sow
       else {
         // Require a quote
         if (!formData.steps || !formData.amountOut) throw new Error(`No quote available for ${formData.token.symbol}`);
@@ -309,8 +376,7 @@ const Sow : React.FC<{}> = () => {
         // Encode steps to get from token i to siloToken
         const encoded = Farm.encodeStepsWithSlippage(
           formData.steps,
-          0.1 / 100,
-          // ethers.BigNumber.from(toStringBaseUnitBN(values.settings.slippage / 100, 6)), // slippage
+          values.settings.slippage / 100,
         );
         data.push(...encoded);
         encoded.forEach((_data, index) => 
@@ -329,7 +395,11 @@ const Sow : React.FC<{}> = () => {
       txToast.confirming(txn);
       
       const receipt = await txn.wait();
-      await Promise.all([refetchFarmerField(), refetchFarmerBalances()]);  
+      await Promise.all([
+        refetchFarmerField(),     // get farmer's plots
+        refetchFarmerBalances(),  // get farmer's token balances
+        refetchBeanstalkField(),  // get beanstalk field data (ex. amount of Soil left)
+      ]);  
       txToast.success(receipt);
       formActions.resetForm();
     } catch (err) {
@@ -345,6 +415,7 @@ const Sow : React.FC<{}> = () => {
     Eth,
     refetchFarmerField,
     refetchFarmerBalances,
+    refetchBeanstalkField,
   ]);
 
   return (
@@ -358,6 +429,7 @@ const Sow : React.FC<{}> = () => {
             <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
           </TxnSettings>
           <SowForm
+            handleQuote={handleQuote}
             balances={balances}
             beanstalk={beanstalk}
             weather={weather}

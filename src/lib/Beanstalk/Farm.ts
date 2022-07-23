@@ -68,9 +68,8 @@ export type ChainableFunction = (amountIn: ethers.BigNumber, forward?: boolean) 
  */
 
 const getContracts = (provider: ethers.providers.BaseProvider) => {
-  const chainId = provider.network.chainId;
-
   // Addressses
+  const chainId         = provider.network.chainId;
   const BEANSTALK       = getChainConstant(BEANSTALK_ADDRESSES, chainId);
   const POOL3           = getChainConstant(POOL3_ADDRESSES, chainId);
   const TRICRYPTO2      = getChainConstant(TRICRYPTO2_ADDRESSES, chainId);

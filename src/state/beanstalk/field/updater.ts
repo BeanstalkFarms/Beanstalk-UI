@@ -5,7 +5,7 @@ import { BEAN } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { resetBeanstalkField, updateBeanstalkField } from './actions';
 
-export const useBeanstalkField = () => {
+export const useFetchBeanstalkField = () => {
   const dispatch = useDispatch();
   const beanstalk = useBeanstalkContract();
 
@@ -67,7 +67,7 @@ export const useBeanstalkField = () => {
 // -- Updater
 
 const FieldUpdater = () => {
-  const [fetch, clear] = useBeanstalkField();
+  const [fetch, clear] = useFetchBeanstalkField();
 
   useEffect(() => {
     clear();

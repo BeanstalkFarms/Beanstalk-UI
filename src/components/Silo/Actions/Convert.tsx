@@ -199,7 +199,7 @@ const ConvertForm : React.FC<
     })();
   }, [beanstalk, setFieldValue, tokenIn, tokenOut]);
 
-  const conversionPct = (amountIn && maxAmountIn) ? amountIn.div(maxAmountIn) : null;
+  const maxAmountUsed = (amountIn && maxAmountIn) ? amountIn.div(maxAmountIn) : null;
 
   return (
     <Form noValidate autoComplete="off">
@@ -275,10 +275,10 @@ const ConvertForm : React.FC<
                 />
               </Box>
             </Stack>
-            {(conversionPct && conversionPct.gt(0.9)) ? (
+            {(maxAmountUsed && maxAmountUsed.gt(0.9)) ? (
               <Box>
                 <Alert color="warning" icon={<WarningAmberIcon sx={{ fontSize: 22 }} />}>
-                  You are converting {displayFullBN(conversionPct.times(100), 4, 0)}% of the way to the peg. 
+                  You are converting {displayFullBN(maxAmountUsed.times(100), 4, 0)}% of the way to the peg. 
                   When Converting all the way to the peg, the Convert may fail due to a small amount of slippage in the direction of the peg.
                 </Alert>
               </Box>
