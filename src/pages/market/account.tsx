@@ -13,11 +13,11 @@ import ComingSoonCard from 'components/Common/ComingSoonCard';
 import useChainId from 'hooks/useChain';
 import useAccount from 'hooks/ledger/useAccount';
 import useTabs from 'hooks/display/useTabs';
-import MyOrdersTable from 'components/Market/Tables/MyOrdersTable';
+import MyOrdersTable from 'components/Market/Tables/MyOrders';
 import AddressIcon from 'components/Common/AddressIcon';
 import CreateButtons from 'components/Market/CreateButtons';
 import { SupportedChainId } from 'constants/index';
-import MyListingsTable from 'components/Market/Tables/MyListingsTable';
+import MyListingsTable from 'components/Market/Tables/MyListings';
 
 const MarketAccountPage: React.FC = () => {
   ///

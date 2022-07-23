@@ -10,7 +10,7 @@ import { DataGridProps } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
 import podIcon from 'img/beanstalk/pod-icon.svg';
 import beanIcon from 'img/tokens/bean-logo-circled.svg';
-import ActivityTable from 'components/Market/Tables/ActivityTable';
+import ActivityTable from 'components/Market/Tables/Activity';
 import ComingSoonCard from 'components/Common/ComingSoonCard';
 import useChainId from 'hooks/useChain';
 import { displayBN, displayFullBN } from '../../util';

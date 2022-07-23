@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { useNavigate } from 'react-router-dom';
 import COLUMNS from 'components/Common/Table/cells';
-import MarketBaseTable from './MarketBaseTable';
+import MarketBaseTable from './Base';
 
 const MyListingsTable : React.FC<{}> = () => {
   /// Data

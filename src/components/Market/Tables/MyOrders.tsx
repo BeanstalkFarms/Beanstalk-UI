@@ -5,7 +5,7 @@ import { AppState } from 'state';
 import { useNavigate } from 'react-router-dom';
 import COLUMNS from 'components/Common/Table/cells';
 import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
-import MarketBaseTable from './MarketBaseTable';
+import MarketBaseTable from './Base';
 
 const MyOrdersTable : React.FC<{}> = () => {
   /// Data
@@ -16,7 +16,7 @@ const MyOrdersTable : React.FC<{}> = () => {
   /// Navigation
   const navigate = useNavigate();
   const handleClick = useCallback((params: GridRowParams) => {
-    navigate(`/market/listing/${params.row.id}`);
+    navigate(`/market/order/${params.row.id}`);
   }, [navigate]);
 
   /// Data Grid setup
