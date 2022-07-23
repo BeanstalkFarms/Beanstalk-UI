@@ -131,6 +131,7 @@ export default class Farm {
 
   contracts : ReturnType<typeof getContracts>;
 
+  /// FIXME: what precision to use here
   static SLIPPAGE_PRECISION = 10 ** 6;
 
   // ------------------------------------------
