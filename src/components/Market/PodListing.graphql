@@ -1,0 +1,13 @@
+#import "./PodListing.fragment.graphql"
+query PodListing(
+  $index: BigInt
+) {
+  podListings(
+    where: { index: $index },
+    first: 1,
+    orderBy: createdAt,
+    orderDirection: desc,
+  ) {
+    ...PodListing
+  }
+}

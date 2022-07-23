@@ -1,0 +1,13 @@
+fragment PodListing on PodListing {
+  # Metadata
+  id
+  index
+  createdAt
+  updatedAt
+  status
+  # Listing data
+  totalAmount
+  filledAmount
+  pricePerPod
+  maxHarvestableIndex
+}

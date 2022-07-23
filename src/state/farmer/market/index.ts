@@ -1,4 +1,33 @@
 import BigNumber from 'bignumber.js';
+import { ZERO_BN } from 'constants/index';
+import { BEAN } from 'constants/tokens';
+import { PodListingFragment } from 'generated/graphql';
+import { toTokenUnitsBN } from 'util/index';
+
+/**
+ * Cast a Pod Listing from Subgraph form -> Redux form.
+ * @param listing The PodListing as returned by the subgraph.
+ * @returns Redux form PodListing.
+ */
+export const castPodListing = (listing: PodListingFragment) : PodListing => {
+  /// Subgraph returns a conjoined ID.
+  const [account, id] = listing.id.split('-');
+  const amount = toTokenUnitsBN(listing.totalAmount,   BEAN[1].decimals);  
+  const filled = toTokenUnitsBN(listing.filledAmount,  BEAN[1].decimals);
+  return {
+    id,
+    account,
+    index:        toTokenUnitsBN(id, BEAN[1].decimals),
+    totalAmount:  amount,
+    filledAmount: filled,
+    remainingAmount: amount.minus(filled),
+    maxHarvestableIndex: toTokenUnitsBN(listing.maxHarvestableIndex, BEAN[1].decimals),
+    pricePerPod:  toTokenUnitsBN(listing.pricePerPod, BEAN[1].decimals),
+    start:        ZERO_BN,
+    status:       listing.status as 'active' | 'filled',
+    toWallet:     false,
+  };
+};
 
 export type PodListing = {
   /**

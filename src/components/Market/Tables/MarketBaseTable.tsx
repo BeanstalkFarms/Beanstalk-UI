@@ -100,11 +100,11 @@ const MarketBaseTable: React.FC<
       <DataGrid
         columns={columns}
         rows={rows}
-        pageSize={maxRows !== undefined ? maxRows : MAX_ROWS}
+        pageSize={maxRows || MAX_ROWS}
         disableSelectionOnClick
         disableColumnMenu
         density="compact"
-        onRowClick={onRowClick !== undefined ? onRowClick : () => {}}
+        onRowClick={onRowClick}
         initialState={{
           sorting: {
             sortModel: [{ field: 'placeInLine', sort: 'asc' }],

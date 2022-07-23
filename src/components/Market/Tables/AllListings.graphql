@@ -1,27 +1,18 @@
-# query AllListings(
-#   $season_lte: Int,
-#   $first: Int,
-#   $maxHarvestableIndex: BigDecimal
-# ) {
-#   podListings(
-#     first: $first,
-#   	where: {
-#       status_not: "cancelled",
-#       maxHarvestableIndex_gt: $maxHarvestableIndex
-#     },
-#     orderBy: index,     # index of the listed plot
-#     orderDirection: asc # start from earliest listings
-#   ) {
-#     # Metadata
-#     id
-#     index
-#     createdAt
-#     updatedAt
-#     status
-#     # Listing data
-#     totalAmount
-#     filledAmount
-# 		pricePerPod
-#     maxHarvestableIndex
-#   }
-# }
+#import "../PodListing.fragment.graphql"
+query AllPodListings(
+  $season_lte: Int,
+  $first: Int,
+  $maxHarvestableIndex: BigDecimal
+) {
+  podListings(
+    first: $first,
+  	where: {
+      status_in: ["active", "partial"],
+      maxHarvestableIndex_gt: $maxHarvestableIndex
+    },
+    orderBy: index,     # index of the listed plot
+    orderDirection: asc # start from earliest listings
+  ) {
+    ...PodListing
+  }
+}

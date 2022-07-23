@@ -1,6 +1,6 @@
 import React from 'react';
 import { Chip, Stack, Tooltip, Typography } from '@mui/material';
-import { GridRenderCellParams, GridValueFormatterParams } from '@mui/x-data-grid';
+import { GridColumns, GridRenderCellParams, GridValueFormatterParams } from '@mui/x-data-grid';
 import { displayBN, displayFullBN, MaxBN } from 'util/index';
 import BigNumber from 'bignumber.js';
 import { BEAN, PODS } from 'constants/tokens';
@@ -9,12 +9,7 @@ import TokenIcon from '../TokenIcon';
 
 const basicCell = (params : GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
 
-/* { 
-  [key: string]: (
-    GridColumns[number] | 
-    ((...params: any) => GridColumns[number])
-  );
-} = */
+/*  = */
 
 const COLUMNS = {
   ///
@@ -29,7 +24,7 @@ const COLUMNS = {
     valueFormatter: (params: GridValueFormatterParams) => displayBN(params.value),
     renderCell: basicCell,
     sortable: false,
-  },
+  } as GridColumns[number],
 
   ///
   /// Silo
@@ -43,7 +38,7 @@ const COLUMNS = {
     valueFormatter: (params: GridValueFormatterParams) => displayBN(params.value),
     renderCell: basicCell,
     sortable: false,
-  },
+  } as GridColumns[number],
 
   /// 
   /// Market
@@ -65,7 +60,7 @@ const COLUMNS = {
         </Stack>
       </Tooltip>
     ),
-  },
+  } as GridColumns[number],
   pricePerPod: {
     field: 'pricePerPod',
     headerName: 'Price per Pod',
@@ -80,7 +75,7 @@ const COLUMNS = {
         </Typography>
       </Stack>
     ),
-  },
+  } as GridColumns[number],
   fromAccount: {
     field: 'account',
     headerName: 'From',
@@ -90,7 +85,7 @@ const COLUMNS = {
         {params.value.substring(0, 6)}
       </Typography>
     ),
-  },
+  } as GridColumns[number],
   placeInLine: (
     harvestableIndex: BigNumber,
     { 
@@ -104,12 +99,16 @@ const COLUMNS = {
     field: field || 'maxPlaceInLine',
     headerName: 'Place In Line',
     flex: 1,
+    valueParser: (params: GridValueFormatterParams) => (
+      /// FIXME: may have roundoff errors
+      (params.value as BigNumber).toNumber()
+    ),
     renderCell: (params: GridRenderCellParams) => (
       <Typography>
         {range ? '0 - ' : null}{displayFullBN((params.value as BigNumber).minus(harvestableIndex), 0)}
       </Typography>
     ),
-  }),
+  } as GridColumns[number]),
   expiry: (
     harvestableIndex: BigNumber
   ) => ({
@@ -129,7 +128,7 @@ const COLUMNS = {
         </Tooltip>
       );
     }
-  }),
+  } as GridColumns[number]),
   status: (
     harvestableIndex: BigNumber
   ) => ({
@@ -149,7 +148,7 @@ const COLUMNS = {
         </Typography>
       </Tooltip>
     )
-  })
+  } as GridColumns[number])
 };
 
 export default COLUMNS;
