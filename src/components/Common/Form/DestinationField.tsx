@@ -3,6 +3,7 @@ import { Typography } from '@mui/material';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
 import AddressIcon from '../AddressIcon';
 import PillSelectField from './PillSelectField';
+import { IconSize } from '../../App/muiTheme';
 
 const DestinationField : React.FC<{
   name: string;
@@ -21,7 +22,7 @@ const DestinationField : React.FC<{
       title: 'Wallet',
       description: 'Transfer assets to your wallet.',
       pill: <><AddressIcon size={14} /><Typography variant="body1">Wallet</Typography></>,
-      icon: <AddressIcon size={36} />,
+      icon: <AddressIcon size={IconSize.small} />,
       value: FarmToMode.EXTERNAL,
     }]
   ), []);
