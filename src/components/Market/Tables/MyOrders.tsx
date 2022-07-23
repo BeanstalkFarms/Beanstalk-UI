@@ -21,10 +21,13 @@ const MyOrdersTable : React.FC<{}> = () => {
 
   /// Data Grid setup
   const columns: DataGridProps['columns'] = [
+    COLUMNS.connectedAccount,
     COLUMNS.placeInLine(harvestableIndex, { range: true }),
     COLUMNS.pricePerPod,
-    COLUMNS.numPods,
+    COLUMNS.numPodsActive,
+    COLUMNS.progress,
     // FIXME: add cancel
+    COLUMNS.rightChevron,
   ];
   
   return (

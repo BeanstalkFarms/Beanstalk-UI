@@ -62,9 +62,9 @@ const MarketAccountPage: React.FC = () => {
         <PageHeader
           // fixme: trim account on mobile only
           title={(
-            <Stack direction="row" gap={0.5} alignItems="center">
+            <Stack direction="row" gap={1} alignItems="center">
               <AddressIcon />
-              <Typography variant="h2">{account}</Typography>
+              <Typography variant="h1">My Pod Market</Typography>
             </Stack>
           )}
           description="Browse my open Pod Orders and Listings"

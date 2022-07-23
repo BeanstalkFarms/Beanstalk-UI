@@ -54,22 +54,6 @@ const PodMarketPage: React.FC = () => {
             {tab === 0 && (
               <AllListings />
             )}
-            {/* {tab === 0 && (
-              <MarketTable
-                columns={LISTING_COLUMNS}
-                rows={mockPodListingData}
-                maxRows={8}
-                onRowClick={handleClickListing}
-              />
-            )}
-            {tab === 1 && (
-              <MarketTable
-                columns={ORDER_COLUMNS}
-                rows={mockPodOrderData}
-                maxRows={8}
-                onRowClick={handleClickOrder}
-              />
-            )} */}
           </Box>
         </Card>
       </>

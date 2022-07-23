@@ -20,14 +20,17 @@ const MyListingsTable : React.FC<{}> = () => {
 
   /// Data Grid setup
   const columns: DataGridProps['columns'] = [
-    COLUMNS.status(beanstalkField.harvestableIndex),
+    COLUMNS.connectedAccount,
+    // COLUMNS.status(beanstalkField.harvestableIndex),
     COLUMNS.placeInLine(beanstalkField.harvestableIndex, {
       field: 'index',
       range: false
     }),
     COLUMNS.pricePerPod,
-    COLUMNS.numPods,
+    COLUMNS.numPodsActive,
+    COLUMNS.progress,
     COLUMNS.expiry(beanstalkField.harvestableIndex),
+    COLUMNS.rightChevron,
   ];
   
   return (

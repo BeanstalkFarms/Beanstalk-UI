@@ -1,11 +1,14 @@
 import React from 'react';
-import { Chip, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Chip, LinearProgress, Stack, Tooltip, Typography } from '@mui/material';
 import { GridColumns, GridRenderCellParams, GridValueFormatterParams } from '@mui/x-data-grid';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { displayBN, displayFullBN, MaxBN } from 'util/index';
 import BigNumber from 'bignumber.js';
 import { BEAN, PODS } from 'constants/tokens';
 import { ZERO_BN } from 'constants/index';
+import { PodListing, PodOrder } from 'state/farmer/market';
 import TokenIcon from '../TokenIcon';
+import AddressIcon from '../AddressIcon';
 
 const basicCell = (params : GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
 
@@ -61,21 +64,82 @@ const COLUMNS = {
       </Tooltip>
     ),
   } as GridColumns[number],
+
+  ///
+  numPodsActive: {
+    field: 'remainingAmount',
+    headerName: 'Number of Pods',
+    flex: 1,
+    disableColumnMenu: true,
+    align: 'left',
+    headerAlign: 'left',
+    renderCell: (params: GridRenderCellParams<any, PodListing>) => (
+      <Tooltip
+        placement="right"
+        title={(
+          <>
+            Total: {displayFullBN(params.row.totalAmount)} Pods<br />
+            Remaining: {displayFullBN(params.row.remainingAmount)} Pods<br />
+            {/* {params.row.filledAmount.div(params.row.totalAmount).times(100).toFixed(2)}% Filled */}
+          </>
+        )}>
+        <Stack direction="row" gap={0.3} alignItems="center">
+          <TokenIcon token={PODS} />
+          <Typography>
+            {displayBN(params.row.remainingAmount)}
+          </Typography>
+        </Stack>
+      </Tooltip>
+    )
+  } as GridColumns[number],
+  progress: {
+    field: 'progress',
+    headerName: 'Progress',
+    align: 'left',
+    headerAlign: 'left',
+    flex: 1,
+    renderCell: (params: GridRenderCellParams<any, PodListing | PodOrder>) => {
+      const progress = params.row.filledAmount.div(params.row.totalAmount).times(100);
+      return (
+        <Stack gap={1} direction="row" width="100%" alignItems="center">
+          <Box sx={{ flex: 1 }}>
+            <LinearProgress
+              variant="determinate"
+              color="primary"
+              value={progress.toNumber()}
+            />
+          </Box>
+          <Typography fontSize="bodySmall" color="gray">
+            {progress.toFixed(1)}%
+          </Typography>
+        </Stack>
+      );
+    },
+  } as GridColumns[number],
   pricePerPod: {
     field: 'pricePerPod',
     headerName: 'Price per Pod',
     align: 'left',
     headerAlign: 'left',
     flex: 1,
-    renderCell: (params: GridRenderCellParams) => (
-      <Stack direction="row" gap={0.3} alignItems="center">
-        <TokenIcon token={BEAN[1]} />
-        <Typography>
-          {displayFullBN(params.value)}
-        </Typography>
-      </Stack>
+    renderCell: (params: GridRenderCellParams<any, PodListing | PodOrder>) => (
+      <Tooltip
+        placement="right"
+        title={(
+          <>
+            Cost: {displayFullBN((params.value as BigNumber).times(params.row.remainingAmount), BEAN[1].displayDecimals)} BEAN
+          </>
+        )}>
+        <Stack direction="row" gap={0.3} alignItems="center">
+          <TokenIcon token={BEAN[1]} />
+          <Typography>
+            {displayFullBN(params.value)}
+          </Typography>
+        </Stack>
+      </Tooltip>
     ),
   } as GridColumns[number],
+
   fromAccount: {
     field: 'account',
     headerName: 'From',
@@ -148,7 +212,27 @@ const COLUMNS = {
         </Typography>
       </Tooltip>
     )
-  } as GridColumns[number])
+  } as GridColumns[number]),
+
+  ///
+  /// Extras
+  ///
+  connectedAccount: {
+    field: 'connectedAccount',
+    headerName: '',
+    width: 10,
+    sortable: false,
+    filterable: false,
+    renderCell: () => <AddressIcon />,
+  } as GridColumns[number],
+  rightChevron: {
+    field: 'rightChevron',
+    headerName: '',
+    width: 20,
+    sortable: false,
+    filterable: false,
+    renderCell: () => <ArrowRightIcon color="secondary" />
+  } as GridColumns[number],
 };
 
 export default COLUMNS;

@@ -1,22 +1,21 @@
 import React, { useCallback, useMemo } from 'react';
 import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
-import { useSelector } from 'react-redux';
-import { AppState } from 'state';
 import { useNavigate } from 'react-router-dom';
 import COLUMNS from 'components/Common/Table/cells';
 import { castPodListing, PodListing } from 'state/farmer/market';
 import { toStringBaseUnitBN } from 'util/index';
 import { BEAN } from 'constants/tokens';
 import { useAllPodListingsQuery } from 'generated/graphql';
+import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
 import MarketBaseTable from './Base';
 
 const AllListings : React.FC<{}> = () => {
   /// Data
-  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
+  const harvestableIndex  = useHarvestableIndex();
   const { data, loading } = useAllPodListingsQuery({
     variables: {
       first: 1000,
-      maxHarvestableIndex: toStringBaseUnitBN(beanstalkField.harvestableIndex, BEAN[1].decimals),
+      maxHarvestableIndex: toStringBaseUnitBN(harvestableIndex, BEAN[1].decimals),
     }
   });
   const rows : PodListing[] = useMemo(() => {
@@ -33,16 +32,17 @@ const AllListings : React.FC<{}> = () => {
   /// Data Grid setup
   const columns: DataGridProps['columns'] = [
     // index
-    COLUMNS.placeInLine(beanstalkField.harvestableIndex, {
+    COLUMNS.placeInLine(harvestableIndex, {
       field: 'index',
       range: false
     }),
     // pricePerPod
     COLUMNS.pricePerPod,
     // amount
-    COLUMNS.numPods,
+    COLUMNS.numPodsActive,
     // maxHarvestableIndex
-    COLUMNS.expiry(beanstalkField.harvestableIndex),
+    COLUMNS.expiry(harvestableIndex),
+    COLUMNS.rightChevron
   ];
   
   return (
