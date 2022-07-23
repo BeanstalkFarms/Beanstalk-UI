@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useAccount } from 'wagmi';
 import { mockPodOrderData } from '../../components/Market/Plots.mock';
-import PlotOrderDetails from '../../components/Market/Cards/PlotOrderDetails';
+import OrderDetails from '../../components/Market/Cards/OrderDetails';
 import { AppState } from '../../state';
 import AddressIcon from '../../components/Common/AddressIcon';
 import { getAccount } from '../../util/Account';
@@ -40,7 +40,7 @@ const EditOrderPage: React.FC = () => {
           )}
           returnPath="/market/account"
         />
-        <PlotOrderDetails podListing={mockPodOrderData[0]} harvestableIndex={beanstalkField.harvestableIndex} />
+        <OrderDetails podListing={mockPodOrderData[0]} harvestableIndex={beanstalkField.harvestableIndex} />
       </Stack>
     </Container>
   );

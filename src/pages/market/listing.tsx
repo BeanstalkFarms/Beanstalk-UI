@@ -11,7 +11,7 @@ import { usePodListingQuery } from 'generated/graphql';
 import { castPodListing } from 'state/farmer/market';
 import { trimAddress } from 'util/index';
 import FillListing from 'components/Market/Actions/FillListing';
-import PlotListingDetails from 'components/Market/Cards/PlotListingDetails';
+import ListingDetails from 'components/Market/Cards/ListingDetails';
 import { mockPodListingData } from 'components/Market/Plots.mock';
 import AddressIcon from 'components/Common/AddressIcon';
 import PageHeaderSecondary from 'components/Common/PageHeaderSecondary';
@@ -40,7 +40,7 @@ const ListingPage: React.FC = () => {
           )}
           returnPath="/market"
         />
-        <PlotListingDetails
+        <ListingDetails
           podListing={listing}
           harvestableIndex={harvestableIndex}
         />

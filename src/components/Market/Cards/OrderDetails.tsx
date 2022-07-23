@@ -11,19 +11,17 @@ import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
 import { displayBN } from '../../../util';
 import { PodOrder } from '../Plots.mock';
 
-export type PlotDetailsCardProps = {
+export type OrderDetailsProps = {
   podListing: PodOrder | undefined;
   harvestableIndex: BigNumber;
 }
 
-const PlotOrderDetails: React.FC<PlotDetailsCardProps & CardProps> = ({
+const OrderDetails: React.FC<OrderDetailsProps & CardProps> = ({
   sx,
   podListing,
   harvestableIndex
 }) => {
-  if (podListing === undefined) {
-    return null;
-  }
+  if (!podListing) return null;
   return (
     <Card sx={{ p: 2, ...sx }}>
       <Stack gap={2}>
@@ -71,4 +69,4 @@ const PlotOrderDetails: React.FC<PlotDetailsCardProps & CardProps> = ({
   );
 };
 
-export default PlotOrderDetails;
+export default OrderDetails;
