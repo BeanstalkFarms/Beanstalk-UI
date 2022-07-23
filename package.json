@@ -107,6 +107,7 @@
   },
   "scripts": {
     "start": "node --max_old_space_size=4096 node_modules/.bin/react-app-rewired start",
+    "clean": "rm -rf ./src/generated && echo \"Cleaned src/generated.\"",
     "build": "yarn generate && node --optimize_for_size --max_old_space_size=8192 node_modules/.bin/react-app-rewired build",
     "build-netlify": "REACT_APP_NAME=$npm_package_name REACT_APP_VERSION=$npm_package_version REACT_APP_HOST='netlify' REACT_APP_NETLIFY_CONTEXT=$CONTEXT REACT_APP_NETLIFY_BUILD_ID=$BUILD_ID REACT_APP_GIT_COMMIT_REF=$COMMIT_REF yarn build",
     "build-fleek": "REACT_APP_NAME=$npm_package_name REACT_APP_VERSION=$npm_package_version REACT_APP_HOST='fleek' REACT_APP_GIT_COMMIT_REF=$(git rev-parse HEAD) yarn build",
@@ -116,9 +117,9 @@
     "lint": "eslint \"src/**/**/*.ts{,x}\"",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
-    "generate": "yarn generate:typechain && yarn generate:graphql",
-    "generate:typechain": "typechain --target=ethers-v5 --ts-nocheck --out-dir=./src/generated './src/constants/abi/**/*.json'",
-    "generate:graphql": "graphql-codegen --config codegen.yml",
+    "generate": "yarn clean && yarn generate:typechain && yarn generate:graphql && echo \"Done generating files.\"",
+    "generate:typechain": "echo \"Generating: typechain ethers-v5\" && typechain --target=ethers-v5 --ts-nocheck --out-dir=./src/generated './src/constants/abi/**/*.json'",
+    "generate:graphql": "echo \"Generating: graphql-codegen\" graphql-codegen --config codegen.yml",
     "postpack": "yarn generate",
     "postinstall": "husky install"
   },

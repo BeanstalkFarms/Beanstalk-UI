@@ -1,12 +1,12 @@
-fragment PodOrder on PodOrder {
-  # Metadata
-  id
-  createdAt
-  updatedAt
-  status
-  # Order data
-  amount
-  amountFilled
-  pricePerPod
-  maxPlaceInLine
-}
+# fragment PodOrder on PodOrder {
+#   # Metadata
+#   id
+#   createdAt
+#   updatedAt
+#   status
+#   # Order data
+#   amount
+#   amountFilled
+#   pricePerPod
+#   maxPlaceInLine
+# }
