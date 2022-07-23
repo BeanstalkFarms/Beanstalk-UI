@@ -41,22 +41,10 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
     {
       path: '/barn',
       title: 'Barn',
-      tag: 'NEW',
     },
-  ],
-  // Market Menu
-  market: [
     {
       path: '/market',
-      title: 'Pod Market',
-    },
-    {
-      path: '/market/account',
-      title: 'My Orders/Listings',
-    },
-    {
-      path: '/market/activity',
-      title: 'Activity',
+      title: 'Market',
     },
   ],
   // Analytics Menu
@@ -96,6 +84,12 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       title: 'Governance',
       icon: governanceIcon
     },
+    {
+      path: 'docs',
+      href: 'https://docs.bean.money',
+      title: 'Docs',
+      icon: governanceIcon
+    },
   ],
   // About Button
   additional: [
@@ -128,6 +122,21 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       href: 'https://dune.xyz/tbiq/Beanstalk',
       title: 'Dune',
       icon: beanNFTIcon
+    },
+  ],
+  // Market Menu
+  market: [
+    {
+      path: '/market',
+      title: 'Pod Market',
+    },
+    {
+      path: '/market/account',
+      title: 'My Orders/Listings',
+    },
+    {
+      path: '/market/activity',
+      title: 'Activity',
     },
   ],
 };
