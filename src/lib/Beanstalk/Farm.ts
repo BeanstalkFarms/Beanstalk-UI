@@ -32,7 +32,7 @@ export type ChainableFunctionResult = {
   encode: (minAmountOut: ethers.BigNumber) => string;
   decode: (data: string) => Result;
 };
-export type ChainableFunction = (amountIn: ethers.BigNumber) => Promise<ChainableFunctionResult>;
+export type ChainableFunction = (amountIn: ethers.BigNumber, forward?: boolean) => Promise<ChainableFunctionResult>;
 
 /**
  * Forward calculation:
@@ -166,34 +166,48 @@ export default class Farm {
    * Executes a sequence of contract calls to estimate the `amountOut` received of some token
    * after an arbitrary set of chained transactions.
    * @param _fns array of chainable functions. Each accepts an `amountIn` and provides an `amountOut`.
-   * @param _initialArgs array of initial arguments, currently only contains [`amountIn`]
-   * @returns struct containing the final `amountOut`
+   * @param _args
+   * @param _forward
+   * @returns struct containing the final `amountOut` and aggregated steps
    */
   static async estimate(
     _fns: ChainableFunction[],
-    _initialArgs: [amountIn: ethers.BigNumber]
+    _args: [amountIn: ethers.BigNumber],
+    _forward: boolean = true,
   ) : Promise<{
     amountOut: ethers.BigNumber;
     steps: ChainableFunctionResult[];
   }> {
-    let args = _initialArgs;
-    const steps : ChainableFunctionResult[] = [];
-    // ratchet Promise.waterfall()
-    for (let i = 0; i < _fns.length; i += 1) {
+    let nextAmountIn = _args[0]; /// 
+    const steps : ChainableFunctionResult[] = []; ///
+    const exec = async (i: number) => {
       try {
-        const step = await _fns[i](...args);
-        args = [step.amountOut];
+        const step = await _fns[i](nextAmountIn, _forward);
+        nextAmountIn = step.amountOut;
         steps.push(step);
       } catch (e) {
-        console.debug(`[farm/estimate] Failed to estimate step ${i}`, _fns[i].name, args);
+        console.debug(`[farm/estimate] Failed to estimate step ${i}`, _fns[i].name, nextAmountIn, _forward);
         console.error(e);
         throw e;
       }
+    };
+
+    if (_forward) {
+      for (let i = 0; i < _fns.length; i += 1) {
+        console.debug(`[farm/estimate] forwards: ${i}`);
+        await exec(i);
+      }
+    } else {
+      for (let i = _fns.length - 1; i >= 0; i -= 1) {
+        console.debug(`[farm/estimate] backwards: ${i}`);
+        await exec(i);
+      }
     }
+
     return {
-      // the resulting amountOut is just the argument
-      // that would've been passed to the next function
-      amountOut: args[0],
+      /// the resulting amountOut is just the argument
+      /// that would've been passed to the next function
+      amountOut: nextAmountIn,
       steps,
     };
   }
