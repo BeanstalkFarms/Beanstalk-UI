@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, Alert, Box, Stack, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, Alert, Box, Link, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
@@ -95,11 +95,11 @@ const SowForm : React.FC<
   // const isQuoting = values.tokens[0].quoting || false;
 
   ///
-  const canSow = soil.gt(0);
+  const hasSoil = soil.gt(0);
   const beans = tokenIn === Bean 
     ? amount  || ZERO_BN
     : amountOut || ZERO_BN;
-  const isSubmittable = canSow && beans?.gt(0);
+  const isSubmittable = hasSoil && beans?.gt(0);
   const numPods = beans.multipliedBy(weather.div(100).plus(1));
   const podLineLength = beanstalkField.podIndex.minus(beanstalkField.harvestableIndex);
 
@@ -123,7 +123,7 @@ const SowForm : React.FC<
   /// max amount that the user can input of `tokenIn`.
   useEffect(() => {
     (async () => {
-      if (canSow) {
+      if (hasSoil) {
         if (tokenIn === Bean) {
           /// 1 SOIL is consumed by 1 BEAN
           setFieldValue('maxAmountIn', soil);
@@ -150,7 +150,7 @@ const SowForm : React.FC<
         setFieldValue('maxAmountIn', ZERO_BN);
       }
     })();
-  }, [Bean, Eth, Weth, beanstalk, canSow, farm, setFieldValue, soil, tokenIn, tokenOut]);
+  }, [Bean, Eth, Weth, beanstalk, hasSoil, farm, setFieldValue, soil, tokenIn, tokenOut]);
 
   const maxAmountUsed = (amount && maxAmountIn) ? amount.div(maxAmountIn) : null;
 
@@ -171,13 +171,20 @@ const SowForm : React.FC<
           key="tokens.0"
           name="tokens.0"
           tokenOut={Bean}
-          disabled={!canSow || !values.maxAmountIn}
+          disabled={!hasSoil || !values.maxAmountIn}
           max={MinBN(values.maxAmountIn || ZERO_BN, tokenInBalance?.total || ZERO_BN)}
           balance={tokenInBalance || undefined}
           state={values.tokens[0]}
           showTokenSelect={showTokenSelect}
           handleQuote={handleQuote}
         />
+        {!hasSoil ? (
+          <Box>
+            <Alert color="warning" icon={<WarningAmberIcon sx={{ fontSize: 22 }} />}>
+              There is currently no Soil. <Link href="https://docs.bean.money/farm/field#soil" target="_blank" rel="noreferrer">Learn more</Link>
+            </Alert>
+          </Box>
+        ) : null}
         {isSubmittable ? (
           <>
             <TxnSeparator />
