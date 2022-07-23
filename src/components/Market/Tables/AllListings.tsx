@@ -13,15 +13,12 @@ import MarketBaseTable from './MarketBaseTable';
 const AllListings : React.FC<{}> = () => {
   /// Data
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
-  const listings       = useSelector<AppState, AppState['_farmer']['market']['listings']>((state) => state._farmer.market.listings);
-  // const rows           = useMemo(() => Object.values(listings),   [listings]);
   const { data, loading } = useAllPodListingsQuery({
     variables: {
       first: 1000,
       maxHarvestableIndex: toStringBaseUnitBN(beanstalkField.harvestableIndex, BEAN[1].decimals),
     }
   });
-  
   const rows : PodListing[] = useMemo(() => {
     if (loading || !data?.podListings) return [];
     return data.podListings.map<PodListing>(castPodListing);

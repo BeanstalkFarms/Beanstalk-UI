@@ -1,6 +1,5 @@
 #import "../PodListing.fragment.graphql"
 query AllPodListings(
-  $season_lte: Int,
   $first: Int,
   $maxHarvestableIndex: BigDecimal
 ) {
