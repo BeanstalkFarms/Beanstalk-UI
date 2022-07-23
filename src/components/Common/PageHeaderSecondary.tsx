@@ -20,7 +20,7 @@ const PageHeader : React.FC<{
   const navigate = useNavigate();
   return (
     <Box>
-      <Stack direction={{ md: 'row', xs: 'column' }} alignItems="center" justifyContent="space-between" gap={0.5}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" gap={0.5}>
         <Box sx={{ width: 70 }}>
           <Button
             onClick={() => navigate(-1)}

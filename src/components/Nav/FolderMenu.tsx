@@ -22,15 +22,13 @@ import useAnchor from 'hooks/display/useAnchor';
  *             out of the button. See <PriceButton/> for example.
  * On mobile:  Clicking the Button shows a Drawer.
  */
-const FolderMenu: React.FC<
-  {
-    startIcon?: any;
-    buttonContent: JSX.Element;
-    popoverContent: JSX.Element;
-    drawerContent: JSX.Element;
-    hideTextOnMobile?: boolean;
-  } & ButtonProps
-> = ({
+const FolderMenu: React.FC<{
+  startIcon?: any;
+  buttonContent: JSX.Element;
+  popoverContent: JSX.Element;
+  drawerContent: JSX.Element;
+  hideTextOnMobile?: boolean;
+} & ButtonProps> = ({
   startIcon,
   buttonContent,
   popoverContent,
@@ -91,7 +89,9 @@ const FolderMenu: React.FC<
           }}
         >
           <Box sx={{ display: { xs: hideTextOnMobile ? 'none' : 'block', sm: 'block' } }}>
-            <Typography variant="h3">{buttonContent}</Typography>
+            <Typography variant="h3">
+              {buttonContent}
+            </Typography>
           </Box>
         </Button>
         <Popper

@@ -21,7 +21,7 @@ export type RouteData = {
   small?: boolean;
 }
 
-type RouteKeys = 'top' | 'market' | 'analytics' | 'more' | 'additional'
+type RouteKeys = 'top' | 'market' | 'more' | 'additional' // | 'analytics'
 
 const ROUTES : { [key in RouteKeys] : RouteData[] } = {
   // Main Navigation
@@ -46,25 +46,10 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       path: '/market',
       title: 'Market',
     },
-  ],
-  // Analytics Menu
-  analytics: [
     {
-      path: 'analytics/barnraise',
-      title: 'Barn Raise Analytics',
+      path: '/analytics',
+      title: 'Analytics',
     },
-    {
-      path: 'analytics/bean',
-      title: 'Bean Analytics',
-    },
-    {
-      path: 'analytics/silo',
-      title: 'Silo Analytics',
-    },
-    {
-      path: 'analytics/field',
-      title: 'Field Analytics',
-    }
   ],
   // More Menu
   more: [
@@ -139,6 +124,25 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       title: 'Activity',
     },
   ],
+  // Analytics Menu
+  // analytics: [
+  //   {
+  //     path: 'analytics/barnraise',
+  //     title: 'Barn Raise Analytics',
+  //   },
+  //   {
+  //     path: 'analytics/bean',
+  //     title: 'Bean Analytics',
+  //   },
+  //   {
+  //     path: 'analytics/silo',
+  //     title: 'Silo Analytics',
+  //   },
+  //   {
+  //     path: 'analytics/field',
+  //     title: 'Field Analytics',
+  //   }
+  // ],
 };
 
 export default ROUTES;

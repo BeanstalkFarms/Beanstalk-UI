@@ -188,9 +188,9 @@ const NavBar: React.FC<{}> = () => {
               {/* <HoverMenu items={ROUTES.market}>
                 Market
               </HoverMenu> */}
-              <HoverMenu items={ROUTES.analytics}>
+              {/* <HoverMenu items={ROUTES.analytics}>
                 Analytics
-              </HoverMenu>
+              </HoverMenu> */}
               <HoverMenu items={ROUTES.more}>
                 More
               </HoverMenu>

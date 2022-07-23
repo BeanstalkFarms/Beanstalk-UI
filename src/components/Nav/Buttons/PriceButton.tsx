@@ -33,9 +33,9 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   );
 
   // Theme
-  const theme = useTheme();
+  const theme    = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
-  const isTiny = useMediaQuery('(max-width:350px)');
+  const isTiny   = useMediaQuery('(max-width:350px)');
 
   // Content
   const isLoading = beanPrice.eq(NEW_BN);
