@@ -21,7 +21,7 @@ export type RouteData = {
   small?: boolean;
 }
 
-type RouteKeys = 'top' | 'market' | 'analytics' | 'more' | 'additional'
+type RouteKeys = 'top' | 'market' | 'more' | 'additional' // | 'analytics'
 
 const ROUTES : { [key in RouteKeys] : RouteData[] } = {
   // Main Navigation
@@ -41,42 +41,15 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
     {
       path: '/barn',
       title: 'Barn',
-      tag: 'NEW',
     },
-  ],
-  // Market Menu
-  market: [
     {
       path: '/market',
-      title: 'Pod Market',
+      title: 'Market',
     },
     {
-      path: '/market/account',
-      title: 'My Orders/Listings',
+      path: '/analytics',
+      title: 'Analytics',
     },
-    {
-      path: '/market/activity',
-      title: 'Activity',
-    },
-  ],
-  // Analytics Menu
-  analytics: [
-    {
-      path: 'analytics/barnraise',
-      title: 'Barn Raise Analytics',
-    },
-    {
-      path: 'analytics/bean',
-      title: 'Bean Analytics',
-    },
-    {
-      path: 'analytics/silo',
-      title: 'Silo Analytics',
-    },
-    {
-      path: 'analytics/field',
-      title: 'Field Analytics',
-    }
   ],
   // More Menu
   more: [
@@ -94,6 +67,12 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       path: 'governance',
       href: 'https://snapshot.org/#/beanstalkdao.eth',
       title: 'Governance',
+      icon: governanceIcon
+    },
+    {
+      path: 'docs',
+      href: 'https://docs.bean.money',
+      title: 'Docs',
       icon: governanceIcon
     },
   ],
@@ -130,6 +109,40 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       icon: beanNFTIcon
     },
   ],
+  // Market Menu
+  market: [
+    {
+      path: '/market',
+      title: 'Pod Market',
+    },
+    {
+      path: '/market/account',
+      title: 'My Orders/Listings',
+    },
+    {
+      path: '/market/activity',
+      title: 'Activity',
+    },
+  ],
+  // Analytics Menu
+  // analytics: [
+  //   {
+  //     path: 'analytics/barnraise',
+  //     title: 'Barn Raise Analytics',
+  //   },
+  //   {
+  //     path: 'analytics/bean',
+  //     title: 'Bean Analytics',
+  //   },
+  //   {
+  //     path: 'analytics/silo',
+  //     title: 'Silo Analytics',
+  //   },
+  //   {
+  //     path: 'analytics/field',
+  //     title: 'Field Analytics',
+  //   }
+  // ],
 };
 
 export default ROUTES;

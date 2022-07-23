@@ -1,8 +1,8 @@
 import React from 'react';
-import { useAccount } from 'wagmi';
 import { BEANSTALK_ADDRESSES } from 'constants/index';
 import { BoxProps } from '@mui/material';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
+import useAccount from 'hooks/ledger/useAccount';
 
 const FALLBACK_ADDRESS = BEANSTALK_ADDRESSES[1];
 
@@ -13,8 +13,8 @@ const AddressIcon : React.FC<BoxProps & {
   size = 25,
   address,
 }) => {
-  const { data: account } = useAccount();
-  const addr = address || account?.address || FALLBACK_ADDRESS;
+  const account = useAccount();
+  const addr = address || account || FALLBACK_ADDRESS; // FIXME naming
   return (
     <Jazzicon
       diameter={size}

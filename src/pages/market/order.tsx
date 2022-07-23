@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { mockPodOrderData } from '../../components/Market/Plots.mock';
 import FillOrder from '../../components/Market/Actions/FillOrder';
-import PlotOrderDetails from '../../components/Market/Cards/PlotOrderDetails';
+import OrderDetails from '../../components/Market/Cards/OrderDetails';
 import { AppState } from '../../state';
 import AddressIcon from '../../components/Common/AddressIcon';
 import { getAccount } from '../../util';
@@ -36,7 +36,7 @@ const OrderPage: React.FC = () => {
           )}
           returnPath="/market"
         />
-        <PlotOrderDetails podListing={mockPodOrderData[0]} harvestableIndex={beanstalkField.harvestableIndex} />
+        <OrderDetails podListing={mockPodOrderData[0]} harvestableIndex={beanstalkField.harvestableIndex} />
         <Card sx={{ position: 'relative' }}>
           <Stack gap={1.5}>
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>

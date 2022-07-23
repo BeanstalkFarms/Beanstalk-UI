@@ -8,6 +8,7 @@ export type PlotMap<T> = {
   [index: string]: T;
 }
 
+/// FIXME: "Field" or "FarmerField";
 export type Field = {
   plots: PlotMap<BigNumber>;
   pods: BigNumber;

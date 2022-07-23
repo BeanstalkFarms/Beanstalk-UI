@@ -112,7 +112,7 @@ persistCacheSync({
 });
 
 export const apolloClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/cujowolf/beanstalk-dev',
+  uri: 'https://api.thegraph.com/subgraphs/name/cujowolf/beanstalk-dev-replanted',
   cache,
 });
 

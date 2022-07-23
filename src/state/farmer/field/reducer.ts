@@ -1,17 +1,18 @@
 import { createReducer } from '@reduxjs/toolkit';
-import BigNumber from 'bignumber.js';
+import { ZERO_BN } from 'constants/index';
 import { Field } from '.';
-import { updateFarmerField } from './actions';
+import { resetFarmerField, updateFarmerField } from './actions';
 
 const initialState : Field = {
   plots: {},
   harvestablePlots: {},
-  pods: new BigNumber(0),
-  harvestablePods: new BigNumber(0),
+  pods: ZERO_BN,
+  harvestablePods: ZERO_BN,
 };
 
 export default createReducer(initialState, (builder) =>
   builder
+    .addCase(resetFarmerField, () => initialState)
     .addCase(updateFarmerField, (state, { payload }) => {
       state.plots = payload.plots;
       state.harvestablePlots = payload.harvestablePlots;

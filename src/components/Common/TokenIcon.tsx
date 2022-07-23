@@ -1,7 +1,10 @@
 import React from 'react';
 import Token from 'classes/Token';
 
-const TokenIcon : React.FC<{ token: Token, style?: any }> = ({ token, style }) => (
+const TokenIcon : React.FC<{
+  token: Token;
+  style?: any;
+}> = ({ token, style }) => (
   <img
     src={token.logo}
     alt={token.symbol}

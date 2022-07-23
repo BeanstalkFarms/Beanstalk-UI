@@ -48,13 +48,13 @@ const NavDrawer: React.FC<{
             onClick={hideDrawer}
           />
         ))}
-        {ROUTES.market.map((item) => (
+        {/* {ROUTES.market.map((item) => (
           <MenuItemMobile
             key={item.path}
             item={item}
             onClick={hideDrawer}
           />
-        ))}
+        ))} */}
         {ROUTES.additional.map((item) => (
           <MenuItemMobile
             key={item.path}

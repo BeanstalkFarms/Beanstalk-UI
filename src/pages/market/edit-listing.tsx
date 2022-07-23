@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useAccount } from 'wagmi';
-import PlotListingDetails from '../../components/Market/Cards/PlotListingDetails';
+import ListingDetails from '../../components/Market/Cards/ListingDetails';
 import { mockPodListingData } from '../../components/Market/Plots.mock';
 import AddressIcon from '../../components/Common/AddressIcon';
 import { getAccount } from '../../util/Account';
@@ -34,7 +34,7 @@ const EditListingPage: React.FC = () => {
           )}
           returnPath="/market/account"
         />
-        <PlotListingDetails podListing={mockPodListingData[0]} harvestableIndex={mockPodListingData[0].index} />
+        <ListingDetails podListing={mockPodListingData[0]} harvestableIndex={mockPodListingData[0].index} />
       </Stack>
     </Container>
   );

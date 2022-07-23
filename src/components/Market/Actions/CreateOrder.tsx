@@ -25,10 +25,9 @@ import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN, parseError } from 'u
 import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import { ethers } from 'ethers';
 import useGetChainToken from 'hooks/useGetChainToken';
-import { combineBalances, optimizeFromMode } from 'util/Farm';
+import { optimizeFromMode } from 'util/Farm';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import { useProvider } from 'wagmi';
-import { Balance } from 'state/farmer/balances';
 import useToggle from 'hooks/display/useToggle';
 import { BeanstalkReplanted } from 'generated';
 import { useBeanstalkContract } from 'hooks/useContract';
@@ -36,6 +35,7 @@ import { useSigner } from 'hooks/ledger/useSigner';
 import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
+import { useFetchFarmerMarket } from 'state/farmer/market/updater';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import SliderField from '../../Common/Form/SliderField';
@@ -213,16 +213,24 @@ const CreateOrderForm : React.FC<
 const CreateOrder : React.FC<{}> = () => {
   ///
   const getChainToken = useGetChainToken();
-  const Eth = useChainConstant(ETH);
-  const Bean = getChainToken(BEAN);
-  const Weth = getChainToken(WETH);
+  const Eth   = useChainConstant(ETH);
+  const Bean  = getChainToken(BEAN);
+  const Weth  = getChainToken(WETH);
   const tokenMap = useTokenMap<ERC20Token | NativeToken>([BEAN, ETH]);
 
   ///
-  const balances = useFarmerBalances();
-  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
-    (state) => state._beanstalk.field
-  );
+  const { data: signer } = useSigner();
+  const provider  = useProvider();
+  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const farm      = useMemo(() => new Farm(provider), [provider]);
+
+  ///
+  const balances       = useFarmerBalances();
+  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
+  
+  ///
+  const [refetchFarmerBalances] = useFetchFarmerBalances();
+  const [refetchFarmerMarket]   = useFetchFarmerMarket();
 
   ///
   const initialValues: CreateOrderFormValues = useMemo(() => ({
@@ -238,25 +246,17 @@ const CreateOrder : React.FC<{}> = () => {
       slippage: 0.1,
     }
   }), [Eth]);
-  
-  ///
-  const [refetchFarmerBalances] = useFetchFarmerBalances();
 
   ///
-  const { data: signer } = useSigner();
-  const provider = useProvider();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
-  const farm = useMemo(() => new Farm(provider), [provider]);
-
   const handleQuote = useCallback<QuoteHandler>(
     async (_tokenIn, _amountIn, _tokenOut) => {
       // tokenOut is fixed to BEAN.
       const tokenIn  : ERC20Token = _tokenIn  instanceof NativeToken ? Weth : _tokenIn;
       const tokenOut : ERC20Token = _tokenOut instanceof NativeToken ? Weth : _tokenOut;
       const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, tokenIn.decimals));
-      const balanceIn : Balance   = _tokenIn  instanceof NativeToken 
-        ? combineBalances(balances[Weth.address], balances[ETH[1].address])
-        : balances[_tokenIn.address];
+      // const balanceIn : Balance   = _tokenIn  instanceof NativeToken 
+      //   ? combineBalances(balances[Weth.address], balances[ETH[1].address])
+      //   : balances[_tokenIn.address];
 
       //
       let estimate;
@@ -277,10 +277,10 @@ const CreateOrder : React.FC<{}> = () => {
         steps: estimate.steps,
       };
     },
-    [Weth, balances, farm]
+    [Weth, farm]
   );
 
-  // eslint-disable-next-line unused-imports/no-unused-vars
+  ///
   const onSubmit = useCallback(async (values: CreateOrderFormValues, formActions: FormikHelpers<CreateOrderFormValues>) => {
     let txToast;
     try {
@@ -352,14 +352,17 @@ const CreateOrder : React.FC<{}> = () => {
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
-      await Promise.all([refetchFarmerBalances()]);
+      await Promise.all([
+        refetchFarmerBalances(),
+        refetchFarmerMarket(),
+      ]);
       txToast.success(receipt);
       formActions.resetForm();
     } catch (err) {
       txToast?.error(err) || toast.error(parseError(err));
       console.error(err);
     }
-  }, [Bean, Eth, balances, beanstalk, refetchFarmerBalances]);
+  }, [Bean, Eth, balances, beanstalk, refetchFarmerBalances, refetchFarmerMarket]);
   
   return (
     <Formik<CreateOrderFormValues>

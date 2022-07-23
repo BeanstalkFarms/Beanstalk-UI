@@ -158,13 +158,13 @@ let muiTheme = createTheme({
     primary: {
       main: BeanstalkPalette.logoGreen,
       light: BeanstalkPalette.lightGreen,
-      contrastText: 'white',
+      contrastText: '#ffffff',
     },
     secondary: {
       main: BeanstalkPalette.lightBlue,
       light: BeanstalkPalette.lighterBlue,
       dark: BeanstalkPalette.darkBlue,
-      contrastText: 'black',
+      contrastText: '#000000',
     },
     light: {
       main: BeanstalkPalette.white,
@@ -180,7 +180,7 @@ let muiTheme = createTheme({
     },
     cancel: {
       main: BeanstalkPalette.washedRed,
-      contrastText: 'white'
+      contrastText: '#ffffff'
     },
     naked: {
       main: 'transparent',

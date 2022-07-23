@@ -7,17 +7,26 @@ import {
   Typography,
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import FillListing from '../../components/Market/Actions/FillListing';
-import PlotListingDetails from '../../components/Market/Cards/PlotListingDetails';
-import { mockPodListingData } from '../../components/Market/Plots.mock';
-import AddressIcon from '../../components/Common/AddressIcon';
-import { getAccount } from '../../util';
-import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
+import { usePodListingQuery } from 'generated/graphql';
+import { castPodListing } from 'state/farmer/market';
+import { trimAddress } from 'util/index';
+import FillListing from 'components/Market/Actions/FillListing';
+import ListingDetails from 'components/Market/Cards/ListingDetails';
+import { mockPodListingData } from 'components/Market/Plots.mock';
+import AddressIcon from 'components/Common/AddressIcon';
+import PageHeaderSecondary from 'components/Common/PageHeaderSecondary';
+import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
 
 const ListingPage: React.FC = () => {
-  // index of plot
-  // eslint-disable-next-line
   const { id } = useParams<{ id: string }>();
+  const { data, loading, error } = usePodListingQuery({ variables: { index: id } });
+  const harvestableIndex = useHarvestableIndex();
+
+  if (loading) return <div>Loading</div>;
+  if (error) return <div>{error}</div>;
+  if (!data?.podListings[0]) return <div>Not found</div>;
+
+  const listing = castPodListing(data?.podListings[0]);
 
   return (
     <Container maxWidth="sm">
@@ -26,19 +35,26 @@ const ListingPage: React.FC = () => {
           title={(
             <Stack direction="row" gap={0.5} alignItems="center">
               <AddressIcon address={mockPodListingData[0].account} />
-              <Typography variant="h2">{`${getAccount(mockPodListingData[0].account).substring(0, 7)}...'s Pod Listing`}</Typography>
+              <Typography variant="h2">{`${trimAddress(listing.account)}'s Pod Listing`}</Typography>
             </Stack>
           )}
           returnPath="/market"
         />
-        <PlotListingDetails podListing={mockPodListingData[0]} harvestableIndex={mockPodListingData[0].index} />
+        <ListingDetails
+          podListing={listing}
+          harvestableIndex={harvestableIndex}
+        />
         <Card sx={{ position: 'relative' }}>
           <Stack gap={1.5}>
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>
-              <Typography variant="h4">Buy Pods from Pod Listing</Typography>
+              <Typography variant="h4">
+                Buy Pods from Pod Listing
+              </Typography>
             </Stack>
             <Box sx={{ px: 1, pb: 1 }}>
-              <FillListing podListing={mockPodListingData[0]} />
+              <FillListing
+                podListing={listing}
+              />
             </Box>
           </Stack>
         </Card>

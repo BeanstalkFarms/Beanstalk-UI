@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { useAccount, useDisconnect, useNetwork } from 'wagmi';
+import { useDisconnect, useNetwork } from 'wagmi';
 import {
   Box,
   Button,
@@ -17,12 +17,10 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 import { trimAddress } from 'util/index';
 import { CHAIN_INFO } from 'constants/chains';
 
-import { getAccount } from 'util/Account';
 import useChainConstant from 'hooks/useChainConstant';
 
 import balancesIcon from 'img/nav-icons/balances.svg';
@@ -31,6 +29,7 @@ import etherscanIcon from 'img/nav-icons/etherscan.svg';
 import disconnectIcon from 'img/nav-icons/disconnect.svg';
 import useAnchor from 'hooks/display/useAnchor';
 import useToggle from 'hooks/display/useToggle';
+import useAccount from 'hooks/ledger/useAccount';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import WalletDialog from './WalletDialog';
 import DropdownIcon from '../DropdownIcon';
@@ -40,7 +39,7 @@ import AddressIcon from '../AddressIcon';
 // -----------------------------------------------------------------
 
 const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
-  const { data: account } = useAccount();
+  const account = useAccount();
   const { activeChain } = useNetwork();
   const { disconnect } = useDisconnect();
   const chain = useChainConstant(CHAIN_INFO);
@@ -61,7 +60,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
   const [picking, showPick, hidePick] = useToggle(toggleMenuAnchor);
 
   // Display: Not Connected
-  if (!account?.address || !activeChain?.id) {
+  if (!account || !activeChain?.id) {
     return (
       <>
         <Button
@@ -110,7 +109,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
       </MenuItem>
       <MenuItem
         component="a"
-        href={`${chain.explorer}/address/${account.address}`}
+        href={`${chain.explorer}/address/${account}`}
         target="_blank"
         rel="noreferrer"
       >
@@ -193,19 +192,20 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
         disableFocusRipple
         variant="contained"
         color="light"
-        startIcon={
-          isTiny ? null : process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT ? (
-            <WarningAmberIcon />
-          ) : (
-            <AddressIcon address={account.address} />
-          )
-        }
+        startIcon={<AddressIcon address={account} />}
         endIcon={<DropdownIcon open={menuVisible} />}
         {...props}
         onClick={toggleMenuAnchor}
+        sx={process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT ? {
+          borderBottomColor: 'red',
+          borderBottomWidth: 2,
+          borderBottomStyle: 'solid',
+          ...props.sx,
+        } : props.sx}
       >
         <Typography variant="bodyMedium" display={{ xs: 'none', sm: 'block' }}>
-          {trimAddress(getAccount(account.address), !isMedium)}
+          {trimAddress(account, false)}
+          {/* {trimAddress(getAccount(account.address), !isMedium)} */}
         </Typography>
       </Button>
       {/* Popup Menu */}
@@ -231,18 +231,14 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           vertical: 'top',
           horizontal: 'right',
         }}
-        sx={
-          {
-            // Give some room between the WalletButton
-            // and the popper when it's opened.
-            // mt: 0.5,
-          }
-        }
       >
         {menu}
       </Menu>
       {/* Pick Beans Dialog */}
-      <PickBeansDialog open={picking} handleClose={hidePick} />
+      <PickBeansDialog
+        open={picking}
+        handleClose={hidePick}
+      />
     </>
   );
 };
