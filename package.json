@@ -119,7 +119,7 @@
     "build-storybook": "build-storybook -s public",
     "generate": "yarn clean && yarn generate:typechain && yarn generate:graphql && echo \"Done generating files.\"",
     "generate:typechain": "echo \"Generating: typechain ethers-v5\" && typechain --target=ethers-v5 --ts-nocheck --out-dir=./src/generated './src/constants/abi/**/*.json'",
-    "generate:graphql": "echo \"Generating: graphql-codegen\" graphql-codegen --config codegen.yml",
+    "generate:graphql": "echo \"Generating: graphql-codegen\" && graphql-codegen --config codegen.yml",
     "postpack": "yarn generate",
     "postinstall": "husky install"
   },
