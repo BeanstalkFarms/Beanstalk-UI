@@ -102,6 +102,7 @@ const MarketBaseTable: React.FC<
         rows={rows}
         pageSize={maxRows !== undefined ? maxRows : MAX_ROWS}
         disableSelectionOnClick
+        disableColumnMenu
         density="compact"
         onRowClick={onRowClick !== undefined ? onRowClick : () => {}}
         initialState={{

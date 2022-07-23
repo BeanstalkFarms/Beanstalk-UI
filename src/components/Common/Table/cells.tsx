@@ -122,7 +122,7 @@ const COLUMNS = {
         <>If the Pod Line moves forward {displayFullBN((params.value as BigNumber).minus(harvestableIndex), PODS.displayDecimals)} more Pods, this Listing will expire.</>
       ) : '';
       return (
-        <Tooltip title={tip}>
+        <Tooltip placement="right" title={tip}>
           <Typography>
             {displayBN(expiresIn)} Pods
           </Typography>

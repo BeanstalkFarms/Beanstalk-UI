@@ -5,13 +5,16 @@ import PageHeader from 'components/Common/PageHeader';
 import ComingSoonCard from 'components/Common/ComingSoonCard';
 import useChainId from 'hooks/useChain';
 import useTabs from 'hooks/display/useTabs';
+import AllListings from 'components/Market/Tables/AllListings';
 import { SupportedChainId } from '../../constants';
 import CreateButtons from '../../components/Market/CreateButtons';
 
 const PodMarketPage: React.FC = () => {
   const chainId = useChainId();
   const [tab, handleChangeTab] = useTabs();
-  
+
+  // const 
+
   let content;
   if (chainId === SupportedChainId.MAINNET) {
     content = (
@@ -27,7 +30,6 @@ const PodMarketPage: React.FC = () => {
           </Box>
         </Card>
         {/** Buy Now and Sell Now */}
-        {/* <MarketPlots /> */}
         <Card sx={{ p: 2 }}>
           <Tabs
             value={tab}
@@ -47,6 +49,9 @@ const PodMarketPage: React.FC = () => {
             />
           </Tabs>
           <Box>
+            {tab === 0 && (
+              <AllListings />
+            )}
             {/* {tab === 0 && (
               <MarketTable
                 columns={LISTING_COLUMNS}
