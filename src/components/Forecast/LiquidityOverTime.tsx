@@ -23,7 +23,8 @@ const LiquidityOverTime: React.FC<LiquidityOverviewProps & CardProps> = ({
         title="Total Bean Liquidity"
         amount={displayUSD(breakdown.totalValue.abs())}
         amountIcon={undefined}
-        gap={0}
+        gap={0.25}
+        sx={{ ml: 0 }}
       />
       <LiquidityBalances
         balances={balances}
