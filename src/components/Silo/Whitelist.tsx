@@ -99,7 +99,7 @@ const Whitelist : React.FC<{
               >
                 <Grid container alignItems="center">
                   {/* Cell: Token */}
-                  <Grid item md={3} xs={4}>
+                  <Grid item md={3} xs={9}>
                     <Stack direction="row" alignItems="center" gap={1}>
                       <img
                         src={token.logo}
@@ -160,7 +160,7 @@ const Whitelist : React.FC<{
                     </Typography>
                   </Grid>
                   {/* Cell: My Deposits */}
-                  <Grid item md={1.5} xs={8}>
+                  <Grid item md={1.5} xs={3}>
                     <Stack direction="row" alignItems="center" justifyContent="flex-end">
                       <Typography color="black">
                         {deposited?.amount ? displayUSD(poolTokenToUSD(token, deposited.amount)) : '$0'}
