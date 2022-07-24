@@ -2,7 +2,6 @@ import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
 import { displayFullBN, displayTokenAmount } from 'util/Tokens';
 import { BEAN, PODS } from '../constants/tokens';
-import { getAccount, trimAddress } from './index';
 
 export enum ActionType {
   BASE,
@@ -105,8 +104,9 @@ export type ReceiveBeansAction = {
 
 export type SendPodsAction = {
   type: ActionType.SEND_PODS;
-  start: BigNumber;
-  end: BigNumber;
+  amount: BigNumber;
+  // start: BigNumber;
+  // end: BigNumber;
   address: string;
 }
 
@@ -168,13 +168,13 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.BURN_BEANS:
       return `Burn ${displayFullBN(a.amount, BEAN[1].decimals)} ${a.amount.eq(new BigNumber(1)) ? 'Bean' : 'Beans'}.`;
     case ActionType.RECEIVE_PODS:
-      return `Receive ${displayTokenAmount(a.podAmount, PODS)} Pods at ${displayFullBN(a.placeInLine)} in the Pod Line.`;
+      return `Receive ${displayTokenAmount(a.podAmount, PODS)} at ${displayFullBN(a.placeInLine)} in the Pod Line.`;
     case ActionType.HARVEST:
       return `Harvest ${displayFullBN(a.amount, PODS.decimals)} Harvestable Pods.`;
     case ActionType.RECEIVE_BEANS:
       return `Receive ${displayFullBN(a.amount, BEAN[1].decimals)} Beans.`;
     case ActionType.SEND_PODS:
-      return `Send Pods ${displayFullBN(a.start, BEAN[1].decimals)} - ${displayFullBN(a.end, BEAN[1].decimals)} to ${trimAddress(getAccount(a.address), true)}.`;
+      return `Send ${displayTokenAmount(a.amount, PODS)} to ${a.address}.`;
 
     /// FERTILIZER
     case ActionType.BUY_FERTILIZER:
