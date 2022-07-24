@@ -62,8 +62,8 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         <>${(isLoading ? 0.0 : beanPrice).toFixed(isMobile ? 2 : 4)}</>
       }
       drawerContent={
-        <Stack sx={{ p: 2 }} gap={2}>
-          <Typography variant="h2">
+        <Stack sx={{ p: 2 }} gap={1}>
+          <Typography variant="h4">
             Pools — Season {displayBN(season || ZERO_BN)}
           </Typography>
           <Stack gap={1}>{poolsContent}</Stack>

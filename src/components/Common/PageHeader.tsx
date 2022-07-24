@@ -63,7 +63,7 @@ const PageHeader : React.FC<{
         )}
         {props.description && (
           <Box>
-            <Typography variant="subtitle1">
+            <Typography variant="subtitle1" sx={{ lineHeight: '1.5rem' }}>
               {/* <Link href="#" underline="hover" fontWeight={700}>Docs</Link> &middot; */}
               {props.description}.
             </Typography>

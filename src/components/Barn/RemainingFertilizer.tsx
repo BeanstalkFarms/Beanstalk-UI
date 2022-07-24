@@ -45,7 +45,7 @@ const RemainingFertilizer: React.FC = () => {
           </Box>
           {/* right column */}
 
-          <Stack justifyContent="space-between">
+          <Stack justifyContent="space-between" gap={2}>
             <Stack gap={0.5}>
               <Typography variant="body1">
                 Available Fertilizer&nbsp;

@@ -1,17 +1,15 @@
 import React from 'react';
 import {
-  Button,
   Card,
   Container, 
   Stack,
   useMediaQuery
 } from '@mui/material';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 
 import { AppState } from 'state';
-import { ANALYTICS_LINK, SupportedChainId } from 'constants/index';
+import { SupportedChainId } from 'constants/index';
 import PageHeader from 'components/Common/PageHeader';
 import LiquidityOverTime from 'components/Forecast/LiquidityOverTime';
 import useChainId from 'hooks/useChain';
@@ -58,18 +56,6 @@ const ForecastPage: React.FC = () => {
         <PageHeader
           title="Forecast"
           description="View conditions on the Farm"
-          control={(
-            <Button
-              href={ANALYTICS_LINK}
-              target="_blank"
-              rel="noreferrer"
-              color="light"
-              variant="contained"
-              endIcon={<ArrowForwardIcon sx={{ transform: 'rotate(-45deg)' }} />}
-            >
-              Pre-exploit Analytics
-            </Button>
-          )}
         />
         {content}
       </Stack>

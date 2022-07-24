@@ -9,7 +9,8 @@ const getValue = (season: SnapshotData<SeasonalPodRateQuery>) => parseFloat(seas
 const formatValue = (value: number) => `${value.toFixed(2)}%`;
 const StatProps = {
   title: 'Pod Rate',
-  gap: 0.5,
+  gap: 0.25,
+  sx: { ml: 0 }
 };
 
 const PodRate: React.FC<{}> = () => {
