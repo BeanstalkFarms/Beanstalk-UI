@@ -4,7 +4,7 @@ import Stat, { StatProps } from 'components/Common/Stat';
 import LineChart, { DataPoint, LineChartProps } from 'components/Common/Charts/LineChart';
 import useSeasons, { MinimumViableSnapshotQuery, SeasonAggregation, SeasonRange } from 'hooks/useSeasons';
 import { DocumentNode } from 'graphql';
-import TimeTabs, { TimeTabState }  from './TimeTabs2';
+import TimeTabs, { TimeTabState }  from './TimeTabs';
 
 // export type SeasonPlotProps = 
 

@@ -12,7 +12,6 @@ import {
 } from 'components/Common/Charts/LineChart.mock';
 import MainnetBlur from 'components/Common/MainnetBlur';
 import Stat from 'components/Common/Stat';
-import TimeTabs from 'components/Common/Charts/TimeTabs';
 
 // ------------------------------------------------
 
@@ -139,7 +138,7 @@ const Overview: React.FC<{
         </Tabs>
         {/* "Windows" (time range selector) */}
         <Box sx={{ display: 'none' }}>
-          <TimeTabs tab={timeTab} setState={handleChangeTimeTab} />
+          {/* <TimeTabs tab={timeTab} setState={handleChangeTimeTab} /> */}
         </Box>
       </Stack>
       <Box sx={{ display: tab === 0 ? 'block' : 'none' }}>
