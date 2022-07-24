@@ -38,7 +38,7 @@ import ListingPage from '../../pages/market/listing';
 import EditListingPage from '../../pages/market/edit-listing';
 import EditOrderPage from '../../pages/market/edit-order';
 import TradePage from '../../pages/trade';
-import AnalyticsPage from 'pages/analytics';
+import AnalyticsPage from '../../pages/analytics';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
