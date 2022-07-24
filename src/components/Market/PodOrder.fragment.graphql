@@ -1,6 +1,7 @@
 fragment PodOrder on PodOrder {
   # Metadata
   id
+  farmer { id }
   createdAt
   updatedAt
   status

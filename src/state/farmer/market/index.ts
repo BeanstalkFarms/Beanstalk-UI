@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { ZERO_BN } from 'constants/index';
 import { BEAN } from 'constants/tokens';
-import { PodListingFragment } from 'generated/graphql';
+import { PodListingFragment, PodOrderFragment } from 'generated/graphql';
 import { toTokenUnitsBN } from 'util/index';
 
 /**
@@ -10,8 +10,7 @@ import { toTokenUnitsBN } from 'util/index';
  * @returns Redux form PodListing.
  */
 export const castPodListing = (listing: PodListingFragment) : PodListing => {
-  /// Subgraph returns a conjoined ID.
-  const [account, id] = listing.id.split('-');
+  const [account, id] = listing.id.split('-'); /// Subgraph returns a conjoined ID.
   const amount = toTokenUnitsBN(listing.totalAmount,   BEAN[1].decimals);  
   const filled = toTokenUnitsBN(listing.filledAmount,  BEAN[1].decimals);
   return {
@@ -29,10 +28,24 @@ export const castPodListing = (listing: PodListingFragment) : PodListing => {
   };
 };
 
+export const castPodOrder = (order: PodOrderFragment) : PodOrder => {
+  const amount = toTokenUnitsBN(order.amount,   BEAN[1].decimals);  
+  const filled = toTokenUnitsBN(order.filledAmount,  BEAN[1].decimals);
+  return {
+    id:              order.id,
+    account:         order.farmer.id,
+    totalAmount:     amount,
+    filledAmount:    filled,
+    remainingAmount: amount.minus(filled),
+    maxPlaceInLine:  toTokenUnitsBN(order.maxPlaceInLine, BEAN[1].decimals),
+    pricePerPod:     toTokenUnitsBN(order.pricePerPod, BEAN[1].decimals),
+    status:          order.status as 'active' | 'filled',
+  };
+};
+
 export type PodListing = {
   /**
-   * The ID of the Pod Listing. Equivalent to the
-   * `index` with no decimals.
+   * The ID of the Pod Listing. Equivalent to the `index` with no decimals.
    * `id = BigNumber(index) * 10**6`
    */
   id: string

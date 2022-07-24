@@ -1,4 +1,4 @@
-query AllOrders($first: Int) {
+query AllPodOrders($first: Int) {
   podOrders(
     first: $first,
     orderBy: createdAt,
