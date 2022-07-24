@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Button, Divider, Stack, StackProps, Typography } from '@mui/material';
+import { SeasonAggregation, SeasonRange } from 'hooks/useSeasons';
 import { BeanstalkPalette } from '../../App/muiTheme';
 
 const DISPLAY = [
@@ -13,9 +14,11 @@ const WINDOWS = [
   { label: 'All', index: 2 },
 ];
 
+export type TimeTabState = [SeasonAggregation, SeasonRange];
+
 export interface TimeTabProps {
-  tab: number[];
-  setState: (i: number[]) => void;
+  state: TimeTabState;
+  setState: (s: TimeTabState) => void;
 }
 
 const TimeTabs: React.FC<
@@ -24,21 +27,21 @@ const TimeTabs: React.FC<
 > = ({ 
   sx, 
   setState, 
-  tab 
+  state
 }) => {
-  const handleChangeX = (i: number) => {
-    setState([i, tab[1]]);
-  };
+  const handleChange0 = useCallback((i: number) => {
+    setState([i, state[1]]);
+  }, [state, setState]);
 
-  const handleChangeY = (i: number) => {
-    setState([tab[0], i]);
-  };
+  const handleChange1 = useCallback((i: number) => {
+    setState([state[0], i]);
+  }, [state, setState]);
 
   return (
     <Stack direction="row" sx={{ ...sx }} gap={0.2} alignItems="center">
       {DISPLAY.map((d) => (
         <Button
-          onClick={() => handleChangeX(d.index)}
+          onClick={() => handleChange0(d.index)}
           key={d.label}
           variant="text"
           size="small"
@@ -54,7 +57,7 @@ const TimeTabs: React.FC<
           }}
           disableRipple
         >
-          <Typography color={tab[0] === d.index ? BeanstalkPalette.logoGreen : 'text.primary'}>
+          <Typography color={state[0] === d.index ? BeanstalkPalette.logoGreen : 'text.primary'}>
             {d.label}
           </Typography>
         </Button>
@@ -62,7 +65,7 @@ const TimeTabs: React.FC<
       <Divider orientation="vertical" sx={{ height: '14px', ml: 0.1, mr: 0.1 }} />
       {WINDOWS.map((w) => (
         <Button
-          onClick={() => handleChangeY(w.index)}
+          onClick={() => handleChange1(w.index)}
           key={w.label}
           variant="text"
           size="small"
@@ -78,7 +81,7 @@ const TimeTabs: React.FC<
           }}
           disableRipple
         >
-          <Typography color={tab[1] === w.index ? BeanstalkPalette.logoGreen : 'text.primary'}>
+          <Typography color={state[1] === w.index ? BeanstalkPalette.logoGreen : 'text.primary'}>
             {w.label}
           </Typography>
         </Button>
