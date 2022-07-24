@@ -46,8 +46,7 @@ const TimeTabs: React.FC<
           sx={{
             borderRadius: 0.5,
             px: 0.3,
-            pt: 0,
-            pb: 0.3,
+            py: 0,
             minWidth: 0,
             '&:hover': {
               // backgroundColor: 'transparent'
@@ -71,8 +70,7 @@ const TimeTabs: React.FC<
           sx={{
             borderRadius: 0.5,
             px: 0.3,
-            pt: 0,
-            pb: 0.3,
+            py: 0,
             minWidth: 0,
             '&:hover': {
               // backgroundColor: 'transparent'
