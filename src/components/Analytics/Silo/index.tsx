@@ -1,0 +1,33 @@
+import { Card, Stack, Tab, Tabs } from '@mui/material';
+import useTabs from 'hooks/display/useTabs';
+import React from 'react';
+
+const SiloAnalytics: React.FC<{}> = () => {
+  const [tab, handleChangeTab] = useTabs();
+
+  return (
+    <Card>
+      <Stack gap={2}>
+        <Tabs value={tab} onChange={handleChangeTab} sx={{ px: 2, pt: 2 }}>
+          <Tab label="Deposited Beans" />
+          <Tab label="Withdrawn Beans" />
+          <Tab label="Deposited LP" />
+          <Tab label="Withdrawn LP" />
+          <Tab label="Deposited Unripe Beans" />
+          <Tab label="Deposited Unripe LP" />
+          <Tab label="Stalk" />
+          <Tab label="Seeds" />
+        </Tabs>
+        {/* {tab === 0 && <DepositedBeans season={season} beanPrice={beanPrice} />}
+      {tab === 1 && <WithdrawnBeans season={season} beanPrice={beanPrice} />}
+      {tab === 2 && <DepositedLP season={season} beanPrice={beanPrice} />}
+      {tab === 3 && <WithdrawnLP season={season} beanPrice={beanPrice} />}
+      {tab === 4 && (<DepositedUnripeBeans season={season} beanPrice={beanPrice} />)}
+      {tab === 5 && <DepositedUnripeLP season={season} beanPrice={beanPrice} />}
+      {tab === 6 && <Stalk season={season} beanPrice={beanPrice} />}
+      {tab === 7 && <Seeds season={season} beanPrice={beanPrice} />} */}
+      </Stack>
+    </Card>
+  );
+};
+export default SiloAnalytics;
