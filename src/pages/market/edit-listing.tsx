@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-  Container,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Container, Stack, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useAccount } from 'wagmi';
-import ListingDetails from '../../components/Market/Cards/ListingDetails';
-import { mockPodListingData } from '../../components/Market/Plots.mock';
 import AddressIcon from '../../components/Common/AddressIcon';
 import { getAccount } from '../../util/Account';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
@@ -26,15 +20,23 @@ const EditListingPage: React.FC = () => {
     <Container maxWidth="sm">
       <Stack spacing={2}>
         <PageHeaderSecondary
-          title={(
+          title={
             <Stack direction="row" gap={0.5} alignItems="center">
               <AddressIcon address={account.address} />
-              <Typography variant="h2">{`${getAccount(account.address).substring(0, 7)}...'s Pod Listing`}</Typography>
+              <Typography variant="h2">
+                {`${getAccount(account.address).substring(
+                  0,
+                  7
+                )}...'s Pod Listing`}
+              </Typography>
             </Stack>
-          )}
+          }
           returnPath="/market/account"
         />
-        <ListingDetails podListing={mockPodListingData[0]} harvestableIndex={mockPodListingData[0].index} />
+        {/* <ListingDetails
+          podListing={mockPodListingData[0]}
+          harvestableIndex={mockPodListingData[0].index}
+        /> */}
       </Stack>
     </Container>
   );
