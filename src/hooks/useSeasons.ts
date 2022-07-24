@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Season } from 'generated/graphql';
 import { apolloClient } from 'graph/client';
 import { DocumentNode, useLazyQuery } from '@apollo/client';
 
@@ -22,10 +21,40 @@ const SEASON_RANGE_TO_COUNT : { [key in SeasonRange]: number | undefined } = {
   [SeasonRange.ALL]:   undefined,
 };
 
-type MinimumViableSeason = Partial<Season> & Pick<Season, 'id' | 'seasonInt' | 'timestamp'>;
+/**
+ * The minimum data points that each Snapshot should acquire.
+ */
+export type MinimumViableSnapshot = {
+  id: string;
+  season: number;
+  timestamp: string;
+}
 
-const useSeasons = <T extends { seasons: MinimumViableSeason[] }>(document: DocumentNode, range : SeasonRange) => {
+/**
+ * Query data containing an array of Snapshots.
+ */
+export type MinimumViableSnapshotQuery = { 
+  seasons: (MinimumViableSnapshot & any)[]
+};
+
+/**
+ * Extracts a single data point from an array of Snapshots.
+ */
+export type SnapshotData<T extends MinimumViableSnapshotQuery> = T['seasons'][number]; 
+
+/**
+ *
+ * @param document an arbitrary graphql query document
+ * @param range 
+ * @returns QueryDocument
+ */
+const useSeasons = <T extends MinimumViableSnapshotQuery>(
+  document: DocumentNode,
+  range:    SeasonRange
+) => {
+  /// Custom loading prop
   const [loading, setLoading] = useState(false);
+  /// Execute generic lazy query
   const [get, query] = useLazyQuery<T>(document, { variables: {} });
 
   useEffect(() => {
@@ -63,7 +92,7 @@ const useSeasons = <T extends { seasons: MinimumViableSeason[] }>(document: Docu
            * data is returned sorted from oldest to newest
            * so season 0 is the oldest season and length-1 is newest.
            */
-          const latestSubgraphSeason = init.data.seasons[0].seasonInt;
+          const latestSubgraphSeason = init.data.seasons[0].season;
 
           console.debug(`[useRecentSeasonsData] requested all seasons. current season is ${latestSubgraphSeason}. oldest loaded season ${null}`, init.data.seasons);
 

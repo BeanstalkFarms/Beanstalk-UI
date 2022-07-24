@@ -6,6 +6,7 @@ import ComingSoonCard from 'components/Common/ComingSoonCard';
 import useChainId from 'hooks/useChain';
 import useTabs from 'hooks/display/useTabs';
 import AllListings from 'components/Market/Tables/AllListings';
+import AllOrders from 'components/Market/Tables/AllOrders';
 import { SupportedChainId } from '../../constants';
 import CreateButtons from '../../components/Market/CreateButtons';
 
@@ -53,6 +54,9 @@ const PodMarketPage: React.FC = () => {
           <Box sx={{ px: 1 }}>
             {tab === 0 && (
               <AllListings />
+            )}
+            {tab === 1 && (
+              <AllOrders />
             )}
           </Box>
         </Card>

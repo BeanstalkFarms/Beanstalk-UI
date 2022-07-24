@@ -52,12 +52,13 @@ const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
   values,
   isSubmitting,
 }) => {
+  /// Tokens
   const chainId = useChainId();
+  const bean    = getChainConstant(BEAN, chainId);
+  const lp      = getChainConstant(BEAN_CRV3_LP, chainId);
+  
+  /// Derived
   const isMainnet = chainId === SupportedChainId.MAINNET;
-  const bean  = getChainConstant(BEAN, chainId);
-  const lp    = getChainConstant(BEAN_CRV3_LP, chainId);
-
-  //
   const amount = harvestablePods;
   const isSubmittable = (
     amount
@@ -121,7 +122,13 @@ const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
               </Box>
             </>
           ) : null}
-          <Button disabled={!isSubmittable || isSubmitting || isMainnet} type="submit" size="large" fullWidth>
+          <Button
+            /// FIXME: use SmartSubmitButton
+            disabled={!isSubmittable || isSubmitting || isMainnet}
+            type="submit"
+            size="large"
+            fullWidth
+          >
             Harvest
           </Button>
         </Stack>

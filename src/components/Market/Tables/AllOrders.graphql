@@ -1,11 +1,9 @@
-# query AllOrders(
-#   $first: Int
-# ){
-#   podOrders(
-#     first: $first,
-#     orderBy: createdAt,
-#     orderDirection: desc,
-#   ) {
-#     ...PodOrder
-#   }
-# }
+query AllPodOrders($first: Int) {
+  podOrders(
+    first: $first,
+    orderBy: createdAt,
+    orderDirection: desc,
+  ) {
+    ...PodOrder
+  }
+}

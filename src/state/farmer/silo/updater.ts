@@ -157,7 +157,7 @@ export const useFetchFarmerSilo = () => {
           toBlock   || 'latest',
         ),
         b.queryFilter(
-          b.filters['RemoveDeposits(address,address,uint32[],uint256[],uint256)'](_account),
+          b.filters.RemoveDeposits(_account),
           fromBlock || blocks.BEANSTALK_GENESIS_BLOCK,
           toBlock   || 'latest',
         ),

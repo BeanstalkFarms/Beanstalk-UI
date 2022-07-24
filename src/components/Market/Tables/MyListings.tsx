@@ -9,7 +9,7 @@ import MarketBaseTable from './Base';
 const MyListingsTable : React.FC<{}> = () => {
   /// Data
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
-  const listings         = useSelector<AppState, AppState['_farmer']['market']['listings']>((state) => state._farmer.market.listings);
+  const listings       = useSelector<AppState, AppState['_farmer']['market']['listings']>((state) => state._farmer.market.listings);
   const rows           = useMemo(() => Object.values(listings),   [listings]);
 
   /// Navigation

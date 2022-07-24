@@ -1,7 +1,7 @@
 #import "../PodListing.fragment.graphql"
 query AllPodListings(
   $first: Int,
-  $maxHarvestableIndex: BigDecimal
+  $maxHarvestableIndex: BigInt
 ) {
   podListings(
     first: $first,

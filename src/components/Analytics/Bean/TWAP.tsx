@@ -1,5 +1,5 @@
 import React from 'react';
-import SeasonPlot, { SeasonPlotProps } from 'components/Common/Charts/SeasonPlot';
+import SeasonPlot, { SeasonPlotBaseProps } from 'components/Common/Charts/SeasonPlot';
 import { Season, SeasonalTwapDocument } from 'generated/graphql';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BEAN } from 'constants/tokens';
@@ -19,7 +19,7 @@ const LineChartProps = {
   isTWAP: true,
 };
 
-const TWAP: React.FC<{ height?: SeasonPlotProps['height'] }> = ({ height }) => {
+const TWAP: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => {
   const price  = usePrice();
   const season = useSeason();
   return (

@@ -8,8 +8,8 @@ import {
   AddWithdrawalEvent,
   RemoveWithdrawalEvent,
   RemoveDepositEvent,
-  RemoveDeposits_address_address_uint32_array_uint256_array_uint256_Event,
   RemoveWithdrawalsEvent,
+  RemoveDepositsEvent,
 } from 'generated/Beanstalk/BeanstalkReplanted';
 import { BEAN, PODS } from 'constants/tokens';
 import Token from 'classes/Token';
@@ -513,7 +513,7 @@ export default class EventProcessor {
     );
   }
 
-  RemoveDeposits(event: Simplify<RemoveDeposits_address_address_uint32_array_uint256_array_uint256_Event>) {
+  RemoveDeposits(event: Simplify<RemoveDepositsEvent>) {
     event.args.seasons.forEach((seasonNum, index) => {
       this._removeDeposit(
         seasonNum.toString(),

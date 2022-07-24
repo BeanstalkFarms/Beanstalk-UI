@@ -1,12 +1,12 @@
 query SeasonalTWAP($season_lte: Int, $first: Int) {
-  seasons(
-    where: { seasonInt_lte: $season_lte },
+  seasons: seasons(
+    where: { season_lte: $season_lte },
     first: $first,
-    orderBy: seasonInt,
+    orderBy: season,
     orderDirection: desc,
   ) {
     id
-    seasonInt
+    season
     timestamp
     twap
   }

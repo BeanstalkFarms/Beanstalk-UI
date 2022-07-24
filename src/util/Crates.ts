@@ -67,13 +67,13 @@ export const encodeCratesForEnroot = (
     const crates = siloBalances[addr]?.deposited.crates;
     if (crates && crates.length > 0) {
       if (crates.length === 1) {
-        prev[addr] = beanstalk.interface.encodeFunctionData('updateUnripeDeposit', [
+        prev[addr] = beanstalk.interface.encodeFunctionData('enrootDeposit', [
           addr,
           crates[0].season.toString(),
           unripeTokens[addr].stringify(crates[0].amount),
         ]);
       } else {
-        prev[addr] = beanstalk.interface.encodeFunctionData('updateUnripeDeposits', [
+        prev[addr] = beanstalk.interface.encodeFunctionData('enrootDeposits', [
           addr,
           // fixme: not sure why TS doesn't pick up the type of `crates` here
           crates.map((crate: Crate) => crate.season.toString()), // seasons
