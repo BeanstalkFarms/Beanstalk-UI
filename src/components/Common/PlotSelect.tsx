@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Stack, Typography, ListItem, ListItemButton, ListItemIcon, ListItemText, List } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { makeStyles } from '@mui/styles';
@@ -37,58 +37,57 @@ export interface PlotSelectProps {
 
 const PlotSelect: React.FC<PlotSelectProps> = ({ plots, harvestableIndex, handlePlotSelect, selected }) => {
   const classes = useStyles();
-  if (plots === null) {
-    return null;
-  }
+  const orderedPlotKeys = useMemo(() => {
+    if (!plots) return null;
+    /// float sorting is good enough here
+    return Object.keys(plots).sort((a, b) => parseFloat(a) - parseFloat(b));
+  }, [plots]);
+  if (!plots || !orderedPlotKeys) return null;
   return (
-    <>
-      <List sx={{ p: 0 }}>
-        <Stack gap={1}>
-          {Object.keys(plots).map((index) => (
-            <ListItem
-              key={index}
-              color="primary"
-              selected={selected ? selected === index : undefined}
-              disablePadding
-              onClick={() => handlePlotSelect(index)}
-              sx={{
-                // ListItem is used elsewhere so we define here
-                // instead of in muiTheme.ts
-                '& .MuiListItemText-primary': {
-                  fontSize: FontSize['1xl'],
-                  lineHeight: '1.875rem'
-                },
-                '& .MuiListItemText-secondary': {
-                  fontSize: FontSize.base,
-                  lineHeight: '1.25rem',
-                  color: BeanstalkPalette.lightishGrey
-                },
-              }}
-            >
-              <ListItemButton disableRipple>
-                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }}>
-                  <Stack direction="row" justifyContent="center">
-                    <ListItemIcon sx={{ pr: 1 }}>
-                      <img src={podIcon} alt="" className={classes.tokenLogo} />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="PODS"
-                      secondary={`Place in Line: ${displayBN(new BigNumber(index).minus(harvestableIndex))}`}
-                      sx={{ my: 0 }}
-                    />
-                  </Stack>
-                  {plots[index] ? (
-                    <Typography variant="bodyLarge">
-                      {displayBN(new BigNumber(plots[index]))}
-                    </Typography>
-                  ) : null}
-                </Stack>
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </Stack>
-      </List>
-    </>
+    <List sx={{ p: 0 }}>
+      {orderedPlotKeys.map((index) => (
+        <ListItem
+          key={index}
+          color="primary"
+          selected={selected ? selected === index : undefined}
+          disablePadding
+          onClick={() => handlePlotSelect(index)}
+          sx={{
+              // ListItem is used elsewhere so we define here
+              // instead of in muiTheme.ts
+              '& .MuiListItemText-primary': {
+                fontSize: FontSize['1xl'],
+                lineHeight: '1.875rem'
+              },
+              '& .MuiListItemText-secondary': {
+                fontSize: FontSize.base,
+                lineHeight: '1.25rem',
+                color: BeanstalkPalette.lightishGrey
+              },
+            }}
+          >
+          <ListItemButton disableRipple>
+            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }}>
+              <Stack direction="row" justifyContent="center">
+                <ListItemIcon sx={{ pr: 1 }}>
+                  <img src={podIcon} alt="" className={classes.tokenLogo} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="PODS"
+                  secondary={`Place in Line: ${displayBN(new BigNumber(index).minus(harvestableIndex))}`}
+                  sx={{ my: 0 }}
+                  />
+              </Stack>
+              {plots[index] ? (
+                <Typography variant="bodyLarge">
+                  {displayBN(new BigNumber(plots[index]))}
+                </Typography>
+                ) : null}
+            </Stack>
+          </ListItemButton>
+        </ListItem>
+        ))}
+    </List>
   );
 };
 

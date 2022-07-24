@@ -6,7 +6,7 @@ import useToggle from 'hooks/display/useToggle';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { displayBN, MaxBN, MinBN } from 'util/index';
-import SelectPlotDialog from 'components/Field/SelectPlotDialog';
+import PlotSelectDialog from 'components/Field/PlotSelectDialog';
 import { PODS } from 'constants/tokens';
 import { Box, Grid, Stack, Typography } from '@mui/material';
 import { PlotFragment, PlotSettingsFragment, TokenAdornment, TokenInputField } from '.';
@@ -103,7 +103,7 @@ const PlotInputField : React.FC = () => {
 
   return (
     <>
-      <SelectPlotDialog
+      <PlotSelectDialog
         farmerField={farmerField}
         beanstalkField={beanstalkField}
         handlePlotSelect={handlePlotSelect}
