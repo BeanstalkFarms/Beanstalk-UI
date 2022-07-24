@@ -450,6 +450,10 @@ let muiTheme = createTheme({
         indicator: {
           display: 'none',
         },
+        flexContainer: {
+          flexWrap: 'wrap',
+          rowGap: '10px',
+        }
       },
     },
     MuiTab: {

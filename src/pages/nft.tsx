@@ -216,12 +216,12 @@ const NFTPage: React.FC = () => {
           control={
             <Stack height="100%" justifyContent="end" width="100%">
               {tab === 0 && genesisNFTs && (
-                <Button disabled={!unmintedGenesis || unmintedGenesis.length === 0} onClick={mintAllGenesis} sx={{ width: { xs: '30%', md: '100%' } }}>
+                <Button disabled={!unmintedGenesis || unmintedGenesis.length === 0} onClick={mintAllGenesis}>
                   { isMobile ? 'Mint all' : 'Mint All Genesis' }
                 </Button>
               )}
               {tab === 1 && winterNFTs && (
-                <Button disabled={!unmintedWinter || unmintedWinter.length === 0} onClick={mintAllWinter} sx={{ width: { xs: '30%', md: '100%' } }}>
+                <Button disabled={!unmintedWinter || unmintedWinter.length === 0} onClick={mintAllWinter}>
                   { isMobile ? 'Mint all' : 'Mint All Winter' }
                 </Button>
               )}
