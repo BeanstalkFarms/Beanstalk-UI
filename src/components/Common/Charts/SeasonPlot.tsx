@@ -2,14 +2,19 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Stack, Box, CircularProgress } from '@mui/material';
 import Stat, { StatProps } from 'components/Common/Stat';
 import LineChart, { DataPoint, LineChartProps } from 'components/Common/Charts/LineChart';
-import useSeasons, { SeasonAggregation, SeasonRange } from 'hooks/useSeasons';
-import { Season } from 'generated/graphql';
+import useSeasons, { MinimumViableSnapshotQuery, SeasonAggregation, SeasonRange } from 'hooks/useSeasons';
 import { DocumentNode } from 'graphql';
 import TimeTabs, { TimeTabState }  from './TimeTabs2';
 
-export type SeasonPlotProps = {
+// export type SeasonPlotProps = 
+
+type SeasonDataPoint = DataPoint & { season: number; };
+
+const defaultValueFormatter = (value: number) => value.toFixed(4);
+
+export type SeasonPlotBaseProps = {
   /** */
-  document: DocumentNode
+  document: DocumentNode;
   /**
    * Height applied to the chart range. Can be a fixed
    * pixel number or a percent if the parent element has a constrained height.
@@ -27,72 +32,78 @@ export type SeasonPlotProps = {
    * otherwise returns 0.
    */
   defaultSeason?: number;
-  /**
-   * Which value to display from the Season object
-   */
-  getValue: (season: Season) => number,
-  /**
-   * Format the value from number -> string
-   */
-  formatValue?: (value: number) => string,
 }
-
-type SeasonDataPoint = DataPoint & {
-  season: number;
-}
-
-const defaultValueFormatter = (value: number) => value.toFixed(4);
-
-type SeasonPlotFinalProps = (
-  SeasonPlotProps 
+type SeasonPlotFinalProps<T extends MinimumViableSnapshotQuery> = (
+  SeasonPlotBaseProps
+  & {
+    /**
+     * Which value to display from the Season object
+     */
+    getValue: (snapshot: T['seasons'][number]) => number,
+    /**
+     * Format the value from number -> string
+     */
+    formatValue?: (value: number) => string,
+  } 
   & { StatProps: Omit<StatProps, 'amount' | 'subtitle'> }
   & { LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP'> }
 )
 
-function SeasonPlot({
+function SeasonPlot<T extends MinimumViableSnapshotQuery>({
+  // Query
   document,
   height = '175px',
   defaultValue: _defaultValue,
   defaultSeason: _defaultSeason,
   getValue,
+  formatValue = defaultValueFormatter,
+  //
   StatProps: statProps, // renamed to prevent type collision
   LineChartProps: lineChartProps,
-  formatValue = defaultValueFormatter,
-}: SeasonPlotFinalProps) {
+}: SeasonPlotFinalProps<T>) {
+  /// Selected state
   const [tabState, setTimeTab] = useState<TimeTabState>([SeasonAggregation.HOUR, SeasonRange.WEEK]);
-  const { loading, data } = useSeasons(document, tabState[1]);
+  const { loading, data } = useSeasons<T>(document, tabState[1]);
 
-  // Display values
+  /// Display values
   const [displayValue,  setDisplayValue]  = useState<number | undefined>(undefined);
   const [displaySeason, setDisplaySeason] = useState<number | undefined>(undefined);
 
+  ///
   const series = useMemo(() => {
     console.debug(`[TWAPCard] Building series with ${data?.seasons.length || 0} data points`);
     if (data) {
       const lastIndex = data.seasons.length - 1;
-      const baseData  = data.seasons.reduce<SeasonDataPoint[]>((prev, curr, index) => {
-        const useThisDataPoint = tabState[0] === SeasonAggregation.DAY ? (
-          index === 0              // first in the series
-          || index === lastIndex   // last in the series
-          || index % 24 === 0      // grab every 24th data point
-        ) : true;
+      const baseData  = data.seasons.reduce<SeasonDataPoint[]>(
+        (prev, curr, index) => {
+          const useThisDataPoint = tabState[0] === SeasonAggregation.DAY ? (
+            index === 0              // first in the series
+            || index === lastIndex   // last in the series
+            || index % 24 === 0      // grab every 24th data point
+          ) : true;
 
-        if (useThisDataPoint && curr !== null) {
-          prev.push({
-            season: curr.seasonInt as number,
-            date:   new Date(parseInt(`${curr.timestamp}000`, 10)),
-            value:  getValue(curr as Season),
-          });
-        }
-        return prev;
-      }, []);
+          if (useThisDataPoint && curr !== null) {
+            prev.push({
+              season: curr.season as number,
+              date:   new Date(parseInt(`${curr.timestamp}000`, 10)),
+              value:  getValue(curr),
+            });
+          }
+          return prev;
+        },
+        []
+      );
       
       return baseData.sort((a, b) => a.season - b.season);
     }
     return [];
-  }, [data, tabState, getValue]);
+  }, [
+    data,
+    tabState,
+    getValue
+  ]);
 
-  // Handlers
+  /// Handlers
   const handleChangeTimeTab = useCallback(
     (tabs: TimeTabState) => {
       setTimeTab(tabs);
@@ -107,7 +118,7 @@ function SeasonPlot({
     []
   );
 
-  // If one of the defaults is missing, use the last data point.
+  /// If one of the defaults is missing, use the last data point.
   let defaultValue  = _defaultValue  || 0;
   let defaultSeason = _defaultSeason || 0;
   if (!defaultValue || !defaultSeason) {

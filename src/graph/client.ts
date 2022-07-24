@@ -14,7 +14,7 @@ const cache = new InMemoryCache({
            */
           read(existing, { args, readField }) {
             const first       = args?.first;
-            const startSeason = args?.where?.seasonInt_lte;       // could be larger than the biggest season
+            const startSeason = args?.where?.season_lte; // could be larger than the biggest season
             
             console.debug(`[ApolloClient/seasons/read] read first = ${first} startSeason = ${startSeason} for ${existing?.length || 0} existing items`, existing);
 
@@ -52,11 +52,11 @@ const cache = new InMemoryCache({
               );
 
               console.debug('[ApolloClient/seasons/read] READ:');
-              console.debug(`| left:  index = ${left}, season = ${readField('seasonInt', existing[left])}`);
-              console.debug(`| right: index = ${right}, season = ${readField('seasonInt', existing[right])}`);
+              console.debug(`| left:  index = ${left}, season = ${readField('season', existing[left])}`);
+              console.debug(`| right: index = ${right}, season = ${readField('season', existing[right])}`);
               console.debug(`| existing.length = ${existing.length}`);
-              console.debug(`| existing[0] = ${readField('seasonInt', existing[0])}`, existing);
-              console.debug(`| existing[${existing.length - 1}] = ${readField('seasonInt', existing[existing.length - 1])}`);
+              console.debug(`| existing[0] = ${readField('season', existing[0])}`, existing);
+              console.debug(`| existing[${existing.length - 1}] = ${readField('season', existing[existing.length - 1])}`);
 
               // If one of the endpoints is missing, force refresh
               if (!existing[left] || !existing[right]) return;
@@ -77,16 +77,16 @@ const cache = new InMemoryCache({
             // immutable, and frozen in development.
             let merged = existing ? existing.slice(0).reverse() : [];
 
-            // Seasons are indexed by seasonInt (could also parseInt the "id" field)
+            // Seasons are indexed by season (could also parseInt the "id" field)
             // This structures stores seasons in ascending order such that
             // merged[0] = undefined
             // merged[1] = Season 1
             // merged[2] = ...
             for (let i = 0; i < incoming.length; i += 1) {
-              const seasonInt = readField('seasonInt', incoming[i]);
-              if (!seasonInt) throw new Error('Seasons queried without seasonInt');
+              const season = readField('season', incoming[i]);
+              if (!season) throw new Error('Seasons queried without season');
               // Season 1 = Index 0
-              merged[(seasonInt as number) - 1] = incoming[i];
+              merged[(season as number) - 1] = incoming[i];
             }
             
             merged = merged.reverse();
@@ -98,7 +98,7 @@ const cache = new InMemoryCache({
             // Reverse is O(n) while sorting during the read operation
             // is O(n*log(n)) and likely called more often.
             // return merged.reverse();
-            return merged; // .sort((a: any, b: any) => (readField("seasonInt", a) as number) - (readField("seasonInt", b) as number));
+            return merged;
           },
         }
       }

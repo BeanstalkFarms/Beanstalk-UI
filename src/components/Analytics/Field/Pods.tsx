@@ -1,8 +1,9 @@
 import React from 'react';
 import SeasonPlot from 'components/Common/Charts/SeasonPlot';
-import { Season, SeasonalPodsDocument } from 'generated/graphql';
+import { SeasonalPodsDocument, SeasonalPodsQuery } from 'generated/graphql';
+import { SnapshotData } from 'hooks/useSeasons';
 
-const getValue = (season: Season) => parseFloat(season.field.totalPods);
+const getValue = (season: SnapshotData<SeasonalPodsQuery>) => parseFloat(season.totalPods);
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const StatProps = {
   title: 'Pods',
@@ -10,12 +11,12 @@ const StatProps = {
 };
 
 const Pods: React.FC<{}> = () => (
-  <SeasonPlot
+  <SeasonPlot<SeasonalPodsQuery>
     document={SeasonalPodsDocument}
     getValue={getValue}
     formatValue={formatValue}
     StatProps={StatProps}
-    />
-  );
+  />
+);
 
 export default Pods;
