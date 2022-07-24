@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button, Card, Container, Stack, Tab, Tabs, Typography, } from '@mui/material';
+import { Button, Card, Container, Stack, Tab, Tabs, Typography, useMediaQuery, } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
 import { useSigner } from 'hooks/ledger/useSigner';
 import fetch from 'node-fetch';
 import { getAccount } from 'util/Account';
 import { ClaimStatus, loadNFTs, Nft } from 'util/BeaNFTs';
+import { useTheme } from '@mui/material/styles';
 import NFTDialog from '../components/NFT/NFTDialog';
 import { BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES } from '../constants';
 import NFTGrid from '../components/NFT/NFTGrid';
@@ -15,6 +16,7 @@ import useAccount from '../hooks/ledger/useAccount';
 
 const NFTPage: React.FC = () => {
   const account = useAccount();
+  const theme = useTheme();
   const { data: signer } = useSigner();
   const genesisContract = useGenesisNFTContract(signer);
   const winterContract = useWinterNFTContract(signer);
@@ -193,6 +195,8 @@ const NFTPage: React.FC = () => {
       });
     }
   }, [account, parseMints]);
+  
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm')); //
 
   // TODO: direct user to connect a wallet
   if (account === undefined) {
@@ -210,15 +214,15 @@ const NFTPage: React.FC = () => {
             </Stack>
           )}
           control={
-            <Stack height="100%" justifyContent="end">
+            <Stack height="100%" justifyContent="end" width="100%">
               {tab === 0 && genesisNFTs && (
-                <Button disabled={!unmintedGenesis || unmintedGenesis.length === 0} onClick={mintAllGenesis}>Mint All
-                  Genesis
+                <Button disabled={!unmintedGenesis || unmintedGenesis.length === 0} onClick={mintAllGenesis} sx={{ width: '30%' }}>
+                  { isMobile ? 'Mint all' : 'Mint All Genesis' }
                 </Button>
               )}
               {tab === 1 && winterNFTs && (
-                <Button disabled={!unmintedWinter || unmintedWinter.length === 0} onClick={mintAllWinter}>Mint All
-                  Winter
+                <Button disabled={!unmintedWinter || unmintedWinter.length === 0} onClick={mintAllWinter} sx={{ width: '30%' }}>
+                  { isMobile ? 'Mint all' : 'Mint All Winter' }
                 </Button>
               )}
             </Stack>
