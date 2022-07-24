@@ -21,7 +21,7 @@ import Convert from './Convert';
  *     up by tabs. Each tab contains a single form.
  * (2) a table of Deposits and Withdrawals, shown dependent on the
  *     selected tab. The Withdrawals table also displays an aggregated
- *     "claimable" row and is shown for both Withdraw & Claim tabs.    
+ *     "claimable" row and is shown for both Withdraw & Claim tabs.
  */
 const SiloActions : React.FC<{
   pool: Pool;
@@ -47,8 +47,7 @@ const SiloActions : React.FC<{
           <Tabs
             value={tab}
             onChange={handleChange}
-            sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }}
-            variant="scrollable"
+            sx={{ minHeight: 0 }}
           >
             <AlmTab label="Deposit" almHref="https://docs.bean.money/farm/silo#withdraw" />
             <Tab label="Convert" />
