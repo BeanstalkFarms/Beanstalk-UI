@@ -32,7 +32,7 @@ const StyledAccordionSummary : React.FC<{
         justifyContent="center"
         sx={{ mr: 1 }}
       >
-        {icon || <img alt="" src={splitArrowsIcon} height={IconSize.small} />}
+        {icon || <img alt="" src={splitArrowsIcon} height={IconSize.xs} />}
       </Box>
       <Typography
         variant="body1"

@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Accordion, AccordionDetails, Box, Button, Link, Stack, Tooltip, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, Alert, Box, Button, Link, Stack, Tooltip } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useAccount, useProvider } from 'wagmi';
@@ -26,12 +26,13 @@ import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import { useFetchFarmerField } from 'state/farmer/field/updater';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { AppState } from '../../../state';
 import DestinationField from '../DestinationField';
 import TransactionToast from '../../Common/TxnToast';
 import { ZERO_BN } from '../../../constants';
-import Warning from '../../Common/Form/Warning';
 import TokenAdornment from '../../Common/Form/TokenAdornment';
+import { IconSize } from '../../App/muiTheme';
 
 // -----------------------------------------------------------------------
 
@@ -96,11 +97,14 @@ const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
                 token={BEAN[1]}
                 amount={values.amount || ZERO_BN}
               />
-              <Warning
-                message={(
-                  <Typography variant="body1">You can Harvest your Pods and Deposit Beans into the Silo in one transaction on the <Link href={`/#/silo/${bean.address}`}>Bean</Link> or <Link href={`/#/silo/${lp.address}`}>LP</Link> Deposit page.</Typography>
-                )}
-              />
+              <Box>
+                <Alert
+                  color="warning"
+                  icon={<WarningAmberIcon sx={{ fontSize: IconSize.medium }} />}
+                >
+                  You can Harvest your Pods and Deposit Beans into the Silo in one transaction on the <Link href={`/#/silo/${bean.address}`}>Bean</Link> or <Link href={`/#/silo/${lp.address}`}>LP</Link> Deposit page.
+                </Alert>
+              </Box>
               <Box>
                 <Accordion variant="outlined">
                   <StyledAccordionSummary title="Transaction Details" />

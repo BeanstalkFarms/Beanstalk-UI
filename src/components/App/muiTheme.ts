@@ -328,6 +328,7 @@ let muiTheme = createTheme({
       },
       styleOverrides: {
         root: sx({
+          px: 2,
           alignItems: 'center',
           '& .MuiAlert-icon': {
             mr: 1,
