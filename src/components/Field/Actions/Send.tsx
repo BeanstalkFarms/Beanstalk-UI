@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
+import { Accordion, AccordionDetails, Alert, Box, Stack } from '@mui/material';
 import AddressInputField from 'components/Common/Form/AddressInputField';
 import FieldWrapper from 'components/Common/Form/FieldWrapper';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
@@ -13,12 +13,13 @@ import { BeanstalkReplanted } from 'generated/index';
 import TransactionToast from 'components/Common/TxnToast';
 import useAccount from 'hooks/ledger/useAccount';
 import PlotInputField from 'components/Common/Form/PlotInputField';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { AppState } from '../../../state';
 import { ZERO_BN } from '../../../constants';
 import { displayFullBN, toStringBaseUnitBN, trimAddress } from '../../../util';
-import Warning from '../../Common/Form/Warning';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
+import { IconSize } from '../../App/muiTheme';
 
 export type SendFormValues = {
   plot: PlotFragment;
@@ -122,7 +123,14 @@ const SendForm: React.FC<
             <FieldWrapper label="Recipient Address">
               <AddressInputField name="to" />
             </FieldWrapper>
-            <Warning message="Pods can be exchanged in a decentralized fashion on the Pod Market. Send at your own risk." />
+            <Box>
+              <Alert
+                color="warning"
+                icon={<WarningAmberIcon sx={{ fontSize: IconSize.medium }} />}
+              >
+                Pods can be exchanged in a decentralized fashion on the Pod Market. Send at your own risk.
+              </Alert>
+            </Box>
             <Box>
               <Accordion variant="outlined">
                 <StyledAccordionSummary title="Transaction Details" />
