@@ -3,7 +3,6 @@ import AddressInputField from 'components/Common/Form/AddressInputField';
 import FieldWrapper from 'components/Common/Form/FieldWrapper';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import { PlotFragment, PlotSettingsFragment, TxnPreview, TxnSeparator } from 'components/Common/Form';
 import { PODS } from 'constants/tokens';
 import { LoadingButton } from '@mui/lab';
@@ -25,18 +24,12 @@ import IconWrapper from '../../Common/IconWrapper';
 export type SendFormValues = {
   plot: PlotFragment;
   to: string | null;
-  // plotIndex: string | null;
-  // start: BigNumber | null;
-  // end: BigNumber | null;
-  // amount: BigNumber | null;
   settings: PlotSettingsFragment & {
     slippage: number, // 0.1%
   }
 }
 
 export interface SendFormProps {}
-
-const SliderFieldKeys = ['start', 'end'];
 
 const SendForm: React.FC<
   SendFormProps &
@@ -45,58 +38,8 @@ const SendForm: React.FC<
   values,
   isValid,
   isSubmitting,
-  setFieldValue
 }) => {
   const account = useAccount();
-  const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
-    (state) => state._farmer.field
-  );
-
-  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
-    (state) => state._beanstalk.field
-  );
-
-  // const numPods = useMemo(() =>
-  //     (values?.plotIndex
-  //       ? farmerField.plots[values.plotIndex]
-  //       : ZERO_BN),
-  //   [farmerField.plots, values?.plotIndex]
-  // );
-
-  // const [dialogOpen, showDialog, hideDialog] = useToggle();
-
-  // const handlePlotSelect = useCallback((index: string) => {
-  //   console.debug('[field/actions/Send]: selected plot', index);
-  //   setFieldValue('plotIndex', index);
-  // }, [setFieldValue]);
-
-  // const reset = useCallback(() => {
-  //   setFieldValue('start', new BigNumber(0));
-  //   setFieldValue('end', numPods);
-  //   setFieldValue('amount', numPods);
-  // }, [setFieldValue, numPods]);
-
-  // const handleChangeAmount = (amount: BigNumber | undefined) => {
-  //   if (amount) {
-  //     const delta = (values?.end || ZERO_BN).minus(amount);
-  //     setFieldValue('start', MaxBN(ZERO_BN, delta));
-  //     if (delta.lt(0)) {
-  //       setFieldValue('end', MinBN(numPods, (values?.end || ZERO_BN).plus(delta.abs())));
-  //     }
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (values.plotIndex !== null) {
-  //     console.debug('[field/actions/Send] Plot selected: ', values?.plotIndex);
-  //     reset();
-  //   }
-  // }, [values.plotIndex, reset]);
-
-  // useEffect(() => {
-  //   setFieldValue('amount', values.end?.minus(values.start ? values.start : ZERO_BN));
-  // }, [values.start, values.end, setFieldValue]);
-
   const plot = values.plot;
   const isReady = (
     plot.index
@@ -108,14 +51,6 @@ const SendForm: React.FC<
 
   return (
     <Form autoComplete="off">
-      {/* <SelectPlotDialog
-        farmerField={farmerField}
-        beanstalkField={beanstalkField}
-        handlePlotSelect={handlePlotSelect}
-        handleClose={hideDialog}
-        selected={values.plotIndex}
-        open={dialogOpen}
-      /> */}
       <Stack gap={1}>
         <PlotInputField />
         {plot.index && (

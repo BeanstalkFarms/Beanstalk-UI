@@ -5,6 +5,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import useChainId from 'hooks/useChain';
 import { CHAIN_INFO } from 'constants/index';
+import useAccount from 'hooks/ledger/useAccount';
 import OutputField from './OutputField';
 
 export type AddressInputFieldProps = (
@@ -14,9 +15,11 @@ export type AddressInputFieldProps = (
 
 export const ETHEREUM_ADDRESS_CHARS = /([0][x]?[a-fA-F0-9]{0,42})$/;
 
-const validateAddress = (value: string) => {
+const validateAddress = (account?: string) => (value: string) => {
   let error;
-  if (!ETHEREUM_ADDRESS_CHARS.test(value)) {
+  if (account && value?.toLowerCase() === account.toLowerCase()) {
+    error = 'Cannot send a Plot to yourself';
+  } else if (!ETHEREUM_ADDRESS_CHARS.test(value)) {
     error = 'Invalid address';
   }
   return error;
@@ -32,7 +35,7 @@ const AddressInputFieldInner : React.FC<FieldProps & AddressInputFieldProps> = (
   ...props
 }) => {
   const chainId = useChainId();
-  const isValid = field.value && !meta.error;
+  const isValid = field.value?.length === 42 && !meta.error;
   const onChange = useCallback((e) => {
     // Allow field to change if the value has been removed, or if
     // a valid address character has been input.
@@ -75,34 +78,47 @@ const AddressInputFieldInner : React.FC<FieldProps & AddressInputFieldProps> = (
     );
   }
   return (
-    <TextField
-      fullWidth
-      type="text"
-      placeholder="0x0000"
-      disabled={isValid || disabled}
-      InputProps={InputProps}
-      {...props}
-      name={field.name}
-      value={field.value}
-      onBlur={field.onBlur}
-      onChange={onChange}
-    />
+    <Stack gap={0.5}>
+      <TextField
+        fullWidth
+        type="text"
+        placeholder="0x0000"
+        disabled={isValid || disabled}
+        InputProps={InputProps}
+        {...props}
+        name={field.name}
+        value={field.value}
+        onBlur={field.onBlur}
+        onChange={onChange}
+      />
+      <Box sx={{ px: 0.5 }}>
+        <Typography fontSize="bodySmall" textAlign="right" color="text.secondary">{meta.error}</Typography>
+      </Box>
+    </Stack>
   );
 };
 
 const AddressInputField : React.FC<AddressInputFieldProps> = ({
   name,
   ...props
-}) => (
-  <Field name={name} validate={validateAddress} validateOnChange={false} validateOnBlur>
-    {(fieldProps: FieldProps) => (
-      <AddressInputFieldInner
-        name={name}
-        {...props}
-        {...fieldProps}
-      />
-    )}
-  </Field>
-);
+}) => {
+  const account = useAccount();
+  return (
+    <Field
+      name={name}
+      validate={validateAddress(account)}
+      validateOnChange={false}
+      validateOnBlur
+    >
+      {(fieldProps: FieldProps) => (
+        <AddressInputFieldInner
+          name={name}
+          {...props}
+          {...fieldProps}
+        />
+      )}
+    </Field>
+  );
+};
 
 export default AddressInputField;

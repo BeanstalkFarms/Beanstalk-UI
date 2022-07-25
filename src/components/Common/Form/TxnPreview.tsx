@@ -86,6 +86,7 @@ const TxnStep : React.FC<{
         <SwapStep actions={actions as SwapAction[]} />
       );
       break;
+    
     /// SILO
     case ActionType.DEPOSIT:
     case ActionType.WITHDRAW:
@@ -114,7 +115,8 @@ const TxnStep : React.FC<{
         </IconRow>
       );
       break;
-    /// Field
+    
+    /// FIELD
     case ActionType.BUY_BEANS:
       action = (
         <IconRow>
@@ -158,6 +160,18 @@ const TxnStep : React.FC<{
         </IconRow>
       );
       break;
+    
+    /// MARKET
+    case ActionType.CREATE_ORDER:
+      action = (
+        <IconRow>
+          <TokenIcon token={BEAN[1]} style={{ height: '100%', marginTop: 0, }} />
+          <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
+          <TokenIcon token={PODS} style={{ height: '100%', marginTop: 0, }} />
+        </IconRow>
+      );
+      break;
+
     /// FERTILIZER
     case ActionType.BUY_FERTILIZER:
       action = (
@@ -177,6 +191,8 @@ const TxnStep : React.FC<{
         </IconRow>
       );
       break;
+
+    /// ?
     case ActionType.END_TOKEN:
       action = (
         <IconRow>
@@ -226,27 +242,30 @@ const TxnStep : React.FC<{
 
 // order matters
 const EXECUTION_STEPS = [
-  // Group 1
+  /// Group 1:
+  /// Actions that must precede a Beanstalk transaction
   ActionType.SWAP,
-  // Group 2
+  /// Group 2:
+  /// Beanstalk function calls
   ActionType.DEPOSIT,
   ActionType.WITHDRAW,
   ActionType.BUY_FERTILIZER,
-  // Group 3
+  ActionType.CREATE_ORDER,
+  /// Group 3
+  /// Results of Beanstalk function calls
   ActionType.UPDATE_SILO_REWARDS,
   ActionType.RECEIVE_FERT_REWARDS,
-  //
   ActionType.IN_TRANSIT,
-  //
   ActionType.CLAIM_WITHDRAWAL,
-  // Field
+  // FIXME: incorrectly categroized below
+  /// Field 
   ActionType.BUY_BEANS,
   ActionType.BURN_BEANS,
   ActionType.RECEIVE_PODS,
   ActionType.HARVEST,
   ActionType.RECEIVE_BEANS,
   ActionType.SEND_PODS,
-  // End
+  /// End
   ActionType.END_TOKEN
 ];
 
@@ -254,7 +273,7 @@ const TXN_PREVIEW_HEIGHT = 35;
 const TXN_PREVIEW_LINE_WIDTH = 5;
 
 const TxnPreview : React.FC<{ 
-  actions: Action[]
+  actions: (Action | undefined)[]
 }> = ({
   actions
 }) => {
@@ -267,7 +286,7 @@ const TxnPreview : React.FC<{
     //   return prev;
     // }, { grouped: {}, total: 0 }),
     // [actions]
-    groupBy(actions.filter((a) => a.type !== ActionType.BASE), 'type'),
+    groupBy(actions.filter((a) => a && a.type !== ActionType.BASE) as Action[], 'type'),
     [actions]
   );
   const instructionGroupCount = Object.keys(instructionsByType).length;
@@ -334,22 +353,24 @@ const TxnPreview : React.FC<{
       {/* Show highlightable explanations of each action */}
       <Stack>
         {actions.map((a, index) => (
-          <Box
-            key={index}
-            sx={{
-              opacity: (highlighted === undefined || a.type === highlighted) ? 1 : 0.3,
-              cursor: 'pointer',
-              py: 0.5,
-            }}
-            onMouseOver={() => setHighlighted(a.type)}
-            onMouseOut={() => setHighlighted(undefined)}
-            onFocus={() => setHighlighted(a.type)}
-            onBlur={() => setHighlighted(undefined)}
-          >
-            <Typography variant="body1" color="grey[300]">
-              {parseActionMessage(a)}
-            </Typography>
-          </Box>
+          a !== undefined && (
+            <Box
+              key={index}
+              sx={{
+                opacity: (highlighted === undefined || a.type === highlighted) ? 1 : 0.3,
+                cursor: 'pointer',
+                py: 0.5,
+              }}
+              onMouseOver={() => setHighlighted(a.type)}
+              onMouseOut={() => setHighlighted(undefined)}
+              onFocus={() => setHighlighted(a.type)}
+              onBlur={() => setHighlighted(undefined)}
+            >
+              <Typography variant="body1" color="grey[300]">
+                {parseActionMessage(a)}
+              </Typography>
+            </Box>
+          )
         ))}
       </Stack>
     </Stack>

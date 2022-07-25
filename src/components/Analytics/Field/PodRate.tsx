@@ -6,7 +6,7 @@ import usePodRate from 'hooks/usePodRate';
 import { SnapshotData } from 'hooks/useSeasons';
 
 const getValue = (season: SnapshotData<SeasonalPodRateQuery>) => parseFloat(season.podRate);
-const formatValue = (value: number) => `${value.toFixed(2)}%`;
+const formatValue = (value: number) => `${(value * 100).toFixed(2)}%`;
 const StatProps = {
   title: 'Pod Rate',
   gap: 0.25,
@@ -19,7 +19,7 @@ const PodRate: React.FC<{}> = () => {
   return (
     <SeasonPlot<SeasonalPodRateQuery>
       document={SeasonalPodRateDocument}
-      defaultValue={podRate?.gt(0) ? podRate.toNumber() : 0}
+      defaultValue={podRate?.gt(0) ? podRate.div(100).toNumber() : 0}
       defaultSeason={season?.gt(0) ? season.toNumber() : 0}
       getValue={getValue}
       formatValue={formatValue}

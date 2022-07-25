@@ -1,13 +1,13 @@
-import { Box, InputAdornment, Stack, Typography } from '@mui/material';
+import { Alert, Box, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { PlotFragment, PlotSettingsFragment, TokenAdornment, TokenInputField } from 'components/Common/Form';
+import { PlotFragment, PlotSettingsFragment, TokenAdornment, TokenInputField, TxnPreview } from 'components/Common/Form';
 import { ONE_BN, ZERO_BN } from 'constants/index';
-import { BEAN } from 'constants/tokens';
+import { BEAN, PODS } from 'constants/tokens';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { toStringBaseUnitBN , parseError } from 'util/index';
+import { toStringBaseUnitBN , parseError, displayTokenAmount, displayBN, displayFullBN } from 'util/index';
 import DestinationField from 'components/Field/DestinationField';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
 import { useBeanstalkContract } from 'hooks/useContract';
@@ -21,6 +21,9 @@ import { useSigner } from 'hooks/ledger/useSigner';
 import { LoadingButton } from '@mui/lab';
 import PlotInputField from 'components/Common/Form/PlotInputField';
 import { useFetchFarmerMarket } from 'state/farmer/market/updater';
+import useFarmerListings from 'hooks/redux/useFarmerListings';
+import TxnAccordion from 'components/Common/TxnAccordion';
+import { ActionType } from 'util/Actions';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 
@@ -70,17 +73,14 @@ const CreateListingForm: React.FC<
   farmerField,
   beanstalkField,
 }) => {
-  /// ??
-  const handlePlotSelect = useCallback((index: string) => {
-    setFieldValue('expiresAt', new BigNumber(index).minus(beanstalkField?.harvestableIndex));
-  }, [beanstalkField?.harvestableIndex, setFieldValue]);
-
   const plot = values.plot;
   const placeInLine = useMemo(
     () => (plot.index ? new BigNumber(plot.index).minus(beanstalkField?.harvestableIndex) : ZERO_BN),
     [beanstalkField?.harvestableIndex, plot.index]
   );
-
+  const existingListings = useFarmerListings();
+  const alreadyListed = plot?.index ? existingListings[toStringBaseUnitBN(plot.index, BEAN[1].decimals)] : false;
+    
   ///
   const isReady = (
     !REQUIRED_KEYS.some((k) => values[k] === null)
@@ -92,6 +92,11 @@ const CreateListingForm: React.FC<
         <PlotInputField />
         {plot.index && (
           <>
+            {alreadyListed ? (
+              <Alert variant="standard" color="warning">
+                This Plot is already listed on the Market. Creating a new Listing will override the previous one.
+              </Alert>
+            ) : null}
             <FieldWrapper label="Price Per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
               <TokenInputField
                 name="pricePerPod"
@@ -100,7 +105,7 @@ const CreateListingForm: React.FC<
                 max={ONE_BN}
               />
             </FieldWrapper>
-            <FieldWrapper label="Expires At" tooltip={POD_MARKET_TOOLTIPS.expiresAt}>
+            <FieldWrapper label="Expires In" tooltip={POD_MARKET_TOOLTIPS.expiresAt}>
               <TokenInputField
                 name="expiresAt"
                 placeholder="0.0000"
@@ -114,9 +119,28 @@ const CreateListingForm: React.FC<
               farmDesc="When Pods are sold, send Beans to your Beanstalk farm balance."
               label="Send proceeds to"
             />
-            {/* <Warning
-              message="Pods in this Plot are already Listed on the Pod Market. Listing Pods from the same Plot will replace the previous Pod Listing."
-            /> */}
+            {isReady && ( 
+              <Box>
+                <TxnAccordion>
+                  <TxnPreview
+                    actions={[
+                      {
+                        type: ActionType.BASE,
+                        message: `List ${displayTokenAmount(plot.amount || ZERO_BN, PODS)} at ${displayFullBN(values.pricePerPod || ZERO_BN)} Beans per Pod from your Plot at ${displayBN(placeInLine)} in the Pod Line.`
+                      },
+                      {
+                        type: ActionType.BASE,
+                        message: `If the Pod Line moves forward by ${displayFullBN(values.expiresAt || ZERO_BN)} more Pods, this Listing will automatically expire.`
+                      },
+                      {
+                        type: ActionType.BASE,
+                        message: `Proceeds will be delivered to your ${values.destination === FarmToMode.INTERNAL ? 'Farm balance' : 'Circulating balance'}.`
+                      }
+                    ]}
+                  />
+                </TxnAccordion>
+              </Box>
+            )}
           </>
         )}
         <LoadingButton
@@ -128,7 +152,7 @@ const CreateListingForm: React.FC<
           size="large"
           type="submit"
         >
-          Create Listing
+          {alreadyListed ? 'Update' : 'Create'} Listing
         </LoadingButton>
       </Stack>
     </Form>

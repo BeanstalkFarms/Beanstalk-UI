@@ -12,7 +12,6 @@ import { castPodListing } from 'state/farmer/market';
 import { trimAddress } from 'util/index';
 import FillListing from 'components/Market/Actions/FillListing';
 import ListingDetails from 'components/Market/Cards/ListingDetails';
-import { mockPodListingData } from 'components/Market/Plots.mock';
 import AddressIcon from 'components/Common/AddressIcon';
 import PageHeaderSecondary from 'components/Common/PageHeaderSecondary';
 import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
@@ -34,16 +33,18 @@ const ListingPage: React.FC = () => {
         <PageHeaderSecondary
           title={(
             <Stack direction="row" gap={0.5} alignItems="center">
-              <AddressIcon address={mockPodListingData[0].account} />
+              <AddressIcon address={listing.account} />
               <Typography variant="h2">{`${trimAddress(listing.account)}'s Pod Listing`}</Typography>
             </Stack>
           )}
           returnPath="/market"
         />
+        {/* Details Card */}
         <ListingDetails
           podListing={listing}
           harvestableIndex={harvestableIndex}
         />
+        {/* Buy Pods */}
         <Card sx={{ position: 'relative' }}>
           <Stack gap={1.5}>
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>

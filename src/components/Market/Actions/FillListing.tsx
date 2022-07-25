@@ -20,7 +20,6 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { displayBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
-import FieldWrapper from '../../Common/Form/FieldWrapper';
 import useCurve from '../../../hooks/useCurve';
 import { PodListing } from '../Plots.mock';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
@@ -84,58 +83,56 @@ const FillListingForm : React.FC<
 
   return (
     <Form noValidate>
+      <TokenSelectDialog
+        open={showTokenSelect}
+        handleClose={handleClose}
+        selected={values.tokens}
+        handleSubmit={handleSelectTokens}
+        balances={balances}
+        tokenList={Object.values(erc20TokenMap)}
+      />
       <Stack gap={1}>
-        <TokenSelectDialog
-          open={showTokenSelect}
-          handleClose={handleClose}
-          selected={values.tokens}
-          handleSubmit={handleSelectTokens}
-          balances={balances}
-          tokenList={Object.values(erc20TokenMap)}
-        />
-        <FieldWrapper label="Buy Pods">
-          <>
-            {values.tokens.map((state, index) => (
-              <TokenQuoteProvider
-                key={`tokens.${index}`}
-                name={`tokens.${index}`}
-                tokenOut={depositToken}
-                balance={balances[state.token.address] || undefined}
-                state={state}
-                showTokenSelect={handleOpen}
-                disabled={isMainnet}
-                disableTokenSelect={isMainnet}
-                handleQuote={handleQuote}
-              />
-            ))}
-          </>
-        </FieldWrapper>
+        {values.tokens.map((state, index) => (
+          <TokenQuoteProvider
+            key={`tokens.${index}`}
+            name={`tokens.${index}`}
+            tokenOut={depositToken}
+            balance={balances[state.token.address] || undefined}
+            state={state}
+            showTokenSelect={handleOpen}
+            disabled={isMainnet}
+            disableTokenSelect={isMainnet}
+            handleQuote={handleQuote}
+          />
+        ))}
         <TxnSeparator mt={0} />
         <Stack direction="row" justifyContent="space-between" sx={{ p: 1 }}>
-          <Typography variant="body1">Place in Pod Line:</Typography>
-          <Typography variant="body1">{displayBN(podListing.index.minus(beanstalkField.harvestableIndex))}</Typography>
+          <Typography variant="body1" color="text.secondary">Place in Pod Line</Typography>
+          <Typography variant="body1">
+            {displayBN(podListing.index.minus(beanstalkField.harvestableIndex))}
+          </Typography>
         </Stack>
         <TokenOutputField
           token={PODS}
           amount={podListing.remainingAmount}
           isLoading={false}
-          />
+        />
         <Box>
           <Accordion variant="outlined">
             <StyledAccordionSummary title="Transaction Details" />
             <AccordionDetails>
               <TxnPreview
                 actions={[
-                    {
-                      type: ActionType.BASE,
-                      message: 'DO SOMETHING'
-                    },
-                    {
-                      type: ActionType.BASE,
-                      message: 'DO SOMETHING!'
-                    }
-                  ]}
-                />
+                  {
+                    type: ActionType.BASE,
+                    message: 'DO SOMETHING'
+                  },
+                  {
+                    type: ActionType.BASE,
+                    message: 'DO SOMETHING!'
+                  }
+                ]}
+              />
             </AccordionDetails>
           </Accordion>
         </Box>

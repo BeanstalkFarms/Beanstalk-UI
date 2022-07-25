@@ -226,8 +226,8 @@ const SowForm : React.FC<
                         type: ActionType.BUY_BEANS,
                         beanAmount: beans,
                         beanPrice: beanPrice,
-                        token: values.tokens[0].token,
-                        tokenAmount: values.tokens[0].amount ? values.tokens[0].amount : ZERO_BN
+                        token: tokenIn,
+                        tokenAmount: amount || ZERO_BN
                       },
                       {
                         type: ActionType.BURN_BEANS,
