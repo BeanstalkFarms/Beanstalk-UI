@@ -68,27 +68,27 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       >
           <Grid container alignItems="flex-end">
             <Grid item md={2} xs={2.5}>
-              <Typography color="text.primary" sx={{ fontSize: '14px' }}>
+              <Typography color="text.primary" variant="bodySmall">
                 Season
               </Typography>
             </Grid>
             <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
-              <Typography color="text.primary" sx={{ fontSize: '14px' }}>
+              <Typography color="text.primary" variant="bodySmall">
                 Precipitation
               </Typography>
             </Grid>
-            <Grid item md={2.6} xs={3.166} display={{ md: 'block' }}>
-              <Typography color="text.primary" sx={{ fontSize: '14px' }}>
+            <Grid item md={2.6} xs={3} display={{ md: 'block' }}>
+              <Typography color="text.primary" variant="bodySmall">
                 New Beans
               </Typography>
             </Grid>
-            <Grid item md={2.4} xs={3.166} display={{ md: 'block' }}>
-              <Typography color="text.primary" sx={{ fontSize: '14px' }}>
+            <Grid item md={2.4} xs={3} display={{ md: 'block' }}>
+              <Typography color="text.primary" variant="bodySmall">
                 New Soil
               </Typography>
             </Grid>
-            <Grid item md={2.4} xs={3.166} sx={{ textAlign: 'right' }}>
-              <Typography color="text.primary" sx={{ fontSize: '14px' }}>
+            <Grid item md={2.4} xs={3.5} sx={{ textAlign: 'right' }}>
+              <Typography color="text.primary" variant="bodySmall">
                 Weather
               </Typography>
             </Grid>
