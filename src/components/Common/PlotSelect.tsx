@@ -37,7 +37,12 @@ export interface PlotSelectProps {
   selected?: string | null;
 }
 
-const PlotSelect: React.FC<PlotSelectProps> = ({ plots, harvestableIndex, handlePlotSelect, selected }) => {
+const PlotSelect: React.FC<PlotSelectProps> = ({
+  plots,
+  harvestableIndex,
+  handlePlotSelect,
+  selected
+}) => {
   const classes = useStyles();
   const farmerListings = useFarmerListings();
   const orderedPlotKeys = useMemo(() => {
@@ -61,19 +66,19 @@ const PlotSelect: React.FC<PlotSelectProps> = ({ plots, harvestableIndex, handle
         disablePadding
         onClick={() => handlePlotSelect(index)}
         sx={{
-            // ListItem is used elsewhere so we define here
-            // instead of in muiTheme.ts
-            '& .MuiListItemText-primary': {
-              fontSize: FontSize['1xl'],
-              lineHeight: '1.875rem'
-            },
-            '& .MuiListItemText-secondary': {
-              fontSize: FontSize.base,
-              lineHeight: '1.25rem',
-              color: BeanstalkPalette.lightishGrey
-            },
-          }}
-        >
+          // ListItem is used elsewhere so we define here
+          // instead of in muiTheme.ts
+          '& .MuiListItemText-primary': {
+            fontSize: FontSize['1xl'],
+            lineHeight: '1.875rem'
+          },
+          '& .MuiListItemText-secondary': {
+            fontSize: FontSize.base,
+            lineHeight: '1.25rem',
+            color: BeanstalkPalette.lightishGrey
+          },
+        }}
+      >
         <ListItemButton disableRipple>
           <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }}>
             <Stack direction="row" justifyContent="center">
@@ -102,7 +107,7 @@ const PlotSelect: React.FC<PlotSelectProps> = ({ plots, harvestableIndex, handle
       {numAlreadyListed > 0 ? (
         <Box px={1}>
           <Typography color="text.secondary" fontSize="bodySmall">
-            * This Plot is already listed on the Market. Creating a new Listing with it will override the previous one.
+            * This Plot is currently listed on the Market. {/* FIXME: contextual message */}
           </Typography>
         </Box>
       ) : null}

@@ -119,26 +119,28 @@ const CreateListingForm: React.FC<
               farmDesc="When Pods are sold, send Beans to your Beanstalk farm balance."
               label="Send proceeds to"
             />
-            <Box>
-              <TxnAccordion>
-                <TxnPreview
-                  actions={[
-                    {
-                      type: ActionType.BASE,
-                      message: `List ${displayTokenAmount(plot.amount || ZERO_BN, PODS)} at ${displayFullBN(values.pricePerPod || ZERO_BN)} Beans per Pod from your Plot at ${displayBN(placeInLine)} in the Pod Line.`
-                    },
-                    {
-                      type: ActionType.BASE,
-                      message: `If the Pod Line moves forward by ${displayFullBN(values.expiresAt || ZERO_BN)} more Pods, this Listing will automatically expire.`
-                    },
-                    {
-                      type: ActionType.BASE,
-                      message: `Proceeds will be delivered to your ${values.destination === FarmToMode.INTERNAL ? 'Farm balance' : 'Circulating balance'}.`
-                    }
-                  ]}
-                />
-              </TxnAccordion>
-            </Box>
+            {isReady && ( 
+              <Box>
+                <TxnAccordion>
+                  <TxnPreview
+                    actions={[
+                      {
+                        type: ActionType.BASE,
+                        message: `List ${displayTokenAmount(plot.amount || ZERO_BN, PODS)} at ${displayFullBN(values.pricePerPod || ZERO_BN)} Beans per Pod from your Plot at ${displayBN(placeInLine)} in the Pod Line.`
+                      },
+                      {
+                        type: ActionType.BASE,
+                        message: `If the Pod Line moves forward by ${displayFullBN(values.expiresAt || ZERO_BN)} more Pods, this Listing will automatically expire.`
+                      },
+                      {
+                        type: ActionType.BASE,
+                        message: `Proceeds will be delivered to your ${values.destination === FarmToMode.INTERNAL ? 'Farm balance' : 'Circulating balance'}.`
+                      }
+                    ]}
+                  />
+                </TxnAccordion>
+              </Box>
+            )}
           </>
         )}
         <LoadingButton
