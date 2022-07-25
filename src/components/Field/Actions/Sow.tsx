@@ -207,7 +207,13 @@ const SowForm : React.FC<
             </Box>
             {(maxAmountUsed && maxAmountUsed.gt(0.9)) ? (
               <Box>
-                <Alert color="warning" icon={<WarningAmberIcon sx={{ fontSize: 22 }} />}>
+                <Alert
+                  color="warning"
+                  icon={<WarningAmberIcon sx={{ fontSize: 25 }} />}
+                  sx={{
+                    px: 2,
+                  }}
+                >
                   You are Sowing {displayFullBN(maxAmountUsed.times(100), 4, 0)}% of remaining Soil. 
                 </Alert>
               </Box>

@@ -327,9 +327,13 @@ let muiTheme = createTheme({
       defaultProps: {
       },
       styleOverrides: {
-        root: {
+        root: sx({
           alignItems: 'center',
-        }
+          '& .MuiAlert-icon': {
+            mr: 1,
+            p: 0
+          }
+        }),
       }
     },
     MuiTooltip: {
