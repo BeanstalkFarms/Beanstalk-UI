@@ -3,7 +3,6 @@ import AddressInputField from 'components/Common/Form/AddressInputField';
 import FieldWrapper from 'components/Common/Form/FieldWrapper';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import { PlotFragment, PlotSettingsFragment, TxnPreview, TxnSeparator } from 'components/Common/Form';
 import { PODS } from 'constants/tokens';
 import { LoadingButton } from '@mui/lab';
@@ -13,28 +12,20 @@ import { BeanstalkReplanted } from 'generated/index';
 import TransactionToast from 'components/Common/TxnToast';
 import useAccount from 'hooks/ledger/useAccount';
 import PlotInputField from 'components/Common/Form/PlotInputField';
-import { AppState } from '../../../state';
-import { ZERO_BN } from '../../../constants';
+import Warning from 'components/Common/Form/Warning';
 import { displayFullBN, toStringBaseUnitBN, trimAddress } from '../../../util';
-import Warning from '../../Common/Form/Warning';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 
 export type SendFormValues = {
   plot: PlotFragment;
   to: string | null;
-  // plotIndex: string | null;
-  // start: BigNumber | null;
-  // end: BigNumber | null;
-  // amount: BigNumber | null;
   settings: PlotSettingsFragment & {
     slippage: number, // 0.1%
   }
 }
 
 export interface SendFormProps {}
-
-const SliderFieldKeys = ['start', 'end'];
 
 const SendForm: React.FC<
   SendFormProps &
@@ -43,58 +34,8 @@ const SendForm: React.FC<
   values,
   isValid,
   isSubmitting,
-  setFieldValue
 }) => {
   const account = useAccount();
-  const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
-    (state) => state._farmer.field
-  );
-
-  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
-    (state) => state._beanstalk.field
-  );
-
-  // const numPods = useMemo(() =>
-  //     (values?.plotIndex
-  //       ? farmerField.plots[values.plotIndex]
-  //       : ZERO_BN),
-  //   [farmerField.plots, values?.plotIndex]
-  // );
-
-  // const [dialogOpen, showDialog, hideDialog] = useToggle();
-
-  // const handlePlotSelect = useCallback((index: string) => {
-  //   console.debug('[field/actions/Send]: selected plot', index);
-  //   setFieldValue('plotIndex', index);
-  // }, [setFieldValue]);
-
-  // const reset = useCallback(() => {
-  //   setFieldValue('start', new BigNumber(0));
-  //   setFieldValue('end', numPods);
-  //   setFieldValue('amount', numPods);
-  // }, [setFieldValue, numPods]);
-
-  // const handleChangeAmount = (amount: BigNumber | undefined) => {
-  //   if (amount) {
-  //     const delta = (values?.end || ZERO_BN).minus(amount);
-  //     setFieldValue('start', MaxBN(ZERO_BN, delta));
-  //     if (delta.lt(0)) {
-  //       setFieldValue('end', MinBN(numPods, (values?.end || ZERO_BN).plus(delta.abs())));
-  //     }
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (values.plotIndex !== null) {
-  //     console.debug('[field/actions/Send] Plot selected: ', values?.plotIndex);
-  //     reset();
-  //   }
-  // }, [values.plotIndex, reset]);
-
-  // useEffect(() => {
-  //   setFieldValue('amount', values.end?.minus(values.start ? values.start : ZERO_BN));
-  // }, [values.start, values.end, setFieldValue]);
-
   const plot = values.plot;
   const isReady = (
     plot.index
@@ -106,14 +47,6 @@ const SendForm: React.FC<
 
   return (
     <Form autoComplete="off">
-      {/* <SelectPlotDialog
-        farmerField={farmerField}
-        beanstalkField={beanstalkField}
-        handlePlotSelect={handlePlotSelect}
-        handleClose={hideDialog}
-        selected={values.plotIndex}
-        open={dialogOpen}
-      /> */}
       <Stack gap={1}>
         <PlotInputField />
         {plot.index && (
@@ -122,28 +55,33 @@ const SendForm: React.FC<
             <FieldWrapper label="Recipient Address">
               <AddressInputField name="to" />
             </FieldWrapper>
-            <Warning message="Pods can be exchanged in a decentralized fashion on the Pod Market. Send at your own risk." />
-            <Box>
-              <Accordion variant="outlined">
-                <StyledAccordionSummary title="Transaction Details" />
-                <AccordionDetails>
-                  <TxnPreview
-                    actions={[
-                      {
-                        type:    ActionType.SEND_PODS,
-                        start:   plot.start ? plot.start : ZERO_BN,
-                        end:     plot.end ? plot.end : ZERO_BN,
-                        address: values.to !== null ? values.to : ''
-                      },
-                      {
-                        type: ActionType.END_TOKEN,
-                        token: PODS
-                      }
-                    ]}
-                  />
-                </AccordionDetails>
-              </Accordion>
-            </Box>
+            {isReady ? (
+              <>
+                <Warning message="Pods can be exchanged in a decentralized fashion on the Pod Market. Send at your own risk." />
+                <Box>
+                  <Accordion variant="outlined">
+                    <StyledAccordionSummary title="Transaction Details" />
+                    <AccordionDetails>
+                      <TxnPreview
+                        actions={[
+                          {
+                            type:    ActionType.SEND_PODS,
+                            amount:  plot.amount!,
+                            // start:   plot.start ? plot.start : ZERO_BN,
+                            // end:     plot.end ? plot.end : ZERO_BN,
+                            address: values.to !== null ? values.to : ''
+                          },
+                          {
+                            type: ActionType.END_TOKEN,
+                            token: PODS
+                          }
+                        ]}
+                      />
+                    </AccordionDetails>
+                  </Accordion>
+                </Box>
+              </>
+            ) : null}
           </>
         )}
         <LoadingButton

@@ -150,17 +150,10 @@ const COLUMNS = {
       </Typography>
     ),
   } as GridColumns[number],
-  placeInLine: (
-    harvestableIndex: BigNumber,
-    { 
-      field,
-      range = true,
-    } : {
-      field?: string;
-      range: boolean;
-    }
-  ) => ({
-    field: field || 'maxPlaceInLine',
+
+  //
+  plotIndex: (harvestableIndex: BigNumber) => ({
+    field: 'index',
     headerName: 'Place In Line',
     flex: 1,
     valueParser: (params: GridValueFormatterParams) => (
@@ -169,10 +162,25 @@ const COLUMNS = {
     ),
     renderCell: (params: GridRenderCellParams) => (
       <Typography>
-        {range ? '0 - ' : null}{displayFullBN((params.value as BigNumber).minus(harvestableIndex), 0)}
+        {displayFullBN((params.value as BigNumber).minus(harvestableIndex), 0)}
       </Typography>
     ),
   } as GridColumns[number]),
+
+  maxPlaceInLine: {
+    field: 'maxPlaceInLine',
+    headerName: 'Place In Line',
+    flex: 1,
+    valueParser: (params: GridValueFormatterParams) => (
+      /// FIXME: may have roundoff errors
+      (params.value as BigNumber).toNumber()
+    ),
+    renderCell: (params: GridRenderCellParams) => (
+      <Typography>
+        0 - {displayFullBN((params.value as BigNumber), 0)}
+      </Typography>
+    ),
+  } as GridColumns[number],
   expiry: (
     harvestableIndex: BigNumber
   ) => ({

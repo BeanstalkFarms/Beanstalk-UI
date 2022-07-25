@@ -27,7 +27,7 @@ const AllListings : React.FC<{}> = () => {
 
   /// Data Grid setup
   const columns: DataGridProps['columns'] = [
-    COLUMNS.placeInLine(harvestableIndex, { range: true }),
+    COLUMNS.maxPlaceInLine,
     COLUMNS.pricePerPod,
     COLUMNS.numPods,
   ];

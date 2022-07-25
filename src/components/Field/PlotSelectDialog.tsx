@@ -1,10 +1,10 @@
 import React from 'react';
-import { Dialog, DialogProps, Stack, Typography } from '@mui/material';
+import { Dialog, DialogProps, Typography } from '@mui/material';
 import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
 import PlotSelect from '../Common/PlotSelect';
 import { AppState } from '../../state';
 
-export interface SelectPlotDialogProps {
+export interface PlotSelectDialogProps {
   /** Closes dialog */
   handleClose: any;
   /** Sets plot index */
@@ -17,7 +17,7 @@ export interface SelectPlotDialogProps {
   selected?: string | null;
 }
 
-const SelectPlotDialog: React.FC<SelectPlotDialogProps & DialogProps> = ({
+const PlotSelectDialog: React.FC<PlotSelectDialogProps & DialogProps> = ({
   farmerField,
   beanstalkField,
   handlePlotSelect,
@@ -39,22 +39,26 @@ const SelectPlotDialog: React.FC<SelectPlotDialogProps & DialogProps> = ({
       fullWidth
     >
       <StyledDialogTitle onClose={handleClose}>My Plots</StyledDialogTitle>
-      <StyledDialogContent>
-        <Stack gap={2}>
-          {Object.keys(farmerField?.plots).length > 0 ? (
-            <PlotSelect
-              handlePlotSelect={handleSelectAndClose}
-              plots={farmerField?.plots}
-              harvestableIndex={beanstalkField?.harvestableIndex}
-              selected={selected}
-            />
-          ) : (
-            <Typography sx={{ textAlign: 'center', pt: 1, pb: 4 }}>You don&apos;t have any plots to send!</Typography>
-          )}
-        </Stack>
+      <StyledDialogContent
+        sx={{
+          pb: 1, // enforces 10px padding around all 
+        }}
+      >
+        {Object.keys(farmerField?.plots).length > 0 ? (
+          <PlotSelect
+            handlePlotSelect={handleSelectAndClose}
+            plots={farmerField.plots!}
+            harvestableIndex={beanstalkField?.harvestableIndex}
+            selected={selected}
+          />
+        ) : (
+          <Typography sx={{ textAlign: 'center', pt: 1, pb: 4 }}>
+            You don&apos;t have any plots to send!
+          </Typography>
+        )}
       </StyledDialogContent>
     </Dialog>
   );
 };
 
-export default SelectPlotDialog;
+export default PlotSelectDialog;

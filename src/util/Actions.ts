@@ -2,31 +2,37 @@ import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
 import { displayFullBN, displayTokenAmount } from 'util/Tokens';
 import { BEAN, PODS } from '../constants/tokens';
-import { getAccount, trimAddress } from './index';
 
 export enum ActionType {
+  /// GENERIC
   BASE,
   END_TOKEN,
-  // Generic: Swap
   SWAP,
-  // Silo
+
+  /// SILO
   DEPOSIT,
   WITHDRAW,
   IN_TRANSIT,
   UPDATE_SILO_REWARDS,
   CLAIM_WITHDRAWAL,
-  // Field
+
+  /// FIELD
   BUY_BEANS,
   BURN_BEANS,
   RECEIVE_PODS,
   HARVEST,
   RECEIVE_BEANS,
   SEND_PODS,
-  // Fertilizer
+
+  /// MARKET
+  CREATE_ORDER,
+
+  /// FERTILIZER
   BUY_FERTILIZER,
   RECEIVE_FERT_REWARDS,
 }
 
+/// GENERIC
 export type BaseAction = {
   type: ActionType.BASE;
   message?: string;
@@ -45,17 +51,16 @@ export type SwapAction = {
   amountOut: BigNumber;
 }
 
+/// SILO
+type SiloAction = {
+  amount: BigNumber;
+  token: Token;
+}
 export type SiloRewardsAction = {
   type: ActionType.UPDATE_SILO_REWARDS;
   stalk: BigNumber;
   seeds: BigNumber;
 }
-
-type SiloAction = {
-  amount: BigNumber;
-  token: Token;
-}
-
 export type SiloDepositAction = SiloAction & {
   type: ActionType.DEPOSIT;
 }
@@ -70,10 +75,8 @@ export type SiloClaimAction = SiloAction & {
   type: ActionType.CLAIM_WITHDRAWAL;
 }
 
-type FieldAction = {
-
-}
-
+/// FIELD
+type FieldAction = {};
 export type BuyBeansAction = {
   type: ActionType.BUY_BEANS;
   beanAmount: BigNumber;
@@ -81,63 +84,69 @@ export type BuyBeansAction = {
   token: Token;
   tokenAmount: BigNumber;
 }
-
 export type BurnBeansAction = FieldAction & {
   type: ActionType.BURN_BEANS;
   amount: BigNumber;
 }
-
 export type ReceivePodsAction = FieldAction & {
   type: ActionType.RECEIVE_PODS;
   podAmount: BigNumber;
   placeInLine: BigNumber;
 }
-
 export type FieldHarvestAction = {
   type: ActionType.HARVEST;
   amount: BigNumber;
 }
-
 export type ReceiveBeansAction = {
   type: ActionType.RECEIVE_BEANS;
   amount: BigNumber;
 }
-
 export type SendPodsAction = {
   type: ActionType.SEND_PODS;
-  start: BigNumber;
-  end: BigNumber;
+  amount: BigNumber;
   address: string;
 }
 
+/// MARKET
+export type CreateOrderAction = {
+  type: ActionType.CREATE_ORDER;
+  message: string; // lazy!
+}
+
+/// FERTILIZER
 export type FertilizerBuyAction = {
   type: ActionType.BUY_FERTILIZER;
   amountIn: BigNumber;
   humidity: BigNumber;
 }
-
 export type FertilizerRewardsAction = {
   type: ActionType.RECEIVE_FERT_REWARDS;
   amountOut: BigNumber;
 }
 
+/// AGGREGATE
 export type Action = (
   BaseAction
   | SwapAction
+  | EndTokenAction
+  /// SILO
   | SiloDepositAction
   | SiloWithdrawAction
   | SiloTransitAction
   | SiloRewardsAction
   | SiloClaimAction
+  /// FIELD
   | BurnBeansAction
   | ReceivePodsAction
   | FieldHarvestAction
   | ReceiveBeansAction
   | BuyBeansAction
   | SendPodsAction
+  /// MARKET
+  | CreateOrderAction
+  /// FERTILIZER
   | FertilizerBuyAction
   | FertilizerRewardsAction
-  | EndTokenAction
 );
 
 // -----------------------------------------------------------------------
@@ -168,19 +177,23 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.BURN_BEANS:
       return `Burn ${displayFullBN(a.amount, BEAN[1].decimals)} ${a.amount.eq(new BigNumber(1)) ? 'Bean' : 'Beans'}.`;
     case ActionType.RECEIVE_PODS:
-      return `Receive ${displayTokenAmount(a.podAmount, PODS)} Pods at ${displayFullBN(a.placeInLine)} in the Pod Line.`;
+      return `Receive ${displayTokenAmount(a.podAmount, PODS)} at ${displayFullBN(a.placeInLine)} in the Pod Line.`;
     case ActionType.HARVEST:
       return `Harvest ${displayFullBN(a.amount, PODS.decimals)} Harvestable Pods.`;
     case ActionType.RECEIVE_BEANS:
       return `Receive ${displayFullBN(a.amount, BEAN[1].decimals)} Beans.`;
     case ActionType.SEND_PODS:
-      return `Send Pods ${displayFullBN(a.start, BEAN[1].decimals)} - ${displayFullBN(a.end, BEAN[1].decimals)} to ${trimAddress(getAccount(a.address), true)}.`;
+      return `Send ${displayTokenAmount(a.amount, PODS)} to ${a.address}.`;
 
     /// FERTILIZER
     case ActionType.BUY_FERTILIZER:
       return `Buy ${displayFullBN(a.amountIn, 2)} Fertilizer at ${displayFullBN(a.humidity.multipliedBy(100), 1)}% Humidity.`;
     case ActionType.RECEIVE_FERT_REWARDS:
       return `Receive ${displayFullBN(a.amountOut, 2)} Sprouts. Sprouts become Fertilized pro rata as the Bean supply increases.`;
+
+    /// MARKET
+    case ActionType.CREATE_ORDER:
+      return a.message;
 
     /// ALL
     case ActionType.END_TOKEN:

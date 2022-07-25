@@ -7,6 +7,7 @@ import {
   TokenOutputField,
   TokenQuoteProvider,
   TokenSelectDialog,
+  TxnPreview,
   TxnSeparator,
   TxnSettings
 } from 'components/Common/Form';
@@ -21,7 +22,7 @@ import useTokenMap from 'hooks/useTokenMap';
 import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN, parseError } from 'util/index';
+import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN, parseError, displayTokenAmount, displayBN } from 'util/index';
 import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import { ethers } from 'ethers';
 import useGetChainToken from 'hooks/useGetChainToken';
@@ -36,6 +37,8 @@ import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import { useFetchFarmerMarket } from 'state/farmer/market/updater';
+import TxnAccordion from 'components/Common/TxnAccordion';
+import { ActionType } from 'util/Actions';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import SliderField from '../../Common/Form/SliderField';
@@ -113,16 +116,21 @@ const CreateOrderForm : React.FC<
     ]);
   }, [values.tokens, setFieldValue]);
 
-  const amountBeans = (
-    values.tokens[0].token === getChainToken(BEAN)
+  const tokenIn   = values.tokens[0].token;
+  const amountIn  = values.tokens[0].amount;
+  const tokenOut  = getChainToken(BEAN);
+  const amountOut = tokenIn === tokenOut // Beans
       ? values.tokens[0].amount
-      : values.tokens[0].amountOut
-  );
+      : values.tokens[0].amountOut;
 
   const isReady = (
-    values.placeInLine?.gt(0)
+    amountIn 
+    && values.placeInLine?.gt(0)
     && values.pricePerPod?.gt(0)
-    && amountBeans
+    && amountOut
+  );
+  const amountPods = (
+    isReady ? amountOut.div(values.pricePerPod!) : ZERO_BN
   );
 
   return (
@@ -186,8 +194,31 @@ const CreateOrderForm : React.FC<
             <TxnSeparator mt={-1} />
             <TokenOutputField
               token={PODS}
-              amount={amountBeans.div(values.pricePerPod!)}
+              amount={amountPods}
             />
+            <Box>
+              <TxnAccordion>
+                <TxnPreview
+                  actions={[
+                    tokenIn === tokenOut ? undefined : {
+                      type: ActionType.SWAP,
+                      tokenIn,
+                      amountIn,
+                      tokenOut,
+                      amountOut,
+                    },
+                    {
+                      type: ActionType.CREATE_ORDER,
+                      message: `Create an Order to purchase up to ${displayTokenAmount(amountPods, PODS)} at ${displayFullBN(values.pricePerPod!, 4)} Beans per Pod. Any Pods before ${displayBN(values.placeInLine!)} in the Pod Line are eligible.`
+                    },
+                    {
+                      type: ActionType.BASE,
+                      message: `${displayTokenAmount(amountOut, tokenOut)} will be locked in the Pod Order to allow for instant settlement. You can reclaim these Beans by cancelling the Order.`
+                    }
+                  ]}
+                />
+              </TxnAccordion>
+            </Box>
           </>
         ) : null}
         <SmartSubmitButton
