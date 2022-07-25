@@ -63,48 +63,47 @@ const NavDrawer: React.FC<{
                 direction="row"
                 alignItems="center"
                 justifyContent="space-between"
-                sx={{ px: 1.6, py: 0.6, cursor: 'pointer' }}>
+                sx={{ px: 1.6, py: 0.6, cursor: 'pointer', height: 48 }}
+              >
                 <Typography sx={{ fontSize: '25px' }} variant="body1" color="text.secondary">
                   More
                 </Typography>
                 <DropdownIcon open={openMore} sx={{ color: 'text.secondary' }} />
               </Stack>
               <Stack display={openMore ? 'block' : 'none'}>
-                <>
-                  <Box sx={{ pl: 0.5, pt: 1 }}>
-                    {ROUTES.more.map((item) => (
-                      <MenuItemMobile
-                        key={item.path}
-                        item={item}
-                        onClick={hideDrawer}
-                      />
-                    ))}
-                  </Box>
-                  <Box sx={{ px: 1, py: 0.6 }}>
-                    <Button
-                      fullWidth
-                      href={`${chainInfo.explorer}/address/${beanstalkAddress}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      variant="contained"
-                      color="secondary"
-                      sx={{ py: 0.9 }}
-                    >
-                      <Stack direction="row" alignItems="center" spacing={1}>
-                        <ListItemText>
-                          <Typography variant="h4">
-                            Contract: {beanstalkAddress.slice(0, 6)}...
-                          </Typography>
-                        </ListItemText>
-                        <Typography variant="body2" color="text.secondary">
-                          <ArrowForwardIcon
-                            sx={{ transform: 'rotate(-45deg)', fontSize: 12 }}
-                          />
+                <Box sx={{ pl: 0.5, pt: 1 }}>
+                  {ROUTES.more.map((item) => (
+                    <MenuItemMobile
+                      key={item.path}
+                      item={item}
+                      onClick={hideDrawer}
+                    />
+                  ))}
+                </Box>
+                <Box sx={{ px: 1, py: 0.6 }}>
+                  <Button
+                    fullWidth
+                    href={`${chainInfo.explorer}/address/${beanstalkAddress}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    variant="contained"
+                    color="secondary"
+                    sx={{ py: 0.9 }}
+                  >
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                      <ListItemText>
+                        <Typography variant="h4">
+                          Contract: {beanstalkAddress.slice(0, 6)}...
                         </Typography>
-                      </Stack>
-                    </Button>
-                  </Box>
-                </>
+                      </ListItemText>
+                      <Typography variant="body2" color="text.secondary">
+                        <ArrowForwardIcon
+                          sx={{ transform: 'rotate(-45deg)', fontSize: 12 }}
+                        />
+                      </Typography>
+                    </Stack>
+                  </Button>
+                </Box>
               </Stack>
             </Stack>
             <Divider />

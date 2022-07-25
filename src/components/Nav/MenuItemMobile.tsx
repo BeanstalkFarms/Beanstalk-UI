@@ -22,8 +22,9 @@ const NavItemMobile: React.FC<{
     to={item.href ? undefined : item.path}
     sx={{ minWidth: 250 }}
     onClick={onClick}
+    disableRipple
   >
-    <Stack direction="row" alignItems="center" spacing={0.5}>
+    <Stack direction="row" alignItems="ce®nter" spacing={0.5}>
       <Typography sx={{ fontSize: item.small ? '18px' : '25px' }} variant="body1" color="text.secondary">
         {item.title}
       </Typography>
