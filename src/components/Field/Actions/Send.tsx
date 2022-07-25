@@ -13,7 +13,6 @@ import TransactionToast from 'components/Common/TxnToast';
 import useAccount from 'hooks/ledger/useAccount';
 import PlotInputField from 'components/Common/Form/PlotInputField';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-import { AppState } from '../../../state';
 import { ZERO_BN } from '../../../constants';
 import { displayFullBN, toStringBaseUnitBN, trimAddress } from '../../../util';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
