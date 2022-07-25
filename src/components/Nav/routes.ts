@@ -121,7 +121,7 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
     },
     {
       path: '/market/activity',
-      title: 'Activity',
+      title: 'Marketplace Activity',
     },
   ],
   // Analytics Menu

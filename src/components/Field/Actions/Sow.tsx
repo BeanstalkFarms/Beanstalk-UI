@@ -196,13 +196,6 @@ const SowForm : React.FC<
               token={PODS}
               amount={numPods}
             />
-            {(maxAmountUsed && maxAmountUsed.gt(0.9)) ? (
-              <Box>
-                <Alert color="warning" icon={<WarningAmberIcon sx={{ fontSize: 22 }} />}>
-                  You are Sowing {displayFullBN(maxAmountUsed.times(100), 4, 0)}% of remaining Soil. 
-                </Alert>
-              </Box>
-            ) : null}
             <Box
               sx={{
                 py: 1,
@@ -212,6 +205,13 @@ const SowForm : React.FC<
             >
               <Typography variant="body1" textAlign="center" color="primary" alignItems="center">Upon <strong>Harvest</strong>, <span><img src={podIconGreen} alt="" height={IconSize.xs} /></span> {displayBN(numPods)} will be redeemable for <span><img src={beanIcon} alt="" height={IconSize.xs} /></span> {displayBN(numPods)}</Typography>
             </Box>
+            {(maxAmountUsed && maxAmountUsed.gt(0.9)) ? (
+              <Box>
+                <Alert color="warning" icon={<WarningAmberIcon sx={{ fontSize: 22 }} />}>
+                  You are Sowing {displayFullBN(maxAmountUsed.times(100), 4, 0)}% of remaining Soil. 
+                </Alert>
+              </Box>
+            ) : null}
             <Box>
               <Accordion variant="outlined">
                 <StyledAccordionSummary title="Transaction Details" />

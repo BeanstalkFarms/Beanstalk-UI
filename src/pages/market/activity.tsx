@@ -5,7 +5,6 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import PageHeader from 'components/Common/PageHeader';
 import { DataGridProps } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
 import podIcon from 'img/beanstalk/pod-icon.svg';
@@ -15,7 +14,7 @@ import ComingSoonCard from 'components/Common/ComingSoonCard';
 import useChainId from 'hooks/useChain';
 import { displayBN, displayFullBN } from '../../util';
 import { SupportedChainId } from '../../constants';
-import CreateButtons from '../../components/Market/CreateButtons';
+import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -112,10 +111,13 @@ const MarketActivityPage: React.FC = () => {
   return (
     <Container maxWidth="lg">
       <Stack spacing={2}>
-        <PageHeader
-          title="Pod Market Activity"
-          description="View all activity for the Pod Market"
-          control={<CreateButtons />}
+        {/* <PageHeader */}
+        {/*  title="Pod Market Activity" */}
+        {/*  description="View all activity for the Pod Market" */}
+        {/*  control={<CreateButtons />} */}
+        {/* /> */}
+        <PageHeaderSecondary
+          title="Marketplace Activity"
         />
         {content}
       </Stack>

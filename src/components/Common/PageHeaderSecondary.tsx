@@ -9,7 +9,7 @@ const PageHeader : React.FC<{
   title?: string | JSX.Element;
   icon?: JSX.Element;
   /** Show a back button to return to `returnPath`. */
-  returnPath: string;
+  returnPath?: string;
   /**  */
   control?: React.ReactElement;
 }> = (props) => {

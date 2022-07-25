@@ -58,7 +58,7 @@ const TokenOutputField : React.FC<{
           />
         )}
         <Typography variant="bodyMedium">
-          {modifier && `${modifier} `}{token.name}
+          {modifier && `${modifier} `}{token.symbol}
         </Typography>
       </Stack>
     </OutputField>
