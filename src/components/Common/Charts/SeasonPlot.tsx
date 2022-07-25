@@ -131,7 +131,7 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
   return (
     <>
       {/* Statistic & Controls */}
-      <Stack direction="row" justifyContent="space-between" sx={{ px: 1.5, pt: 1.5 }}>
+      <Stack direction="row" justifyContent="space-between" sx={{ px: 1.5 }}>
         <Stat
           {...statProps}
           amount={formatValue(displayValue || defaultValue)}

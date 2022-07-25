@@ -37,10 +37,10 @@ const ForecastPage: React.FC = () => {
     content = (
       <>
         <Stack direction={isMobile ? 'column' : 'row'} gap={2}>
-          <Card sx={{ flex: 1 }}>
+          <Card sx={{ flex: 1, pt: 1.5 }}>
             <TWAP />
           </Card>
-          <Card sx={{ flex: 1 }}>
+          <Card sx={{ flex: 1, pt: 1.5 }}>
             <PodRate />
           </Card>
         </Stack>
