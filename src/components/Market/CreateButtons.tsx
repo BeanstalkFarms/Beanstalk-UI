@@ -19,9 +19,12 @@ const CreateButtons: React.FC = () => {
         components={{ Tooltip: Card }}
         title={(
           <MenuList>
-            {ROUTES.market.map((item) => (
-              <MenuItem key={item.path} item={item} onClick={hide} />
-            ))}
+            {ROUTES.market.map((item) => {
+              if (item.path !== ROUTES.market[0].path) {
+                return (<MenuItem key={item.path} item={item} onClick={hide} />);
+              }
+              return null;
+            })}
           </MenuList>
         )}
         onOpen={show}
@@ -50,7 +53,7 @@ const CreateButtons: React.FC = () => {
           className={open ? 'Mui-focusVisible' : ''}
         >
           <Typography variant="h4">
-            Market
+            More
           </Typography>
         </Button>
       </Tooltip>
@@ -60,7 +63,7 @@ const CreateButtons: React.FC = () => {
         variant="contained"
         sx={{ py: 1 }}
       >
-        <Typography variant="h4">Create Order</Typography>
+        <Typography variant="h4">Create New</Typography>
       </Button>
     </Stack>
   );

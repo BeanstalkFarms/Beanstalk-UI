@@ -18,8 +18,8 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, newBeans, newSoil, weat
   <Box sx={{ border: 1, borderColor: BeanstalkPalette.lightBlue, p: 0.75, borderRadius: '8px' }}>
     <Stack direction="row" justifyContent="space-between" alignItems="center">
       <Grid container alignItems="flex-end">
-        <Grid item md={2} xs={4}>
-          <Typography color="text.primary" sx={{ fontSize: '14px' }}>{displayBN(season)}</Typography>
+        <Grid item md={2} xs={2.5}>
+          <Typography color="text.primary" variant="bodySmall">{displayBN(season)}</Typography>
         </Grid>
         <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
           <Stack direction="row" alignItems="center" spacing="2px">
@@ -36,65 +36,50 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, newBeans, newSoil, weat
             </Typography>
           </Stack>
         </Grid>
-        <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
-          <Typography color="text.primary" sx={{ fontSize: '14px' }}>{displayBN(newBeans)}</Typography>
-        </Grid>
-        <Grid item md={2.4} xs={0} display={{ xs: 'none', md: 'block' }}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{ width: '20%', alignSelf: 'flex-start' }}
-          >
-            <ArrowUpwardIcon sx={{ width: '14px', height: '14px' }} />
+        <Grid item md={2.6} xs={3} display={{ md: 'block' }}>
+          {newBeans.gt(new BigNumber(0)) ? (
+            <Stack direction="row" alignItems="center">
+              <ArrowUpwardIcon sx={{ width: '14px', height: '14px', color: BeanstalkPalette.logoGreen }} />
+              <Typography
+                color={BeanstalkPalette.logoGreen}
+                variant="bodySmall"
+              >
+                {displayBN(newBeans)}
+              </Typography>
+            </Stack>
+          ) : (
             <Typography
-              color="text.primary"
-              sx={{
-                fontSize: '14px',
-                fontWeight: 500,
-              }}
+              color={BeanstalkPalette.lightishGrey}
+              variant="bodySmall"
+            >
+              {displayBN(newBeans)}
+            </Typography>
+          )}
+        </Grid>
+        <Grid item md={2.4} xs={3} display={{ md: 'block' }}>
+          {newSoil.gt(new BigNumber(0)) ? (
+            <Stack direction="row" alignItems="center">
+              <ArrowUpwardIcon sx={{ width: '14px', height: '14px', color: BeanstalkPalette.logoGreen }} />
+              <Typography
+                color={BeanstalkPalette.logoGreen}
+                variant="bodySmall"
+              >
+                {displayBN(newSoil)}
+              </Typography>
+            </Stack>
+          ) : (
+            <Typography
+              color={BeanstalkPalette.lightishGrey}
+              variant="bodySmall"
             >
               {displayBN(newSoil)}
             </Typography>
-          </Stack>
+          )}
         </Grid>
-        <Grid item md={2.4} xs={8} sx={{ textAlign: 'right' }}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing="6px"
-            sx={{ width: '20%', alignSelf: 'flex-end' }}
-          >
-            <Typography
-              color="text.primary"
-              sx={{
-                fontSize: '14px',
-                fontWeight: 500,
-              }}
-            >
-              {displayBN(weather)}
-            </Typography>
-            <Stack direction="row" alignItems="center">
-              <Typography
-                color="text.primary"
-                sx={{
-                  fontSize: '14px',
-                  fontWeight: 500,
-                }}
-              >
-                (
-              </Typography>
-              <ArrowDownwardIcon sx={{ width: '14px', height: '14px' }} />
-              <Typography
-                color="text.primary"
-                sx={{
-                  fontSize: '14px',
-                  fontWeight: 500,
-                }}
-              >
-                3%)
-              </Typography>
-            </Stack>
-          </Stack>
+        <Grid item md={2.4} xs={3.5} sx={{ textAlign: 'right' }}>
+          <Typography color="text.primary" variant="bodySmall" display="flex" flexDirection="row" alignItems="center" justifyContent="end">
+            {displayBN(weather)} (<ArrowDownwardIcon sx={{ width: '14px', height: '14px', display: 'inline' }} />3%)
+          </Typography>
         </Grid>
       </Grid>
     </Stack>

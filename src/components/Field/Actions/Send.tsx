@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
+import { Accordion, AccordionDetails, Alert, Box, Stack } from '@mui/material';
 import AddressInputField from 'components/Common/Form/AddressInputField';
 import FieldWrapper from 'components/Common/Form/FieldWrapper';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
@@ -12,10 +12,14 @@ import { BeanstalkReplanted } from 'generated/index';
 import TransactionToast from 'components/Common/TxnToast';
 import useAccount from 'hooks/ledger/useAccount';
 import PlotInputField from 'components/Common/Form/PlotInputField';
-import Warning from 'components/Common/Form/Warning';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import { AppState } from '../../../state';
+import { ZERO_BN } from '../../../constants';
 import { displayFullBN, toStringBaseUnitBN, trimAddress } from '../../../util';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
+import { IconSize } from '../../App/muiTheme';
+import IconWrapper from '../../Common/IconWrapper';
 
 export type SendFormValues = {
   plot: PlotFragment;
@@ -55,33 +59,35 @@ const SendForm: React.FC<
             <FieldWrapper label="Recipient Address">
               <AddressInputField name="to" />
             </FieldWrapper>
-            {isReady ? (
-              <>
-                <Warning message="Pods can be exchanged in a decentralized fashion on the Pod Market. Send at your own risk." />
-                <Box>
-                  <Accordion variant="outlined">
-                    <StyledAccordionSummary title="Transaction Details" />
-                    <AccordionDetails>
-                      <TxnPreview
-                        actions={[
-                          {
-                            type:    ActionType.SEND_PODS,
-                            amount:  plot.amount!,
-                            // start:   plot.start ? plot.start : ZERO_BN,
-                            // end:     plot.end ? plot.end : ZERO_BN,
-                            address: values.to !== null ? values.to : ''
-                          },
-                          {
-                            type: ActionType.END_TOKEN,
-                            token: PODS
-                          }
-                        ]}
-                      />
-                    </AccordionDetails>
-                  </Accordion>
-                </Box>
-              </>
-            ) : null}
+            <Box>
+              <Alert
+                color="warning"
+                icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
+              >
+                Pods can be exchanged in a decentralized fashion on the Pod Market. Send at your own risk.
+              </Alert>
+            </Box>
+            <Box>
+              <Accordion variant="outlined">
+                <StyledAccordionSummary title="Transaction Details" />
+                <AccordionDetails>
+                  <TxnPreview
+                    actions={[
+                      {
+                        type:    ActionType.SEND_PODS,
+                        start:   plot.start ? plot.start : ZERO_BN,
+                        end:     plot.end ? plot.end : ZERO_BN,
+                        address: values.to !== null ? values.to : ''
+                      },
+                      {
+                        type: ActionType.END_TOKEN,
+                        token: PODS
+                      }
+                    ]}
+                  />
+                </AccordionDetails>
+              </Accordion>
+            </Box>
           </>
         )}
         <LoadingButton

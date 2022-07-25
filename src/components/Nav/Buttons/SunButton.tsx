@@ -5,7 +5,7 @@ import {
   Typography,
   useMediaQuery,
   Box,
-  Grid,
+  Grid, Divider,
 } from '@mui/material';
 import { NEW_BN } from 'constants/index';
 import useSeason from 'hooks/useSeason';
@@ -26,7 +26,7 @@ const mockSunData = new Array(20).fill(null).map(() => ({
   weather: new BigNumber(5000 * Math.random()),
 }));
 
-const MAX_ITEMS = 5;
+const MAX_ITEMS = 8;
 
 const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   const season = useSeason();
@@ -48,60 +48,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
 
   const tableContent = (
     <Stack gap={1}>
-      {/* Upcoming Season Header */}
-      <Box>
-        <Typography color="text.primary" variant="h4">
-          Upcoming Season in 42m
-        </Typography>
-        {/* table header */}
-        <Box
-          display="flex"
-          sx={{
-            px: 1, // 1 + 2 from Table Body
-            pt: 1,
-            pb: 0.5,
-          }}
-        >
-          <Grid container alignItems="flex-end">
-            <Grid item md={2} xs={4}>
-              <Typography color="text.primary" sx={{ fontSize: '14px' }}>
-                Season
-              </Typography>
-            </Grid>
-            <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
-              <Typography color="text.primary" sx={{ fontSize: '14px' }}>
-                Precipitation
-              </Typography>
-            </Grid>
-            <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
-              <Typography color="text.primary" sx={{ fontSize: '14px' }}>
-                New Beans
-              </Typography>
-            </Grid>
-            <Grid item md={2.4} xs={0} display={{ xs: 'none', md: 'block' }}>
-              <Typography color="text.primary" sx={{ fontSize: '14px' }}>
-                New Soil
-              </Typography>
-            </Grid>
-            <Grid item md={2.4} xs={8} sx={{ textAlign: 'right' }}>
-              <Typography color="text.primary" sx={{ fontSize: '14px' }}>
-                Weather
-              </Typography>
-            </Grid>
-          </Grid>
-        </Box>
-        {/* current season */}
-        <SeasonCard
-          season={new BigNumber(7845)}
-          newBeans={new BigNumber(100000)}
-          newSoil={new BigNumber(1000)}
-          weather={new BigNumber(5000)}
-        />
-      </Box>
       {/* Past Seasons */}
-      <Typography color="text.primary" variant="h4">
-        Past Seasons
-      </Typography>
       <Stack
         gap={1}
         sx={{
@@ -109,6 +56,50 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           overflowY: 'auto',
         }}
       >
+        <Typography color="text.primary" variant="h4">
+          Season X in 42m
+        </Typography>
+        {/* table header */}
+        <Box
+          display="flex"
+          sx={{
+          px: 1, // 1 + 2 from Table Body
+        }}
+      >
+          <Grid container alignItems="flex-end">
+            <Grid item md={2} xs={2.5}>
+              <Typography color="text.primary" variant="bodySmall">
+                Season
+              </Typography>
+            </Grid>
+            <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
+              <Typography color="text.primary" variant="bodySmall">
+                Precipitation
+              </Typography>
+            </Grid>
+            <Grid item md={2.6} xs={3} display={{ md: 'block' }}>
+              <Typography color="text.primary" variant="bodySmall">
+                New Beans
+              </Typography>
+            </Grid>
+            <Grid item md={2.4} xs={3} display={{ md: 'block' }}>
+              <Typography color="text.primary" variant="bodySmall">
+                New Soil
+              </Typography>
+            </Grid>
+            <Grid item md={2.4} xs={3.5} sx={{ textAlign: 'right' }}>
+              <Typography color="text.primary" variant="bodySmall">
+                Weather
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
+        <SeasonCard
+          season={new BigNumber(7845)}
+          newBeans={new BigNumber(0)}
+          newSoil={new BigNumber(0)}
+          weather={new BigNumber(5000)}
+      />
         {mockSunData.map((s) => (
           <SeasonCard
             key={s.season.toString()}
@@ -119,6 +110,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           />
         ))}
       </Stack>
+      <Divider />
       <Typography
         align="center"
         color={BeanstalkPalette.lightishGrey}
@@ -140,6 +132,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       drawerContent={<Box sx={{ p: 1 }}>{tableContent}</Box>}
       popoverContent={tableContent}
       hideTextOnMobile
+      popperWidth="500px"
       {...props}
     />
   );

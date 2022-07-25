@@ -6,7 +6,7 @@ import {
   Button,
   ButtonProps,
   Card,
-  Divider,
+  Divider, Drawer,
   ListItemText,
   Menu,
   MenuItem,
@@ -208,8 +208,13 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           {/* {trimAddress(getAccount(account.address), !isMedium)} */}
         </Typography>
       </Button>
+      {/* Mobile: Drawer */}
+      <Drawer anchor="bottom" open={menuVisible} onClose={toggleMenuAnchor} sx={{ display: { xs: 'block', lg: 'none' } }}>
+        {menu}
+      </Drawer>
       {/* Popup Menu */}
       <Menu
+        sx={{ display: { xs: 'none', lg: 'block' } }}
         elevation={0}
         anchorEl={menuAnchor}
         open={menuVisible}

@@ -36,6 +36,8 @@ import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import useBDV from 'hooks/useBDV';
 import TokenIcon from 'components/Common/TokenIcon';
+import { IconSize } from '../../App/muiTheme';
+import IconWrapper from '../../Common/IconWrapper';
 
 // -----------------------------------------------------------------------
 
@@ -277,7 +279,7 @@ const ConvertForm : React.FC<
             </Stack>
             {(maxAmountUsed && maxAmountUsed.gt(0.9)) ? (
               <Box>
-                <Alert color="warning" icon={<WarningAmberIcon sx={{ fontSize: 22 }} />}>
+                <Alert color="warning" icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}>
                   You are converting {displayFullBN(maxAmountUsed.times(100), 4, 0)}% of the way to the peg. 
                   When Converting all the way to the peg, the Convert may fail due to a small amount of slippage in the direction of the peg.
                 </Alert>
