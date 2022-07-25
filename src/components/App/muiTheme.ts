@@ -328,7 +328,7 @@ let muiTheme = createTheme({
       },
       styleOverrides: {
         root: sx({
-          px: 2,
+          px: 1,
           alignItems: 'center',
           '& .MuiAlert-icon': {
             m: 0,
@@ -376,10 +376,11 @@ let muiTheme = createTheme({
         // FIXME: trying to disable the increase
         // in margin on AccordionSummary during expansion.
         // None of these work...
-        root: {
+        root: sx({
           minHeight: '0 !important',
           my: 0,
-        },
+          px: 1
+        }),
         expanded: sx({
           minHeight: '0 !important',
           m: [0, 0],
