@@ -18,7 +18,7 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, newBeans, newSoil, weat
   <Box sx={{ border: 1, borderColor: BeanstalkPalette.lightBlue, p: 0.75, borderRadius: '8px' }}>
     <Stack direction="row" justifyContent="space-between" alignItems="center">
       <Grid container alignItems="flex-end">
-        <Grid item md={2} xs={4}>
+        <Grid item md={2} xs={2.5}>
           <Typography color="text.primary" sx={{ fontSize: '14px' }}>{displayBN(season)}</Typography>
         </Grid>
         <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
@@ -36,28 +36,47 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, newBeans, newSoil, weat
             </Typography>
           </Stack>
         </Grid>
-        <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
-          <Typography color="text.primary" sx={{ fontSize: '14px' }}>{displayBN(newBeans)}</Typography>
-        </Grid>
-        <Grid item md={2.4} xs={0} display={{ xs: 'none', md: 'block' }}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{ width: '20%', alignSelf: 'flex-start' }}
-          >
-            <ArrowUpwardIcon sx={{ width: '14px', height: '14px' }} />
+        <Grid item md={2.6} xs={3.166} display={{ md: 'block' }}>
+          {newBeans.gt(new BigNumber(0)) ? (
+            <Stack direction="row" alignItems="center">
+              <ArrowUpwardIcon sx={{ width: '14px', height: '14px', color: BeanstalkPalette.logoGreen }} />
+              <Typography
+                color={BeanstalkPalette.logoGreen}
+                sx={{ fontSize: '14px' }}
+              >
+                {displayBN(newBeans)}
+              </Typography>
+            </Stack>
+          ) : (
             <Typography
-              color="text.primary"
-              sx={{
-                fontSize: '14px',
-                fontWeight: 500,
-              }}
+              color={BeanstalkPalette.lightishGrey}
+              sx={{ fontSize: '14px' }}
+            >
+              {displayBN(newBeans)}
+            </Typography>
+          )}
+        </Grid>
+        <Grid item md={2.4} xs={3.166} display={{ md: 'block' }}>
+          {newSoil.gt(new BigNumber(0)) ? (
+            <Stack direction="row" alignItems="center">
+              <ArrowUpwardIcon sx={{ width: '14px', height: '14px', color: BeanstalkPalette.logoGreen }} />
+              <Typography
+                color={BeanstalkPalette.logoGreen}
+                sx={{ fontSize: '14px' }}
+              >
+                {displayBN(newSoil)}
+              </Typography>
+            </Stack>
+          ) : (
+            <Typography
+              color={BeanstalkPalette.lightishGrey}
+              sx={{ fontSize: '14px' }}
             >
               {displayBN(newSoil)}
             </Typography>
-          </Stack>
+          )}
         </Grid>
-        <Grid item md={2.4} xs={8} sx={{ textAlign: 'right' }}>
+        <Grid item md={2.4} xs={3.166} sx={{ textAlign: 'right' }}>
           <Stack
             direction="row"
             alignItems="center"

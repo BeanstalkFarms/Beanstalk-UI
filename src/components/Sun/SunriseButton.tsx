@@ -32,29 +32,43 @@ const SunriseButton : React.FC = () => {
   }, [beanstalk]);
   return (
     <Formik initialValues={{}} onSubmit={onSubmit}>
-      {(formikProps: FormikProps<{}>) => (
-        <Form>
-          <LoadingButton
-            loading={formikProps.isSubmitting}
-            disabled={formikProps.isSubmitting}
-            type="submit"
-            variant="contained"
-            color="light"
-            sx={{
-              backgroundColor: '#FBF2B9',
-              borderColor: '#F7CF2D',
-              borderWidth: 1,
-              borderStyle: 'solid',
-              color: 'text.primary'
-            }}
-            fullWidth
-          >
-            {!formikProps.isSubmitting && (
-              <><img src={sunIcon} alt="Sunrise" style={{ height: 28 }} />&nbsp;</>
-            )}Sunrise
-          </LoadingButton>
-        </Form>
-      )}
+      {(formikProps: FormikProps<{}>) => {
+        const disabled = formikProps.isSubmitting;
+        // const disabled = true
+        return (
+          <Form>
+            <LoadingButton
+              loading={formikProps.isSubmitting}
+              disabled={disabled}
+              type="submit"
+              variant="contained"
+              color="light"
+              sx={{
+                backgroundColor: '#FBF2B9',
+                borderColor: '#F7CF2D',
+                height: { xs: '60px', md: '45px' },
+                // borderWidth: 1,
+                // borderStyle: 'solid',
+                color: 'text.primary',
+                '&:hover': {
+                  backgroundColor: '#FBF2B9 !important',
+                  opacity: 0.9
+                }
+              }}
+              fullWidth
+            >
+              {!disabled ? (
+                <>
+                  <img src={sunIcon} alt="Sunrise" style={{ height: 28 }} />&nbsp;
+                  Sunrise
+                </>
+              ) : (
+                <>Sunrise Not Available</>
+              )}
+            </LoadingButton>
+          </Form>
+        );
+      }}
     </Formik>
   );
 };
