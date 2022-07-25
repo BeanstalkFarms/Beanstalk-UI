@@ -56,24 +56,28 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
     {
       path: 'nft',
       title: 'BeaNFTs',
-      icon: beanNFTIcon
+      icon: beanNFTIcon,
+      small: true
     },
     {
       path: 'trade',
       title: 'Trade',
-      icon: tradeIcon
+      icon: tradeIcon,
+      small: true
     },
     {
       path: 'governance',
       href: 'https://snapshot.org/#/beanstalkdao.eth',
       title: 'Governance',
-      icon: governanceIcon
+      icon: governanceIcon,
+      small: true
     },
     {
       path: 'docs',
       href: 'https://docs.bean.money',
       title: 'Docs',
-      icon: governanceIcon
+      icon: governanceIcon,
+      small: true
     },
   ],
   // About Button
