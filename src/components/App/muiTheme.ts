@@ -331,7 +331,7 @@ let muiTheme = createTheme({
           px: 2,
           alignItems: 'center',
           '& .MuiAlert-icon': {
-            mr: 1,
+            m: 0,
             p: 0
           }
         }),

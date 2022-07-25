@@ -20,6 +20,7 @@ import { displayFullBN, toStringBaseUnitBN, trimAddress } from '../../../util';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 import { IconSize } from '../../App/muiTheme';
+import IconWrapper from '../../Common/IconWrapper';
 
 export type SendFormValues = {
   plot: PlotFragment;
@@ -126,7 +127,7 @@ const SendForm: React.FC<
             <Box>
               <Alert
                 color="warning"
-                icon={<WarningAmberIcon sx={{ fontSize: IconSize.medium }} />}
+                icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
               >
                 Pods can be exchanged in a decentralized fashion on the Pod Market. Send at your own risk.
               </Alert>

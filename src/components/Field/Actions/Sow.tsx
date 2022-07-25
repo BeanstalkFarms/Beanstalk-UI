@@ -43,6 +43,7 @@ import { useFetchBeanstalkField } from 'state/beanstalk/field/updater';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
+import IconWrapper from '../../Common/IconWrapper';
 
 type SowFormValues = FormState & {
   settings: {
@@ -180,7 +181,7 @@ const SowForm : React.FC<
         />
         {!hasSoil ? (
           <Box>
-            <Alert color="warning" icon={<WarningAmberIcon sx={{ fontSize: 22 }} />}>
+            <Alert color="warning" icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}>
               There is currently no Soil. <Link href="https://docs.bean.money/farm/field#soil" target="_blank" rel="noreferrer">Learn more</Link>
             </Alert>
           </Box>
@@ -209,7 +210,7 @@ const SowForm : React.FC<
               <Box>
                 <Alert
                   color="warning"
-                  icon={<WarningAmberIcon sx={{ fontSize: IconSize.medium }} />}
+                  icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
                 >
                   You are Sowing {displayFullBN(maxAmountUsed.times(100), 4, 0)}% of remaining Soil. 
                 </Alert>

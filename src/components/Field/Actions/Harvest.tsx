@@ -33,6 +33,7 @@ import TransactionToast from '../../Common/TxnToast';
 import { ZERO_BN } from '../../../constants';
 import TokenAdornment from '../../Common/Form/TokenAdornment';
 import { IconSize } from '../../App/muiTheme';
+import IconWrapper from '../../Common/IconWrapper';
 
 // -----------------------------------------------------------------------
 
@@ -100,7 +101,7 @@ const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
               <Box>
                 <Alert
                   color="warning"
-                  icon={<WarningAmberIcon sx={{ fontSize: IconSize.medium }} />}
+                  icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
                 >
                   You can Harvest your Pods and Deposit Beans into the Silo in one transaction on the <Link href={`/#/silo/${bean.address}`}>Bean</Link> or <Link href={`/#/silo/${lp.address}`}>LP</Link> Deposit page.
                 </Alert>
