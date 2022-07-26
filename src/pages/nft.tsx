@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button, Card, Container, Stack, Tab, Tabs, Typography, useMediaQuery, } from '@mui/material';
+import { Card, Container, Link, Stack, Tab, Tabs, Typography, useMediaQuery, } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
 import { useSigner } from 'hooks/ledger/useSigner';
 import fetch from 'node-fetch';
@@ -13,10 +13,12 @@ import { useGenesisNFTContract, useWinterNFTContract } from '../hooks/useContrac
 import TransactionToast from '../components/Common/TxnToast';
 import AddressIcon from '../components/Common/AddressIcon';
 import useAccount from '../hooks/ledger/useAccount';
+import NoRowsOverlay from '../components/Common/NoRowsOverlay';
 
 const NFTPage: React.FC = () => {
   const account = useAccount();
   const theme = useTheme();
+  const authState = !account ? 'disconnected' : 'ready';
   const { data: signer } = useSigner();
   const genesisContract = useGenesisNFTContract(signer);
   const winterContract = useWinterNFTContract(signer);
@@ -195,13 +197,11 @@ const NFTPage: React.FC = () => {
       });
     }
   }, [account, parseMints]);
-  
+
   const isMobile = useMediaQuery(theme.breakpoints.down('sm')); //
 
-  // TODO: direct user to connect a wallet
-  if (account === undefined) {
-    return null;
-  }
+  const hideGenesis = !unmintedGenesis || unmintedGenesis.length === 0;
+  const hideWinter = !unmintedWinter || unmintedWinter.length === 0;
 
   return (
     <Container maxWidth="lg">
@@ -210,53 +210,57 @@ const NFTPage: React.FC = () => {
           title={(
             <Stack direction="row" gap={0.5} alignItems="center">
               <AddressIcon address={account} />
-              <Typography variant="h1">{`${getAccount(account).substring(0, 7)}...'s BeaNFTs`}</Typography>
+              {account && account !== undefined ? (
+                <Typography variant="h1">{`${getAccount(account).substring(0, 7)}...'s BeaNFTs`}</Typography>
+              ) : (
+                <Typography variant="h1">BeaNFTs</Typography>
+              )}
             </Stack>
           )}
-          control={
-            <Stack height="100%" justifyContent="end" width="100%">
-              {tab === 0 && genesisNFTs && (
-                <Button disabled={!unmintedGenesis || unmintedGenesis.length === 0} onClick={mintAllGenesis}>
-                  { isMobile ? 'Mint all' : 'Mint All Genesis' }
-                </Button>
-              )}
-              {tab === 1 && winterNFTs && (
-                <Button disabled={!unmintedWinter || unmintedWinter.length === 0} onClick={mintAllWinter}>
-                  { isMobile ? 'Mint all' : 'Mint All Winter' }
-                </Button>
-              )}
-            </Stack>
-          }
         />
         <Card sx={{ p: 2 }}>
           <Stack gap={1.5}>
-            {/* <Typography variant="h2">My BeaNFTs</Typography> */}
-            {/* <WalletCard address={account.address} /> */}
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ px: 0.5 }}>
               <Tabs value={tab} onChange={handleChangeTab} sx={{ minHeight: 0 }}>
-                <Tab label={`Genesis (${genesisNFTs === null ? 0 : genesisNFTs?.length})`} />
+                <Tab label={`Genesis (${genesisNFTs === null ? 0 : genesisNFTs?.length})`} />\
                 <Tab label={`Winter (${winterNFTs === null ? 0 : winterNFTs?.length})`} />
               </Tabs>
+              {tab === 0 && genesisNFTs && !hideGenesis && (
+                <Link underline="none" onClick={mintAllGenesis} sx={{ cursor: 'pointer', position: 'relative', zIndex: 2000 }}>
+                  <Typography variant="h4">{isMobile ? 'Mint all' : 'Mint All Genesis'}</Typography>
+                </Link>
+              )}
+              {tab === 1 && winterNFTs && !hideWinter && (
+                <Link underline="none" onClick={mintAllWinter} sx={{ cursor: 'pointer', position: 'relative', zIndex: 2000 }}>
+                  <Typography variant="h4">{isMobile ? 'Mint all' : 'Mint All Winter'}</Typography>
+                </Link>
+              )}
             </Stack>
-            {/* <Divider /> */}
-            {/* genesis */}
-            {tab === 0 && (
-              <NFTGrid
-                nfts={genesisNFTs}
-                handleDialogOpen={handleDialogOpen}
-              />
-            )}
-            {/* winter */}
-            {tab === 1 && (
-              <NFTGrid
-                nfts={winterNFTs}
-                handleDialogOpen={handleDialogOpen}
-              />
+            {/* Zero state when not logged in */}
+            {account === undefined ? (
+              <NoRowsOverlay height={300} title="BeaNFTs" state={authState} />
+            ) : (
+              <>
+                {/* genesis */}
+                {tab === 0 && (
+                  <NFTGrid
+                    nfts={genesisNFTs}
+                    handleDialogOpen={handleDialogOpen}
+                  />
+                )}
+                {/* winter */}
+                {tab === 1 && (
+                  <NFTGrid
+                    nfts={winterNFTs}
+                    handleDialogOpen={handleDialogOpen}
+                  />
+                )}
+              </>
             )}
           </Stack>
         </Card>
       </Stack>
-      {selectedNFT !== null &&
+      {selectedNFT !== null && account &&
       <NFTDialog
         nft={selectedNFT}
         dialogOpen={dialogOpen}
@@ -264,7 +268,6 @@ const NFTPage: React.FC = () => {
         address={account}
         handleMint={contractMap[selectedNFT.subcollection]}
           />}
-
     </Container>
   );
 };
