@@ -44,6 +44,7 @@ import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
 import IconWrapper from '../../Common/IconWrapper';
+import TokenIcon from '../../Common/TokenIcon';
 
 type SowFormValues = FormState & {
   settings: {
@@ -97,7 +98,7 @@ const SowForm : React.FC<
 
   ///
   const hasSoil = soil.gt(0);
-  const beans = tokenIn === Bean 
+  const beans = tokenIn === Bean
     ? amount  || ZERO_BN
     : amountOut || ZERO_BN;
   const isSubmittable = hasSoil && beans?.gt(0);
@@ -129,7 +130,7 @@ const SowForm : React.FC<
           /// 1 SOIL is consumed by 1 BEAN
           setFieldValue('maxAmountIn', soil);
         } else if (tokenIn === Eth || tokenIn === Weth) {
-          /// Estimate how many ETH it will take to buy `soil` BEAN. 
+          /// Estimate how many ETH it will take to buy `soil` BEAN.
           /// TODO: across different forms of `tokenIn`.
           /// This (obviously) only works for Eth and Weth.
           const estimate = await Farm.estimate(
@@ -140,7 +141,7 @@ const SowForm : React.FC<
           setFieldValue(
             'maxAmountIn',
             toTokenUnitsBN(
-              estimate.amountOut.toString(), 
+              estimate.amountOut.toString(),
               tokenIn.decimals
             ),
           );
@@ -189,13 +190,22 @@ const SowForm : React.FC<
         {isSubmittable ? (
           <>
             <TxnSeparator />
-            <Stack direction="row" justifyContent="space-between" sx={{ p: 1 }}>
-              <Typography variant="body1">Place in Pod Line:</Typography>
-              <Typography variant="body1">{displayBN(podLineLength)}</Typography>
-            </Stack>
             <TokenOutputField
               token={PODS}
               amount={numPods}
+              override={(
+                <Stack direction="row" alignItems="center" gap={0.5}>
+                  <TokenIcon
+                    token={PODS}
+                    style={{
+                      height: IconSize.small,
+                    }}
+                  />
+                  <Typography variant="bodyMedium">
+                    {PODS.symbol} @ {displayBN(podLineLength)}
+                  </Typography>
+                </Stack>
+              )}
             />
             <Box
               sx={{
