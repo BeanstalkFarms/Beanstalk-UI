@@ -26,12 +26,12 @@ const OrderDetails: React.FC<OrderDetailsProps & CardProps> = ({
           <Typography variant="h4">Pod Order</Typography>
           {/* FIXME: use <Chip /> instead */}
           <Box sx={{
-              px: 1,
-              py: 0.5,
-              borderRadius: 1,
-              backgroundColor: BeanstalkPalette.washedGreen,
-              color: BeanstalkPalette.logoGreen
-            }}>
+            px: 1,
+            py: 0.5,
+            borderRadius: 1,
+            backgroundColor: BeanstalkPalette.washedGreen,
+            color: BeanstalkPalette.logoGreen
+          }}>
             <Typography variant="body1">
               {podOrder.id.substring(0, 6)}
             </Typography>

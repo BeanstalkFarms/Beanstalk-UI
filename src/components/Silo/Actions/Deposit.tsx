@@ -259,7 +259,7 @@ const Deposit : React.FC<{
   const amountToBdv = useCallback((amount: BigNumber) => bdvPerToken.times(amount), [bdvPerToken]);
 
   /// Farmer
-  const balances = useFarmerBalances();
+  const balances                = useFarmerBalances();
   const [refetchFarmerSilo]     = useFetchFarmerSilo();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
 

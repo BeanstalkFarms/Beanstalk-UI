@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Box,
-  Button,
   Card,
   Container,
   Stack,
@@ -15,6 +14,7 @@ import PageHeaderSecondary from 'components/Common/PageHeaderSecondary';
 import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
 import usePodListing from 'hooks/usePodListing';
 import useAccount from 'hooks/ledger/useAccount';
+import CancelListing from 'components/Market/Actions/CancelListing';
 
 const ListingPage: React.FC = () => {
   const account = useAccount();
@@ -41,21 +41,17 @@ const ListingPage: React.FC = () => {
           returnPath="/market"
         />
         {/* Details Card */}
-        <ListingDetails
-          podListing={listing}
-          harvestableIndex={harvestableIndex}
-        />
+        <Card sx={{ p: 2 }}>
+          <ListingDetails
+            podListing={listing}
+            harvestableIndex={harvestableIndex}
+          />
+        </Card>
         {/* Buy Pods */}
         {account === listing.account ? (
-          // <Card>
-          <Button
-            color="error"
-            variant="contained"
-            fullWidth
-            >
-            Cancel
-          </Button>
-          // </Card>
+          <CancelListing
+            id={listing.id}
+          />
         ) : (
           <Card sx={{ position: 'relative' }}>
             <Stack gap={1.5}>
@@ -73,7 +69,7 @@ const ListingPage: React.FC = () => {
           </Card>
         )}
         <Box sx={{ }}>
-          <Typography color="text.secondary">
+          <Typography color="text.secondary" textAlign="right">
             Data source: {source === Source.SUBGRAPH ? 'Subgraph' : 'RPC'}
           </Typography>
         </Box>

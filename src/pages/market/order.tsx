@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Box,
-  Button,
   Card,
   Container,
   Divider,
@@ -11,6 +10,7 @@ import { useParams } from 'react-router-dom';
 import usePodOrder from 'hooks/usePodOrder';
 import { Source } from 'util/index';
 import useAccount from 'hooks/ledger/useAccount';
+import CancelOrder from 'components/Market/Actions/CancelOrder';
 import FillOrder from '../../components/Market/Actions/FillOrder';
 import OrderDetails from '../../components/Market/Cards/OrderDetails';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
@@ -62,13 +62,9 @@ const OrderPage: React.FC = () => {
                 color="secondary"
                 sx={{ my: 1, borderWidth: 0, borderTopWidth: 1, }}
               />
-              <Button
-                color="error"
-                variant="text"
-                fullWidth
-                >
-                Cancel
-              </Button>
+              <CancelOrder
+                order={order}
+              />
             </Box>
           ) : null}
         </Card>
