@@ -11,7 +11,7 @@ const NoRowsOverlay: React.FC<{
   state,
   height
 }) => (
-  <Stack height="100%" alignItems="center" justifyContent="center" height={height}>
+  <Stack height="100%" alignItems="center" justifyContent="center">
     <Typography variant="body1" color="gray">
       {state === 'disconnected'
         ? `Connect a wallet to view ${title}`
