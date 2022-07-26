@@ -40,7 +40,7 @@ const marketplaceTableStyle = {
     },
     '& .MuiDataGrid-row': {
       border: 1,
-      borderColor: BeanstalkPalette.lightBlue,
+      borderColor: BeanstalkPalette.blue,
       borderRadius: 1,
       py: 2.4,
       mb: 0.8,
@@ -87,7 +87,7 @@ const MarketBaseTable: React.FC<
 }) => {
   ///
   const tableHeight = useMemo(() => {
-    if (!rows || rows.length === 0) return '150px';
+    if (!rows || rows.length === 0) return '300px';
     return 39 + 58 + Math.min(rows.length, maxRows || MAX_ROWS) * 58;
   }, [rows, maxRows]);
 

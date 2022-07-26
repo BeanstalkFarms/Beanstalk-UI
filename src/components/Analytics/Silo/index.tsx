@@ -8,7 +8,7 @@ const SiloAnalytics: React.FC<{}> = () => {
   return (
     <Card>
       <Stack gap={2}>
-        <Tabs value={tab} onChange={handleChangeTab} sx={{ px: 2, pt: 2 }}>
+        <Tabs value={tab} onChange={handleChangeTab} sx={{ px: 2, pt: 2, pb: 1.5 }}>
           <Tab label="Deposited Beans" />
           <Tab label="Withdrawn Beans" />
           <Tab label="Deposited LP" />

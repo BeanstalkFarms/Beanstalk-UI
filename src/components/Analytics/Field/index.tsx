@@ -12,7 +12,7 @@ const FieldAnalytics: React.FC<{}> = () => {
   return (
     <Card>
       <Stack>
-        <Tabs value={tab} onChange={handleChangeTab} sx={{ px: 2, pt: 2 }}>
+        <Tabs value={tab} onChange={handleChangeTab} sx={{ px: 2, pt: 2, pb: 1.5 }}>
           <Tab label="RRoR" />
           <Tab label="Weather" />
           <Tab label="Pods" />

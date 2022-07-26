@@ -43,6 +43,8 @@ import { useFetchBeanstalkField } from 'state/beanstalk/field/updater';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
+import IconWrapper from '../../Common/IconWrapper';
+import TokenIcon from '../../Common/TokenIcon';
 
 type SowFormValues = FormState & {
   settings: {
@@ -133,7 +135,7 @@ const SowForm : React.FC<
           /// 1 SOIL is consumed by 1 BEAN
           setFieldValue('maxAmountIn', soil);
         } else if (tokenIn === Eth || tokenIn === Weth) {
-          /// Estimate how many ETH it will take to buy `soil` BEAN. 
+          /// Estimate how many ETH it will take to buy `soil` BEAN.
           /// TODO: across different forms of `tokenIn`.
           /// This (obviously) only works for Eth and Weth.
           const estimate = await Farm.estimate(
@@ -144,7 +146,7 @@ const SowForm : React.FC<
           setFieldValue(
             'maxAmountIn',
             toTokenUnitsBN(
-              estimate.amountOut.toString(), 
+              estimate.amountOut.toString(),
               tokenIn.decimals
             ),
           );
@@ -185,7 +187,7 @@ const SowForm : React.FC<
         />
         {!hasSoil ? (
           <Box>
-            <Alert color="warning" icon={<WarningAmberIcon sx={{ fontSize: 22 }} />}>
+            <Alert color="warning" icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}>
               There is currently no Soil. <Link href="https://docs.bean.money/farm/field#soil" target="_blank" rel="noreferrer">Learn more</Link>
             </Alert>
           </Box>
@@ -193,21 +195,24 @@ const SowForm : React.FC<
         {isSubmittable ? (
           <>
             <TxnSeparator />
-            <Stack direction="row" justifyContent="space-between" sx={{ p: 1 }}>
-              <Typography variant="body1">Place in Pod Line:</Typography>
-              <Typography variant="body1">{displayBN(podLineLength)}</Typography>
-            </Stack>
             <TokenOutputField
               token={PODS}
               amount={numPods}
+              override={(
+                <Stack direction="row" alignItems="center" gap={0.5}>
+                  <TokenIcon
+                    token={PODS}
+                    style={{
+                      height: IconSize.small,
+                    }}
+                  />
+                  <Typography variant="bodyMedium">
+                    {PODS.symbol} @ {displayBN(podLineLength)}
+                  </Typography>
+
+                </Stack>
+              )}
             />
-            {(maxAmountUsed && maxAmountUsed.gt(0.9)) ? (
-              <Box>
-                <Alert color="warning" icon={<WarningAmberIcon sx={{ fontSize: 22 }} />}>
-                  You are Sowing {displayFullBN(maxAmountUsed.times(100), 4, 0)}% of remaining Soil. 
-                </Alert>
-              </Box>
-            ) : null}
             <Box
               sx={{
                 py: 1,
@@ -217,6 +222,16 @@ const SowForm : React.FC<
             >
               <Typography variant="body1" textAlign="center" color="primary" alignItems="center">Upon <strong>Harvest</strong>, <span><img src={podIconGreen} alt="" height={IconSize.xs} /></span> {displayBN(numPods)} will be redeemable for <span><img src={beanIcon} alt="" height={IconSize.xs} /></span> {displayBN(numPods)}</Typography>
             </Box>
+            {(maxAmountUsed && maxAmountUsed.gt(0.9)) ? (
+              <Box>
+                <Alert
+                  color="warning"
+                  icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
+                >
+                  You are Sowing {displayFullBN(maxAmountUsed.times(100), 4, 0)}% of remaining Soil. 
+                </Alert>
+              </Box>
+            ) : null}
             <Box>
               <Accordion variant="outlined">
                 <StyledAccordionSummary title="Transaction Details" />

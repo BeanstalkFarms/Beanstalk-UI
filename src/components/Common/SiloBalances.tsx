@@ -62,7 +62,7 @@ const TokenRow: React.FC<{
       py: 0.75,
       px: 0.75,
       opacity: isFaded ? 0.3 : 1,
-      outline: isSelected ? `1px solid ${BeanstalkPalette.lightBlue}` : null,
+      outline: isSelected ? `1px solid ${BeanstalkPalette.blue}` : null,
       borderRadius: 1,
     }}
     onMouseOver={onMouseOver}

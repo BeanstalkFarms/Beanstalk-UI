@@ -1,4 +1,4 @@
-import { CircularProgress, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, CircularProgress, Stack, Tooltip, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { Token } from 'classes';
 import React from 'react';
@@ -22,6 +22,8 @@ const TokenOutputField : React.FC<{
   isLoading?: boolean;
   /** */
   amountTooltip?: string | JSX.Element;
+  /** Override the end adornment section */
+  override?: any;
 }> = ({
   token,
   amount,
@@ -30,6 +32,7 @@ const TokenOutputField : React.FC<{
   amountTooltip = '',
   isDelta = true,
   isLoading = false,
+  override
 }) => {
   const isZero     = amount.eq(0);
   const isNegative = amount.lt(0);
@@ -48,19 +51,21 @@ const TokenOutputField : React.FC<{
       ) : (
         <CircularProgress size={16} thickness={5} />
       )}
-      <Stack direction="row" alignItems="center" gap={0.5}>
-        {token.logo && (
-          <TokenIcon
-            token={token}
-            style={{ 
-              height: IconSize.small,
-            }}
-          />
-        )}
-        <Typography variant="bodyMedium">
-          {modifier && `${modifier} `}{token.name}
-        </Typography>
-      </Stack>
+      {override === undefined ? (
+        <Stack direction="row" alignItems="center" gap={0.5}>
+          {token.logo && (
+            <TokenIcon
+              token={token}
+              style={{
+                height: IconSize.small,
+              }}
+            />
+          )}
+          <Typography variant="bodyMedium">
+            {modifier && `${modifier} `}{token.symbol}
+          </Typography>
+        </Stack>
+      ) : <Box>{override}</Box>}
     </OutputField>
   );
 };

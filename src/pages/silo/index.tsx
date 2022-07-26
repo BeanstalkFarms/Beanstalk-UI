@@ -48,6 +48,7 @@ const SiloPage : React.FC = () => {
         <PageHeader
           title="The Silo"
           description="Earn yield by depositing liquidity and participate in protocol governance"
+          href="https://docs.bean.money/farm/silo"
         />
         <Overview
           farmerSilo={farmerSilo}

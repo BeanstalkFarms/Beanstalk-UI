@@ -6,6 +6,7 @@ import { displayBN, displayUSD } from 'util/index';
 import { tableStyle } from 'components/Common/Table/styles';
 import { ZERO_BN } from 'constants/index';
 import { Token } from '../../classes';
+import TableEmptyState from './TableEmptyState';
 
 const MAX_ROWS = 5;
 
@@ -89,13 +90,7 @@ const TableCard : React.FC<{
           components={{
             NoRowsOverlay() {
               return (
-                <Stack height="100%" alignItems="center" justifyContent="center">
-                  {state === 'disconnected'
-                    ? `Connect a wallet to view ${title}`
-                    : state === 'loading' 
-                      ? 'Loading...'
-                      : `No ${title}`}
-                </Stack>
+                <TableEmptyState title={title} state={state} />
               );
             },
           }}

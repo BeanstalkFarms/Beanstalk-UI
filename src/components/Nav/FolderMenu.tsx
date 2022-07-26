@@ -28,12 +28,14 @@ const FolderMenu: React.FC<{
   popoverContent: JSX.Element;
   drawerContent: JSX.Element;
   hideTextOnMobile?: boolean;
+  popperWidth?: string;
 } & ButtonProps> = ({
   startIcon,
   buttonContent,
   popoverContent,
   drawerContent,
   hideTextOnMobile,
+  popperWidth,
   ...buttonProps
 }) => {
   // Setup
@@ -103,7 +105,7 @@ const FolderMenu: React.FC<{
           <Box
             sx={(_theme) => ({
               background: 'white',
-              width: '450px',
+              width: popperWidth !== undefined ? popperWidth : '450px',
               borderBottomLeftRadius: _theme.shape.borderRadius,
               borderBottomRightRadius: _theme.shape.borderRadius,
               borderTopRightRadius: _theme.shape.borderRadius,

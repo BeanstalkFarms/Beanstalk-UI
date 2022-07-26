@@ -5,6 +5,8 @@ import githubIcon from 'img/nav-icons/github.svg';
 import governanceIcon from 'img/nav-icons/governance.svg';
 import tradeIcon from 'img/nav-icons/trade.svg';
 import twitterIcon from 'img/nav-icons/twitter.svg';
+import duneIcon from 'img/nav-icons/dune.svg';
+import docsIcon from 'img/nav-icons/docs.svg';
 
 export type RouteData = {
   /** If set, link to this internal path. */
@@ -56,24 +58,28 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
     {
       path: 'nft',
       title: 'BeaNFTs',
-      icon: beanNFTIcon
+      icon: beanNFTIcon,
+      small: true
     },
     {
       path: 'trade',
       title: 'Trade',
-      icon: tradeIcon
+      icon: tradeIcon,
+      small: true
     },
     {
       path: 'governance',
       href: 'https://snapshot.org/#/beanstalkdao.eth',
       title: 'Governance',
-      icon: governanceIcon
+      icon: governanceIcon,
+      small: true
     },
     {
       path: 'docs',
       href: 'https://docs.bean.money',
       title: 'Docs',
-      icon: governanceIcon
+      icon: docsIcon,
+      small: true
     },
   ],
   // About Button
@@ -106,7 +112,7 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       path: 'analytics',
       href: 'https://dune.xyz/tbiq/Beanstalk',
       title: 'Dune',
-      icon: beanNFTIcon
+      icon: duneIcon
     },
   ],
   // Market Menu
@@ -121,7 +127,7 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
     },
     {
       path: '/market/activity',
-      title: 'Activity',
+      title: 'Marketplace Activity',
     },
   ],
   // Analytics Menu

@@ -3,6 +3,7 @@ import { AccordionSummary, Stack, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import splitArrowsIcon from 'img/interface/split-arrows.svg';
 import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
+import IconWrapper from '../IconWrapper';
 
 const StyledAccordionSummary : React.FC<{
   title: string | JSX.Element;
@@ -22,8 +23,10 @@ const StyledAccordionSummary : React.FC<{
         }}
       />
     )}>
-    <Stack direction="row" gap={1} alignItems="center" sx={{ pr: 2 }}>
-      {icon || <img alt="" src={splitArrowsIcon} width={IconSize.xs} />}
+    <Stack direction="row" alignItems="center">
+      <IconWrapper boxSize={IconSize.medium}>
+        {icon || <img alt="" src={splitArrowsIcon} height={IconSize.xs} />}
+      </IconWrapper>
       <Typography
         variant="body1"
         sx={gradientText ? {

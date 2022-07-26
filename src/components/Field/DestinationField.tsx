@@ -18,7 +18,7 @@ const DestinationField : React.FC<Partial<PillSelectFieldProps> & {
     {
       title: 'Wallet',
       description: walletDesc,
-      pill: <><AddressIcon size={14} /><Typography variant="body1">Wallet</Typography></>,
+      pill: <><AddressIcon size={IconSize.xs} /><Typography variant="body1">Wallet</Typography></>,
       icon: <AddressIcon size={IconSize.small} width={IconSize.small} height={IconSize.small} />,
       value: FarmToMode.EXTERNAL,
     },

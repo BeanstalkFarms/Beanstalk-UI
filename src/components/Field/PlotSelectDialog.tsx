@@ -1,9 +1,10 @@
 import React from 'react';
-import { Dialog, DialogProps, Typography } from '@mui/material';
+import { Dialog, DialogProps } from '@mui/material';
 import { PlotMap } from 'state/farmer/field';
 import BigNumber from 'bignumber.js';
 import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
 import PlotSelect from '../Common/PlotSelect';
+import CardEmptyState from '../Common/CardEmptyState';
 
 export interface PlotSelectDialogProps {
   /** Closes dialog */
@@ -55,9 +56,7 @@ const PlotSelectDialog: React.FC<PlotSelectDialogProps & DialogProps> = ({
             selected={selected}
           />
         ) : (
-          <Typography sx={{ textAlign: 'center', pt: 1, pb: 4 }}>
-            You don&apos;t have any plots to send!
-          </Typography>
+          <CardEmptyState message="You don't have any plots to send!" />
         )}
       </StyledDialogContent>
     </Dialog>

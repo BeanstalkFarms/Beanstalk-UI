@@ -5,17 +5,14 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import PageHeader from 'components/Common/PageHeader';
 import { DataGridProps } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
 import podIcon from 'img/beanstalk/pod-icon.svg';
 import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import ActivityTable from 'components/Market/Tables/Activity';
-import ComingSoonCard from 'components/Common/ComingSoonCard';
 import useChainId from 'hooks/useChain';
 import { displayBN, displayFullBN } from '../../util';
-import { SupportedChainId } from '../../constants';
-import CreateButtons from '../../components/Market/CreateButtons';
+import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -100,22 +97,13 @@ const rows = new Array(20).fill(null).map((_, i) => (
 const MarketActivityPage: React.FC = () => {
   const chainId = useChainId();
 
-  let content;
-  if (chainId === SupportedChainId.MAINNET) {
-    content = (
-      <ComingSoonCard title="Pod Market Activity" />
-    );
-  } else {
-    content = (<ActivityTable columns={columns} rows={rows} />);
-  }
+  const content = (<ActivityTable columns={columns} rows={rows} />);
 
   return (
     <Container maxWidth="lg">
       <Stack spacing={2}>
-        <PageHeader
-          title="Pod Market Activity"
-          description="View all activity for the Pod Market"
-          control={<CreateButtons />}
+        <PageHeaderSecondary
+          title="Marketplace Activity"
         />
         {content}
       </Stack>
