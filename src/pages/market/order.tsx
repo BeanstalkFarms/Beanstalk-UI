@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   Container,
+  Divider,
   Stack, Typography,
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
@@ -12,7 +13,6 @@ import { Source } from 'util/index';
 import useAccount from 'hooks/ledger/useAccount';
 import FillOrder from '../../components/Market/Actions/FillOrder';
 import OrderDetails from '../../components/Market/Cards/OrderDetails';
-import AddressIcon from '../../components/Common/AddressIcon';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 
 const OrderPage: React.FC = () => {
@@ -42,29 +42,37 @@ const OrderPage: React.FC = () => {
         <PageHeaderSecondary
           title={(
             <Stack direction="row" gap={0.5} alignItems="center">
-              <AddressIcon address={order.account} />
+              {/* <AddressIcon address={order.account} /> */}
               <Typography variant="h2">
-                {`${order.account.substring(0, 7)}...'s Pod Order`}
+                Order {order.id.substring(0, 8)}
               </Typography>
             </Stack>
           )}
           returnPath="/market"
         />
-        <OrderDetails
-          podOrder={order}
-        />
-
-        {account === order.account ? (
-          // <Card>
-          <Button
-            color="error"
-            variant="contained"
-            fullWidth
-            >
-            Cancel
-          </Button>
-          // </Card>
-        ) : (
+        <Card sx={{ p: 1 }}>
+          <Box p={1}>
+            <OrderDetails
+              podOrder={order}
+            />
+          </Box>
+          {account === order.account ? (
+            <Box>
+              <Divider
+                color="secondary"
+                sx={{ my: 1, borderWidth: 0, borderTopWidth: 1, }}
+              />
+              <Button
+                color="error"
+                variant="text"
+                fullWidth
+                >
+                Cancel
+              </Button>
+            </Box>
+          ) : null}
+        </Card>
+        {account === order.account ? null : (
           <Card sx={{ position: 'relative' }}>
             <Stack gap={1.5}>
               <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>

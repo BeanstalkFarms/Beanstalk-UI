@@ -8,10 +8,9 @@ import {
   Typography,
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { Source, trimAddress } from 'util/index';
+import { Source } from 'util/index';
 import FillListing from 'components/Market/Actions/FillListing';
 import ListingDetails from 'components/Market/Cards/ListingDetails';
-import AddressIcon from 'components/Common/AddressIcon';
 import PageHeaderSecondary from 'components/Common/PageHeaderSecondary';
 import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
 import usePodListing from 'hooks/usePodListing';
@@ -33,8 +32,10 @@ const ListingPage: React.FC = () => {
         <PageHeaderSecondary
           title={(
             <Stack direction="row" gap={0.5} alignItems="center">
-              <AddressIcon address={listing.account} />
-              <Typography variant="h2">{`${trimAddress(listing.account)}'s Pod Listing`}</Typography>
+              <Typography variant="h2">
+                Listing #{listing.id}
+                {/* {`${trimAddress(listing.account)}'s Pod Listing`} */}
+              </Typography>
             </Stack>
           )}
           returnPath="/market"

@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Stack,
   Typography,
-  Card, Box, CardProps, Grid,
+  Card, CardProps, Grid, Button,
 } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { PodListing } from 'state/farmer/market';
@@ -11,6 +11,7 @@ import { BeanstalkPalette, IconSize } from 'components/App/muiTheme';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BEAN, PODS } from 'constants/tokens';
 import Stat from 'components/Common/Stat';
+import AddressIcon from 'components/Common/AddressIcon';
 
 export type ListingDetailsProps = {
   podListing: PodListing;
@@ -29,17 +30,37 @@ const ListingDetails: React.FC<ListingDetailsProps & CardProps> = ({
           <Typography variant="h4">
             Pod Listing
           </Typography>
-          <Box sx={{
-              px: 1,
-              py: 0.5,
-              borderRadius: 1,
-              backgroundColor: BeanstalkPalette.washedGreen,
-              color: BeanstalkPalette.logoGreen
-            }}>
+          <Button
+            size="small"
+            variant="outlined"
+            color="secondary"
+            sx={{
+              fontWeight: 400,
+              color: 'text.primary'
+            }}
+            href={`https://etherscan.io/address/${podListing.account}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Stack direction="row" alignItems="center" gap={0.5}>
+              <AddressIcon
+                address={podListing.account}
+                size={IconSize.small}
+              />
+              <Typography>{podListing.account.substring(0, 6)}</Typography>
+            </Stack>
+          </Button>
+          {/* <Box sx={{
+            px: 1,
+            py: 0.5,
+            borderRadius: 1,
+            backgroundColor: BeanstalkPalette.washedGreen,
+            color: BeanstalkPalette.logoGreen
+          }}>
             <Typography variant="body1">
               {podListing.account.substring(0, 6)}
             </Typography>
-          </Box>
+          </Box> */}
         </Stack>
         <Typography color={BeanstalkPalette.gray} variant="bodySmall">
           Listing expires at position <Typography color={BeanstalkPalette.black} variant="bodySmall" display="inline">500,000</Typography> in the Pod Line
