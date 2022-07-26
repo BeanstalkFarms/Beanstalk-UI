@@ -12,6 +12,7 @@ const Barn: React.FC = () => (
       <PageHeader
         title="The Barn"
         description="Earn yield and recapitalize Beanstalk by buying Fertilizer"
+        href="https://docs.bean.money/farm/barn"
         control={
           <Stack direction="row" gap={1}>
             <Button

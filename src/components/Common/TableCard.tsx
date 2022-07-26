@@ -6,7 +6,7 @@ import { displayBN, displayUSD } from 'util/index';
 import { tableStyle } from 'components/Common/Table/styles';
 import { ZERO_BN } from 'constants/index';
 import { Token } from '../../classes';
-import NoRowsOverlay from './NoRowsOverlay';
+import TableEmptyState from './TableEmptyState';
 
 const MAX_ROWS = 5;
 
@@ -90,7 +90,7 @@ const TableCard : React.FC<{
           components={{
             NoRowsOverlay() {
               return (
-                <NoRowsOverlay title={title} state={state} />
+                <TableEmptyState title={title} state={state} />
               );
             },
           }}

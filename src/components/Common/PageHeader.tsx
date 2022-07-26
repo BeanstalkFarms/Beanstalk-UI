@@ -1,8 +1,14 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Box, Button, Link, Stack, Typography } from '@mui/material';
+import { Box, Button, Link, LinkProps, Stack, Typography } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import React from 'react';
-import { BeanstalkPalette, IconSize } from '../App/muiTheme';
+// import DescriptionIcon from '@mui/icons-material/Description';
+// import MenuBookIcon from '@mui/icons-material/MenuBook';
+// import BookIcon from '@mui/icons-material/Book';
+// import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+// import gitbookIcon from 'img/interface/gitbook.png';
+import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
 
 const PageHeader : React.FC<{
   /** The Field: The Decentralized Credit Facility */
@@ -13,7 +19,7 @@ const PageHeader : React.FC<{
   returnPath?: string;
   /**  */
   control?: React.ReactElement;
-}> = (props) => (
+} & LinkProps> = (props) => (
   <Stack direction={{ md: 'row', xs: 'column' }} justifyContent="space-between" gap={1}>
     <Stack direction="row" alignItems="center" gap={1.5}>
       {props.returnPath && (
@@ -50,10 +56,20 @@ const PageHeader : React.FC<{
       <Stack direction="column" gap={0}>
         {props.title && (
           <Box>
-            <Typography variant="h1">
-              <Link href="https://docs.bean.money" target="_blank" underline="hover" color="inherit">
-                <span>{props.title}</span>
-              </Link>
+            <Typography variant="h1" display="flex" alignItems="center" gap={1}>
+              <span>{props.title}</span>
+              {props.href !== undefined && (
+                <Link
+                  href={props.href}
+                  underline="none"
+                  color="inherit"
+                  display="flex"
+                  alignItems="center"
+                >
+                  {/* <img src={gitbookIcon} alt="" height={IconSize.medium} style={{ '&:hover': { opacity: 0.9 } }} /> */}
+                  <AutoStoriesIcon href="https://docs.bean.money" target="_blank" sx={{ fontSize: FontSize['2xl'], '&:hover': { color: BeanstalkPalette.logoGreen } }} />
+                </Link>
+              )}
             </Typography>
               {/* <Typography variant="bodySmall" display="inline">
                 Docs

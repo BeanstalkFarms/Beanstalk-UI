@@ -204,6 +204,7 @@ const SowForm : React.FC<
                   <Typography variant="bodyMedium">
                     {PODS.symbol} @ {displayBN(podLineLength)}
                   </Typography>
+
                 </Stack>
               )}
             />

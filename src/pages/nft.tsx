@@ -13,7 +13,7 @@ import { useGenesisNFTContract, useWinterNFTContract } from '../hooks/useContrac
 import TransactionToast from '../components/Common/TxnToast';
 import AddressIcon from '../components/Common/AddressIcon';
 import useAccount from '../hooks/ledger/useAccount';
-import NoRowsOverlay from '../components/Common/NoRowsOverlay';
+import TableEmptyState from '../components/Common/TableEmptyState';
 
 const NFTPage: React.FC = () => {
   const account = useAccount();
@@ -238,7 +238,7 @@ const NFTPage: React.FC = () => {
             </Stack>
             {/* Zero state when not logged in */}
             {account === undefined ? (
-              <NoRowsOverlay height={300} title="BeaNFTs" state={authState} />
+              <TableEmptyState height={300} title="BeaNFTs" state={authState} />
             ) : (
               <>
                 {/* genesis */}

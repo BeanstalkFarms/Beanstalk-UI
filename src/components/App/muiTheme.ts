@@ -293,6 +293,15 @@ let muiTheme = createTheme({
       },
     },
     MuiButton: {
+      // variants: [
+      //   {
+      //     props: { color: 'light' },
+      //     style: sx({
+      //       borderWidth: 1,
+      //       borderColor: 'secondary.main',
+      //     })
+      //   }
+      // ],
       defaultProps: {
         disableElevation: true,
         variant: 'contained',

@@ -5,7 +5,7 @@ import { AppState } from 'state';
 import { useNavigate } from 'react-router-dom';
 import COLUMNS from 'components/Common/Table/cells';
 import MarketBaseTable from './Base';
-import NoRowsOverlay from '../../Common/NoRowsOverlay';
+import TableEmptyState from '../../Common/TableEmptyState';
 import useAccount from '../../../hooks/ledger/useAccount';
 
 const MyListingsTable : React.FC<{}> = () => {
@@ -43,7 +43,7 @@ const MyListingsTable : React.FC<{}> = () => {
       components={{
         NoRowsOverlay() {
           return (
-            <NoRowsOverlay title="Listings" state={authState} />
+            <TableEmptyState title="Listings" state={authState} />
           );
         },
       }}

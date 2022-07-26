@@ -1,7 +1,12 @@
 import React from 'react';
 import { Stack, StackProps, Typography } from '@mui/material';
 
-const NoRowsOverlay: React.FC<{
+/**
+ * Similar to CardEmptyState, but
+ * takes into account authentication
+ * status.
+ * */
+const TableEmptyState: React.FC<{
   /** Card title */
   title: string;
   /** Loading / connection state */
@@ -22,4 +27,4 @@ const NoRowsOverlay: React.FC<{
   </Stack>
 );
 
-export default NoRowsOverlay;
+export default TableEmptyState;

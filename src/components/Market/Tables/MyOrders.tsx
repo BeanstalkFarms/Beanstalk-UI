@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import COLUMNS from 'components/Common/Table/cells';
 import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
 import MarketBaseTable from './Base';
-import NoRowsOverlay from '../../Common/NoRowsOverlay';
+import TableEmptyState from '../../Common/TableEmptyState';
 import useAccount from '../../../hooks/ledger/useAccount';
 
 const MyOrdersTable : React.FC<{}> = () => {
@@ -43,7 +43,7 @@ const MyOrdersTable : React.FC<{}> = () => {
       components={{
         NoRowsOverlay() {
           return (
-            <NoRowsOverlay title="Orders" state={authState} />
+            <TableEmptyState title="Orders" state={authState} />
           );
         },
       }}
