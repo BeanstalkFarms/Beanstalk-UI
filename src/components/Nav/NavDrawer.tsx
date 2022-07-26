@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Box, Button, Divider,
   Drawer,
-  IconButton,
+  IconButton, Link,
   List, ListItemText, Stack, Typography
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -40,9 +40,11 @@ const NavDrawer: React.FC<{
           {/* Beanstalk Logo & Close Button */}
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 1.5 }}>
             <Box>
-              <img src={beanstalkLogo} alt="" width={IconSize.large} />
+              <Link href="/" display="flex" alignItems="center">
+                <img src={beanstalkLogo} alt="" width={IconSize.large} />
+              </Link>
             </Box>
-            <IconButton aria-label="close" onClick={hideDrawer}>
+            <IconButton aria-label="close" onClick={hideDrawer} sx={{ mr: -0.8 }}>
               <CloseIcon sx={{ color: BeanstalkPalette.black, fontSize: 35 }} />
             </IconButton>
           </Stack>
