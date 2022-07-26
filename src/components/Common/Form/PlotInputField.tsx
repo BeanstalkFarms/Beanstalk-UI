@@ -3,12 +3,12 @@ import BigNumber from 'bignumber.js';
 import { ZERO_BN } from 'constants/index';
 import { useFormikContext } from 'formik';
 import useToggle from 'hooks/display/useToggle';
-import { useSelector } from 'react-redux';
-import { AppState } from 'state';
 import { displayBN, MaxBN, MinBN } from 'util/index';
 import PlotSelectDialog from 'components/Field/PlotSelectDialog';
 import { PODS } from 'constants/tokens';
 import { Box, Grid, Stack, Typography } from '@mui/material';
+import { PlotMap } from 'state/farmer/field';
+import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
 import { PlotFragment, PlotSettingsFragment, TokenAdornment, TokenInputField } from '.';
 import AdvancedButton from './AdvancedButton';
 import SliderField from './SliderField';
@@ -17,27 +17,38 @@ const SLIDER_FIELD_KEYS = ['plot.start', 'plot.end'];
 const InputPropsLeft  = { endAdornment: 'Start' };
 const InputPropsRight = { endAdornment: 'End' };
 
-const PlotInputField : React.FC = () => {
+const PlotInputField : React.FC<{
+  /** All plots that are selectable via the input field */
+  plots: PlotMap<BigNumber>,
+}> = ({
+  plots
+}) => {
+  /// Form state
   const { values, setFieldValue, isSubmitting } = useFormikContext<{ 
-    /// These fields are required in Formik state
+    /// These fields are required in the parent's Formik state
     plot: PlotFragment,
     settings: PlotSettingsFragment,
   }>();
+
+  /// Local state
   const [dialogOpen, showDialog, hideDialog] = useToggle();
 
-  const farmerField    = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
-  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
+  /// Data
+  const harvestableIndex = useHarvestableIndex();
   
+  /// Find the currently selected plot from form state.
+  /// If selected, grab the number of pods from the farmer's field state.
   const plot = values.plot;
   const [numPods, numPodsFloat] = useMemo(
     () => {
       if (!plot.index) return [ZERO_BN, 0];
-      const _pods = farmerField.plots[plot.index];
+      const _pods = plots[plot.index];
       return [_pods, _pods.toNumber()];
     },
-    [farmerField.plots, plot.index]
+    [plots, plot.index]
   );
   
+  /// Button to select a new plot
   const InputProps = useMemo(() => ({
     endAdornment: (
       <TokenAdornment
@@ -47,13 +58,19 @@ const PlotInputField : React.FC = () => {
           plot.index ? (
             <Stack direction="row" alignItems="center" gap={0.75}>
               <Typography display="inline" fontSize={16}>@</Typography>
-              {displayBN(new BigNumber(plot.index).minus(beanstalkField.harvestableIndex))}
+              {displayBN(new BigNumber(plot.index).minus(harvestableIndex))}
             </Stack>
           ) : 'Select Plot'
         )}
       />
     ),
-  }), [beanstalkField.harvestableIndex, plot.index, showDialog]);
+  }), [
+    harvestableIndex,
+    plot.index,
+    showDialog
+  ]);
+
+  /// "Advanced" control in the Quote slot
   const Quote = useMemo(() => (
     <AdvancedButton
       open={values.settings.showRangeSelect}
@@ -64,16 +81,16 @@ const PlotInputField : React.FC = () => {
     />
   ), [setFieldValue, values.settings.showRangeSelect]);
 
-  ///
+  /// Select a new plot
   const handlePlotSelect = useCallback((index: string) => {
-    const _numPods = new BigNumber(farmerField.plots[index]);
+    const _numPods = new BigNumber(plots[index]);
     setFieldValue('plot.index',  index);
     setFieldValue('plot.start',  ZERO_BN);
     setFieldValue('plot.end',    _numPods);
     setFieldValue('plot.amount', _numPods);
-  }, [farmerField.plots, setFieldValue]);
+  }, [plots, setFieldValue]);
 
-  ///
+  /// Update amount
   const handleChangeAmount = (amount: BigNumber | undefined) => {
     if (!amount) {
       /// If the user clears the amount input, set default value
@@ -96,16 +113,16 @@ const PlotInputField : React.FC = () => {
     }
   };
 
-  ///
+  /// Update amount when an endpoint changes via the advanced controls
   useEffect(() => {
-    setFieldValue('plot.amount', plot.end?.minus(plot.start ? plot.start : ZERO_BN));
+    setFieldValue('plot.amount', plot.end?.minus(plot.start || ZERO_BN));
   }, [setFieldValue, plot.end, plot.start]);
 
   return (
     <>
       <PlotSelectDialog
-        farmerField={farmerField}
-        beanstalkField={beanstalkField}
+        plots={plots}
+        harvestableIndex={harvestableIndex}
         handlePlotSelect={handlePlotSelect}
         handleClose={hideDialog}
         selected={plot.index}

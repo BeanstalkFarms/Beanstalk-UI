@@ -11,6 +11,7 @@ import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import PlotInputField from 'components/Common/Form/PlotInputField';
 import { PodOrder } from 'state/farmer/market';
+import useFarmerPlots from 'hooks/redux/useFarmerPlots';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 
@@ -26,11 +27,18 @@ const FillOrderForm: React.FC<
   values,
   podOrder,
 }) => {
+  /// Data
+  const allPlots = useFarmerPlots();
+
+  /// Form Data
   const plot = values.plot;
+  
   return (
     <Form noValidate>
       <Stack gap={1}>
-        <PlotInputField />
+        <PlotInputField
+          plots={allPlots}
+        />
         {plot.index && (
           <>
             <TxnSeparator mt={0} />

@@ -13,6 +13,7 @@ import TransactionToast from 'components/Common/TxnToast';
 import useAccount from 'hooks/ledger/useAccount';
 import PlotInputField from 'components/Common/Form/PlotInputField';
 import Warning from 'components/Common/Form/Warning';
+import useFarmerPlots from 'hooks/redux/useFarmerPlots';
 import { displayFullBN, toStringBaseUnitBN, trimAddress } from '../../../util';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
@@ -35,8 +36,13 @@ const SendForm: React.FC<
   isValid,
   isSubmitting,
 }) => {
-  const account = useAccount();
+  /// Data
+  const plots = useFarmerPlots();
+
+  /// Form Data
   const plot = values.plot;
+
+  /// Derived
   const isReady = (
     plot.index
     && values.to
@@ -48,7 +54,9 @@ const SendForm: React.FC<
   return (
     <Form autoComplete="off">
       <Stack gap={1}>
-        <PlotInputField />
+        <PlotInputField
+          plots={plots}
+        />
         {plot.index && (
           <>
             <TxnSeparator />
