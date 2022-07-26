@@ -307,20 +307,27 @@ let muiTheme = createTheme({
           fontWeight: 700,
           fontSize: '1rem',
           lineHeight: '1.25rem',
-          // FIXME: overrides button primary element and breaks the fixed height
-          // typography: 'h4',
         }),
+        /// Sizes
+        sizeSmall: sx({}),
         sizeMedium: sx({
           py: 1,
-          // height: '45px',
+          px: 1,
         }),
         sizeLarge: sx({
           py: 1.5,
+          px: 1.5,
           height: '60px'
         }),
         disabled: sx({
           pointerEvents: 'auto',
         }),
+        startIcon: sx({
+          marginLeft: 0, // prevent adornment from pulling close to right margin
+        }),
+        endIcon: sx({
+          marginRight: 0, // prevent adornment from pulling close to right margin
+        })
       },
     },
     MuiAlert: {
