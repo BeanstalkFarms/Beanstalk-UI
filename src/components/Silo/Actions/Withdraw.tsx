@@ -116,7 +116,7 @@ const WithdrawForm : React.FC<
           <TokenOutputField
             token={STALK}
             amount={withdrawResult.stalk}
-            valueTooltip={(
+            amountTooltip={(
               <>
                 <div>Withdrawing from {withdrawResult.deltaCrates.length} Deposit{withdrawResult.deltaCrates.length === 1 ? '' : 's'}:</div>
                 <Divider sx={{ opacity: 0.2, my: 1 }} />

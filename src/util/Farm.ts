@@ -28,6 +28,14 @@ export const optimizeFromMode = (
   return FarmFromMode.INTERNAL_EXTERNAL;
 };
 
+// export const optimizeFarmCall = (
+//   contract: BeanstalkReplanted,
+//   encodedFunctionData: string[],
+//   overrides: any
+// ) => {
+//   return 
+// }
+
 /**
  * 
  */

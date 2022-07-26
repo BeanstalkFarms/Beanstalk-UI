@@ -62,7 +62,7 @@ const Stat: React.FC<StatProps> = ({
       </Stack>
     </Typography>
     {/* Amount */}
-    <Typography variant={variant} color={color} sx={{ marginLeft: '-3px', ...sx }}>
+    <Typography variant={variant} color={color} sx={sx}>
       <Stack direction="row" alignItems="center" gap={0.5}>
         {amountIcon && <>{amountIcon}</>}{amount}
       </Stack>

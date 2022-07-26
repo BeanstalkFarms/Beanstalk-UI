@@ -1,8 +1,8 @@
-import { Accordion, AccordionDetails, Box, Button, Stack, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Stack, Typography } from '@mui/material';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
   FormState,
-  SettingInput, TokenOutputField,
+  SettingInput, SlippageSettingsFragment, SmartSubmitButton, TokenOutputField,
   TokenQuoteProvider,
   TokenSelectDialog, TxnPreview, TxnSeparator,
   TxnSettings
@@ -17,11 +17,11 @@ import useTokenMap from 'hooks/useTokenMap';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { displayBN, MinBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
+import { displayBN, displayTokenAmount, MinBN, toStringBaseUnitBN, parseError, toTokenUnitsBN } from 'util/index';
 import useToggle from 'hooks/display/useToggle';
 import useGetChainToken from 'hooks/useGetChainToken';
 import { ethers } from 'ethers';
-import Farm from 'lib/Beanstalk/Farm';
+import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import { useSigner } from 'hooks/ledger/useSigner';
 import { useProvider } from 'wagmi';
 import { useBeanstalkContract } from 'hooks/useContract';
@@ -31,9 +31,15 @@ import { ActionType } from 'util/Actions';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import BigNumber from 'bignumber.js';
 import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
-import { PodListing } from '../Plots.mock';
+import TransactionToast from 'components/Common/TxnToast';
+import { useFetchBeanstalkField } from 'state/beanstalk/field/updater';
+import { useFetchFarmerField } from 'state/farmer/field/updater';
+import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
+import toast from 'react-hot-toast';
+import { PodListing } from 'state/farmer/market';
 
 export type FillListingFormValues = FormState & {
+  settings: SlippageSettingsFragment;
   maxAmountIn: BigNumber | undefined;
 }
 
@@ -41,6 +47,7 @@ const FillListingForm : React.FC<
   FormikProps<FillListingFormValues>
   & {
     podListing: PodListing;
+    contract: BeanstalkReplanted;
     handleQuote: QuoteHandler;
     farm: Farm;
   }
@@ -50,6 +57,7 @@ const FillListingForm : React.FC<
   setFieldValue,
   //
   podListing,
+  contract,
   handleQuote,
   farm,
 }) => {
@@ -81,6 +89,8 @@ const FillListingForm : React.FC<
 
   /// Calculations
   const isReady = amountOut?.gt(0);
+  const isSubmittable = isReady;
+  const podsPurchased = amountOut?.div(podListing.pricePerPod) || ZERO_BN;
 
   /// Token select
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
@@ -155,7 +165,7 @@ const FillListingForm : React.FC<
           tokenOut={Bean}
           disabled={!values.maxAmountIn}
           max={MinBN(
-            values.maxAmountIn || ZERO_BN,
+            values.maxAmountIn    || ZERO_BN,
             tokenInBalance?.total || ZERO_BN
           )}
           balance={tokenInBalance || undefined}
@@ -166,16 +176,24 @@ const FillListingForm : React.FC<
         {isReady ? (
           <>
             <TxnSeparator mt={0} />
+            {/* Place in Line */}
             <Stack direction="row" justifyContent="space-between" sx={{ p: 1 }}>
-              <Typography variant="body1" color="text.secondary">Place in Pod Line</Typography>
+              <Typography variant="body1" color="text.secondary">
+                Place in Pod Line
+              </Typography>
               <Typography variant="body1">
                 {displayBN(podListing.index.minus(beanstalkField.harvestableIndex))}
               </Typography>
             </Stack>
+            {/* Pods Output */}
             <TokenOutputField
               token={PODS}
-              amount={podListing.remainingAmount}
-              isLoading={false}
+              amount={podsPurchased}
+              amountTooltip={(
+                <>
+                  {displayTokenAmount(amountOut || ZERO_BN, Bean)} / {displayBN(podListing.pricePerPod)} Beans per Pod<br />= {displayTokenAmount(podsPurchased, PODS)}
+                </>
+              )}
             />
             <Box>
               <Accordion variant="outlined">
@@ -198,9 +216,18 @@ const FillListingForm : React.FC<
             </Box>
           </>
         ) : null}
-        <Button sx={{ p: 1, height: '60px' }} type="submit" disabled>
+        <SmartSubmitButton
+          type="submit"
+          variant="contained"
+          color="primary"
+          size="large"
+          disabled={!isSubmittable}
+          contract={contract}
+          tokens={values.tokens}
+          mode="auto"
+        >
           Buy Pods
-        </Button>
+        </SmartSubmitButton>
       </Stack>
     </Form>
   );
@@ -243,8 +270,17 @@ const FillListing : React.FC<{
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
   const farm      = useMemo(() => new Farm(provider), [provider]);
 
+  /// Refetchers
+  // const balances                = useFarmerBalances();
+  const [refetchBeanstalkField] = useFetchBeanstalkField();
+  const [refetchFarmerField]    = useFetchFarmerField();
+  const [refetchFarmerBalances] = useFetchFarmerBalances();
+
   ///
   const initialValues: FillListingFormValues = useMemo(() => ({
+    settings: {
+      slippage: 0.1
+    },
     tokens: [
       {
         token: baseToken as (ERC20Token | NativeToken),
@@ -280,9 +316,103 @@ const FillListing : React.FC<{
     [Weth, farm]
   );
 
-  const onSubmit = useCallback((values: FillListingFormValues, formActions: FormikHelpers<FillListingFormValues>) => {
-    Promise.resolve();
-  }, []);
+  const onSubmit = useCallback(async (values: FillListingFormValues, formActions: FormikHelpers<FillListingFormValues>) => {
+    let txToast;
+    try {
+      console.debug('Pod listing:', await beanstalk.podListing(podListing.id), podListing.id);
+      const formData = values.tokens[0];
+      const inputToken = formData.token;
+      const amountBeans = inputToken === Bean ? formData.amount : formData.amountOut;
+      if (!podListing) throw new Error('No pod listing.');
+      if (!signer) throw new Error('Connect a wallet that can sign transactions first.');
+      if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
+      if (!formData.amount || !amountBeans || amountBeans.eq(0)) throw new Error('No amount set');
+      
+      const data : string[] = [];
+      const amountPods = amountBeans.div(podListing.pricePerPod);
+      let value = ZERO_BN;
+      
+      txToast = new TransactionToast({
+        loading: `Purchase ${displayTokenAmount(amountPods, PODS)} Pods for ${displayTokenAmount(amountBeans, Bean)}`,
+        success: 'Purchase complete.',
+      });
+      
+      /// Sow directly from BEAN
+      if (inputToken === Bean) {
+        // Nothing to do
+      } 
+      
+      /// Swap to BEAN and buy
+      else {
+        // Require a quote
+        if (!formData.steps || !formData.amountOut) throw new Error(`No quote available for ${formData.token.symbol}`);
+
+        if (inputToken === Eth) {
+          value = value.plus(formData.amount);
+          data.push(beanstalk.interface.encodeFunctionData('wrapEth', [
+            toStringBaseUnitBN(value, Eth.decimals),
+            FarmToMode.INTERNAL,
+          ]));
+        }
+
+        const encoded = Farm.encodeStepsWithSlippage(
+          formData.steps,
+          values.settings.slippage / 100,
+        );
+        data.push(...encoded);
+      }
+      
+      data.push(
+        beanstalk.interface.encodeFunctionData('fillPodListing', [
+          {
+            // account: string;
+            // index: BigNumberish;
+            // start: BigNumberish;
+            // amount: BigNumberish;
+            // pricePerPod: BigNumberish;
+            // maxHarvestableIndex: BigNumberish;
+            // mode: BigNumberish;
+            account:  podListing.account,
+            index:    Bean.stringify(podListing.index),
+            start:    Bean.stringify(podListing.start),
+            amount:   Bean.stringify(podListing.amount),
+            pricePerPod: Bean.stringify(podListing.pricePerPod),
+            maxHarvestableIndex: Bean.stringify(podListing.maxHarvestableIndex),
+            mode:     podListing.mode,
+          },
+          Bean.stringify(amountBeans),
+          FarmFromMode.INTERNAL_EXTERNAL,
+        ])
+      );
+ 
+      const overrides = { value: toStringBaseUnitBN(value, Eth.decimals) };
+      const txn = data.length === 1
+        ? await provider.sendTransaction(
+          signer.signTransaction({
+            to: beanstalk.address,
+            data: data[0],
+            ...overrides
+          })
+        )
+        : await beanstalk.farm(data, overrides);
+      txToast.confirming(txn);
+      
+      const receipt = await txn.wait();
+      await Promise.all([
+        refetchFarmerField(),     // get farmer's plots
+        refetchFarmerBalances(),  // get farmer's token balances
+        refetchBeanstalkField(),  // get beanstalk field data (ex. amount of Soil left)
+        // FIXME: refresh listings
+      ]);  
+      txToast.success(receipt);
+      formActions.resetForm();
+    } catch (err) {
+      console.error(err);
+      txToast?.error(err) || toast.error(parseError(err));
+    } finally {
+      formActions.setSubmitting(false);
+    }
+  }, [Bean, Eth, beanstalk, podListing, provider, signer, refetchBeanstalkField, refetchFarmerBalances, refetchFarmerField]);
 
   return (
     <Formik<FillListingFormValues>
@@ -298,6 +428,7 @@ const FillListing : React.FC<{
           <FillListingForm
             podListing={podListing}
             handleQuote={handleQuote}
+            contract={beanstalk}
             farm={farm}
             {...formikProps}
           />

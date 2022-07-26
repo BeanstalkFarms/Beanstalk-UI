@@ -21,13 +21,13 @@ const TokenOutputField : React.FC<{
   /** Display a loading spinner */
   isLoading?: boolean;
   /** */
-  valueTooltip?: string | JSX.Element;
+  amountTooltip?: string | JSX.Element;
 }> = ({
   token,
   amount,
   value,
   modifier,
-  valueTooltip = '',
+  amountTooltip = '',
   isDelta = true,
   isLoading = false,
 }) => {
@@ -37,7 +37,7 @@ const TokenOutputField : React.FC<{
   return (
     <OutputField isNegative={isNegative}>
       {!isLoading ? (
-        <Tooltip title={valueTooltip}>
+        <Tooltip title={amountTooltip}>
           <Typography display="inline" variant="bodyLarge">
             {prefix}{displayFullBN(amount.abs(), token.displayDecimals, token.displayDecimals)}
             {value && (

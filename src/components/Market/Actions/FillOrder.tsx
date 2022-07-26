@@ -10,9 +10,9 @@ import { BEAN } from 'constants/tokens';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import PlotInputField from 'components/Common/Form/PlotInputField';
+import { PodOrder } from 'state/farmer/market';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
-import { PodOrder } from '../Plots.mock';
 
 export type FillOrderFormValues = {
   plot: PlotFragment;

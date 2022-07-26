@@ -2,14 +2,15 @@ import React from 'react';
 import {
   Stack,
   Typography,
-  Card, Box, CardProps,
+  Card, Box, CardProps, Grid,
 } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { PodListing } from 'state/farmer/market';
-import { displayBN, displayFullBN } from 'util/index';
+import { displayBN } from 'util/index';
 import { BeanstalkPalette, IconSize } from 'components/App/muiTheme';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BEAN, PODS } from 'constants/tokens';
+import Stat from 'components/Common/Stat';
 
 export type ListingDetailsProps = {
   podListing: PodListing;
@@ -44,43 +45,39 @@ const ListingDetails: React.FC<ListingDetailsProps & CardProps> = ({
           Listing expires at position <Typography color={BeanstalkPalette.black} variant="bodySmall" display="inline">500,000</Typography> in the Pod Line
         </Typography>
       </Stack>
-      <Stack direction="row" justifyContent="space-between">
+      <Grid container>
         {/* Place in Line */}
-        <Stack gap={0.5}>
-          <Typography variant="body1">
-            Place in Line
-          </Typography>
-          <Typography variant="bodyLarge">
-            {displayBN(podListing.index.minus(harvestableIndex))}
-          </Typography>
-        </Stack>
+        <Grid item xs>
+          <Stat
+            title="Place in Line"
+            amount={displayBN(podListing.index.minus(harvestableIndex))}
+            variant="bodyLarge"
+            gap={0.5}
+          />
+        </Grid>
         {/* Price per Pod */}
-        <Stack gap={0.5}>
-          <Typography variant="body1">
-            Price per Pod
-          </Typography>
-          <Stack direction="row" gap={0.3} alignItems="center">
-            <TokenIcon token={BEAN[1]} style={{ height: IconSize.medium }} />
-            <Typography variant="bodyLarge">
-              {displayFullBN(podListing.pricePerPod)}
-            </Typography>
-          </Stack>
-        </Stack>
+        <Grid item xs>
+          <Stat
+            title="Price per Pod"
+            amount={displayBN(podListing.pricePerPod)}
+            amountIcon={<TokenIcon token={BEAN[1]} style={{ height: IconSize.medium }} />}
+            variant="bodyLarge"
+            gap={0.5}
+          />
+        </Grid>
         {/* Pods Sold */}
-        <Stack gap={0.5}>
-          <Typography variant="body1">
-            Pods Sold
-          </Typography>
-          <Stack direction="row" gap={0.3} alignItems="center">
-            <TokenIcon token={PODS} style={{ height: IconSize.medium }} />
-            <Typography variant="bodyLarge">
-              {displayBN(podListing.filledAmount)}/{displayBN(podListing.totalAmount)}
-            </Typography>
-          </Stack>
-        </Stack>
-      </Stack>
+        <Grid item xs>
+          <Stat
+            title="Pods Available"
+            amount={displayBN(podListing.remainingAmount)}
+            amountIcon={<TokenIcon token={PODS} style={{ height: IconSize.medium }} />}
+            variant="bodyLarge"
+            gap={0.5}
+          />
+        </Grid>
+      </Grid>
     </Stack>
   </Card>
-  );
+);
 
 export default ListingDetails;

@@ -54,6 +54,10 @@ export type PlotFragment = {
   /** end - start  */
   amount: BigNumber | null;
 }
+
+export type SlippageSettingsFragment = {
+  slippage: number;
+}
 export type PlotSettingsFragment = {
   showRangeSelect: boolean;
 }
