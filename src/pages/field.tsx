@@ -15,6 +15,7 @@ import FieldActions from 'components/Field/Actions';
 import TableCard from 'components/Common/TableCard';
 import FieldConditions from '../components/Field/FieldConditions';
 import { PODS } from '../constants/tokens';
+import useAccount from '../hooks/ledger/useAccount';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -47,6 +48,8 @@ const columns: DataGridProps['columns'] = [
 ];
 
 const FieldPage: React.FC = () => {
+  const account = useAccount();
+  const authState = !account ? 'disconnected' : 'ready';
   /// Data
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
     (state) => state._farmer.field
@@ -91,8 +94,8 @@ const FieldPage: React.FC = () => {
         />
         <FieldActions />
         <TableCard
-          title="My Pods"
-          state="ready"
+          title="Pod Balance"
+          state={authState}
           amount={farmerField.pods}
           rows={rows}
           columns={columns}

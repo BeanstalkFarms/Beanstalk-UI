@@ -1,4 +1,4 @@
-import { Box, Card, Stack, Tab, Tabs } from '@mui/material';
+import { Box, Card, Stack, Tab, Tabs, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -12,6 +12,7 @@ import {
 } from 'components/Common/Charts/LineChart.mock';
 import MainnetBlur from 'components/Common/MainnetBlur';
 import Stat from 'components/Common/Stat';
+import WalletButton from '../Common/Connection/WalletButton';
 
 // ------------------------------------------------
 
@@ -48,7 +49,10 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
       </Box>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
         <MainnetBlur>
-          Historical Deposit value will be available once Beanstalk is Replanted.
+          <Stack justifyContent="center" alignItems="center" gap={1}>
+            <Typography variant="body1" color="gray">Your Silo Deposits will appear here.</Typography>
+            <WalletButton color="primary" sx={{ height: 45 }} />
+          </Stack>
         </MainnetBlur>
         <LineChart series={series} onCursor={handleCursor} />
       </Box>
@@ -94,7 +98,10 @@ const StalkOwnershipTab: React.FC<TabData
       </Stack>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
         <MainnetBlur>
-          Historical Stalk balance and ownership will be available once Beanstalk is Replanted.
+          <Stack justifyContent="center" alignItems="center" gap={1}>
+            <Typography variant="body1" color="gray">Your Stalk Balance and Ownership will appear here.</Typography>
+            <WalletButton color="primary" sx={{ height: 45 }} />
+          </Stack>
         </MainnetBlur>
         <LineChart series={series} onCursor={handleCursor} />
       </Box>

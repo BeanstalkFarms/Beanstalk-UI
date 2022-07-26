@@ -18,7 +18,7 @@ const BlurComponent : React.FC<StackProps> = ({ children, sx }) => (
     alignItems="center"
     justifyContent="center"
     >
-    <Typography variant="subtitle1" color="text.secondary" sx={{ opacity: 0.7 }}>
+    <Typography variant="subtitle1" color="text.secondary">
       {children}
     </Typography>
   </Stack>

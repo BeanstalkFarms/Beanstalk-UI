@@ -27,7 +27,7 @@ const NFTGrid: React.FC<NFTGridProps> = ({
       {
         (nfts.length === 0) ? (
           <Box height={300} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Typography>You don&apos;t have any NFTs from this collection!</Typography>
+            <Typography color="gray">You don&apos;t have any NFTs from this collection!</Typography>
           </Box>
         ) : (
           <Grid container spacing={{ md: 3, xs: 2 }}>

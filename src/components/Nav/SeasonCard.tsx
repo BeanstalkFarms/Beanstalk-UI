@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack, Typography, Box } from '@mui/material';
+import { Stack, Box, Typography } from '@mui/material';
 import rainySeasonIcon from 'img/beanstalk/sun/rainy-season.svg';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
@@ -32,7 +32,7 @@ const SeasonCard: React.FC<SeasonCardProps> = ({
     <Box
       sx={{
         border: 1,
-        borderColor: BeanstalkPalette.lightBlue,
+        borderColor: BeanstalkPalette.blue,
         p: 0.75,
         borderRadius: '8px',
       }}

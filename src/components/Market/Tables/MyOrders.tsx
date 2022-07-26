@@ -6,8 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import COLUMNS from 'components/Common/Table/cells';
 import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
 import MarketBaseTable from './Base';
+import NoRowsOverlay from '../../Common/NoRowsOverlay';
+import useAccount from '../../../hooks/ledger/useAccount';
 
 const MyOrdersTable : React.FC<{}> = () => {
+  const account = useAccount();
+  const authState = !account ? 'disconnected' : 'ready';
   /// Data
   const harvestableIndex = useHarvestableIndex();
   const orders = useSelector<AppState, AppState['_farmer']['market']['orders']>((state) => state._farmer.market.orders);
@@ -36,6 +40,13 @@ const MyOrdersTable : React.FC<{}> = () => {
       rows={rows}
       maxRows={8}
       onRowClick={handleClick}
+      components={{
+        NoRowsOverlay() {
+          return (
+            <NoRowsOverlay title="Orders" state={authState} />
+          );
+        },
+      }}
     />
   );
 };
