@@ -23,6 +23,7 @@ import TxnAccordion from 'components/Common/TxnAccordion';
 import { ActionType } from 'util/Actions';
 import useFarmerPlots from 'hooks/redux/useFarmerPlots';
 import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 
@@ -102,7 +103,7 @@ const CreateListingForm: React.FC<
         {plot.index && (
           <>
             {alreadyListed ? (
-              <Alert variant="standard" color="warning">
+              <Alert variant="standard" color="warning" icon={<WarningAmberIcon />}>
                 This Plot is already listed on the Market. Creating a new Listing will override the previous one.
               </Alert>
             ) : null}
