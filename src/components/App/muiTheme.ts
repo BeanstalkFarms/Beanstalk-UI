@@ -313,6 +313,7 @@ let muiTheme = createTheme({
         sizeMedium: sx({
           py: 1,
           px: 1,
+          height: '45px',
         }),
         sizeLarge: sx({
           py: 1.5,

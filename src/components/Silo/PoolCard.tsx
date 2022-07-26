@@ -71,20 +71,17 @@ const PoolCard: React.FC<{
       variant="outlined"
       color="secondary"
       sx={{
+        height: 'auto', // FIXME
         display: 'block',
         color: '#000000',
         borderColor: '#c7ddf0',
-        // '&:hover': {
-        //   borderColor: '#d5e5f2',
-        //   backgroundColor: 'transparent'
-        // }
       }}
       {...ButtonProps}
     >
       {cardContent}
     </Button>
   ) : (
-    <Card sx={{ p: 1, pr: 2, pl:2 }}>
+    <Card sx={{ p: 1, pr: 2, pl: 2 }}>
       {cardContent}
     </Card>
   );

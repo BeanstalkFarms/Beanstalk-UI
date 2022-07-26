@@ -54,6 +54,7 @@ const NetworkDialog: React.FC<{
           ) : null}
           {chains.map((chain) => (
             <Button
+              size="large"
               variant="outlined"
               color="primary"
               key={chain.id}

@@ -91,6 +91,7 @@ const Whitelist : React.FC<{
                 fullWidth
                 variant="outlined"
                 color="secondary"
+                size="large"
                 sx={{
                   textAlign: 'left',
                   px: 2,
