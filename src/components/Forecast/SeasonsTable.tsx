@@ -22,11 +22,11 @@ const SeasonsTable: React.FC<SeasonsTableProps & DataGridProps> = ({ columns, ro
           ...tableStyle,
           '& .MuiDataGrid-row': {
             borderBottom: 1,
-            borderColor: BeanstalkPalette.lightBlue,
+            borderColor: BeanstalkPalette.blue,
           },
           '& .MuiDataGrid-columnHeadersInner': {
             borderBottom: 2, // TODO: why 2 here but 1 above?
-            borderColor: BeanstalkPalette.lightBlue,
+            borderColor: BeanstalkPalette.blue,
           }
         }}>
         <DataGrid

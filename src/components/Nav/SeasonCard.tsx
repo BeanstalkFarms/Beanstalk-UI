@@ -15,7 +15,7 @@ export interface SeasonCardProps {
 }
 
 const SeasonCard: React.FC<SeasonCardProps> = ({ season, newBeans, newSoil, weather }) => (
-  <Box sx={{ border: 1, borderColor: BeanstalkPalette.lightBlue, p: 0.75, borderRadius: '8px' }}>
+  <Box sx={{ border: 1, borderColor: BeanstalkPalette.blue, p: 0.75, borderRadius: '8px' }}>
     <Stack direction="row" justifyContent="space-between" alignItems="center">
       <Grid container alignItems="flex-end">
         <Grid item md={2} xs={2.5}>

@@ -81,8 +81,9 @@ export const BeanstalkPalette = {
   washedGreen: '#E1F8E6',
   supportGreen: '#19873B',
   // Blues
-  lightBlue: '#C1DEF2',
+  blue: '#C1DEF2',
   babyBlue: '#E2F2FE',
+  lightBlue: '#DBEDFD',
   lighterBlue: '#daf2ff', // see `bodyBackground`
   lightestBlue: '#F6FAFE',
   darkBlue: '#1F78B4',
@@ -161,7 +162,7 @@ let muiTheme = createTheme({
       contrastText: '#ffffff',
     },
     secondary: {
-      main: BeanstalkPalette.lightBlue,
+      main: BeanstalkPalette.blue,
       light: BeanstalkPalette.lighterBlue,
       dark: BeanstalkPalette.darkBlue,
       contrastText: '#000000',
@@ -286,7 +287,7 @@ let muiTheme = createTheme({
     MuiDivider: {
       styleOverrides: {
         root: sx({
-          borderColor: BeanstalkPalette.lightBlue,
+          borderColor: BeanstalkPalette.blue,
           borderWidth: 0.5,
         }),
       },
@@ -341,7 +342,7 @@ let muiTheme = createTheme({
       styleOverrides: {
         tooltip: sx({
           typography: 'body1',
-          borderColor: BeanstalkPalette.lightBlue,
+          borderColor: BeanstalkPalette.blue,
           borderWidth: 1,
           borderStyle: 'solid',
           backgroundColor: BeanstalkPalette.lightestBlue,
@@ -366,7 +367,7 @@ let muiTheme = createTheme({
           },
           style: {
             background: 'transparent',
-            borderColor: BeanstalkPalette.lightBlue,
+            borderColor: BeanstalkPalette.blue,
           },
         },
       ],
