@@ -20,8 +20,11 @@ const InputPropsRight = { endAdornment: 'End' };
 const PlotInputField : React.FC<{
   /** All plots that are selectable via the input field */
   plots: PlotMap<BigNumber>,
+  /** The maximum number of pods that can be entered into the input */
+  max?: BigNumber;
 }> = ({
-  plots
+  plots,
+  max
 }) => {
   /// Form state
   const { values, setFieldValue, isSubmitting } = useFormikContext<{ 
@@ -47,6 +50,12 @@ const PlotInputField : React.FC<{
     },
     [plots, plot.index]
   );
+  // const minFloat = useMemo(
+  //   () => {
+  //     if 
+  //   },
+  //   []
+  // )
   
   /// Button to select a new plot
   const InputProps = useMemo(() => ({
@@ -81,19 +90,27 @@ const PlotInputField : React.FC<{
     />
   ), [setFieldValue, values.settings.showRangeSelect]);
 
+  const clamp = useCallback((amount: BigNumber | undefined) => {
+    if (!amount) return undefined;
+    if (amount.lt(0)) return ZERO_BN;
+    if (max && amount.gt(max)) return max;
+    return amount;
+  }, [max]);
+
   /// Select a new plot
   const handlePlotSelect = useCallback((index: string) => {
     const _numPods = new BigNumber(plots[index]);
     setFieldValue('plot.index',  index);
+    setFieldValue('plot.amount', _numPods);
     setFieldValue('plot.start',  ZERO_BN);
     setFieldValue('plot.end',    _numPods);
-    setFieldValue('plot.amount', _numPods);
   }, [plots, setFieldValue]);
 
   /// Update amount
   const handleChangeAmount = (amount: BigNumber | undefined) => {
     if (!amount) {
-      /// If the user clears the amount input, set default value
+      /// If the user clears the amount input, set start/end to the end
+      /// of the Plot; amount will get set to zero by below effect
       setFieldValue('plot.start', numPods);
       setFieldValue('plot.end',   numPods);
     } else {
@@ -114,9 +131,14 @@ const PlotInputField : React.FC<{
   };
 
   /// Update amount when an endpoint changes via the advanced controls
+  /// If one of end/start change, so does the amount input
   useEffect(() => {
-    setFieldValue('plot.amount', plot.end?.minus(plot.start || ZERO_BN));
-  }, [setFieldValue, plot.end, plot.start]);
+    const clampedAmount = clamp(plot.end?.minus(plot.start || ZERO_BN));
+    setFieldValue(
+      'plot.amount', 
+      clampedAmount,
+    );
+  }, [setFieldValue, plot.end, plot.start, clamp]);
 
   return (
     <>

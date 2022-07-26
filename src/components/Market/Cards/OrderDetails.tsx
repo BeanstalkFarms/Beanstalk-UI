@@ -2,26 +2,24 @@ import React from 'react';
 import {
   Stack,
   Typography,
-  Card, Box, CardProps,
+  Card, Box, CardProps, Grid,
 } from '@mui/material';
-import beanIcon from 'img/tokens/bean-logo-circled.svg';
-import podIcon from 'img/beanstalk/pod-icon.svg';
-import BigNumber from 'bignumber.js';
 import { PodOrder } from 'state/farmer/market';
+import Stat from 'components/Common/Stat';
+import TokenIcon from 'components/Common/TokenIcon';
+import { BEAN, PODS } from 'constants/tokens';
 import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
 import { displayBN } from '../../../util';
 
 export type OrderDetailsProps = {
-  podListing: PodOrder | undefined;
-  harvestableIndex: BigNumber;
+  podOrder: PodOrder | undefined;
 }
 
 const OrderDetails: React.FC<OrderDetailsProps & CardProps> = ({
   sx,
-  podListing,
-  harvestableIndex
+  podOrder,
 }) => {
-  if (!podListing) return null;
+  if (!podOrder) return null;
   return (
     <Card sx={{ p: 2, ...sx }}>
       <Stack gap={2}>
@@ -35,35 +33,43 @@ const OrderDetails: React.FC<OrderDetailsProps & CardProps> = ({
               backgroundColor: BeanstalkPalette.washedGreen,
               color: BeanstalkPalette.logoGreen
             }}>
-              <Typography variant="body1">{podListing.account.substring(0, 6)}</Typography>
+              <Typography variant="body1">
+                {podOrder.account.substring(0, 6)}
+              </Typography>
             </Box>
           </Stack>
         </Stack>
-        <Stack direction="row" justifyContent="space-between">
-          <Stack gap={0.5}>
-            <Typography variant="body1">Place in Line</Typography>
-            {/* <Typography variant="h1" sx={{ fontWeight: 400 }}>613,964</Typography> */}
-            <Typography variant="bodyLarge">0
-              - {displayBN(new BigNumber(podListing.maxPlaceInLine).minus(harvestableIndex))}
-            </Typography>
-          </Stack>
-          <Stack gap={0.5}>
-            <Typography variant="body1">Price per Pod</Typography>
-            <Stack direction="row" gap={0.3} alignItems="center">
-              <img src={beanIcon} alt="" height={IconSize.medium} />
-              <Typography variant="bodyLarge">{displayBN(podListing.pricePerPod)}</Typography>
-            </Stack>
-          </Stack>
-          <Stack gap={0.5}>
-            <Typography variant="body1">Pods Purchased</Typography>
-            <Stack direction="row" gap={0.3} alignItems="center">
-              <img src={podIcon} alt="" height={IconSize.medium} />
-              <Typography variant="bodyLarge">
-                {displayBN(podListing.filledAmount)}/{displayBN(podListing.totalAmount)}
-              </Typography>
-            </Stack>
-          </Stack>
-        </Stack>
+        <Grid container>
+          {/* Place in Line */}
+          <Grid item xs>
+            <Stat
+              title="Place in Line"
+              amount={`0 - ${displayBN(podOrder.maxPlaceInLine)}`}
+              variant="bodyLarge"
+              gap={0.5}
+            />
+          </Grid>
+          {/* Price per Pod */}
+          <Grid item xs>
+            <Stat
+              title="Price per Pod"
+              amount={displayBN(podOrder.pricePerPod)}
+              amountIcon={<TokenIcon token={BEAN[1]} style={{ height: IconSize.medium }} />}
+              variant="bodyLarge"
+              gap={0.5}
+            />
+          </Grid>
+          {/* Pods Sold */}
+          <Grid item xs>
+            <Stat
+              title="Pods Remaining"
+              amount={displayBN(podOrder.remainingAmount)}
+              amountIcon={<TokenIcon token={PODS} style={{ height: IconSize.medium }} />}
+              variant="bodyLarge"
+              gap={0.5}
+            />
+          </Grid>
+        </Grid>
       </Stack>
     </Card>
   );

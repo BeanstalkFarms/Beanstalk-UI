@@ -12,6 +12,9 @@ import React, { useCallback, useMemo } from 'react';
 import PlotInputField from 'components/Common/Form/PlotInputField';
 import { PodOrder } from 'state/farmer/market';
 import useFarmerPlots from 'hooks/redux/useFarmerPlots';
+import BigNumber from 'bignumber.js';
+import { PlotMap } from 'state/farmer/field';
+import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 
@@ -29,15 +32,25 @@ const FillOrderForm: React.FC<
 }) => {
   /// Data
   const allPlots = useFarmerPlots();
-
+  const harvestableIndex = useHarvestableIndex();
+  
   /// Form Data
   const plot = values.plot;
+
+  /// Derived
+  const plots = useMemo(() => Object.keys(allPlots).reduce<PlotMap<BigNumber>>((prev, curr) => {
+    const indexBN = new BigNumber(curr);
+    if (indexBN.minus(harvestableIndex).lt(podOrder.maxPlaceInLine)) {
+      prev[curr] = allPlots[curr];
+    }
+    return prev;
+  }, {}), [allPlots, harvestableIndex, podOrder.maxPlaceInLine]);
   
   return (
     <Form noValidate>
       <Stack gap={1}>
         <PlotInputField
-          plots={allPlots}
+          plots={plots}
         />
         {plot.index && (
           <>
