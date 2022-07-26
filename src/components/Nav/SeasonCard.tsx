@@ -1,89 +1,160 @@
 import React from 'react';
-import { Stack, Typography, Box, Grid } from '@mui/material';
+import { Stack, Typography, Box } from '@mui/material';
 import rainySeasonIcon from 'img/beanstalk/sun/rainy-season.svg';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import BigNumber from 'bignumber.js';
+import drySeasonIcon from 'img/beanstalk/sun/dry-season.svg';
 import { BeanstalkPalette } from '../App/muiTheme';
 import { displayBN } from '../../util';
+import { useSeasonTableStyles } from './utils';
 
 export interface SeasonCardProps {
   season: BigNumber;
   newBeans: BigNumber;
   newSoil: BigNumber;
-  weather: BigNumber;
+  temperature: BigNumber;
+  podRate: BigNumber;
+  deltaDemand: BigNumber;
 }
 
-const SeasonCard: React.FC<SeasonCardProps> = ({ season, newBeans, newSoil, weather }) => (
-  <Box sx={{ border: 1, borderColor: BeanstalkPalette.lightBlue, p: 0.75, borderRadius: '8px' }}>
-    <Stack direction="row" justifyContent="space-between" alignItems="center">
-      <Grid container alignItems="flex-end">
-        <Grid item md={2} xs={2.5}>
-          <Typography color="text.primary" variant="bodySmall">{displayBN(season)}</Typography>
-        </Grid>
-        <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
-          <Stack direction="row" alignItems="center" spacing="2px">
-            <img
-              src={rainySeasonIcon}
-              style={{ width: 16, height: 16 }}
-              alt="dry/rainy season"
-            />
-            <Typography
-              color="text.primary"
-              sx={{ fontSize: '14px', fontWeight: 500 }}
-            >
-              Rainy
-            </Typography>
+const SeasonCard: React.FC<SeasonCardProps> = ({
+  season,
+  newBeans,
+  newSoil,
+  temperature,
+  podRate,
+  deltaDemand,
+}) => {
+  const styles = useSeasonTableStyles();
+
+  return (
+    <Box
+      sx={{
+        border: 1,
+        borderColor: BeanstalkPalette.lightBlue,
+        p: 0.75,
+        borderRadius: '8px',
+      }}
+    >
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Stack justifyContent="space-between" direction="row" width="100%">
+          <Stack sx={styles.season}>
+            <Stack direction="row" alignItems="center" spacing="5px">
+              {newBeans.gt(new BigNumber(0)) ? (
+                <img
+                  src={drySeasonIcon}
+                  style={{ width: 16, height: 16 }}
+                  alt="dry/rainy season"
+                />
+              ) : (
+                <img
+                  src={rainySeasonIcon}
+                  style={{ width: 16, height: 16 }}
+                  alt="dry/rainy season"
+                />
+              )}
+              <Typography color="text.primary" variant="bodySmall">
+                {displayBN(season)}
+              </Typography>
+            </Stack>
           </Stack>
-        </Grid>
-        <Grid item md={2.6} xs={3} display={{ md: 'block' }}>
-          {newBeans.gt(new BigNumber(0)) ? (
-            <Stack direction="row" alignItems="center">
-              <ArrowUpwardIcon sx={{ width: '14px', height: '14px', color: BeanstalkPalette.logoGreen }} />
-              <Typography
-                color={BeanstalkPalette.logoGreen}
-                variant="bodySmall"
-              >
+
+          <Stack sx={styles.newBeans}>
+            <Stack>
+              <Typography color="gray" variant="bodySmall">
                 {displayBN(newBeans)}
               </Typography>
             </Stack>
-          ) : (
-            <Typography
-              color={BeanstalkPalette.lightishGrey}
-              variant="bodySmall"
-            >
-              {displayBN(newBeans)}
-            </Typography>
-          )}
-        </Grid>
-        <Grid item md={2.4} xs={3} display={{ md: 'block' }}>
-          {newSoil.gt(new BigNumber(0)) ? (
+          </Stack>
+          <Stack sx={styles.newSoil}>
             <Stack direction="row" alignItems="center">
-              <ArrowUpwardIcon sx={{ width: '14px', height: '14px', color: BeanstalkPalette.logoGreen }} />
+              {newSoil.gt(new BigNumber(0)) ? (
+                <ArrowUpwardIcon
+                  sx={{
+                    width: '14px',
+                    height: '14px',
+                    color: BeanstalkPalette.logoGreen,
+                  }}
+                />
+              ) : null}
               <Typography
-                color={BeanstalkPalette.logoGreen}
+                color={
+                  newSoil.gt(new BigNumber(0))
+                    ? BeanstalkPalette.logoGreen
+                    : BeanstalkPalette.lightishGrey
+                }
                 variant="bodySmall"
               >
                 {displayBN(newSoil)}
               </Typography>
             </Stack>
-          ) : (
-            <Typography
-              color={BeanstalkPalette.lightishGrey}
-              variant="bodySmall"
-            >
-              {displayBN(newSoil)}
+          </Stack>
+          <Stack sx={styles.temperature}>
+            <Stack direction="row" alignItems="center" spacing={0.5}>
+              <Typography variant="bodySmall">
+                {displayBN(temperature)}
+              </Typography>
+              <Typography
+                variant="bodySmall"
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="end"
+                sx={{
+                  color: newSoil.gt(new BigNumber(0))
+                    ? BeanstalkPalette.logoGreen
+                    : BeanstalkPalette.lightishGrey,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                (
+                {newSoil.gt(new BigNumber(0)) ? (
+                  <ArrowUpwardIcon
+                    sx={{
+                      width: '14px',
+                      height: '14px',
+                      color: BeanstalkPalette.logoGreen,
+                    }}
+                  />
+                ) : (
+                  <ArrowDownwardIcon
+                    sx={{
+                      width: '14px',
+                      height: '14px',
+                      color: BeanstalkPalette.lightishGrey,
+                    }}
+                  />
+                )}
+                {temperature.div(10).toFixed(0)}% )
+              </Typography>
+            </Stack>
+          </Stack>
+          <Stack sx={styles.podRate}>
+            <Typography color="text.primary" variant="bodySmall">
+              {displayBN(podRate)}%
             </Typography>
-          )}
-        </Grid>
-        <Grid item md={2.4} xs={3.5} sx={{ textAlign: 'right' }}>
-          <Typography color="text.primary" variant="bodySmall" display="flex" flexDirection="row" alignItems="center" justifyContent="end">
-            {displayBN(weather)} (<ArrowDownwardIcon sx={{ width: '14px', height: '14px', display: 'inline' }} />3%)
-          </Typography>
-        </Grid>
-      </Grid>
-    </Stack>
-  </Box>
-);
+          </Stack>
+          <Stack sx={styles.deltaDemand}>
+            <Typography
+              variant="bodySmall"
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="end"
+              sx={{
+                color: deltaDemand.gte(new BigNumber(100))
+                  ? BeanstalkPalette.logoGreen
+                  : BeanstalkPalette.washedRed,
+              }}
+            >
+              {displayBN(deltaDemand)}
+            </Typography>
+          </Stack>
+        </Stack>
+      </Stack>
+    </Box>
+  );
+};
 
 export default SeasonCard;

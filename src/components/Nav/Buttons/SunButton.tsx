@@ -5,7 +5,7 @@ import {
   Typography,
   useMediaQuery,
   Box,
-  Grid, Divider,
+  Divider,
 } from '@mui/material';
 import { NEW_BN } from 'constants/index';
 import useSeason from 'hooks/useSeason';
@@ -18,12 +18,15 @@ import BigNumber from 'bignumber.js';
 import FolderMenu from '../FolderMenu';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import SeasonCard from '../SeasonCard';
+import { useSeasonTableStyles } from '../utils';
 
 const mockSunData = new Array(20).fill(null).map(() => ({
   season: new BigNumber(5000 * Math.random()),
   newBeans: new BigNumber(100000 * Math.random()),
-  newSoil: new BigNumber(1000 * Math.random()),
-  weather: new BigNumber(5000 * Math.random()),
+  newSoil: new BigNumber(100000 * Math.random()),
+  temperature: new BigNumber(5000 * Math.random()),
+  podRate: new BigNumber(100 * Math.random()),
+  deltaDemand: new BigNumber(150 * Math.random()),
 }));
 
 const MAX_ITEMS = 8;
@@ -33,7 +36,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>(
     (state) => state._bean.token.price
   );
-
+  const tableStyles = useSeasonTableStyles();
   const isTiny = useMediaQuery('(max-width:350px)');
 
   // Button Content
@@ -52,61 +55,85 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       <Stack
         gap={1}
         sx={{
+          width: '100%',
           maxHeight: `${(37.5 + 10) * MAX_ITEMS - 10}px`,
           overflowY: 'auto',
         }}
       >
-        <Typography color="text.primary" variant="h4">
-          Season X in 42m
-        </Typography>
+        <Stack>
+          <Typography color="text.primary" variant="h4">
+            42m to next season
+          </Typography>
+          <Typography color="gray" variant="bodySmall">
+            Beanstalk is currently minting{' '}
+            <span style={{ color: BeanstalkPalette.black }}>1%</span> of deltaB.
+            It will mint{' '}
+            <span style={{ color: BeanstalkPalette.black }}>1%</span> more every
+            Season until{' '}
+            <span style={{ color: BeanstalkPalette.black }}>100%</span>
+          </Typography>
+        </Stack>
         {/* table header */}
         <Box
           display="flex"
           sx={{
-          px: 1, // 1 + 2 from Table Body
-        }}
-      >
-          <Grid container alignItems="flex-end">
-            <Grid item md={2} xs={2.5}>
+            px: 1, // 1 + 2 from Table Body
+          }}
+        >
+          <Stack direction="row" width="100%" justifyContent="space-between">
+            <Stack sx={tableStyles.season}>
               <Typography color="text.primary" variant="bodySmall">
                 Season
               </Typography>
-            </Grid>
-            <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
-              <Typography color="text.primary" variant="bodySmall">
-                Precipitation
-              </Typography>
-            </Grid>
-            <Grid item md={2.6} xs={3} display={{ md: 'block' }}>
+            </Stack>
+            <Stack sx={tableStyles.newBeans}>
               <Typography color="text.primary" variant="bodySmall">
                 New Beans
               </Typography>
-            </Grid>
-            <Grid item md={2.4} xs={3} display={{ md: 'block' }}>
+            </Stack>
+            <Stack sx={tableStyles.newSoil}>
               <Typography color="text.primary" variant="bodySmall">
                 New Soil
               </Typography>
-            </Grid>
-            <Grid item md={2.4} xs={3.5} sx={{ textAlign: 'right' }}>
+            </Stack>
+            <Stack sx={tableStyles.temperature}>
               <Typography color="text.primary" variant="bodySmall">
-                Weather
+                Temperature
               </Typography>
-            </Grid>
-          </Grid>
+            </Stack>
+            <Stack sx={tableStyles.podRate}>
+              <Typography color="text.primary" variant="bodySmall">
+                Pod Rate
+              </Typography>
+            </Stack>
+            <Stack sx={tableStyles.deltaDemand}>
+              <Typography color="text.primary" variant="bodySmall">
+                Delta Demand
+              </Typography>
+            </Stack>
+          </Stack>
         </Box>
         <SeasonCard
           season={new BigNumber(7845)}
           newBeans={new BigNumber(0)}
           newSoil={new BigNumber(0)}
-          weather={new BigNumber(5000)}
-      />
+          podRate={new BigNumber(5000)}
+          temperature={new BigNumber(5000)}
+          deltaDemand={new BigNumber(100)}
+        />
+        <Typography color="gray" variant="bodySmall" align="center">
+          The values for Season {season.toNumber()} are preductions based on use
+          behavior during the current season
+        </Typography>
         {mockSunData.map((s) => (
           <SeasonCard
             key={s.season.toString()}
             season={s.season}
             newBeans={s.newBeans}
             newSoil={s.newSoil}
-            weather={s.weather}
+            temperature={s.deltaDemand}
+            podRate={s.podRate}
+            deltaDemand={s.deltaDemand}
           />
         ))}
       </Stack>
@@ -132,7 +159,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       drawerContent={<Box sx={{ p: 1 }}>{tableContent}</Box>}
       popoverContent={tableContent}
       hideTextOnMobile
-      popperWidth="500px"
+      popperWidth="700px"
       {...props}
     />
   );

@@ -452,6 +452,12 @@ let muiTheme = createTheme({
       styleOverrides: {
         root: sx({
           fontWeight: 'normal',
+          '@media (max-width: 600px)': {
+            '-ms-overflow-style:': 'none',
+            '::-webkit-scrollbar': {
+              display: 'none',
+            },
+          },
         }),
         indicator: {
           display: 'none',
@@ -459,7 +465,12 @@ let muiTheme = createTheme({
         flexContainer: {
           flexWrap: 'wrap',
           rowGap: '10px',
-        }
+          '@media (max-width: 600px)': {
+            flexWrap: 'noWrap !important',
+            overflowX: 'scroll',
+            
+          },
+        },
       },
     },
     MuiTab: {
