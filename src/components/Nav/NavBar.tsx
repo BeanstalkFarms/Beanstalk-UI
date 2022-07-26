@@ -6,7 +6,7 @@ import {
   Divider,
   Link,
   Stack,
-  Typography,
+  Typography, useMediaQuery,
 } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { BeanstalkPalette } from 'components/App/muiTheme';
@@ -31,6 +31,7 @@ const NavBar: React.FC<{}> = () => {
 
   // TEMP: Pre-exploit Modal
   const [noticeOpen, setNoticeOpen] = useState(false);
+  const isTwoXLarge = useMediaQuery('(max-width:350px)');
 
   return (
     <>
@@ -135,10 +136,11 @@ const NavBar: React.FC<{}> = () => {
         // Using position: sticky means that
         // the main content region will always start
         // below the header, regardless of height!
+        className="navbar"
         sx={{
           position: 'sticky',
-          backgroundColor: BeanstalkPalette.lighterBlue,
-          borderBottom: `1px solid ${BeanstalkPalette.lightBlue}`,
+          // backgroundColor: { xs: BeanstalkPalette.lightBlue, xl: '#e9f3fd' },
+          borderBottom: `1px solid ${BeanstalkPalette.blue}`,
           // height: '65px'
           // pt: chainId === SupportedChainId.MAINNET ? 0.75 : 1
         }}
