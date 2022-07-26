@@ -9,7 +9,6 @@ const NoRowsOverlay: React.FC<{
 } & StackProps> = ({
   title,
   state,
-  height
 }) => (
   <Stack height="100%" alignItems="center" justifyContent="center">
     <Typography variant="body1" color="gray">
