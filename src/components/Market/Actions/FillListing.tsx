@@ -319,7 +319,6 @@ const FillListing : React.FC<{
   const onSubmit = useCallback(async (values: FillListingFormValues, formActions: FormikHelpers<FillListingFormValues>) => {
     let txToast;
     try {
-      console.debug('Pod listing:', await beanstalk.podListing(podListing.id), podListing.id);
       const formData = values.tokens[0];
       const inputToken = formData.token;
       const amountBeans = inputToken === Bean ? formData.amount : formData.amountOut;
@@ -399,9 +398,8 @@ const FillListing : React.FC<{
       
       const receipt = await txn.wait();
       await Promise.all([
-        refetchFarmerField(),     // get farmer's plots
-        refetchFarmerBalances(),  // get farmer's token balances
-        refetchBeanstalkField(),  // get beanstalk field data (ex. amount of Soil left)
+        refetchFarmerField(),     // refresh plots; increment pods
+        refetchFarmerBalances(),  // decrement balance of tokenIn
         // FIXME: refresh listings
       ]);  
       txToast.success(receipt);
@@ -412,7 +410,7 @@ const FillListing : React.FC<{
     } finally {
       formActions.setSubmitting(false);
     }
-  }, [Bean, Eth, beanstalk, podListing, provider, signer, refetchBeanstalkField, refetchFarmerBalances, refetchFarmerField]);
+  }, [Bean, Eth, beanstalk, podListing, provider, signer, refetchFarmerBalances, refetchFarmerField]);
 
   return (
     <Formik<FillListingFormValues>

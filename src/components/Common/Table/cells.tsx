@@ -78,7 +78,7 @@ const COLUMNS = {
         placement="right"
         title={(
           <>
-            Total: {displayFullBN(params.row.amount)} Pods<br />
+            Total: {displayFullBN(params.row.totalAmount)} Pods<br />
             Remaining: {displayFullBN(params.row.remainingAmount)} Pods<br />
             {/* {params.row.filledAmount.div(params.row.totalAmount).times(100).toFixed(2)}% Filled */}
           </>

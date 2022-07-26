@@ -13,6 +13,8 @@ const MyOrdersTable : React.FC<{}> = () => {
   const orders = useSelector<AppState, AppState['_farmer']['market']['orders']>((state) => state._farmer.market.orders);
   const rows   = useMemo(() => Object.values(orders),   [orders]);
 
+  console.debug('Orders', orders);
+
   /// Navigation
   const navigate = useNavigate();
   const handleClick = useCallback((params: GridRowParams) => {

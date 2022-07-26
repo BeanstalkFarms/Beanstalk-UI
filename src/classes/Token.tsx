@@ -141,7 +141,7 @@ export default abstract class Token {
    * @param amount amount to convert
    * @returns string 
    */
-  public stringify(amount: BigNumber) {
+  public stringify(amount: BigNumber.Value) {
     return toStringBaseUnitBN(amount, this.decimals);
   }
 }

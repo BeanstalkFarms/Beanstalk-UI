@@ -22,9 +22,12 @@ const PlotInputField : React.FC<{
   plots: PlotMap<BigNumber>,
   /** The maximum number of pods that can be entered into the input */
   max?: BigNumber;
+  /** */
+  disabledAdvanced?: boolean;
 }> = ({
   plots,
-  max
+  max,
+  disabledAdvanced = false,
 }) => {
   /// Form state
   const { values, setFieldValue, isSubmitting } = useFormikContext<{ 
@@ -50,13 +53,7 @@ const PlotInputField : React.FC<{
     },
     [plots, plot.index]
   );
-  // const minFloat = useMemo(
-  //   () => {
-  //     if 
-  //   },
-  //   []
-  // )
-  
+
   /// Button to select a new plot
   const InputProps = useMemo(() => ({
     endAdornment: (
@@ -73,14 +70,10 @@ const PlotInputField : React.FC<{
         )}
       />
     ),
-  }), [
-    harvestableIndex,
-    plot.index,
-    showDialog
-  ]);
+  }), [harvestableIndex, plot.index, showDialog]);
 
   /// "Advanced" control in the Quote slot
-  const Quote = useMemo(() => (
+  const Quote = useMemo(() => (disabledAdvanced ? undefined : (
     <AdvancedButton
       open={values.settings.showRangeSelect}
       onClick={() => setFieldValue(
@@ -88,7 +81,7 @@ const PlotInputField : React.FC<{
         !values.settings.showRangeSelect
       )}
     />
-  ), [setFieldValue, values.settings.showRangeSelect]);
+  )), [disabledAdvanced, setFieldValue, values.settings.showRangeSelect]);
 
   const clamp = useCallback((amount: BigNumber | undefined) => {
     if (!amount) return undefined;
@@ -97,17 +90,8 @@ const PlotInputField : React.FC<{
     return amount;
   }, [max]);
 
-  /// Select a new plot
-  const handlePlotSelect = useCallback((index: string) => {
-    const _numPods = new BigNumber(plots[index]);
-    setFieldValue('plot.index',  index);
-    setFieldValue('plot.amount', _numPods);
-    setFieldValue('plot.start',  ZERO_BN);
-    setFieldValue('plot.end',    _numPods);
-  }, [plots, setFieldValue]);
-
   /// Update amount
-  const handleChangeAmount = (amount: BigNumber | undefined) => {
+  const handleChangeAmount = useCallback((amount: BigNumber | undefined) => {
     if (!amount) {
       /// If the user clears the amount input, set start/end to the end
       /// of the Plot; amount will get set to zero by below effect
@@ -128,10 +112,20 @@ const PlotInputField : React.FC<{
         setFieldValue('plot.end', MinBN(numPods, (plot?.end || ZERO_BN).plus(delta.abs())));
       }
     }
-  };
+  }, [numPods, plot?.end, setFieldValue]);
+
+  /// Select a new plot
+  const handlePlotSelect = useCallback((index: string) => {
+    const _numPods = new BigNumber(plots[index]);
+    const clamped  = clamp(_numPods);
+    setFieldValue('plot.index',  index);     //  
+    setFieldValue('plot.amount', clamped);   // total num
+    handleChangeAmount(clamped);             // setup start/end index appropriately
+  }, [clamp, handleChangeAmount, plots, setFieldValue]);
 
   /// Update amount when an endpoint changes via the advanced controls
-  /// If one of end/start change, so does the amount input
+  /// If one of end/start change, so does the amount input.
+  /// Values are changed when the slider moves or a manual input changes.
   useEffect(() => {
     const clampedAmount = clamp(plot.end?.minus(plot.start || ZERO_BN));
     setFieldValue(
@@ -153,6 +147,7 @@ const PlotInputField : React.FC<{
       <TokenInputField
         name="plot.amount"
         fullWidth
+        max={max}
         InputProps={InputProps}
         balance={numPods}
         hideBalance={!plot.index}

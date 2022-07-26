@@ -36,7 +36,7 @@ const BalancesPage: React.FC = () => {
               <Grid item xs={12} md={3}>
                 <Stat
                   title="Stalk"
-                  tooltip="This is your total Stalk balance. Stalk is the ownership token of the Beanstalk DAO. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
+                  titleTooltip="This is your total Stalk balance. Stalk is the ownership token of the Beanstalk DAO. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
                   amountIcon={<TokenIcon token={STALK} />}
                   amount={displayBN(farmerSilo.stalk.total)}
                   variant="h2"
@@ -47,7 +47,7 @@ const BalancesPage: React.FC = () => {
               <Grid item xs={12} md={3}>
                 <Stat
                   title="Seeds"
-                  tooltip="This is your total Seed balance. Each Seed yields 1/10000 Grown Stalk each Season. Grown Stalk must be claimed in order to be included in your Stalk balance and start earning interest."
+                  titleTooltip="This is your total Seed balance. Each Seed yields 1/10000 Grown Stalk each Season. Grown Stalk must be claimed in order to be included in your Stalk balance and start earning interest."
                   amountIcon={<TokenIcon token={SEEDS} />}
                   amount={displayBN(farmerSilo.seeds.total)}
                   variant="h2"
@@ -58,7 +58,7 @@ const BalancesPage: React.FC = () => {
               <Grid item xs={12} md={3}>
                 <Stat
                   title="Pods"
-                  tooltip="This is your total Pod Balance. Pods become Harvestable on a FIFO basis. For more information on your place in the Pod Line, head over to the Field page."
+                  titleTooltip="This is your total Pod Balance. Pods become Harvestable on a FIFO basis. For more information on your place in the Pod Line, head over to the Field page."
                   amountIcon={<TokenIcon token={PODS} />}
                   amount={displayBN(farmerField.pods)}
                   variant="h2"
@@ -69,7 +69,7 @@ const BalancesPage: React.FC = () => {
               <Grid item xs={12} md={3}>
                 <Stat
                   title="Sprouts"
-                  tooltip="This is your total Sprout balance. Sprouts represent how many Beans there are left to be earned from your Fertilizer. Sprouts become Fertilized pro rata as the Bean supply increases. For more information on your Fertilizer, head over to the Barn Raise page."
+                  titleTooltip="This is your total Sprout balance. Sprouts represent how many Beans there are left to be earned from your Fertilizer. Sprouts become Fertilized pro rata as the Bean supply increases. For more information on your Fertilizer, head over to the Barn Raise page."
                   amountIcon={<TokenIcon token={SPROUTS} />}
                   amount={displayBN(fertilizerSummary.unfertilized)}
                   variant="h2"

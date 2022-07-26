@@ -1,0 +1,35 @@
+import { usePodOrderQuery } from 'generated/graphql';
+import { useMemo } from 'react';
+import { castPodOrder } from 'state/farmer/market';
+import useFarmerOrders from './redux/useFarmerOrders';
+
+export enum Source {
+  SUBGRAPH,
+  LOCAL
+}
+
+const usePodOrder = (id: string | undefined) => {
+  const farmerOrders = useFarmerOrders();
+  const query        = usePodOrderQuery({ variables: { id: id || '' }, skip: !id });
+  
+  const [data, source] = useMemo(() => {
+    if (id && query.data?.podOrder) {
+      return [castPodOrder(query.data.podOrder), Source.SUBGRAPH];
+    }
+    if (id && farmerOrders[id]) {
+      return [farmerOrders[id], Source.LOCAL];
+    }
+    return [undefined, undefined];
+  }, [farmerOrders, id, query.data?.podOrder]);
+  
+  return {
+    ...query,
+    /// If the query finished loading and has no data,
+    /// check redux for a local order that was loaded
+    /// via direct event processing.
+    data,
+    source,
+  };
+};
+
+export default usePodOrder;
