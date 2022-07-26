@@ -451,15 +451,7 @@ let muiTheme = createTheme({
     MuiTabs: {
       defaultProps: {},
       styleOverrides: {
-        root: sx({
-          fontWeight: 'normal',
-          '@media (max-width: 600px)': {
-            '-ms-overflow-style:': 'none',
-            '::-webkit-scrollbar': {
-              display: 'none',
-            },
-          },
-        }),
+        root: sx({ fontWeight: 'normal' }),
         indicator: {
           display: 'none',
         },
@@ -469,7 +461,10 @@ let muiTheme = createTheme({
           '@media (max-width: 600px)': {
             flexWrap: 'noWrap !important',
             overflowX: 'scroll',
-            
+            '-ms-overflow-style:': 'none',
+            '::-webkit-scrollbar': {
+              display: 'none',
+            },
           },
         },
       },
