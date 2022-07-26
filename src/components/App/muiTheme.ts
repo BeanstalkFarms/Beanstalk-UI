@@ -1,6 +1,7 @@
 import {
   createTheme,
   experimental_sx as sx,
+  lighten,
   responsiveFontSizes
 } from '@mui/material/styles';
 import React from 'react';
@@ -77,6 +78,7 @@ const remBase = (n: number) => `${(n / BASE_FONT_SIZE).toFixed(4)}rem`;
 export const BeanstalkPalette = {
   // Greens
   logoGreen: '#46B955',
+  mediumGreen: lighten('#46B955', 0.7),
   lightGreen: '#E1F8E6',
   washedGreen: '#E1F8E6',
   supportGreen: '#19873B',
@@ -93,14 +95,18 @@ export const BeanstalkPalette = {
   black: '#333',
   gray: '#657265',
   lightishGrey: '#9E9E9E',
+  // Reds
   washedRed: '#c35f42',
+  mediumRed: lighten('#c35f42', 0.55),
   hoverRed: '#fef9f8',
   trueRed: '#AE2D20',
+  // Yellow
   yellow: '#f0df6a',
-  brown: 'rgba(121,87,57,1)',
-  lightBrown: 'rgba(121,87,57,0.2)',
   lightYellow: '#FDF4E7',
   warningYellow: '#F2A64A',
+  // Brown
+  brown: 'rgba(121,87,57,1)',
+  lightBrown: 'rgba(121,87,57,0.2)',
 };
 
 export const IconSize = {
