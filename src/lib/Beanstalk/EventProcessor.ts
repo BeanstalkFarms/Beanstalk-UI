@@ -676,8 +676,8 @@ export default class EventProcessor {
 
     const isFilled = this.listings[newID].remainingAmount.isEqualTo(0);
     if (isFilled) {
-      // this.listings[newID].status = 'filled';
-      delete this.listings[newID];
+      this.listings[newID].status = 'filled';
+      // delete this.listings[newID];
     }
   }
   
@@ -702,7 +702,7 @@ export default class EventProcessor {
   
   PodOrderFilled(event: Simplify<PodOrderFilledEvent>) {
     const id = event.args.id.toString();
-    if (!this.listings[id]) return;
+    if (!this.orders[id]) return;
 
     const amount = tokenBN(event.args.amount, BEAN[1]);
     this.orders[id].filledAmount    = this.orders[id].filledAmount.plus(amount);
@@ -711,8 +711,8 @@ export default class EventProcessor {
     /// Update status
     const isFilled = this.orders[id].remainingAmount.isEqualTo(0);
     if (isFilled) {
-      // this.orders[id].status = 'filled';
-      delete this.orders[id];
+      this.orders[id].status = 'filled';
+      // delete this.orders[id];
     }
   }
 }

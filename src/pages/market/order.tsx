@@ -1,25 +1,40 @@
 import React from 'react';
 import {
   Box,
+  Button,
   Card,
   Container,
   Stack, Typography,
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import usePodOrder, { Source } from 'hooks/usePodOrder';
+import usePodOrder from 'hooks/usePodOrder';
+import { Source } from 'util/index';
+import useAccount from 'hooks/ledger/useAccount';
 import FillOrder from '../../components/Market/Actions/FillOrder';
 import OrderDetails from '../../components/Market/Cards/OrderDetails';
 import AddressIcon from '../../components/Common/AddressIcon';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 
 const OrderPage: React.FC = () => {
+  const account = useAccount();
   const { id } = useParams<{ id: string }>();
-  
   const { data: order, source, loading, error } = usePodOrder(id);
 
   if (loading) return <div>Loading</div>;
   if (error) return <div>{error}</div>;
   if (!order) return <div>Not found</div>;
+
+  /// TEMP: override order for testing
+  // const order : PodOrder = {
+  //   id: '0x61f2026bb26606482187137f1c06fc85b999036e0b1641cb1a84e02a1e785cd3',
+  //   account: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+  //   maxPlaceInLine: new BigNumber('600000000'),
+  //   totalAmount: new BigNumber('19982.345012'),
+  //   pricePerPod: new BigNumber('0.5'),
+  //   remainingAmount: new BigNumber('19982.345012'),
+  //   filledAmount: new BigNumber('0'),
+  //   status: 'active'
+  // };
 
   return (
     <Container maxWidth="sm">
@@ -38,19 +53,36 @@ const OrderPage: React.FC = () => {
         <OrderDetails
           podOrder={order}
         />
-        <Card sx={{ position: 'relative' }}>
-          <Stack gap={1.5}>
-            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>
-              <Typography variant="h4">Sell Pods to Pod Order</Typography>
+
+        {account === order.account ? (
+          // <Card>
+          <Button
+            color="error"
+            variant="contained"
+            fullWidth
+            >
+            Cancel
+          </Button>
+          // </Card>
+        ) : (
+          <Card sx={{ position: 'relative' }}>
+            <Stack gap={1.5}>
+              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>
+                <Typography variant="h4">Sell Pods to Pod Order</Typography>
+              </Stack>
+              <Box sx={{ px: 1, pb: 1 }}>
+                <FillOrder
+                  podOrder={order}
+                />
+              </Box>
             </Stack>
-            <Box sx={{ px: 1, pb: 1 }}>
-              <FillOrder
-                podOrder={order}
-              />
-            </Box>
-          </Stack>
-        </Card>
-        {source === Source.SUBGRAPH ? 'Loaded from Subgraph' : 'Loaded from on-chain events'}
+          </Card>
+        )}
+        <Box sx={{ }}>
+          <Typography color="text.secondary">
+            Data source: {source === Source.SUBGRAPH ? 'Subgraph' : 'RPC'}
+          </Typography>
+        </Box>
       </Stack>
     </Container>
   );

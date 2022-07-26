@@ -127,7 +127,7 @@ const COLUMNS = {
         placement="right"
         title={(
           <>
-            Cost: {displayFullBN((params.value as BigNumber).times(params.row.remainingAmount), BEAN[1].displayDecimals)} BEAN
+            Total Cost: {displayFullBN((params.value as BigNumber).times(params.row.remainingAmount), BEAN[1].displayDecimals)} BEAN
           </>
         )}>
         <Stack direction="row" gap={0.3} alignItems="center">

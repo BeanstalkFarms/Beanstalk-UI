@@ -1,17 +1,12 @@
 import { usePodOrderQuery } from 'generated/graphql';
 import { useMemo } from 'react';
 import { castPodOrder } from 'state/farmer/market';
+import { Source } from 'util/index';
 import useFarmerOrders from './redux/useFarmerOrders';
 
-export enum Source {
-  SUBGRAPH,
-  LOCAL
-}
-
 const usePodOrder = (id: string | undefined) => {
-  const farmerOrders = useFarmerOrders();
-  const query        = usePodOrderQuery({ variables: { id: id || '' }, skip: !id });
-  
+  const farmerOrders   = useFarmerOrders();
+  const query          = usePodOrderQuery({ variables: { id: id || '' }, skip: !id });
   const [data, source] = useMemo(() => {
     if (id && query.data?.podOrder) {
       return [castPodOrder(query.data.podOrder), Source.SUBGRAPH];
