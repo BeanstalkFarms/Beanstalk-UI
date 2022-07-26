@@ -1,6 +1,13 @@
 import { Alert, Box, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { PlotFragment, PlotSettingsFragment, TokenAdornment, TokenInputField, TxnPreview } from 'components/Common/Form';
+import {
+  PlotFragment,
+  PlotSettingsFragment,
+  SmartSubmitButton,
+  TokenAdornment,
+  TokenInputField,
+  TxnPreview
+} from 'components/Common/Form';
 import { ONE_BN, ZERO_BN } from 'constants/index';
 import { BEAN, PODS } from 'constants/tokens';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
@@ -18,7 +25,6 @@ import { Field } from 'state/farmer/field';
 import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import { useSigner } from 'hooks/ledger/useSigner';
-import { LoadingButton } from '@mui/lab';
 import PlotInputField from 'components/Common/Form/PlotInputField';
 import { useFetchFarmerMarket } from 'state/farmer/market/updater';
 import useFarmerListings from 'hooks/redux/useFarmerListings';
@@ -143,17 +149,18 @@ const CreateListingForm: React.FC<
             )}
           </>
         )}
-        <LoadingButton
+        <SmartSubmitButton
+          loading={isSubmitting}
+          disabled={!isReady || isSubmitting}
+          type="submit"
           variant="contained"
           color="primary"
-          loading={isSubmitting}
-          disabled={isSubmitting || !isReady}
-          fullWidth
           size="large"
-          type="submit"
+          tokens={[]}
+          mode="auto"
         >
           {alreadyListed ? 'Update' : 'Create'} Listing
-        </LoadingButton>
+        </SmartSubmitButton>
       </Stack>
     </Form>
   );

@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Accordion, AccordionDetails, Alert, Box, Button, Link, Stack, Tooltip } from '@mui/material';
+import { Accordion, AccordionDetails, Alert, Box, Link, Stack } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useAccount, useProvider } from 'wagmi';
@@ -10,7 +10,8 @@ import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { ActionType } from 'util/Actions';
-import { TokenInputField, TokenOutputField,
+import {
+  SmartSubmitButton, TokenInputField, TokenOutputField,
   TxnPreview,
   TxnSeparator
 } from 'components/Common/Form';
@@ -48,17 +49,17 @@ const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
   harvestablePods: BigNumber;
   farm: Farm;
 }> = ({
-  // Custom
-  harvestablePods,
-  // Formik
-  values,
-  isSubmitting,
-}) => {
+        // Custom
+        harvestablePods,
+        // Formik
+        values,
+        isSubmitting,
+      }) => {
   /// Tokens
   const chainId = useChainId();
-  const bean    = getChainConstant(BEAN, chainId);
-  const lp      = getChainConstant(BEAN_CRV3_LP, chainId);
-  
+  const bean = getChainConstant(BEAN, chainId);
+  const lp = getChainConstant(BEAN_CRV3_LP, chainId);
+
   /// Derived
   const isMainnet = chainId === SupportedChainId.MAINNET;
   const amount = harvestablePods;
@@ -69,76 +70,84 @@ const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
   );
 
   return (
-    <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
-      <Form noValidate>
-        <Stack gap={1}>
-          {/* Claimable Token */}
-          <TokenInputField
-            name="amount"
-            balance={amount}
-            balanceLabel="Harvestable Pods"
-            disabled
-            InputProps={{
-              endAdornment: (
-                <TokenAdornment
-                  token={PODS}
-                />
-              )
-            }}
-          />
-          {/* Transaction Details */}
-          {values.amount?.gt(0) ? (
-            <>
-              {/* Setting: Destination */}
-              <DestinationField
-                name="destination"
+    <Form noValidate>
+      <Stack gap={1}>
+        {/* Claimable Token */}
+        <TokenInputField
+          name="amount"
+          balance={amount}
+          balanceLabel="Harvestable Pods"
+          disabled
+          InputProps={{
+            endAdornment: (
+              <TokenAdornment
+                token={PODS}
               />
-              <TxnSeparator mt={-1} />
-              <TokenOutputField
-                token={BEAN[1]}
-                amount={values.amount || ZERO_BN}
-              />
-              <Box>
-                <Alert
-                  color="warning"
-                  icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
-                >
-                  You can Harvest your Pods and Deposit Beans into the Silo in one transaction on the <Link href={`/#/silo/${bean.address}`}>Bean</Link> or <Link href={`/#/silo/${lp.address}`}>LP</Link> Deposit page.
-                </Alert>
-              </Box>
-              <Box>
-                <Accordion variant="outlined">
-                  <StyledAccordionSummary title="Transaction Details" />
-                  <AccordionDetails>
-                    <TxnPreview
-                      actions={[
-                        {
-                          type: ActionType.HARVEST,
-                          amount: amount
-                        },
-                        {
-                          type: ActionType.RECEIVE_BEANS,
-                          amount: amount
-                        },
-                      ]}
-                    />
-                  </AccordionDetails>
-                </Accordion>
-              </Box>
-            </>
-          ) : null}
-          <Button
-            /// FIXME: use SmartSubmitButton
-            disabled={!isSubmittable || isSubmitting || isMainnet}
-            type="submit"
-            size="large"
-            fullWidth
-          >
-            Harvest
-          </Button>
-        </Stack>
-      </Form>
-    </Tooltip>
+            )
+          }}
+        />
+        {/* Transaction Details */}
+        {values.amount?.gt(0) ? (
+          <>
+            {/* Setting: Destination */}
+            <DestinationField
+              name="destination"
+            />
+            <TxnSeparator mt={-1} />
+            <TokenOutputField
+              token={BEAN[1]}
+              amount={values.amount || ZERO_BN}
+            />
+            <Box>
+              <Alert
+                color="warning"
+                icon={
+                  <IconWrapper boxSize={IconSize.medium}><WarningAmberIcon
+                    sx={{ fontSize: IconSize.small }} />
+                  </IconWrapper>
+                }
+              >
+                You can Harvest your Pods and Deposit Beans into the Silo in one transaction on the <Link
+                  href={`/#/silo/${bean.address}`}>Bean
+                                                                                                    </Link> or <Link href={`/#/silo/${lp.address}`}>LP</Link> Deposit
+                page.
+              </Alert>
+            </Box>
+            <Box>
+              <Accordion variant="outlined">
+                <StyledAccordionSummary title="Transaction Details" />
+                <AccordionDetails>
+                  <TxnPreview
+                    actions={[
+                      {
+                        type: ActionType.HARVEST,
+                        amount: amount
+                      },
+                      {
+                        type: ActionType.RECEIVE_BEANS,
+                        amount: amount
+                      },
+                    ]}
+                  />
+                </AccordionDetails>
+              </Accordion>
+            </Box>
+          </>
+        ) : null}
+        <SmartSubmitButton
+          loading={isSubmitting}
+          disabled={!isSubmittable || isSubmitting}
+          type="submit"
+          variant="contained"
+          color="primary"
+          size="large"
+          tokens={[]}
+          mode="auto"
+        >
+          Harvest
+        </SmartSubmitButton>
+      </Stack>
+    </Form>
   );
 };
 
@@ -153,7 +162,7 @@ const Harvest: React.FC<{}> = () => {
   const farm = useMemo(() => new Farm(provider), [provider]);
 
   ///
-  const [refetchFarmerField]    = useFetchFarmerField();
+  const [refetchFarmerField] = useFetchFarmerField();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
 
   ///
