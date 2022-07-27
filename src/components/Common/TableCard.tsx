@@ -1,7 +1,14 @@
 import React, { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
-import { Box, Card, CircularProgress, Divider, Stack, Typography } from '@mui/material';
-import { DataGrid, GridColumns, GridSortItem } from '@mui/x-data-grid';
+import { Box, Card, CircularProgress, Divider, Pagination, Stack, Typography } from '@mui/material';
+import {
+  DataGrid,
+  GridColumns, gridPageCountSelector,
+  gridPageSelector,
+  GridSortItem,
+  useGridApiContext,
+  useGridSelector
+} from '@mui/x-data-grid';
 import { displayBN, displayUSD } from 'util/index';
 import { tableStyle } from 'components/Common/Table/styles';
 import { ZERO_BN } from 'constants/index';
@@ -9,6 +16,23 @@ import { Token } from '../../classes';
 import TableEmptyState from './ZeroState/TableEmptyState';
 
 const MAX_ROWS = 5;
+
+function CustomPagination() {
+  const apiRef = useGridApiContext();
+  const page = useGridSelector(apiRef, gridPageSelector);
+  const pageCount = useGridSelector(apiRef, gridPageCountSelector);
+
+  return (
+    <Pagination
+      color="primary"
+      count={pageCount}
+      page={page + 1}
+      variant="text"
+      size="small"
+      onChange={(event, value) => apiRef.current.setPage(value - 1)}
+    />
+  );
+}
 
 /**
  * Displays a <DataGrid /> with data about Crates. Attaches
@@ -93,10 +117,16 @@ const TableCard : React.FC<{
                 <TableEmptyState title={title} state={state} />
               );
             },
+            Pagination: CustomPagination
           }}
           initialState={{
             sorting: {
               sortModel: [sort],
+            }
+          }}
+          sx={{
+            '& .MuiDataGrid-footerContainer': {
+              justifyContent: 'center'
             }
           }}
         />
