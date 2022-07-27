@@ -13,8 +13,6 @@ import AddressIcon from '../AddressIcon';
 
 const basicCell = (params : GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
 
-/*  = */
-
 const COLUMNS = {
   ///
   /// Generics
@@ -138,7 +136,7 @@ const COLUMNS = {
     field: 'remainingAmount',
     headerName: 'Number of Pods',
     flex: 1,
-    disableColumnMenu: true,
+    // disableColumnMenu: true,
     align: 'left',
     headerAlign: 'left',
     renderCell: (params: GridRenderCellParams<any, PodListing>) => (
@@ -187,6 +185,7 @@ const COLUMNS = {
   pricePerPod: {
     field: 'pricePerPod',
     headerName: 'Price per Pod',
+    type: 'number',
     align: 'left',
     headerAlign: 'left',
     flex: 1,
@@ -224,10 +223,12 @@ const COLUMNS = {
     field: 'index',
     headerName: 'Place In Line',
     flex: 1,
-    valueParser: (params: GridValueFormatterParams) => (
-      /// FIXME: may have roundoff errors
-      (params.value as BigNumber).toNumber()
-    ),
+    type: 'number',
+    align: 'left',
+    headerAlign: 'left',
+    // valueParser: (value: number) => (
+    //   value - harvestableIndex.toNumber()
+    // ),
     renderCell: (params: GridRenderCellParams) => (
       <Typography>
         {displayFullBN((params.value as BigNumber).minus(harvestableIndex), 0)}
