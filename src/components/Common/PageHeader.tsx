@@ -2,13 +2,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Box, Button, Link, LinkProps, Stack, Typography } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import React from 'react';
-// import DescriptionIcon from '@mui/icons-material/Description';
-// import MenuBookIcon from '@mui/icons-material/MenuBook';
-// import BookIcon from '@mui/icons-material/Book';
-// import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-// import gitbookIcon from 'img/interface/gitbook.png';
-import AutoStoriesIcon from '@mui/icons-material/AutoStories';
-import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
+import { BeanstalkPalette, IconSize } from '../App/muiTheme';
 
 const PageHeader : React.FC<{
   /** The Field: The Decentralized Credit Facility */
@@ -48,19 +42,6 @@ const PageHeader : React.FC<{
           <Box>
             <Typography variant="h1" display="flex" alignItems="center" gap={1}>
               <span>{props.title}</span>
-              {props.href !== undefined && (
-                <Link
-                  href={props.href || 'https://docs.bean.money'}
-                  underline="none"
-                  color="inherit"
-                  display="flex"
-                  alignItems="center"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <AutoStoriesIcon sx={{ fontSize: FontSize['2xl'], '&:hover': { color: 'primary.main' } }} />
-                </Link>
-              )}
             </Typography>
           </Box>
         )}
@@ -68,6 +49,20 @@ const PageHeader : React.FC<{
           <Box>
             <Typography variant="subtitle1" sx={{ lineHeight: '1.5rem' }}>
               {props.description}.
+              {props.href !== undefined && (
+                <Link
+                  href={props.href || 'https://docs.bean.money'}
+                  underline="none"
+                  color={BeanstalkPalette.darkNavyBlue}
+                  display="flex"
+                  alignItems="center"
+                  target="_blank"
+                  rel="noreferrer"
+                  sx={{ display: 'inline', ml: 0.3, '&:hover': { opacity: 0.85 } }}
+                >
+                  <Typography display="inline" variant="subtitle1" sx={{ lineHeight: '1.5rem' }}>Learn more.</Typography>
+                </Link>
+              )}
             </Typography>
           </Box>
         )}
