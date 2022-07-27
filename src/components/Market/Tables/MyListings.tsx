@@ -7,6 +7,7 @@ import COLUMNS from 'components/Common/Table/cells';
 import { Button } from '@mui/material';
 import MarketBaseTable from './Base';
 import TableEmptyState from '../../Common/ZeroState/TableEmptyState';
+import TablePagination from '../../Common/TablePagination';
 
 const components = {
   NoRowsOverlay() {
@@ -18,6 +19,7 @@ const components = {
       </TableEmptyState>
     );
   },
+  Pagination: TablePagination,
 };
 
 const MyListingsTable : React.FC<{}> = () => {

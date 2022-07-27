@@ -43,7 +43,7 @@ const PodMarketPage: React.FC = () => {
             />
           </Tabs>
         </Box>
-        <Box sx={{ px: 1 }}>
+        <Box sx={{ px: 1, pb: 1 }}>
           {tab === 0 && (
             <AllListings />
           )}

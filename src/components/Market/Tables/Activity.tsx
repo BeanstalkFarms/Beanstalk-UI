@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Box, BoxProps, Card, Typography } from '@mui/material';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { tableStyle } from '../../Common/Table/styles';
+import TablePagination from '../../Common/TablePagination';
 
 const MAX_ROWS = 10;
 
@@ -20,9 +21,12 @@ const ActivityTable: React.FC<
   }, [rows]);
 
   return (
-    <Card sx={{ p: 2 }}>
-      <Typography variant="h4" sx={{ pb: 1 }}>Marketplace Activity</Typography>
-      <Box display="flex" alignItems="center" justifyContent="center">
+    <Card>
+      <Box pt={2} px={2} pb={1.5}>
+        <Typography variant="h4" sx={{ pb: 1 }}>Marketplace Activity</Typography>
+      </Box>
+
+      <Box display="flex" alignItems="center" justifyContent="center" sx={{ px: 1, pb: 1 }}>
         <Box
           sx={{
             height: tableHeight,
@@ -40,6 +44,9 @@ const ActivityTable: React.FC<
               sorting: {
                 sortModel: [{ field: 'placeInLine', sort: 'asc' }],
               }
+            }}
+            components={{
+              Pagination: TablePagination
             }}
           />
         </Box>
