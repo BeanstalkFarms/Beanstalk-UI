@@ -25,7 +25,7 @@ import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary
 import { ActionType } from 'util/Actions';
 import TokenInputField from 'components/Common/Form/TokenInputField';
 import { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
-import DestinationField from 'components/Field/DestinationField';
+import DestinationField from 'components/Common/Form/DestinationField';
 import useChainConstant from '../../../hooks/useChainConstant';
 
 type TradeFormValues = {

@@ -6,7 +6,7 @@ import {
   TxnSeparator
 } from 'components/Common/Form';
 import { ZERO_BN } from 'constants/index';
-import { BEAN } from 'constants/tokens';
+import { BEAN, PODS } from 'constants/tokens';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import PlotInputField from 'components/Common/Form/PlotInputField';
@@ -21,11 +21,12 @@ import useChainConstant from 'hooks/useChainConstant';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
 import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
-import { parseError } from 'util/index';
+import { displayBN, displayTokenAmount, parseError } from 'util/index';
 import { useFetchFarmerField } from 'state/farmer/field/updater';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import { LoadingButton } from '@mui/lab';
 import { useSigner } from 'hooks/ledger/useSigner';
+import DestinationField from 'components/Common/Form/DestinationField';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 
@@ -51,23 +52,30 @@ const FillOrderForm: React.FC<
   plots: allPlots,  // rename to prevent collision
   harvestableIndex,
 }) => {
-  /// Form Data
+  /// Derived
   const plot = values.plot;
 
   /// Calculations
-  const [eligiblePlots, numEligiblePlots] = useMemo(() => Object.keys(allPlots).reduce<[PlotMap<BigNumber>, number]>((prev, curr) => {
-    const indexBN = new BigNumber(curr);
-    if (indexBN.minus(harvestableIndex).lt(podOrder.maxPlaceInLine)) {
-      prev[0][curr] = allPlots[curr];
-      prev[1] += 1;
-    }
-    return prev;
-  }, [{}, 0]), [allPlots, harvestableIndex, podOrder.maxPlaceInLine]);
-  const beansReceived = values.plot.amount?.times(podOrder.pricePerPod) || ZERO_BN;
+  const [eligiblePlots, numEligiblePlots] = useMemo(() => 
+    Object.keys(allPlots).reduce<[PlotMap<BigNumber>, number]>(
+      (prev, curr) => {
+        const indexBN = new BigNumber(curr);
+        if (indexBN.minus(harvestableIndex).lt(podOrder.maxPlaceInLine)) {
+          prev[0][curr] = allPlots[curr];
+          prev[1] += 1;
+        }
+        return prev;
+      },
+      [{}, 0]
+    ),
+    [allPlots, harvestableIndex, podOrder.maxPlaceInLine]
+  );
+  const placeInLine   = plot.index ? new BigNumber(plot.index).minus(harvestableIndex) : undefined;
+  const beansReceived = plot.amount?.times(podOrder.pricePerPod) || ZERO_BN;
   const isReady = (
     numEligiblePlots > 0
-    && values.plot.index
-    && values.plot.amount?.gt(0)
+    && plot.index
+    && plot.amount?.gt(0)
   );
   
   return (
@@ -78,7 +86,8 @@ const FillOrderForm: React.FC<
           max={podOrder.remainingAmount}
           disabledAdvanced
         />
-        {plot.index && (
+        <DestinationField name="destination" />
+        {isReady && (
           <>
             <TxnSeparator mt={0} />
             <TokenOutputField
@@ -94,11 +103,16 @@ const FillOrderForm: React.FC<
                     actions={[
                       {
                         type: ActionType.BASE,
-                        message: 'DO SOMETHING'
+                        message: `Sell ${displayTokenAmount(plot.amount!, PODS)} from your Plot at ${displayBN(placeInLine!)} in the Pod Line.`
+                      },
+                      {
+                        type: ActionType.RECEIVE_BEANS,
+                        amount: beansReceived,
+                        destination: values.destination,
                       },
                       {
                         type: ActionType.BASE,
-                        message: 'DO SOMETHING!'
+                        message: 'This sale will settle immediately.'
                       }
                     ]}
                   />

@@ -89,9 +89,10 @@ const FillListingForm : React.FC<
   const tokenInBalance = balances[tokenIn.address];
 
   /// Calculations
-  const isReady = amountOut?.gt(0);
+  const isReady       = amountIn?.gt(0) && amountOut?.gt(0);
   const isSubmittable = isReady;
   const podsPurchased = amountOut?.div(podListing.pricePerPod) || ZERO_BN;
+  const placeInLine   = podListing.index.minus(beanstalkField.harvestableIndex);
 
   /// Token select
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
@@ -183,7 +184,7 @@ const FillListingForm : React.FC<
                 Place in Pod Line
               </Typography>
               <Typography variant="body1">
-                {displayBN(podListing.index.minus(beanstalkField.harvestableIndex))}
+                {displayBN(placeInLine)}
               </Typography>
             </Stack>
             {/* Pods Output */}
@@ -192,7 +193,7 @@ const FillListingForm : React.FC<
               amount={podsPurchased}
               amountTooltip={(
                 <>
-                  {displayTokenAmount(amountOut || ZERO_BN, Bean)} / {displayBN(podListing.pricePerPod)} Beans per Pod<br />= {displayTokenAmount(podsPurchased, PODS)}
+                  {displayTokenAmount(amountOut!, Bean)} / {displayBN(podListing.pricePerPod)} Beans per Pod<br />= {displayTokenAmount(podsPurchased, PODS)}
                 </>
               )}
             />
@@ -202,14 +203,18 @@ const FillListingForm : React.FC<
                 <AccordionDetails>
                   <TxnPreview
                     actions={[
-                      {
-                        type: ActionType.BASE,
-                        message: 'DO SOMETHING'
+                      tokenIn === Bean ? undefined : {
+                        type: ActionType.SWAP,
+                        tokenIn,
+                        tokenOut,
+                        /// FIXME: these are asserted by !!isReady
+                        amountIn:   amountIn!,  
+                        amountOut:  amountOut!,
                       },
                       {
                         type: ActionType.BASE,
-                        message: 'DO SOMETHING!'
-                      }
+                        message: `Buy ${displayTokenAmount(podsPurchased, PODS)} at ${displayBN(placeInLine)} in the Pod Line for ${displayBN(podListing.pricePerPod)} Beans per Pod.`
+                      },
                     ]}
                   />
                 </AccordionDetails>

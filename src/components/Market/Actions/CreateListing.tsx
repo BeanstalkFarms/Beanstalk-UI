@@ -6,7 +6,7 @@ import { BEAN, PODS } from 'constants/tokens';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import { toStringBaseUnitBN , parseError, displayTokenAmount, displayBN, displayFullBN } from 'util/index';
-import DestinationField from 'components/Field/DestinationField';
+import DestinationField from 'components/Common/Form/DestinationField';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { BeanstalkReplanted } from 'generated';
