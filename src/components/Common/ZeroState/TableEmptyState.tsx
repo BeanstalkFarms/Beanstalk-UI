@@ -14,9 +14,10 @@ const TableEmptyState: React.FC<{
 } & StackProps> = ({
   title,
   state,
-  height
+  height,
+  children,
 }) => (
-  <Stack height={height !== undefined ? height : '100%'} alignItems="center" justifyContent="center">
+  <Stack height={height !== undefined ? height : '100%'} alignItems="center" justifyContent="center" zIndex={10} gap={1}>
     <Typography variant="body1" color="gray">
       {state === 'disconnected'
         ? `Connect a wallet to view ${title}`
@@ -24,6 +25,7 @@ const TableEmptyState: React.FC<{
           ? 'Loading...'
           : `No ${title}`}
     </Typography>
+    {children}
   </Stack>
 );
 

@@ -10,7 +10,7 @@ import useAccount from '../hooks/ledger/useAccount';
 import useChainId from '../hooks/useChain';
 import { getEventCacheId } from '../util/State';
 import { EventCacheName } from '../state/farmer/events2';
-import CardEmptyState from '../components/Common/CardEmptyState';
+import CardEmptyState from '../components/Common/ZeroState/CardEmptyState';
 
 const facetByTab = {
   0: undefined,

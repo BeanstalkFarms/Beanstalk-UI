@@ -4,7 +4,7 @@ import { PlotMap } from 'state/farmer/field';
 import BigNumber from 'bignumber.js';
 import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
 import PlotSelect from '../Common/PlotSelect';
-import CardEmptyState from '../Common/CardEmptyState';
+import CardEmptyState from '../Common/ZeroState/CardEmptyState';
 
 export interface PlotSelectDialogProps {
   /** Closes dialog */

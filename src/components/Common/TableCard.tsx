@@ -6,7 +6,7 @@ import { displayBN, displayUSD } from 'util/index';
 import { tableStyle } from 'components/Common/Table/styles';
 import { ZERO_BN } from 'constants/index';
 import { Token } from '../../classes';
-import TableEmptyState from './TableEmptyState';
+import TableEmptyState from './ZeroState/TableEmptyState';
 
 const MAX_ROWS = 5;
 

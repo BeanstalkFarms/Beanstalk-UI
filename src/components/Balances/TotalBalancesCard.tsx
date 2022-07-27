@@ -4,7 +4,7 @@ import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import { displayUSD } from 'util/index';
 import Stat from 'components/Common/Stat';
 import { useAccount } from 'wagmi';
-import BlurComponent from 'components/Common/BlurComponent';
+import BlurComponent from 'components/Common/ZeroState/BlurComponent';
 import SiloBalances from 'components/Common/SiloBalances';
 import useChainId from '../../hooks/useChain';
 import { SupportedChainId } from '../../constants';

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import COLUMNS from 'components/Common/Table/cells';
 import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
 import MarketBaseTable from './Base';
-import TableEmptyState from '../../Common/TableEmptyState';
+import TableEmptyState from '../../Common/ZeroState/TableEmptyState';
 import useAccount from '../../../hooks/ledger/useAccount';
 
 const MyOrdersTable : React.FC<{}> = () => {
@@ -27,7 +27,7 @@ const MyOrdersTable : React.FC<{}> = () => {
 
   /// Data Grid setup
   const columns: DataGridProps['columns'] = [
-    // COLUMNS.connectedAccount,
+    COLUMNS.orderId,
     COLUMNS.maxPlaceInLine,
     COLUMNS.pricePerPod,
     COLUMNS.numPodsActive,

@@ -13,7 +13,7 @@ import { useGenesisNFTContract, useWinterNFTContract } from '../hooks/useContrac
 import TransactionToast from '../components/Common/TxnToast';
 import AddressIcon from '../components/Common/AddressIcon';
 import useAccount from '../hooks/ledger/useAccount';
-import TableEmptyState from '../components/Common/TableEmptyState';
+import TableEmptyState from '../components/Common/ZeroState/TableEmptyState';
 
 const NFTPage: React.FC = () => {
   const account = useAccount();

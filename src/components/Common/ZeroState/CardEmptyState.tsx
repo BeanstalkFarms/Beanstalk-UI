@@ -19,6 +19,6 @@ const CardEmptyState: React.FC<CardEmptyStateProps & BoxProps> = ({
       {message}
     </Typography>
   </Box>
-  );
+);
 
 export default CardEmptyState;

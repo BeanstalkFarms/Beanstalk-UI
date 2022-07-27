@@ -10,7 +10,7 @@ import {
   mockDepositData,
   mockOwnershipPctData,
 } from 'components/Common/Charts/LineChart.mock';
-import MainnetBlur from 'components/Common/MainnetBlur';
+import MainnetBlur from 'components/Common/ZeroState/MainnetBlur';
 import Stat from 'components/Common/Stat';
 import WalletButton from '../Common/Connection/WalletButton';
 
