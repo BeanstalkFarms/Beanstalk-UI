@@ -1,7 +1,7 @@
 import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
 import {
   PlotFragment,
-  PlotSettingsFragment,
+  PlotSettingsFragment, SmartSubmitButton,
   TokenOutputField, TxnPreview,
   TxnSeparator
 } from 'components/Common/Form';
@@ -24,7 +24,6 @@ import toast from 'react-hot-toast';
 import { displayBN, displayTokenAmount, parseError } from 'util/index';
 import { useFetchFarmerField } from 'state/farmer/field/updater';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
-import { LoadingButton } from '@mui/lab';
 import { useSigner } from 'hooks/ledger/useSigner';
 import DestinationField from 'components/Common/Form/DestinationField';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
@@ -121,17 +120,18 @@ const FillOrderForm: React.FC<
             </Box>
           </>
         )}
-        <LoadingButton
+        <SmartSubmitButton
+          loading={isSubmitting}
+          disabled={!isReady}
           type="submit"
           variant="contained"
           color="primary"
           size="large"
-          fullWidth
-          loading={isSubmitting}
-          disabled={!isReady}
+          tokens={[]}
+          mode="auto"
         >
           {numEligiblePlots === 0 ? 'No eligible plots' : 'Sell Pods'}
-        </LoadingButton>
+        </SmartSubmitButton>
       </Stack>
     </Form>
   );

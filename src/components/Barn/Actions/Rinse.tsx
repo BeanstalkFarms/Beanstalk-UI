@@ -6,14 +6,19 @@ import { BEAN, RINSABLE_SPROUTS } from 'constants/tokens';
 import { ZERO_BN } from 'constants/index';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { useBeanstalkContract } from 'hooks/useContract';
-import { TokenAdornment, TokenInputField, TokenOutputField, TxnSeparator } from 'components/Common/Form';
+import {
+  SmartSubmitButton,
+  TokenAdornment,
+  TokenInputField,
+  TokenOutputField,
+  TxnSeparator
+} from 'components/Common/Form';
 import TxnPreview from 'components/Common/Form/TxnPreview';
 import TxnAccordion from 'components/Common/TxnAccordion';
 import { useFetchFarmerBarn } from 'state/farmer/barn/updater';
 import { displayBN, displayFullBN, parseError } from 'util/index';
 import { BeanstalkReplanted } from 'generated';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
-import { LoadingButton } from '@mui/lab';
 import DestinationField from 'components/Common/Form/DestinationField';
 import useFarmerFertilizer from 'hooks/redux/useFarmerFertilizer';
 import TransactionToast from 'components/Common/TxnToast';
@@ -84,16 +89,18 @@ const RinseForm : React.FC<
           ) : null}
         </Stack>
         {/* Submit */}
-        <LoadingButton
+        <SmartSubmitButton
+          loading={isSubmitting}
+          disabled={!isValid}
           type="submit"
           variant="contained"
           color="primary"
           size="large"
-          loading={isSubmitting}
-          disabled={!isValid}
+          tokens={[]}
+          mode="auto"
         >
           Rinse{amountSprouts && amountSprouts.gt(0) && ` ${displayBN(amountSprouts)}`} Sprouts
-        </LoadingButton>
+        </SmartSubmitButton>
       </Stack>
     </Form>
   );

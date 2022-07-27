@@ -86,7 +86,6 @@ const FolderMenu: React.FC<{
             // the 1px border at the top of the Box.
             zIndex: popoverOpen ? 999 : undefined,
             // Positioning and other styles.
-            mr: 1,
             ...buttonProps.sx,
           }}
         >

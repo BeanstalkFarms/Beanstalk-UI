@@ -168,9 +168,10 @@ const NavBar: React.FC<{}> = () => {
           justifyContent="space-between"
           height="64px"
           px={1}
+          gap={1}
         >
           {/* Desktop: Left Side */}
-          <Stack direction="row" alignItems="center" sx={{ flex: 1 }} height="100%">
+          <Stack direction="row" alignItems="center" sx={{ flex: 1 }} height="100%" gap={1}>
             <PriceButton sx={{ height: 45 }} />
             <SunButton sx={{ height: 45 }} />
             <Stack
@@ -187,12 +188,6 @@ const NavBar: React.FC<{}> = () => {
                   tag={item.tag}
                 />
               ))}
-              {/* <HoverMenu items={ROUTES.market}>
-                Market
-              </HoverMenu> */}
-              {/* <HoverMenu items={ROUTES.analytics}>
-                Analytics
-              </HoverMenu> */}
               <HoverMenu items={ROUTES.more}>
                 More
               </HoverMenu>
@@ -203,7 +198,7 @@ const NavBar: React.FC<{}> = () => {
             direction="row"
             justifyContent="flex-end"
             alignItems="center"
-            spacing={1}
+            gap={1}
           >
             <Box sx={{ display: { sm: 'block', xs: 'none' } }}>
               <NetworkButton sx={{ height: 45 }} />
