@@ -10,7 +10,7 @@ import useAccount from '../hooks/ledger/useAccount';
 import useChainId from '../hooks/useChain';
 import { getEventCacheId } from '../util/State';
 import { EventCacheName } from '../state/farmer/events2';
-import CardEmptyState from '../components/Common/ZeroState/CardEmptyState';
+import EmptyState from '../components/Common/ZeroState/EmptyState';
 
 const facetByTab = {
   0: undefined,
@@ -81,7 +81,7 @@ const TransactionHistoryPage: React.FC = () => {
                   ))}
               </Grid>
             ) : (
-              <CardEmptyState message="You don't have any events of this type!" />
+              <EmptyState message="You don't have any events of this type!" />
             )}
           </Stack>
         </Card>

@@ -6,17 +6,17 @@ import { Link, useNavigate } from 'react-router-dom';
 import COLUMNS from 'components/Common/Table/cells';
 import { Button } from '@mui/material';
 import MarketBaseTable from './Base';
-import TableEmptyState from '../../Common/ZeroState/TableEmptyState';
+import AuthEmptyState from '../../Common/ZeroState/AuthEmptyState';
 import TablePagination from '../../Common/TablePagination';
 
 const components = {
   NoRowsOverlay() {
     return (
-      <TableEmptyState title="You haven't created any Orders.">
+      <AuthEmptyState title="You haven't created any Orders.">
         <Button component={Link} to="/market/create" variant="outlined" color="primary">
           New Order
         </Button>
-      </TableEmptyState>
+      </AuthEmptyState>
     );
   },
   Pagination: TablePagination,

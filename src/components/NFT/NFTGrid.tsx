@@ -3,7 +3,7 @@ import { Card, CircularProgress, Grid, Stack } from '@mui/material';
 import { Nft } from 'util/BeaNFTs';
 import NFTDetails from './NFTDetails';
 import { BeanstalkPalette } from '../App/muiTheme';
-import CardEmptyState from '../Common/ZeroState/CardEmptyState';
+import EmptyState from '../Common/ZeroState/EmptyState';
 
 export interface NFTGridProps {
   nfts: Nft[] | null;
@@ -26,7 +26,7 @@ const NFTGrid: React.FC<NFTGridProps> = ({
     <>
       {
         (nfts.length === 0) ? (
-          <CardEmptyState message="You don't have any NFTs from this collection!" />
+          <EmptyState message="You don't have any NFTs from this collection!" />
         ) : (
           <Grid container spacing={{ md: 3, xs: 2 }}>
             {nfts.map((nft) => (

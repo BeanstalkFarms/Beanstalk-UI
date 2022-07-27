@@ -6,11 +6,11 @@ export interface CardEmptyStateProps {
 }
 
 /**
- * Similar to TableEmptyState, but
+ * Similar to AuthEmptyState, but
  * does not take into account
  * authentication status.
  * */
-const CardEmptyState: React.FC<CardEmptyStateProps & BoxProps> = ({
+const EmptyState: React.FC<CardEmptyStateProps & BoxProps> = ({
   message,
   height
 }) => (
@@ -21,4 +21,4 @@ const CardEmptyState: React.FC<CardEmptyStateProps & BoxProps> = ({
   </Box>
 );
 
-export default CardEmptyState;
+export default EmptyState;

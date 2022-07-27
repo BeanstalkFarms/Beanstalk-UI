@@ -4,7 +4,7 @@ import { PlotMap } from 'state/farmer/field';
 import BigNumber from 'bignumber.js';
 import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
 import PlotSelect from '../Common/PlotSelect';
-import CardEmptyState from '../Common/ZeroState/CardEmptyState';
+import EmptyState from '../Common/ZeroState/EmptyState';
 
 export interface PlotSelectDialogProps {
   /** Closes dialog */
@@ -56,7 +56,7 @@ const PlotSelectDialog: React.FC<PlotSelectDialogProps & DialogProps> = ({
             selected={selected}
           />
         ) : (
-          <CardEmptyState message="You don't have any plots to send!" />
+          <EmptyState message="You don't have any plots to send!" />
         )}
       </StyledDialogContent>
     </Dialog>

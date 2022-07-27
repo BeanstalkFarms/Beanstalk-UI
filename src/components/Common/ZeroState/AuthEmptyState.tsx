@@ -4,27 +4,34 @@ import useAccount from 'hooks/ledger/useAccount';
 import WalletButton from '../Connection/WalletButton';
 
 /**
- * Similar to CardEmptyState, but
+ * Similar to EmptyState, but
  * takes into account authentication
  * status.
  * */
-const TableEmptyState: React.FC<{
+const AuthEmptyState: React.FC<{
   /** Card title */
   title?: string;
   /** Loading / connection state */
   state?: 'disconnected' | 'loading' | 'ready';
+  /**
+   * Choose between a Connect Button or
+   * a message when a wallet is not connected.
+   * Defaults to Button.
+   * */
+  option?: 'button' | 'message'
 } & StackProps> = ({
   title,
   state,
+  option,
   height,
   children,
 }) => {
   const account = useAccount();
   let content;
   if (!account) {
-    content = (
-      <WalletButton variant="outlined" color="primary" size="large" />
-    );
+    content = option !== undefined && option === 'message'
+      ? (<Typography variant="body1" color="gray">Connect your wallet to see table.</Typography>)
+      : (<WalletButton variant="contained" color="primary" size="large" />);
   } else {
     content = (
       <>
@@ -57,4 +64,4 @@ const TableEmptyState: React.FC<{
   );
 };
 
-export default TableEmptyState;
+export default AuthEmptyState;

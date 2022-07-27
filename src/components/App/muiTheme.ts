@@ -304,8 +304,8 @@ let muiTheme = createTheme({
       //     props: { color: 'light' },
       //     style: sx({
       //       borderWidth: 1,
-      //       borderColor: 'secondary.main',
-      //     })
+      //       borderColor: 'red',
+      //     }),
       //   }
       // ],
       defaultProps: {
@@ -526,6 +526,15 @@ let muiTheme = createTheme({
       },
     },
     MuiButtonBase: {
+      // variants: [
+      //   {
+      //     props: { color: 'light' },
+      //     style: sx({
+      //       borderWidth: 1,
+      //       borderColor: 'red',
+      //     }),
+      //   }
+      // ],
       styleOverrides: {
       },
     },

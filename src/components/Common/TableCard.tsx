@@ -10,7 +10,7 @@ import { displayBN, displayUSD } from 'util/index';
 import { tableStyle } from 'components/Common/Table/styles';
 import { ZERO_BN } from 'constants/index';
 import { Token } from '../../classes';
-import TableEmptyState from './ZeroState/TableEmptyState';
+import AuthEmptyState from './ZeroState/AuthEmptyState';
 import TablePagination from './TablePagination';
 
 const MAX_ROWS = 5;
@@ -95,7 +95,7 @@ const TableCard : React.FC<{
           components={{
             NoRowsOverlay() {
               return (
-                <TableEmptyState title={title} state={state} />
+                <AuthEmptyState title={title} state={state} option="message" />
               );
             },
             Pagination: TablePagination
