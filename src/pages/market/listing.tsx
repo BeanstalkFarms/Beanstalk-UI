@@ -3,6 +3,7 @@ import {
   Box,
   Card,
   Container,
+  Divider,
   Stack,
   Typography,
 } from '@mui/material';
@@ -41,18 +42,27 @@ const ListingPage: React.FC = () => {
           returnPath="/market"
         />
         {/* Details Card */}
-        <Card sx={{ p: 2 }}>
-          <ListingDetails
-            podListing={listing}
-            harvestableIndex={harvestableIndex}
-          />
+        <Card sx={{ p: 1 }}>
+          <Box sx={{ p: 1 }}>
+            <ListingDetails
+              podListing={listing}
+              harvestableIndex={harvestableIndex}
+            />
+          </Box>
+          {account === listing.account ? (
+            <Box>
+              <Divider
+                color="secondary"
+                sx={{ mt: 1, mb: 1, borderWidth: 0, borderTopWidth: 1 }}
+              />
+              <CancelListing
+                id={listing.id}
+              />
+            </Box>
+          ) : null}
         </Card>
         {/* Buy Pods */}
-        {account === listing.account ? (
-          <CancelListing
-            id={listing.id}
-          />
-        ) : (
+        {account === listing.account ? null : (
           <Card sx={{ position: 'relative' }}>
             <Stack gap={1.5}>
               <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>

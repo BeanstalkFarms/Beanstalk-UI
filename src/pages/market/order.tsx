@@ -83,7 +83,7 @@ const OrderPage: React.FC = () => {
           </Card>
         )}
         <Box sx={{ }}>
-          <Typography color="text.secondary">
+          <Typography color="text.secondary" textAlign="right">
             Data source: {source === Source.SUBGRAPH ? 'Subgraph' : 'RPC'}
           </Typography>
         </Box>

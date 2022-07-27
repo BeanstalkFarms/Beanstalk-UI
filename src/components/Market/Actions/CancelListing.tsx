@@ -53,7 +53,7 @@ const CancelListing : React.FC<{ id: string }> = ({ id }) => {
     <LoadingButton
       onClick={onSubmit}
       color="error"
-      variant="contained"
+      variant="text"
       loading={loading}
       disabled={loading}
       fullWidth
