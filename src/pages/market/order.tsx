@@ -70,11 +70,11 @@ const OrderPage: React.FC = () => {
         </Card>
         {account === order.account ? null : (
           <Card sx={{ position: 'relative' }}>
-            <Stack gap={1.5}>
-              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>
-                <Typography variant="h4">Sell Pods to Pod Order</Typography>
-              </Stack>
-              <Box sx={{ px: 1, pb: 1 }}>
+            <Stack gap={1.5} sx={{ p: 1 }}>
+              <Box sx={{ pt: 1, px: 1 }}>
+                <Typography variant="h4">Sell Pods</Typography>
+              </Box>
+              <Box>
                 <FillOrder
                   podOrder={order}
                 />

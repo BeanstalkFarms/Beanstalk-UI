@@ -10,7 +10,7 @@ const StatHorizontal : React.FC<{
   children
 }) => (
   <Stack direction="row" alignItems="center" justifyContent="space-between">
-    <Tooltip title={labelTooltip}><Typography>{label}</Typography></Tooltip>
+    <Tooltip title={labelTooltip} placement="right"><Typography>{label}</Typography></Tooltip>
     <Stack direction="row" alignItems="center" gap={0.3}>{children}</Stack>
   </Stack>
 );
