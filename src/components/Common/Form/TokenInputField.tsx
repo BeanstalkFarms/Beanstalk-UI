@@ -207,6 +207,7 @@ const TokenInput: React.FC<
         type="text"
         placeholder={placeholder || '0'}
         disabled={isInputDisabled}
+        fullWidth // default to fullWidth
         {...textFieldProps}
         // Override the following props.
         onWheel={handleWheel}
@@ -217,7 +218,7 @@ const TokenInput: React.FC<
       />
       {/* Bottom Adornment */}
       {(balance && !hideBalance || quote) && (
-        <Stack direction="row" alignItems="center" gap={0.5} px={0.5} pt={0.5}>
+        <Stack direction="row" alignItems="center" gap={0.5} px={0.5} pt={0.75}>
           {/* Leaving the Stack rendered regardless of whether `quote` is defined
             * ensures that the Balance section gets flexed to the right side of
             * the input. */}

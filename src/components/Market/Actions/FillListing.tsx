@@ -179,7 +179,7 @@ const FillListingForm : React.FC<
           <>
             <TxnSeparator mt={0} />
             {/* Place in Line */}
-            <Stack direction="row" justifyContent="space-between" sx={{ p: 1 }}>
+            <Stack direction="row" justifyContent="space-between" sx={{ px: 1 }}>
               <Typography variant="body1" color="text.secondary">
                 Place in Pod Line
               </Typography>

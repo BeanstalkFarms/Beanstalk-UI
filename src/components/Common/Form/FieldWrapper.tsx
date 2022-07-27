@@ -1,15 +1,34 @@
 import React, { ReactNode } from 'react';
-import { Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Tooltip, Typography } from '@mui/material';
 
-const FieldWrapper : React.FC<{ label?: ReactNode | string; tooltip?: string }> = ({ label, tooltip, children }) => (
-  <Stack gap={0.25}>
+const FieldWrapper : React.FC<{
+  label?: ReactNode | string;
+  tooltip?: string
+}> = ({
+  label,
+  tooltip,
+  children
+}) => (
+  <Box>
     {label && (
-      <Tooltip title={tooltip !== undefined ? tooltip : ''} placement="top-start">
-        <Typography sx={{ fontSize: 'bodySmall', px: 1 }} display="inline">{label}</Typography>
+      <Tooltip
+        title={tooltip !== undefined ? tooltip : ''}
+        placement="right-start"
+      >
+        <Typography
+          sx={{
+            fontSize: 'bodySmall',
+            px: 1,
+            mb: 0.25
+          }}
+          display="inline-block"
+        >
+          {label}
+        </Typography>
       </Tooltip>
     )}
     {children}
-  </Stack>
+  </Box>
 );
 
 export default FieldWrapper;
