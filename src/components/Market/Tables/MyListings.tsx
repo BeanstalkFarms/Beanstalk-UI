@@ -7,12 +7,20 @@ import COLUMNS from 'components/Common/Table/cells';
 import { Button } from '@mui/material';
 import MarketBaseTable from './Base';
 import TableEmptyState from '../../Common/ZeroState/TableEmptyState';
-import useAccount from '../../../hooks/ledger/useAccount';
+
+const components = {
+  NoRowsOverlay() {
+    return (
+      <TableEmptyState title="You haven't created any Listings.">
+        <Button component={Link} to="/market/create" variant="outlined" color="primary">
+          New Listing
+        </Button>
+      </TableEmptyState>
+    );
+  },
+};
 
 const MyListingsTable : React.FC<{}> = () => {
-  const account = useAccount();
-  const authState = !account ? 'disconnected' : 'ready';
-
   /// Data
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
   const listings       = useSelector<AppState, AppState['_farmer']['market']['listings']>((state) => state._farmer.market.listings);
@@ -41,20 +49,8 @@ const MyListingsTable : React.FC<{}> = () => {
       rows={rows}
       maxRows={8}
       onRowClick={handleClick}
-      components={{
-        NoRowsOverlay() {
-          return (
-            <TableEmptyState
-              title="Listings"
-              state={authState}
-            >
-              <Button component={Link} to="/market/create" variant="outlined" color="primary">
-                Create Listing
-              </Button>
-            </TableEmptyState>
-          );
-        },
-      }}
+      disableVirtualization={rows.length === 0}
+      components={components}
     />
   );
 };
