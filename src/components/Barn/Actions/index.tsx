@@ -7,9 +7,11 @@ import useFarmerFertilizer from 'hooks/redux/useFarmerFertilizer';
 import Rinse from './Rinse';
 import Buy from './Buy';
 
+const SLUGS = ['buy', 'rinse'];
+
 const BarnActions : React.FC<{}> = () => {
-  const [tab, handleChange] = useTabs();
-  const farmerFertilizer = useFarmerFertilizer();
+  const [tab, handleChange] = useTabs(SLUGS, 'action');
+  const farmerFertilizer    = useFarmerFertilizer();
   return (
     <Card sx={{ position: 'relative' }}>
       <Stack gap={1.5}>

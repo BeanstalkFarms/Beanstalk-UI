@@ -2,9 +2,19 @@ import { Card, Stack, Tab, Tabs } from '@mui/material';
 import useTabs from 'hooks/display/useTabs';
 import React from 'react';
 
-const SiloAnalytics: React.FC<{}> = () => {
-  const [tab, handleChangeTab] = useTabs();
+const SLUGS = [
+  'deposited_bean',
+  'withdrawn_bean',
+  'deposited_lp',
+  'withdrawn_lp',
+  'deposited_urbean',
+  'deposited_urlp',
+  'stalk',
+  'seeds',
+];
 
+const SiloAnalytics: React.FC<{}> = () => {
+  const [tab, handleChangeTab] = useTabs(SLUGS, 'silo');
   return (
     <Card>
       <Stack gap={2}>

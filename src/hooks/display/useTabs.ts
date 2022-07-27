@@ -1,11 +1,23 @@
 import { useCallback, useState, SyntheticEvent, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-const useTabs = (slugs?: string[], key : string = 'tab') => {
+const useTabs = (
+  /** 
+   * An array of url slugs corresponding to tab indices.
+   * These are the URLs that will trigger each respective tab.
+   */
+  slugs?: string[],
+  /**
+   * The URL key used to store the slug.
+   * @default 'tab'
+   */
+  key : string = 'tab'
+) => {
+  /// Search params
   const [params, update] = useSearchParams();
   const currSlug = params.get(key);
   
-  ///
+  /// Lookup tab index if slugs provided
   const getTabIndex = useCallback((slug: string | null | undefined) => {
     /// If `slug` exists in `slugToIndex`...
     if (slug && slugs && slugs.length > 0) {
@@ -21,10 +33,13 @@ const useTabs = (slugs?: string[], key : string = 'tab') => {
   /// Setup tab state
   const handleChangeTab = useCallback((event: SyntheticEvent, newIndex: number) => {
     if (slugs && slugs[newIndex]) {
-      update({ [key]: slugs[newIndex] });
+      update({ 
+        ...params,
+        [key]: slugs[newIndex]
+      });
     }
     setTab(newIndex);
-  }, [key, slugs, update]);
+  }, [key, params, slugs, update]);
 
   /// Handle external navigation
   useEffect(() => {
