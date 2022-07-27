@@ -252,7 +252,7 @@ const ConvertForm : React.FC<
                 <TokenOutputField
                   token={STALK}
                   amount={deltaStalk || ZERO_BN}
-                  valueTooltip={( 
+                  amountTooltip={( 
                     <>
                       This conversion will increase the BDV of your deposit by {displayFullBN(deltaBDV || ZERO_BN, 6)}{deltaBDV?.gt(0) ? ', resulting in a gain of Stalk' : ''}.
                       {/* BDV Removed: {displayFullBN(converted.bdv)}<br />
@@ -265,7 +265,7 @@ const ConvertForm : React.FC<
                 <TokenOutputField
                   token={SEEDS}
                   amount={deltaSeeds || ZERO_BN}
-                  valueTooltip={(
+                  amountTooltip={(
                     <>
                       Converting from {tokenIn.symbol} to {tokenOut.symbol} results in {(
                         (!deltaSeedsPerBDV || deltaSeedsPerBDV.eq(0)) 

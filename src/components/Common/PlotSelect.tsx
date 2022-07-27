@@ -5,7 +5,7 @@ import { makeStyles } from '@mui/styles';
 import { BEAN } from 'constants/tokens';
 import useFarmerListings from 'hooks/redux/useFarmerListings';
 import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
-import { displayBN, toStringBaseUnitBN } from '../../util';
+import { displayBN, displayFullBN, toStringBaseUnitBN } from '../../util';
 import podIcon from '../../img/beanstalk/pod-icon.svg';
 import { PlotMap } from '../../state/farmer/field';
 
@@ -86,14 +86,23 @@ const PlotSelect: React.FC<PlotSelectProps> = ({
                 <img src={podIcon} alt="" className={classes.tokenLogo} />
               </ListItemIcon>
               <ListItemText
-                primary={`PODS${listing ? '*' : ''}`}
-                secondary={`Place in Line: ${displayBN(new BigNumber(index).minus(harvestableIndex))}`}
+                primary="PODS"
+                secondary={(
+                  <>
+                    Place in Line: {displayBN(new BigNumber(index).minus(harvestableIndex))}{listing ? <>&nbsp;&middot; Currently listed</> : null}
+                  </>
+                )}
+                secondaryTypographyProps={{
+                  // sx: {
+                  //   color: '#333333 !important'
+                  // }
+                }}
                 sx={{ my: 0 }}
-                />
+              />
             </Stack>
             {plots[index] ? (
               <Typography variant="bodyLarge">
-                {displayBN(plots[index])} Pods
+                {displayFullBN(plots[index], 0)}
               </Typography>
               ) : null}
           </Stack>
@@ -107,7 +116,8 @@ const PlotSelect: React.FC<PlotSelectProps> = ({
       {numAlreadyListed > 0 ? (
         <Box px={1}>
           <Typography color="text.secondary" fontSize="bodySmall">
-            * This Plot is currently listed on the Market. {/* FIXME: contextual message */}
+            {/* * Currently listed on the Market. */}
+            {/* FIXME: contextual message */}
           </Typography>
         </Box>
       ) : null}

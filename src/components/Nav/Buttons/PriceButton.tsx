@@ -22,9 +22,9 @@ import FolderMenu from '../FolderMenu';
 
 const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   // Data
-  const pools = usePools();
-  const chainId = useChainId();
-  const season = useSeason();
+  const pools     = usePools();
+  const chainId   = useChainId();
+  const season    = useSeason();
   const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>(
     (state) => state._bean.token.price
   );

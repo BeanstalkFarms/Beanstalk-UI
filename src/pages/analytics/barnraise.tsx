@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import Stat from 'components/Common/Stat';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 import AmountRaisedCard from 'components/Analytics/Barnraise/AmountRaisedCard';
-import ComingSoonCard from 'components/Common/ComingSoonCard';
+import ComingSoonCard from 'components/Common/ZeroState/ComingSoonCard';
 import { AppState } from 'state';
 import { displayBN } from 'util/index';
 import useChainId from 'hooks/useChain';

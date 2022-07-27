@@ -61,6 +61,7 @@ const PodMarketPage: React.FC = () => {
         <PageHeader
           title="The Pod Market"
           description="Trade Pods, the Beanstalk-native debt asset"
+          href="https://docs.bean.money/farm/market"
           control={<CreateButtons />}
         />
         {content}

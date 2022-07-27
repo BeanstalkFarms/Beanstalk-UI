@@ -8,6 +8,15 @@ import { toTokenUnitsBN } from './Tokens';
 // Chain Result Helpers
 // -------------------------
 
+export enum Source {
+  SUBGRAPH,
+  LOCAL
+}
+
+// -------------------------
+// Chain Result Helpers
+// -------------------------
+
 export const identityResult = (result: any) => result;
 
 export const bigNumberResult = (result: any) => new BigNumber(result instanceof BNJS ? result.toString() : result);

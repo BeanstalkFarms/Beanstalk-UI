@@ -1,71 +1,56 @@
 import React from 'react';
 import {
   Stack,
-  Typography,
-  Card, Box, CardProps,
+  Typography, Box, Divider, Tooltip,
 } from '@mui/material';
-import beanIcon from 'img/tokens/bean-logo-circled.svg';
-import podIcon from 'img/beanstalk/pod-icon.svg';
-import BigNumber from 'bignumber.js';
-import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
-import { displayBN } from '../../../util';
-import { PodOrder } from '../Plots.mock';
+import { PodOrder } from 'state/farmer/market';
+import TokenIcon from 'components/Common/TokenIcon';
+import { BEAN, PODS } from 'constants/tokens';
+import FarmerChip from 'components/Common/FarmerChip';
+import podOrderIcon from 'img/beanstalk/pod-order-icon.svg';
+import StatHorizontal from 'components/Common/StatHorizontal';
+import { displayBN, displayFullBN } from '../../../util';
+import { IconSize } from '../../App/muiTheme';
 
 export type OrderDetailsProps = {
-  podListing: PodOrder | undefined;
-  harvestableIndex: BigNumber;
+  podOrder: PodOrder | undefined;
 }
 
-const OrderDetails: React.FC<OrderDetailsProps & CardProps> = ({
-  sx,
-  podListing,
-  harvestableIndex
+const OrderDetails: React.FC<OrderDetailsProps> = ({
+  podOrder,
 }) => {
-  if (!podListing) return null;
+  if (!podOrder) return null;
   return (
-    <Card sx={{ p: 2, ...sx }}>
-      <Stack gap={2}>
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Stack direction="row" gap={1} alignItems="center">
-            <Typography variant="h4">Pod Order</Typography>
-            <Box sx={{
-              px: 1,
-              py: 0.5,
-              borderRadius: 1,
-              backgroundColor: BeanstalkPalette.washedGreen,
-              color: BeanstalkPalette.logoGreen
-            }}>
-              <Typography variant="body1">{podListing.account.substring(0, 6)}</Typography>
-            </Box>
-          </Stack>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between">
-          <Stack gap={0.5}>
-            <Typography variant="body1">Place in Line</Typography>
-            {/* <Typography variant="h1" sx={{ fontWeight: 400 }}>613,964</Typography> */}
-            <Typography variant="bodyLarge">0
-              - {displayBN(new BigNumber(podListing.maxPlaceInLine).minus(harvestableIndex))}
-            </Typography>
-          </Stack>
-          <Stack gap={0.5}>
-            <Typography variant="body1">Price per Pod</Typography>
-            <Stack direction="row" gap={0.3} alignItems="center">
-              <img src={beanIcon} alt="" height={IconSize.medium} />
-              <Typography variant="bodyLarge">{displayBN(podListing.pricePerPod)}</Typography>
-            </Stack>
-          </Stack>
-          <Stack gap={0.5}>
-            <Typography variant="body1">Pods Purchased</Typography>
-            <Stack direction="row" gap={0.3} alignItems="center">
-              <img src={podIcon} alt="" height={IconSize.medium} />
-              <Typography variant="bodyLarge">
-                {displayBN(podListing.filledAmount)}/{displayBN(podListing.totalAmount)}
-              </Typography>
-            </Stack>
-          </Stack>
-        </Stack>
+    <Stack gap={2}>
+      <Stack direction="row" alignItems="center" gap={1}>
+        <img src={podOrderIcon} style={{ width: IconSize.medium, height: IconSize.medium }} alt="Pod Order" />
+        <Typography variant="h4">Pod Order</Typography>
+        <Box sx={{ flex: 1, textAlign: 'right' }}>
+          <FarmerChip account={podOrder.account} />
+        </Box>
       </Stack>
-    </Card>
+      <Stack gap={1}>
+        <StatHorizontal label="Place in Line">
+          <Tooltip title={(
+            <>
+              0 - {displayFullBN(podOrder.maxPlaceInLine)}
+              <Divider sx={{ my: 1 }} />
+              Any Pods in this range are eligible to be sold.
+            </>
+          )}>
+            <Typography>0 - {displayBN(podOrder.maxPlaceInLine)}</Typography>
+          </Tooltip>
+        </StatHorizontal>
+        <StatHorizontal label="Price per Pod" labelTooltip="The number of Beans offered per Pod.">
+          <TokenIcon token={BEAN[1]} style={{ height: IconSize.xs }} />
+          <Typography>{displayBN(podOrder.pricePerPod)}</Typography>
+        </StatHorizontal>
+        <StatHorizontal label="Pods Requested" labelTooltip="The number of Pods left to be sold to this Order.">
+          <TokenIcon token={PODS} style={{ height: IconSize.xs }} />
+          <Typography>{displayBN(podOrder.remainingAmount)}</Typography>
+        </StatHorizontal>
+      </Stack>
+    </Stack>
   );
 };
 

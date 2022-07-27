@@ -7,12 +7,14 @@ export type StatProps = {
   title: string;
   /** Icon shown with the title */
   titleIcon?: JSX.Element | string;
+  /** Show a question mark with tooltip nex to the title */
+  titleTooltip?: JSX.Element | string;
   /** Stringified amount (parent should format accordingly) */
   amount: string;
   /** Icon shown with the amount */
   amountIcon?: JSX.Element | string;
-  /** Show a question mark with tooltip nex to the title */
-  tooltip?: string;
+  /**  */
+  amountTooltip?: JSX.Element | string;
   /** Subtext shown below the statistic (ex. "Season X") */
   subtitle?: string;
   /** Typography variant to use (default: h1) */
@@ -28,9 +30,10 @@ export type StatProps = {
 const Stat: React.FC<StatProps> = ({
   title,
   titleIcon,
+  titleTooltip = '',
   amount,
   amountIcon,
-  tooltip = '',
+  amountTooltip = '',
   subtitle,
   // Typography
   sx,
@@ -46,11 +49,10 @@ const Stat: React.FC<StatProps> = ({
         {titleIcon && <>{titleIcon}</>}
         <Typography variant="body1">
           {title}
-          {tooltip && (
-            <Tooltip title={tooltip} placement="top">
+          {titleTooltip && (
+            <Tooltip title={titleTooltip} placement="top">
               <HelpOutlineIcon
                 sx={{
-                  // color: 'text.secondary',
                   display: 'inline',
                   mb: 0.5,
                   fontSize: '11px',
@@ -62,14 +64,18 @@ const Stat: React.FC<StatProps> = ({
       </Stack>
     </Typography>
     {/* Amount */}
-    <Typography variant={variant} color={color} sx={{ marginLeft: '-3px', ...sx }}>
-      <Stack direction="row" alignItems="center" gap={0.5}>
-        {amountIcon && <>{amountIcon}</>}{amount}
-      </Stack>
-    </Typography>
+    <Tooltip title={amountTooltip}>
+      <Typography variant={variant} color={color} sx={sx}>
+        <Stack direction="row" alignItems="center" gap={0.5}>
+          {amountIcon && <>{amountIcon}</>}{amount}
+        </Stack>
+      </Typography>
+    </Tooltip>
     {/* Subtitle */}
     {subtitle !== undefined && (
-      <Typography variant="bodySmall" color="gray">{subtitle}</Typography>
+      <Typography variant="bodySmall" color="gray">
+        {subtitle}
+      </Typography>
     )}
   </Stack>
 );

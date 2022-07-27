@@ -5,16 +5,13 @@ import { ONE_BN, ZERO_BN } from 'constants/index';
 import { BEAN, PODS } from 'constants/tokens';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { AppState } from 'state';
 import { toStringBaseUnitBN , parseError, displayTokenAmount, displayBN, displayFullBN } from 'util/index';
 import DestinationField from 'components/Field/DestinationField';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { BeanstalkReplanted } from 'generated';
 import useGetChainToken from 'hooks/useGetChainToken';
-import { BeanstalkField } from 'state/beanstalk/field';
-import { Field } from 'state/farmer/field';
+import { PlotMap } from 'state/farmer/field';
 import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import { useSigner } from 'hooks/ledger/useSigner';
@@ -24,6 +21,9 @@ import { useFetchFarmerMarket } from 'state/farmer/market/updater';
 import useFarmerListings from 'hooks/redux/useFarmerListings';
 import TxnAccordion from 'components/Common/TxnAccordion';
 import { ActionType } from 'util/Actions';
+import useFarmerPlots from 'hooks/redux/useFarmerPlots';
+import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 
@@ -63,25 +63,33 @@ const REQUIRED_KEYS = [
 
 const CreateListingForm: React.FC<
   FormikProps<CreateListingFormValues> & {
-    farmerField:    Field;
-    beanstalkField: BeanstalkField;
+    plots: PlotMap<BigNumber>;
+    harvestableIndex: BigNumber;
   }
 > = ({
+  //
   values,
-  setFieldValue,
   isSubmitting,
-  farmerField,
-  beanstalkField,
+  //
+  plots,
+  harvestableIndex,
 }) => {
+  /// Form Data
   const plot = values.plot;
-  const placeInLine = useMemo(
-    () => (plot.index ? new BigNumber(plot.index).minus(beanstalkField?.harvestableIndex) : ZERO_BN),
-    [beanstalkField?.harvestableIndex, plot.index]
-  );
+
+  /// Data
   const existingListings = useFarmerListings();
-  const alreadyListed = plot?.index ? existingListings[toStringBaseUnitBN(plot.index, BEAN[1].decimals)] : false;
-    
-  ///
+
+  /// Derived
+  const placeInLine = useMemo(
+    () => (plot.index ? new BigNumber(plot.index).minus(harvestableIndex) : ZERO_BN),
+    [harvestableIndex, plot.index]
+  );
+  
+  /// Calculations
+  const alreadyListed = (plot?.index)
+    ? existingListings[toStringBaseUnitBN(plot.index, BEAN[1].decimals)]
+    : false;
   const isReady = (
     !REQUIRED_KEYS.some((k) => values[k] === null)
   );
@@ -89,11 +97,13 @@ const CreateListingForm: React.FC<
   return (
     <Form noValidate>
       <Stack gap={1}>
-        <PlotInputField />
+        <PlotInputField
+          plots={plots}
+        />
         {plot.index && (
           <>
             {alreadyListed ? (
-              <Alert variant="standard" color="warning">
+              <Alert variant="standard" color="warning" icon={<WarningAmberIcon />}>
                 This Plot is already listed on the Market. Creating a new Listing will override the previous one.
               </Alert>
             ) : null}
@@ -170,8 +180,8 @@ const CreateListing: React.FC<{}> = () => {
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
   
   ///
-  const farmerField    = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
-  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
+  const plots            = useFarmerPlots();
+  const harvestableIndex = useHarvestableIndex();
   
   ///
   const [refetchFarmerMarket] = useFetchFarmerMarket();
@@ -202,13 +212,13 @@ const CreateListing: React.FC<{}> = () => {
       if (!index || !start || !end || !amount || !pricePerPod || !expiresAt) throw new Error('Missing data');
 
       const plotIndexBN = new BigNumber(index);
-      const numPods     = farmerField.plots[index];
+      const numPods     = plots[index];
 
       if (!numPods) throw new Error('Plot not found.');
       if (start.gte(end)) throw new Error('Invalid start/end parameter.');
       if (!end.minus(start).eq(amount)) throw new Error('Malformatted amount.');
       if (pricePerPod.gt(1)) throw new Error('Price per pod cannot be more than 1.');
-      if (expiresAt.gt(plotIndexBN.minus(beanstalkField.harvestableIndex).plus(start))) throw new Error('This listing would expire after the Plot harvests.');
+      if (expiresAt.gt(plotIndexBN.minus(harvestableIndex).plus(start))) throw new Error('This listing would expire after the Plot harvests.');
 
       txToast = new TransactionToast({
         loading: 'Creating listing',
@@ -217,7 +227,7 @@ const CreateListing: React.FC<{}> = () => {
 
       /// expiresAt is relative (ie 0 = front of pod line)
       /// add harvestableIndex to make it absolute
-      const maxHarvestableIndex = expiresAt.plus(beanstalkField.harvestableIndex);
+      const maxHarvestableIndex = expiresAt.plus(harvestableIndex);
       const txn = await beanstalk.createPodListing(
         toStringBaseUnitBN(index,       Bean.decimals),   // absolute plot index
         toStringBaseUnitBN(start,       Bean.decimals),   // relative start index
@@ -239,7 +249,7 @@ const CreateListing: React.FC<{}> = () => {
       txToast?.error(err) || toast.error(parseError(err));
       console.error(err);
     }
-  }, [beanstalk, beanstalkField.harvestableIndex, farmerField.plots, getChainToken, refetchFarmerMarket]);
+  }, [beanstalk, getChainToken, harvestableIndex, plots, refetchFarmerMarket]);
 
   return (
     <Formik<CreateListingFormValues>
@@ -248,8 +258,8 @@ const CreateListing: React.FC<{}> = () => {
     >
       {(formikProps: FormikProps<CreateListingFormValues>) => (
         <CreateListingForm
-          farmerField={farmerField}
-          beanstalkField={beanstalkField}
+          plots={plots}
+          harvestableIndex={harvestableIndex}
           {...formikProps}
         />
       )}

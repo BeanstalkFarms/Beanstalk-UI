@@ -12,6 +12,7 @@ import { BeanstalkReplanted } from 'generated/index';
 import TransactionToast from 'components/Common/TxnToast';
 import useAccount from 'hooks/ledger/useAccount';
 import PlotInputField from 'components/Common/Form/PlotInputField';
+import useFarmerPlots from 'hooks/redux/useFarmerPlots';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { ZERO_BN } from '../../../constants';
 import { displayFullBN, toStringBaseUnitBN, trimAddress } from '../../../util';
@@ -38,8 +39,13 @@ const SendForm: React.FC<
   isValid,
   isSubmitting,
 }) => {
-  const account = useAccount();
+  /// Data
+  const plots = useFarmerPlots();
+
+  /// Form Data
   const plot = values.plot;
+
+  /// Derived
   const isReady = (
     plot.index
     && values.to
@@ -51,7 +57,9 @@ const SendForm: React.FC<
   return (
     <Form autoComplete="off">
       <Stack gap={1}>
-        <PlotInputField />
+        <PlotInputField
+          plots={plots}
+        />
         {plot.index && (
           <>
             <TxnSeparator />
@@ -74,8 +82,7 @@ const SendForm: React.FC<
                     actions={[
                       {
                         type:    ActionType.SEND_PODS,
-                        start:   plot.start ? plot.start : ZERO_BN,
-                        end:     plot.end ? plot.end : ZERO_BN,
+                        amount:  plot.amount || ZERO_BN,
                         address: values.to !== null ? values.to : ''
                       },
                       {

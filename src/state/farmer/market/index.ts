@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js';
 import { ZERO_BN } from 'constants/index';
 import { BEAN } from 'constants/tokens';
 import { PodListingFragment, PodOrderFragment } from 'generated/graphql';
+import { FarmToMode } from 'lib/Beanstalk/Farm';
 import { toTokenUnitsBN } from 'util/index';
 
 /**
@@ -10,21 +11,28 @@ import { toTokenUnitsBN } from 'util/index';
  * @returns Redux form PodListing.
  */
 export const castPodListing = (listing: PodListingFragment) : PodListing => {
-  const [account, id] = listing.id.split('-'); /// Subgraph returns a conjoined ID.
-  const amount = toTokenUnitsBN(listing.totalAmount,   BEAN[1].decimals);  
-  const filled = toTokenUnitsBN(listing.filledAmount,  BEAN[1].decimals);
+  /// NOTE: try to maintain symmetry with subgraph vars here.
+  const [account, id]     = listing.id.split('-'); /// Subgraph returns a conjoined ID.
+  const amount            = toTokenUnitsBN(listing.amount,      BEAN[1].decimals);  
+  const totalAmount       = toTokenUnitsBN(listing.totalAmount, BEAN[1].decimals); 
+  const filledAmount      = totalAmount.minus(amount);
+  const remainingAmount   = amount;
   return {
-    id,
-    account,
-    index:        toTokenUnitsBN(id, BEAN[1].decimals),
-    totalAmount:  amount,
-    filledAmount: filled,
-    remainingAmount: amount.minus(filled),
-    maxHarvestableIndex: toTokenUnitsBN(listing.maxHarvestableIndex, BEAN[1].decimals),
-    pricePerPod:  toTokenUnitsBN(listing.pricePerPod, BEAN[1].decimals),
-    start:        ZERO_BN,
-    status:       listing.status as 'active' | 'filled',
-    toWallet:     false,
+    id:                   id,
+    account:              account,
+    index:                toTokenUnitsBN(id, BEAN[1].decimals),
+    amount:               amount,
+    totalAmount:          totalAmount,
+    filledAmount:         filledAmount,
+    remainingAmount:      remainingAmount,
+    maxHarvestableIndex:  toTokenUnitsBN(listing.maxHarvestableIndex, BEAN[1].decimals),
+    pricePerPod:          toTokenUnitsBN(listing.pricePerPod, BEAN[1].decimals),
+    start:                ZERO_BN,
+    status:               listing.status as 'active' | 'filled',
+    mode:                 Boolean(listing.mode) === true ? FarmToMode.EXTERNAL : FarmToMode.INTERNAL,
+    // HACK: 'mode' is 'toWallet'
+    //  toWallet = true   ->  mode = FarmToMode.EXTERNAL
+    //  toWallet = false  ->  mode = FarmToMode.INTERNAL
   };
 };
 
@@ -46,12 +54,13 @@ export const castPodOrder = (order: PodOrderFragment) : PodOrder => {
 export type PodListing = {
   /**
    * The ID of the Pod Listing. Equivalent to the `index` with no decimals.
-   * `id = BigNumber(index) * 10**6`
+   * @decimals 0
    */
   id: string
 
   /**
    * The address of the Farmer that owns the Listing.
+   * @decimals 0
    */
   account: string;
 
@@ -65,41 +74,51 @@ export type PodListing = {
    *    0         the first Pod issued
    *    100,000   harvestableIndex
    *    150,000   index
+   * 
+   * @decimals 6
    */
   index: BigNumber;
 
   /**
    * The difference in index of where the listing starts selling pods from and where the plot starts
-   *
+   * @decimals 6
    */
   start: BigNumber;
 
   /**
    * Price per Pod, in Beans.
+   * @decimals 6
    */
   pricePerPod: BigNumber;
 
   /**
    * The absolute position in line at which this listing expires.
+   * @decimals 6
    */
   maxHarvestableIndex: BigNumber;
 
   /**
-   * 
+   * Where Beans are sent when the listing is filled.
    */
-  toWallet: boolean;
-
-  // -- Amounts
+  mode: FarmToMode;
 
   /**
    * The total number of Pods to sell from the Plot.
+   * This is the number of Pods that can still be bought.
+   * Every time it changes, `index` is updated.
+   */
+  amount: BigNumber;
+
+  /**
+   * The total number of Pods originally intended to be sold.
+   * Fixed upon emission of `PodListingCreated`.
    */
   totalAmount: BigNumber;
 
   /**
    * The number of Pods left to sell.
    *
-   * `remainingAmount = totalAmount - filledAmount`
+   * `remainingAmount = amount`
    * `totalAmount > remainingAmount > 0`
    */
   remainingAmount: BigNumber;
@@ -107,6 +126,7 @@ export type PodListing = {
   /**
    * The number of Pods that have been bought from this PodListing.
    *
+   * `filledAmount = totalAmount - amount`
    * `0 < filledAmount < totalAmount`
    */
   filledAmount: BigNumber;

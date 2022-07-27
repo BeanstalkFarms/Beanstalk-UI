@@ -10,14 +10,14 @@ import {
   RemoveDepositEvent,
   RemoveWithdrawalsEvent,
   RemoveDepositsEvent,
-} from 'generated/Beanstalk/BeanstalkReplanted';
+  PodListingCancelledEvent, PodListingCreatedEvent, PodListingFilledEvent, PodOrderCancelledEvent, PodOrderCreatedEvent, PodOrderFilledEvent } from 'generated/Beanstalk/BeanstalkReplanted';
 import { BEAN, PODS } from 'constants/tokens';
 import Token from 'classes/Token';
 import { TokenMap } from 'constants/index';
 import { PlotMap } from 'state/farmer/field';
 import { FarmerSiloBalance, WithdrawalCrate } from 'state/farmer/silo';
 import { PodListing, PodOrder } from 'state/farmer/market';
-import { PodListingCancelledEvent, PodListingCreatedEvent, PodListingFilledEvent, PodOrderCancelledEvent, PodOrderCreatedEvent, PodOrderFilledEvent } from 'generated/Beanstalk/Beanstalk';
+import { FarmToMode } from './Farm';
 
 // ----------------------------------------
 
@@ -604,15 +604,16 @@ export default class EventProcessor {
     this.listings[id] = {
       id:               id,
       account:          event.args.account.toLowerCase(),
-      index:            tokenBN(event.args.index, BEAN[1]),
-      start:            tokenBN(event.args.start, BEAN[1]),
+      index:            tokenBN(event.args.index, BEAN[1]), // 6 dec
+      start:            tokenBN(event.args.start, BEAN[1]), // 6 dec
       pricePerPod:      tokenBN(event.args.pricePerPod, BEAN[1]),
       maxHarvestableIndex: tokenBN(event.args.maxHarvestableIndex, BEAN[1]),
-      toWallet:         event.args.toWallet,
+      mode:             event.args.mode.toString() as FarmToMode,
       // extra
-      totalAmount:      amount,
-      remainingAmount:  amount,
-      filledAmount:     BN(0),
+      amount:           amount,   //
+      totalAmount:      amount,   //
+      remainingAmount:  amount,   //
+      filledAmount:     BN(0),    // 
       status:           'active',
     };
   }
@@ -622,12 +623,34 @@ export default class EventProcessor {
     if (this.listings[id]) delete this.listings[id];
   }
 
+  /**
+   * Notes on behavior:
+   * 
+   * PodListingCreated                          => `status = active`
+   * -> PodListingFilled (for the full amount)  => `status = filled-full`
+   * -> PodListingFilled (for a partial amount) => `status = filled-partial`
+   * -> PodListingCancelled                     => `status = cancelled`
+   * 
+   * Every `PodListingFilled` event changes the `index` of the Listing.
+   * When a Listing is partially filled, the Subgraph creates a new Listing
+   * with the new index and `status = active`. The "old listing" now has
+   * `status = filled-partial`.
+   * 
+   * This EventProcessor is intended to stand in for the subgraph when we can't
+   * connect, so we treat listings similarly:
+   * 1. When a `PodListingFilled` event is received, delete the listing stored
+   *    at the original `index` and create one at the new `index`. The new `index`
+   *    is always: `previous index + start + amount`.
+   * 
+   * @param event
+   * @returns 
+   */
   PodListingFilled(event: Simplify<PodListingFilledEvent>) {
     const id = event.args.index.toString();
     if (!this.listings[id]) return;
     
-    const indexBN = BN(event.args.index);
-    const amount  = tokenBN(event.args.amount, BEAN[1]); 
+    const indexBN     = BN(event.args.index);
+    const deltaAmount = tokenBN(event.args.amount, BEAN[1]); 
     // const start   = tokenBN(event.args.start,  BEAN[1]); 
 
     /// Move current listing's index up by |amount|
@@ -635,7 +658,7 @@ export default class EventProcessor {
     ///  this assumes we are selling from the front (such that, as a listing
     ///  is sold, the index increases).
     const prevID = id;
-    const currentListing = this.listings[prevID];
+    const currentListing = this.listings[prevID]; // copy
     delete this.listings[prevID];
 
     /// The new index of the Plot, now that some of it has been sold.
@@ -646,11 +669,11 @@ export default class EventProcessor {
     /// Bump up |amountSold| for this listing
     this.listings[newID].id              = newID;
     this.listings[newID].index           = tokenBN(newIndex, BEAN[1]);
-    this.listings[newID].start           = new BigNumber(0); // start ?
-    this.listings[newID].filledAmount    = currentListing.filledAmount.plus(amount);
-    this.listings[newID].remainingAmount = currentListing.totalAmount.minus(currentListing.filledAmount);
+    this.listings[newID].start           = new BigNumber(0); // After a Fill, the new start position is always zero (?)
+    this.listings[newID].filledAmount    = currentListing.filledAmount.plus(deltaAmount);
+    this.listings[newID].remainingAmount = currentListing.amount.minus(currentListing.filledAmount);
+    // others stay the same, incl. currentListing.totalAmount, etc.
 
-    /// Update status
     const isFilled = this.listings[newID].remainingAmount.isEqualTo(0);
     if (isFilled) {
       this.listings[newID].status = 'filled';
@@ -679,7 +702,7 @@ export default class EventProcessor {
   
   PodOrderFilled(event: Simplify<PodOrderFilledEvent>) {
     const id = event.args.id.toString();
-    if (!this.listings[id]) return;
+    if (!this.orders[id]) return;
 
     const amount = tokenBN(event.args.amount, BEAN[1]);
     this.orders[id].filledAmount    = this.orders[id].filledAmount.plus(amount);

@@ -48,6 +48,7 @@ const SiloPage : React.FC = () => {
         <PageHeader
           title="The Silo"
           description="Earn yield by depositing liquidity and participate in protocol governance"
+          href="https://docs.bean.money/farm/silo"
         />
         <Overview
           farmerSilo={farmerSilo}
@@ -84,7 +85,7 @@ const SiloPage : React.FC = () => {
                     disabled={chainId === SupportedChainId.MAINNET}
                     size="medium"
                     variant="contained"
-                    sx={{ height: '100%', width: { xs: '100%', lg: 'auto' } }}
+                    sx={{ width: { xs: '100%', lg: 'auto' } }}
                     endIcon={<DropdownIcon open={false} />}
                     onClick={show}
                   >
