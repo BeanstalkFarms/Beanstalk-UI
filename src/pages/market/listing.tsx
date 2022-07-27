@@ -64,13 +64,11 @@ const ListingPage: React.FC = () => {
         {/* Buy Pods */}
         {account === listing.account ? null : (
           <Card sx={{ position: 'relative' }}>
-            <Stack gap={1.5}>
-              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>
-                <Typography variant="h4">
-                  Buy Pods from Pod Listing
-                </Typography>
-              </Stack>
-              <Box sx={{ px: 1, pb: 1 }}>
+            <Stack gap={1.5} sx={{ p: 1 }}>
+              <Box sx={{ pt: 1, px: 1 }}>
+                <Typography variant="h4">Buy Pods</Typography>
+              </Box>
+              <Box>
                 <FillListing
                   podListing={listing}
                 />

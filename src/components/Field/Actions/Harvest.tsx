@@ -29,7 +29,7 @@ import { useFetchFarmerField } from 'state/farmer/field/updater';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { AppState } from '../../../state';
-import DestinationField from '../DestinationField';
+import DestinationField from '../../Common/Form/DestinationField';
 import TransactionToast from '../../Common/TxnToast';
 import { ZERO_BN } from '../../../constants';
 import TokenAdornment from '../../Common/Form/TokenAdornment';

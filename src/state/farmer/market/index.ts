@@ -29,7 +29,7 @@ export const castPodListing = (listing: PodListingFragment) : PodListing => {
     pricePerPod:          toTokenUnitsBN(listing.pricePerPod, BEAN[1].decimals),
     start:                ZERO_BN,
     status:               listing.status as 'active' | 'filled',
-    mode:                 Boolean(listing.mode) === true ? FarmToMode.EXTERNAL : FarmToMode.INTERNAL,
+    mode:                 listing.mode.toString() as FarmToMode, // FIXME: use numbers instead?
     // HACK: 'mode' is 'toWallet'
     //  toWallet = true   ->  mode = FarmToMode.EXTERNAL
     //  toWallet = false  ->  mode = FarmToMode.INTERNAL

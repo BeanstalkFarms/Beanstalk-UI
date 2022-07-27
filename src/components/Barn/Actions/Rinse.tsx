@@ -14,7 +14,7 @@ import { displayBN, displayFullBN, parseError } from 'util/index';
 import { BeanstalkReplanted } from 'generated';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
 import { LoadingButton } from '@mui/lab';
-import DestinationField from 'components/Field/DestinationField';
+import DestinationField from 'components/Common/Form/DestinationField';
 import useFarmerFertilizer from 'hooks/redux/useFarmerFertilizer';
 import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';

@@ -34,7 +34,7 @@ import { BeanstalkPalette } from 'components/App/muiTheme';
 import useChainId from 'hooks/useChain';
 import TransactionToast from 'components/Common/TxnToast';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
-import DestinationField from 'components/Field/DestinationField';
+import DestinationField from 'components/Common/Form/DestinationField';
 import useAccount from 'hooks/ledger/useAccount';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';

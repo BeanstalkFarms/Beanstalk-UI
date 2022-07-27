@@ -167,60 +167,57 @@ const ClaimForm : React.FC<
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
       <Form noValidate>
         <Stack gap={1}>
-          {/* Form Content */}
-          <Stack gap={1}>
-            {/* Claimable Token */}
-            <TokenQuoteProvider
-              name="token"
-              tokenOut={values.tokenOut}
-              state={values.token}
-              // This input is always disabled but we use
-              // the underlying handleQuote functionality
-              // for consistency with other forms.
-              disabled 
-              // 
-              balance={amount || ZERO_BN}
-              balanceLabel="Claimable Balance"
-              // -----
-              // FIXME:
-              // "disableTokenSelect" applies the disabled prop to
-              // the TokenSelect button. However if we don't pass
-              // a handler to the button then it's effectively disabled
-              // but shows with stronger-colored text. param names are
-              // a bit confusing.
-              // disableTokenSelect={true}
-              quoteSettings={quoteSettings}
-              handleQuote={handleQuote}
-              hideQuote
-            />
-            {/* Setting: Destination */}
-            <DestinationField
-              name="destination"
-            />
-            {/* Setting: Claim LP */}
-            {token.isLP ? (
-              <PillRow
-                isOpen={isTokenSelectVisible}
-                label="Claim LP as"
-                onClick={showTokenSelect}> 
-                <TokenIcon token={values.tokenOut} />
-                <Typography variant="body1">{values.tokenOut.name}</Typography>
-              </PillRow>
-            ) : null}
-            <TokenSelectDialog
-              open={isTokenSelectVisible}
-              handleClose={hideTokenSelect}
-              handleSubmit={handleSelectTokens}
-              selected={[values.tokenOut]}
-              balances={undefined} // hide balances from right side of selector
-              tokenList={claimableTokens}
-              mode={TokenSelectMode.SINGLE}
-            />
-          </Stack>
+          {/* Claimable Token */}
+          <TokenQuoteProvider
+            name="token"
+            tokenOut={values.tokenOut}
+            state={values.token}
+            // This input is always disabled but we use
+            // the underlying handleQuote functionality
+            // for consistency with other forms.
+            disabled 
+            // 
+            balance={amount || ZERO_BN}
+            balanceLabel="Claimable Balance"
+            // -----
+            // FIXME:
+            // "disableTokenSelect" applies the disabled prop to
+            // the TokenSelect button. However if we don't pass
+            // a handler to the button then it's effectively disabled
+            // but shows with stronger-colored text. param names are
+            // a bit confusing.
+            // disableTokenSelect={true}
+            quoteSettings={quoteSettings}
+            handleQuote={handleQuote}
+            hideQuote
+          />
+          {/* Setting: Destination */}
+          <DestinationField
+            name="destination"
+          />
+          {/* Setting: Claim LP */}
+          {token.isLP ? (
+            <PillRow
+              isOpen={isTokenSelectVisible}
+              label="Claim LP as"
+              onClick={showTokenSelect}> 
+              <TokenIcon token={values.tokenOut} />
+              <Typography variant="body1">{values.tokenOut.name}</Typography>
+            </PillRow>
+          ) : null}
+          <TokenSelectDialog
+            open={isTokenSelectVisible}
+            handleClose={hideTokenSelect}
+            handleSubmit={handleSelectTokens}
+            selected={[values.tokenOut]}
+            balances={undefined} // hide balances from right side of selector
+            tokenList={claimableTokens}
+            mode={TokenSelectMode.SINGLE}
+          />
           {/* Transaction Details */}
           {isSubmittable ? (
             <>
-              <TxnSeparator mt={-1} />
+              <TxnSeparator />
               <TokenOutputField
                 token={values.tokenOut}
                 amount={values.token.amountOut || ZERO_BN}

@@ -28,6 +28,7 @@ export enum ClaimRewardsAction {
 
 export type ChainableFunctionResult = {
   amountOut: ethers.BigNumber;
+  value?: ethers.BigNumber;
   data?: any;
   encode: (minAmountOut: ethers.BigNumber) => string;
   decode: (data: string) => Result;
@@ -175,14 +176,17 @@ export default class Farm {
     _forward: boolean = true,
   ) : Promise<{
     amountOut: ethers.BigNumber;
+    value: ethers.BigNumber;
     steps: ChainableFunctionResult[];
   }> {
     let nextAmountIn = _args[0]; /// 
+    let value = ethers.BigNumber.from(0);
     const steps : ChainableFunctionResult[] = []; ///
     const exec = async (i: number) => {
       try {
         const step = await _fns[i](nextAmountIn, _forward);
         nextAmountIn = step.amountOut;
+        if (step.value) value = value.add(step.value);
         steps.push(step);
       } catch (e) {
         console.debug(`[farm/estimate] Failed to estimate step ${i}`, _fns[i].name, nextAmountIn, _forward);
@@ -193,12 +197,10 @@ export default class Farm {
 
     if (_forward) {
       for (let i = 0; i < _fns.length; i += 1) {
-        console.debug(`[farm/estimate] forwards: ${i}`);
         await exec(i);
       }
     } else {
       for (let i = _fns.length - 1; i >= 0; i -= 1) {
-        console.debug(`[farm/estimate] backwards: ${i}`);
         await exec(i);
       }
     }
@@ -207,6 +209,9 @@ export default class Farm {
       /// the resulting amountOut is just the argument
       /// that would've been passed to the next function
       amountOut: nextAmountIn,
+      ///
+      value,
+      ///
       steps,
     };
   }
@@ -223,25 +228,29 @@ export default class Farm {
   ) {
     const fnData : string[] = [];
     for (let i = 0; i < _steps.length; i += 1) {
-      const amountOut = _steps[i].amountOut;
-      // slippage is calculated at each step
+      const amountOut    = _steps[i].amountOut;
       const minAmountOut = Farm.slip(amountOut, _slippage);
-      console.debug(`[chain] encoding step ${i}: expected amountOut = ${amountOut}, minAmountOut = ${minAmountOut}`);
-      const encoded = _steps[i].encode(minAmountOut);
+      /// If the step doesn't have slippage (for ex, wrapping ETH),
+      /// then `encode` should ignore minAmountOut
+      const encoded      = _steps[i].encode(minAmountOut);
       fnData.push(encoded);
+      console.debug(`[chain] encoding step ${i}: expected amountOut = ${amountOut}, minAmountOut = ${minAmountOut}`);
     }
     return fnData;
   }
 
   // ------------------------------------------
 
-  buyBeans = () => [
+  buyBeans = (
+    _initialFromMode? : FarmFromMode,
+  ) => [
     // WETH -> USDT via tricrypto2 exchange
     this.exchange(
       this.contracts.curve.pools.tricrypto2.address,
       this.contracts.curve.registries.cryptoFactory.address,
       getChainConstant(WETH, this.provider.network.chainId).address,
       getChainConstant(USDT, this.provider.network.chainId).address,
+      _initialFromMode
     ),
     // USDT -> BEAN via bean3crv exchange_underlying
     this.exchangeUnderlying(
@@ -250,6 +259,28 @@ export default class Farm {
       getChainConstant(BEAN, this.provider.network.chainId).address,
     ),
   ]
+
+  // ------------------------------------------
+
+  wrapEth = (
+    _toMode : FarmToMode  = FarmToMode.INTERNAL,
+  ) : ChainableFunction => async (_amountInStep: ethers.BigNumber) => {
+    console.debug('[step@wrapEth] run', {
+      _toMode,
+      _amountInStep
+    });
+    return {
+      amountOut: _amountInStep, // amountInStep should be an amount of ETH.
+      value:     _amountInStep, // need to use this amount in the txn.
+      encode: (_: ethers.BigNumber) => (
+        this.contracts.beanstalk.interface.encodeFunctionData('wrapEth', [
+          _amountInStep,        // ignore minAmountOut since there is no slippage
+          _toMode,              //
+        ])
+      ),
+      decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('wrapEth', data),
+    };
+  };
 
   // ------------------------------------------
 

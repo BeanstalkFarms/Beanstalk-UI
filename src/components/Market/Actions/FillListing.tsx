@@ -21,7 +21,7 @@ import { displayBN, displayTokenAmount, MinBN, toStringBaseUnitBN, parseError, t
 import useToggle from 'hooks/display/useToggle';
 import useGetChainToken from 'hooks/useGetChainToken';
 import { ethers } from 'ethers';
-import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
+import Farm, { ChainableFunction, FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import { useSigner } from 'hooks/ledger/useSigner';
 import { useProvider } from 'wagmi';
 import { useBeanstalkContract } from 'hooks/useContract';
@@ -37,6 +37,7 @@ import { useFetchFarmerField } from 'state/farmer/field/updater';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import toast from 'react-hot-toast';
 import { PodListing } from 'state/farmer/market';
+import { optimizeFromMode } from 'util/Farm';
 
 export type FillListingFormValues = FormState & {
   settings: SlippageSettingsFragment;
@@ -88,9 +89,10 @@ const FillListingForm : React.FC<
   const tokenInBalance = balances[tokenIn.address];
 
   /// Calculations
-  const isReady = amountOut?.gt(0);
+  const isReady       = amountIn?.gt(0) && amountOut?.gt(0);
   const isSubmittable = isReady;
   const podsPurchased = amountOut?.div(podListing.pricePerPod) || ZERO_BN;
+  const placeInLine   = podListing.index.minus(beanstalkField.harvestableIndex);
 
   /// Token select
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
@@ -177,12 +179,12 @@ const FillListingForm : React.FC<
           <>
             <TxnSeparator mt={0} />
             {/* Place in Line */}
-            <Stack direction="row" justifyContent="space-between" sx={{ p: 1 }}>
+            <Stack direction="row" justifyContent="space-between" sx={{ px: 1 }}>
               <Typography variant="body1" color="text.secondary">
                 Place in Pod Line
               </Typography>
               <Typography variant="body1">
-                {displayBN(podListing.index.minus(beanstalkField.harvestableIndex))}
+                {displayBN(placeInLine)}
               </Typography>
             </Stack>
             {/* Pods Output */}
@@ -191,7 +193,7 @@ const FillListingForm : React.FC<
               amount={podsPurchased}
               amountTooltip={(
                 <>
-                  {displayTokenAmount(amountOut || ZERO_BN, Bean)} / {displayBN(podListing.pricePerPod)} Beans per Pod<br />= {displayTokenAmount(podsPurchased, PODS)}
+                  {displayTokenAmount(amountOut!, Bean)} / {displayBN(podListing.pricePerPod)} Beans per Pod<br />= {displayTokenAmount(podsPurchased, PODS)}
                 </>
               )}
             />
@@ -201,14 +203,18 @@ const FillListingForm : React.FC<
                 <AccordionDetails>
                   <TxnPreview
                     actions={[
-                      {
-                        type: ActionType.BASE,
-                        message: 'DO SOMETHING'
+                      tokenIn === Bean ? undefined : {
+                        type: ActionType.SWAP,
+                        tokenIn,
+                        tokenOut,
+                        /// FIXME: these are asserted by !!isReady
+                        amountIn:   amountIn!,  
+                        amountOut:  amountOut!,
                       },
                       {
                         type: ActionType.BASE,
-                        message: 'DO SOMETHING!'
-                      }
+                        message: `Buy ${displayTokenAmount(podsPurchased, PODS)} at ${displayBN(placeInLine)} in the Pod Line for ${displayBN(podListing.pricePerPod)} Beans per Pod.`
+                      },
                     ]}
                   />
                 </AccordionDetails>
@@ -270,8 +276,8 @@ const FillListing : React.FC<{
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
   const farm      = useMemo(() => new Farm(provider), [provider]);
 
-  /// Refetchers
-  // const balances                = useFarmerBalances();
+  /// Data
+  const balances                = useFarmerBalances();
   const [refetchBeanstalkField] = useFetchBeanstalkField();
   const [refetchFarmerField]    = useFetchFarmerField();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
@@ -291,36 +297,46 @@ const FillListing : React.FC<{
   }), [baseToken]);
 
   /// Handlers
+  /// Does not execute for _tokenIn === BEAN
   const handleQuote = useCallback<QuoteHandler>(
     async (_tokenIn, _amountIn, _tokenOut) => {
-      const tokenIn  : ERC20Token = _tokenIn  instanceof NativeToken ? Weth : _tokenIn;
-      const tokenOut : ERC20Token = _tokenOut instanceof NativeToken ? Weth : _tokenOut;
-      const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, tokenIn.decimals));
-      let estimate;
+      const steps : ChainableFunction[] = [];
 
-      // Depositing BEAN
-      if (tokenIn === Weth) {
-        estimate = await Farm.estimate(
-          farm.buyBeans(), // this assumes we're coming from WETH
-          [amountIn]
+      if (_tokenIn === Eth) {
+        steps.push(...[
+          farm.wrapEth(FarmToMode.INTERNAL),                // wrap ETH to WETH (internal)
+          ...farm.buyBeans(FarmFromMode.INTERNAL_TOLERANT)  // buy Beans using internal WETH
+        ]);
+      } else if (_tokenIn === Weth) {
+        steps.push(
+          ...farm.buyBeans(
+            optimizeFromMode(_amountIn, balances[Weth.address]),
+          )
         );
       } else {
-        throw new Error(`Filling a Listing via ${tokenIn.symbol} is not currently supported`);
+        throw new Error(`Filling a Listing via ${_tokenIn.symbol} is not currently supported`);
       }
-      
+
+      const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, _tokenIn.decimals));
+      const estimate = await Farm.estimate(
+        steps,
+        [amountIn]
+      );
+    
       return {
-        amountOut: toTokenUnitsBN(estimate.amountOut.toString(), tokenOut.decimals),
-        steps: estimate.steps,
+        amountOut:  toTokenUnitsBN(estimate.amountOut.toString(), _tokenOut.decimals),
+        value:      estimate.value,
+        steps:      estimate.steps,
       };
     },
-    [Weth, farm]
+    [Eth, Weth, balances, farm]
   );
 
   const onSubmit = useCallback(async (values: FillListingFormValues, formActions: FormikHelpers<FillListingFormValues>) => {
     let txToast;
     try {
-      const formData = values.tokens[0];
-      const inputToken = formData.token;
+      const formData    = values.tokens[0];
+      const inputToken  = formData.token;
       const amountBeans = inputToken === Bean ? formData.amount : formData.amountOut;
       if (!podListing) throw new Error('No pod listing.');
       if (!signer) throw new Error('Connect a wallet that can sign transactions first.');
@@ -329,7 +345,6 @@ const FillListing : React.FC<{
       
       const data : string[] = [];
       const amountPods = amountBeans.div(podListing.pricePerPod);
-      let value = ZERO_BN;
       
       txToast = new TransactionToast({
         loading: `Purchase ${displayTokenAmount(amountPods, PODS)} Pods for ${displayTokenAmount(amountBeans, Bean)}`,
@@ -345,14 +360,6 @@ const FillListing : React.FC<{
       else {
         // Require a quote
         if (!formData.steps || !formData.amountOut) throw new Error(`No quote available for ${formData.token.symbol}`);
-
-        if (inputToken === Eth) {
-          value = value.plus(formData.amount);
-          data.push(beanstalk.interface.encodeFunctionData('wrapEth', [
-            toStringBaseUnitBN(value, Eth.decimals),
-            FarmToMode.INTERNAL,
-          ]));
-        }
 
         const encoded = Farm.encodeStepsWithSlippage(
           formData.steps,
@@ -383,16 +390,20 @@ const FillListing : React.FC<{
           FarmFromMode.INTERNAL_EXTERNAL,
         ])
       );
- 
-      const overrides = { value: toStringBaseUnitBN(value, Eth.decimals) };
+
+      const overrides = { value: formData.value };
+      console.debug('[FillListing] ', {
+        length: data.length,
+        data,
+        overrides
+      });
+
       const txn = data.length === 1
-        ? await provider.sendTransaction(
-          signer.signTransaction({
-            to: beanstalk.address,
-            data: data[0],
-            ...overrides
-          })
-        )
+        ? await signer.sendTransaction({
+          to: beanstalk.address,
+          data: data[0],
+          ...overrides
+        })
         : await beanstalk.farm(data, overrides);
       txToast.confirming(txn);
       
@@ -410,7 +421,7 @@ const FillListing : React.FC<{
     } finally {
       formActions.setSubmitting(false);
     }
-  }, [Bean, Eth, beanstalk, podListing, provider, signer, refetchFarmerBalances, refetchFarmerField]);
+  }, [Bean, beanstalk, podListing, signer, refetchFarmerBalances, refetchFarmerField]);
 
   return (
     <Formik<FillListingFormValues>

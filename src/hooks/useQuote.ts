@@ -4,9 +4,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import debounce from 'lodash/debounce';
 import toast from 'react-hot-toast';
 import { ChainableFunctionResult } from 'lib/Beanstalk/Farm';
+import { ethers } from 'ethers';
 
 export type QuoteHandlerResult = {
   amountOut: BigNumber;
+  value?: ethers.BigNumber;
   steps?: ChainableFunctionResult[];
 };
 export type QuoteHandler = (
@@ -35,6 +37,7 @@ export default function useQuote(
   tokenOut: ERC20Token | NativeToken,
   /** A function that returns a quoted amountOut value. */
   quoteHandler: QuoteHandler,
+  /** */
   _settings?: Partial<QuoteSettings>,
 ) : [
   result: QuoteHandlerResult | null,

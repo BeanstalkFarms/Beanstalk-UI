@@ -14,7 +14,7 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
 import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useFetchFarmerField } from 'state/farmer/field/updater';
+import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import { PodOrder } from 'state/farmer/market';
 import { useFetchFarmerMarket } from 'state/farmer/market/updater';
 
@@ -54,8 +54,9 @@ const CancelOrder : React.FC<{
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
   
   /// Refetch
-  const [refetchFarmerField]  = useFetchFarmerField();
-  const [refetchFarmerMarket] = useFetchFarmerMarket();
+  const [refetchFarmerBalances]  = useFetchFarmerBalances();
+  // const [refetchFarmerField]     = useFetchFarmerField();
+  const [refetchFarmerMarket]    = useFetchFarmerMarket();
 
   const onClick = useCallback(() => {
     setLoading(true);
@@ -79,8 +80,8 @@ const CancelOrder : React.FC<{
 
         const receipt = await txn.wait();
         await Promise.all([
-          refetchFarmerField(),
-          refetchFarmerMarket(),
+          refetchFarmerMarket(),    // clear old pod order
+          refetchFarmerBalances(),  // refresh Beans
         ]);
         txToast.success(receipt);
         navigate('/market/account');
@@ -90,7 +91,7 @@ const CancelOrder : React.FC<{
         setLoading(false);
       }
     })();
-  }, [Bean, beanstalk, hide, navigate, order.maxPlaceInLine, order.pricePerPod, refetchFarmerField, refetchFarmerMarket]);
+  }, [Bean, beanstalk, hide, navigate, order.maxPlaceInLine, order.pricePerPod, refetchFarmerBalances, refetchFarmerMarket]);
 
   return (
     <>

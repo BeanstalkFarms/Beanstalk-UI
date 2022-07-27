@@ -285,11 +285,6 @@ const CreateOrder : React.FC<{}> = () => {
       const tokenIn  : ERC20Token = _tokenIn  instanceof NativeToken ? Weth : _tokenIn;
       const tokenOut : ERC20Token = _tokenOut instanceof NativeToken ? Weth : _tokenOut;
       const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, tokenIn.decimals));
-      // const balanceIn : Balance   = _tokenIn  instanceof NativeToken 
-      //   ? combineBalances(balances[Weth.address], balances[ETH[1].address])
-      //   : balances[_tokenIn.address];
-
-      //
       let estimate;
 
       // Depositing BEAN
