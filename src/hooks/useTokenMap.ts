@@ -5,7 +5,7 @@ import useGetChainToken from './useGetChainToken';
 
 export default function useTokenMap<T extends Token>(
   list: (T | ChainConstant<T>)[]
-) : TokenMap {
+) {
   const getChainToken = useGetChainToken();
   return useMemo(
     () => list.reduce<TokenMap<T>>(

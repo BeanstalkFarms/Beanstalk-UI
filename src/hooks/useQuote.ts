@@ -46,15 +46,14 @@ export default function useQuote(
 ] {
   const [result, setResult]   = useState<QuoteHandlerResult | null>(null);
   const [quoting, setQuoting] = useState<boolean>(false);
-  const settings = useMemo(() => ({ ...baseSettings, ..._settings }), [_settings]);
+  const settings              = useMemo(() => ({ ...baseSettings, ..._settings }), [_settings]);
+  const abortController       = useRef<null | AbortController>(null);
   
-  // When token changes, reset the amount.
+  /// When token changes, reset the amount.
   useEffect(() => {
     setResult(settings.onReset());
     setQuoting(false);
   }, [tokenOut, settings]);
-
-  const abortController = useRef<null | AbortController>(null);
 
   /// 
   const __getAmountOut = useCallback((
@@ -78,6 +77,7 @@ export default function useQuote(
           /// This line is crucial: it ignores the request if it was cancelled in-flight.
           if (abortController.current?.signal.aborted) return reject();
           if (_result === null) return resolve(_result);
+          /// FIXME: this is for backwards-compat, find everywhere that doesnt use the obj form.
           setResult(_result instanceof BigNumber ? { amountOut: _result } : _result);
           /// Return the result back to wherever it was called.
           setQuoting(false);

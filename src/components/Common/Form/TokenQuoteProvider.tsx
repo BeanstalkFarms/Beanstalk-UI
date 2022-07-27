@@ -82,9 +82,9 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
   // a version of `useQuote` that handles this automatically?
   useEffect(() => {
     console.debug(`[TokenQuoteProvider] update ${name}.amountOut =>`, result?.amountOut?.toString());
-    setFieldValue(`${name}.amountOut`, result?.amountOut);
-    setFieldValue(`${name}.value`, result?.value);
-    setFieldValue(`${name}.steps`, result?.steps);
+    setFieldValue(`${name}.amountOut`, result?.amountOut); // calculated amountOut
+    setFieldValue(`${name}.value`, result?.value);  // ether value used
+    setFieldValue(`${name}.steps`, result?.steps);  // steps
   }, [name, setFieldValue, result]);
   useEffect(() => {
     console.debug(`[TokenQuoteProvider] update ${name}.quoting =>`, quoting);

@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { ZERO_BN, MAX_UINT256, ChainConstant } from 'constants/index';
+import { ZERO_BN, MAX_UINT256, ChainConstant, NEW_BN } from 'constants/index';
 import { bigNumberResult } from 'util/Ledger';
 import { erc20TokenContract } from 'util/Contracts';
 import client from 'util/Client';
@@ -113,7 +113,7 @@ export default abstract class Token {
 
   abstract getContract() : any;
 
-  abstract getBalance(account: string) : Promise<BigNumber | undefined>;
+  abstract getBalance(account: string) : Promise<BigNumber>;
 
   abstract getAllowance(account: string, spender: string) : Promise<BigNumber | undefined>;
   
@@ -201,7 +201,7 @@ export class BeanstalkToken extends Token {
 
   // eslint-disable-next-line class-methods-use-this
   public getBalance() {
-    return Promise.resolve(undefined);
+    return Promise.resolve(NEW_BN);
   }
 
   // eslint-disable-next-line class-methods-use-this
