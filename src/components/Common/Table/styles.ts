@@ -46,6 +46,7 @@ export const tableStyle = {
     '& .MuiDataGrid-footerContainer': {
       borderBottom: 'none',
       borderTop: 'none',
+      justifyContent: 'center'
     },
 
     // Other
