@@ -171,8 +171,8 @@ const TokenInput: React.FC<
     e.target.blur();
   }, []);
 
-  // PROBLEM:
-  // BigNumber('0') == BigNumber('0.0').
+  // PROBLEM: BigNumber('0') == BigNumber('0.0').
+  // ------------------------------------------
   // If a user were to try to type in a small number (0.001 ETH for example),
   // using BigNumber to track the state of the input wouldn't work; when
   // I try to go from 0 to 0.0 the input value stays as just 0.

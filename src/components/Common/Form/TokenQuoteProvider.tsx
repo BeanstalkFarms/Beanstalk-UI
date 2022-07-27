@@ -63,7 +63,7 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
   // via effects and update form state accordingly.
   useEffect(() => {
     if (state.token !== tokenOut) {
-      console.debug(`[TokenQuoteProvider] Inputs changed. Refreshing amount out: ${state.amount} ${state.token.symbol} => X ${tokenOut.symbol}`);
+      console.debug(`[TokenQuoteProvider] Inputs changed. Refreshing amount out: ${state.amount} ${state.token?.symbol} => X ${tokenOut.symbol}`);
       getAmountOut(
         state.token,                      // tokenIn
         new BigNumber(state.amount || 0)  // amountIn
@@ -81,8 +81,9 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
   // FIXME: Antipattern here? Should we have 
   // a version of `useQuote` that handles this automatically?
   useEffect(() => {
-    console.debug(`[TokenQuoteProvider] update ${name}.amountOut =>`, result?.amountOut.toString());
+    console.debug(`[TokenQuoteProvider] update ${name}.amountOut =>`, result?.amountOut?.toString());
     setFieldValue(`${name}.amountOut`, result?.amountOut);
+    setFieldValue(`${name}.value`, result?.value);
     setFieldValue(`${name}.steps`, result?.steps);
   }, [name, setFieldValue, result]);
   useEffect(() => {
@@ -116,6 +117,7 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
   ]);
 
   // Render info about the quote beneath the input.
+  // ----------------------------------------------
   // use state.amountOut instead of amountOut to hide Quote display
   // when the user switches selected tokens.
   const Quote = useMemo(() => (
