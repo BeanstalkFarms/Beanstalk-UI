@@ -29,7 +29,7 @@ import { FarmerSilo } from 'state/farmer/silo';
 import PillRow from 'components/Common/Form/PillRow';
 import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import useSeason from 'hooks/useSeason';
-import { Encoder as ConvertEncoder } from 'lib/Beanstalk/Silo/Convert';
+import { convert, Encoder as ConvertEncoder } from 'lib/Beanstalk/Silo/Convert';
 import { ethers } from 'ethers';
 import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
@@ -90,8 +90,8 @@ const ConvertForm : React.FC<
   const amountOut = values.tokens[0].amountOut; // amount of to token
   const maxAmountIn     = values.maxAmountIn;
   const canConvert      = maxAmountIn?.gt(0) || false;
-  const siloBalance     = siloBalances[tokenIn.address];
-  const depositedAmount = siloBalance?.deposited?.amount || ZERO_BN;
+  const siloBalance     = siloBalances[tokenIn.address]; // FIXME: this is mistyped, may not exist
+  const depositedAmount = siloBalance?.deposited.amount || ZERO_BN;
   const isQuoting = values.tokens[0].quoting || false;
 
   /// Derived form state
@@ -112,16 +112,16 @@ const ConvertForm : React.FC<
     } else if (tokenOut && !isQuoting) {
       console.debug('[Convert] setting conversion, ', tokenOut, isQuoting);
       setConversion(
-        Beanstalk.Silo.Convert.convert(
+        convert(
           tokenIn,   // from
           tokenOut,  // to
           _amountIn, // amount
-          siloBalance?.deposited?.crates, // depositedCrates
+          siloBalance?.deposited.crates || [], // depositedCrates
           currentSeason,
         )
       );
     }
-  }, [currentSeason, isQuoting, siloBalance?.deposited?.crates, tokenIn, tokenOut]);
+  }, [currentSeason, isQuoting, siloBalance?.deposited.crates, tokenIn, tokenOut]);
 
   /// FIXME: is there a better pattern for this?
   /// we want to refresh the conversion info only
