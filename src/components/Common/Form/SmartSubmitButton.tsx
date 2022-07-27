@@ -36,9 +36,10 @@ const SmartSubmitButton : React.FC<{
    * The contract we're interacting with. Must approve 
    * `contract.address` to use `tokens`.
    */
-  contract: ethers.Contract;
+  contract?: ethers.Contract;
   /**
    * The tokens (and respective values) currently tracked in the form.
+   * Pass an empty list if no tokens need to be approved for this txn.
    */
   tokens: FormTokenState[];
   /**
@@ -68,9 +69,9 @@ const SmartSubmitButton : React.FC<{
 
   // Convert the current `FormTokenState[]` into more convenient forms,
   // and find the next token that we need to seek approval for.
-  const selectedTokens : Token[] = useMemo(() => tokens.map((elem) => elem.token), [tokens]);
+  const selectedTokens : Token[] = useMemo(() => tokens?.map((elem) => elem.token), [tokens]);
   const [allowances, refetchAllowances] = useAllowances(
-    contract.address,
+    contract?.address,
     selectedTokens,
     { loadIfAbsent: true }
   );

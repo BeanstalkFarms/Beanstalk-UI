@@ -472,18 +472,22 @@ let muiTheme = createTheme({
       },
     },
     MuiTabs: {
-      defaultProps: {},
+      defaultProps: {
+        variant: 'scrollable'
+      },
       styleOverrides: {
         root: sx({
           fontWeight: 'normal',
+          mr: { xs: 2, md: 0 }
         }),
         indicator: {
           display: 'none',
         },
-        flexContainer: {
-          flexWrap: 'wrap',
-          rowGap: '10px',
-        }
+        // BELOW MAKES OVERFLOW TABS STACK INSTEAD OF SCROLL
+        // flexContainer: {
+        //   flexWrap: 'wrap',
+        //   rowGap: '10px',
+        // }
       },
     },
     MuiTab: {

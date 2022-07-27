@@ -3,9 +3,8 @@ import AddressInputField from 'components/Common/Form/AddressInputField';
 import FieldWrapper from 'components/Common/Form/FieldWrapper';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
-import { PlotFragment, PlotSettingsFragment, TxnPreview, TxnSeparator } from 'components/Common/Form';
+import { PlotFragment, PlotSettingsFragment, SmartSubmitButton, TxnPreview, TxnSeparator } from 'components/Common/Form';
 import { PODS } from 'constants/tokens';
-import { LoadingButton } from '@mui/lab';
 import { useSigner } from 'hooks/ledger/useSigner';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { BeanstalkReplanted } from 'generated/index';
@@ -96,15 +95,18 @@ const SendForm: React.FC<
             </Box>
           </>
         )}
-        <LoadingButton
+        <SmartSubmitButton
           loading={isSubmitting}
           disabled={!isReady || isSubmitting}
-          fullWidth
           type="submit"
           variant="contained"
-          size="large">
+          color="primary"
+          size="large"
+          tokens={[]}
+          mode="auto"
+        >
           Send
-        </LoadingButton>
+        </SmartSubmitButton>
       </Stack>
     </Form>
   );

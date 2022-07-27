@@ -13,7 +13,17 @@ import { FarmerSiloBalance } from 'state/farmer/silo';
 import { ActionType } from 'util/Actions';
 import usePools from 'hooks/usePools';
 import { ERC20Token } from 'classes/Token';
-import { FormTokenState, TxnPreview, TokenOutputField, TokenSelectDialog, TxnSeparator, TokenQuoteProvider, TxnSettings, SettingInput } from 'components/Common/Form';
+import {
+  FormTokenState,
+  TxnPreview,
+  TokenOutputField,
+  TokenSelectDialog,
+  TxnSeparator,
+  TokenQuoteProvider,
+  TxnSettings,
+  SettingInput,
+  SmartSubmitButton
+} from 'components/Common/Form';
 import { BeanstalkReplanted } from 'generated/index';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import { ZERO_BN } from 'constants/index';
@@ -25,7 +35,6 @@ import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import PillRow from 'components/Common/Form/PillRow';
 import { QuoteHandler } from 'hooks/useQuote';
 import { ethers } from 'ethers';
-import { LoadingButton } from '@mui/lab';
 import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
@@ -242,16 +251,18 @@ const ClaimForm : React.FC<
               </Box>
             </>
           ) : null}
-          <LoadingButton
-            variant="contained"
+          <SmartSubmitButton
             loading={isSubmitting}
-            disabled={!isSubmittable || isSubmitting || isMainnet}
+            disabled={!isSubmittable || isSubmitting}
             type="submit"
+            variant="contained"
+            color="primary"
             size="large"
-            fullWidth
+            tokens={[]}
+            mode="auto"
           >
             Claim
-          </LoadingButton>
+          </SmartSubmitButton>
         </Stack>
       </Form>
     </Tooltip>

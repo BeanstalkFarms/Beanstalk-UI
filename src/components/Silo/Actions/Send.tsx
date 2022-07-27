@@ -1,8 +1,9 @@
-import { Button, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import AddressInputField from 'components/Common/Form/AddressInputField';
 import FieldWrapper from 'components/Common/Form/FieldWrapper';
 import { Form, Formik, FormikProps } from 'formik';
 import React from 'react';
+import { SmartSubmitButton } from '../../Common/Form';
 
 export type SendFormValues = {
   to?: string;
@@ -14,9 +15,18 @@ const SendForm : React.FC<FormikProps<SendFormValues>> = () => (
       <FieldWrapper label="Send Deposits to">
         <AddressInputField name="to" />
       </FieldWrapper>
-      <Button fullWidth type="submit" variant="contained" size="large">
+      <SmartSubmitButton
+        // loading={isSubmitting}
+        // disabled={!isSubmittable || isSubmitting}
+        type="submit"
+        variant="contained"
+        color="primary"
+        size="large"
+        tokens={[]}
+        mode="auto"
+      >
         Send
-      </Button>
+      </SmartSubmitButton>
     </Stack>
   </Form>
   );

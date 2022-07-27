@@ -6,7 +6,7 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { BEAN, BEAN_CRV3_LP, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from 'constants/tokens';
 import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import { FormState, SettingInput, TxnSettings } from 'components/Common/Form';
+import { FormState, SettingInput, SmartSubmitButton, TxnSettings } from 'components/Common/Form';
 import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
 import TxnPreview from 'components/Common/Form/TxnPreview';
 import Beanstalk from 'lib/Beanstalk';
@@ -28,7 +28,6 @@ import useFarmerSiloBalances from 'hooks/useFarmerSiloBalances';
 import { FarmerSilo } from 'state/farmer/silo';
 import PillRow from 'components/Common/Form/PillRow';
 import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
-import { LoadingButton } from '@mui/lab';
 import useSeason from 'hooks/useSeason';
 import { Encoder as ConvertEncoder } from 'lib/Beanstalk/Silo/Convert';
 import { ethers } from 'ethers';
@@ -297,21 +296,33 @@ const ConvertForm : React.FC<
             </Box>
           </>
         ) : null}
-        <LoadingButton
+        {/* <LoadingButton */}
+        {/*  loading={buttonLoading || isQuoting} */}
+        {/*  loadingPosition={ */}
+        {/*    isSubmitting */}
+        {/*      ? 'center'  // when submitting, hide the button text */}
+        {/*      : 'start'   // when loading convert data, show button text */}
+        {/*  } */}
+        {/*  type="submit" */}
+        {/*  variant="contained" */}
+        {/*  color="primary" */}
+        {/*  size="large" */}
+        {/*  disabled={!isReady || isSubmitting} */}
+        {/* > */}
+        {/*  {buttonContent} */}
+        {/* </LoadingButton> */}
+        <SmartSubmitButton
           loading={buttonLoading || isQuoting}
-          loadingPosition={
-            isSubmitting
-              ? 'center'  // when submitting, hide the button text
-              : 'start'   // when loading convert data, show button text
-          }
+          disabled={!isReady || isSubmitting}
           type="submit"
           variant="contained"
           color="primary"
           size="large"
-          disabled={!isReady || isSubmitting}
+          tokens={[]}
+          mode="auto"
         >
           {buttonContent}
-        </LoadingButton>
+        </SmartSubmitButton>
       </Stack>
     </Form>
   );
