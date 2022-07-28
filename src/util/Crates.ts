@@ -62,9 +62,18 @@ export const encodeCratesForEnroot = (
   beanstalk:    BeanstalkReplanted,
   unripeTokens: TokenMap<Token>,
   siloBalances: TokenMap<FarmerSiloBalance>,
+  getBDV:       (_token: Token) => BigNumber,
 ) => (
   Object.keys(unripeTokens).reduce<{ [addr: string]: string }>((prev, addr) => {
-    const crates = siloBalances[addr]?.deposited.crates;
+    const crates = (
+      siloBalances[addr]?.deposited.crates
+        .filter((crate) => (
+          /// only select crates where BDV would stay the same or increase
+          /// solves bug where fluctuations in unripe bdv cause enroots
+          /// to fail in certain conditions.
+          (getBDV(unripeTokens[addr]).times(crate.amount)).gte(crate.bdv)
+        ))
+    );
     if (crates && crates.length > 0) {
       if (crates.length === 1) {
         prev[addr] = beanstalk.interface.encodeFunctionData('enrootDeposit', [

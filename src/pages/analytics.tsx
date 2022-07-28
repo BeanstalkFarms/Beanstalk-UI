@@ -12,7 +12,7 @@ const AnalyticsPage: React.FC<{}> = () => (
       <PageHeader
         title="Analytics"
         description="View historical performance of Beanstalk"
-        />
+      />
       <BeanAnalytics />
       <SiloAnalytics />
       <FieldAnalytics />

@@ -20,11 +20,11 @@ const BeanAnalytics: React.FC<{}> = () => {
           <Tab label="Crosses" />
         </Tabs>
         {tab === 0 && <TWAP height={300} />}
-        {/* {tab === 1 && <Volume season={season} beanPrice={beanPrice} />}
-          {tab === 2 && <Liquidity season={season} beanPrice={beanPrice} />}
-          {tab === 3 && <MarketCap season={season} beanPrice={beanPrice} />}
-          {tab === 4 && <Supply season={season} beanPrice={beanPrice} />}
-          {tab === 5 && <Crosses season={season} beanPrice={beanPrice} />} */}
+        {tab === 1 && <TWAP height={300} />}
+        {tab === 2 && <TWAP height={300} />}
+        {tab === 3 && <TWAP height={300} />}
+        {tab === 4 && <TWAP height={300} />}
+        {tab === 5 && <TWAP height={300} />}
       </Stack>
     </Card>
   );

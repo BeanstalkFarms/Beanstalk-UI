@@ -19,11 +19,10 @@ import { BEANSTALK_ADDRESSES, CHAIN_INFO } from '../../constants';
 const NavDrawer: React.FC<{
   open: boolean;
   hideDrawer: () => void;
-}> =
-  ({
-     open,
-     hideDrawer
-   }) => {
+}> = ({
+  open,
+  hideDrawer
+}) => {
     const [openMore, showMore, hideMore] = useToggle();
     // Constants
     const chainInfo = useChainConstant(CHAIN_INFO);

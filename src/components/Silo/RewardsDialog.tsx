@@ -20,6 +20,7 @@ import { ethers } from 'ethers';
 import BigNumber from 'bignumber.js';
 import useTimedRefresh from 'hooks/useTimedRefresh';
 import GasTag from 'components/Common/GasTag';
+import useBDV from 'hooks/useBDV';
 import TransactionToast from '../Common/TxnToast';
 import DescriptionButton from '../Common/DescriptionButton';
 import RewardsBar, { RewardsBarProps } from './RewardsBar';
@@ -185,9 +186,12 @@ const RewardsDialog: React.FC<RewardsBarProps & {
   /// Farmer data
   const siloBalances      = useFarmerSiloBalances();
   const [fetchFarmerSilo] = useFetchFarmerSilo();
+
+  // Beanstalk data
+  const getBDV = useBDV();
   
   /// Contracts
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk         = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
 
   /// Form
   const initialValues: ClaimRewardsFormValues = useMemo(() => ({
@@ -201,7 +205,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
     if (!account) return;
     if (!signer) throw new Error('No signer');
     
-    const encodedDataByToken  = encodeCratesForEnroot(beanstalk, unripeTokens, siloBalances);
+    const encodedDataByToken  = encodeCratesForEnroot(beanstalk, unripeTokens, siloBalances, getBDV);
     const encodedData         = Object.values(encodedDataByToken);
 
     const _calls : ClaimCalls = {
@@ -266,7 +270,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
       {}
     ));
     setGas(_gas);
-  }, [account, beanstalk, provider, signer, siloBalances, unripeTokens]);
+  }, [account, beanstalk, getBDV, provider, signer, siloBalances, unripeTokens]);
 
   useTimedRefresh(estimateGas, 20 * 1000, open);
 
