@@ -220,7 +220,7 @@ const COLUMNS = {
     ),
   } as GridColumns[number],
 
-  //
+  // https://mui.com/x/react-data-grid/column-definition/#converting-types
   plotIndex: (harvestableIndex: BigNumber) => ({
     field: 'index',
     headerName: 'Place In Line',
