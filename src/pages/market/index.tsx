@@ -2,14 +2,12 @@ import React from 'react';
 import { Box, Card, Container, Stack, Tab, Tabs } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
 // import MarketPlots from 'components/Market/MarketPlots';
-import useChainId from 'hooks/useChain';
 import useTabs from 'hooks/display/useTabs';
 import AllListings from 'components/Market/Tables/AllListings';
 import AllOrders from 'components/Market/Tables/AllOrders';
 import CreateButtons from '../../components/Market/CreateButtons';
 
 const PodMarketPage: React.FC = () => {
-  const chainId = useChainId();
   const [tab, handleChangeTab] = useTabs();
 
   // const 

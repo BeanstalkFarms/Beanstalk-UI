@@ -85,20 +85,23 @@ const WithdrawForm : React.FC<
   const [confirming, setConfirming] = useState(false);
   const [allowConfirm, setAllowConfirm] = useState(false);
   const [fill, setFill] = useState('');
+
   const onClose = useCallback(() => {
     setConfirming(false);
     setAllowConfirm(false);
     setFill('');
   }, []);
-  const onOpen  = useCallback(() => {
-    setConfirming(true);
-    setTimeout(() => {
-      setFill('fill');
-    }, 0);
-    setTimeout(() => {
-      setAllowConfirm(true);
-    }, CONFIRM_DELAY);
-  }, []);
+
+  // const onOpen  = useCallback(() => {
+  //   setConfirming(true);
+  //   setTimeout(() => {
+  //     setFill('fill');
+  //   }, 0);
+  //   setTimeout(() => {
+  //     setAllowConfirm(true);
+  //   }, CONFIRM_DELAY);
+  // }, []);
+
   const onSubmit = useCallback(() => {
     submitForm();
     onClose();

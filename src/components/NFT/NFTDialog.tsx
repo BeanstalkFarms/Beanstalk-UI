@@ -8,7 +8,6 @@ export interface NFTDialogProps {
   handleDialogClose: any;
   dialogOpen: boolean;
   handleMint: any;
-  address: string;
   nft: any;
 }
 
@@ -16,7 +15,6 @@ const NFTDialog: React.FC<NFTDialogProps> = ({
   handleDialogClose,
   dialogOpen,
   handleMint,
-  address,
   nft
 }) => (
   <Dialog

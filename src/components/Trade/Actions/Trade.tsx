@@ -14,7 +14,7 @@ import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import { BeanstalkReplanted } from 'generated/index';
 import { ZERO_BN } from 'constants/index';
 import { BEAN, ETH, USDC } from 'constants/tokens';
-import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { Form, Formik, FormikProps } from 'formik';
 import useToggle from 'hooks/display/useToggle';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useFarmerBalances from 'hooks/useFarmerBalances';
@@ -227,11 +227,7 @@ const Trade: React.FC<{}> = () => {
     toDestination: FarmToMode.INTERNAL,
   }), [Bean, Eth]);
 
-  const onSubmit = useCallback(
-    async (
-      values: TradeFormValues,
-      formActions: FormikHelpers<TradeFormValues>
-    ) => {
+  const onSubmit = useCallback(async () => {
       console.log('SUBMIT');
     },
     []

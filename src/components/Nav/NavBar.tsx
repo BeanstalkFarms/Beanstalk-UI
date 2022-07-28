@@ -6,7 +6,7 @@ import {
   Divider,
   Link,
   Stack,
-  Typography, useMediaQuery,
+  Typography,
 } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { BeanstalkPalette } from 'components/App/muiTheme';
@@ -31,7 +31,6 @@ const NavBar: React.FC<{}> = () => {
 
   // TEMP: Pre-exploit Modal
   const [noticeOpen, setNoticeOpen] = useState(false);
-  const isTwoXLarge = useMediaQuery('(max-width:350px)');
 
   return (
     <>

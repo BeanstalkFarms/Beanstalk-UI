@@ -121,11 +121,6 @@ const Overview: React.FC<{
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
   };
-
-  const [timeTab, setTimeTab] = useState([0,0]);
-  const handleChangeTimeTab = (i: number[]) => {
-    setTimeTab(i);
-  };
   return (
     <Card>
       {/* FIXME: sizing between deposits tab and Total Silo Deposits */}

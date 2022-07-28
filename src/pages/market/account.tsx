@@ -8,8 +8,6 @@ import {
   Tabs,
   Typography,
 } from '@mui/material';
-import useChainId from 'hooks/useChain';
-import useAccount from 'hooks/ledger/useAccount';
 import useTabs from 'hooks/display/useTabs';
 import MyOrdersTable from 'components/Market/Tables/MyOrders';
 import AddressIcon from 'components/Common/AddressIcon';
@@ -17,10 +15,6 @@ import MyListingsTable from 'components/Market/Tables/MyListings';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 
 const MarketAccountPage: React.FC = () => {
-  ///
-  const account = useAccount();
-  const chainId = useChainId();
-
   ///
   const [tab, handleChangeTab] = useTabs();
 

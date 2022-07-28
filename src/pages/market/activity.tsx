@@ -10,7 +10,6 @@ import BigNumber from 'bignumber.js';
 import podIcon from 'img/beanstalk/pod-icon.svg';
 import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import ActivityTable from 'components/Market/Tables/Activity';
-import useChainId from 'hooks/useChain';
 import { displayBN, displayFullBN } from '../../util';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 
@@ -95,8 +94,6 @@ const rows = new Array(20).fill(null).map((_, i) => (
 ));
 
 const MarketActivityPage: React.FC = () => {
-  const chainId = useChainId();
-
   const content = (<ActivityTable columns={columns} rows={rows} />);
 
   return (

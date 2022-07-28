@@ -136,6 +136,7 @@ const COLUMNS = {
     field: 'remainingAmount',
     headerName: 'Number of Pods',
     flex: 1,
+    type: 'number',
     // disableColumnMenu: true,
     align: 'left',
     headerAlign: 'left',

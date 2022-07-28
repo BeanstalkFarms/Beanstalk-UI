@@ -265,7 +265,6 @@ const NFTPage: React.FC = () => {
         nft={selectedNFT}
         dialogOpen={dialogOpen}
         handleDialogClose={handleDialogClose}
-        address={account}
         handleMint={contractMap[selectedNFT.subcollection]}
           />}
     </Container>
