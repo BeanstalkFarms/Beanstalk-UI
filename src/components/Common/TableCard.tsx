@@ -48,7 +48,7 @@ const TableCard : React.FC<{
   token
 }) => {
   const tableHeight = useMemo(() => {
-    if (!rows || rows.length === 0) return '180px';
+    if (!rows || rows.length === 0) return '250px';
     return (60.5 + 6 + 39 - 5) + Math.min(rows.length, MAX_ROWS) * 36;
   }, [rows]);
   return (

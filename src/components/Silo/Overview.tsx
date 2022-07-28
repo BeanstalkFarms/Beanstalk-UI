@@ -55,7 +55,7 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
           <MainnetBlur>
             <Stack justifyContent="center" alignItems="center" gap={1}>
               <Typography variant="body1" color="gray">Your Silo Deposits will appear here.</Typography>
-              <WalletButton color="primary" sx={{ height: 45 }} />
+              <WalletButton showFullText color="primary" sx={{ height: 45 }} />
             </Stack>
           </MainnetBlur>
         )}
@@ -107,7 +107,7 @@ const StalkOwnershipTab: React.FC<TabData
           <MainnetBlur>
             <Stack justifyContent="center" alignItems="center" gap={1}>
               <Typography variant="body1" color="gray">Your Stalk Balance and Ownership will appear here.</Typography>
-              <WalletButton color="primary" sx={{ height: 45 }} />
+              <WalletButton showFullText color="primary" sx={{ height: 45 }} />
             </Stack>
           </MainnetBlur>
         )}

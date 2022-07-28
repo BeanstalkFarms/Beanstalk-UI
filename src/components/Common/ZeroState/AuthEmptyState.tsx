@@ -23,7 +23,6 @@ const AuthEmptyState: React.FC<{
   title,
   state,
   option,
-  height,
   children,
 }) => {
   const account = useAccount();
@@ -43,7 +42,7 @@ const AuthEmptyState: React.FC<{
   return (
     <Stack
       sx={{
-        height: height || '100%',
+        height: '100%',
         // place this over the virtual scroller
         zIndex: 10,
         position: 'relative',
