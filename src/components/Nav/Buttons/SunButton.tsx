@@ -14,6 +14,9 @@ import rainySeasonIcon from 'img/beanstalk/sun/rainy-season.svg';
 import SunriseButton from 'components/Sun/SunriseButton';
 import BigNumber from 'bignumber.js';
 import usePrice from 'hooks/usePrice';
+import SunriseCountdown from 'components/Sun/SunriseCountdown';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import FolderMenu from '../FolderMenu';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import SeasonCard from '../SeasonCard';
@@ -31,6 +34,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   /// DATA
   const season    = useSeason();
   const beanPrice = usePrice();
+  const awaiting  = useSelector<AppState, boolean>((state) => state._beanstalk.sun.sunrise.awaiting);
 
   /// Theme
   const isTiny = useMediaQuery('(max-width:350px)');
@@ -39,8 +43,13 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   const isLoading = season.eq(NEW_BN);
   const startIcon = isTiny ? undefined : (
     <img
-      src={beanPrice.gt(1) ? rainySeasonIcon : drySeasonIcon}
-      style={{ width: 25, height: 25 }}
+      src={beanPrice.lte(1) || awaiting ? drySeasonIcon : rainySeasonIcon}
+      style={{
+        width: 25,
+        height: 25,
+        animation: awaiting ? 'rotate linear 2000ms' : 'none',
+        animationIterationCount: 'infinite',
+      }}
       alt="Dry Season"
     />
   );
@@ -57,7 +66,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         }}
       >
         <Typography color="text.primary" variant="h4">
-          Season X in 42m
+          Season {season.plus(1).toString()} <SunriseCountdown />
         </Typography>
         {/* table header */}
         <Box
