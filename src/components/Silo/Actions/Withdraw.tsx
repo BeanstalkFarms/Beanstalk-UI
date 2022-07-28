@@ -121,7 +121,7 @@ const WithdrawForm : React.FC<
   // once in the final popup
   const tokenOutputs = isReady ? (
     <>
-      <Stack direction="row" gap={1} justifyContent="center">
+      <Stack direction={{ xs: 'column', md: 'row' }} gap={1} justifyContent="center">
         <Box sx={{ flex: 1 }}>
           <TokenOutputField
             token={STALK}
