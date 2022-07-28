@@ -4,7 +4,9 @@ import { useDispatch } from 'react-redux';
 import useAppFlag from 'hooks/display/useAppFlag';
 import useTimedRefresh from 'hooks/useTimedRefresh';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { setAlmanacView, setEthPrices } from './actions';
+import useSetting from 'hooks/useSetting';
+import toast from 'react-hot-toast';
+import { setAlmanacView, setEthPrices, updateSetting } from './actions';
 
 export const useEthPrices = () => {
   const dispatch = useDispatch();
@@ -29,6 +31,7 @@ export const useEthPrices = () => {
 export default function AppUpdater() {
   const dispatch = useDispatch();
   const pressed  = useAppFlag('almanacView');
+  const [denomination] = useSetting('denomination');
   
   useEthPrices();
 
@@ -46,6 +49,11 @@ export default function AppUpdater() {
   useHotkeys('opt+q, alt+q', (/* event, handler */) => {
     dispatch(setAlmanacView(false));
   }, { keyup: true });
+
+  useHotkeys('opt+f, alt+f', (/* event, handler */) => {
+    toast.success(`Updated setting: Show ${denomination === 'bdv' ? 'BDV' : 'USD value'} for fiat.`);
+    dispatch(updateSetting({ key: 'denomination', value: denomination === 'bdv' ? 'usd' : 'bdv' }));
+  }, { keyup: true, }, [denomination]);
 
   return null;
 }

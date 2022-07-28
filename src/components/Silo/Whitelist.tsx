@@ -4,16 +4,15 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Link } from 'react-router-dom';
 import { Pool, Token } from 'classes';
 import { AppState } from 'state';
-import { displayUSD } from 'util/index';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BEAN, SEEDS, STALK } from 'constants/tokens';
 import { AddressMap, ZERO_BN } from 'constants/index';
-import { displayBN, displayFullBN } from 'util/Tokens';
-import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
+import { displayFullBN } from 'util/Tokens';
 import useTVL from 'hooks/useTVL';
 import useChainConstant from 'hooks/useChainConstant';
 import useBDV from 'hooks/useBDV';
 import { IconSize } from 'components/App/muiTheme';
+import useFiat from 'hooks/currency/useFiat';
 
 const ARROW_CONTAINER_WIDTH = 20;
 
@@ -33,8 +32,8 @@ const Whitelist : React.FC<{
 }) => {
   const getTVL = useTVL();
   const getBDV = useBDV();
-  const poolTokenToUSD = useSiloTokenToUSD();
   const Bean = useChainConstant(BEAN);
+  const displayFiat = useFiat();
 
   return (
     <Card>
@@ -124,7 +123,8 @@ const Whitelist : React.FC<{
                   {/* Cell: TVD */}
                   <Grid item md={2.5} xs={0} display={{ xs: 'none', md: 'block' }}>
                     <Typography color="black">
-                      ${displayBN(getTVL(token))}
+                      {displayFiat(token, getTVL(token))}
+                      {/* ${displayBN(getTVL(token))} */}
                     </Typography>
                   </Grid>
                   {/* Cell: Deposited Amount */}
@@ -164,7 +164,8 @@ const Whitelist : React.FC<{
                   <Grid item md={1.5} xs={3}>
                     <Stack direction="row" alignItems="center" justifyContent="flex-end">
                       <Typography color="black">
-                        {deposited?.amount ? displayUSD(poolTokenToUSD(token, deposited.amount)) : '$0'}
+                        {displayFiat(token, deposited?.amount)}
+                        {/* {deposited?.amount ? displayUSD(poolTokenToUSD(token, deposited.amount)) : '$0'} */}
                       </Typography>
                       <Stack sx={{ width: ARROW_CONTAINER_WIDTH, }} alignItems="center">
                         <ArrowRightIcon />
