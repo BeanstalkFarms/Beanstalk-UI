@@ -138,7 +138,7 @@ const NavBar: React.FC<{}> = () => {
         className="navbar"
         sx={{
           position: 'sticky',
-          // backgroundColor: { xs: BeanstalkPalette.lightBlue, xl: '#e9f3fd' },
+          backgroundColor: BeanstalkPalette.lightBlue,
           borderBottom: `1px solid ${BeanstalkPalette.blue}`,
           // height: '65px'
           // pt: chainId === SupportedChainId.MAINNET ? 0.75 : 1
