@@ -140,7 +140,7 @@ const DepositForm : React.FC<
                 token={whitelistedToken}
                 amount={amount}
               />
-              <Stack direction="row" gap={1} justifyContent="center">
+              <Stack direction={{ xs: 'column', md: 'row' }} gap={1} justifyContent="center">
                 <Box sx={{ flex: 1 }}>
                   <TokenOutputField
                     token={STALK}

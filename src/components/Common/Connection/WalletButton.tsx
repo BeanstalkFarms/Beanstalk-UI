@@ -38,7 +38,7 @@ import AddressIcon from '../AddressIcon';
 
 // -----------------------------------------------------------------
 
-const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
+const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props }) => {
   const account = useAccount();
   const { activeChain } = useNetwork();
   const { disconnect } = useDisconnect();
@@ -69,7 +69,7 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
           onClick={showWallets}
         >
           Connect
-          <Box component="span" display={{ xs: 'none', md: 'inline' }}>
+          <Box component="span" display={{ xs: props.showFullText ? 'inline' : 'none', md: 'inline' }}>
             &nbsp;Wallet
           </Box>
         </Button>

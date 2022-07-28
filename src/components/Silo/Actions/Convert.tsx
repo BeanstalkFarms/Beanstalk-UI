@@ -247,7 +247,7 @@ const ConvertForm : React.FC<
               token={tokenOut}
               amount={amountOut || ZERO_BN}
             />
-            <Stack direction="row" gap={1} justifyContent="center">
+            <Stack direction={{ xs: 'column', md: 'row' }} gap={1} justifyContent="center">
               <Box sx={{ flex: 1 }}>
                 <TokenOutputField
                   token={STALK}

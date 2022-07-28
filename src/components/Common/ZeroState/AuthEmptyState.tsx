@@ -23,7 +23,6 @@ const AuthEmptyState: React.FC<{
   title,
   state,
   option,
-  height,
   children,
 }) => {
   const account = useAccount();
@@ -35,7 +34,7 @@ const AuthEmptyState: React.FC<{
   } else {
     content = (
       <>
-        {title && <Typography variant="body1" color="gray">{title}</Typography>}
+        {title && <Typography variant="body1" color="gray">Your {title} will appear here.</Typography>}
         {children}
       </>
     );
@@ -43,7 +42,7 @@ const AuthEmptyState: React.FC<{
   return (
     <Stack
       sx={{
-        height: height || '100%',
+        height: '100%',
         // place this over the virtual scroller
         zIndex: 10,
         position: 'relative',
