@@ -214,8 +214,8 @@ const RewardsDialog: React.FC<RewardsBarProps & {
         execute: () => beanstalk.update(account),
       },
       [ClaimRewardsAction.PLANT_AND_MOW]: {
-        estimateGas: () => beanstalk.estimateGas.earn(account),
-        execute: () => beanstalk.earn(account)
+        estimateGas: () => beanstalk.estimateGas.earn(),
+        execute: () => beanstalk.earn()
       },
       [ClaimRewardsAction.ENROOT_AND_MOW]: (
         encodedData.length > 0 
@@ -230,24 +230,22 @@ const RewardsDialog: React.FC<RewardsBarProps & {
               data: encodedData[0],
             })
           ),
-          execute: () => provider.sendTransaction(
-            signer.signTransaction({
-              to: beanstalk.address,
-              data: encodedData[0],
-            })
-          ),
+          execute: () => signer.sendTransaction({
+            to: beanstalk.address,
+            data: encodedData[0],
+          }),
         }
       ),
       [ClaimRewardsAction.CLAIM_ALL]: {
         estimateGas: () => beanstalk.estimateGas.farm([
           // PLANT_AND_MOW
-          beanstalk.interface.encodeFunctionData('earn', [account]),
+          beanstalk.interface.encodeFunctionData('earn', []),
           // ENROOT_AND_MOW
           ...encodedData,
         ]),
         execute: () => beanstalk.farm([
           // PLANT_AND_MOW
-          beanstalk.interface.encodeFunctionData('earn', [account]),
+          beanstalk.interface.encodeFunctionData('earn', []),
           // ENROOT_AND_MOW
           ...encodedData,
         ])
