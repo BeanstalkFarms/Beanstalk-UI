@@ -40,6 +40,8 @@ import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import podIconGreen from 'img/beanstalk/harvestable-pod-icon.svg';
 import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import { useFetchBeanstalkField } from 'state/beanstalk/field/updater';
+import usePrice from 'hooks/usePrice';
+import { useFetchPools } from 'state/bean/pools/updater';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
@@ -85,8 +87,8 @@ const SowForm : React.FC<
   const erc20TokenMap = useTokenMap<ERC20Token | NativeToken>([BEAN, ETH, WETH]);
 
   ///
+  const beanPrice      = usePrice();
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
-  const beanPrice      = useSelector<AppState, AppState['_bean']['token']['price']>((state) => state._bean.token.price);
 
   /// Derived
   const tokenIn   = values.tokens[0].token;     // converting from token
@@ -318,6 +320,7 @@ const Sow : React.FC<{}> = () => {
   /// Refetchers
   const balances                = useFarmerBalances();
   const [refetchBeanstalkField] = useFetchBeanstalkField();
+  const [refetchPools]          = useFetchPools();
   const [refetchFarmerField]    = useFetchFarmerField();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
 
@@ -426,6 +429,7 @@ const Sow : React.FC<{}> = () => {
         refetchFarmerField(),     // get farmer's plots
         refetchFarmerBalances(),  // get farmer's token balances
         refetchBeanstalkField(),  // get beanstalk field data (ex. amount of Soil left)
+        refetchPools(),           // get price data [TODO: optimize if we bought beans]
       ]);  
       txToast.success(receipt);
       formActions.resetForm();
@@ -443,6 +447,7 @@ const Sow : React.FC<{}> = () => {
     refetchFarmerField,
     refetchFarmerBalances,
     refetchBeanstalkField,
+    refetchPools
   ]);
 
   return (

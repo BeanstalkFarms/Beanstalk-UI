@@ -5,28 +5,23 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { displayFullBN } from 'util/index';
 import useHumidity, { INITIAL_HUMIDITY } from 'hooks/useHumidity';
 import { AppState } from 'state';
-import BigNumber from 'bignumber.js';
+import { ZERO_BN } from 'constants/index';
+import SunriseCountdown from 'components/Sun/SunriseCountdown';
 import FertilizerImage from './FertilizerImage';
 import { BeanstalkPalette } from '../App/muiTheme';
 
 const RemainingFertilizer: React.FC = () => {
   const [humidity, nextDecreaseAmount] = useHumidity();
-  const fertilizer = useSelector<
-    AppState,
-    AppState['_beanstalk']['barn']
-  >((state) => state._beanstalk.barn);
-  const nextDecreaseDuration = useSelector<
-    AppState,
-    AppState['_beanstalk']['sun']['sunrise']['remaining']
-  >((state) => state._beanstalk.sun.sunrise.remaining);
+  const fertilizer = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
+  
   const nextDecreaseTimeString = humidity.eq(INITIAL_HUMIDITY)
     ? 'when Beanstalk is Replanted'
-    : `in ${nextDecreaseDuration.toFormat('mm:ss')}`;
+    :  <SunriseCountdown />;
   const progress = fertilizer.totalRaised.gt(0)
     ? fertilizer.totalRaised.div(
         fertilizer.totalRaised.plus(fertilizer.remaining)
       )
-    : new BigNumber(0);
+    : ZERO_BN;
 
   return (
     <Card sx={{ p: 2 }}>
@@ -34,7 +29,6 @@ const RemainingFertilizer: React.FC = () => {
         <Typography variant="h4">Fertilizer</Typography>
         <Stack
           direction={{ xs: 'column', md: 'row' }}
-          // alignItems={{ xs: 'left', md: 'center' }}
           alignItems={{ xs: 'left', md: 'stretch' }}
           justifyContent={{ md: 'left' }}
           gap={2}
@@ -44,7 +38,6 @@ const RemainingFertilizer: React.FC = () => {
             <FertilizerImage progress={Math.max(progress.toNumber(), 0.05)} />
           </Box>
           {/* right column */}
-
           <Stack justifyContent="space-between" gap={2}>
             <Stack gap={0.5}>
               <Typography variant="body1">

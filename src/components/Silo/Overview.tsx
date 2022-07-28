@@ -12,6 +12,7 @@ import {
 } from 'components/Common/Charts/LineChart.mock';
 import MainnetBlur from 'components/Common/ZeroState/MainnetBlur';
 import Stat from 'components/Common/Stat';
+import useTabs from 'hooks/display/useTabs';
 import WalletButton from '../Common/Connection/WalletButton';
 
 // ------------------------------------------------
@@ -111,16 +112,15 @@ const StalkOwnershipTab: React.FC<TabData
 
 // ------------------------------------------------
 
+const SLUGS = ['deposits', 'stalk'];
+
 const Overview: React.FC<{
   farmerSilo:     AppState['_farmer']['silo'];
   beanstalkSilo:  AppState['_beanstalk']['silo'];
   breakdown:      ReturnType<typeof useFarmerSiloBreakdown>;
   season:         BigNumber;
 }> = ({ farmerSilo, beanstalkSilo, breakdown, season }) => {
-  const [tab, setTab] = useState(0);
-  const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
-    setTab(newValue);
-  };
+  const [tab, handleChange] = useTabs(SLUGS, 'view');
   return (
     <Card>
       {/* FIXME: sizing between deposits tab and Total Silo Deposits */}
@@ -134,7 +134,7 @@ const Overview: React.FC<{
         }}
       >
         {/* Tabs */}
-        <Tabs value={tab} onChange={handleChangeTab} sx={{ minHeight: 0 }}>
+        <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0 }}>
           <Tab label="Deposits" />
           <Tab label="Stalk Ownership" />
         </Tabs>

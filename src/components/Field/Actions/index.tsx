@@ -1,14 +1,13 @@
+import React from 'react';
 import { Box, Card, Stack, Tab, Tabs } from '@mui/material';
-import React, { useCallback, useState } from 'react';
+import useTabs from 'hooks/display/useTabs';
 import Sow from './Sow';
 import Send from './Send';
 import Harvest from './Harvest';
 
+const SLUGS = ['sow', 'harvest', 'send'];
 const FieldActions : React.FC<{}> = () => {
-  const [tab, setTab] = useState(0);
-  const handleChange = useCallback((_: React.SyntheticEvent, newValue: number) => {
-    setTab(newValue);
-  }, []);
+  const [tab, handleChange] = useTabs(SLUGS, 'action');
   return (
     <Card sx={{ position: 'relative' }}>
       <Stack gap={1.5}>

@@ -1,24 +1,12 @@
 import { Box, Card, Stack, Tab, Tabs } from '@mui/material';
-import React, { useCallback, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React from 'react';
+import useTabs from 'hooks/display/useTabs';
 import CreateOrder from './CreateOrder';
 import CreateListing from './CreateListing';
 
+const SLUGS = ['order', 'list'];
 const MarketActions : React.FC<{}> = () => {
-  const [tab, setTab] = useState(0);
-  const handleChange = useCallback((_: React.SyntheticEvent, newValue: number) => {
-    setTab(newValue);
-  }, []);
-  const [searchParams] = useSearchParams();
-
-  // opens page on "sell listing" tab if ?t=1 is in params
-  const t = searchParams.get('t');
-  useMemo(() => {
-    if (t) {
-      setTab(Number(t));
-    }
-  }, [t]);
-
+  const [tab, handleChange] = useTabs(SLUGS, 'action');
   return (
     <Card sx={{ position: 'relative' }}>
       <Stack gap={1.5}>

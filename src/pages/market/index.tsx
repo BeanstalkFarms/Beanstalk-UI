@@ -6,8 +6,9 @@ import AllListings from 'components/Market/Tables/AllListings';
 import AllOrders from 'components/Market/Tables/AllOrders';
 import CreateButtons from '../../components/Market/CreateButtons';
 
+const SLUGS = ['buy', 'sell'];
 const PodMarketPage: React.FC = () => {
-  const [tab, handleChangeTab] = useTabs();
+  const [tab, handleChangeTab] = useTabs(SLUGS, 'view');
 
   const content = (
     <>

@@ -35,6 +35,7 @@ import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import useBDV from 'hooks/useBDV';
 import TokenIcon from 'components/Common/TokenIcon';
+import { useFetchPools } from 'state/bean/pools/updater';
 import { IconSize } from '../../App/muiTheme';
 import IconWrapper from '../../Common/IconWrapper';
 
@@ -368,6 +369,7 @@ const Convert : React.FC<{
   /// Farmer
   const siloBalances            = useFarmerSiloBalances();
   const [refetchFarmerSilo]     = useFetchFarmerSilo();
+  const [refetchPools]          = useFetchPools();
 
   /// Network
   const { data: signer }  = useSigner();
@@ -498,7 +500,10 @@ const Convert : React.FC<{
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
-      await Promise.all([refetchFarmerSilo()]);
+      await Promise.all([
+        refetchFarmerSilo(),  // update farmer silo since we just moved deposits around
+        refetchPools(),       // update prices to account for pool conversion
+      ]);
       txToast.success(receipt);
       formActions.resetForm({
         values: {
@@ -511,7 +516,7 @@ const Convert : React.FC<{
       txToast ? txToast.error(err) : toast.error(parseError(err));
       formActions.setSubmitting(false);
     }
-  }, [Bean, BeanCrv3, urBean, urBeanCrv3, beanstalk, initialValues, refetchFarmerSilo, season, siloBalances]);
+  }, [siloBalances, season, urBean, urBeanCrv3, Bean, BeanCrv3, beanstalk, refetchFarmerSilo, refetchPools, initialValues]);
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>

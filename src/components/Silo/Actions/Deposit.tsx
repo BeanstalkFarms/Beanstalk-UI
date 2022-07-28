@@ -41,6 +41,7 @@ import toast from 'react-hot-toast';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
+import { useFetchPools } from 'state/bean/pools/updater';
 
 // -----------------------------------------------------------------------
 
@@ -262,6 +263,7 @@ const Deposit : React.FC<{
   const balances                = useFarmerBalances();
   const [refetchFarmerSilo]     = useFetchFarmerSilo();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
+  const [refetchPools]          = useFetchPools();
 
   /// Network
   const provider = useProvider();
@@ -511,7 +513,8 @@ const Deposit : React.FC<{
       const receipt = await txn.wait();
       await Promise.all([
         refetchFarmerSilo(),
-        refetchFarmerBalances()
+        refetchFarmerBalances(),
+        refetchPools(),
       ]);
       txToast.success(receipt);
       formActions.resetForm();
@@ -526,6 +529,7 @@ const Deposit : React.FC<{
     amountToBdv,
     refetchFarmerSilo,
     refetchFarmerBalances,
+    refetchPools,
   ]);
 
   return (
