@@ -62,14 +62,15 @@ const CustomToaster: React.FC = () => (
         toast={t}
         style={{
           ...t.style,
-          // Option 1: Pops up instantly,
+          fontFamily: 'Futura PT',
+          /// Option 1: Pops up instantly,
           // then slides out to the right side
           // animation: 'none',
           // position: 'absolute',
           // right: t.visible ? 0 : -500,
           // transition: 'right 0.4s ease-in-out',
           // opacity: 1,
-          // Option 2: Slides in and out, but there's
+          /// Option 2: Slides in and out, but there's
           // an issue where it "flashes back" after
           // completing the animation.
           // position: 'absolute',

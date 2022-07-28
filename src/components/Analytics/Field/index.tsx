@@ -7,8 +7,9 @@ import PodRate from './PodRate';
 import Pods from './Pods';
 import Weather from './Weather';
 
+const SLUGS = ['rror', 'weather', 'pods', 'podrate', 'sown', 'harvested', 'sowers'];
 const FieldAnalytics: React.FC<{}> = () => {
-  const [tab, handleChangeTab] = useTabs();
+  const [tab, handleChangeTab] = useTabs(SLUGS, 'field');
   return (
     <Card>
       <Stack>

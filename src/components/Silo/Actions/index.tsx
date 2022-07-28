@@ -14,6 +14,8 @@ import Withdrawals from './Withdrawals';
 import Send from './Send';
 import Convert from './Convert';
 
+const SLUGS = ['deposit', 'convert', 'withdraw', 'claim', 'send'];
+
 /**
  * Show the three primary Silo actions: Deposit, Withdraw, Claim.
  * Displays two components:
@@ -28,7 +30,7 @@ const SiloActions : React.FC<{
   token: ERC20Token;
   siloBalance: FarmerSiloBalance;
 }> = (props) => {
-  const [tab, handleChange] = useTabs();
+  const [tab, handleChange] = useTabs(SLUGS, 'action');
   const hasClaimable = props.siloBalance?.claimable?.amount.gt(0);
   return (
     <>

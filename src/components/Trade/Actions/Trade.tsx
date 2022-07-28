@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
   FormApprovingState, FormTokenState,
@@ -6,180 +6,158 @@ import {
   SmartSubmitButton,
   TokenAdornment,
   TokenSelectDialog,
-  TxnPreview,
   TxnSeparator,
   TxnSettings
 } from 'components/Common/Form';
 import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import { BeanstalkReplanted } from 'generated/index';
 import { ZERO_BN } from 'constants/index';
-import { BEAN, ETH, USDC } from 'constants/tokens';
+import { BEAN, DAI, ETH, USDC, USDT, WETH } from 'constants/tokens';
 import { Form, Formik, FormikProps } from 'formik';
-import useToggle from 'hooks/display/useToggle';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useFarmerBalances from 'hooks/useFarmerBalances';
 import useTokenMap from 'hooks/useTokenMap';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useSigner } from 'hooks/ledger/useSigner';
-import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import { ActionType } from 'util/Actions';
 import TokenInputField from 'components/Common/Form/TokenInputField';
 import { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import DestinationField from 'components/Common/Form/DestinationField';
-import useChainConstant from '../../../hooks/useChainConstant';
+import useGetChainToken from 'hooks/useGetChainToken';
 
 type TradeFormValues = {
-  fromTokens: FormTokenState[];
-  toTokens: FormTokenState[];
-  fromDestination: FarmFromMode;
-  toDestination: FarmToMode;
+  tokensIn:   FormTokenState[];
+  modeIn:     FarmFromMode;
+  tokensOut:  FormTokenState[];
+  modeOut:    FarmToMode;
   approving?: FormApprovingState;
 };
 
 const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   balances: ReturnType<typeof useFarmerBalances>;
   beanstalk: BeanstalkReplanted;
+  tokenList: (ERC20Token | NativeToken)[]
 }> = ({
-        values,
-        setFieldValue,
-        balances,
-        beanstalk,
-      }) => {
-  // Hide token in "from" dropdown if it is selected in "to"
-  const fromTokensMap = useTokenMap<ERC20Token | NativeToken>(
-    [
-      useChainConstant(ETH),
-      useChainConstant(BEAN),
-      useChainConstant(USDC)
-    ]
-      .filter((token) => token.address !== values.toTokens[0].token.address)
-  );
-
-  // Hide token in "to" dropdown if it is selected in "from"
-  const toTokensMap = useTokenMap<ERC20Token | NativeToken>(
-    [
-      useChainConstant(ETH),
-      useChainConstant(BEAN),
-      useChainConstant(USDC)
-    ]
-      .filter((token) => token.address !== values.fromTokens[0].token.address)
-  );
-
-  // fromToken
-  const [isFromTokenSelectVisible, showFromTokenSelect, hideFromTokenSelect] = useToggle();
-  // toToken
-  const [isToTokenSelectVisible, showToTokenSelect, hideToTokenSelect] = useToggle();
+  //
+  values,
+  setFieldValue,
+  //
+  balances,
+  beanstalk,
+  tokenList,
+}) => {
+  const [tokenSelect, setTokenSelect] =  useState<null | 'tokensIn' | 'tokensOut'>(null);
 
   /// Derived values
-  const fromState = values.fromTokens[0];
-  const fromToken = fromState.token;
-  const fromTokenBalance = balances[fromToken.address];
-
-  const toState = values.toTokens[0];
-  const toToken = toState.token;
-  const toTokenBalance = balances[toToken.address];
+  // Inputs
+  const stateIn   = values.tokensIn[0];
+  const tokenIn   = stateIn.token;
+  const balanceIn = balances[tokenIn.address];
+  // Outputs
+  const stateOut   = values.tokensOut[0];
+  const tokenOut   = stateOut.token;
+  const balanceOut = balances[tokenOut.address];
 
   ///
-  const handleSelectTokens = useCallback((_tokens: Set<Token>, formTokens: FormTokenState[], fieldName: string) => {
-    const copy = new Set(_tokens);
-    const newValue = formTokens.filter((x) => {
-      copy.delete(x.token);
-      return _tokens.has(x.token);
-    });
-    setFieldValue(fieldName, [
-      ...newValue,
-      ...Array.from(copy).map((_token) => ({
-        token: _token,
-        amount: undefined // balances[_token.address]?.total ||
-      })),
-    ]);
-  }, [setFieldValue]);
-
-  const handleSelectFromTokens = useCallback((_tokens: Set<Token>) => {
-    handleSelectTokens(_tokens, values.fromTokens, 'fromTokens');
-  }, [handleSelectTokens, values.fromTokens]);
-
-  const handleSelectToTokens = useCallback((_tokens: Set<Token>) => {
-    handleSelectTokens(_tokens, values.toTokens, 'toTokens');
-  }, [handleSelectTokens, values.toTokens]);
+  const handleClose = useCallback(() => setTokenSelect(null), []);
+  const handleShow  = useCallback((which: 'tokensIn' | 'tokensOut') => () => setTokenSelect(which), []);
+  const handleSubmit = useCallback((_tokens: Set<Token>) => {
+    if (tokenSelect !== null) {
+      const copy = new Set(_tokens);
+      const newValue = values[tokenSelect].filter((x) => {
+        copy.delete(x.token);
+        return _tokens.has(x.token);
+      });
+      setFieldValue(tokenSelect, [
+        ...newValue,
+        ...Array.from(copy).map((_token) => ({
+          token: _token,
+          amount: undefined
+        })),
+      ]);
+    }
+  }, [setFieldValue, tokenSelect, values]);
 
   const isValid = true;
 
   return (
     <Form autoComplete="off">
       <TokenSelectDialog
-        open={isFromTokenSelectVisible || isToTokenSelectVisible}
-        handleClose={isFromTokenSelectVisible ? hideFromTokenSelect : hideToTokenSelect}
-        handleSubmit={isFromTokenSelectVisible ? handleSelectFromTokens : handleSelectToTokens}
-        selected={isFromTokenSelectVisible ? values.fromTokens : values.toTokens}
+        title={(
+          tokenSelect === 'tokensIn'
+            ? 'Select Input Token'
+            : 'Select Output Token'
+        )}
+        open={tokenSelect !== null}   // 'tokensIn' | 'tokensOut'
+        handleClose={handleClose}     //
+        handleSubmit={handleSubmit}   //
+        selected={tokenSelect !== null ? values[tokenSelect] : []}
         balances={balances}
-        tokenList={isFromTokenSelectVisible ? Object.values(fromTokensMap) : Object.values(toTokensMap)}
+        tokenList={tokenList}
         mode={TokenSelectMode.SINGLE}
       />
-      {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
       <Stack gap={1}>
-        <TokenInputField
-          token={fromToken}
-          balance={fromTokenBalance || ZERO_BN}
-          name="fromTokens.0.amount"
-          // MUI
-          fullWidth
-          InputProps={{
-            endAdornment: (
-              <TokenAdornment
-                token={fromToken}
-                onClick={showFromTokenSelect}
-              />
-            )
-          }}
-        />
-        <Stack gap={0.5}>
-          <DestinationField
-            name="toDestination"
-            label="To"
+        {/* Input */}
+        <>
+          <TokenInputField
+            token={tokenIn}
+            balance={balanceIn || ZERO_BN}
+            name="tokensIn.0.amount"
+            // MUI
+            fullWidth
+            InputProps={{
+              endAdornment: (
+                <TokenAdornment
+                  token={tokenIn}
+                  onClick={handleShow('tokensIn')}
+                />
+              )
+            }}
           />
-        </Stack>
-        {isValid ? (
-          <>
-            <TxnSeparator />
-            <TokenInputField
-              token={toToken}
-              balance={toTokenBalance || ZERO_BN}
-              name="toTokens.0.amount"
-              // MUI
-              fullWidth
-              InputProps={{
-                endAdornment: (
-                  <TokenAdornment
-                    token={toToken}
-                    onClick={showToTokenSelect}
-                  />
-                )
-              }}
+          <Stack gap={0.5}>
+            <DestinationField
+              name="modeIn"
+              label="From"
             />
-            <Stack gap={0.5}>
-              <DestinationField
-                name="fromDestination"
-                label="From"
+          </Stack>
+        </>
+        <TxnSeparator />
+        {/* Output */}
+        <>
+          <TokenInputField
+            token={tokenOut}
+            balance={balanceOut || ZERO_BN}
+            name="tokensOut.0.amount"
+            // MUI
+            fullWidth
+            InputProps={{
+              endAdornment: (
+                <TokenAdornment
+                  token={tokenOut}
+                  onClick={handleShow('tokensOut')}
+                />
+              )
+            }}
+          />
+          <DestinationField
+            name="modeOut"
+            label="to"
+          />
+        </>
+        {/* <Box>
+          <Accordion variant="outlined">
+            <StyledAccordionSummary title="Transaction Details" />
+            <AccordionDetails>
+              <TxnPreview
+                actions={[
+                  {
+                    type: ActionType.BASE,
+                    message: 'Trade!'
+                  },
+                ]}
               />
-            </Stack>
-            <Box>
-              <Accordion variant="outlined">
-                <StyledAccordionSummary title="Transaction Details" />
-                <AccordionDetails>
-                  <TxnPreview
-                    actions={[
-                      {
-                        type: ActionType.BASE,
-                        message: 'Trade!'
-                      },
-                    ]}
-                  />
-                </AccordionDetails>
-              </Accordion>
-            </Box>
-          </>
-        ) : null}
+            </AccordionDetails>
+          </Accordion>
+        </Box> */}
         <SmartSubmitButton
           type="submit"
           variant="contained"
@@ -187,7 +165,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
           size="large"
           disabled={!isValid}
           contract={beanstalk}
-          tokens={values.toTokens.concat(values.fromTokens)}
+          tokens={values.tokensOut.concat(values.tokensIn)}
           mode="auto"
         >
           Trade
@@ -199,32 +177,102 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
 
 // ---------------------------------------------------
 
+const SUPPORTED_TOKENS = [
+  BEAN,
+  ETH,
+  WETH,
+  DAI,
+  USDC,
+  USDT,
+];
+
+// const x = (farm: Farm) => ({
+//   [BEAN[1].address]: {
+//     [ETH[1].address]: [
+//       // WETH -> USDT via tricrypto2 exchange
+//       farm.exchange(
+//         farm.contracts.curve.pools.tricrypto2.address,
+//         farm.contracts.curve.registries.cryptoFactory.address,
+//         getChainConstant(WETH, farm.provider.network.chainId).address,
+//         getChainConstant(USDT, farm.provider.network.chainId).address,
+//         _initialFromMode
+//       ),
+//       // USDT -> BEAN via bean3crv exchange_underlying
+//       farm.exchangeUnderlying(
+//         farm.contracts.curve.pools.beanCrv3.address,
+//         getChainConstant(USDT, farm.provider.network.chainId).address,
+//         getChainConstant(BEAN, farm.provider.network.chainId).address,
+//       ),
+//       ]
+//   },
+//   [ETH[1].address]: {
+//     [BEAN[1].address]: [
+
+//     ]
+//   }
+// });
+
+/**
+ * BEAN + ETH
+ * ---------------
+ * BEAN   -> ETH      exchange_underlying(BEAN, USDT) => exchange(USDT, WETH) => unwrapEth
+ * BEAN   -> WETH     exchange_underlying(BEAN, USDT) => exchange(USDT, WETH)
+ * ETH    -> BEAN     wrapEth => exchange(WETH, USDT) => exchange_underlying(USDT, BEAN)
+ * WETH   -> BEAN     exchange(WETH, USDT) => exchange_underlying(USDT, BEAN)
+ * 
+ * BEAN + Stables
+ * ---------------------
+ * BEAN   -> DAI      exchange_underlying(BEAN, DAI, BEAN_METAPOOL)
+ * BEAN   -> USDT     exchange_underlying(BEAN, USDT, BEAN_METAPOOL)
+ * BEAN   -> USDC     exchange_underlying(BEAN, USDC, BEAN_METAPOOL)
+ * BEAN   -> 3CRV     exchange(BEAN, 3CRV, BEAN_METAPOOL)
+ * DAI    -> BEAN     exchange_underlying(DAI,  BEAN, BEAN_METAPOOL)
+ * USDT   -> BEAN     exchange_underlying(BEAN, USDT, BEAN_METAPOOL)
+ * USDC   -> BEAN     exchange_underlying(BEAN, USDC, BEAN_METAPOOL)
+ * 3CRV   -> BEAN     exchange(3CRV, BEAN, BEAN_METAPOOL)
+ * 
+ * Internal <-> External
+ * ---------------------
+ * TOK-i  -> TOK-e    transferToken(TOK, self, amount, INTERNAL, EXTERNAL)
+ * TOK-e  -> TOK-i    transferToken(TOK, self, amount, EXTERNAL, INTERNAL)
+ * 
+ * Stables
+ * ---------------------
+ * USDC   -> USDT     exchange(USDC, USDT, 3POOL)
+ * ...etc
+ */
+
 const Trade: React.FC<{}> = () => {
   ///
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
 
   ///
+  const getChainToken = useGetChainToken();
+  const Eth           = getChainToken(ETH);
+  const Bean          = getChainToken(BEAN);
+  const tokenMap      = useTokenMap<ERC20Token | NativeToken>(SUPPORTED_TOKENS);
+  const tokenList     = useMemo(() => Object.values(tokenMap), [tokenMap]);
+  
+  ///
   const farmerBalances = useFarmerBalances();
-  const Eth = useChainConstant(ETH);
-  const Bean = useChainConstant(BEAN);
 
   // Form setup
   const initialValues: TradeFormValues = useMemo(() => ({
-    fromTokens: [
+    tokensIn: [
       {
         token: Eth,
         amount: undefined,
       }
     ],
-    toTokens: [
+    modeIn: FarmFromMode.EXTERNAL,
+    tokensOut: [
       {
         token: Bean,
         amount: undefined,
       }
     ],
-    fromDestination: FarmFromMode.INTERNAL,
-    toDestination: FarmToMode.INTERNAL,
+    modeOut: FarmToMode.EXTERNAL,
   }), [Bean, Eth]);
 
   const onSubmit = useCallback(async () => {
@@ -247,6 +295,7 @@ const Trade: React.FC<{}> = () => {
           <TradeForm
             balances={farmerBalances}
             beanstalk={beanstalk}
+            tokenList={tokenList}
             {...formikProps}
           />
         </>

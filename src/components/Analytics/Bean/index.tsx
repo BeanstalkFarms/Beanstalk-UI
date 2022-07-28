@@ -4,8 +4,9 @@ import { Card, Stack, Tab, Tabs } from '@mui/material';
 import useTabs from 'hooks/display/useTabs';
 import TWAP from './TWAP';
 
+const SLUGS = ['price', 'volume', 'liquidity', 'mktcap', 'supply', 'crosses'];
 const BeanAnalytics: React.FC<{}> = () => {
-  const [tab, handleChangeTab] = useTabs();
+  const [tab, handleChangeTab] = useTabs(SLUGS, 'bean');
 
   return (
     <Card>

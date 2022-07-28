@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Card, Container, Stack, Tab, Tabs } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
-// import MarketPlots from 'components/Market/MarketPlots';
 import useTabs from 'hooks/display/useTabs';
 import AllListings from 'components/Market/Tables/AllListings';
 import AllOrders from 'components/Market/Tables/AllOrders';
@@ -9,8 +8,6 @@ import CreateButtons from '../../components/Market/CreateButtons';
 
 const PodMarketPage: React.FC = () => {
   const [tab, handleChangeTab] = useTabs();
-
-  // const 
 
   const content = (
     <>
@@ -29,16 +26,8 @@ const PodMarketPage: React.FC = () => {
             sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }}
             variant="scrollable"
           >
-            <Tab
-              label="Buy Now"
-              // iconPosition="start"
-              // icon={<img src={buyNowIcon} alt="" />}
-            />
-            <Tab
-              label="Sell Now"
-              // icon={<img src={sellNowIcon} alt="" />}
-              // iconPosition="start"
-            />
+            <Tab label="Buy Now" />
+            <Tab label="Sell Now" />
           </Tabs>
         </Box>
         <Box sx={{ px: 1, pb: 1 }}>

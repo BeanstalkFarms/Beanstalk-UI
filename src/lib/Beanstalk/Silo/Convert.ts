@@ -23,6 +23,8 @@ export function selectCratesToConvert(
   let totalStalkRemoved  = new BigNumber(0);
   const deltaCrates : DepositCrate[] = [];
 
+  console.debug('typeof crates', typeof depositedCrates);
+
   /// TODO: handle the LP->LP case when we have two LP pools.
   const sortedCrates = (
     toToken.isLP 
@@ -85,11 +87,11 @@ export function selectCratesToConvert(
 }
 
 export function convert(
-  fromToken: Token,
-  toToken: Token,
-  fromAmount: BigNumber,
-  depositedCrates: DepositCrate[],
-  currentSeason: BigNumber,
+  fromToken:        Token,
+  toToken:          Token,
+  fromAmount:       BigNumber,
+  depositedCrates:  DepositCrate[],
+  currentSeason:    BigNumber,
 ) {
   const {
     deltaAmount,
@@ -105,10 +107,10 @@ export function convert(
   );
   
   return {
-    amount: deltaAmount,
-    bdv:    deltaBDV,
-    stalk:  deltaStalk,
-    seeds:  fromToken.getSeeds(deltaBDV),
+    amount:  deltaAmount,
+    bdv:     deltaBDV,
+    stalk:   deltaStalk,
+    seeds:   fromToken.getSeeds(deltaBDV),
     actions: [],
     deltaCrates,
   };

@@ -70,6 +70,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         </Stack>
       }
       popoverContent={<Stack gap={1}>{poolsContent}</Stack>}
+      hotkey="opt+z, alt+z"
       {...props}
     />
   );

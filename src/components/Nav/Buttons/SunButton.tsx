@@ -29,14 +29,16 @@ const mockSunData = new Array(20).fill(null).map(() => ({
 const MAX_ITEMS = 8;
 
 const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
-  const season = useSeason();
+  /// DATA
+  const season    = useSeason();
   const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>(
     (state) => state._bean.token.price
   );
 
+  /// Theme
   const isTiny = useMediaQuery('(max-width:350px)');
 
-  // Button Content
+  /// Button Content
   const isLoading = season.eq(NEW_BN);
   const startIcon = isTiny ? undefined : (
     <img
@@ -46,6 +48,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
     />
   );
 
+  /// Table Content
   const tableContent = (
     <Stack gap={1}>
       {/* Past Seasons */}
@@ -63,9 +66,9 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         <Box
           display="flex"
           sx={{
-          px: 1, // 1 + 2 from Table Body
-        }}
-      >
+            px: 1, // 1 + 2 from Table Body
+          }}
+        >
           <Grid container alignItems="flex-end">
             <Grid item md={2} xs={2.5}>
               <Typography color="text.primary" variant="bodySmall">
@@ -94,12 +97,14 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
             </Grid>
           </Grid>
         </Box>
+        {/* Upcoming Season */}
         <SeasonCard
           season={new BigNumber(7845)}
           newBeans={new BigNumber(0)}
           newSoil={new BigNumber(0)}
           weather={new BigNumber(5000)}
-      />
+        />
+        {/* Past Seasons */}
         {mockSunData.map((s) => (
           <SeasonCard
             key={s.season.toString()}
@@ -133,6 +138,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       popoverContent={tableContent}
       hideTextOnMobile
       popperWidth="500px"
+      hotkey="opt+x, alt+x"
       {...props}
     />
   );
