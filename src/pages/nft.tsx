@@ -223,12 +223,12 @@ const NFTPage: React.FC = () => {
                 <Tab label={`Winter (${winterNFTs === null ? 0 : winterNFTs?.length})`} />
               </Tabs>
               {tab === 0 && genesisNFTs && !hideGenesis && (
-                <Link underline="none" onClick={mintAllGenesis} sx={{ cursor: 'pointer', position: 'relative', zIndex: 2000 }}>
+                <Link underline="none" onClick={mintAllGenesis} sx={{ cursor: 'pointer', position: 'relative', zIndex: 5 }}>
                   <Typography variant="h4">{isMobile ? 'Mint all' : 'Mint All Genesis'}</Typography>
                 </Link>
               )}
               {tab === 1 && winterNFTs && !hideWinter && (
-                <Link underline="none" onClick={mintAllWinter} sx={{ cursor: 'pointer', position: 'relative', zIndex: 2000 }}>
+                <Link underline="none" onClick={mintAllWinter} sx={{ cursor: 'pointer', position: 'relative', zIndex: 5 }}>
                   <Typography variant="h4">{isMobile ? 'Mint all' : 'Mint All Winter'}</Typography>
                 </Link>
               )}

@@ -14,7 +14,7 @@ import Withdrawals from './Withdrawals';
 import Send from './Send';
 import Convert from './Convert';
 
-const SLUGS = ['deposit', 'convert', 'withdraw', 'claim', 'send'];
+const SLUGS = ['deposit', 'convert', 'transfer', 'withdraw', 'claim'];
 
 /**
  * Show the three primary Silo actions: Deposit, Withdraw, Claim.
@@ -53,13 +53,13 @@ const SiloActions : React.FC<{
           >
             <AlmTab label="Deposit" almHref="https://docs.bean.money/farm/silo#withdraw" />
             <Tab label="Convert" />
+            <Tab label="Transfer" />
             <Tab label="Withdraw" />
             <BadgeTab
               showBadge={hasClaimable}
               label="Claim"
               sx={{ overflow: 'visible' }}
             />
-            <Tab label="Send" />
           </Tabs>
         </Stack>
         <Stack gap={1.5}>
@@ -77,30 +77,30 @@ const SiloActions : React.FC<{
               />
             ) : null}
             {tab === 2 ? (
+              <Send />
+            ) : null}
+            {tab === 3 ? (
               <Withdraw
                 token={props.token}
               />
             ) : null}
-            {tab === 3 ? (
+            {tab === 4 ? (
               <Claim
                 token={props.token}
                 siloBalance={props.siloBalance}
               />
             ) : null}
-            {tab === 4 ? (
-              <Send />
-            ) : null}
           </Box>
         </Stack>
       </Card>
       {/* Tables */}
-      <Box sx={{ display: tab === 0 || tab === 1 || tab === 4 ? 'block' : 'none' }}>
+      <Box sx={{ display: tab === 0 || tab === 1 || tab === 2 ? 'block' : 'none' }}>
         <Deposits
           token={props.token}
           balance={props.siloBalance}
         />
       </Box>
-      <Box sx={{ display: tab === 2 || tab === 3 ? 'block' : 'none' }}>
+      <Box sx={{ display: tab === 3 || tab === 4 ? 'block' : 'none' }}>
         <Withdrawals
           token={props.token}
           balance={props.siloBalance}

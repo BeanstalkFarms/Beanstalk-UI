@@ -1,4 +1,5 @@
 import { LoadingButton } from '@mui/lab';
+import { BeanstalkPalette } from 'components/App/muiTheme';
 import TransactionToast from 'components/Common/TxnToast';
 import { BeanstalkReplanted } from 'generated';
 import { useSigner } from 'hooks/ledger/useSigner';
@@ -57,6 +58,7 @@ const CancelListing : React.FC<{ id: string }> = ({ id }) => {
       loading={loading}
       disabled={loading}
       fullWidth
+      sx={{ '&:hover': { backgroundColor: `${BeanstalkPalette.hoverRed} !important` } }}
     >
       Cancel
     </LoadingButton>

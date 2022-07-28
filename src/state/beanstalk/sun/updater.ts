@@ -65,7 +65,7 @@ const SunUpdater = () => {
     }
   }, [dispatch, awaiting, next]);
 
-  useTimedRefresh(fetch, 5000, awaiting === true);
+  useTimedRefresh(fetch, 2500, awaiting === true);
 
   // Fetch when chain changes
   useEffect(() => {

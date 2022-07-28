@@ -27,6 +27,7 @@ export enum ClaimRewardsAction {
 }
 
 export type ChainableFunctionResult = {
+  name: string;
   amountOut: ethers.BigNumber;
   value?: ethers.BigNumber;
   data?: any;
@@ -270,6 +271,7 @@ export default class Farm {
       _amountInStep
     });
     return {
+      name: 'wrapEth',
       amountOut: _amountInStep, // amountInStep should be an amount of ETH.
       value:     _amountInStep, // need to use this amount in the txn.
       encode: (_: ethers.BigNumber) => (
@@ -368,6 +370,7 @@ export default class Farm {
     });
 
     return {
+      name: 'exchange',
       amountOut,
       encode: (minAmountOut: ethers.BigNumber) => (
         this.contracts.beanstalk.interface.encodeFunctionData('exchange', [
@@ -382,7 +385,14 @@ export default class Farm {
         ])
       ),
       decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('exchange', data),
-      data: {}
+      data: {
+        pool: _pool,
+        registry: _registry,
+        tokenIn,
+        tokenOut,
+        fromMode: _fromMode,
+        toMode: _toMode,
+      }
     };
   }
 
@@ -441,6 +451,7 @@ export default class Farm {
     });
 
     return {
+      name: 'exchangeUnderlying',
       amountOut,
       encode: (minAmountOut: ethers.BigNumber) => (
         this.contracts.beanstalk.interface.encodeFunctionData('exchangeUnderlying', [
@@ -454,7 +465,13 @@ export default class Farm {
         ])
       ),
       decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('exchangeUnderlying', data),
-      data: {}
+      data: {
+        pool: _pool,
+        tokenIn,
+        tokenOut,
+        fromMode: _fromMode,
+        toMode: _toMode,
+      }
     };
   }
 
@@ -532,6 +549,7 @@ export default class Farm {
       });
       
       return {
+        name: 'addLiquidity',
         amountOut,
         encode: (minAmountOut: ethers.BigNumber) => (
           this.contracts.beanstalk.interface.encodeFunctionData('addLiquidity', [
@@ -544,7 +562,12 @@ export default class Farm {
           ])
         ),
         decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('addLiquidity', data),
-        data: {}
+        data: {
+          pool: _pool,
+          registry: _registry,
+          fromMode: _fromMode,
+          toMode: _toMode,
+        }
       };
     };
   }
@@ -607,6 +630,7 @@ export default class Farm {
       console.debug(`[step@removeLiquidity] amountOut=${amountOut.toString()}`);
 
       return {
+        name: 'removeLiquidityOneToken',
         amountOut,
         encode: (minAmountOut: ethers.BigNumber) => (
           this.contracts.beanstalk.interface.encodeFunctionData('removeLiquidityOneToken', [
