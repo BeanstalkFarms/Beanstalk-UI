@@ -16,7 +16,7 @@ const basicCell = (params : GridRenderCellParams) => <Typography>{params.formatt
 const COLUMNS = {
   ///
   /// Generics
-  /// 
+  ///
   season: {
     field: 'season',
     flex: 1,
@@ -30,7 +30,7 @@ const COLUMNS = {
 
   ///
   /// Silo
-  /// 
+  ///
   seeds: {
     field: 'seeds',
     flex: 1,
@@ -42,14 +42,15 @@ const COLUMNS = {
     sortable: false,
   } as GridColumns[number],
 
-  /// 
+  ///
   /// Market
-  /// 
+  ///
   numPods: {
     field: 'totalAmount',
     headerName: 'Number of Pods',
+    type: 'number',
     flex: 1,
-    disableColumnMenu: true,
+    // disableColumnMenu: true,
     align: 'left',
     headerAlign: 'left',
     renderCell: (params: GridRenderCellParams) => (
@@ -85,7 +86,7 @@ const COLUMNS = {
               height: '25px',
               p: 1,
               pl: 1.1,
-              borderRadius: '50%' 
+              borderRadius: '50%'
             }}>
             <TokenIcon token={PODS} />
           </Stack>
@@ -119,7 +120,7 @@ const COLUMNS = {
               height: '25px',
               p: 1,
               pl: 1.1,
-              borderRadius: '50%' 
+              borderRadius: '50%'
             }}>
             <TokenIcon token={PODS} />
           </Stack>
@@ -227,27 +228,28 @@ const COLUMNS = {
     type: 'number',
     align: 'left',
     headerAlign: 'left',
-    // valueParser: (value: number) => (
-    //   value - harvestableIndex.toNumber()
-    // ),
+    valueGetter: (params: GridRenderCellParams) => (
+      params.value - harvestableIndex.toNumber()
+    ),
     renderCell: (params: GridRenderCellParams) => (
       <Typography>
-        {displayFullBN((params.value as BigNumber).minus(harvestableIndex), 0)}
+        {displayFullBN(new BigNumber(params.value), 0)}
       </Typography>
     ),
   } as GridColumns[number]),
-
   maxPlaceInLine: {
     field: 'maxPlaceInLine',
     headerName: 'Place In Line',
+    type: 'number',
     flex: 1,
-    valueParser: (params: GridValueFormatterParams) => (
-      /// FIXME: may have roundoff errors
+    align: 'left',
+    headerAlign: 'left',
+    valueGetter: (params: GridRenderCellParams) => (
       (params.value as BigNumber).toNumber()
     ),
     renderCell: (params: GridRenderCellParams) => (
       <Typography>
-        0 - {displayFullBN((params.value as BigNumber), 0)}
+        0 - {displayFullBN(new BigNumber(params.value), 0)}
       </Typography>
     ),
   } as GridColumns[number],
@@ -257,6 +259,8 @@ const COLUMNS = {
     field: 'maxHarvestableIndex',
     headerName: 'Expires in',
     flex: 1,
+    value: 'number',
+    filterable: false, // TODO: make this filterable
     renderCell: (params: GridRenderCellParams) => {
       const expiresIn = MaxBN((params.value as BigNumber).minus(harvestableIndex), ZERO_BN);
       const tip = expiresIn?.gt(0) ? (
