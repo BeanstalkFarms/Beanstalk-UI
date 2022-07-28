@@ -14,6 +14,7 @@ import MainnetBlur from 'components/Common/ZeroState/MainnetBlur';
 import Stat from 'components/Common/Stat';
 import useTabs from 'hooks/display/useTabs';
 import WalletButton from '../Common/Connection/WalletButton';
+import useAccount from '../../hooks/ledger/useAccount';
 
 // ------------------------------------------------
 
@@ -26,6 +27,7 @@ type TabData = {
 // ------------------------------------------------
 
 const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
+  const account = useAccount();
   const [displayValue, setDisplayValue] = useState(current);
   const handleCursor = useCallback(
     (ds?: DataPoint[]) => {
@@ -49,12 +51,14 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
         />
       </Box>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
-        <MainnetBlur>
-          <Stack justifyContent="center" alignItems="center" gap={1}>
-            <Typography variant="body1" color="gray">Your Silo Deposits will appear here.</Typography>
-            <WalletButton color="primary" sx={{ height: 45 }} />
-          </Stack>
-        </MainnetBlur>
+        {!account && (
+          <MainnetBlur>
+            <Stack justifyContent="center" alignItems="center" gap={1}>
+              <Typography variant="body1" color="gray">Your Silo Deposits will appear here.</Typography>
+              <WalletButton color="primary" sx={{ height: 45 }} />
+            </Stack>
+          </MainnetBlur>
+        )}
         <LineChart series={series} onCursor={handleCursor} />
       </Box>
     </>
