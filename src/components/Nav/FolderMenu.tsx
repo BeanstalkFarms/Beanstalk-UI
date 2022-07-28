@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   Box,
   Button,
@@ -12,6 +12,7 @@ import { useTheme } from '@mui/material/styles';
 import DropdownIcon from 'components/Common/DropdownIcon';
 import useToggle from 'hooks/display/useToggle';
 import useAnchor from 'hooks/display/useAnchor';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 /**
  * Show a "Folder". A folder is a button that shows a popup;
@@ -29,6 +30,7 @@ const FolderMenu: React.FC<{
   drawerContent: JSX.Element;
   hideTextOnMobile?: boolean;
   popperWidth?: string;
+  hotkey: string;
 } & ButtonProps> = ({
   startIcon,
   buttonContent,
@@ -36,6 +38,7 @@ const FolderMenu: React.FC<{
   drawerContent,
   hideTextOnMobile,
   popperWidth,
+  hotkey,
   ...buttonProps
 }) => {
   // Setup
@@ -52,6 +55,18 @@ const FolderMenu: React.FC<{
   // Handlers
   const onClickButton = isMobile ? openDrawer : toggleAnchor;
 
+  const button = useRef<HTMLButtonElement | null>(null);
+
+  // Hotkeys
+  useHotkeys(hotkey || '', () => {
+    console.debug('toggle');
+    if (isMobile) {
+      drawerOpen ? closeDrawer() : openDrawer();
+    } else {
+      toggleAnchor(anchorEl ? undefined : { currentTarget: button.current });
+    }
+  }, { }, [anchorEl, drawerOpen, isMobile]);
+
   return (
     <>
       {/* Mobile: Drawer */}
@@ -65,6 +80,7 @@ const FolderMenu: React.FC<{
           endIcon={<DropdownIcon open={popoverOpen || drawerOpen} />}
           onClick={onClickButton}
           disableRipple
+          ref={(r) => { button.current = r; }}
           {...buttonProps}
           sx={{
             // Fully rounded by default; when open, remove
