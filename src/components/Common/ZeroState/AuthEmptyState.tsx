@@ -11,6 +11,11 @@ import WalletButton from '../Connection/WalletButton';
 const AuthEmptyState: React.FC<{
   /** Card title */
   title?: string;
+  /**
+   * Overrides default message
+   * when wallet is connected.
+   */
+  message?: string;
   /** Loading / connection state */
   state?: 'disconnected' | 'loading' | 'ready';
   /**
@@ -21,6 +26,7 @@ const AuthEmptyState: React.FC<{
   option?: 'button' | 'message'
 } & StackProps> = ({
   title,
+  message,
   state,
   option,
   children,
@@ -34,7 +40,8 @@ const AuthEmptyState: React.FC<{
   } else {
     content = (
       <>
-        {title && <Typography variant="body1" color="gray">Your {title} will appear here.</Typography>}
+        {title && !message && <Typography variant="body1" color="gray">Your {title} will appear here.</Typography>}
+        {message && <Typography variant="body1" color="gray">{message}</Typography>}
         {children}
       </>
     );

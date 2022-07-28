@@ -12,7 +12,7 @@ import TablePagination from '../../Common/TablePagination';
 const components = {
   NoRowsOverlay() {
     return (
-      <AuthEmptyState title="You haven't created any Orders.">
+      <AuthEmptyState message="You haven't created any Orders.">
         <Button component={Link} to="/market/create" variant="outlined" color="primary">
           New Order
         </Button>
