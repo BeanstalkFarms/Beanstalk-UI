@@ -1,4 +1,4 @@
-import { CircularProgress, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, CircularProgress, Stack, Tooltip, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { Token } from 'classes';
 import React from 'react';
@@ -21,15 +21,18 @@ const TokenOutputField : React.FC<{
   /** Display a loading spinner */
   isLoading?: boolean;
   /** */
-  valueTooltip?: string | JSX.Element;
+  amountTooltip?: string | JSX.Element;
+  /** Override the end adornment section */
+  override?: any;
 }> = ({
   token,
   amount,
   value,
   modifier,
-  valueTooltip = '',
+  amountTooltip = '',
   isDelta = true,
   isLoading = false,
+  override
 }) => {
   const isZero     = amount.eq(0);
   const isNegative = amount.lt(0);
@@ -37,7 +40,7 @@ const TokenOutputField : React.FC<{
   return (
     <OutputField isNegative={isNegative}>
       {!isLoading ? (
-        <Tooltip title={valueTooltip}>
+        <Tooltip title={amountTooltip}>
           <Typography display="inline" variant="bodyLarge">
             {prefix}{displayFullBN(amount.abs(), token.displayDecimals, token.displayDecimals)}
             {value && (
@@ -48,19 +51,21 @@ const TokenOutputField : React.FC<{
       ) : (
         <CircularProgress size={16} thickness={5} />
       )}
-      <Stack direction="row" alignItems="center" gap={0.5}>
-        {token.logo && (
-          <TokenIcon
-            token={token}
-            style={{ 
-              height: IconSize.small,
-            }}
-          />
-        )}
-        <Typography variant="bodyMedium">
-          {modifier && `${modifier} `}{token.symbol}
-        </Typography>
-      </Stack>
+      {override === undefined ? (
+        <Stack direction="row" alignItems="center" gap={0.5}>
+          {token.logo && (
+            <TokenIcon
+              token={token}
+              style={{
+                height: IconSize.small,
+              }}
+            />
+          )}
+          <Typography variant="bodyMedium">
+            {modifier && `${modifier} `}{token.symbol}
+          </Typography>
+        </Stack>
+      ) : <Box>{override}</Box>}
     </OutputField>
   );
 };

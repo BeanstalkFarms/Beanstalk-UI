@@ -144,7 +144,7 @@ const DepositForm : React.FC<
                   <TokenOutputField
                     token={STALK}
                     amount={stalk}
-                    valueTooltip={(
+                    amountTooltip={(
                       <>
                         1 {whitelistedToken.symbol} &rarr; {displayFullBN(amountToBdv(new BigNumber(1)))} BDV<br />
                         1 BDV = {whitelistedToken.getStalk().toString()} STALK
@@ -157,7 +157,7 @@ const DepositForm : React.FC<
                   <TokenOutputField
                     token={SEEDS}
                     amount={seeds}
-                    valueTooltip={(
+                    amountTooltip={(
                       <>
                         1 {whitelistedToken.symbol} &rarr; {displayFullBN(amountToBdv(new BigNumber(1)))} BDV<br />
                         1 BDV = {whitelistedToken.getSeeds().toString()} SEEDS
@@ -259,7 +259,7 @@ const Deposit : React.FC<{
   const amountToBdv = useCallback((amount: BigNumber) => bdvPerToken.times(amount), [bdvPerToken]);
 
   /// Farmer
-  const balances = useFarmerBalances();
+  const balances                = useFarmerBalances();
   const [refetchFarmerSilo]     = useFetchFarmerSilo();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
 

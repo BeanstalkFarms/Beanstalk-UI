@@ -171,8 +171,8 @@ const TokenInput: React.FC<
     e.target.blur();
   }, []);
 
-  // PROBLEM:
-  // BigNumber('0') == BigNumber('0.0').
+  // PROBLEM: BigNumber('0') == BigNumber('0.0').
+  // ------------------------------------------
   // If a user were to try to type in a small number (0.001 ETH for example),
   // using BigNumber to track the state of the input wouldn't work; when
   // I try to go from 0 to 0.0 the input value stays as just 0.
@@ -207,6 +207,7 @@ const TokenInput: React.FC<
         type="text"
         placeholder={placeholder || '0'}
         disabled={isInputDisabled}
+        fullWidth // default to fullWidth
         {...textFieldProps}
         // Override the following props.
         onWheel={handleWheel}
@@ -217,7 +218,7 @@ const TokenInput: React.FC<
       />
       {/* Bottom Adornment */}
       {(balance && !hideBalance || quote) && (
-        <Stack direction="row" alignItems="center" gap={0.5} px={0.5} pt={0.5}>
+        <Stack direction="row" alignItems="center" gap={0.5} px={0.5} pt={0.75}>
           {/* Leaving the Stack rendered regardless of whether `quote` is defined
             * ensures that the Balance section gets flexed to the right side of
             * the input. */}

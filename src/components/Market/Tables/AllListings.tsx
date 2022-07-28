@@ -31,6 +31,7 @@ const AllListings : React.FC<{}> = () => {
 
   /// Data Grid setup
   const columns: DataGridProps['columns'] = [
+    COLUMNS.listingId,
     // index
     COLUMNS.plotIndex(harvestableIndex),
     // pricePerPod

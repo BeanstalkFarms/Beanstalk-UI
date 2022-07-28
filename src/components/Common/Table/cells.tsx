@@ -7,12 +7,11 @@ import BigNumber from 'bignumber.js';
 import { BEAN, PODS } from 'constants/tokens';
 import { ZERO_BN } from 'constants/index';
 import { PodListing, PodOrder } from 'state/farmer/market';
+import { BeanstalkPalette } from 'components/App/muiTheme';
 import TokenIcon from '../TokenIcon';
 import AddressIcon from '../AddressIcon';
 
 const basicCell = (params : GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
-
-/*  = */
 
 const COLUMNS = {
   ///
@@ -65,12 +64,80 @@ const COLUMNS = {
     ),
   } as GridColumns[number],
 
+  listingId: {
+    field: 'id',
+    headerName: 'Listing',
+    flex: 1,
+    disableColumnMenu: true,
+    align: 'left',
+    headerAlign: 'left',
+    renderCell: (params: GridRenderCellParams<any, PodListing>) => (
+      <Tooltip
+        placement="right"
+        title="">
+        <Stack direction="row" gap={1} alignItems="center">
+          <Stack
+            alignItems="center"
+            justifyContent="center"
+            sx={{
+              backgroundColor: BeanstalkPalette.mediumRed,
+              width: '25px',
+              height: '25px',
+              p: 1,
+              pl: 1.1,
+              borderRadius: '50%' 
+            }}>
+            <TokenIcon token={PODS} />
+          </Stack>
+          <Typography>
+            #{params.row.id}
+          </Typography>
+        </Stack>
+      </Tooltip>
+    )
+  } as GridColumns[number],
+
+  orderId: {
+    field: 'id',
+    headerName: 'Order',
+    flex: 1,
+    disableColumnMenu: true,
+    align: 'left',
+    headerAlign: 'left',
+    renderCell: (params: GridRenderCellParams<any, PodListing>) => (
+      <Tooltip
+        placement="right"
+        title="">
+        <Stack direction="row" gap={1} alignItems="center">
+          {/* FIXME: standardize */}
+          <Stack
+            alignItems="center"
+            justifyContent="center"
+            sx={{
+              backgroundColor: BeanstalkPalette.mediumGreen,
+              width: '25px',
+              height: '25px',
+              p: 1,
+              pl: 1.1,
+              borderRadius: '50%' 
+            }}>
+            <TokenIcon token={PODS} />
+          </Stack>
+          <Typography>
+            {params.row.id.substring(0, 8)}
+          </Typography>
+        </Stack>
+      </Tooltip>
+    )
+  } as GridColumns[number],
+
   ///
   numPodsActive: {
     field: 'remainingAmount',
     headerName: 'Number of Pods',
     flex: 1,
-    disableColumnMenu: true,
+    type: 'number',
+    // disableColumnMenu: true,
     align: 'left',
     headerAlign: 'left',
     renderCell: (params: GridRenderCellParams<any, PodListing>) => (
@@ -119,6 +186,7 @@ const COLUMNS = {
   pricePerPod: {
     field: 'pricePerPod',
     headerName: 'Price per Pod',
+    type: 'number',
     align: 'left',
     headerAlign: 'left',
     flex: 1,
@@ -127,7 +195,7 @@ const COLUMNS = {
         placement="right"
         title={(
           <>
-            Cost: {displayFullBN((params.value as BigNumber).times(params.row.remainingAmount), BEAN[1].displayDecimals)} BEAN
+            Total Cost: {displayFullBN((params.value as BigNumber).times(params.row.remainingAmount), BEAN[1].displayDecimals)} BEAN
           </>
         )}>
         <Stack direction="row" gap={0.3} alignItems="center">
@@ -156,10 +224,12 @@ const COLUMNS = {
     field: 'index',
     headerName: 'Place In Line',
     flex: 1,
-    valueParser: (params: GridValueFormatterParams) => (
-      /// FIXME: may have roundoff errors
-      (params.value as BigNumber).toNumber()
-    ),
+    type: 'number',
+    align: 'left',
+    headerAlign: 'left',
+    // valueParser: (value: number) => (
+    //   value - harvestableIndex.toNumber()
+    // ),
     renderCell: (params: GridRenderCellParams) => (
       <Typography>
         {displayFullBN((params.value as BigNumber).minus(harvestableIndex), 0)}

@@ -2,13 +2,20 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Accordion, AccordionDetails, Box, Button, Divider, Stack, Tooltip, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import { LoadingButton } from '@mui/lab';
 import { Token } from 'classes';
 import { SEEDS, STALK } from 'constants/tokens';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
-import { FormState, TxnPreview, TokenOutputField, TokenInputField, TokenAdornment, TxnSeparator } from 'components/Common/Form';
+import {
+  FormState,
+  TxnPreview,
+  TokenOutputField,
+  TokenInputField,
+  TokenAdornment,
+  TxnSeparator,
+  SmartSubmitButton
+} from 'components/Common/Form';
 import Beanstalk from 'lib/Beanstalk';
 import useSeason from 'hooks/useSeason';
 import { FarmerSilo } from 'state/farmer/silo';
@@ -78,20 +85,23 @@ const WithdrawForm : React.FC<
   const [confirming, setConfirming] = useState(false);
   const [allowConfirm, setAllowConfirm] = useState(false);
   const [fill, setFill] = useState('');
+
   const onClose = useCallback(() => {
     setConfirming(false);
     setAllowConfirm(false);
     setFill('');
   }, []);
-  const onOpen  = useCallback(() => {
-    setConfirming(true);
-    setTimeout(() => {
-      setFill('fill');
-    }, 0);
-    setTimeout(() => {
-      setAllowConfirm(true);
-    }, CONFIRM_DELAY);
-  }, []);
+
+  // const onOpen  = useCallback(() => {
+  //   setConfirming(true);
+  //   setTimeout(() => {
+  //     setFill('fill');
+  //   }, 0);
+  //   setTimeout(() => {
+  //     setAllowConfirm(true);
+  //   }, CONFIRM_DELAY);
+  // }, []);
+
   const onSubmit = useCallback(() => {
     submitForm();
     onClose();
@@ -116,7 +126,7 @@ const WithdrawForm : React.FC<
           <TokenOutputField
             token={STALK}
             amount={withdrawResult.stalk}
-            valueTooltip={(
+            amountTooltip={(
               <>
                 <div>Withdrawing from {withdrawResult.deltaCrates.length} Deposit{withdrawResult.deltaCrates.length === 1 ? '' : 's'}:</div>
                 <Divider sx={{ opacity: 0.2, my: 1 }} />
@@ -227,17 +237,18 @@ const WithdrawForm : React.FC<
               </Box>
             </Stack>
           ) : null}
-          <LoadingButton
+          <SmartSubmitButton
+            loading={isSubmitting}
+            disabled={!isReady || isSubmitting}
+            type="submit"
             variant="contained"
             color="primary"
-            loading={isSubmitting}
-            onClick={onOpen}
-            disabled={!isReady || isSubmitting || isMainnet}
             size="large"
-            fullWidth
+            tokens={[]}
+            mode="auto"
           >
             Withdraw
-          </LoadingButton>
+          </SmartSubmitButton>
         </Stack>
       </Form>
     </Tooltip>

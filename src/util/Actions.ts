@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
+import { FarmToMode } from 'lib/Beanstalk/Farm';
 import { displayFullBN, displayTokenAmount } from 'util/Tokens';
 import { BEAN, PODS } from '../constants/tokens';
 
@@ -100,6 +101,7 @@ export type FieldHarvestAction = {
 export type ReceiveBeansAction = {
   type: ActionType.RECEIVE_BEANS;
   amount: BigNumber;
+  destination?: FarmToMode;
 }
 export type SendPodsAction = {
   type: ActionType.SEND_PODS;
@@ -181,7 +183,12 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.HARVEST:
       return `Harvest ${displayFullBN(a.amount, PODS.decimals)} Harvestable Pods.`;
     case ActionType.RECEIVE_BEANS:
-      return `Receive ${displayFullBN(a.amount, BEAN[1].decimals)} Beans.`;
+      return `Receive ${displayFullBN(a.amount, BEAN[1].decimals)} Beans${
+        a.destination
+          ? a.destination === FarmToMode.EXTERNAL
+            ? ' to your Circulating Balance' 
+            : ' to your Farm Balance' 
+          : ''}.`;
     case ActionType.SEND_PODS:
       return `Send ${displayTokenAmount(a.amount, PODS)} to ${a.address}.`;
 

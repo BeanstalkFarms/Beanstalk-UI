@@ -6,9 +6,9 @@ query AllPodListings(
   podListings(
     first: $first,
   	where: {
-      status_in: ["active", "partial"],
+      status_in: ["active"],
       maxHarvestableIndex_gt: $maxHarvestableIndex,
-      # amountRemaining_gt: "10",  # = 0.000010 Pods. hides dust pods.
+      remainingAmount_gt: "10",  # = 0.000010 Pods. hides dust pods.
     },
     orderBy: index,     # index of the listed plot
     orderDirection: asc # start from earliest listings

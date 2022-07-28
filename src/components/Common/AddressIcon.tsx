@@ -3,6 +3,7 @@ import { BEANSTALK_ADDRESSES } from 'constants/index';
 import { BoxProps } from '@mui/material';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import useAccount from 'hooks/ledger/useAccount';
+import { IconSize } from 'components/App/muiTheme';
 
 const FALLBACK_ADDRESS = BEANSTALK_ADDRESSES[1];
 
@@ -10,7 +11,7 @@ const AddressIcon : React.FC<BoxProps & {
   size?: number;
   address?: string;
 }> = ({
-  size = 25,
+  size = IconSize.medium,
   address,
 }) => {
   const account = useAccount();

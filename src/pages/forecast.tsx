@@ -11,14 +11,11 @@ import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import PageHeader from 'components/Common/PageHeader';
 import LiquidityOverTime from 'components/Forecast/LiquidityOverTime';
-import useChainId from 'hooks/useChain';
 import PodRate from 'components/Analytics/Field/PodRate';
 import TWAP from 'components/Analytics/Bean/TWAP';
 import LiquidityByState from '../components/Forecast/LiquidityByState';
 
 const ForecastPage: React.FC = () => {
-  const chainId = useChainId();
-
   // Data
   const balances = useSelector<AppState, AppState['_beanstalk']['silo']['balances']>((state) => state._beanstalk.silo.balances);
 

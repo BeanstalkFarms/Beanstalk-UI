@@ -44,6 +44,7 @@ import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
 import IconWrapper from '../../Common/IconWrapper';
+import TokenIcon from '../../Common/TokenIcon';
 
 type SowFormValues = FormState & {
   settings: {
@@ -63,6 +64,7 @@ const SowForm : React.FC<
     farm: Farm;
   }
 > = ({
+  // Formik
   values,
   setFieldValue,
   //
@@ -75,7 +77,7 @@ const SowForm : React.FC<
 }) => {
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
 
-  ///
+  /// Chain
   const getChainToken = useGetChainToken();
   const Bean          = getChainToken(BEAN);
   const Eth           = getChainToken<NativeToken>(ETH);
@@ -84,27 +86,30 @@ const SowForm : React.FC<
 
   ///
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
-  const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>((state) => state._bean.token.price);
+  const beanPrice      = useSelector<AppState, AppState['_bean']['token']['price']>((state) => state._bean.token.price);
 
-  /// Extract values from form state
+  /// Derived
   const tokenIn   = values.tokens[0].token;     // converting from token
-  const amount    = values.tokens[0].amount;    // amount of from token
+  const amountIn  = values.tokens[0].amount;    // amount of from token
   const tokenOut  = Bean;                       // converting to token
   const amountOut = values.tokens[0].amountOut; // amount of to token
   const maxAmountIn    = values.maxAmountIn;
   const tokenInBalance = balances[tokenIn.address];
-  // const isQuoting = values.tokens[0].quoting || false;
 
-  ///
+  /// Calculations
   const hasSoil = soil.gt(0);
-  const beans = tokenIn === Bean 
-    ? amount  || ZERO_BN
+  const beans   = (tokenIn === Bean)
+    ? amountIn  || ZERO_BN
     : amountOut || ZERO_BN;
   const isSubmittable = hasSoil && beans?.gt(0);
-  const numPods = beans.multipliedBy(weather.div(100).plus(1));
+  const numPods       = beans.multipliedBy(weather.div(100).plus(1));
   const podLineLength = beanstalkField.podIndex.minus(beanstalkField.harvestableIndex);
 
-  //
+  const maxAmountUsed = (amountIn && maxAmountIn) 
+    ? amountIn.div(maxAmountIn) 
+    : null;
+
+  /// Token select
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
     // If the user has typed some existing values in,
     // save them. Add new tokens to the end of the list.
@@ -120,6 +125,7 @@ const SowForm : React.FC<
     ]);
   }, [values.tokens, setFieldValue]);
 
+  /// FIXME: standardized `maxAmountIn` approach?
   /// When `tokenIn` or `tokenOut` changes, refresh the
   /// max amount that the user can input of `tokenIn`.
   useEffect(() => {
@@ -129,7 +135,7 @@ const SowForm : React.FC<
           /// 1 SOIL is consumed by 1 BEAN
           setFieldValue('maxAmountIn', soil);
         } else if (tokenIn === Eth || tokenIn === Weth) {
-          /// Estimate how many ETH it will take to buy `soil` BEAN. 
+          /// Estimate how many ETH it will take to buy `soil` BEAN.
           /// TODO: across different forms of `tokenIn`.
           /// This (obviously) only works for Eth and Weth.
           const estimate = await Farm.estimate(
@@ -140,7 +146,7 @@ const SowForm : React.FC<
           setFieldValue(
             'maxAmountIn',
             toTokenUnitsBN(
-              estimate.amountOut.toString(), 
+              estimate.amountOut.toString(),
               tokenIn.decimals
             ),
           );
@@ -152,8 +158,6 @@ const SowForm : React.FC<
       }
     })();
   }, [Bean, Eth, Weth, beanstalk, hasSoil, farm, setFieldValue, soil, tokenIn, tokenOut]);
-
-  const maxAmountUsed = (amount && maxAmountIn) ? amount.div(maxAmountIn) : null;
 
   return (
     <Form autoComplete="off">
@@ -167,13 +171,15 @@ const SowForm : React.FC<
         mode={TokenSelectMode.SINGLE}
       />
       <Stack gap={1}>
-        {/* <div>Soil: {soil.toString()} Max amount in: {values.maxAmountIn?.toString() || 'none'}</div> */}
         <TokenQuoteProvider
           key="tokens.0"
           name="tokens.0"
           tokenOut={Bean}
           disabled={!hasSoil || !values.maxAmountIn}
-          max={MinBN(values.maxAmountIn || ZERO_BN, tokenInBalance?.total || ZERO_BN)}
+          max={MinBN(
+            values.maxAmountIn || ZERO_BN,
+            tokenInBalance?.total || ZERO_BN
+          )}
           balance={tokenInBalance || undefined}
           state={values.tokens[0]}
           showTokenSelect={showTokenSelect}
@@ -189,13 +195,23 @@ const SowForm : React.FC<
         {isSubmittable ? (
           <>
             <TxnSeparator />
-            <Stack direction="row" justifyContent="space-between" sx={{ p: 1 }}>
-              <Typography variant="body1">Place in Pod Line:</Typography>
-              <Typography variant="body1">{displayBN(podLineLength)}</Typography>
-            </Stack>
             <TokenOutputField
               token={PODS}
               amount={numPods}
+              override={(
+                <Stack direction="row" alignItems="center" gap={0.5}>
+                  <TokenIcon
+                    token={PODS}
+                    style={{
+                      height: IconSize.small,
+                    }}
+                  />
+                  <Typography variant="bodyMedium">
+                    {PODS.symbol} @ {displayBN(podLineLength)}
+                  </Typography>
+
+                </Stack>
+              )}
             />
             <Box
               sx={{
@@ -227,7 +243,7 @@ const SowForm : React.FC<
                         beanAmount: beans,
                         beanPrice: beanPrice,
                         token: tokenIn,
-                        tokenAmount: amount || ZERO_BN
+                        tokenAmount: amountIn || ZERO_BN
                       },
                       {
                         type: ActionType.BURN_BEANS,

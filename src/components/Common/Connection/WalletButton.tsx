@@ -47,7 +47,6 @@ const WalletButton: React.FC<ButtonProps> = ({ ...props }) => {
   // Theme
   const theme = useTheme();
   const isMedium = useMediaQuery(theme.breakpoints.down('md')); // trim additional account text
-  const isTiny = useMediaQuery('(max-width:380px)'); //
 
   // Menu
   const [menuAnchor, toggleMenuAnchor] = useAnchor();

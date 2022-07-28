@@ -21,7 +21,11 @@ const PillRow : React.FC<{
     direction="row"
     justifyContent="space-between"
     alignItems="center"
-    sx={{ ml: 0.5, py: 1, ...sx }}
+    sx={{
+      ml: 0.5,
+      // py: 1,
+      ...sx
+    }}
     {...props}
   >
     <Tooltip title={tooltip}>
@@ -33,7 +37,7 @@ const PillRow : React.FC<{
       variant="contained"
       onClick={onClick}
       color="light"
-      sx={{ px: 0.5 }}
+      sx={{ px: 0.5, height: 'auto' }}
     >
       <Stack direction="row" gap={0.5} alignItems="center">
         {children}

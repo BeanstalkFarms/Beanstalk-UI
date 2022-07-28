@@ -2,15 +2,27 @@ import React, { useCallback, useMemo } from 'react';
 import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import COLUMNS from 'components/Common/Table/cells';
+import { Button } from '@mui/material';
 import MarketBaseTable from './Base';
-import NoRowsOverlay from '../../Common/NoRowsOverlay';
-import useAccount from '../../../hooks/ledger/useAccount';
+import AuthEmptyState from '../../Common/ZeroState/AuthEmptyState';
+import TablePagination from '../../Common/TablePagination';
+
+const components = {
+  NoRowsOverlay() {
+    return (
+      <AuthEmptyState title="You haven't created any Listings.">
+        <Button component={Link} to="/market/create" variant="outlined" color="primary">
+          New Listing
+        </Button>
+      </AuthEmptyState>
+    );
+  },
+  Pagination: TablePagination,
+};
 
 const MyListingsTable : React.FC<{}> = () => {
-  const account = useAccount();
-  const authState = !account ? 'disconnected' : 'ready';
   /// Data
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
   const listings       = useSelector<AppState, AppState['_farmer']['market']['listings']>((state) => state._farmer.market.listings);
@@ -24,8 +36,7 @@ const MyListingsTable : React.FC<{}> = () => {
 
   /// Data Grid setup
   const columns: DataGridProps['columns'] = [
-    // COLUMNS.connectedAccount,
-    // // COLUMNS.status(beanstalkField.harvestableIndex),
+    COLUMNS.listingId,
     COLUMNS.plotIndex(beanstalkField.harvestableIndex),
     COLUMNS.pricePerPod,
     COLUMNS.numPodsActive,
@@ -40,13 +51,8 @@ const MyListingsTable : React.FC<{}> = () => {
       rows={rows}
       maxRows={8}
       onRowClick={handleClick}
-      components={{
-        NoRowsOverlay() {
-          return (
-            <NoRowsOverlay title="Listings" state={authState} />
-          );
-        },
-      }}
+      disableVirtualization={rows.length === 0}
+      components={components}
     />
   );
 };

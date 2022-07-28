@@ -5,6 +5,7 @@ import PageHeader from 'components/Common/PageHeader';
 import RemainingFertilizer from 'components/Barn/RemainingFertilizer';
 import MyFertilizer from 'components/Barn/MyFertilizer';
 import BarnActions from 'components/Barn/Actions';
+import { IconSize } from '../components/App/muiTheme';
 
 const Barn: React.FC = () => (
   <Container maxWidth="md">
@@ -12,6 +13,7 @@ const Barn: React.FC = () => (
       <PageHeader
         title="The Barn"
         description="Earn yield and recapitalize Beanstalk by buying Fertilizer"
+        href="https://docs.bean.money/farm/barn"
         control={
           <Stack direction="row" gap={1}>
             <Button
@@ -21,7 +23,7 @@ const Barn: React.FC = () => (
               color="light"
               variant="contained"
               endIcon={
-                <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)' }} />
+                <ArrowForwardIcon sx={{ width: IconSize.xs, transform: 'rotate(-45deg)' }} />
               }
             >
               Analytics
@@ -33,7 +35,7 @@ const Barn: React.FC = () => (
               color="light"
               variant="contained"
               endIcon={
-                <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)' }} />
+                <ArrowForwardIcon sx={{ width: IconSize.xs, transform: 'rotate(-45deg)' }} />
               }
             >
               Guide

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Alert, Box, Button, Card, Container, Stack, Tooltip } from '@mui/material';
+import { Box, Button, Card, Container, Stack, Tooltip } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import Overview from 'components/Silo/Overview';
@@ -12,7 +12,6 @@ import usePools from 'hooks/usePools';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import useChainId from 'hooks/useChain';
 import BigNumber from 'bignumber.js';
-import { displayFullBN } from 'util/index';
 import useToggle from 'hooks/display/useToggle';
 import useRevitalized from 'hooks/useRevitalized';
 import RewardsDialog from 'components/Silo/RewardsDialog';
@@ -48,6 +47,7 @@ const SiloPage : React.FC = () => {
         <PageHeader
           title="The Silo"
           description="Earn yield by depositing liquidity and participate in protocol governance"
+          href="https://docs.bean.money/farm/silo"
         />
         <Overview
           farmerSilo={farmerSilo}
@@ -55,11 +55,6 @@ const SiloPage : React.FC = () => {
           breakdown={breakdown}
           season={season}
         />
-        {chainId === SupportedChainId.MAINNET ? (
-          <Alert severity="info" variant="standard" sx={{ borderColor: 'secondary.dark', borderWidth: 1, borderStyle: 'solid' }}>
-            The exploiter{'\''}s Earned Beans were distributed pro rata to Silo Members. Your Earned Bean balance has increased by ~{displayFullBN(exploiterEarnedBeans.times(ownership), 2)} Beans.
-          </Alert>
-        ) : null}
         <Card sx={{ pl: 2, pr: 2, py: 1.5 }}>
           <Stack
             direction={{ lg: 'row', xs: 'column' }}
@@ -84,7 +79,7 @@ const SiloPage : React.FC = () => {
                     disabled={chainId === SupportedChainId.MAINNET}
                     size="medium"
                     variant="contained"
-                    sx={{ height: '100%', width: { xs: '100%', lg: 'auto' } }}
+                    sx={{ width: { xs: '100%', lg: 'auto' } }}
                     endIcon={<DropdownIcon open={false} />}
                     onClick={show}
                   >

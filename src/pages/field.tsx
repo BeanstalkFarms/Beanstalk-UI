@@ -88,6 +88,7 @@ const FieldPage: React.FC = () => {
         <PageHeader
           title="The Field"
           description="Earn yield by lending Beans to Beanstalk in exchange for Pods"
+          href="https://docs.bean.money/farm/field"
         />
         <FieldConditions
           beanstalkField={beanstalkField}

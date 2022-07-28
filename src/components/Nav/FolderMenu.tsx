@@ -69,7 +69,7 @@ const FolderMenu: React.FC<{
           sx={{
             // Fully rounded by default; when open, remove
             // the bottom rounding to look like a "tab".
-            borderBottomLeftRadius: popoverOpen ? 0 : undefined,
+            borderBottomLeftRadius:  popoverOpen ? 0 : undefined,
             borderBottomRightRadius: popoverOpen ? 0 : undefined,
             // Enforce a default white border; switch the color
             // to secondary when the Popper is open.
@@ -86,7 +86,6 @@ const FolderMenu: React.FC<{
             // the 1px border at the top of the Box.
             zIndex: popoverOpen ? 999 : undefined,
             // Positioning and other styles.
-            mr: 1,
             ...buttonProps.sx,
           }}
         >

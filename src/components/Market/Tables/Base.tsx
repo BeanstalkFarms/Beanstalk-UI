@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Box } from '@mui/material';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { BeanstalkPalette, FontSize } from 'components/App/muiTheme';
+import TablePagination from '../../Common/TablePagination';
 
 const marketplaceTableStyle = {
   '& .MuiDataGrid-root': {
@@ -55,6 +56,7 @@ const marketplaceTableStyle = {
       outline: 'none',
       borderBottom: 'none',
       borderTop: 'none',
+      justifyContent: 'center'
     },
     '& .MuiDataGrid-columnHeaders': {
       outline: 'none',
@@ -102,13 +104,16 @@ const MarketBaseTable: React.FC<
         rows={rows}
         pageSize={maxRows || MAX_ROWS}
         disableSelectionOnClick
-        disableColumnMenu
+        // disableColumnMenu
         density="compact"
         onRowClick={onRowClick}
         initialState={{
           sorting: {
             sortModel: [{ field: 'placeInLine', sort: 'asc' }],
           }
+        }}
+        components={{
+          Pagination: TablePagination
         }}
         {...props}
       />

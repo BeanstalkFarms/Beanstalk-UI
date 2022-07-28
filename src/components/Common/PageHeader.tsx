@@ -1,21 +1,22 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Box, Button, Link, Stack, Typography } from '@mui/material';
+import { Box, Button, Link, LinkProps, Stack, Typography } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import React from 'react';
 import { BeanstalkPalette, IconSize } from '../App/muiTheme';
 
 const PageHeader : React.FC<{
   /** The Field: The Decentralized Credit Facility */
-  title?: string | JSX.Element;
+  title?: any;
   /** "Earn yield through lending beans..." */
   description?: string;
   /** Show a back button to return to `returnPath`. */
   returnPath?: string;
   /**  */
   control?: React.ReactElement;
-}> = (props) => (
+} & Omit<LinkProps, 'title'>> = (props) => (
   <Stack direction={{ md: 'row', xs: 'column' }} justifyContent="space-between" gap={1}>
     <Stack direction="row" alignItems="center" gap={1.5}>
+      {/* Back button */}
       {props.returnPath && (
         <Button
           to={props.returnPath}
@@ -35,37 +36,33 @@ const PageHeader : React.FC<{
           </Stack>
         </Button>
       )}
-      {/* --- THE OLD CIRCLE BACK BUTTON ---*/}
-      {/* {props.returnPath && ( */}
-      {/*  <Button */}
-      {/*    to={props.returnPath} */}
-      {/*    component={RouterLink} */}
-      {/*    variant="contained" */}
-      {/*    color="light" */}
-      {/*    sx={{ p: 1, borderRadius: 100, minWidth: 0 }} */}
-      {/*  > */}
-      {/*    <ChevronLeftIcon /> */}
-      {/*  </Button> */}
-      {/* )} */}
+      {/* Title */}
       <Stack direction="column" gap={0}>
         {props.title && (
           <Box>
-            <Typography variant="h1">
-              <Link href="https://docs.bean.money" target="_blank" underline="hover" color="inherit">
-                <span>{props.title}</span>
-              </Link>
+            <Typography variant="h1" display="flex" alignItems="center" gap={1}>
+              <span>{props.title}</span>
             </Typography>
-              {/* <Typography variant="bodySmall" display="inline">
-                Docs
-              </Typography> */}
-            {/* </Typography> */}
           </Box>
         )}
         {props.description && (
           <Box>
             <Typography variant="subtitle1" sx={{ lineHeight: '1.5rem' }}>
-              {/* <Link href="#" underline="hover" fontWeight={700}>Docs</Link> &middot; */}
               {props.description}.
+              {props.href !== undefined && (
+                <Link
+                  href={props.href || 'https://docs.bean.money'}
+                  underline="none"
+                  color={BeanstalkPalette.darkNavyBlue}
+                  display="flex"
+                  alignItems="center"
+                  target="_blank"
+                  rel="noreferrer"
+                  sx={{ display: 'inline', ml: 0.3, '&:hover': { opacity: 0.85 } }}
+                >
+                  <Typography display="inline" variant="subtitle1" sx={{ lineHeight: '1.5rem' }}>Learn more.</Typography>
+                </Link>
+              )}
             </Typography>
           </Box>
         )}

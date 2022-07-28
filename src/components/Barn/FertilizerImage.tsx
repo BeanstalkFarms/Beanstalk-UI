@@ -90,11 +90,10 @@ const FertilizerImage : React.FC<FertilizerImageProps> = ({
     return (
       <Button
         variant="outlined"
-        sx={{ borderColor: 'none', p: 0 }}
+        sx={{ borderColor: 'none', p: 0, height: 'auto' }}
         href={`https://opensea.io/assets/ethereum/0x402c84de2ce49af88f5e2ef3710ff89bfed36cb6/${id.toString()}`} 
         target="_blank"
         fullWidth
-        disableRipple={false}
       >
         {inner}
       </Button>

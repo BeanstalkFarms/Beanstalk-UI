@@ -1,30 +1,34 @@
 import React from 'react';
-import { Dialog, DialogProps, Typography } from '@mui/material';
+import { Dialog, DialogProps } from '@mui/material';
+import { PlotMap } from 'state/farmer/field';
+import BigNumber from 'bignumber.js';
 import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
 import PlotSelect from '../Common/PlotSelect';
-import { AppState } from '../../state';
+import EmptyState from '../Common/ZeroState/EmptyState';
 
 export interface PlotSelectDialogProps {
   /** Closes dialog */
   handleClose: any;
   /** Sets plot index */
   handlePlotSelect: any;
-  /** Farmer field app state */
-  farmerField: AppState['_farmer']['field'];
-  /** Beanstalk field app state */
-  beanstalkField: AppState['_beanstalk']['field'];
+  /** */
+  plots: PlotMap<BigNumber>;
+  /** */
+  harvestableIndex: BigNumber;
   /** index of the selected plot */
   selected?: string | null;
 }
 
 const PlotSelectDialog: React.FC<PlotSelectDialogProps & DialogProps> = ({
-  farmerField,
-  beanstalkField,
-  handlePlotSelect,
+  // Custom
   handleClose,
+  handlePlotSelect,
+  plots,
+  harvestableIndex,
+  selected,
+  // Dialog
   onClose,
   open,
-  selected
 }) => {
   // sets plot index then closes dialog
   const handleSelectAndClose = (index: string) => {
@@ -44,17 +48,15 @@ const PlotSelectDialog: React.FC<PlotSelectDialogProps & DialogProps> = ({
           pb: 1, // enforces 10px padding around all 
         }}
       >
-        {Object.keys(farmerField?.plots).length > 0 ? (
+        {Object.keys(plots).length > 0 ? (
           <PlotSelect
             handlePlotSelect={handleSelectAndClose}
-            plots={farmerField.plots!}
-            harvestableIndex={beanstalkField?.harvestableIndex}
+            plots={plots!}
+            harvestableIndex={harvestableIndex}
             selected={selected}
           />
         ) : (
-          <Typography sx={{ textAlign: 'center', pt: 1, pb: 4 }}>
-            You don&apos;t have any plots to send!
-          </Typography>
+          <EmptyState message="You don't have any plots to send!" />
         )}
       </StyledDialogContent>
     </Dialog>

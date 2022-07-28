@@ -1,86 +1,47 @@
 import React from 'react';
-import {
-  Stack,
-  Typography,
-  Card, Box, CardProps,
-} from '@mui/material';
+import { Stack, Typography, Box } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { PodListing } from 'state/farmer/market';
-import { displayBN, displayFullBN } from 'util/index';
-import { BeanstalkPalette, IconSize } from 'components/App/muiTheme';
+import { displayBN } from 'util/index';
+import { IconSize } from 'components/App/muiTheme';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BEAN, PODS } from 'constants/tokens';
+import podListingIcon from 'img/beanstalk/pod-listing-icon.svg';
+import FarmerChip from 'components/Common/FarmerChip';
+import StatHorizontal from 'components/Common/StatHorizontal';
 
-export type ListingDetailsProps = {
+const ListingDetails: React.FC<{
   podListing: PodListing;
   harvestableIndex: BigNumber;
-}
-
-const ListingDetails: React.FC<ListingDetailsProps & CardProps> = ({
-  sx,
+}> = ({
   podListing,
   harvestableIndex
 }) => (
-  <Card sx={{ p: 2, ...sx }}>
-    <Stack gap={2}>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Stack direction="row" gap={1} alignItems="center">
-          <Typography variant="h4">
-            Pod Listing
-          </Typography>
-          <Box sx={{
-              px: 1,
-              py: 0.5,
-              borderRadius: 1,
-              backgroundColor: BeanstalkPalette.washedGreen,
-              color: BeanstalkPalette.logoGreen
-            }}>
-            <Typography variant="body1">
-              {podListing.account.substring(0, 6)}
-            </Typography>
-          </Box>
-        </Stack>
-        <Typography color={BeanstalkPalette.gray} variant="bodySmall">
-          Listing expires at position <Typography color={BeanstalkPalette.black} variant="bodySmall" display="inline">500,000</Typography> in the Pod Line
-        </Typography>
-      </Stack>
-      <Stack direction="row" justifyContent="space-between">
-        {/* Place in Line */}
-        <Stack gap={0.5}>
-          <Typography variant="body1">
-            Place in Line
-          </Typography>
-          <Typography variant="bodyLarge">
-            {displayBN(podListing.index.minus(harvestableIndex))}
-          </Typography>
-        </Stack>
-        {/* Price per Pod */}
-        <Stack gap={0.5}>
-          <Typography variant="body1">
-            Price per Pod
-          </Typography>
-          <Stack direction="row" gap={0.3} alignItems="center">
-            <TokenIcon token={BEAN[1]} style={{ height: IconSize.medium }} />
-            <Typography variant="bodyLarge">
-              {displayFullBN(podListing.pricePerPod)}
-            </Typography>
-          </Stack>
-        </Stack>
-        {/* Pods Sold */}
-        <Stack gap={0.5}>
-          <Typography variant="body1">
-            Pods Sold
-          </Typography>
-          <Stack direction="row" gap={0.3} alignItems="center">
-            <TokenIcon token={PODS} style={{ height: IconSize.medium }} />
-            <Typography variant="bodyLarge">
-              {displayBN(podListing.filledAmount)}/{displayBN(podListing.totalAmount)}
-            </Typography>
-          </Stack>
-        </Stack>
-      </Stack>
+  <Stack gap={2}>
+    <Stack direction="row" alignItems="center" gap={1}>
+      <img src={podListingIcon} style={{ width: IconSize.medium, height: IconSize.medium }} alt="Pod Listing" />
+      <Typography variant="h4">Pod Listing</Typography>
+      <Box sx={{ flex: 1, textAlign: 'right' }}>
+        <FarmerChip account={podListing.account} />
+      </Box>
     </Stack>
-  </Card>
-  );
+    <Stack gap={1}>
+      <StatHorizontal label="Place in Line">
+        <Typography>{displayBN(podListing.index.minus(harvestableIndex))}</Typography>
+      </StatHorizontal>
+      <StatHorizontal label="Price per Pod" labelTooltip="The number of Beans requested per Pod.">
+        <TokenIcon token={BEAN[1]} style={{ height: IconSize.xs }} />
+        <Typography>{displayBN(podListing.pricePerPod)}</Typography>
+      </StatHorizontal>
+      <StatHorizontal label="Pods Available" labelTooltip="The number of Pods left to be purchased from this Listing.">
+        <TokenIcon token={PODS} style={{ height: IconSize.xs }} />
+        <Typography>{displayBN(podListing.remainingAmount)}</Typography>
+      </StatHorizontal>
+      <StatHorizontal label="Expires In" labelTooltip="If the Pod Line moves forward by this amount, this listing will automatically expire.">
+        <Typography>{displayBN(podListing.maxHarvestableIndex.minus(harvestableIndex))} Pods</Typography>
+      </StatHorizontal>
+    </Stack>
+  </Stack>
+);
 
 export default ListingDetails;

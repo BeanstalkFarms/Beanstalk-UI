@@ -27,6 +27,7 @@ const AllListings : React.FC<{}> = () => {
 
   /// Data Grid setup
   const columns: DataGridProps['columns'] = [
+    COLUMNS.orderId,
     COLUMNS.maxPlaceInLine,
     COLUMNS.pricePerPod,
     COLUMNS.numPods,

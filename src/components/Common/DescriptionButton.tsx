@@ -45,11 +45,8 @@ const DescriptionButton : React.FC<ButtonProps & {
       backgroundColor: selected ? '#F6FAFE' : null,
       '&:hover': {
         backgroundColor: selected ? '#F6FAFE' : null,
-      }
-      // backgroundColor: selected ? BeanstalkPalette.lightBlue : null,
-      // '&:hover': {
-      //   backgroundColor: selected ? BeanstalkPalette.lightBlue : null,
-      // }
+      },
+      height: 'auto'
     }}
   >
     <Stack direction="row" gap={0.5} justifyContent="space-between" alignItems="center">

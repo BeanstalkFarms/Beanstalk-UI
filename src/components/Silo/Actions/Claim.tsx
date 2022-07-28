@@ -13,7 +13,17 @@ import { FarmerSiloBalance } from 'state/farmer/silo';
 import { ActionType } from 'util/Actions';
 import usePools from 'hooks/usePools';
 import { ERC20Token } from 'classes/Token';
-import { FormTokenState, TxnPreview, TokenOutputField, TokenSelectDialog, TxnSeparator, TokenQuoteProvider, TxnSettings, SettingInput } from 'components/Common/Form';
+import {
+  FormTokenState,
+  TxnPreview,
+  TokenOutputField,
+  TokenSelectDialog,
+  TxnSeparator,
+  TokenQuoteProvider,
+  TxnSettings,
+  SettingInput,
+  SmartSubmitButton
+} from 'components/Common/Form';
 import { BeanstalkReplanted } from 'generated/index';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import { ZERO_BN } from 'constants/index';
@@ -25,7 +35,6 @@ import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import PillRow from 'components/Common/Form/PillRow';
 import { QuoteHandler } from 'hooks/useQuote';
 import { ethers } from 'ethers';
-import { LoadingButton } from '@mui/lab';
 import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
@@ -158,60 +167,57 @@ const ClaimForm : React.FC<
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
       <Form noValidate>
         <Stack gap={1}>
-          {/* Form Content */}
-          <Stack gap={1}>
-            {/* Claimable Token */}
-            <TokenQuoteProvider
-              name="token"
-              tokenOut={values.tokenOut}
-              state={values.token}
-              // This input is always disabled but we use
-              // the underlying handleQuote functionality
-              // for consistency with other forms.
-              disabled 
-              // 
-              balance={amount || ZERO_BN}
-              balanceLabel="Claimable Balance"
-              // -----
-              // FIXME:
-              // "disableTokenSelect" applies the disabled prop to
-              // the TokenSelect button. However if we don't pass
-              // a handler to the button then it's effectively disabled
-              // but shows with stronger-colored text. param names are
-              // a bit confusing.
-              // disableTokenSelect={true}
-              quoteSettings={quoteSettings}
-              handleQuote={handleQuote}
-              hideQuote
-            />
-            {/* Setting: Destination */}
-            <DestinationField
-              name="destination"
-            />
-            {/* Setting: Claim LP */}
-            {token.isLP ? (
-              <PillRow
-                isOpen={isTokenSelectVisible}
-                label="Claim LP as"
-                onClick={showTokenSelect}> 
-                <TokenIcon token={values.tokenOut} />
-                <Typography variant="body1">{values.tokenOut.name}</Typography>
-              </PillRow>
-            ) : null}
-            <TokenSelectDialog
-              open={isTokenSelectVisible}
-              handleClose={hideTokenSelect}
-              handleSubmit={handleSelectTokens}
-              selected={[values.tokenOut]}
-              balances={undefined} // hide balances from right side of selector
-              tokenList={claimableTokens}
-              mode={TokenSelectMode.SINGLE}
-            />
-          </Stack>
+          {/* Claimable Token */}
+          <TokenQuoteProvider
+            name="token"
+            tokenOut={values.tokenOut}
+            state={values.token}
+            // This input is always disabled but we use
+            // the underlying handleQuote functionality
+            // for consistency with other forms.
+            disabled 
+            // 
+            balance={amount || ZERO_BN}
+            balanceLabel="Claimable Balance"
+            // -----
+            // FIXME:
+            // "disableTokenSelect" applies the disabled prop to
+            // the TokenSelect button. However if we don't pass
+            // a handler to the button then it's effectively disabled
+            // but shows with stronger-colored text. param names are
+            // a bit confusing.
+            // disableTokenSelect={true}
+            quoteSettings={quoteSettings}
+            handleQuote={handleQuote}
+            hideQuote
+          />
+          {/* Setting: Destination */}
+          <DestinationField
+            name="destination"
+          />
+          {/* Setting: Claim LP */}
+          {token.isLP ? (
+            <PillRow
+              isOpen={isTokenSelectVisible}
+              label="Claim LP as"
+              onClick={showTokenSelect}> 
+              <TokenIcon token={values.tokenOut} />
+              <Typography variant="body1">{values.tokenOut.name}</Typography>
+            </PillRow>
+          ) : null}
+          <TokenSelectDialog
+            open={isTokenSelectVisible}
+            handleClose={hideTokenSelect}
+            handleSubmit={handleSelectTokens}
+            selected={[values.tokenOut]}
+            balances={undefined} // hide balances from right side of selector
+            tokenList={claimableTokens}
+            mode={TokenSelectMode.SINGLE}
+          />
           {/* Transaction Details */}
           {isSubmittable ? (
             <>
-              <TxnSeparator mt={-1} />
+              <TxnSeparator />
               <TokenOutputField
                 token={values.tokenOut}
                 amount={values.token.amountOut || ZERO_BN}
@@ -242,16 +248,18 @@ const ClaimForm : React.FC<
               </Box>
             </>
           ) : null}
-          <LoadingButton
-            variant="contained"
+          <SmartSubmitButton
             loading={isSubmitting}
-            disabled={!isSubmittable || isSubmitting || isMainnet}
+            disabled={!isSubmittable || isSubmitting}
             type="submit"
+            variant="contained"
+            color="primary"
             size="large"
-            fullWidth
+            tokens={[]}
+            mode="auto"
           >
             Claim
-          </LoadingButton>
+          </SmartSubmitButton>
         </Stack>
       </Form>
     </Tooltip>

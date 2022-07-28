@@ -1,12 +1,17 @@
 import React, { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box, Card, CircularProgress, Divider, Stack, Typography } from '@mui/material';
-import { DataGrid, GridColumns, GridSortItem } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridColumns,
+  GridSortItem
+} from '@mui/x-data-grid';
 import { displayBN, displayUSD } from 'util/index';
 import { tableStyle } from 'components/Common/Table/styles';
 import { ZERO_BN } from 'constants/index';
 import { Token } from '../../classes';
-import NoRowsOverlay from './NoRowsOverlay';
+import AuthEmptyState from './ZeroState/AuthEmptyState';
+import TablePagination from './TablePagination';
 
 const MAX_ROWS = 5;
 
@@ -90,13 +95,19 @@ const TableCard : React.FC<{
           components={{
             NoRowsOverlay() {
               return (
-                <NoRowsOverlay title={title} state={state} />
+                <AuthEmptyState title={title} state={state} option="message" />
               );
             },
+            Pagination: TablePagination
           }}
           initialState={{
             sorting: {
               sortModel: [sort],
+            }
+          }}
+          sx={{
+            '& .MuiDataGrid-footerContainer': {
+              justifyContent: 'center'
             }
           }}
         />

@@ -10,7 +10,7 @@ import {
   mockDepositData,
   mockOwnershipPctData,
 } from 'components/Common/Charts/LineChart.mock';
-import MainnetBlur from 'components/Common/MainnetBlur';
+import MainnetBlur from 'components/Common/ZeroState/MainnetBlur';
 import Stat from 'components/Common/Stat';
 import WalletButton from '../Common/Connection/WalletButton';
 
@@ -78,7 +78,7 @@ const StalkOwnershipTab: React.FC<TabData
       <Stack direction="row" gap={4} sx={{ px: 2 }}>
         <Stat
           title="Stalk Balance"
-          tooltip="This is your total Stalk Balance. Stalk are the governance token of the Beanstalk DAO. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
+          titleTooltip="This is your total Stalk Balance. Stalk are the governance token of the Beanstalk DAO. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
           subtitle={`Season ${displayBN(season)}`}
           amount={displayBN(displayValue[0])}
           color="primary"
@@ -88,7 +88,7 @@ const StalkOwnershipTab: React.FC<TabData
         />
         <Stat
           title="Ownership"
-          tooltip="Your current ownership of Beanstalk is displayed as a percentage. Ownership is determined by your proportional ownership of the total Stalk supply."
+          titleTooltip="Your current ownership of Beanstalk is displayed as a percentage. Ownership is determined by your proportional ownership of the total Stalk supply."
           amount={`${displayValue[1].multipliedBy(100).toFixed(3)}%`}
           color="secondary.dark"
           amountIcon={undefined}
@@ -120,11 +120,6 @@ const Overview: React.FC<{
   const [tab, setTab] = useState(0);
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
-  };
-
-  const [timeTab, setTimeTab] = useState([0,0]);
-  const handleChangeTimeTab = (i: number[]) => {
-    setTimeTab(i);
   };
   return (
     <Card>

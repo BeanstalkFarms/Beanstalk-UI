@@ -6,6 +6,7 @@ import {
   useMediaQuery,
   Box,
   Divider,
+  Grid,
 } from '@mui/material';
 import { NEW_BN } from 'constants/index';
 import useSeason from 'hooks/useSeason';
@@ -18,7 +19,6 @@ import BigNumber from 'bignumber.js';
 import FolderMenu from '../FolderMenu';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import SeasonCard from '../SeasonCard';
-import { useSeasonTableStyles } from '../utils';
 
 const mockSunData = new Array(20).fill(null).map(() => ({
   season: new BigNumber(5000 * Math.random()),
@@ -36,7 +36,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>(
     (state) => state._bean.token.price
   );
-  const tableStyles = useSeasonTableStyles();
+
   const isTiny = useMediaQuery('(max-width:350px)');
 
   // Button Content
@@ -80,38 +80,50 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
             px: 1, // 1 + 2 from Table Body
           }}
         >
-          <Stack direction="row" width="100%" justifyContent="space-between">
-            <Stack sx={tableStyles.season}>
-              <Typography color="text.primary" variant="bodySmall">
-                Season
-              </Typography>
-            </Stack>
-            <Stack sx={tableStyles.newBeans}>
-              <Typography color="text.primary" variant="bodySmall">
-                New Beans
-              </Typography>
-            </Stack>
-            <Stack sx={tableStyles.newSoil}>
-              <Typography color="text.primary" variant="bodySmall">
-                New Soil
-              </Typography>
-            </Stack>
-            <Stack sx={tableStyles.temperature}>
-              <Typography color="text.primary" variant="bodySmall">
-                Temperature
-              </Typography>
-            </Stack>
-            <Stack sx={tableStyles.podRate}>
-              <Typography color="text.primary" variant="bodySmall">
-                Pod Rate
-              </Typography>
-            </Stack>
-            <Stack sx={tableStyles.deltaDemand}>
-              <Typography color="text.primary" variant="bodySmall">
-                Delta Demand
-              </Typography>
-            </Stack>
-          </Stack>
+          <Grid container>
+            <Grid item xs={1.5} md={1.25}>
+              <Stack alignItems="flex-start">
+                <Typography color="text.primary" variant="bodySmall">
+                  Season
+                </Typography>
+              </Stack>
+            </Grid>
+            <Grid item xs={3} md={2}>
+              <Stack alignItems="flex-end">
+                <Typography color="text.primary" variant="bodySmall">
+                  New Beans
+                </Typography>
+              </Stack>
+            </Grid>
+            <Grid item xs={3} md={2}>
+              <Stack alignItems="flex-end">
+                <Typography color="text.primary" variant="bodySmall">
+                  New Soil
+                </Typography>
+              </Stack>
+            </Grid>
+            <Grid item xs={4} md={2.75}>
+              <Stack alignItems="flex-end">
+                <Typography color="text.primary" variant="bodySmall">
+                  Temperature
+                </Typography>
+              </Stack>
+            </Grid>
+            <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
+              <Stack alignItems="flex-end">
+                <Typography color="text.primary" variant="bodySmall">
+                  Pod Rate
+                </Typography>
+              </Stack>
+            </Grid>
+            <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
+              <Stack alignItems="flex-end">
+                <Typography color="text.primary" variant="bodySmall">
+                  Delta Demand
+                </Typography>
+              </Stack>
+            </Grid>
+          </Grid>
         </Box>
         <SeasonCard
           season={new BigNumber(7845)}
