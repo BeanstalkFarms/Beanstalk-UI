@@ -18,11 +18,11 @@ import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 const OrderPage: React.FC = () => {
   const account = useAccount();
   const { id } = useParams<{ id: string }>();
-  const { data: order, source, loading, error } = usePodOrder(id);
+  const { data: _order, source, loading, error } = usePodOrder(id);
 
   if (loading) return <div>Loading</div>;
   if (error) return <div>{error}</div>;
-  if (!order) return <div>Not found</div>;
+  if (!_order) return <div>Not found</div>;
 
   /// TEMP: override order for testing
   // const order : PodOrder = {
@@ -35,6 +35,7 @@ const OrderPage: React.FC = () => {
   //   filledAmount: new BigNumber('0'),
   //   status: 'active'
   // };
+  const order = _order;
 
   return (
     <Container maxWidth="sm">

@@ -20,12 +20,28 @@ import CancelListing from 'components/Market/Actions/CancelListing';
 const ListingPage: React.FC = () => {
   const account = useAccount();
   const { id } = useParams<{ id: string }>();
-  const { data: listing, source, loading, error } = usePodListing(id);
+  const { data: _listing, source, loading, error } = usePodListing(id);
   const harvestableIndex = useHarvestableIndex();
 
   if (loading) return <div>Loading</div>;
   if (error) return <div>{error}</div>;
-  if (!listing) return <div>Not found</div>;
+  if (!_listing) return <div>Not found</div>;
+
+  /// TEMP: override order for testing
+  // const testListing : PodListing = {
+  //   id: '',          // index with no decimals
+  //   index: '',       // index with decimals
+  //   account: '',
+  //   maxHarvestableIndex: new BigNumber(''),
+  //   pricePerPod:     new BigNumber(''),
+  //   amount:          new BigNumber(''),
+  //   totalAmount:     new BigNumber(''),
+  //   remainingAmount: new BigNumber(''),
+  //   filledAmount: new BigNumber('0'),
+  //   mode: FarmToMode.EXTERNAL,
+  //   status: 'active'
+  // };
+  const listing = _listing;
 
   return (
     <Container maxWidth="sm">
