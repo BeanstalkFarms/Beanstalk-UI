@@ -56,7 +56,7 @@ export const PRE_EXPLOIT_BEAN_DATA = {
   ],
 };
 
-export const useGetPools = () => {
+export const useFetchPools = () => {
   const dispatch = useDispatch();
   const [beanstalkPriceContract, chainId] = useBeanstalkPriceContract();
 
@@ -160,7 +160,7 @@ export const useGetPools = () => {
 // ------------------------------------------
 
 const PoolsUpdater = () => {
-  const [fetch, clear] = useGetPools();
+  const [fetch, clear] = useFetchPools();
 
   useEffect(() => {
     clear();

@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   ButtonProps,
   Stack,
   Typography,
   useMediaQuery,
 } from '@mui/material';
+import throttle from 'lodash/throttle';
 import { useTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
@@ -16,6 +17,8 @@ import PoolCard from 'components/Silo/PoolCard';
 import { NEW_BN, ZERO_BN } from 'constants/index';
 import BeanProgressIcon from 'components/Common/BeanProgressIcon';
 import useSeason from 'hooks/useSeason';
+import { useFetchPools } from 'state/bean/pools/updater';
+import usePrice from 'hooks/usePrice';
 import FolderMenu from '../FolderMenu';
 
 // ------------------------------------------------------------
@@ -25,12 +28,12 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   const pools     = usePools();
   const chainId   = useChainId();
   const season    = useSeason();
-  const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>(
-    (state) => state._bean.token.price
-  );
+  const beanPrice = usePrice();
   const beanPools = useSelector<AppState, AppState['_bean']['pools']>(
     (state) => state._bean.pools
   );
+  const [_refetchPools] = useFetchPools();
+  const refetchPools = useMemo(() => throttle(_refetchPools, 1000), [_refetchPools]);
 
   // Theme
   const theme    = useTheme();
@@ -57,6 +60,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
 
   return (
     <FolderMenu
+      onOpen={refetchPools}
       startIcon={startIcon}
       buttonContent={
         <>${(isLoading ? 0.0 : beanPrice).toFixed(isMobile ? 2 : 4)}</>

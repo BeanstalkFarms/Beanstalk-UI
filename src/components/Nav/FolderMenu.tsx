@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import {
   Box,
   Button,
@@ -30,6 +30,7 @@ const FolderMenu: React.FC<{
   drawerContent: JSX.Element;
   hideTextOnMobile?: boolean;
   popperWidth?: string;
+  onOpen?: () => void;
   hotkey: string;
 } & ButtonProps> = ({
   startIcon,
@@ -39,34 +40,46 @@ const FolderMenu: React.FC<{
   hideTextOnMobile,
   popperWidth,
   hotkey,
+  onOpen,
   ...buttonProps
 }) => {
-  // Setup
+  // Theme
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
-
+  
   // Popover
   const [anchorEl, toggleAnchor] = useAnchor();
   const popoverOpen = Boolean(anchorEl);
+  const button = useRef<HTMLButtonElement | null>(null);
 
   // Drawer
   const [drawerOpen, openDrawer, closeDrawer] = useToggle();
 
-  // Handlers
-  const onClickButton = isMobile ? openDrawer : toggleAnchor;
-
-  const button = useRef<HTMLButtonElement | null>(null);
+  const isOpen = Boolean(anchorEl || drawerOpen);
+  const open = useCallback(() => {
+    onOpen?.();
+    if (isMobile) {
+      toggleAnchor(undefined); // force close menu if screen size has chnaged
+      openDrawer();
+    } else {
+      closeDrawer(); // force close drawer if screen size has changed
+      toggleAnchor({ currentTarget: button.current });
+    }
+  }, [closeDrawer, isMobile, onOpen, openDrawer, toggleAnchor]);
+  const close = useCallback(() => {
+    if (isMobile) {
+      closeDrawer();
+    } else {
+      toggleAnchor(undefined);
+    }
+  }, [closeDrawer, isMobile, toggleAnchor]);
 
   // Hotkeys
   useHotkeys(hotkey || '', () => {
     console.debug('toggle');
-    if (isMobile) {
-      drawerOpen ? closeDrawer() : openDrawer();
-    } else {
-      toggleAnchor(anchorEl ? undefined : { currentTarget: button.current });
-    }
-  }, { }, [anchorEl, drawerOpen, isMobile]);
-
+    isOpen ? close() : open();
+  }, { }, [isOpen, open, close]);
+  
   return (
     <>
       {/* Mobile: Drawer */}
@@ -77,8 +90,8 @@ const FolderMenu: React.FC<{
         <Button
           color="light"
           startIcon={startIcon}
-          endIcon={<DropdownIcon open={popoverOpen || drawerOpen} />}
-          onClick={onClickButton}
+          endIcon={<DropdownIcon open={isOpen} />}
+          onClick={open}
           disableRipple
           ref={(r) => { button.current = r; }}
           {...buttonProps}

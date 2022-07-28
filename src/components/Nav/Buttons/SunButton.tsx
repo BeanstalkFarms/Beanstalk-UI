@@ -11,10 +11,9 @@ import { NEW_BN } from 'constants/index';
 import useSeason from 'hooks/useSeason';
 import drySeasonIcon from 'img/beanstalk/sun/dry-season.svg';
 import rainySeasonIcon from 'img/beanstalk/sun/rainy-season.svg';
-import { useSelector } from 'react-redux';
-import { AppState } from 'state';
 import SunriseButton from 'components/Sun/SunriseButton';
 import BigNumber from 'bignumber.js';
+import usePrice from 'hooks/usePrice';
 import FolderMenu from '../FolderMenu';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import SeasonCard from '../SeasonCard';
@@ -31,9 +30,7 @@ const MAX_ITEMS = 8;
 const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   /// DATA
   const season    = useSeason();
-  const beanPrice = useSelector<AppState, AppState['_bean']['token']['price']>(
-    (state) => state._bean.token.price
-  );
+  const beanPrice = usePrice();
 
   /// Theme
   const isTiny = useMediaQuery('(max-width:350px)');
