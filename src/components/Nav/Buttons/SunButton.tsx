@@ -135,7 +135,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       popoverContent={tableContent}
       hideTextOnMobile
       popperWidth="500px"
-      hotkey="opt+x, alt+x"
+      hotkey="opt+2, alt+2"
       {...props}
     />
   );

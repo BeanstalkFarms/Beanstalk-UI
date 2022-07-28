@@ -14,9 +14,10 @@ import AddressIcon from 'components/Common/AddressIcon';
 import MyListingsTable from 'components/Market/Tables/MyListings';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 
+const SLUGS = ['orders', 'listings'];
 const MarketAccountPage: React.FC = () => {
   ///
-  const [tab, handleChangeTab] = useTabs(['orders', 'listings']);
+  const [tab, handleChangeTab] = useTabs(SLUGS, 'view');
 
   return (
     <Container maxWidth="lg">

@@ -11,7 +11,7 @@ const CreatePage: React.FC = () => (
     <Stack spacing={2}>
       <PageHeader
         returnPath="/market"
-        />
+      />
       <MarketActions />
     </Stack>
   </Container>

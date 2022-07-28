@@ -6,6 +6,7 @@ import fetch from 'node-fetch';
 import { getAccount } from 'util/Account';
 import { ClaimStatus, loadNFTs, Nft } from 'util/BeaNFTs';
 import { useTheme } from '@mui/material/styles';
+import useTabs from 'hooks/display/useTabs';
 import NFTDialog from '../components/NFT/NFTDialog';
 import { BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES } from '../constants';
 import NFTGrid from '../components/NFT/NFTGrid';
@@ -15,6 +16,7 @@ import AddressIcon from '../components/Common/AddressIcon';
 import useAccount from '../hooks/ledger/useAccount';
 import AuthEmptyState from '../components/Common/ZeroState/AuthEmptyState';
 
+const SLUGS = ['genesis', 'winter'];
 const NFTPage: React.FC = () => {
   const account = useAccount();
   const theme = useTheme();
@@ -24,7 +26,7 @@ const NFTPage: React.FC = () => {
   const winterContract = useWinterNFTContract(signer);
 
   // component state
-  const [tab, setTab] = useState(0);
+  const [tab, handleChangeTab] = useTabs(SLUGS, 'collection');
   const [dialogOpen, setDialogOpen] = useState(false);
 
   // NFT state
@@ -34,16 +36,11 @@ const NFTPage: React.FC = () => {
   const unmintedGenesis = genesisNFTs?.filter((nft) => nft.claimed === ClaimStatus.UNCLAIMED);
   const unmintedWinter = winterNFTs?.filter((nft) => nft.claimed === ClaimStatus.UNCLAIMED);
 
-  // handlers
-  const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
-    setTab(newValue);
-  };
-
+  /// Handlers
   const handleDialogOpen = (nft: Nft) => {
     setSelectedNFT(nft);
     setDialogOpen(true);
   };
-
   const handleDialogClose = () => {
     setSelectedNFT(null);
     setDialogOpen(false);
