@@ -2,7 +2,7 @@ import React, { useCallback, useRef } from 'react';
 import {
   Box,
   Button,
-  ButtonProps,
+  ButtonProps, ClickAwayListener,
   Drawer,
   Popper,
   Typography,
@@ -33,20 +33,20 @@ const FolderMenu: React.FC<{
   onOpen?: () => void;
   hotkey: string;
 } & ButtonProps> = ({
-  startIcon,
-  buttonContent,
-  popoverContent,
-  drawerContent,
-  hideTextOnMobile,
-  popperWidth,
-  hotkey,
-  onOpen,
-  ...buttonProps
-}) => {
+                      startIcon,
+                      buttonContent,
+                      popoverContent,
+                      drawerContent,
+                      hideTextOnMobile,
+                      popperWidth,
+                      hotkey,
+                      onOpen,
+                      ...buttonProps
+                    }) => {
   // Theme
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
-  
+
   // Popover
   const [anchorEl, toggleAnchor] = useAnchor();
   const popoverOpen = Boolean(anchorEl);
@@ -56,6 +56,7 @@ const FolderMenu: React.FC<{
   const [drawerOpen, openDrawer, closeDrawer] = useToggle();
 
   const isOpen = Boolean(anchorEl || drawerOpen);
+
   const open = useCallback(() => {
     onOpen?.();
     if (isMobile) {
@@ -66,6 +67,7 @@ const FolderMenu: React.FC<{
       toggleAnchor({ currentTarget: button.current });
     }
   }, [closeDrawer, isMobile, onOpen, openDrawer, toggleAnchor]);
+
   const close = useCallback(() => {
     if (isMobile) {
       closeDrawer();
@@ -74,12 +76,16 @@ const FolderMenu: React.FC<{
     }
   }, [closeDrawer, isMobile, toggleAnchor]);
 
+  const handleClickAway = () => {
+    close();
+  };
+
   // Hotkeys
   useHotkeys(hotkey || '', () => {
     console.debug('toggle');
     isOpen ? close() : open();
-  }, { }, [isOpen, open, close]);
-  
+  }, {}, [isOpen, open, close]);
+
   return (
     <>
       {/* Mobile: Drawer */}
@@ -87,70 +93,77 @@ const FolderMenu: React.FC<{
         {drawerContent}
       </Drawer>
       <Box>
-        <Button
-          color="light"
-          startIcon={startIcon}
-          endIcon={<DropdownIcon open={isOpen} />}
-          onClick={open}
-          disableRipple
-          ref={(r) => { button.current = r; }}
-          {...buttonProps}
-          sx={{
-            // Fully rounded by default; when open, remove
-            // the bottom rounding to look like a "tab".
-            borderBottomLeftRadius:  popoverOpen ? 0 : undefined,
-            borderBottomRightRadius: popoverOpen ? 0 : undefined,
-            // Enforce a default white border; switch the color
-            // to secondary when the Popper is open.
-            borderWidth: 1,
-            borderStyle: 'solid',
-            borderColor: popoverOpen ? 'secondary.main' : 'white',
-            // Keep this white so we can make it look like the
-            // button is "expanding" into a Box when you click it.
-            borderBottomColor: 'white',
-            // Without disabling the transition, the border fades
-            // in/out and looks weird.
-            transition: 'none !important',
-            // Move the button above the Box so we can slice off
-            // the 1px border at the top of the Box.
-            zIndex: popoverOpen ? 999 : undefined,
-            // Positioning and other styles.
-            ...buttonProps.sx,
-          }}
-        >
-          <Box sx={{ display: { xs: hideTextOnMobile ? 'none' : 'block', sm: 'block' } }}>
-            <Typography variant="h3">
-              {buttonContent}
-            </Typography>
+        <ClickAwayListener mouseEvent="onMouseUp" touchEvent="onTouchStart" onClickAway={handleClickAway}>
+          <Box>
+            <Button
+              color="light"
+              startIcon={startIcon}
+              endIcon={<DropdownIcon open={isOpen} />}
+              onClick={open}
+              disableRipple
+              ref={(r) => {
+                button.current = r;
+              }}
+              {...buttonProps}
+              sx={{
+                // Fully rounded by default; when open, remove
+                // the bottom rounding to look like a "tab".
+                borderBottomLeftRadius: popoverOpen ? 0 : undefined,
+                borderBottomRightRadius: popoverOpen ? 0 : undefined,
+                // Enforce a default white border; switch the color
+                // to secondary when the Popper is open.
+                borderWidth: 1,
+                borderStyle: 'solid',
+                borderColor: popoverOpen ? 'secondary.main' : 'white',
+                // Keep this white so we can make it look like the
+                // button is "expanding" into a Box when you click it.
+                borderBottomColor: 'white',
+                // Without disabling the transition, the border fades
+                // in/out and looks weird.
+                transition: 'none !important',
+                // Move the button above the Box so we can slice off
+                // the 1px border at the top of the Box.
+                zIndex: popoverOpen ? 999 : undefined,
+                // Positioning and other styles.
+                ...buttonProps.sx,
+              }}
+            >
+              <Box sx={{ display: { xs: hideTextOnMobile ? 'none' : 'block', sm: 'block' } }}>
+                <Typography variant="h3">
+                  {buttonContent}
+                </Typography>
+              </Box>
+            </Button>
+            <Popper
+              open={popoverOpen}
+              anchorEl={anchorEl}
+              placement="bottom-start"
+              disablePortal
+            >
+              <Box
+                sx={(_theme) => ({
+                  background: 'white',
+                  width: popperWidth !== undefined ? popperWidth : '450px',
+                  borderBottomLeftRadius: _theme.shape.borderRadius,
+                  borderBottomRightRadius: _theme.shape.borderRadius,
+                  borderTopRightRadius: _theme.shape.borderRadius,
+                  borderColor: 'secondary.main',
+                  borderWidth: 1,
+                  borderStyle: 'solid',
+                  px: 1,
+                  py: 1,
+                  boxShadow: _theme.shadows[0],
+                  // Should be below the zIndex of the Button.
+                  zIndex: 998,
+                  mt: '-1px',
+                })}
+              >
+                {popoverContent}
+              </Box>
+            </Popper>
           </Box>
-        </Button>
-        <Popper
-          open={popoverOpen}
-          anchorEl={anchorEl}
-          placement="bottom-start"
-          disablePortal
-        >
-          <Box
-            sx={(_theme) => ({
-              background: 'white',
-              width: popperWidth !== undefined ? popperWidth : '450px',
-              borderBottomLeftRadius: _theme.shape.borderRadius,
-              borderBottomRightRadius: _theme.shape.borderRadius,
-              borderTopRightRadius: _theme.shape.borderRadius,
-              borderColor: 'secondary.main',
-              borderWidth: 1,
-              borderStyle: 'solid',
-              px: 1,
-              py: 1,
-              boxShadow: _theme.shadows[0],
-              // Should be below the zIndex of the Button.
-              zIndex: 998,
-              mt: '-1px',
-            })}
-          >
-            {popoverContent}
-          </Box>
-        </Popper>
+
+        </ClickAwayListener>
       </Box>
     </>
   );
