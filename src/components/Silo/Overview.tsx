@@ -69,6 +69,7 @@ const StalkOwnershipTab: React.FC<TabData
   // & { beanstalkSilo: AppState['_beanstalk']['silo']; }
 > = ({ current, series, season }) => {
   // Display value is an array [stalk, pct]
+  const account = useAccount();
   const [displayValue, setDisplayValue] = useState(current);
   const handleCursor = useCallback(
     (dps?: DataPoint[]) => {
@@ -102,12 +103,14 @@ const StalkOwnershipTab: React.FC<TabData
         />
       </Stack>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
-        <MainnetBlur>
-          <Stack justifyContent="center" alignItems="center" gap={1}>
-            <Typography variant="body1" color="gray">Your Stalk Balance and Ownership will appear here.</Typography>
-            <WalletButton color="primary" sx={{ height: 45 }} />
-          </Stack>
-        </MainnetBlur>
+        {!account && (
+          <MainnetBlur>
+            <Stack justifyContent="center" alignItems="center" gap={1}>
+              <Typography variant="body1" color="gray">Your Stalk Balance and Ownership will appear here.</Typography>
+              <WalletButton color="primary" sx={{ height: 45 }} />
+            </Stack>
+          </MainnetBlur>
+        )}
         <LineChart series={series} onCursor={handleCursor} />
       </Box>
     </>

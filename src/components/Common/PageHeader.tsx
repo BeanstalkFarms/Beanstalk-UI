@@ -53,7 +53,8 @@ const PageHeader : React.FC<{
                 <Link
                   href={props.href || 'https://docs.bean.money'}
                   underline="none"
-                  color={BeanstalkPalette.darkNavyBlue}
+                  // color={BeanstalkPalette.darkNavyBlue}
+                  color={BeanstalkPalette.logoGreen}
                   display="flex"
                   alignItems="center"
                   target="_blank"

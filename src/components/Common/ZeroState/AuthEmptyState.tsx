@@ -35,7 +35,7 @@ const AuthEmptyState: React.FC<{
   } else {
     content = (
       <>
-        {title && <Typography variant="body1" color="gray">{title}</Typography>}
+        {title && <Typography variant="body1" color="gray">Your {title} will appear here.</Typography>}
         {children}
       </>
     );

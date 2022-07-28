@@ -87,7 +87,7 @@ const FieldPage: React.FC = () => {
       <Stack spacing={2}>
         <PageHeader
           title="The Field"
-          description="Earn yield by lending Beans to Beanstalk in exchange for Pods"
+          description="Earn yield by lending Beans to Beanstalk"
           href="https://docs.bean.money/farm/field"
         />
         <FieldConditions
