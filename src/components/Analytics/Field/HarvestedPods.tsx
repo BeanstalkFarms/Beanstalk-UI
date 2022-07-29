@@ -1,5 +1,5 @@
 import React from 'react';
-import SeasonPlot from 'components/Common/Charts/SeasonPlot';
+import SeasonPlot, { SeasonPlotBaseProps } from 'components/Common/Charts/SeasonPlot';
 import { SeasonalHarvestedPodsDocument, SeasonalHarvestedPodsQuery } from 'generated/graphql';
 import { SnapshotData } from 'hooks/useSeasons';
 
@@ -10,8 +10,9 @@ const StatProps = {
   gap: 0.5,
 };
 
-const HarvestedPods: React.FC<{}> = () => (
+const HarvestedPods: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => (
   <SeasonPlot<SeasonalHarvestedPodsQuery>
+    height={height}
     document={SeasonalHarvestedPodsDocument}
     getValue={getValue}
     formatValue={formatValue}

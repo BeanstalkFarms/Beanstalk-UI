@@ -27,12 +27,12 @@ const FieldAnalytics: React.FC<{}> = () => {
         </Tabs>
         {/* {tab === 0 && <RRoR season={season} beanPrice={beanPrice} />} */}
         {tab === 0 && <Soon />}
-        {tab === 1 && <Weather />}
-        {tab === 2 && <Pods />}
-        {tab === 3 && <PodRate />}
-        {tab === 4 && <Sown />}
-        {tab === 5 && <HarvestedPods />}
-        {tab === 6 && <TotalSowers />}
+        {tab === 1 && <Weather height={300} />}
+        {tab === 2 && <Pods height={300} />}
+        {tab === 3 && <PodRate height={300} />}
+        {tab === 4 && <Sown height={300} />}
+        {tab === 5 && <HarvestedPods height={300} />}
+        {tab === 6 && <TotalSowers height={300} />}
       </Stack>
     </Card>
   );

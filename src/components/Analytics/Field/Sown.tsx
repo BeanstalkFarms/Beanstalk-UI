@@ -1,5 +1,5 @@
 import React from 'react';
-import SeasonPlot from 'components/Common/Charts/SeasonPlot';
+import SeasonPlot, { SeasonPlotBaseProps } from 'components/Common/Charts/SeasonPlot';
 import { SeasonalSownDocument, SeasonalSownQuery } from 'generated/graphql';
 import useSeason from 'hooks/useSeason';
 import usePodRate from 'hooks/usePodRate';
@@ -13,11 +13,12 @@ const StatProps = {
   sx: { ml: 0 }
 };
 
-const Sown: React.FC<{}> = () => {
+const Sown: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => {
   const podRate = usePodRate();
   const season  = useSeason();
   return (
     <SeasonPlot<SeasonalSownQuery>
+      height={height}
       document={SeasonalSownDocument}
       // defaultValue={podRate?.gt(0) ? podRate.div(100).toNumber() : 0}
       defaultSeason={season?.gt(0) ? season.toNumber() : 0}
