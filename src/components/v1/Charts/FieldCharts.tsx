@@ -48,7 +48,7 @@ export default function FieldCharts(props) {
         data: [props.data.map((d) => ({ x: d.x, y: d.harvestedPods }))],
     },
     {
-        title: 'Unique Sowers',
+        title: 'Unique TotalSowers',
         tabTitle: 'SOWERS',
         description: fieldChartStrings.sowers,
         data: [props.data.map((d) => ({ x: d.x, y: d.numberOfSowers }))],
