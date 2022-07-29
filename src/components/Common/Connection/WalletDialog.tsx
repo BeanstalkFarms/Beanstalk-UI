@@ -40,29 +40,32 @@ const WalletDialog: React.FC<{
       <StyledDialogContent>
         <Stack gap={1}>
           {connectors.map((connector) => (
-            <Button
-              variant="outlined"
-              color="primary"
-              key={connector.id}
-              disabled={!connector.ready}
-              onClick={handleConnect(connector)}
-              sx={{
-                py: 1,
-                minWidth: fullScreen ? null : 400,
-                borderColor: grey[300]
-              }}
-            >
-              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }} gap={3}>
-                <Typography color="text.primary" sx={{ fontSize: 20 }}>
-                  {isConnecting && (connector.id === pendingConnector?.id)
-                    ? <CircularProgress variant="indeterminate" color="primary" size={20} />
-                    : connector.name}
-                </Typography>
-                {CONNECTOR_LOGOS[connector.name] && (
-                  <img src={CONNECTOR_LOGOS[connector.name]} alt="" style={{ height: 35 }} />
-                )}
-              </Stack>
-            </Button>
+            connector.ready ? (
+              <Button
+                size="large"
+                variant="outlined"
+                color="primary"
+                key={connector.id}
+                disabled={!connector.ready}
+                onClick={handleConnect(connector)}
+                sx={{
+                  py: 1,
+                  minWidth: fullScreen ? null : 400,
+                  borderColor: grey[300]
+                }}
+              >
+                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }} gap={3}>
+                  <Typography color="text.primary" sx={{ fontSize: 20 }}>
+                    {isConnecting && (connector.id === pendingConnector?.id)
+                      ? <CircularProgress variant="indeterminate" color="primary" size={20} />
+                      : connector.name}
+                  </Typography>
+                  {CONNECTOR_LOGOS[connector.name] && (
+                    <img src={CONNECTOR_LOGOS[connector.name]} alt="" style={{ height: 35 }} />
+                  )}
+                </Stack>
+              </Button>
+            ) : null
           ))}
           {error && (
             <Alert severity="error">

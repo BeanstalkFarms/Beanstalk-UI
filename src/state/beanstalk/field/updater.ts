@@ -1,13 +1,11 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { bigNumberResult } from 'util/Ledger';
-import { tokenResult } from 'util/Tokens';
-
+import { bigNumberResult, tokenResult } from 'util/index';
 import { BEAN } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { resetBeanstalkField, updateBeanstalkField } from './actions';
 
-export const useBeanstalkField = () => {
+export const useFetchBeanstalkField = () => {
   const dispatch = useDispatch();
   const beanstalk = useBeanstalkContract();
 
@@ -47,7 +45,7 @@ export const useBeanstalkField = () => {
       dispatch(updateBeanstalkField({
         harvestableIndex,
         podIndex,
-        totalPods: harvestableIndex.plus(podIndex),
+        podLine: podIndex.minus(harvestableIndex),
         soil,
         weather,
         rain,
@@ -69,7 +67,7 @@ export const useBeanstalkField = () => {
 // -- Updater
 
 const FieldUpdater = () => {
-  const [fetch, clear] = useBeanstalkField();
+  const [fetch, clear] = useFetchBeanstalkField();
 
   useEffect(() => {
     clear();

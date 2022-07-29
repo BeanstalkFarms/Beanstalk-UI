@@ -2,16 +2,16 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { BEAN_TO_SEEDS, BEAN_TO_STALK,  REPLANTED_CHAINS,  SupportedChainId,  TokenMap, ZERO_BN } from 'constants/index';
 import { useDispatch } from 'react-redux';
 import { bigNumberResult } from 'util/Ledger';
-import { tokenResult } from 'util/Tokens';
+import { tokenResult, toStringBaseUnitBN } from 'util/index';
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, SEEDS, STALK } from 'constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useMigrateCall from 'hooks/useMigrateCall';
-import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
+import { Beanstalk, BeanstalkReplanted } from 'generated/index';
 import useWhitelist, { useGeneralizedWhitelist } from 'hooks/useWhitelist';
 import BigNumber from 'bignumber.js';
 import { useGetChainConstant } from 'hooks/useChainConstant';
 import useChainId from 'hooks/useChain';
-import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
+import { resetBeanstalkSilo, updateBeanstalkSilo } from './actions';
 import { BeanstalkSiloBalance } from './index';
 
 export const useBeanstalkSilo = () => {
@@ -26,8 +26,8 @@ export const useBeanstalkSilo = () => {
 
   const getChainConstant = useGetChainConstant();
   const SiloTokens = useMemo(() => ({
-    Bean: getChainConstant(BEAN),
-    BeanEthLP: getChainConstant(BEAN_ETH_UNIV2_LP),
+    Bean:       getChainConstant(BEAN),
+    BeanEthLP:  getChainConstant(BEAN_ETH_UNIV2_LP),
     BeanCrv3LP: getChainConstant(BEAN_CRV3_LP),
     BeanLusdLP: getChainConstant(BEAN_LUSD_LP),
   }), [getChainConstant]);
@@ -35,7 +35,7 @@ export const useBeanstalkSilo = () => {
   // Handlers
   const fetch = useCallback(async () => {
     if (beanstalk) {
-      console.debug('[beanstalk/silo/useBeanstalkSilo] FETCH');
+      console.debug('[beanstalk/silo/useBeanstalkSilo] FETCH: whitelist = ', WHITELIST);
 
       const [
         // 0
@@ -52,6 +52,8 @@ export const useBeanstalkSilo = () => {
         withdrawnLpTotal,
         // 4
         poolBalancesTotal,
+        // 5
+        withdrawSeasons,
       ] = await Promise.all([
         // 0
         beanstalk.totalStalk().then(tokenResult(STALK)),  // Includes Stalk from Earned Beans.
@@ -84,25 +86,45 @@ export const useBeanstalkSilo = () => {
         Promise.all(
           Object.keys(WHITELIST).map((addr) => (
             Promise.all([
+              // FIXME: duplicate tokenResult optimization
               beanstalk.getTotalDeposited(addr).then(tokenResult(WHITELIST[addr])),
-              beanstalk.getTotalWithdrawn(addr).then(tokenResult(WHITELIST[addr]))
+              beanstalk.getTotalWithdrawn(addr).then(tokenResult(WHITELIST[addr])),
+              IS_REPLANTED ? (
+                // BEAN will always have a fixed BDV of 1,
+                // skip to save a network request
+                WHITELIST[addr] === SiloTokens.Bean 
+                  ? new BigNumber(1)
+                  : (beanstalk as unknown as BeanstalkReplanted)
+                      .bdv(addr, toStringBaseUnitBN(1, WHITELIST[addr].decimals))
+                      .then(tokenResult(BEAN))
+                      .catch((err) => {
+                        console.error(`Failed to fetch BDV: ${addr}`);
+                        console.error(err);
+                        throw err;
+                      })
+              ) : Promise.resolve(ZERO_BN)
             ]).then((data) => ({
               token: addr.toLowerCase(),
               deposited: data[0],
               withdrawn: data[1],
+              bdvPerToken: data[2],
             }))
           ))
-        )
-        // beanstalk.withdrawSeasons().then(bigNumberResult)
+        ),
+        // 5
+        migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
+          (b) => b.withdrawSeasons(),
+          (b) => b.withdrawFreeze(),
+        ]).then(bigNumberResult),
       ] as const);
 
-      console.debug('[beanstalk/silo/useBeanstalkSilo] RESULT', [stalkTotal, seedsTotal, poolBalancesTotal[0], poolBalancesTotal[0].deposited.toString()]);
+      console.debug('[beanstalk/silo/useBeanstalkSilo] RESULT', [stalkTotal, seedsTotal, poolBalancesTotal[0], poolBalancesTotal[0].deposited.toString(), withdrawSeasons]);
 
       // farmableStalk and farmableSeed are derived from farmableBeans
       // because 1 bean = 1 stalk, 2 seeds
       const activeStalkTotal = (
         chainId === SupportedChainId.MAINNET
-          ? stalkTotal //.minus(219316.5007560000) // subtract exploiter stalk balance
+          ? stalkTotal // .minus(219316.5007560000) // subtract exploiter stalk balance
           : stalkTotal
       );
       const earnedStalkTotal = earnedBeansTotal.times(BEAN_TO_STALK);
@@ -112,7 +134,45 @@ export const useBeanstalkSilo = () => {
       // active:  owned, actively earning other silo assets
       // earned:  active but not yet deposited into a Season
       // grown:   inactive
-      dispatch(updateBeanstalkSiloAssets({
+      dispatch(updateBeanstalkSilo({
+        // Balances
+        balances: {
+          ...(IS_REPLANTED ? {} : {
+            [SiloTokens.Bean.address]: {
+              bdvPerToken: ZERO_BN,
+              deposited: {
+                amount:  depositedBeansTotal,
+              },
+              withdrawn: {
+                amount:  withdrawnBeansTotal,
+              }
+            },
+            [SiloTokens.BeanEthLP.address]: {
+              bdvPerToken: ZERO_BN,
+              deposited: {
+                amount:  depositedLpTotal,
+              },
+              withdrawn: {
+                amount:  withdrawnLpTotal,
+              }
+            },
+          }),
+          // Replanted Beanstalk contains data about
+          // all whitelisted silo tokens in `poolBalancesTotal`
+          ...poolBalancesTotal.reduce((agg, curr) => {
+            agg[curr.token] = {
+              bdvPerToken: curr.bdvPerToken,
+              deposited: {
+                amount: curr.deposited,
+              },
+              withdrawn: {
+                amount: curr.withdrawn,
+              }
+            };
+            return agg;
+          }, {} as TokenMap<BeanstalkSiloBalance>)
+        },
+        // Rewards
         beans: {
           earned: earnedBeansTotal,
           total:  depositedBeansTotal,
@@ -131,41 +191,12 @@ export const useBeanstalkSilo = () => {
         roots: {
           total:  rootsTotal,
         },
-        balances: {
-          ...(IS_REPLANTED ? {} : {
-            [SiloTokens.Bean.address]: {
-              deposited: {
-                amount:  depositedBeansTotal,
-              },
-              withdrawn: {
-                amount:  withdrawnBeansTotal,
-              }
-            },
-            [SiloTokens.BeanEthLP.address]: {
-              deposited: {
-                amount:  depositedLpTotal,
-              },
-              withdrawn: {
-                amount:  withdrawnLpTotal,
-              }
-            },
-          }),
-          ...poolBalancesTotal.reduce((agg, curr) => {
-            agg[curr.token] = {
-              deposited: {
-                amount: curr.deposited,
-              },
-              withdrawn: {
-                amount: curr.withdrawn,
-              }
-            };
-            return agg;
-          }, {} as TokenMap<BeanstalkSiloBalance>)
-        }
+        // Metadata
+        withdrawSeasons: withdrawSeasons
       }));
     }
   }, [
-    SiloTokens.Bean.address,
+    SiloTokens.Bean,
     SiloTokens.BeanEthLP.address,
     dispatch,
     migrate,

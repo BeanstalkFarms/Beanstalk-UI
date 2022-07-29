@@ -1,2 +1,10 @@
 [build]
   command = "yarn build-netlify"
+
+# These build env vars are specific only to Netlify.
+[build.environment]
+  YARN_VERSION = "3.2.1"
+  CI = "true"
+
+[functions]
+  directory = "src/functions"

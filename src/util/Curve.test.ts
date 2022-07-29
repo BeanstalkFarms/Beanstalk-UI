@@ -1,6 +1,6 @@
 import curve, { initCurve } from './Curve';
 
-beforeAll(() => initCurve());
+beforeAll(() => initCurve(1), 60000);
 
 it('can access basic functions like tvl', async () => {
   const tvl = await curve.getTVL();

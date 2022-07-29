@@ -1,24 +1,23 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import ethers, { BigNumber as BN } from 'ethers';
 import BigNumber from 'bignumber.js';
-import { useAccount } from 'wagmi';
 import { useDispatch } from 'react-redux';
 import flattenDeep from 'lodash/flattenDeep';
 import useBlocks from 'hooks/useBlocks';
-import { Beanstalk, BeanstalkReplanted } from 'constants/generated';
+import { Beanstalk, BeanstalkReplanted } from 'generated/index';
 import { useBeanstalkContract } from 'hooks/useContract';
-import useChainId from 'hooks/useChain';
 import { getAccount } from 'util/Account';
 import { getEventFacet } from 'util/GetEventFacet';
 import useMigrateCall from 'hooks/useMigrateCall';
 import { Event } from 'lib/Beanstalk/EventProcessor';
+import toast from 'react-hot-toast';
 import { resetEvents, setEvents } from './actions';
 
-const getEvents = (
-  beanstalk: Beanstalk,
-  migrate: ReturnType<typeof useMigrateCall>,
-  account: string,
-  blocks: ReturnType<typeof useBlocks>
+const getQueryFilters = (
+  beanstalk:  Beanstalk,
+  migrate:    ReturnType<typeof useMigrateCall>,
+  account:    string,
+  blocks:     ReturnType<typeof useBlocks>
 ) =>
   [
     migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
@@ -127,7 +126,6 @@ const getEvents = (
       beanstalk.filters.Harvest(account),
       blocks.BEANSTALK_GENESIS_BLOCK
     ),
-    // Pod Market
     beanstalk.queryFilter(
       beanstalk.filters.PlotTransfer(account, null), // from
       blocks.BEANSTALK_GENESIS_BLOCK
@@ -136,6 +134,7 @@ const getEvents = (
       beanstalk.filters.PlotTransfer(null, account), // to
       blocks.BEANSTALK_GENESIS_BLOCK
     ),
+    // Pod Market
     beanstalk.queryFilter(
       beanstalk.filters.PodListingCreated(account),
       blocks.BIP10_COMMITTED_BLOCK
@@ -185,11 +184,11 @@ const parseBNJS = (_o: { [key: string]: any }) => {
 
 // ----------------------------------------
 
-const useFarmerEvents = () => {
-  const blocks = useBlocks();
-  const dispatch = useDispatch();
+export const useFarmerEvents = () => {
+  const blocks    = useBlocks();
+  const dispatch  = useDispatch();
   const beanstalk = useBeanstalkContract();
-  const migrate = useMigrateCall();
+  const migrate   = useMigrateCall();
 
   // Handlers
   const fetch = useCallback(async (_account?: string) => {
@@ -197,21 +196,21 @@ const useFarmerEvents = () => {
       if (beanstalk && _account && blocks) {
         const account = getAccount(_account);
         console.debug(`[farmer/events/useFarmerEvents] FETCH: beanstalk = ${beanstalk.address}, farmer = ${account}`, blocks);
-        Promise.all(getEvents(beanstalk, migrate, account, blocks)).then((results) => {
+        
+        //
+        Promise.all(getQueryFilters(beanstalk, migrate, account, blocks)).then((results) => {
           const flattened = flattenDeep<ethers.Event>(results);
-          console.debug(`[farmer/events/useFarmerEvents] RESULT: ${results.length} filters -> ${flattened.length} events`);
+          console.debug(`[farmer/events/useFarmerEvents] RESULT: ${results.length} filters -> flattened to ${flattened.length} events`);
           const allEvents : Event[] = (
             flattened
               .reduce<Event[]>((prev, e) => {
                 try {
                   const returnValues = parseBNJS(
                     e.decode?.(
-                      // e.data === '0x' ? `0x${'0'.repeat(192)}` : e.data,
                       e.data,
                       e.topics
                     ) || {}
-                  );  
-                  // console.debug(`[farmer/events/useFarmerEvents] event = ${e.event}, data.length = ${e.data.length}, topics = ${e.topics}`, returnValues, e)
+                  );
                   prev.push({
                     event: e.event,
                     args: e.args,
@@ -222,9 +221,9 @@ const useFarmerEvents = () => {
                     // backwards compat
                     facet: getEventFacet(e.event),
                     returnValues,
-                  })
-                } catch(err) {
-                  console.error(`Failed to parse event ${e.event} ${e.transactionHash}`, err, e)
+                  });
+                } catch (err) {
+                  console.error(`Failed to parse event ${e.event} ${e.transactionHash}`, err, e);
                 }
                 return prev;
               }, [])
@@ -234,6 +233,8 @@ const useFarmerEvents = () => {
                 return a.logIndex - b.logIndex;
               })
           );
+
+          //
           console.debug(`[farmer/events/useFarmerEvents] RESULT: received ${allEvents.length} events`, allEvents);
           dispatch(setEvents(allEvents));
         });
@@ -243,6 +244,7 @@ const useFarmerEvents = () => {
     } catch (e) {
       console.debug('[farmer/events/useFarmerEvents] FAILED', e);
       console.error(e);
+      toast.error('Failed to load event data from Ethereum.');
     }
   }, [
     dispatch,
@@ -261,20 +263,18 @@ const useFarmerEvents = () => {
 
 // ----------------------------------------
 
-const FarmerEventsUpdater = () => {
-  const [fetch, clear] = useFarmerEvents();
-  const { data: account } = useAccount();
-  const chainId = useChainId();
+const FarmerEventsUpdater = () => 
+  // const [fetch, clear] = useFarmerEvents();
+  // const { data: account } = useAccount();
+  // const chainId = useChainId();
 
-  useEffect(() => {
-    clear();
-    if (account?.address) {
-      fetch(account.address);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chainId, account?.address]);
+  // useEffect(() => {
+  //   clear();
+  //   if (account?.address) {
+  //     fetch(account.address);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [chainId, account?.address]);
 
-  return null;
-};
-
+   null;
 export default FarmerEventsUpdater;

@@ -1,64 +1,113 @@
-import React, { useState } from 'react';
-import { Badge, Card, Stack, Tab, Tabs } from '@mui/material';
-import { Token } from 'classes';
+import React from 'react';
+import { Box, Card, Stack, Tab, Tabs } from '@mui/material';
+import { Pool } from 'classes';
+import { ERC20Token } from 'classes/Token';
 import { FarmerSiloBalance } from 'state/farmer/silo';
+import useTabs from 'hooks/display/useTabs';
+import BadgeTab from 'components/Common/BadgeTab';
+import AlmTab from 'components/Common/Almanac/AlmTab';
 import Deposit from './Deposit';
 import Withdraw from './Withdraw';
 import Claim from './Claim';
+import Deposits from './Deposits';
+import Withdrawals from './Withdrawals';
+import Send from './Send';
+import Convert from './Convert';
 
-const Actions : React.FC<{
-  token: Token;
+const SLUGS = ['deposit', 'convert', 'transfer', 'withdraw', 'claim'];
+
+/**
+ * Show the three primary Silo actions: Deposit, Withdraw, Claim.
+ * Displays two components:
+ * (1) a Card containing the Deposit / Withdraw / Claim forms, broken
+ *     up by tabs. Each tab contains a single form.
+ * (2) a table of Deposits and Withdrawals, shown dependent on the
+ *     selected tab. The Withdrawals table also displays an aggregated
+ *     "claimable" row and is shown for both Withdraw & Claim tabs.
+ */
+const SiloActions : React.FC<{
+  pool: Pool;
+  token: ERC20Token;
   siloBalance: FarmerSiloBalance;
 }> = (props) => {
-  const [tab, setTab] = useState(0);
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setTab(newValue);
-  };
-
-  const isClaimVisible = (
-    props.siloBalance?.withdrawn?.amount.gt(0)
-    || props.siloBalance?.claimable?.amount.gt(0)
-  );
-
+  const [tab, handleChange] = useTabs(SLUGS, 'action');
+  const hasClaimable = props.siloBalance?.claimable?.amount.gt(0);
   return (
-    <Card sx={{ p: 2, position: 'relative' }}>
-      <Stack gap={1.5}>
-        {/* Header */}
-        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible' }}>
-          <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }} variant="scrollable">
-            <Tab label="Deposit" />
+    <>
+      <Card sx={{ position: 'relative' }}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{
+            overflow: 'visible',
+            px: 2,
+            pt: 2,
+            pb: 1.5,
+          }}
+        >
+          <Tabs
+            value={tab}
+            onChange={handleChange}
+            sx={{ minHeight: 0 }}
+          >
+            <AlmTab label="Deposit" almHref="https://docs.bean.money/farm/silo#withdraw" />
+            <Tab label="Convert" />
+            <Tab label="Transfer" />
             <Tab label="Withdraw" />
-            {isClaimVisible ? (
-              <Tab label={<Badge color="primary" variant="dot">Claim</Badge>} sx={{ overflow: 'visible' }} />
-            ) : null}
+            <BadgeTab
+              showBadge={hasClaimable}
+              label="Claim"
+              sx={{ overflow: 'visible' }}
+            />
           </Tabs>
         </Stack>
-        {/* Tab Content */}
-        {tab === 0 ? (
-          <Deposit
-            token={props.token}
-          />
-        ) : null}
-        {tab === 1 ? (
-          <Withdraw
-            token={props.token}
-          />
-        ) : null}
-        {tab === 2 ? (
-          <Claim
-            token={props.token}
-            siloBalance={props.siloBalance}
-          />
-        ) : null}
-      </Stack>
-    </Card>
+        <Stack gap={1.5}>
+          <Box sx={{ px: 1, pb: 1 }}>
+            {tab === 0 ? (
+              <Deposit
+                pool={props.pool}
+                token={props.token}
+              />
+            ) : null}
+            {tab === 1 ? (
+              <Convert
+                pool={props.pool}
+                fromToken={props.token}
+              />
+            ) : null}
+            {tab === 2 ? (
+              <Send />
+            ) : null}
+            {tab === 3 ? (
+              <Withdraw
+                token={props.token}
+              />
+            ) : null}
+            {tab === 4 ? (
+              <Claim
+                token={props.token}
+                siloBalance={props.siloBalance}
+              />
+            ) : null}
+          </Box>
+        </Stack>
+      </Card>
+      {/* Tables */}
+      <Box sx={{ display: tab === 0 || tab === 1 || tab === 2 ? 'block' : 'none' }}>
+        <Deposits
+          token={props.token}
+          balance={props.siloBalance}
+        />
+      </Box>
+      <Box sx={{ display: tab === 3 || tab === 4 ? 'block' : 'none' }}>
+        <Withdrawals
+          token={props.token}
+          balance={props.siloBalance}
+        />
+      </Box>
+    </>
   );
 };
 
-export default Actions;
-
-// <Stack sx={{ p: 4 }} direction="row" justifyContent="center" alignItems="center">
-//   <Typography color="text.secondary">
-//     Withdrawals will be available once Beanstalk is Replanted.
-//   </Typography>
-// </Stack>
+export default SiloActions;

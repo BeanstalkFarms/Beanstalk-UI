@@ -1,97 +1,95 @@
 import React from 'react';
-import { Box, Button, Card, Divider, Stack, Tooltip, Typography } from '@mui/material';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { Box, Divider, Stack } from '@mui/material';
 import { FarmerSiloRewards } from 'state/farmer/silo';
-import { displayBN, displayFullBN } from 'util/index';
-import { SupportedChainId } from 'constants/chains';
-import DropdownIcon from '../Common/DropdownIcon';
+import BigNumber from 'bignumber.js';
+import beanIcon from 'img/tokens/bean-logo-circled.svg';
+import stalkIcon from 'img/beanstalk/stalk-icon.svg';
+import seedIcon from 'img/beanstalk/seed-icon.svg';
+import { NEW_BN } from 'constants/index';
+import RewardItem from './RewardItem';
 
-const gap = 4;
-
-const RewardsBar : React.FC<{
-  chainId: SupportedChainId;
+export type RewardsBarProps = {
   beans: FarmerSiloRewards['beans'];
   stalk: FarmerSiloRewards['stalk'];
   seeds: FarmerSiloRewards['seeds'];
-}> = ({
-  chainId,
+  /// TEMP
+  revitalizedStalk?: BigNumber;
+  revitalizedSeeds?: BigNumber;
+};
+
+const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
   beans,
   stalk,
-  seeds
-}) => (
-  <Card sx={{ pl: 2, pr: 1, py: 1.5 }}>
-    <Stack direction={{ md: 'row', xs: 'column' }} justifyContent={{ md: 'space-between', }} alignItems={{ md: 'center', xs: 'auto' }} rowGap={1.5}>
-      {/* Statistics */}
-      <Stack direction={{ md: 'row', xs: 'column' }} columnGap={gap} rowGap={1.5}>
-        {/* Earned */}
-        <Stack direction="row" gap={gap}>
-          <Box sx={{ flex: { md: 'auto', xs: 1 } }}>
-            <Typography color="gray">Earned Beans&nbsp;
-              <Tooltip title="The number of Beans earned since your last interaction with the Silo. Earned Beans are automatically Deposited in the Silo." placement="top">
-                <HelpOutlineIcon
-                  sx={{ color: 'gray', fontSize: '13px' }}
-                />
-              </Tooltip>
-            </Typography>
-            <Typography variant="h3">{displayFullBN(beans.earned, 2)}</Typography>
-          </Box>
-          <Box sx={{ flex: { md: 'auto', xs: 1 } }}>
-            <Typography color="gray">Earned Stalk&nbsp;
-              <Tooltip title="The number of Stalk earned from Earned Beans. Earned Stalk automatically contributes to total Stalk ownership." placement="top">
-                <HelpOutlineIcon
-                  sx={{ color: 'gray', fontSize: '13px' }}
-                />
-              </Tooltip>
-            </Typography>
-            <Typography variant="h3">{displayFullBN(stalk.earned, 2)}</Typography>
-          </Box>
-        </Stack>
-        {/* Divider */}
-        <Box>
-          <Divider orientation="vertical" />
-        </Box>
-        {/* Grown */}
-        <Stack direction="row" gap={gap}>
-          <Box sx={{ flex: { md: 'auto', xs: 1 } }}>
-            <Typography color="gray">Earned Seeds&nbsp;
-              <Tooltip title="The number of Seeds earned from Earned Beans. Earned Seeds do not generate Stalk until they are claimed." placement="top">
-                <HelpOutlineIcon
-                  sx={{ color: 'gray', fontSize: '13px' }}
-                />
-              </Tooltip>
-            </Typography>
-            <Typography variant="h3">{displayFullBN(seeds.earned, 2)}</Typography>
-          </Box>
-          <Box sx={{ flex: { md: 'auto', xs: 1 } }}>
-            <Typography color="gray">Grown Stalk&nbsp;
-              <Tooltip title="The number of Stalk earned from Seeds. Grown Stalk must be claimed in order for it to contribute to total Stalk ownership." placement="top">
-                <HelpOutlineIcon
-                  sx={{ color: 'gray', fontSize: '13px' }}
-                />
-              </Tooltip>
-            </Typography>
-            <Typography variant="h3">{displayFullBN(stalk.grown, 2)}</Typography>
-          </Box>
-        </Stack>
+  seeds,
+  revitalizedStalk = NEW_BN,
+  revitalizedSeeds = NEW_BN,
+  compact = false,
+}) => {
+  const GAP_LG = compact ? 2 : 3.5;
+  const GAP_MD = compact ? 1 : 2;
+  const GAP_XS = compact ? 0.5 : 1;
+  return (
+    <Stack direction={{ lg: 'row', xs: 'column' }} columnGap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }} rowGap={1.5}>
+      {/* Earned */}
+      <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
+        <RewardItem
+          title="Earned Beans"
+          tooltip="The number of Beans earned since your last Plant. Earned Beans are already Deposited in the Silo."
+          amount={beans.earned}
+          icon={beanIcon}
+          compact={compact}
+        />
+        <RewardItem
+          title="Earned Stalk"
+          tooltip="Stalk earned from Earned Beans. Earned Stalk automatically contribute to Stalk ownership and do not require any action to claim them."
+          amount={stalk.earned}
+          icon={stalkIcon}
+          compact={compact}
+        />
       </Stack>
-      {/* Claim */}
-      {/* TEMP: Hide Claim button on MAINNET */}
-      <Box sx={{ justifySelf: { md: 'flex-end', xs: 'auto' }, width: { xs: '100%', md: 'auto' } }}>
-        <Tooltip title={chainId === SupportedChainId.MAINNET ? <>Claiming Silo rewards will be available upon Replant.</> : ''}>
-          <span>
-            <Button
-              disabled={chainId === SupportedChainId.MAINNET}
-              variant="contained"
-              sx={{ height: '100%', width: { xs: '100%', md: 'auto' } }}
-              endIcon={<DropdownIcon open={false} />}
-            >
-              Claim Rewards
-            </Button>
-          </span>
-        </Tooltip>
+      {/* Divider */}
+      <Box display={{ xs: 'block', lg: compact ? 'none' : 'block' }}>
+        <Divider orientation="vertical" />
       </Box>
+      {/* Grown */}
+      <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
+        <RewardItem
+          title="Plantable Seeds"
+          tooltip="Seeds earned in conjuction with Earned Beans. Plantable Seeds must be Planted in order to grow Stalk."
+          amount={seeds.plantable}
+          icon={seedIcon}
+          compact={compact}
+        />
+        <RewardItem
+          title="Grown Stalk"
+          tooltip="Stalk earned from Seeds. Grown Stalk does not contribute to Stalk ownership until it is Mown. Mow can be called on its own, and it is also called at the beginning of any Silo interaction."
+          amount={stalk.grown}
+          icon={stalkIcon}
+          compact={compact}
+        />
+      </Stack>
+      <Box display={{ xs: 'block', lg: compact ? 'none' : 'block' }}>
+        <Divider orientation="vertical" />
+      </Box>
+      {/* Revitalized */}
+      <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
+        <RewardItem
+          title="Revitalized Stalk"
+          tooltip="Stalk that are minted for pre-exploit Silo Members as Fertilizer is sold. Revitalized Stalk must be Enrooted in order to contribute to Stalk ownership."
+          amount={revitalizedStalk}
+          icon={stalkIcon}
+          compact={compact}
+        />
+        <RewardItem
+          title="Revitalized Seeds"
+          tooltip="Seeds that are minted for pre-exploit Silo Members as Fertilizer is sold. Revitalized Seeds must be Enrooted in order grow Stalk."
+          amount={revitalizedSeeds}
+          icon={seedIcon}
+          compact={compact}
+        />
+      </Stack>
     </Stack>
-  </Card>
-);
+  );
+};
 
 export default RewardsBar;

@@ -1,14 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit';
-import BigNumber from 'bignumber.js';
-import { AddressMap } from 'constants/index';
+import { FarmerBalances } from '.';
 import {
   clearBalances,
   updateBalance, updateBalances,
 } from './actions';
 
-export type BalanceState = AddressMap<BigNumber>;
-
-export const initialState: BalanceState = {};
+export const initialState: FarmerBalances = {};
 
 export default createReducer(initialState, (builder) =>
   builder

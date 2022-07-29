@@ -1,8 +1,9 @@
 import BigNumber from 'bignumber.js';
-import { AddressMap, ZERO_BN, MAX_UINT256 } from 'constants/index';
+import { ZERO_BN, MAX_UINT256, ChainConstant, NEW_BN } from 'constants/index';
 import { bigNumberResult } from 'util/Ledger';
 import { erc20TokenContract } from 'util/Contracts';
 import client from 'util/Client';
+import { toStringBaseUnitBN } from 'util/Tokens';
 
 /**
  * A currency is any fungible financial instrument, including Ether, all ERC20 tokens, and other chain-native currencies
@@ -53,7 +54,15 @@ export default abstract class Token {
    */
   public readonly rewards?: { stalk: number; seeds: number };
 
+  /**
+   * 
+   */
   public readonly displayDecimals: number;
+
+  /**
+   * 
+   */
+  public readonly isLP: boolean;
 
   /**
    * @param chainId the chain ID on which this currency resides
@@ -63,13 +72,14 @@ export default abstract class Token {
    */
   constructor(
     chainId: number,
-    address: string | AddressMap<string>,
+    address: string | ChainConstant<string>,
     decimals: number,
     metadata: {
       name: string,
       symbol: string,
       logo: string,
       displayDecimals?: number,
+      isLP?: boolean;
     },
     rewards?: {
       stalk: number;
@@ -83,8 +93,31 @@ export default abstract class Token {
     this.name = metadata.name;
     this.logo = metadata.logo;
     this.displayDecimals = metadata.displayDecimals || 2;
+    this.isLP = metadata.isLP || false;
     this.rewards = rewards;
   }
+
+  /** Get the amount of Stalk rewarded per deposited BDV of this Token. */
+  public getStalk(bdv?: BigNumber) : BigNumber {
+    if (!this.rewards?.stalk) return ZERO_BN;
+    if (!bdv) return new BigNumber(this.rewards.stalk);
+    return bdv.times(this.rewards.stalk);
+  }
+  
+  /** Get the amount of Seeds rewarded per deposited BDV of this Token. */
+  public getSeeds(bdv?: BigNumber) : BigNumber {
+    if (!this.rewards?.seeds) return ZERO_BN;
+    if (!bdv) return new BigNumber(this.rewards.seeds);
+    return bdv.times(this.rewards.seeds);
+  }
+
+  abstract getContract() : any;
+
+  abstract getBalance(account: string) : Promise<BigNumber>;
+
+  abstract getAllowance(account: string, spender: string) : Promise<BigNumber | undefined>;
+  
+  abstract getTotalSupply() : Promise<BigNumber> | undefined;
 
   /**
    * Returns whether this currency is functionally equivalent to the other currency
@@ -98,25 +131,19 @@ export default abstract class Token {
     return this.name;
   }
 
-  public getStalk(bdv?: BigNumber) : BigNumber {
-    if (!this.rewards?.stalk) return ZERO_BN;
-    if (!bdv) return new BigNumber(this.rewards.stalk);
-    return bdv.times(this.rewards.stalk);
+  /**
+   * Convert an `amount` of this Token into a string value
+   * based on the configured number of decimals.
+   * 
+   * FIXME: better name
+   * FIXME: provide other side (toTokenUnitsBN)
+   * 
+   * @param amount amount to convert
+   * @returns string 
+   */
+  public stringify(amount: BigNumber.Value) {
+    return toStringBaseUnitBN(amount, this.decimals);
   }
-  
-  public getSeeds(bdv?: BigNumber) : BigNumber {
-    if (!this.rewards?.seeds) return ZERO_BN;
-    if (!bdv) return new BigNumber(this.rewards.seeds);
-    return bdv.times(this.rewards.seeds);
-  }
-
-  abstract getContract() : any;
-
-  abstract getBalance(account: string) : Promise<BigNumber | undefined>;
-
-  abstract getAllowance(account: string, spender: string) : Promise<BigNumber | undefined>;
-  
-  abstract getTotalSupply() : Promise<BigNumber> | undefined;
 }
 
 export class NativeToken extends Token {
@@ -174,7 +201,7 @@ export class BeanstalkToken extends Token {
 
   // eslint-disable-next-line class-methods-use-this
   public getBalance() {
-    return Promise.resolve(undefined);
+    return Promise.resolve(NEW_BN);
   }
 
   // eslint-disable-next-line class-methods-use-this

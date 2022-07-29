@@ -12,7 +12,7 @@ import {
 const NEG1 = new BigNumber(-1);
 
 const getInitialState = () => {
-  const nextSunrise = getNextExpectedSunrise();
+  const nextSunrise = getNextExpectedSunrise(false);
   return {
     season: NEG1,
     sunrise: {

@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { useNetwork } from 'wagmi';
 import { Button, ButtonProps, Typography } from '@mui/material';
 import { SupportedChainId } from 'constants/chains';
 import { ETH } from 'constants/tokens';
+import useAnchor from 'hooks/display/useAnchor';
 import TokenIcon from '../TokenIcon';
 import DropdownIcon from '../DropdownIcon';
 import NetworkDialog from './NetworkDialog';
@@ -10,17 +11,9 @@ import NetworkDialog from './NetworkDialog';
 const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
   const { activeChain } = useNetwork();
 
-  // Dialog: State
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-
-  // Dialog: Handlers
-  const handleClick = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  }, [setAnchorEl]);
-  const handleClose = useCallback(() => {
-    setAnchorEl(null);
-  }, [setAnchorEl]);
+  // Dialog
+  const [anchor, toggleAnchor] = useAnchor();
+  const open = Boolean(anchor);
   
   if (!activeChain) return null;
 
@@ -51,7 +44,7 @@ const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
         color="light"
         startIcon={startIcon}
         endIcon={<DropdownIcon open={open} />}
-        onClick={handleClick}
+        onClick={toggleAnchor}
         {...props}
         sx={{
           // MUI adds a default margin to start and
@@ -72,13 +65,14 @@ const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
           ...props.sx
         }}
       >
-        <Typography variant="subtitle1" sx={{ display: { md: 'block', xs: 'none' } }}>
+        <Typography variant="bodyMedium" sx={{ display: { lg: 'block', xs: 'none' } }}>
           {text}
         </Typography>
       </Button>
       <NetworkDialog
         open={open}
-        handleClose={handleClose}
+        // toggling always removes the anchor when open === true
+        handleClose={toggleAnchor}
       />
     </>
   );

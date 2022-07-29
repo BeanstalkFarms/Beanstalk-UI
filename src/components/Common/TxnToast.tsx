@@ -6,6 +6,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { makeStyles } from '@mui/styles';
 import useChainConstant from 'hooks/useChainConstant';
 import { CHAIN_INFO } from 'constants/chains';
+import { parseError } from 'util/index';
 
 const useStyles = makeStyles({
   errorMessage: {
@@ -29,7 +30,7 @@ export function ToastAlert({ desc, hash, msg, id }: { desc?: string, hash?: stri
   return (
     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
       <Typography sx={{ pl: 1, pr: 2, flex: 1, textAlign: 'center' }}>
-        <div>
+        <span>
           {desc}
           {hash && (
             <>
@@ -37,11 +38,11 @@ export function ToastAlert({ desc, hash, msg, id }: { desc?: string, hash?: stri
               <a href={`${chainInfo.explorer}/tx/${hash}`} target="_blank" rel="noreferrer">View on Etherscan</a>
             </>
           )}
-        </div>
+        </span>
         {msg && (
-          <div className={classes.errorMessage}>
+          <span className={classes.errorMessage}>
             {msg}
-          </div>
+          </span>
         )}
       </Typography>
       {msg && (
@@ -137,31 +138,8 @@ export default class TransactionToast {
   }
 
   error(error: any) {
-    let msg;
     const duration = Infinity;
-
-    switch (error.code) {
-      // ethers: 
-      case 'UNSUPPORTED_OPERATION':
-        msg = error.reason;
-        break;
-      // ethers: UNPREDICTABLE_GAS_LIMIT
-      case -32603:
-        msg = error.message.replace('execution reverted: ', '');
-        break;
-      // MetaMask - RPC Error: MetaMask Tx Signature: User denied transaction signature.
-      case 4001:
-        msg = 'You rejected the signature request.';
-        break;
-      default:
-        if (error?.message) {
-          msg = `${error?.message || error?.toString()}.${error?.code ? ` (code=${error?.code})` : ''}`;
-        } else {
-          msg = `An unknown error occurred.${error?.code ? ` (code=${error?.code})` : ''}`;
-        }
-        break;
-    }
-
+    const msg = parseError(error);
     toast.error(
       <ToastAlert
         desc={this.messages.error}
@@ -173,7 +151,6 @@ export default class TransactionToast {
         duration: duration
       }
     );
-
     return msg;
   }
 }

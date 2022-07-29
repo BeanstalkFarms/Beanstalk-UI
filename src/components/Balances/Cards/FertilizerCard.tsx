@@ -8,7 +8,7 @@ import { PODS } from 'constants/tokens';
 
 const FertilizerCard: React.FC<{}> = () => {
   return (
-    <StatCard title="My Fertilizer" icon={<TokenIcon token={PODS} />} amount="109,364">
+    <StatCard title="My Fertilizer" amountIcon={<TokenIcon token={PODS} />} amount="109,364">
       {/* <Box display="flex" justifyContent="center">
         <img alt="" src={fertilizerOpenIcon} />
       </Box> */}

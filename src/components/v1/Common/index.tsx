@@ -340,7 +340,7 @@ export const fieldChartStrings = {
   soil: 'This is the current Soil by Season.',
   podRate: 'This is the current Unharvestable Pods per Bean as a percent by Season.',
   harvested: 'This is the current total Harvested Pods by Season.',
-  sowers: 'This is the current total unique Sowers by Season.',
+  sowers: 'This is the current total unique TotalSowers by Season.',
 };
 export const siloChartStrings = {
   depositedBeans: 'This is the current total Deposited Beans by Season.',

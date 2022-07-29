@@ -13,8 +13,10 @@ import { useGetChainConstant } from './useChainConstant';
 export default function useGetChainToken() {
   const getChainConstant = useGetChainConstant();
   return useCallback(
-    (t: Token | ChainConstant<Token>) : Token => (
-      (t instanceof Token) ? t : getChainConstant(t as ChainConstant<Token>)
+    // T = Token | ERC20Token | NativeToken ...
+    // Accepts any type of token
+    <T extends Token>(t: T | ChainConstant<T>) : T => (
+      (t instanceof Token) ? t : getChainConstant(t as ChainConstant<T>)
     ),
     [getChainConstant]
   );

@@ -1,27 +1,39 @@
-import React, { useCallback, useMemo } from 'react';
-import { Accordion, AccordionDetails, Box, Button, Stack, Tooltip } from '@mui/material';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Accordion, AccordionDetails, Box, Button, Divider, Stack, Tooltip, Typography } from '@mui/material';
+import BigNumber from 'bignumber.js';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { Token } from 'classes';
 import { SEEDS, STALK } from 'constants/tokens';
-import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
-// import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
-import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import { FormState } from 'components/Common/Form';
-// import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
-import TransactionPreview from 'components/Common/Form/TransactionPreview';
 import useChainId from 'hooks/useChain';
 import { SupportedChainId } from 'constants/chains';
-import BigNumber from 'bignumber.js';
-import TokenInputField from 'components/Common/Form/TokenInputField';
-import TokenAdornment from 'components/Common/Form/TokenAdornment';
+import {
+  FormState,
+  TxnPreview,
+  TokenOutputField,
+  TokenInputField,
+  TokenAdornment,
+  TxnSeparator,
+  SmartSubmitButton
+} from 'components/Common/Form';
 import Beanstalk from 'lib/Beanstalk';
 import useSeason from 'hooks/useSeason';
 import { FarmerSilo } from 'state/farmer/silo';
 import { useBeanstalkContract } from 'hooks/useContract';
-import { displayFullBN, toStringBaseUnitBN } from 'util/index';
+import { displayFullBN, parseError, toStringBaseUnitBN } from 'util/index';
 import TransactionToast from 'components/Common/TxnToast';
-import { useSigner } from 'wagmi';
+import { useSigner } from 'hooks/ledger/useSigner';
 import useFarmerSiloBalances from 'hooks/useFarmerSiloBalances';
+import { ERC20Token } from 'classes/Token';
+import { BeanstalkReplanted } from 'generated/index';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
+import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
+import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
+import { ActionType } from 'util/Actions';
+import { ZERO_BN } from 'constants/index';
+import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
+import toast from 'react-hot-toast';
 
 // -----------------------------------------------------------------------
 
@@ -41,89 +53,202 @@ const WithdrawForm : React.FC<
   FormikProps<WithdrawFormValues> & {
     token: Token;
     siloBalances: FarmerSilo['balances'];
-    // depositedBalances: AddressMap<BigNumber>;
     depositedBalance: BigNumber;
+    withdrawSeasons: BigNumber;
     season: BigNumber;
   }
 > = ({
   // Formik
   values,
   isSubmitting,
+  submitForm,
   // Custom
-  token,
+  token: whitelistedToken,
   siloBalances,
-  // depositedBalances,
   depositedBalance,
+  withdrawSeasons,
   season,
 }) => {
   const chainId = useChainId();
+  const getUSD = useSiloTokenToUSD();
   const isMainnet = chainId === SupportedChainId.MAINNET;
 
   // Input props
   const InputProps = useMemo(() => ({
     endAdornment: (
-      <TokenAdornment token={token} />
+      <TokenAdornment token={whitelistedToken} />
     )
-  }), [token]);
+  }), [whitelistedToken]);
 
-  //
+  // Confirmation dialog
+  const CONFIRM_DELAY = 2000; // ms
+  const [confirming, setConfirming] = useState(false);
+  const [allowConfirm, setAllowConfirm] = useState(false);
+  const [fill, setFill] = useState('');
+
+  const onClose = useCallback(() => {
+    setConfirming(false);
+    setAllowConfirm(false);
+    setFill('');
+  }, []);
+
+  // const onOpen  = useCallback(() => {
+  //   setConfirming(true);
+  //   setTimeout(() => {
+  //     setFill('fill');
+  //   }, 0);
+  //   setTimeout(() => {
+  //     setAllowConfirm(true);
+  //   }, CONFIRM_DELAY);
+  // }, []);
+
+  const onSubmit = useCallback(() => {
+    submitForm();
+    onClose();
+  }, [onClose, submitForm]);
+
+  // Results
   const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
-    token,
+    whitelistedToken,
     values.tokens,
-    siloBalances[token.address]?.deposited.crates,
+    siloBalances[whitelistedToken.address]?.deposited.crates || [], // fallback
     season,
   );
   const isReady = (withdrawResult && withdrawResult.amount.lt(0));
 
+  // For the Withdraw form, move this fragment outside of the return
+  // statement because it's displayed twice (once in the form and)
+  // once in the final popup
+  const tokenOutputs = isReady ? (
+    <>
+      <Stack direction={{ xs: 'column', md: 'row' }} gap={1} justifyContent="center">
+        <Box sx={{ flex: 1 }}>
+          <TokenOutputField
+            token={STALK}
+            amount={withdrawResult.stalk}
+            amountTooltip={(
+              <>
+                <div>Withdrawing from {withdrawResult.deltaCrates.length} Deposit{withdrawResult.deltaCrates.length === 1 ? '' : 's'}:</div>
+                <Divider sx={{ opacity: 0.2, my: 1 }} />
+                {withdrawResult.deltaCrates.map((_crate, i) => (
+                  <div key={i}>
+                    Season {_crate.season.toString()}: {displayFullBN(_crate.bdv, whitelistedToken.displayDecimals)} BDV, {displayFullBN(_crate.stalk, STALK.displayDecimals)} STALK, {displayFullBN(_crate.seeds, SEEDS.displayDecimals)} SEEDS
+                  </div>
+                ))}
+              </>
+            )}
+          />
+        </Box>
+        <Box sx={{ flex: 1 }}>
+          <TokenOutputField
+            token={SEEDS}
+            amount={withdrawResult.seeds}
+          />
+        </Box>
+      </Stack>
+      <TokenOutputField
+        token={whitelistedToken}
+        amount={withdrawResult.amount.abs()}
+        value={getUSD(whitelistedToken, withdrawResult.amount).abs()}
+        modifier="Withdrawn"
+      />
+    </>
+  ) : null;
+
   return (
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
       <Form noValidate>
-        <Stack gap={1}>
-          <Field name="tokens.0.amount">
-            {(fieldProps: FieldProps) => (
-              <TokenInputField
-                {...fieldProps}
-                token={token}
-                balance={depositedBalance || undefined}
-                InputProps={InputProps}
+        {/* Confirmation Dialog */}
+        <StyledDialog open={confirming} onClose={onClose}>
+          <StyledDialogTitle onClose={onClose}>Confirm Silo Withdrawal</StyledDialogTitle>
+          <StyledDialogContent sx={{ pb: 1 }}>
+            <Stack direction="column" gap={1}>
+              <Box>
+                <Typography variant="body2">
+                  You will forfeit .0001% ownership of Beanstalk. Withdrawing will burn your Grown Stalk & Seeds associated with your initial Deposit. 
+                </Typography>
+              </Box>
+              {tokenOutputs}
+            </Stack>
+          </StyledDialogContent>
+          <StyledDialogActions>
+            <Button disabled={!allowConfirm} type="submit" onClick={onSubmit} variant="contained" color="warning" size="large" fullWidth sx={{ position: 'relative', overflow: 'hidden' }}>
+              <Box
+                sx={{
+                  background: 'rgba(0,0,0,0.03)',
+                  // display: !allowConfirm ? 'none' : 'block',
+                  width: '100%',
+                  transition: `height ${CONFIRM_DELAY}ms linear`,
+                  height: '0%',
+                  position: 'absolute',
+                  left: 0,
+                  bottom: 0,
+                  '&.fill': {
+                    transition: `height ${CONFIRM_DELAY}ms linear`,
+                    height: '100%',
+                  }
+                }}
+                className={fill}
               />
-            )}
-          </Field>
+              Confirm Withdrawal
+            </Button>
+          </StyledDialogActions>
+        </StyledDialog>
+        {/* Form Content */}
+        <Stack gap={1}>
+          <TokenInputField
+            name="tokens.0.amount"
+            token={whitelistedToken}
+            disabled={!depositedBalance || depositedBalance.eq(0)}
+            balance={depositedBalance || ZERO_BN}
+            balanceLabel="Deposited Balance"
+            InputProps={InputProps}
+          />
           {isReady ? (
             <Stack direction="column" gap={1}>
-              <TokenOutputField
-                token={token}
-                value={withdrawResult.amount}
-              />
-              <Stack direction="row" gap={1} justifyContent="center">
-                <Box sx={{ flex: 1 }}>
-                  <TokenOutputField
-                    token={STALK}
-                    value={withdrawResult.stalk}
-                  />
-                </Box>
-                <Box sx={{ flex: 1 }}>
-                  <TokenOutputField
-                    token={SEEDS}
-                    value={withdrawResult.seeds}
-                  />
-                </Box>
-              </Stack>
+              <TxnSeparator />
+              {tokenOutputs}
               <Box>
                 <Accordion defaultExpanded variant="outlined">
                   <StyledAccordionSummary title="Transaction Details" />
                   <AccordionDetails>
-                    <TransactionPreview
-                      actions={withdrawResult.actions}
+                    <TxnPreview
+                      actions={[
+                        {
+                          type: ActionType.WITHDRAW,
+                          amount: withdrawResult.amount,
+                          token: whitelistedToken,
+                        },
+                        {
+                          type: ActionType.UPDATE_SILO_REWARDS,
+                          stalk: withdrawResult.stalk,
+                          seeds: withdrawResult.seeds,
+                        },
+                        {
+                          type: ActionType.IN_TRANSIT,
+                          amount: withdrawResult.amount,
+                          token: whitelistedToken,
+                          withdrawSeasons
+                        }
+                      ]}
                     />
                   </AccordionDetails>
                 </Accordion>
               </Box>
             </Stack>
           ) : null}
-          <Button disabled={!isReady || isSubmitting || isMainnet} type="submit" size="large" fullWidth>
+          <SmartSubmitButton
+            loading={isSubmitting}
+            disabled={!isReady || isSubmitting}
+            type="submit"
+            variant="contained"
+            color="primary"
+            size="large"
+            tokens={[]}
+            mode="auto"
+          >
             Withdraw
-          </Button>
+          </SmartSubmitButton>
         </Stack>
       </Form>
     </Tooltip>
@@ -132,35 +257,38 @@ const WithdrawForm : React.FC<
 
 // -----------------------------------------------------------------------
 
-// TODO:
-// - implement usePreferredToken here
-const Withdraw : React.FC<{ token: Token; }> = ({ token }) => {
+const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
   const season = useSeason();
   const siloBalances = useFarmerSiloBalances();
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer);
+  const [refetchFarmerSilo] = useFetchFarmerSilo();
+  const beanstalk = (useBeanstalkContract(signer) as unknown) as BeanstalkReplanted;
+  const withdrawSeasons = useSelector<AppState, AppState['_beanstalk']['silo']['withdrawSeasons']>((state) => state._beanstalk.silo.withdrawSeasons);
 
   // Form data
-  // const depositedBalances = useMemo(() => simplifySiloBalances('deposited', siloBalances), [siloBalances]);
   const depositedBalance = siloBalances[token.address]?.deposited.amount;
   const initialValues : WithdrawFormValues = useMemo(() => ({
     tokens: [
       {
         token: token,
-        amount: null,
+        amount: undefined,
       },
     ],
   }), [token]);
 
   // Handlers
-  const onSubmit = useCallback((values: WithdrawFormValues, formActions: FormikHelpers<WithdrawFormValues>) => {
-    const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
-      token,
-      values.tokens,
-      siloBalances[token.address]?.deposited.crates,
-      season,
-    );
-    if (withdrawResult) {
+  const onSubmit = useCallback(async (values: WithdrawFormValues, formActions: FormikHelpers<WithdrawFormValues>) => {
+    let txToast;
+    try {
+      const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
+        token,
+        values.tokens,
+        siloBalances[token.address]?.deposited.crates,
+        season,
+      );
+
+      if (!withdrawResult) throw new Error('Nothing to Withdraw.');
+      
       let call;
       const seasons = withdrawResult.deltaCrates.map((crate) => crate.season.toString());
       const amounts = withdrawResult.deltaCrates.map((crate) => toStringBaseUnitBN(crate.amount.abs(), token.decimals));
@@ -173,79 +301,61 @@ const Withdraw : React.FC<{ token: Token; }> = ({ token }) => {
         },
       });
 
-      if (token.symbol === 'BEAN') {
-        call = beanstalk.withdrawBeans(
-          seasons,
-          amounts,
-        );
-      } else if (withdrawResult.deltaCrates.length > 1) {
-        call = beanstalk.withdrawTokenBySeasons(
-          token.address,
-          seasons,
-          amounts
-        );
-      } else {
-        call = beanstalk.withdrawTokenBySeason(
+      /// Optimize the call used depending on the
+      /// number of crates.
+      if (seasons.length === 0) {
+        throw new Error('Malformatted crates.');
+      } else if (seasons.length === 1) {
+        call = beanstalk.withdrawDeposit(
           token.address,
           seasons[0],
           amounts[0],
         );
+      } else {
+        call = beanstalk.withdrawDeposits(
+          token.address,
+          seasons,
+          amounts,
+        );
       }
 
-      const txToast = new TransactionToast({
+      txToast = new TransactionToast({
         loading: `Withdrawing ${displayFullBN(withdrawResult.amount.abs(), token.displayDecimals, token.displayDecimals)} ${token.name} from the Silo`,
-        success: `Withdraw successful. Your ${token.symbol} will be available to Claim in N Seasons.`,
+        success: `Withdraw successful. Your ${token.name} will be available to Claim in ${withdrawSeasons.toFixed()} Seasons.`,
       });
 
-      return call
-        .then((txn) => {
-          txToast.confirming(txn);
-          return txn.wait();
-        })
-        .then((receipt) => {
-          txToast.success(receipt);
-          formActions.resetForm();
-        })
-        .catch((err) => {
-          console.error(
-            txToast.error(err.error || err),
+      const txn = await call;
+      txToast.confirming(txn);
 
-            {
-              token: token.address,
-              seasons,
-              amounts,
-            }
-          );
-        });
+      const receipt = await txn.wait();
+      await refetchFarmerSilo(); // FIXME: ignore refetch error?
+      txToast.success(receipt);
+      formActions.resetForm();
+    } catch (err) {
+      txToast ? txToast.error(err) : toast.error(parseError(err));
+      formActions.setSubmitting(false);
     }
   }, [
     siloBalances,
     beanstalk,
     token,
     season,
+    withdrawSeasons,
+    refetchFarmerSilo,
   ]);
 
   //
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {(formikProps) => (
-        <>
-          {/* Padding below matches tabs and input position. See Figma. */}
-          {/* <Box sx={{ position: 'absolute', top: 0, right: 0, pr: 1.3, pt: 1.7 }}>
-            <TransactionSettings>
-              {token !== Bean && (
-                <SettingSwitch name="settings.removeLP" label="Remove LP" />
-              )}
-            </TransactionSettings>
-          </Box> */}
-          <WithdrawForm
-            token={token}
-            siloBalances={siloBalances}
-            depositedBalance={depositedBalance}
-            season={season}
-            {...formikProps}
-          />
-        </>
+        <WithdrawForm
+          token={token}
+          siloBalances={siloBalances}
+          depositedBalance={depositedBalance}
+          withdrawSeasons={withdrawSeasons}
+          season={season}
+          {...formikProps}
+        />
       )}
     </Formik>
   );

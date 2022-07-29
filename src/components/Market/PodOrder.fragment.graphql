@@ -1,0 +1,13 @@
+fragment PodOrder on PodOrder {
+  # Metadata
+  id
+  farmer { id }
+  createdAt
+  updatedAt
+  status
+  # Order data
+  amount
+  filledAmount
+  pricePerPod
+  maxPlaceInLine
+}

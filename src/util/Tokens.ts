@@ -1,8 +1,6 @@
 import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
-import { SupportedChainId } from 'constants/chains';
-import { ZERO_BN, ChainConstant } from 'constants/index';
-import { bigNumberResult } from './Ledger';
+import { ZERO_BN } from 'constants/index';
 
 // -------------------------
 // BigNumber Comparators
@@ -82,14 +80,15 @@ export function displayFullBN(
  */
 export function displayTokenAmount(
   amount: BigNumber,
-  token: Token
+  token: Token,
+  modifier?: string
 ) {
   return `${amount
     .toNumber()
     .toLocaleString('en-US', { 
       maximumFractionDigits: token.displayDecimals,
       // maximumSignificantDigits: 3,
-    })} ${token.name}`;
+    })} ${modifier ? `${modifier} ` : ''}${token.name}`;
 }
 
 /**
@@ -203,19 +202,5 @@ export function toTokenUnitsBN(
   rawAmt:   BigNumber.Value,
   decimals: BigNumber.Value,
 ): string {
-  return toBaseUnitBN(rawAmt, decimals).toString();
+  return toBaseUnitBN(rawAmt, decimals).toFixed();
 }
-
-// -------------------------
-// Chain Result Helpers
-// -------------------------
-
-export const tokenResult = (_token: Token | ChainConstant<Token>) => {
-  // If a mapping is provided, default to MAINNET decimals.
-  // ASSUMPTION: the number of decimals are the same across all chains.
-  const token = _token instanceof Token ? _token : _token[SupportedChainId.MAINNET];
-  return (result: any) => toTokenUnitsBN(
-    bigNumberResult(result),
-    token.decimals
-  );
-};

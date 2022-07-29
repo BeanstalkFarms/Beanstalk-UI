@@ -1,16 +1,13 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Stack, Typography, Grid, Box, Tooltip, Badge } from '@mui/material';
+import { Stack, Typography, Grid, Box, Tooltip } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import useBeanstalkSiloBreakdown from 'hooks/useBeanstalkSiloBreakdown';
-import { displayBN, displayFullBN, displayUSD } from 'util/index';
-import ResizablePieChart, { PieDataPoint } from 'components/Charts/Pie';
-import { TotalBalanceCardProps } from 'components/Balances/Cards/TotalBalancesCard';
+import { displayFullBN, displayUSD } from 'util/index';
+import ResizablePieChart, { PieDataPoint } from 'components/Common/Charts/Pie';
 import { Token } from 'classes';
-import TokenIcon from './TokenIcon';
 import { BeanstalkPalette } from 'components/App/muiTheme';
-
-type DrilldownValues = keyof (ReturnType<typeof useFarmerSiloBreakdown>)['states'];
+import TokenIcon from './TokenIcon';
 
 // ------------------------------------------------------
 
@@ -65,7 +62,7 @@ const TokenRow: React.FC<{
       py: 0.75,
       px: 0.75,
       opacity: isFaded ? 0.3 : 1,
-      outline: isSelected ? `1px solid ${BeanstalkPalette.lightBlue}` : null,
+      outline: isSelected ? `1px solid ${BeanstalkPalette.blue}` : null,
       borderRadius: 1,
     }}
     onMouseOver={onMouseOver}
@@ -74,12 +71,12 @@ const TokenRow: React.FC<{
     onBlur={onMouseOut}
     onClick={onClick}
   >
-    {/* 5px gap between color and typography; shift circle back width+gap px*/}
-    <Stack direction="row" gap={'5px'} alignItems="center">
+    {/* 5px gap between color and typography; shift circle back width+gap px */}
+    <Stack direction="row" gap="5px" alignItems="center">
       {color && (
         <Box sx={{ width: 8, height: 8, borderRadius: 8, backgroundColor: showColor ? color : 'transparent', mt: '-2px', ml: '-13px' }} />
       )}
-      <Typography color="text.secondary" sx={token ? { display: { lg: 'block', md: 'none', xs: 'block' } } : undefined}>
+      <Typography variant="body1" color="text.secondary" sx={token ? { display: { lg: 'block', md: 'none', xs: 'block' } } : undefined}>
         {label}
       </Typography>
       {(assetStates) && (
@@ -94,12 +91,12 @@ const TokenRow: React.FC<{
       <Stack direction="row" alignItems="center" gap={0.5}>
         {token && <TokenIcon token={token} />}
         {amount && (
-          <Typography textAlign="right">
+          <Typography variant="body1" textAlign="right">
             {amount}
           </Typography>
         )}
         {value && (
-          <Typography textAlign="right" display="block">
+          <Typography variant="body1" textAlign="right" display="block">
             {value}
           </Typography>
         )}
@@ -108,15 +105,14 @@ const TokenRow: React.FC<{
   </Stack>
 );
 
-// Matches the key => value mapping of TotalBalanceCardProps['breakdown'],
-// but without the 'bdv' key.
-// https://www.typescriptlang.org/docs/handbook/2/mapped-types.html
 const STATE_CONFIG: { [key: string]: [name: string, color: string, tooltip: string] } = {
+  // Silo
   deposited:    ['Deposited', 'rgba(70, 185, 85, 1)', 'Assets that are Deposited in the Silo.'],
-  withdrawn:    ['Withdrawn', 'rgba(31, 120, 180, 0.3)', 'Assets being Withdrawn from the Silo. Once the Withdrawal timer elapses, Withdrawn assets become Claimable.'],
+  withdrawn:    ['Withdrawn', 'rgba(31, 120, 180, 0.3)', 'Assets being Withdrawn from the Silo. At the end of the current Season, Withdrawn assets become Claimable.'],
   claimable:    ['Claimable', 'rgba(178, 223, 138, 0.3)', 'Assets that can be claimed to your wallet, Deposited in the Silo, etc.'],
+  // Farm
+  farm:         ['Farm', 'rgba(25, 135, 59, 0.5)', 'Assets stored in Beanstalk but not Deposited.'],
   circulating:  ['Circulating', 'rgba(25, 135, 59, 1)', 'Beanstalk assets in your wallet.'],
-  wrapped:      ['Wrapped', 'rgba(25, 135, 59, 0.5)', 'Assets stored in Beanstalk but not Deposited.'],
 };
 
 type StateID = keyof typeof STATE_CONFIG;
@@ -172,7 +168,7 @@ const SiloBalances: React.FC<{
           color: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][1],
         });
         return prev;
-      }, []).sort((a, b) => b.value - a.value)
+      }, []).sort((a, b) => b.value - a.value);
     }
     return availableStates.map((id) => ({
       label: STATE_CONFIG[id][0],
@@ -238,7 +234,7 @@ const SiloBalances: React.FC<{
             </Stack>
           ) : (
             <Stack gap={1}>
-              <Typography variant="h2" sx={{ display: { xs: 'none', md: 'block' }, mx: 0.75 }}>{STATE_CONFIG[hoverState][0]} Assets</Typography>
+              <Typography variant="h3" sx={{ display: { xs: 'none', md: 'block' }, mx: 0.75 }}>{STATE_CONFIG[hoverState][0]} Assets</Typography>
               <Box>
                 {pieChartData.map((dp) => {
                   const token = whitelist[dp.tokenAddress];
@@ -254,7 +250,7 @@ const SiloBalances: React.FC<{
                       amount={`${displayFullBN(inThisState?.amount, token.displayDecimals)} ${token.name}`}
                       tooltip={(
                         <>
-                          {displayFullBN(inThisState?.amount)} {token.name}<br/>
+                          {displayFullBN(inThisState?.amount)} {token.name}<br />
                           ≈ {displayUSD(inThisState?.value)}
                         </>
                       )}

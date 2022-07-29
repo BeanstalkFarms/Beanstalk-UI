@@ -1,89 +1,178 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
+  Divider,
   Stack,
   TextField,
   TextFieldProps,
+  Tooltip,
   Typography,
 } from '@mui/material';
-import { FieldProps } from 'formik';
+import { Field, FieldProps } from 'formik';
 import BigNumber from 'bignumber.js';
-import { displayFullBN } from 'util/index';
+import { displayBN, displayFullBN, displayTokenAmount } from 'util/index';
 import Token from 'classes/Token';
+import { FarmerBalances } from 'state/farmer/balances';
+import NumberFormatInput from './NumberFormatInput';
+import FieldWrapper from './FieldWrapper';
 
-type TokenInputFieldProps = { 
-  token: Token;
-  balance: BigNumber | undefined;
+export type TokenInputCustomProps = {
+  /**
+   * If provided, the Balance is displayed with respect
+   * to this token's displayDecimals.
+   */
+  token?: Token;
+  /**
+   *
+   */
+  balance?: FarmerBalances[string] | BigNumber | undefined;
+  /**
+   *
+   */
+  balanceLabel?: string;
+  /**
+   * 
+   */
+  max?: BigNumber | 'use-balance';
+  /**
+   *
+   */
+  hideBalance?: boolean;
+  /**
+   *
+   */
   quote?: JSX.Element;
+  /**
+   *
+   */
+  handleChange?: (finalValue: BigNumber | undefined) => void;
 };
 
-const TokenInputField : React.FC<
-  TokenInputFieldProps      // custom
-  & Partial<TextFieldProps> // MUI TextField
-  & FieldProps              // Formik Field
+export type TokenInputProps = (
+  TokenInputCustomProps // custom
+  & Partial<TextFieldProps>  // MUI TextField
+);
+
+export const VALID_INPUTS = /[0-9]*/;
+
+const TokenInput: React.FC<
+  TokenInputProps & FieldProps
 > = ({
-  // -- Custom props
+  /// Balances
   token,
-  balance,
+  balance: _balance,
+  balanceLabel = 'Balance',
+  hideBalance = false,
   quote,
-  // -- Formik props
+  max: _max = 'use-balance',
+  /// Formik props
   field,
   form,
-  // meta,
-  // -- TextField props
+  /// TextField props
+  handleChange: _handleChange,
   placeholder,
   disabled,
   sx,
   InputProps,
-  // -- Other
-  ...props
+  label,
+  ...textFieldProps
 }) => {
-  const [displayAmount, setDisplayAmount] = useState<string>(field.value);
+  const [displayAmount, setDisplayAmount] = useState<string>(field.value?.toString() || '');
   const inputProps = useMemo(() => ({
-    // Styles
     inputProps: {
       min: 0.00,
+      inputMode: 'numeric',
     },
-    classes: {},
+    inputComponent: NumberFormatInput as any,
     ...InputProps,
   } as TextFieldProps['InputProps']), [InputProps]);
 
-  // Derived
-  // Disable when: explicitly disabled, balance is undefined or zero
+  // Unpack balance
+  const [balance, balanceTooltip] = useMemo(() => {
+    if (!_balance) return [undefined, ''];
+    if (_balance instanceof BigNumber) return [_balance, ''];
+    return [_balance.total, (
+      <>
+        Farm Balance: {token ? displayTokenAmount(_balance.internal, token) : displayBN(_balance.internal)}<br />
+        Circulating Balance: {token ? displayTokenAmount(_balance.external, token) : displayBN(_balance.external)}<br />
+        <Divider color="secondary" sx={{ my: 1 }} />
+        The Beanstalk UI uses your Farm Balance first
+      </>
+    )];
+  }, [_balance, token]);
+
+  // Automatically disable the input if
+  // the form it's contained within is 
+  // submitting, or if a zero balance is provided.
+  // Otherwise fall back to the disabled prop.
   const isInputDisabled = (
     disabled
-    || !balance 
-    || balance.eq(0)
+    || (balance && balance.eq(0))
     || form.isSubmitting
   );
 
-  // Handlers
-  const handleMax = useCallback(() => { 
-    form.setFieldValue(field.name, balance);
-  }, [form, field.name, balance]);
+  const clamp = useCallback((amount: BigNumber | null) => {
+    const max = _max === 'use-balance' ? balance : _max; // fallback to balance
+    console.debug('[TokenInputField] clamp: ', {
+      amount,
+      max,
+      balance,
+    });
+    if (!amount) return undefined; // if no amount, exit
+    if (max?.lt(amount)) return max; // clamp @ max
+    return amount; // no max; always return amount
+  }, [_max, balance]);
+
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    // Always update the display amount right away.
-    setDisplayAmount(e.target.value); 
-    const val = e.target.value ? new BigNumber(e.target.value) : null;
-    // Only push a new value to form state if the numeric
-    // value is different. For example, if the displayValue
-    // goes from '1.0' -> '1.00', don't trigger an update.
-    if (val === null || !val.eq(field.value)) {
-      form.setFieldValue(
-        field.name,
-        // If a balance is provided, enforce it as a maximum.
-        ((balance && val) && val.gt(balance))
-          ? balance
-          : val,
-      );
+    /// If e.target.value is non-empty string, parse it into a BigNumber.
+    /// Using BigNumber here is necessary to prevent roundoff errors
+    /// caused by parseFloat.
+    ///
+    /// Example: consider a case where the max button is pressed
+    /// when the user has `balance = 1.042162935734305698 ETH`.
+    /// this number trims at 16 decimals to "1.0421629357343056".
+    /// when re-initializing this as a BigNumber the numbers will fail comparison,
+    /// causing an infinite loop.
+    ///
+    /// FIXME: throws an error if e.target.value === '.'
+    /// FIXME: throws an error if e.target.value === '-'
+    const newValue = e.target.value ? new BigNumber(e.target.value) : null;
+
+    /// Always update the display amount right away.
+    setDisplayAmount(newValue?.toString() || '');
+
+    /// Only push a new value to form state if the numeric
+    /// value is different. For example, if the displayValue
+    /// goes from '1.0' -> '1.00', don't trigger an update.
+    if (newValue === null || !newValue.eq(field.value)) {
+      const clampedValue = clamp(newValue);
+      form.setFieldValue(field.name, clampedValue);
+      _handleChange?.(clampedValue); // bubble up if necessary
     }
-  }, [form, field.name, field.value, balance]);
-  const handleWheel = useCallback((e) => {
+  }, [form, field.name, field.value, _handleChange, clamp]);
+
+  // 
+  const handleMax = useCallback(() => {
+    console.debug('[TokenInputField] handleMax');
+    if (balance) {
+      const clampedValue = clamp(balance);
+      console.debug('[TokenInputField] handleMax: balance exists', {
+        balance,
+        clampedValue,
+      });
+      form.setFieldValue(field.name, clampedValue);
+      _handleChange?.(clampedValue);  // bubble up if necessary
+    }
+  }, [balance, clamp, form, field.name, _handleChange]);
+
+  // Ignore scroll events on the input. Prevents
+  // accidentally scrolling up/down the number input.
+  const handleWheel = useCallback((e: any) => {
     // @ts-ignore
     e.target.blur();
   }, []);
-  
-  // PROBLEM:
-  // BigNumber('0') == BigNumber('0.0').
+
+  // PROBLEM: BigNumber('0') == BigNumber('0.0').
+  // ------------------------------------------
   // If a user were to try to type in a small number (0.001 ETH for example),
   // using BigNumber to track the state of the input wouldn't work; when
   // I try to go from 0 to 0.0 the input value stays as just 0.
@@ -94,53 +183,91 @@ const TokenInputField : React.FC<
   // - In the below effect, check for edge cases:
   //    a. If `field.value === undefined`         (i.e. the value has been cleared), reset the input.
   //    b. If `field.value !== BN(displayAmount)` (i.e. a new value was provided),   update `displayAmount`.
+  //
+  // Called after:
+  // (1) user clicks max (via setFieldValue)
+  // (2) handleChange
+  //
   useEffect(() => {
+    console.debug('[TokenInputField] field.value or displayAmount changed:', {
+      name: field.name,
+      value: field.value,
+      valueString: field.value?.toString(),
+      displayAmount: displayAmount,
+      updatingDisplayValue: field.value?.toString() !== displayAmount,
+    });
     if (!field.value) setDisplayAmount('');
-    else if (!field.value.eq(new BigNumber(displayAmount))) setDisplayAmount(field.value.toString());
-  }, [field.value, displayAmount]);
+    else if (field.value.toString() !== displayAmount) setDisplayAmount(field.value.toString()); // 
+  }, [field.name, field.value, displayAmount]);
 
   return (
-    <Stack gap={0.5}>
+    <FieldWrapper label={label}>
       {/* Input */}
       <TextField
-        type="number"
+        type="text"
         placeholder={placeholder || '0'}
         disabled={isInputDisabled}
-        {...props}
+        fullWidth // default to fullWidth
+        {...textFieldProps}
+        // Override the following props.
         onWheel={handleWheel}
         value={displayAmount || ''}
         onChange={handleChange}
         InputProps={inputProps}
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            fontSize: '1.5rem'
-          },
-          ...sx
-        }}
+        sx={sx}
       />
       {/* Bottom Adornment */}
-      <Stack direction="row" alignItems="center" spacing={0.5} px={0.75}>
-        <Stack direction="row" alignItems="center" sx={{ flex: 1 }} spacing={1}>
-          {quote}
+      {(balance && !hideBalance || quote) && (
+        <Stack direction="row" alignItems="center" gap={0.5} px={0.5} pt={0.75}>
+          {/* Leaving the Stack rendered regardless of whether `quote` is defined
+            * ensures that the Balance section gets flexed to the right side of
+            * the input. */}
+          <Stack direction="row" alignItems="center" sx={{ flex: 1 }} spacing={1}>
+            <Typography variant="bodySmall">
+              {quote}
+            </Typography>
+          </Stack>
+          {(balance && !hideBalance) && (
+            <>
+              <Tooltip title={balanceTooltip}>
+                <Typography variant="body1">
+                  {balanceLabel}: {(
+                    balance
+                      ? token
+                        // If `token` is provided, use its requested decimals
+                        ? `${displayFullBN(balance, token.displayDecimals)}`
+                        // Otherwise... *shrug*
+                        // : balance.toString()
+                        : `${displayFullBN(balance, 2)}`
+                      : '0'
+                  )}
+                </Typography>
+              </Tooltip>
+              <Typography
+                variant="body1"
+                onClick={isInputDisabled ? undefined : handleMax}
+                color={isInputDisabled ? 'text.secondary' : 'primary'}
+                sx={{ cursor: isInputDisabled ? 'inherit' : 'pointer' }}
+              >
+                (Max)
+              </Typography>
+            </>
+          )}
         </Stack>
-        <Typography sx={{ fontSize: 13.5 }}>
-          Balance: {balance ? `${displayFullBN(balance, token.displayDecimals)}` : '0'}
-        </Typography>
-        <Typography
-          variant="body1"
-          onClick={isInputDisabled ? undefined : handleMax}
-          color={isInputDisabled ? 'text.secondary' : 'primary'}
-          sx={{
-            fontSize: 13.5,
-            fontWeight: 600,
-            cursor: isInputDisabled ? 'inherit' : 'pointer',
-          }}
-        >
-          (Max)
-        </Typography>
-      </Stack>
-    </Stack>
+      )}
+    </FieldWrapper>
   );
 };
+
+const TokenInputField: React.FC<TokenInputProps> = ({ name, ...props }) => (
+  <Field name={name}>
+    {(fieldProps: FieldProps) => (
+      <TokenInput
+        {...fieldProps}
+        {...props}
+      />
+    )}
+  </Field>
+);
 
 export default TokenInputField;

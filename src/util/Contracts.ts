@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { ERC20__factory } from 'constants/generated/factories/ERC20__factory';
+import { ERC20__factory } from 'generated/index';
 import client from './Client';
 
 // -- Contracts

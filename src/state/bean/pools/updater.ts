@@ -1,12 +1,13 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import { useDispatch } from 'react-redux';
+import throttle from 'lodash/throttle';
 import { useBeanstalkPriceContract } from 'hooks/useContract';
-import { tokenResult } from 'util/Tokens';
+import { tokenResult, getChainConstant } from 'util/index';
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, CRV3, WETH } from 'constants/tokens';
-import { getChainConstant } from 'hooks/useChainConstant';
 import ALL_POOLS from 'constants/pools';
 import { SupportedChainId } from 'constants/chains';
+import useTimedRefresh from 'hooks/useTimedRefresh';
 import { resetPools, updateBeanPools, UpdatePoolPayload } from './actions';
 import { updateBeanPrice, updateBeanSupply } from '../token/actions';
 
@@ -57,12 +58,12 @@ export const PRE_EXPLOIT_BEAN_DATA = {
   ],
 };
 
-export const useGetPools = () => {
+export const useFetchPools = () => {
   const dispatch = useDispatch();
   const [beanstalkPriceContract, chainId] = useBeanstalkPriceContract();
 
   // Handlers
-  const fetch = useCallback(
+  const _fetch = useCallback(
     async () => {
       try {
         if (beanstalkPriceContract) {
@@ -155,13 +156,15 @@ export const useGetPools = () => {
     dispatch(resetPools());
   }, [dispatch]);
 
+  const fetch = useMemo(() => throttle(_fetch, 1000), [_fetch]);
+
   return [fetch, clear];
 };
 
 // ------------------------------------------
 
 const PoolsUpdater = () => {
-  const [fetch, clear] = useGetPools();
+  const [fetch, clear] = useFetchPools();
 
   useEffect(() => {
     clear();
@@ -171,6 +174,8 @@ const PoolsUpdater = () => {
     clear
   ]);
   
+  useTimedRefresh(fetch, 10000);
+
   return null;
 };
 

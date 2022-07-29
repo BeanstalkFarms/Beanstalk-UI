@@ -1,0 +1,18 @@
+#import "../PodListing.fragment.graphql"
+query AllPodListings(
+  $first: Int,
+  $maxHarvestableIndex: BigInt
+) {
+  podListings(
+    first: $first,
+  	where: {
+      status_in: ["active"],
+      maxHarvestableIndex_gt: $maxHarvestableIndex,
+      remainingAmount_gt: "10",  # = 0.000010 Pods. hides dust pods.
+    },
+    orderBy: index,     # index of the listed plot
+    orderDirection: asc # start from earliest listings
+  ) {
+    ...PodListing
+  }
+}

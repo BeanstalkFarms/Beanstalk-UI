@@ -3,6 +3,15 @@ export const SILO = 'silo';
 export const BARNRAISE = 'barnraise';
 export const OTHER = 'other';
 
+// FIXME: DEPRECATED
+
+export const facetByTabIndex = {
+  0: undefined,
+  1: SILO,
+  2: FIELD,
+  3: OTHER
+};
+
 const mappedEvents = {
   // silo
   0: [

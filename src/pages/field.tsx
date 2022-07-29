@@ -1,31 +1,21 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo } from 'react';
 import {
-  Box,
-  Card,
   Container,
-  Dialog,
-  Grid,
-  Link,
   Stack,
-  Typography,
   Tooltip,
-  useMediaQuery,
+  Typography,
 } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import BigNumber from 'bignumber.js';
-import { DataGrid, DataGridProps, GridRowParams } from '@mui/x-data-grid';
+import { DataGridProps } from '@mui/x-data-grid';
 import { displayBN, displayFullBN } from 'util/index';
-import { tableStyle } from 'util/tableStyle';
-import podIcon from 'img/beanstalk/pod-icon.svg';
-import { useTheme } from '@mui/material/styles';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import {
-  StyledDialogContent,
-  StyledDialogTitle,
-} from 'components/Common/Dialog';
-import PodLineSection from '../components/Field/PodLineSection';
+import FieldActions from 'components/Field/Actions';
+import TableCard from 'components/Common/TableCard';
+import FieldConditions from '../components/Field/FieldConditions';
+import { PODS } from '../constants/tokens';
+import useAccount from '../hooks/ledger/useAccount';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -34,7 +24,11 @@ const columns: DataGridProps['columns'] = [
     flex: 1,
     valueFormatter: (params) =>
       `${displayFullBN(params.value as BigNumber, 0)}`,
-    renderCell: (params) => <Typography>{displayBN(params.value)}</Typography>,
+    renderCell: (params) => (
+      (params.value.eq(-1))
+        ? (<Typography color="primary">Harvestable</Typography>)
+        : (<Typography>{displayBN(params.value)}</Typography>)
+    )
   },
   {
     field: 'amount',
@@ -45,209 +39,71 @@ const columns: DataGridProps['columns'] = [
     headerAlign: 'left',
     valueFormatter: (params) =>
       `${displayFullBN(params.value as BigNumber, 2)}`,
-    renderCell: (params) => <Typography>{displayBN(params.value)}</Typography>,
+    renderCell: (params) => (
+      <Tooltip title={<>{displayFullBN(params.value)}</>}>
+        <Typography>{displayBN(params.value, true)}</Typography>
+      </Tooltip>
+    ),
   },
 ];
 
-const MAX_ROWS = 5;
-
 const FieldPage: React.FC = () => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const theme = useTheme();
-  // Theme
-  const isMedium = useMediaQuery(theme.breakpoints.down('md'));
-  const handleClose = useCallback(() => {
-    setModalOpen(false);
-  }, []);
-  const handleOpen = useCallback(() => setModalOpen(true), []);
-
-  // Data
+  const account = useAccount();
+  const authState = !account ? 'disconnected' : 'ready';
+  /// Data
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
     (state) => state._farmer.field
   );
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
     (state) => state._beanstalk.field
   );
-  const beanToken = useSelector<AppState, AppState['_bean']['token']>(
-    (state) => state._bean.token
-  );
-  const podLine = beanstalkField?.podIndex.minus(beanstalkField.harvestableIndex);
+  const harvestablePods = farmerField.harvestablePods;
 
-  // Rows
-  const rows = useMemo(
-    () =>
-      Object.keys(farmerField.plots).map((index) => ({
-        id: index,
-        placeInLine: new BigNumber(index).minus(
-          beanstalkField.harvestableIndex
-        ),
-        amount: new BigNumber(farmerField.plots[index]),
-      })),
-    [farmerField?.plots, beanstalkField.harvestableIndex]
-  );
-
-  const tableHeight = useMemo(() => {
-    if (!rows || rows.length === 0) return '200px';
-    return Math.min(rows.length, MAX_ROWS) * 52 + 112;
-  }, [rows]);
-
-  // const data = series[0];
-  const ref = useRef<any>(null);
-  const [graphWidth, setGraphWidth] = useState(ref.current ? ref.current.offsetWidth : 0);
-  window.addEventListener('resize', () => setGraphWidth(ref.current ? ref.current.offsetWidth : 0));
-  // sets width of graph on page load
-  useEffect(() => {
-    setGraphWidth(ref.current ? ref.current.offsetWidth : 0);
-  }, []);
-
-  console.log('GRAPH WIDTH', graphWidth);
+  const rows: any[] = useMemo(() => {
+    const data: any[] = [];
+    if (harvestablePods?.gt(0)) {
+      data.push({
+        id: harvestablePods,
+        placeInLine: new BigNumber(-1),
+        amount: harvestablePods,
+      });
+    }
+    if (Object.keys(farmerField.plots).length > 0) {
+      data.push(
+        ...Object.keys(farmerField.plots).map((index) => ({
+          id: index,
+          placeInLine: new BigNumber(index).minus(
+            beanstalkField.harvestableIndex
+          ),
+          amount: new BigNumber(farmerField.plots[index]),
+        }))
+      );
+    }
+    return data;
+  }, [beanstalkField.harvestableIndex, farmerField.plots, harvestablePods]);
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="sm">
       <Stack spacing={2}>
         <PageHeader
-          title={
-            <>
-              <strong>The Field</strong>
-              <Box
-                component="span"
-                sx={{ display: { md: 'inline', xs: 'none' } }}
-              >
-                : The Decentralized Credit Facility
-              </Box>
-            </>
-          }
-          description="Earn yield by lending Beans to Beanstalk in exchange for Pods"
+          title="The Field"
+          description="Earn yield by lending Beans to Beanstalk"
+          href="https://docs.bean.money/farm/field"
         />
-        <Card sx={{ p: 2 }}>
-          <Stack gap={2}>
-            <Typography variant="h2">Field Conditions</Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={4}>
-                <Stack gap={0.5}>
-                  <Typography variant="h4">Available Soil&nbsp;
-                    <Tooltip
-                      title="The number of Beans that can currently be Sown, or lent to Beanstalk."
-                      placement="top">
-                      <HelpOutlineIcon
-                        sx={{ color: 'text.secondary', fontSize: '14px' }}
-                      />
-                    </Tooltip>
-                  </Typography>
-                  <Typography variant="h1">
-                    {displayBN(beanstalkField.soil)}
-                  </Typography>
-                </Stack>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <Stack gap={0.5}>
-                  <Typography variant="h4">Weather&nbsp;
-                    <Tooltip title="The interest rate for Sowing Beans, or lending your Beans to Beanstalk." placement="top">
-                      <HelpOutlineIcon
-                        sx={{ color: 'text.secondary', fontSize: '14px' }}
-                      />
-                    </Tooltip>
-                  </Typography>
-                  <Typography variant="h1">
-                    {displayBN(beanstalkField.weather.yield)}%
-                  </Typography>
-                </Stack>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <Stack gap={0.5}>
-                  <Typography variant="h4">Pods Harvested&nbsp;
-                    <Tooltip
-                      title="The number of Beans that Beanstalk has paid back to Sowers."
-                      placement="top">
-                      <HelpOutlineIcon
-                        sx={{ color: 'text.secondary', fontSize: '14px' }}
-                      />
-                    </Tooltip>
-                  </Typography>
-                  <Typography variant="h1">
-                    {displayBN(beanstalkField?.harvestableIndex)}
-                  </Typography>
-                </Stack>
-              </Grid>
-              <Grid item xs={12}>
-                <PodLineSection
-                  numPodsTitle="Pod Line"
-                  numPodsDisplay={podLine}
-                  podLine={podLine}
-                  harvestableIndex={beanstalkField.harvestableIndex}
-                  plots={farmerField.plots}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Stack direction="row" justifyContent="space-between">
-                  <Stack direction="row" gap={0.5}>
-                    <Tooltip 
-                      title="This is your total Pod Balance. Pods become Harvestable on a FIFO basis." 
-                      placement="top">
-                      <Typography variant="h4">My Pod Balance:</Typography>
-                    </Tooltip>
-                    <Stack direction="row" alignItems="center" gap={0.25}>
-                      <img alt="" src={podIcon} height="17px" />
-                      
-                        <Typography variant="h4">
-                          {displayBN(farmerField.pods)}
-                        </Typography>
-                      
-                    </Stack>
-                  </Stack>
-                  <Link
-                    onClick={handleOpen}
-                    underline="none"
-                    sx={{ cursor: 'pointer' }}
-                  >
-                    <Typography variant="h4">View My Plots</Typography>
-                  </Link>
-                </Stack>
-              </Grid>
-            </Grid>
-          </Stack>
-        </Card>
+        <FieldConditions
+          beanstalkField={beanstalkField}
+        />
+        <FieldActions />
+        <TableCard
+          title="Pod Balance"
+          state={authState}
+          amount={farmerField.pods}
+          rows={rows}
+          columns={columns}
+          sort={{ field: 'placeInLine', sort: 'asc' }}
+          token={PODS}
+        />
       </Stack>
-      <Dialog
-        onClose={handleClose}
-        open={modalOpen}
-        fullWidth
-        fullScreen={isMedium}
-       
-      >
-        <StyledDialogTitle onClose={handleClose}>My Plots</StyledDialogTitle>
-        <StyledDialogContent sx={{ pb: 0.5 }}>
-          <Stack gap={2}>
-            {/* Pod Balance */}
-            <PodLineSection
-              numPodsTitle="Pod Balance"
-              numPodsDisplay={farmerField.pods}
-              podLine={podLine}
-              harvestableIndex={beanstalkField.harvestableIndex}
-              plots={farmerField.plots}
-            />
-            <Box
-              sx={{
-                height: tableHeight,
-                ...tableStyle,
-              }}
-            >
-              <DataGrid
-                columns={columns}
-                rows={rows}
-                pageSize={8}
-                disableSelectionOnClick
-                density="compact"
-                initialState={{
-                  sorting: {
-                    sortModel: [{ field: 'placeInLine', sort: 'asc' }],
-                  }
-                }}
-              />
-            </Box>
-          </Stack>
-        </StyledDialogContent>
-      </Dialog>
     </Container>
   );
 };

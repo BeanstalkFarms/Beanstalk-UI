@@ -6,14 +6,19 @@ export type BeanstalkField = {
    */
   harvestableIndex: BigNumber;
   /**
-   * The number of outstanding Pods. AKA the "Pod Line".
+   * The total number of Pods ever minted.
    */
   podIndex: BigNumber;
+  /**
+   * The current length of the Pod Line.
+   * podLine = podIndex - harvestableIndex.
+   */
+  podLine: BigNumber;
   /**
    * The total number of Pods ever minted.
    * `totalPods = podIndex + harvestableIndex`
    */
-  totalPods: BigNumber;
+  // totalPods: BigNumber;
   /**
    * The amount of available Soil.
    */
