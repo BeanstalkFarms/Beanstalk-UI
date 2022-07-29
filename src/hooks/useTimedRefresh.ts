@@ -14,10 +14,10 @@ const useTimedRefresh = (handler: () => any, intervalMs : number, enabled : bool
 
   /// Window event handlers
   const onFocus = useCallback(() => {
-    start();
-  }, [start]);
+    if (enabled) start();
+  }, [enabled, start]);
   const onBlur = useCallback(() => {
-    clearInterval(interval.current);
+    if (interval.current) clearInterval(interval.current);
   }, [interval]);
 
   /// Setup interval on initial load or params change

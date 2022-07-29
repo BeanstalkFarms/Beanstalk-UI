@@ -7,8 +7,7 @@ import {
   Box,
   Grid, Divider,
 } from '@mui/material';
-import omit from 'lodash/omit';
-import { NEW_BN } from 'constants/index';
+import { NEW_BN, ZERO_BN } from 'constants/index';
 import useSeason from 'hooks/useSeason';
 import drySeasonIcon from 'img/beanstalk/sun/dry-season.svg';
 import rainySeasonIcon from 'img/beanstalk/sun/rainy-season.svg';
@@ -17,7 +16,9 @@ import BigNumber from 'bignumber.js';
 import usePrice from 'hooks/usePrice';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import { useSunButtonQuery } from 'generated/graphql';
+import { SunButtonQuery, useSunButtonQuery } from 'generated/graphql';
+import { MaxBN, MinBN, toTokenUnitsBN } from 'util/index';
+import { BEAN } from 'constants/tokens';
 import FolderMenu from '../FolderMenu';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import SeasonCard from '../SeasonCard';
@@ -32,6 +33,18 @@ const mockSunData = new Array(20).fill(null).map(() => ({
   deltaDemand: new BigNumber(150 * Math.random()),
 }));
 
+const castField = (data: SunButtonQuery['fields'][number]) => ({
+  season:   new BigNumber(data.season),
+  newSoil:  toTokenUnitsBN(data.newSoil, BEAN[1].decimals),
+  temperature: new BigNumber(data.weather),
+  podRate:  new BigNumber(data.podRate),
+});
+const castSeason = (data: SunButtonQuery['seasons'][number]) => ({
+  season:     new BigNumber(data.season),
+  twap:       new BigNumber(data.twap),
+  deltaBeans: toTokenUnitsBN(data.deltaBeans, BEAN[1].decimals),
+});
+
 const MAX_ITEMS = 8;
 
 const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
@@ -43,18 +56,31 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
 
   const bySeason = useMemo(() => {
     if (data?.fields && data?.seasons) {
-      type X = (typeof data.fields[number] & typeof data.seasons[number])
-      const _data : { [key: number] : Partial<X> } = {};
-      data?.fields.forEach((_f) => {
-        _data[_f.season] = { ...omit(_f, '__typename') };
+      type MergedSeason = (
+        ReturnType<typeof castField>
+        & ReturnType<typeof castSeason>
+      );
+
+      // Build mapping of season => data
+      const merged : { [key: number] : MergedSeason } = {};
+      data.fields.forEach((_f) => {
+        // fixme: need intermediate type?
+        // @ts-ignore
+        merged[_f.season] = { ...castField(_f) };
       });
-      data?.seasons.forEach((_s) => {
-        _data[_s.season] = { ..._data[_s.season], ...omit(_s, '__typename') };
+      data.seasons.forEach((_s) => {
+        merged[_s.season] = { ...merged[_s.season], ...castSeason(_s) };
       });
-      return Object.keys(_data).sort((a, b) => parseInt(b, 10) - parseInt(a, 10)).reduce<X[]>((prev, curr) => {
-        prev.push(_data[curr as unknown as number]);
-        return prev;
-      }, []);
+
+      // Sort latest season first and return as array
+      return (
+        Object.keys(merged)
+          .sort((a, b) => parseInt(b, 10) - parseInt(a, 10))
+          .reduce<MergedSeason[]>((prev, curr) => {
+            prev.push(merged[curr as unknown as number]);
+            return prev;
+          }, [])
+      );
     }
     return [];
   }, [data]);
@@ -77,6 +103,11 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
     />
   );
 
+  /// 6074 = 0%
+  /// 6075 = 0%
+  /// 6076 = 1%
+  const ramp = MinBN(MaxBN(season.minus(6075), ZERO_BN), new BigNumber(100));
+
   /// Table Content
   const tableContent = (
     <Stack gap={1}>
@@ -96,7 +127,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           </Typography>
           <Typography color="gray" variant="bodySmall">
             Beanstalk is currently minting{' '}
-            <span style={{ color: BeanstalkPalette.black }}>1%</span> of deltaB.
+            <span style={{ color: BeanstalkPalette.black }}>{ramp.toFixed(0)}%</span> of deltaB.
             It will mint{' '}
             <span style={{ color: BeanstalkPalette.black }}>1%</span> more every
             Season until{' '}
@@ -156,28 +187,39 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           </Grid>
         </Box>
         <SeasonCard
-          season={new BigNumber(7845)}
+          season={season.plus(1)}
+          twap={new BigNumber(1)}
           newBeans={new BigNumber(0)}
           newSoil={new BigNumber(0)}
           podRate={new BigNumber(5000)}
           temperature={new BigNumber(5000)}
           deltaDemand={new BigNumber(100)}
+          deltaTemperature={new BigNumber(100)}
         />
         <Typography color="gray" variant="bodySmall" align="center">
           The values for Season {season.toNumber()} are preductions based on use
           behavior during the current season
         </Typography>
-        {mockSunData.map((s) => (
-          <SeasonCard
-            key={s.season.toString()}
-            season={s.season}
-            newBeans={s.newBeans}
-            newSoil={s.newSoil}
-            temperature={s.deltaDemand}
-            podRate={s.podRate}
-            deltaDemand={s.deltaDemand}
-          />
-        ))}
+        {bySeason.map((s, i) => {
+          const deltaWeather = bySeason[i + 1] 
+            ? s.temperature.minus(bySeason[i + 1].temperature) 
+            : ZERO_BN;
+          return (
+            <SeasonCard
+              key={s.season.toString()}
+              season={s.season}
+              // Season
+              twap={s.twap}
+              newBeans={s.deltaBeans}
+              // Field
+              temperature={s.temperature}
+              deltaTemperature={deltaWeather}
+              deltaDemand={new BigNumber(-1)}
+              newSoil={s.newSoil}
+              podRate={s.podRate}
+            />
+          );
+        })}
       </Stack>
       <Divider />
       <Typography

@@ -1,15 +1,27 @@
 query SunButton {
-  seasons(first: 24, orderBy: season, orderDirection: desc) {
+  seasons(
+    first: 24,
+    orderBy: season,
+    orderDirection: desc
+  ) {
     id
     season
     twap
     deltaBeans
   }
-  fields: fieldHourlySnapshots(first: 24, orderBy: season, orderDirection: desc) {
+  fields: fieldHourlySnapshots(
+    first: 24,
+    where: { 
+      field: "0xc1e088fc1323b20bcbee9bd1b9fc9546db5624c5"
+    }
+    orderBy: season,
+    orderDirection: desc
+  ) {
     id
     season
     newSoil
 		weather
+    podRate
   }
   # fields(first: 24, orderBy: season, orderDirection: desc) {
   #   id

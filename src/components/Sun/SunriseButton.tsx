@@ -6,10 +6,16 @@ import { BeanstalkReplanted } from 'generated/index';
 import { useSigner } from 'hooks/ledger/useSigner';
 import TransactionToast from 'components/Common/TxnToast';
 import { LoadingButton } from '@mui/lab';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 
 const SunriseButton : React.FC = () => {
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  
+  const awaiting = useSelector<AppState, AppState['_beanstalk']['sun']['sunrise']['awaiting']>((state) => state._beanstalk.sun.sunrise.awaiting);
+
+  ///
   const onSubmit = useCallback(async (_, formActions: FormikHelpers<{}>) => {
     const txToast = new TransactionToast({
       loading: 'Calling Sunrise...',
@@ -33,8 +39,7 @@ const SunriseButton : React.FC = () => {
   return (
     <Formik initialValues={{}} onSubmit={onSubmit}>
       {(formikProps: FormikProps<{}>) => {
-        const disabled = formikProps.isSubmitting;
-        // const disabled = true
+        const disabled = formikProps.isSubmitting || awaiting;
         return (
           <Form>
             <LoadingButton
