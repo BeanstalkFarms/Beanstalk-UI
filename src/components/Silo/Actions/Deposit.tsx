@@ -215,6 +215,7 @@ const Deposit : React.FC<{
   const urBeanCrv3    = getChainToken(UNRIPE_BEAN_CRV3);
 
   /// FIXME: name
+  /// FIXME: finish deposit functionality for other tokens
   const initTokenList = useMemo(() => (whitelistedToken === Bean ? [
     BEAN,
     ETH,
