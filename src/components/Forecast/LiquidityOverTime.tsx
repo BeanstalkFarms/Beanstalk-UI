@@ -1,9 +1,9 @@
 import React from 'react';
 import { Card, CardProps } from '@mui/material';
+import Soon from 'components/Analytics/Soon';
 import Stat from '../Common/Stat';
 import { TokenMap } from '../../constants';
 import { displayUSD } from '../../util';
-import LiquidityBalances from './LiquidityBalances';
 import { BeanstalkSiloBalance } from '../../state/beanstalk/silo';
 import useBeanstalkSiloBreakdown from '../../hooks/useBeanstalkSiloBreakdown';
 
@@ -26,9 +26,10 @@ const LiquidityOverTime: React.FC<LiquidityOverviewProps & CardProps> = ({
         gap={0.25}
         sx={{ ml: 0 }}
       />
-      <LiquidityBalances
+      {/* <LiquidityBalances
         balances={balances}
-      />
+      /> */}
+      <Soon />
     </Card>
   );
 };
