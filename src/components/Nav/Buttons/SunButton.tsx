@@ -8,14 +8,13 @@ import {
   Grid, Divider,
 } from '@mui/material';
 import omit from 'lodash/omit';
-import { NEW_BN, ZERO_BN } from 'constants/index';
+import { NEW_BN } from 'constants/index';
 import useSeason from 'hooks/useSeason';
 import drySeasonIcon from 'img/beanstalk/sun/dry-season.svg';
 import rainySeasonIcon from 'img/beanstalk/sun/rainy-season.svg';
 import SunriseButton from 'components/Sun/SunriseButton';
 import BigNumber from 'bignumber.js';
 import usePrice from 'hooks/usePrice';
-import SunriseCountdown from 'components/Sun/SunriseCountdown';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { useSunButtonQuery } from 'generated/graphql';
@@ -26,8 +25,11 @@ import SeasonCard from '../SeasonCard';
 const mockSunData = new Array(20).fill(null).map(() => ({
   season: new BigNumber(5000 * Math.random()),
   newBeans: new BigNumber(100000 * Math.random()),
-  newSoil: new BigNumber(1000 * Math.random()),
-  weather: new BigNumber(5000 * Math.random()),
+  newSoil: new BigNumber(100000 * Math.random()),
+  temperature: new BigNumber(5000 * Math.random()),
+  podRate: new BigNumber(100 * Math.random()),
+  deltaWeather: new BigNumber(1000 * Math.random()),
+  deltaDemand: new BigNumber(150 * Math.random()),
 }));
 
 const MAX_ITEMS = 8;
@@ -82,13 +84,25 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       <Stack
         gap={1}
         sx={{
+          width: '100%',
+          pr: 1,
           maxHeight: `${(37.5 + 10) * MAX_ITEMS - 10}px`,
           overflowY: 'auto',
         }}
       >
-        <Typography color="text.primary" variant="h4">
-          Season {season.plus(1).toString()} <SunriseCountdown />
-        </Typography>
+        <Stack>
+          <Typography color="text.primary" variant="h4">
+            42m to next season
+          </Typography>
+          <Typography color="gray" variant="bodySmall">
+            Beanstalk is currently minting{' '}
+            <span style={{ color: BeanstalkPalette.black }}>1%</span> of deltaB.
+            It will mint{' '}
+            <span style={{ color: BeanstalkPalette.black }}>1%</span> more every
+            Season until{' '}
+            <span style={{ color: BeanstalkPalette.black }}>100%</span>
+          </Typography>
+        </Stack>
         {/* table header */}
         <Box
           display="flex"
@@ -96,58 +110,74 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
             px: 1, // 1 + 2 from Table Body
           }}
         >
-          <Grid container alignItems="flex-end">
-            <Grid item md={2} xs={2.5}>
-              <Typography color="text.primary" variant="bodySmall">
-                Season
-              </Typography>
+          <Grid container>
+            <Grid item xs={1.5} md={1.25}>
+              <Stack alignItems="flex-start">
+                <Typography color="text.primary" variant="bodySmall">
+                  Season
+                </Typography>
+              </Stack>
             </Grid>
-            <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
-              <Typography color="text.primary" variant="bodySmall">
-                Precipitation
-              </Typography>
+            <Grid item xs={3} md={2}>
+              <Stack alignItems="flex-end">
+                <Typography color="text.primary" variant="bodySmall">
+                  New Beans
+                </Typography>
+              </Stack>
             </Grid>
-            <Grid item md={2.6} xs={3} display={{ md: 'block' }}>
-              <Typography color="text.primary" variant="bodySmall">
-                New Beans
-              </Typography>
+            <Grid item xs={3} md={2}>
+              <Stack alignItems="flex-end">
+                <Typography color="text.primary" variant="bodySmall">
+                  New Soil
+                </Typography>
+              </Stack>
             </Grid>
-            <Grid item md={2.4} xs={3} display={{ md: 'block' }}>
-              <Typography color="text.primary" variant="bodySmall">
-                New Soil
-              </Typography>
+            <Grid item xs={4} md={2.75}>
+              <Stack alignItems="flex-end">
+                <Typography color="text.primary" variant="bodySmall">
+                  Temperature
+                </Typography>
+              </Stack>
             </Grid>
-            <Grid item md={2.4} xs={3.5} sx={{ textAlign: 'right' }}>
-              <Typography color="text.primary" variant="bodySmall">
-                Weather
-              </Typography>
+            <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
+              <Stack alignItems="flex-end">
+                <Typography color="text.primary" variant="bodySmall">
+                  Pod Rate
+                </Typography>
+              </Stack>
+            </Grid>
+            <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
+              <Stack alignItems="flex-end">
+                <Typography color="text.primary" variant="bodySmall">
+                  Delta Demand
+                </Typography>
+              </Stack>
             </Grid>
           </Grid>
         </Box>
-        {/* Upcoming Season */}
-        {/* <SeasonCard
+        <SeasonCard
           season={new BigNumber(7845)}
           newBeans={new BigNumber(0)}
           newSoil={new BigNumber(0)}
-          weather={new BigNumber(5000)}
-        /> */}
-        {/* Past Seasons */}
-        {bySeason.map((s, index) => {
-          const weather      = new BigNumber(s.weather);
-          const deltaWeather = (bySeason[index + 1]?.weather && typeof bySeason[index + 1].weather === 'number') 
-            ? new BigNumber(bySeason[index + 1].weather).minus(weather)
-            : ZERO_BN;
-          return (
-            <SeasonCard
-              key={s.season.toString()}
-              season={new BigNumber(s.season)}
-              newBeans={new BigNumber(s.deltaBeans || 0)}
-              newSoil={new BigNumber(0)}
-              weather={weather}
-              deltaWeather={deltaWeather}
-            />
-          );
-        })}
+          podRate={new BigNumber(5000)}
+          temperature={new BigNumber(5000)}
+          deltaDemand={new BigNumber(100)}
+        />
+        <Typography color="gray" variant="bodySmall" align="center">
+          The values for Season {season.toNumber()} are preductions based on use
+          behavior during the current season
+        </Typography>
+        {mockSunData.map((s) => (
+          <SeasonCard
+            key={s.season.toString()}
+            season={s.season}
+            newBeans={s.newBeans}
+            newSoil={s.newSoil}
+            temperature={s.deltaDemand}
+            podRate={s.podRate}
+            deltaDemand={s.deltaDemand}
+          />
+        ))}
       </Stack>
       <Divider />
       <Typography
@@ -171,7 +201,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       drawerContent={<Box sx={{ p: 1 }}>{tableContent}</Box>}
       popoverContent={tableContent}
       hideTextOnMobile
-      popperWidth="500px"
+      popperWidth="700px"
       hotkey="opt+2, alt+2"
       {...props}
     />

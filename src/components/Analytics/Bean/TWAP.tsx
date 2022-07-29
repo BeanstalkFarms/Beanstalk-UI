@@ -1,25 +1,35 @@
 import React from 'react';
-import SeasonPlot, { SeasonPlotBaseProps } from 'components/Common/Charts/SeasonPlot';
+import SeasonPlot, {
+  SeasonPlotBaseProps,
+} from 'components/Common/Charts/SeasonPlot';
 import { Season, SeasonalTwapDocument } from 'generated/graphql';
 import usePrice from 'hooks/usePrice';
 import useSeason from 'hooks/useSeason';
+import { useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 const getValue = (season: Season) => parseFloat(season.twap);
 const formatValue = (value: number) => `$${value.toFixed(4)}`;
-const StatProps = {
-  title: 'Time Weighted Avg. Price',
-  // titleIcon: <TokenIcon token={BEAN[SupportedChainId.MAINNET]} />,
-  gap: 0.25,
-  color: 'primary',
-  sx: { ml: 0 }
+const useStatProps = () => {
+  const theme = useTheme();
+  const isTiny = useMediaQuery(theme.breakpoints.down('md'));
+  return {
+    title: isTiny ? 'TWAP' : 'Time Weighted Avg. Price',
+    gap: 0.25,
+    color: 'primary',
+    sx: { ml: 0 },
+  };
 };
 const LineChartProps = {
   isTWAP: true,
 };
 
-const TWAP: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => {
-  const price  = usePrice();
+const TWAP: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({
+  height,
+}) => {
+  const price = usePrice();
   const season = useSeason();
+  const StatProps = useStatProps();
   return (
     <SeasonPlot
       document={SeasonalTwapDocument}
