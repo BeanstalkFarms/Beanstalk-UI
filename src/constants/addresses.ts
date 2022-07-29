@@ -12,8 +12,9 @@ export const BEANSTALK_ADDRESSES = {
 export const BEANSTALK_PRICE_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0xcB64964117ae6dc6FaB049531Ed63dF949dCf6aF'.toLowerCase(),
   [SupportedChainId.ROPSTEN]: '0xB721C3386052389892A898EC700619A7Ab20C6B7'.toLowerCase(),
-  [SupportedChainId.PHOENIX]:   '0xA57289161FF18D67A68841922264B317170b0b81'.toLowerCase(),
+  [SupportedChainId.PHOENIX]: '0xA57289161FF18D67A68841922264B317170b0b81'.toLowerCase(),
   [SupportedChainId.LOCALHOST]: '0xA57289161FF18D67A68841922264B317170b0b81'.toLowerCase(),
+  [SupportedChainId.CUJO]: '0xA57289161FF18D67A68841922264B317170b0b81'.toLowerCase(),
 };
 
 export const BEANSTALK_FERTILIZER_ADDRESSES = {
@@ -45,28 +46,31 @@ export const BEANFT_WINTER_ADDRESSES = {
 // ----------------------------------------
 
 export const BEAN_ADDRESSES = {
-  [SupportedChainId.MAINNET]:   '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db'.toLowerCase(),
-  [SupportedChainId.ROPSTEN]:   '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db'.toLowerCase(),
-  [SupportedChainId.PHOENIX]:   '0xBEA0003eA948Db32082Fc6F4EC0729D258a0444c'.toLowerCase(),
+  [SupportedChainId.MAINNET]: '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db'.toLowerCase(),
+  [SupportedChainId.ROPSTEN]: '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db'.toLowerCase(),
+  [SupportedChainId.PHOENIX]: '0xBEA0003eA948Db32082Fc6F4EC0729D258a0444c'.toLowerCase(),
   [SupportedChainId.LOCALHOST]: '0xBEA0000029AD1c77D3d5D23Ba2D8893dB9d1Efab'.toLowerCase(),
+  [SupportedChainId.CUJO]: '0xBEA0000029AD1c77D3d5D23Ba2D8893dB9d1Efab'.toLowerCase(),
 };
 
 export const UNRIPE_BEAN_ADDRESSES = {
   // --------------------------------------------------
   // "Unripe Bean": Unripe vesting asset for the Bean token, Localhost
   // -------------------------------------------------
-  [SupportedChainId.MAINNET]:   '0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449'.toLowerCase(),
-  [SupportedChainId.PHOENIX]:   '0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449'.toLowerCase(),
-  [SupportedChainId.LOCALHOST]: '0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449'.toLowerCase()
+  [SupportedChainId.MAINNET]: '0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449'.toLowerCase(),
+  [SupportedChainId.PHOENIX]: '0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449'.toLowerCase(),
+  [SupportedChainId.LOCALHOST]: '0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449'.toLowerCase(),
+  [SupportedChainId.CUJO]: '0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449'.toLowerCase()
 };
 
 export const UNRIPE_BEAN_CRV3_ADDRESSES = {
   // --------------------------------------------------
   // "Unripe BEAN:CRV3 LP": Unripe vesting asset for the BEAN:CRV3 LP token, Localhost
   // -------------------------------------------------
-  [SupportedChainId.MAINNET]:   '0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D'.toLowerCase(),
-  [SupportedChainId.PHOENIX]:   '0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D'.toLowerCase(),
-  [SupportedChainId.LOCALHOST]: '0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D'.toLowerCase()
+  [SupportedChainId.MAINNET]: '0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D'.toLowerCase(),
+  [SupportedChainId.PHOENIX]: '0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D'.toLowerCase(),
+  [SupportedChainId.LOCALHOST]: '0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D'.toLowerCase(),
+  [SupportedChainId.CUJO]: '0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D'.toLowerCase()
 };
 
 // ----------------------------------------
@@ -172,6 +176,7 @@ export const BEAN_CRV3_ADDRESSES = {
   // --------------------------------------------------
   [SupportedChainId.PHOENIX]: '0xc9C32cd16Bf7eFB85Ff14e0c8603cc90F6F2eE49'.toLowerCase(),
   [SupportedChainId.LOCALHOST]: '0xc9C32cd16Bf7eFB85Ff14e0c8603cc90F6F2eE49'.toLowerCase(),
+  [SupportedChainId.CUJO]: '0xc9C32cd16Bf7eFB85Ff14e0c8603cc90F6F2eE49'.toLowerCase(),
 };
 
 export const BEAN_LUSD_ADDRESSES = {
@@ -226,12 +231,12 @@ export const TRICRYPTO2_ADDRESSES = {
 // - "factories"  (they allow creation of new pools)
 
 // 3pool, etc.
-export const POOL_REGISTRY_ADDRESSES  = {
+export const POOL_REGISTRY_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0x90e00ace148ca3b23ac1bc8c240c2a7dd9c2d7f5'.toLowerCase()
 };
 
 // X:3CRV, etc. aka StableFactory
-export const META_FACTORY_ADDRESSES   = {
+export const META_FACTORY_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0xB9fC157394Af804a3578134A6585C0dc9cc990d4'.toLowerCase()
 };
 

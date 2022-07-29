@@ -1,5 +1,5 @@
 overwrite: true
-schema: "https://api.thegraph.com/subgraphs/name/cujowolf/beanstalk-dev-replanted"
+schema: "http://graph.playgrounds.academy/subgraphs/name/beanstalk"
 documents: "src/**/*.graphql"
 generates:
   src/generated/graphql.tsx:

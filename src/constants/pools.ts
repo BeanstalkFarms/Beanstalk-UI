@@ -101,20 +101,23 @@ export const BEAN_LUSD_CURVE_POOL_MAINNET = new CurvePlainPool(
 
 // --------------------------------------------------
 
-export const ALL_POOLS : ChainConstant<PoolMap> = {
+export const ALL_POOLS: ChainConstant<PoolMap> = {
   [SupportedChainId.MAINNET]: {
-    [BEAN_ETH_UNIV2_POOL_MAINNET.address]:  BEAN_ETH_UNIV2_POOL_MAINNET,
+    [BEAN_ETH_UNIV2_POOL_MAINNET.address]: BEAN_ETH_UNIV2_POOL_MAINNET,
     [BEAN_CRV3_CURVE_POOL_MAINNET.address]: BEAN_CRV3_CURVE_POOL_MAINNET,
     [BEAN_LUSD_CURVE_POOL_MAINNET.address]: BEAN_LUSD_CURVE_POOL_MAINNET,
   },
   [SupportedChainId.ROPSTEN]: {
-    [BEAN_ETH_UNIV2_POOL_ROPSTEN.address]:  BEAN_ETH_UNIV2_POOL_ROPSTEN,
+    [BEAN_ETH_UNIV2_POOL_ROPSTEN.address]: BEAN_ETH_UNIV2_POOL_ROPSTEN,
     [BEAN_CRV3_CURVE_POOL_ROPSTEN.address]: BEAN_CRV3_CURVE_POOL_ROPSTEN,
   },
   [SupportedChainId.PHOENIX]: {
     [BEAN_CRV3_CURVE_POOL_PHOENIX.address]: BEAN_CRV3_CURVE_POOL_PHOENIX,
   },
   [SupportedChainId.LOCALHOST]: {
+    [BEAN_CRV3_CURVE_POOL_PHOENIX.address]: BEAN_CRV3_CURVE_POOL_PHOENIX,
+  },
+  [SupportedChainId.CUJO]: {
     [BEAN_CRV3_CURVE_POOL_PHOENIX.address]: BEAN_CRV3_CURVE_POOL_PHOENIX,
   }
 };
