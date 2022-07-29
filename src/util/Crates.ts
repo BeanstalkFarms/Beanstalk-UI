@@ -3,7 +3,7 @@ import Token from 'classes/Token';
 import { TokenMap } from 'constants/index';
 import { BeanstalkReplanted } from 'generated';
 import { Withdrawals } from 'hooks/useEventProcessor';
-import { Crate, FarmerSiloBalance, WithdrawalCrate } from 'state/farmer/silo';
+import { Crate, DepositCrate, FarmerSiloBalance, WithdrawalCrate } from 'state/farmer/silo';
 
 /**
  * Split Withdrawals into
@@ -58,13 +58,13 @@ export function parseWithdrawals(
   };
 }
 
-export const encodeCratesForEnroot = (
+export const selectCratesForEnroot = (
   beanstalk:    BeanstalkReplanted,
   unripeTokens: TokenMap<Token>,
   siloBalances: TokenMap<FarmerSiloBalance>,
   getBDV:       (_token: Token) => BigNumber,
 ) => (
-  Object.keys(unripeTokens).reduce<{ [addr: string]: string }>((prev, addr) => {
+  Object.keys(unripeTokens).reduce<{ [addr: string]: { crates: DepositCrate[]; encoded: string; } }>((prev, addr) => {
     const crates = (
       siloBalances[addr]?.deposited.crates
         .filter((crate) => (
@@ -76,18 +76,24 @@ export const encodeCratesForEnroot = (
     );
     if (crates && crates.length > 0) {
       if (crates.length === 1) {
-        prev[addr] = beanstalk.interface.encodeFunctionData('enrootDeposit', [
-          addr,
-          crates[0].season.toString(),
-          unripeTokens[addr].stringify(crates[0].amount),
-        ]);
+        prev[addr] = {
+          crates,
+          encoded: beanstalk.interface.encodeFunctionData('enrootDeposit', [
+            addr,
+            crates[0].season.toString(),
+            unripeTokens[addr].stringify(crates[0].amount),
+          ])
+        };
       } else {
-        prev[addr] = beanstalk.interface.encodeFunctionData('enrootDeposits', [
-          addr,
-          // fixme: not sure why TS doesn't pick up the type of `crates` here
-          crates.map((crate: Crate) => crate.season.toString()), // seasons
-          crates.map((crate: Crate) => unripeTokens[addr].stringify(crate.amount)), // amounts
-        ]);
+        prev[addr] = {
+          crates,
+          encoded: beanstalk.interface.encodeFunctionData('enrootDeposits', [
+            addr,
+            // fixme: not sure why TS doesn't pick up the type of `crates` here
+            crates.map((crate: Crate) => crate.season.toString()), // seasons
+            crates.map((crate: Crate) => unripeTokens[addr].stringify(crate.amount)), // amounts
+          ])
+        };
       }
     }
     return prev;

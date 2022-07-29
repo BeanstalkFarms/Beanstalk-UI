@@ -11,9 +11,9 @@ import toast from 'react-hot-toast';
 import { parseError } from 'util/index'; 
 import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
 import useFarmerSiloBalances from 'hooks/useFarmerSiloBalances';
-import { UNRIPE_TOKENS } from 'constants/tokens';
+import { UNRIPE_BEAN, UNRIPE_BEAN_CRV3, UNRIPE_TOKENS } from 'constants/tokens';
 import useTokenMap from 'hooks/useTokenMap';
-import { encodeCratesForEnroot } from 'util/Crates';
+import { selectCratesForEnroot } from 'util/Crates';
 import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
 import useAccount from 'hooks/ledger/useAccount';
 import { ethers } from 'ethers';
@@ -21,6 +21,7 @@ import BigNumber from 'bignumber.js';
 import useTimedRefresh from 'hooks/useTimedRefresh';
 import GasTag from 'components/Common/GasTag';
 import useBDV from 'hooks/useBDV';
+import useGetChainToken from 'hooks/useGetChainToken';
 import TransactionToast from '../Common/TxnToast';
 import DescriptionButton from '../Common/DescriptionButton';
 import RewardsBar, { RewardsBarProps } from './RewardsBar';
@@ -182,6 +183,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
   
   /// Helpers
   const unripeTokens      = useTokenMap(UNRIPE_TOKENS);
+  const getChainToken     = useGetChainToken();
   
   /// Farmer data
   const siloBalances      = useFarmerSiloBalances();
@@ -205,8 +207,41 @@ const RewardsDialog: React.FC<RewardsBarProps & {
     if (!account) return;
     if (!signer) throw new Error('No signer');
     
-    const encodedDataByToken  = encodeCratesForEnroot(beanstalk, unripeTokens, siloBalances, getBDV);
-    const encodedData         = Object.values(encodedDataByToken);
+    /// ------------------------------------------------------------
+    /// FOR TESTING ONLY
+    // 
+    const urbeanCrates   : number[] = [1];  // enter seasomns as numbers
+    const urbeanlpCrates : number[] = [1]; 
+
+    const urbean = getChainToken(UNRIPE_BEAN);
+    const urbeanlp = getChainToken(UNRIPE_BEAN_CRV3);
+    const newSiloBalances = {
+      [urbean.address]: {
+        ...siloBalances[urbean.address],
+        deposited: {
+          ...siloBalances[urbean.address].deposited,
+          crates: siloBalances[urbean.address].deposited.crates.filter((crate) => urbeanCrates.includes(crate.season.toNumber())),
+        }
+      },
+      [urbeanlp.address]: {
+        ...siloBalances[urbeanlp.address],
+        deposited: {
+          ...siloBalances[urbeanlp.address].deposited,
+          crates: siloBalances[urbeanlp.address].deposited.crates.filter((crate) => urbeanlpCrates.includes(crate.season.toNumber())),
+        }
+      }
+    };
+
+    // @ts-ignore
+    window.beanstalk = beanstalk;
+    console.debug('[RewardsDialog] New silo balances', newSiloBalances);
+    
+    // ----------------------------------------------------------------------
+
+    const selectedCratesByToken  = selectCratesForEnroot(beanstalk, unripeTokens, newSiloBalances, getBDV);
+    const encodedData = Object.keys(selectedCratesByToken).map((key) => selectedCratesByToken[key].encoded);
+
+    console.debug('[RewardsDialog] Selected crates: ', selectedCratesByToken);
 
     const _calls : ClaimCalls = {
       [ClaimRewardsAction.MOW]: {
@@ -239,13 +274,13 @@ const RewardsDialog: React.FC<RewardsBarProps & {
       [ClaimRewardsAction.CLAIM_ALL]: {
         estimateGas: () => beanstalk.estimateGas.farm([
           // PLANT_AND_MOW
-          beanstalk.interface.encodeFunctionData('plant', []),
+          beanstalk.interface.encodeFunctionData('plant', undefined),
           // ENROOT_AND_MOW
           ...encodedData,
         ]),
         execute: () => beanstalk.farm([
           // PLANT_AND_MOW
-          beanstalk.interface.encodeFunctionData('plant', []),
+          beanstalk.interface.encodeFunctionData('plant', undefined),
           // ENROOT_AND_MOW
           ...encodedData,
         ])
@@ -268,7 +303,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
       {}
     ));
     setGas(_gas);
-  }, [account, beanstalk, getBDV, provider, signer, siloBalances, unripeTokens]);
+  }, [account, beanstalk, getBDV, getChainToken, provider, signer, siloBalances, unripeTokens]);
 
   useTimedRefresh(estimateGas, 20 * 1000, open);
 
