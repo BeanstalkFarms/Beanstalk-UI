@@ -1,0 +1,25 @@
+query SunButton {
+  seasons(first: 24, orderBy: season, orderDirection: desc) {
+    id
+    season
+    twap
+    deltaBeans
+  }
+  fields: fieldHourlySnapshots(first: 24, orderBy: season, orderDirection: desc) {
+    id
+    season
+    newSoil
+		weather
+  }
+  # fields(first: 24, orderBy: season, orderDirection: desc) {
+  #   id
+  #   season
+  #   totalSoil
+  #   weather
+  # }
+  # silos(first: 1) {
+  #   id
+  #   totalStalk
+  #   totalSeeds
+  # }
+}

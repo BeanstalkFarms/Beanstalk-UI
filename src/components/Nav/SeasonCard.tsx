@@ -12,14 +12,17 @@ export interface SeasonCardProps {
   newBeans: BigNumber;
   newSoil: BigNumber;
   weather: BigNumber;
+  deltaWeather: BigNumber;
 }
 
-const SeasonCard: React.FC<SeasonCardProps> = ({ season, newBeans, newSoil, weather }) => (
+const SeasonCard: React.FC<SeasonCardProps> = ({ season, newBeans, newSoil, weather, deltaWeather }) => (
   <Box sx={{ border: 1, borderColor: BeanstalkPalette.blue, p: 0.75, borderRadius: '8px' }}>
     <Stack direction="row" justifyContent="space-between" alignItems="center">
       <Grid container alignItems="flex-end">
         <Grid item md={2} xs={2.5}>
-          <Typography color="text.primary" variant="bodySmall">{displayBN(season)}</Typography>
+          <Typography color="text.primary" variant="bodySmall">
+            {season.toFixed(0)}
+          </Typography>
         </Grid>
         <Grid item md={2.6} xs={0} display={{ xs: 'none', md: 'block' }}>
           <Stack direction="row" alignItems="center" spacing="2px">
@@ -78,7 +81,7 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, newBeans, newSoil, weat
         </Grid>
         <Grid item md={2.4} xs={3.5} sx={{ textAlign: 'right' }}>
           <Typography color="text.primary" variant="bodySmall" display="flex" flexDirection="row" alignItems="center" justifyContent="end">
-            {displayBN(weather)} (<ArrowDownwardIcon sx={{ width: '14px', height: '14px', display: 'inline' }} />3%)
+            {displayBN(weather)} (<ArrowDownwardIcon sx={{ width: '14px', height: '14px', display: 'inline' }} />{deltaWeather.toFixed(0)}%)
           </Typography>
         </Grid>
       </Grid>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   ButtonProps,
   Stack,
@@ -7,7 +7,8 @@ import {
   Box,
   Grid, Divider,
 } from '@mui/material';
-import { NEW_BN } from 'constants/index';
+import omit from 'lodash/omit';
+import { NEW_BN, ZERO_BN } from 'constants/index';
 import useSeason from 'hooks/useSeason';
 import drySeasonIcon from 'img/beanstalk/sun/dry-season.svg';
 import rainySeasonIcon from 'img/beanstalk/sun/rainy-season.svg';
@@ -17,6 +18,7 @@ import usePrice from 'hooks/usePrice';
 import SunriseCountdown from 'components/Sun/SunriseCountdown';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
+import { useSunButtonQuery } from 'generated/graphql';
 import FolderMenu from '../FolderMenu';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import SeasonCard from '../SeasonCard';
@@ -35,6 +37,25 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   const season    = useSeason();
   const beanPrice = usePrice();
   const awaiting  = useSelector<AppState, boolean>((state) => state._beanstalk.sun.sunrise.awaiting);
+  const { data, loading } = useSunButtonQuery();
+
+  const bySeason = useMemo(() => {
+    if (data?.fields && data?.seasons) {
+      type X = (typeof data.fields[number] & typeof data.seasons[number])
+      const _data : { [key: number] : Partial<X> } = {};
+      data?.fields.forEach((_f) => {
+        _data[_f.season] = { ...omit(_f, '__typename') };
+      });
+      data?.seasons.forEach((_s) => {
+        _data[_s.season] = { ..._data[_s.season], ...omit(_s, '__typename') };
+      });
+      return Object.keys(_data).sort((a, b) => parseInt(b, 10) - parseInt(a, 10)).reduce<X[]>((prev, curr) => {
+        prev.push(_data[curr as unknown as number]);
+        return prev;
+      }, []);
+    }
+    return [];
+  }, [data]);
 
   /// Theme
   const isTiny = useMediaQuery('(max-width:350px)');
@@ -104,22 +125,29 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           </Grid>
         </Box>
         {/* Upcoming Season */}
-        <SeasonCard
+        {/* <SeasonCard
           season={new BigNumber(7845)}
           newBeans={new BigNumber(0)}
           newSoil={new BigNumber(0)}
           weather={new BigNumber(5000)}
-        />
+        /> */}
         {/* Past Seasons */}
-        {mockSunData.map((s) => (
-          <SeasonCard
-            key={s.season.toString()}
-            season={s.season}
-            newBeans={s.newBeans}
-            newSoil={s.newSoil}
-            weather={s.weather}
-          />
-        ))}
+        {bySeason.map((s, index) => {
+          const weather      = new BigNumber(s.weather);
+          const deltaWeather = (bySeason[index + 1]?.weather && typeof bySeason[index + 1].weather === 'number') 
+            ? new BigNumber(bySeason[index + 1].weather).minus(weather)
+            : ZERO_BN;
+          return (
+            <SeasonCard
+              key={s.season.toString()}
+              season={new BigNumber(s.season)}
+              newBeans={new BigNumber(s.deltaBeans || 0)}
+              newSoil={new BigNumber(0)}
+              weather={weather}
+              deltaWeather={deltaWeather}
+            />
+          );
+        })}
       </Stack>
       <Divider />
       <Typography
