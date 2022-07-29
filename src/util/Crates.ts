@@ -71,7 +71,7 @@ export const selectCratesForEnroot = (
           /// only select crates where BDV would stay the same or increase
           /// solves bug where fluctuations in unripe bdv cause enroots
           /// to fail in certain conditions.
-          (getBDV(unripeTokens[addr]).times(crate.amount)).gte(crate.bdv)
+          (new BigNumber(getBDV(unripeTokens[addr]).times(crate.amount).toFixed(6, 1))).gt(crate.bdv)
         ))
     );
     if (crates && crates.length > 0) {
