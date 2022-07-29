@@ -56,6 +56,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         gap={1}
         sx={{
           width: '100%',
+          pr: 1,
           maxHeight: `${(37.5 + 10) * MAX_ITEMS - 10}px`,
           overflowY: 'auto',
         }}
@@ -109,14 +110,14 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
                 </Typography>
               </Stack>
             </Grid>
-            <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
+            <Grid item xs={0} md={2}>
               <Stack alignItems="flex-end">
                 <Typography color="text.primary" variant="bodySmall">
                   Pod Rate
                 </Typography>
               </Stack>
             </Grid>
-            <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
+            <Grid item xs={0} md={2}>
               <Stack alignItems="flex-end">
                 <Typography color="text.primary" variant="bodySmall">
                   Delta Demand

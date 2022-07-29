@@ -479,11 +479,6 @@ let muiTheme = createTheme({
         indicator: {
           display: 'none',
         },
-        // BELOW MAKES OVERFLOW TABS STACK INSTEAD OF SCROLL
-        // flexContainer: {
-        //   flexWrap: 'wrap',
-        //   rowGap: '10px',
-        // }
       },
     },
     MuiTab: {

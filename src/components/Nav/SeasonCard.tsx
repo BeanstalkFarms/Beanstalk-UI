@@ -5,7 +5,7 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import BigNumber from 'bignumber.js';
 import drySeasonIcon from 'img/beanstalk/sun/dry-season.svg';
-import { BeanstalkPalette } from '../App/muiTheme';
+import { BeanstalkPalette, IconSize } from '../App/muiTheme';
 import { displayBN } from '../../util';
 
 export interface SeasonCardProps {
@@ -38,17 +38,9 @@ const SeasonCard: React.FC<SeasonCardProps> = ({
         <Grid item xs={1.5} md={1.25}>
           <Stack direction="row" justifyContent="flex-start" spacing="5px">
             {newBeans.gt(new BigNumber(0)) ? (
-              <img
-                src={drySeasonIcon}
-                style={{ width: 16, height: 16 }}
-                alt="dry/rainy season"
-              />
+              <img src={drySeasonIcon} height={IconSize.small} alt="" />
             ) : (
-              <img
-                src={rainySeasonIcon}
-                style={{ width: 16, height: 16 }}
-                alt="dry/rainy season"
-              />
+              <img src={rainySeasonIcon} height={IconSize.small} alt="" />
             )}
             <Typography color="text.primary" variant="bodySmall">
               {displayBN(season)}
@@ -125,14 +117,14 @@ const SeasonCard: React.FC<SeasonCardProps> = ({
             </Typography>
           </Stack>
         </Grid>
-        <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
+        <Grid item xs={0} md={2}>
           <Stack alignItems="flex-end">
             <Typography color="text.primary" variant="bodySmall">
               {displayBN(podRate)}%
             </Typography>
           </Stack>
         </Grid>
-        <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
+        <Grid item xs={0} md={2}>
           <Stack alignItems="flex-end">
             <Typography
               variant="bodySmall"

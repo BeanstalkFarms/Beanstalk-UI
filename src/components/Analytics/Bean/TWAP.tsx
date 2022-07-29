@@ -6,6 +6,7 @@ import { Season, SeasonalTwapDocument } from 'generated/graphql';
 import usePrice from 'hooks/usePrice';
 import useSeason from 'hooks/useSeason';
 import { useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 const getValue = (season: Season) => parseFloat(season.twap);
 const formatValue = (value: number) => `$${value.toFixed(4)}`;
@@ -15,7 +16,8 @@ const LineChartProps = {
 };
 
 const useStatProps = () => {
-  const isTiny = useMediaQuery('(max-width:400px)');
+  const theme = useTheme();
+  const isTiny = useMediaQuery(theme.breakpoints.down('md'));
   return {
     title: isTiny ? 'TWAP' : 'Time Weighted Avg. Price',
     // titleIcon: <TokenIcon token={BEAN[SupportedChainId.MAINNET]} />,
