@@ -6,7 +6,7 @@ import usePodRate from 'hooks/usePodRate';
 import { SnapshotData } from 'hooks/useSeasons';
 
 const getValue = (season: SnapshotData<SeasonalTotalSowersQuery>) => season.totalNumberOfSowers;
-const formatValue = (value: number) => `${(value * 100).toFixed(2)}%`;
+const formatValue = (value: number) => `${value}`;
 const StatProps = {
   title: 'TotalSowers',
   gap: 0.25,
