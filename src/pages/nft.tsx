@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Card, Container, Link, Stack, Tab, Tabs, Typography, useMediaQuery, } from '@mui/material';
+import { Box, Card, Container, Link, Stack, Tab, Tabs, Typography, useMediaQuery, } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
 import { useSigner } from 'hooks/ledger/useSigner';
 import fetch from 'node-fetch';
@@ -235,7 +235,9 @@ const NFTPage: React.FC = () => {
             </Stack>
             {/* Zero state when not logged in */}
             {account === undefined ? (
-              <AuthEmptyState height={300} title="BeaNFTs" state={authState} />
+              <Box height={300}>
+                <AuthEmptyState title="BeaNFTs" state={authState} />
+              </Box>
             ) : (
               <>
                 {/* genesis */}
