@@ -1,0 +1,12 @@
+query SeasonalSown($season_lte: Int, $first: Int) {
+  seasons: fieldHourlySnapshots(
+    where: { season_lte: $season_lte }
+    orderBy: season
+    orderDirection: desc
+  ) {
+    id
+    season
+    timestamp
+    sownBeans
+  }
+}

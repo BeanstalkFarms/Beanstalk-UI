@@ -6,6 +6,7 @@ import HarvestedPods from './HarvestedPods';
 import PodRate from './PodRate';
 import Pods from './Pods';
 import Weather from './Weather';
+import Sown from './Sown';
 
 const SLUGS = ['rror', 'weather', 'pods', 'podrate', 'sown', 'harvested', 'sowers'];
 const FieldAnalytics: React.FC<{}> = () => {
@@ -26,7 +27,7 @@ const FieldAnalytics: React.FC<{}> = () => {
         {tab === 1 && <Weather />}
         {tab === 2 && <Pods />}
         {tab === 3 && <PodRate />}
-        {/* {tab === 4 && <Sown season={season} beanPrice={beanPrice} />} */}
+        {tab === 4 && <Sown />}
         {tab === 5 && <HarvestedPods />}
         {/* {tab === 6 && <Sowers season={season} beanPrice={beanPrice} />} */}
       </Stack>
