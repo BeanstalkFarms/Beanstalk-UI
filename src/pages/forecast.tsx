@@ -13,7 +13,6 @@ import PageHeader from 'components/Common/PageHeader';
 import LiquidityOverTime from 'components/Forecast/LiquidityOverTime';
 import PodRate from 'components/Analytics/Field/PodRate';
 import TWAP from 'components/Analytics/Bean/TWAP';
-import LiquidityByState from '../components/Forecast/LiquidityByState';
 
 const ForecastPage: React.FC = () => {
   // Data
@@ -34,7 +33,7 @@ const ForecastPage: React.FC = () => {
         </Card>
       </Stack>
       <LiquidityOverTime balances={balances} />
-      <LiquidityByState />
+      {/* <LiquidityByState /> */}
     </>
   );
 

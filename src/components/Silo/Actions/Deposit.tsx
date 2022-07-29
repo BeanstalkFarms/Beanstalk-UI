@@ -6,7 +6,6 @@ import BigNumber from 'bignumber.js';
 import { useProvider } from 'wagmi';
 import { ethers } from 'ethers';
 import { BEAN, CRV3, DAI, ETH, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3, USDC, USDT, WETH } from 'constants/tokens';
-import useChainConstant from 'hooks/useChainConstant';
 import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
@@ -209,11 +208,18 @@ const Deposit : React.FC<{
 }) => {
   /// Chain Constants
   const getChainToken = useGetChainToken();
-  const Eth  = useChainConstant(ETH);
-  const Weth = useChainConstant(WETH);
-  const urBean = useChainConstant(UNRIPE_BEAN);
-  const urBeanCrv3 = useChainConstant(UNRIPE_BEAN_CRV3);
-  const allAvailableTokens = useTokenMap([
+  const Bean          = getChainToken(BEAN);
+  const Eth           = getChainToken(ETH);
+  const Weth          = getChainToken(WETH);
+  const urBean        = getChainToken(UNRIPE_BEAN);
+  const urBeanCrv3    = getChainToken(UNRIPE_BEAN_CRV3);
+
+  /// FIXME: name
+  /// FIXME: finish deposit functionality for other tokens
+  const initTokenList = useMemo(() => (whitelistedToken === Bean ? [
+    BEAN,
+    ETH,
+  ] : [
     BEAN,
     ETH,
     WETH,
@@ -222,7 +228,8 @@ const Deposit : React.FC<{
     DAI,
     USDC,
     USDT
-  ]);
+  ]), [Bean, whitelistedToken]);
+  const allAvailableTokens = useTokenMap(initTokenList);
 
   /// Derived
   const isUnripe = (
