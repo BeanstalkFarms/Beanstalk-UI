@@ -21,7 +21,7 @@ import { SupportedChainId, ZERO_BN } from 'constants/index';
 import Token from 'classes/Token';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
-import { displayFullBN, displayUSD, toTokenUnitsBN } from 'util/index';
+import { displayFullBN, displayUSD, toTokenUnitsBN, parseError } from 'util/index';
 import useChainId from 'hooks/useChain';
 import pickImage from 'img/pick.png';
 import DescriptionButton from 'components/Common/DescriptionButton';
@@ -33,6 +33,8 @@ import useGetChainToken from 'hooks/useGetChainToken';
 import { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import TransactionToast from 'components/Common/TxnToast';
 import useAccount from 'hooks/ledger/useAccount';
+import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
+import toast from 'react-hot-toast';
 import UnripeTokenRow from './UnripeTokenRow';
 
 // ----------------------------------------------------
@@ -107,44 +109,61 @@ const PickBeansDialog: React.FC<{
   disableScrollLock,
   handleClose
 }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  /// Theme
+  const theme         = useTheme();
+  const isMobile      = useMediaQuery(theme.breakpoints.down('md'));
   const [tab, setTab] = useState(0);
 
+  /// Chain
+  const chainId       = useChainId();
+  const getChainToken = useGetChainToken();
+  const urBean        = getChainToken(UNRIPE_BEAN);
+  const urBeanCRV3    = getChainToken(UNRIPE_BEAN_CRV3);
+  
   /// Farmer data
-  const breakdown = useFarmerSiloBreakdown();
-
-  ///
-  const chainId           = useChainId();
-  const account           = useAccount();
-  const { data: signer }  = useSigner();
-  const getChainToken     = useGetChainToken();
+  const breakdown           = useFarmerSiloBreakdown();
+  const [refetchFarmerSilo] = useFetchFarmerSilo();
 
   /// Contracts
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const account          = useAccount();
+  const { data: signer } = useSigner();
+  const beanstalk        = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
   
   /// Local data
-  const [unripe, setUnripe] = useState<GetUnripeResponse | null>(null);
-  const [merkles, setMerkles] = useState<PickMerkleResponse | null>(null);
+  const [unripe, setUnripe]         = useState<GetUnripeResponse | null>(null);
+  const [merkles, setMerkles]       = useState<PickMerkleResponse | null>(null);
   const [pickStatus, setPickStatus] = useState<null | 'picking' | 'success' | 'error'>(null);
+  const [picked, setPicked]         = useState<[null, null] | [boolean, boolean]>([null, null]);
 
+  /// Refresh 
   useEffect(() => {
     (async () => {
-      if (account && open) {
-        const [
-          _unripe,
-          _merkles
-        ] = await Promise.all([
-          fetch(`/.netlify/functions/unripe?account=${account}`).then((response) => response.json()),
-          fetch(`/.netlify/functions/pick?account=${account}`).then((response) => response.json())
-        ]);
-        setUnripe(_unripe);
-        setMerkles(_merkles);
+      try {
+        if (account && open) {
+          const [
+            _unripe,
+            _merkles,
+            _picked,
+          ] = await Promise.all([
+            fetch(`/.netlify/functions/unripe?account=${account}`).then((response) => response.json()),
+            fetch(`/.netlify/functions/pick?account=${account}`).then((response) => response.json()),
+            Promise.all([
+              beanstalk.picked(account, urBean.address),
+              beanstalk.picked(account, urBeanCRV3.address),
+            ]),
+          ]);
+          setUnripe(_unripe);
+          setMerkles(_merkles);
+          setPicked(_picked);
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error(parseError(err));
       }
     })();
-  }, [account, open]);
+  }, [account, beanstalk, open, urBean.address, urBeanCRV3.address]);
 
-  // Handlers
+  /// Tab handlers
   const handleDialogClose = () => {
     handleClose();
     setTab(0);
@@ -157,40 +176,38 @@ const PickBeansDialog: React.FC<{
     if (pickStatus !== 'picking') setPickStatus(null);
   };
 
-  ///
+  /// Pick handlers
   const handlePick = useCallback((isDeposit : boolean) => () => {
     if (!merkles) return;
 
     setPickStatus('picking');
     const data = [];
-    const uBean     = getChainToken(UNRIPE_BEAN);
-    const uBeanCRV3 = getChainToken(UNRIPE_BEAN_CRV3);
 
-    if (merkles.bean) {
+    if (merkles.bean && picked[0] === false) {
       data.push(beanstalk.interface.encodeFunctionData('pick', [
-        uBean.address,
+        urBean.address,
         merkles.bean.amount,
         merkles.bean.proof,
         isDeposit ? FarmToMode.INTERNAL : FarmToMode.EXTERNAL,
       ]));
       if (isDeposit) {
         data.push(beanstalk.interface.encodeFunctionData('deposit', [
-          uBean.address,
+          urBean.address,
           merkles.bean.amount,
           FarmFromMode.INTERNAL, // always use internal for deposits
         ]));
       }
     }
-    if (merkles.bean3crv) {
+    if (merkles.bean3crv && picked[1] === false) {
       data.push(beanstalk.interface.encodeFunctionData('pick', [
-        uBeanCRV3.address,
+        urBeanCRV3.address,
         merkles.bean3crv.amount,
         merkles.bean3crv.proof,
         isDeposit ? FarmToMode.INTERNAL : FarmToMode.EXTERNAL,
       ]));
       if (isDeposit) {
         data.push(beanstalk.interface.encodeFunctionData('deposit', [
-          uBeanCRV3.address,
+          urBeanCRV3.address,
           merkles.bean3crv.amount,
           FarmFromMode.INTERNAL, // always use internal for deposits
         ]));
@@ -207,6 +224,9 @@ const PickBeansDialog: React.FC<{
         txToast.confirming(txn);
         return txn.wait();
       })
+      .then((receipt) => Promise.all([
+        refetchFarmerSilo(),
+      ]).then(() => receipt))
       .then((receipt) => {
         txToast.success(receipt);
         setPickStatus('success');
@@ -217,17 +237,17 @@ const PickBeansDialog: React.FC<{
         );
         setPickStatus('error');
       });
-  }, [
-    merkles,
-    beanstalk,
-    getChainToken,
-  ]);
+  }, [merkles, picked, beanstalk, urBean.address, urBeanCRV3.address, refetchFarmerSilo]);
 
   /// Tab: Pick Overview
-  let buttonText = 'Nothing to Pick';
-  let buttonDisabled = true;
+  const alreadyPicked = picked[0] === true && picked[1] === true;
   const buttonLoading = !merkles;
-  if (merkles && (merkles.bean || merkles.bean3crv)) {
+  let buttonText      = 'Nothing to Pick';
+  let buttonDisabled  = true;
+  if (alreadyPicked) {
+    buttonText = 'Already Picked';
+    buttonDisabled = true;
+  } else if (merkles && (merkles.bean || merkles.bean3crv)) {
     buttonDisabled = false;
     const avail = [];
     if (merkles.bean) avail.push('Unripe Beans');

@@ -1,4 +1,4 @@
-import { Box, Dialog, Stack } from '@mui/material';
+import { Box, Dialog, Stack, Tooltip } from '@mui/material';
 import { Field, FieldProps, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useProvider } from 'wagmi';
@@ -10,7 +10,6 @@ import { BeanstalkReplanted } from 'generated/index';
 import toast from 'react-hot-toast';
 import { parseError } from 'util/index'; 
 import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
-import useFarmerSiloBalances from 'hooks/useFarmerSiloBalances';
 import { UNRIPE_TOKENS } from 'constants/tokens';
 import useTokenMap from 'hooks/useTokenMap';
 import { selectCratesForEnroot } from 'util/Crates';
@@ -21,6 +20,8 @@ import BigNumber from 'bignumber.js';
 import useTimedRefresh from 'hooks/useTimedRefresh';
 import GasTag from 'components/Common/GasTag';
 import useBDV from 'hooks/useBDV';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import TransactionToast from '../Common/TxnToast';
 import DescriptionButton from '../Common/DescriptionButton';
 import RewardsBar, { RewardsBarProps } from './RewardsBar';
@@ -67,6 +68,7 @@ type ClaimCalls = {
   [key in ClaimRewardsAction] : { 
     estimateGas: () => Promise<ethers.BigNumber>;
     execute: () => Promise<ethers.ContractTransaction>;
+    enabled: boolean;
   }
 };
 type ClaimGasResults = {
@@ -80,12 +82,14 @@ const ClaimRewardsForm : React.FC<
   & RewardsBarProps
   & {
     gas: ClaimGasResults | null;
+    calls: ClaimCalls | null;
   }
 > = ({
   submitForm,
   isSubmitting,
   values,
   gas,
+  calls,
   ...rewardsBarProps
 }) => {
   /** The currently hovered action. */
@@ -126,20 +130,29 @@ const ClaimRewardsForm : React.FC<
               };
               return (
                 <Stack gap={1}>
-                  {options.map((option) => (
-                    <DescriptionButton
-                      key={option.value}
-                      title={option.title}
-                      description={`${option.description}`}
-                      tag={<GasTag gasLimit={gas?.[option.value] || null} />}
-                      // Button
-                      fullWidth
-                      onClick={set(option.value)}
-                      onMouseOver={onMouseOver(option.value)}
-                      onMouseLeave={onMouseOutContainer}
-                      selected={isHovering(option.value)}
-                    />
-                  ))}
+                  {options.map((option) => {
+                    const hovered = isHovering(option.value);
+                    const disabled = !calls || calls[option.value].enabled === false;
+                    return (
+                      <Tooltip title={!disabled ? '' : 'Nothing to claim'}>
+                        <div>
+                          <DescriptionButton
+                            key={option.value}
+                            title={option.title}
+                            description={`${option.description}`}
+                            tag={<GasTag gasLimit={gas?.[option.value] || null} />}
+                            // Button
+                            fullWidth
+                            onClick={set(option.value)}
+                            onMouseOver={onMouseOver(option.value)}
+                            onMouseLeave={onMouseOutContainer}
+                            selected={hovered}
+                            disabled={disabled}
+                          />
+                        </div>
+                      </Tooltip>
+                    );
+                  })}
                 </Stack>
               );
             }}
@@ -184,7 +197,8 @@ const RewardsDialog: React.FC<RewardsBarProps & {
   const unripeTokens      = useTokenMap(UNRIPE_TOKENS);
   
   /// Farmer data
-  const siloBalances      = useFarmerSiloBalances();
+  const farmerSilo        = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
+  const siloBalances      = farmerSilo.balances;
   const [fetchFarmerSilo] = useFetchFarmerSilo();
 
   // Beanstalk data
@@ -214,29 +228,33 @@ const RewardsDialog: React.FC<RewardsBarProps & {
       [ClaimRewardsAction.MOW]: {
         estimateGas: () => beanstalk.estimateGas.update(account),
         execute: () => beanstalk.update(account),
+        enabled: farmerSilo.stalk.grown.gt(0),
       },
       [ClaimRewardsAction.PLANT_AND_MOW]: {
         estimateGas: () => beanstalk.estimateGas.plant(),
-        execute: () => beanstalk.plant()
+        execute: () => beanstalk.plant(),
+        enabled: farmerSilo.seeds.plantable.gt(0),
       },
       [ClaimRewardsAction.ENROOT_AND_MOW]: (
-        encodedData.length > 0 
-        ? {
-          estimateGas: () => beanstalk.estimateGas.farm(encodedData),
-          execute: () => beanstalk.farm(encodedData),
-        }
-        : {
-          estimateGas: () => provider.estimateGas(
-            signer.checkTransaction({
+        encodedData.length > 1
+          ? {
+            estimateGas: () => beanstalk.estimateGas.farm(encodedData),
+            execute: () => beanstalk.farm(encodedData),
+            enabled: true,
+          }
+          : {
+            estimateGas: () => provider.estimateGas(
+              signer.checkTransaction({
+                to: beanstalk.address,
+                data: encodedData[0],
+              })
+            ),
+            execute: () => signer.sendTransaction({
               to: beanstalk.address,
               data: encodedData[0],
-            })
-          ),
-          execute: () => signer.sendTransaction({
-            to: beanstalk.address,
-            data: encodedData[0],
-          }),
-        }
+            }),
+            enabled: encodedData.length > 0,
+          }
       ),
       [ClaimRewardsAction.CLAIM_ALL]: {
         estimateGas: () => beanstalk.estimateGas.farm([
@@ -250,7 +268,12 @@ const RewardsDialog: React.FC<RewardsBarProps & {
           beanstalk.interface.encodeFunctionData('plant', undefined),
           // ENROOT_AND_MOW
           ...encodedData,
-        ])
+        ]),
+        enabled: (
+          farmerSilo.stalk.grown.gt(0)
+          || farmerSilo.seeds.plantable.gt(0)
+          || encodedData.length > 0
+        ),
       },
     };
 
@@ -270,7 +293,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
       {}
     ));
     setGas(_gas);
-  }, [account, beanstalk, getBDV, provider, signer, siloBalances, unripeTokens]);
+  }, [account, beanstalk, farmerSilo.seeds.plantable, farmerSilo.stalk.grown, getBDV, provider, signer, siloBalances, unripeTokens]);
 
   useTimedRefresh(estimateGas, 20 * 1000, open);
 
@@ -316,6 +339,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
         {(formikProps: FormikProps<ClaimRewardsFormValues>) => (
           <ClaimRewardsForm
             gas={gas}
+            calls={calls}
             {...formikProps}
             {...rewardsBarProps}
           />

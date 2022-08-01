@@ -53,8 +53,8 @@ export default function AppUpdater() {
   // }, { keyup: true });
 
   useHotkeys('opt+f, alt+f', (/* event, handler */) => {
-    toast.success(`Updated setting: Show fiat in ${denomination === 'bdv' ? 'BDV' : 'USD'}.`);
     dispatch(updateSetting({ key: 'denomination', value: denomination === 'bdv' ? 'usd' : 'bdv' }));
+    toast.success(`Updated setting: Show fiat in ${denomination === 'bdv' ? 'USD' : 'BDV'}.`);
   }, { keyup: true, }, [denomination]);
   
   useHotkeys('opt+q, alt+q', () => {

@@ -81,14 +81,20 @@ export function displayFullBN(
 export function displayTokenAmount(
   amount: BigNumber,
   token: Token,
-  modifier?: string
+  config: {
+    allowNegative?: boolean,
+    showName?: boolean,
+    modifier?: string,
+  } = {
+    allowNegative: false,
+    showName: true,
+  }
 ) {
-  return `${amount
+  return `${(config.allowNegative ? amount : amount.abs())
     .toNumber()
     .toLocaleString('en-US', { 
       maximumFractionDigits: token.displayDecimals,
-      // maximumSignificantDigits: 3,
-    })} ${modifier ? `${modifier} ` : ''}${token.name}`;
+    })} ${config.modifier ? `${config.modifier} ` : ''}${config.showName ? token.name : ''}`;
 }
 
 /**
@@ -145,7 +151,10 @@ export function smallDecimalPercent(bn: BigNumber) {
 /**
  * 
  */
-export function displayUSD(bn: BigNumber, allowNegative : boolean = false) {
+export function displayUSD(
+  bn: BigNumber,
+  allowNegative : boolean = false
+) {
   const v = allowNegative === false ? MaxBN(ZERO_BN, bn).abs() : bn;
   return `$${displayFullBN(v, 2, 2)}`;
 }

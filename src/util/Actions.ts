@@ -165,7 +165,7 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.WITHDRAW:
       return `Withdraw ${displayTokenAmount(a.amount.abs(), a.token)} from the Silo.`;
     case ActionType.IN_TRANSIT:
-      return `Receive ${displayTokenAmount(a.amount.abs(), a.token, 'Claimable')} in ${a.withdrawSeasons.toFixed()} Season${a.withdrawSeasons.eq(1) ? '' : 's'}.`;
+      return `Receive ${displayTokenAmount(a.amount.abs(), a.token, false, 'Claimable')} in ${a.withdrawSeasons.toFixed()} Season${a.withdrawSeasons.eq(1) ? '' : 's'}.`;
     case ActionType.UPDATE_SILO_REWARDS: // FIXME: don't like "update" here
       return `${a.stalk.lt(0) ? 'Burn' : 'Receive'} ${displayFullBN(a.stalk.abs(), 2)} Stalk and ${displayFullBN(a.seeds.abs(), 2)} Seeds.`;
     case ActionType.CLAIM_WITHDRAWAL:

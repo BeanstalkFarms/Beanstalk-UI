@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate , Link as RouterLink } from 'react-router-dom';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import React from 'react';
@@ -13,17 +13,19 @@ const PageHeader : React.FC<{
   /**  */
   control?: React.ReactElement;
 }> = (props) => {
-//   const buttonProps = props.returnPath ? {
-//     to: props.returnPath,
-//     component: RouterLink,
-//   }
   const navigate = useNavigate();
+  const buttonProps = props.returnPath ? {
+    to: props.returnPath,
+    component: RouterLink,
+  } : {
+    onClick: () => navigate(-1),
+  };
   return (
     <Box>
       <Stack direction="row" alignItems="center" justifyContent="space-between" gap={0.5}>
         <Box sx={{ width: 70 }}>
           <Button
-            onClick={() => navigate(-1)}
+            {...buttonProps}
             color="naked"
             sx={{
               p: 0,

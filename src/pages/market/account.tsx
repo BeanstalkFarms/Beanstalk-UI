@@ -23,6 +23,7 @@ const MarketAccountPage: React.FC = () => {
     <Container maxWidth="lg">
       <Stack spacing={2}>
         <PageHeaderSecondary
+          returnPath="/market"
           title={(
             <Stack direction="row" gap={1} alignItems="center">
               <AddressIcon />
