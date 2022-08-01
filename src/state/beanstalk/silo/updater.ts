@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { BEAN_TO_SEEDS, BEAN_TO_STALK,  REPLANTED_CHAINS,  SupportedChainId,  TokenMap, ZERO_BN } from 'constants/index';
+import { BEAN_TO_SEEDS, BEAN_TO_STALK,  REPLANTED_CHAINS,  TokenMap, ZERO_BN } from 'constants/index';
 import { useDispatch } from 'react-redux';
 import { bigNumberResult } from 'util/Ledger';
 import { tokenResult, toStringBaseUnitBN } from 'util/index';
@@ -122,11 +122,7 @@ export const useFetchSilo = () => {
 
       // farmableStalk and farmableSeed are derived from farmableBeans
       // because 1 bean = 1 stalk, 2 seeds
-      const activeStalkTotal = (
-        chainId === SupportedChainId.MAINNET
-          ? stalkTotal // .minus(219316.5007560000) // subtract exploiter stalk balance
-          : stalkTotal
-      );
+      const activeStalkTotal = stalkTotal;
       const earnedStalkTotal = earnedBeansTotal.times(BEAN_TO_STALK);
       const earnedSeedTotal  = earnedBeansTotal.times(BEAN_TO_SEEDS);
 
@@ -203,7 +199,6 @@ export const useFetchSilo = () => {
     beanstalk,
     WHITELIST,
     IS_REPLANTED,
-    chainId
   ]);
 
   const clear = useCallback(() => {

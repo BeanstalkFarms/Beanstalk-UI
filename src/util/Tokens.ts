@@ -81,14 +81,20 @@ export function displayFullBN(
 export function displayTokenAmount(
   amount: BigNumber,
   token: Token,
-  allowNegative: boolean = false,
-  modifier?: string
+  config: {
+    allowNegative?: boolean,
+    showName?: boolean,
+    modifier?: string,
+  } = {
+    allowNegative: false,
+    showName: true,
+  }
 ) {
-  return `${(allowNegative ? amount : amount.abs())
+  return `${(config.allowNegative ? amount : amount.abs())
     .toNumber()
     .toLocaleString('en-US', { 
       maximumFractionDigits: token.displayDecimals,
-    })} ${modifier ? `${modifier} ` : ''}${token.name}`;
+    })} ${config.modifier ? `${config.modifier} ` : ''}${config.showName ? token.name : ''}`;
 }
 
 /**

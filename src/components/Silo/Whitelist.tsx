@@ -8,11 +8,11 @@ import TokenIcon from 'components/Common/TokenIcon';
 import { BEAN, SEEDS, STALK } from 'constants/tokens';
 import { AddressMap, ZERO_BN } from 'constants/index';
 import { displayFullBN } from 'util/Tokens';
-import useTVL from 'hooks/useTVL';
 import useChainConstant from 'hooks/useChainConstant';
 import useBDV from 'hooks/useBDV';
 import { IconSize } from 'components/App/muiTheme';
-import useFiat from 'hooks/currency/useFiat';
+import { useSelector } from 'react-redux';
+import Fiat from 'components/Common/Fiat';
 
 const ARROW_CONTAINER_WIDTH = 20;
 
@@ -30,20 +30,21 @@ const Whitelist : React.FC<{
   farmerSilo,
   config,
 }) => {
-  const getTVL = useTVL();
-  const getBDV = useBDV();
+  ///
   const Bean = useChainConstant(BEAN);
-  const displayFiat = useFiat();
+
+  ///
+  const getBDV        = useBDV();
+  const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
 
   return (
     <Card>
-      {/* Table Header */}
       <Box
         display="flex"
         sx={{ 
-          px: 3, // 1 + 2 from Table Body
-          pt: '14px',
-          pb: '5px',
+          px: 3,      // 1 + 2 from Table Body
+          pt: '14px', // manually adjusted
+          pb: '5px',  // manually adjusted
           borderBottomStyle: 'solid',
           borderBottomColor: 'secondary.main', 
           borderBottomWidth: 1.5,
@@ -66,16 +67,12 @@ const Whitelist : React.FC<{
             <Tooltip title="Total Value Deposited">
               <Typography color="gray">TVD</Typography>
             </Tooltip>
-            {/* <Typography color="black" fontWeight="bold">
-              ${displayBN(aggregateTVL)}
-            </Typography> */}
           </Grid>
           <Grid item md={3} xs={0} display={{ xs: 'none', md: 'block' }}>
             <Typography color="gray">Deposited Amount</Typography>
           </Grid>
           <Grid item md={1.5} xs={8} sx={{ textAlign: 'right', paddingRight: `${ARROW_CONTAINER_WIDTH}px` }}>
             <Typography color="gray">Deposited Value</Typography>
-            {/* <Typography color="black" fontWeight="bold">{displayUSD(breakdown.states.deposited.value)}</Typography> */}
           </Grid>
         </Grid>
       </Box>
@@ -123,8 +120,10 @@ const Whitelist : React.FC<{
                   {/* Cell: TVD */}
                   <Grid item md={2.5} xs={0} display={{ xs: 'none', md: 'block' }}>
                     <Typography color="black">
-                      {displayFiat(token, getTVL(token))}
-                      {/* ${displayBN(getTVL(token))} */}
+                      <Fiat
+                        token={token}
+                        amount={beanstalkSilo.balances[token.address]?.deposited.amount}
+                      />
                     </Typography>
                   </Grid>
                   {/* Cell: Deposited Amount */}
@@ -164,8 +163,10 @@ const Whitelist : React.FC<{
                   <Grid item md={1.5} xs={3}>
                     <Stack direction="row" alignItems="center" justifyContent="flex-end">
                       <Typography color="black">
-                        {displayFiat(token, deposited?.amount)}
-                        {/* {deposited?.amount ? displayUSD(poolTokenToUSD(token, deposited.amount)) : '$0'} */}
+                        <Fiat
+                          token={token}
+                          amount={deposited?.amount}
+                        />
                       </Typography>
                       <Stack sx={{ width: ARROW_CONTAINER_WIDTH, }} alignItems="center">
                         <ArrowRightIcon />
