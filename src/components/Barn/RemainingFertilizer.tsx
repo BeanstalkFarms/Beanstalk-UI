@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Box, Card, Link, Stack, Typography, Tooltip } from '@mui/material';
+import { Box, Card, Stack, Typography, Tooltip } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { displayFullBN } from 'util/index';
 import useHumidity, { INITIAL_HUMIDITY } from 'hooks/useHumidity';
@@ -98,15 +98,16 @@ const RemainingFertilizer: React.FC = () => {
               </Stack>
             </Stack>
             <Stack>
-              <Link
-                href="https://docs.bean.money/farm/barn"
-                rel="noreferrer"
-                color="text.secondary"
-              >
-                <Typography variant="body1">
-                  Learn more about the Barn Raise
-                </Typography>
-              </Link>
+              {null}
+              {/* <Link */}
+              {/*  href="https://docs.bean.money/farm/barn" */}
+              {/*  rel="noreferrer" */}
+              {/*  color="text.secondary" */}
+              {/* > */}
+              {/*  <Typography variant="body1"> */}
+              {/*    Learn more about the Barn Raise */}
+              {/*  </Typography> */}
+              {/* </Link> */}
             </Stack>
           </Stack>
         </Stack>
