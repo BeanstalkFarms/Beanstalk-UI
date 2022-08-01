@@ -41,6 +41,7 @@ import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { useFetchPools } from 'state/bean/pools/updater';
+import { useFetchSilo } from 'state/beanstalk/silo/updater';
 
 // -----------------------------------------------------------------------
 
@@ -271,6 +272,7 @@ const Deposit : React.FC<{
   const [refetchFarmerSilo]     = useFetchFarmerSilo();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
   const [refetchPools]          = useFetchPools();
+  const [refetchSilo]           = useFetchSilo();
 
   /// Network
   const provider = useProvider();
@@ -522,6 +524,7 @@ const Deposit : React.FC<{
         refetchFarmerSilo(),
         refetchFarmerBalances(),
         refetchPools(),
+        refetchSilo(),
       ]);
       txToast.success(receipt);
       formActions.resetForm();
@@ -537,6 +540,7 @@ const Deposit : React.FC<{
     refetchFarmerSilo,
     refetchFarmerBalances,
     refetchPools,
+    refetchSilo,
   ]);
 
   return (

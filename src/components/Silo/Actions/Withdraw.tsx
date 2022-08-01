@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { Accordion, AccordionDetails, Box, Button, Divider, Stack, Tooltip, Typography } from '@mui/material';
+import React, { useCallback, useMemo } from 'react';
+import { Accordion, AccordionDetails, Box, Divider, Stack, Tooltip } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { Token } from 'classes';
@@ -29,25 +29,15 @@ import { BeanstalkReplanted } from 'generated/index';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
-import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
 import { ActionType } from 'util/Actions';
 import { ZERO_BN } from 'constants/index';
 import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
 import toast from 'react-hot-toast';
+import { useFetchSilo } from 'state/beanstalk/silo/updater';
 
 // -----------------------------------------------------------------------
 
 type WithdrawFormValues = FormState;
-
-// const simplifySiloBalances = (
-//   state : 'deposited' | 'withdrawn' | 'claimable',
-//   balances: AppState['_farmer']['silo']['balances']
-// ) => Object.keys(balances).reduce((prev, k) => {
-//   prev[k] = balances[k][state].amount;
-//   return prev;
-// }, {} as AddressMap<BigNumber>);
-
-// -----------------------------------------------------------------------
 
 const WithdrawForm : React.FC<
   FormikProps<WithdrawFormValues> & {
@@ -81,17 +71,15 @@ const WithdrawForm : React.FC<
   }), [whitelistedToken]);
 
   // Confirmation dialog
-  const CONFIRM_DELAY = 2000; // ms
-  const [confirming, setConfirming] = useState(false);
-  const [allowConfirm, setAllowConfirm] = useState(false);
-  const [fill, setFill] = useState('');
-
-  const onClose = useCallback(() => {
-    setConfirming(false);
-    setAllowConfirm(false);
-    setFill('');
-  }, []);
-
+  // const CONFIRM_DELAY = 2000; // ms
+  // const [confirming, setConfirming] = useState(false);
+  // const [allowConfirm, setAllowConfirm] = useState(false);
+  // const [fill, setFill] = useState('');
+  // const onClose = useCallback(() => {
+  //   setConfirming(false);
+  //   setAllowConfirm(false);
+  //   setFill('');
+  // }, []);
   // const onOpen  = useCallback(() => {
   //   setConfirming(true);
   //   setTimeout(() => {
@@ -101,11 +89,10 @@ const WithdrawForm : React.FC<
   //     setAllowConfirm(true);
   //   }, CONFIRM_DELAY);
   // }, []);
-
-  const onSubmit = useCallback(() => {
-    submitForm();
-    onClose();
-  }, [onClose, submitForm]);
+  // const onSubmit = useCallback(() => {
+  //   submitForm();
+  //   onClose();
+  // }, [onClose, submitForm]);
 
   // Results
   const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
@@ -159,7 +146,7 @@ const WithdrawForm : React.FC<
     <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
       <Form noValidate>
         {/* Confirmation Dialog */}
-        <StyledDialog open={confirming} onClose={onClose}>
+        {/* <StyledDialog open={confirming} onClose={onClose}>
           <StyledDialogTitle onClose={onClose}>Confirm Silo Withdrawal</StyledDialogTitle>
           <StyledDialogContent sx={{ pb: 1 }}>
             <Stack direction="column" gap={1}>
@@ -193,7 +180,7 @@ const WithdrawForm : React.FC<
               Confirm Withdrawal
             </Button>
           </StyledDialogActions>
-        </StyledDialog>
+        </StyledDialog> */}
         {/* Form Content */}
         <Stack gap={1}>
           <TokenInputField
@@ -258,13 +245,19 @@ const WithdrawForm : React.FC<
 // -----------------------------------------------------------------------
 
 const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
-  const season = useSeason();
-  const siloBalances = useFarmerSiloBalances();
+  ///
   const { data: signer } = useSigner();
-  const [refetchFarmerSilo] = useFetchFarmerSilo();
-  const beanstalk = (useBeanstalkContract(signer) as unknown) as BeanstalkReplanted;
-  const withdrawSeasons = useSelector<AppState, AppState['_beanstalk']['silo']['withdrawSeasons']>((state) => state._beanstalk.silo.withdrawSeasons);
+  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  
+  ///
+  const season = useSeason();
+  const withdrawSeasons = useSelector<AppState, BigNumber>((state) => state._beanstalk.silo.withdrawSeasons);
 
+  ///
+  const siloBalances        = useFarmerSiloBalances();
+  const [refetchFarmerSilo] = useFetchFarmerSilo();
+  const [refetchSilo]       = useFetchSilo();
+  
   // Form data
   const depositedBalance = siloBalances[token.address]?.deposited.amount;
   const initialValues : WithdrawFormValues = useMemo(() => ({
@@ -328,7 +321,10 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
-      await refetchFarmerSilo(); // FIXME: ignore refetch error?
+      await Promise.all([
+        refetchFarmerSilo(),
+        refetchSilo(),
+      ]);
       txToast.success(receipt);
       formActions.resetForm();
     } catch (err) {
@@ -342,6 +338,7 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
     season,
     withdrawSeasons,
     refetchFarmerSilo,
+    refetchSilo,
   ]);
 
   //

@@ -14,7 +14,7 @@ import useChainId from 'hooks/useChain';
 import { resetBeanstalkSilo, updateBeanstalkSilo } from './actions';
 import { BeanstalkSiloBalance } from './index';
 
-export const useBeanstalkSilo = () => {
+export const useFetchSilo = () => {
   const dispatch = useDispatch();
   const beanstalk = useBeanstalkContract();
   const migrate = useMigrateCall();
@@ -217,7 +217,7 @@ export const useBeanstalkSilo = () => {
 // -- Updater
 
 const BeanstalkSiloUpdater = () => {
-  const [fetch, clear] = useBeanstalkSilo();
+  const [fetch, clear] = useFetchSilo();
 
   useEffect(() => {
     clear();
