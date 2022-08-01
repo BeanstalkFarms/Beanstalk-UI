@@ -3,7 +3,7 @@ import { AddressMap, ZERO_BN } from 'constants/index';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import useSiloTokenToUSD from './currency/useSiloTokenToUSD';
+import useSiloTokenToFiat from './currency/useSiloTokenToFiat';
 import useWhitelist from './useWhitelist';
 
 // -----------------
@@ -64,7 +64,7 @@ export default function useBeanstalkSiloBreakdown() {
 
   //
   const siloBalances = useSelector<AppState, AppState['_beanstalk']['silo']['balances']>((state) => state._beanstalk.silo.balances);
-  const getUSD = useSiloTokenToUSD();
+  const getUSD = useSiloTokenToFiat();
 
   return useMemo(() => 
     // console.debug('[useBeanstalkSiloBreakdown] running reducer');

@@ -15,7 +15,7 @@ const useSetting = (key: keyof AppSettings) => {
       })
     );
   }, [dispatch, key]);
-  return useMemo(() => [value, update], [value, update]);
+  return useMemo(() => [value, update] as const, [value, update]);
 };
 
 export default useSetting;

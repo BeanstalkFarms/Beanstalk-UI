@@ -16,11 +16,13 @@ export type BeanPoolState = {
    * ```
    */
   price: BigNumber;
+
   /**
    * The amount of underlying ('reserve') tokens in the Pool.
    * Typically a tuple, but can be higher (3pool for example).
    */
   reserves: BigNumber[];
+
   /**
    * The difference between the actual number of
    * Beans and the desired number of Beans in a Pool.
@@ -46,10 +48,12 @@ export type BeanPoolState = {
    * deltaB > 0   ->   need more Beans; need to mint `deltaB` to return to peg
    */
   deltaB: BigNumber;
+
   /**
    * The total USD value of the assets in the Pool.
    */
   liquidity: BigNumber;
+  
   /**
    * The total supply of the Pool's LP token.
    */

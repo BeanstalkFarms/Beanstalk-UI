@@ -8,8 +8,8 @@ import { BeanstalkPalette } from '../App/muiTheme';
 import useFertilizerProgress from '../../hooks/useFertilizerProgress';
 
 const ChopConditions: React.FC<{}> = () => {
-  const chopPenalty = useChopPenalty();
-  const fertilizerSold = useFertilizerProgress();
+  const chopPenalty     = useChopPenalty();
+  const fertilizerSold  = useFertilizerProgress();
   return (
     <Card sx={{ p: 2 }}>
       <Stack gap={1}>

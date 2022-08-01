@@ -8,7 +8,7 @@ import { FarmerSiloBalance, WithdrawalCrate } from 'state/farmer/silo';
 import { displayFullBN, displayUSD } from 'util/index';
 import useSeason from 'hooks/useSeason';
 import { ZERO_BN } from 'constants/index';
-import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
+import useSiloTokenToFiat from 'hooks/currency/useSiloTokenToFiat';
 import TableCard from '../../Common/TableCard';
 
 type RowData = WithdrawalCrate & { id: BigNumber };
@@ -20,7 +20,7 @@ const Withdrawals : React.FC<{
   token,
   balance,
 }) => {
-  const getUSD = useSiloTokenToUSD();
+  const getUSD = useSiloTokenToFiat();
   const currentSeason = useSeason();
   const { data: account } = useAccount();
 

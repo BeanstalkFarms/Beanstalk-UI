@@ -15,11 +15,13 @@ import { NEW_BN } from '../constants';
  * percentage form for display.
  */
 const useChopPenalty = (tokenAddr?: string) => {
-  const chainId = useChainId();
-  const penalties = useSelector<AppState, AppState['_bean']['unripe']>((state) => state._bean.unripe);
-  const unripeBeanAddr = getChainConstant(UNRIPE_BEAN, chainId).address;
-  const chopPenalty = penalties.penalties[tokenAddr !== undefined ? tokenAddr : unripeBeanAddr];
-  return chopPenalty ? new BigNumber(1).minus(chopPenalty).multipliedBy(100) : NEW_BN;
+  const chainId         = useChainId();
+  const penalties       = useSelector<AppState, AppState['_bean']['unripe']>((state) => state._bean.unripe);
+  const unripeBeanAddr  = getChainConstant(UNRIPE_BEAN, chainId).address;
+  const chopPenalty     = penalties.penalties[tokenAddr !== undefined ? tokenAddr : unripeBeanAddr];
+  return chopPenalty 
+    ? new BigNumber(1).minus(chopPenalty).multipliedBy(100) 
+    : NEW_BN;
 };
 
 export default useChopPenalty;

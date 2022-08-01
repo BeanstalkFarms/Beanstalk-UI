@@ -16,6 +16,7 @@ import useToggle from 'hooks/display/useToggle';
 import useRevitalized from 'hooks/useRevitalized';
 import RewardsDialog from 'components/Silo/RewardsDialog';
 import DropdownIcon from 'components/Common/DropdownIcon';
+import useSeason from 'hooks/useSeason';
 
 const SiloPage : React.FC = () => {
   /// Chain Constants
@@ -26,8 +27,8 @@ const SiloPage : React.FC = () => {
   /// State
   const farmerSilo    = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
-  const { season }    = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
   const breakdown     = useFarmerSiloBreakdown();
+  const season        = useSeason();
   const { revitalizedStalk, revitalizedSeeds } = useRevitalized();
 
   /// Local state

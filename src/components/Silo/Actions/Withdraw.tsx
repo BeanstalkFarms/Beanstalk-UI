@@ -28,7 +28,7 @@ import { ERC20Token } from 'classes/Token';
 import { BeanstalkReplanted } from 'generated/index';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
+import useSiloTokenToFiat from 'hooks/currency/useSiloTokenToFiat';
 import { ActionType } from 'util/Actions';
 import { ZERO_BN } from 'constants/index';
 import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
@@ -60,7 +60,7 @@ const WithdrawForm : React.FC<
   season,
 }) => {
   const chainId = useChainId();
-  const getUSD = useSiloTokenToUSD();
+  const getUSD = useSiloTokenToFiat();
   const isMainnet = chainId === SupportedChainId.MAINNET;
 
   // Input props
