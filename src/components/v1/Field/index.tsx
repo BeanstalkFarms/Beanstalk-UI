@@ -149,7 +149,7 @@ export default function Field() {
           </Grid>
         </Box>
       </Container>
-      {/* Field Module: Sow + Send */}
+      {/* Field Module: Sow + Transfer */}
       <MultiCard type="meta">
         <FieldModule />
       </MultiCard>

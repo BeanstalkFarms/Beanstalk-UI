@@ -231,7 +231,7 @@ export const fieldStrings = {
   harvest:
     'Use this tab to Harvest Pods. You can also toggle the "Claim" setting on in the Silo or Field modules to Harvest and use your Pods in a single transaction.',
   sendPlotWarning:
-    'WARNING: You can exchange your Pods in a decentralized fashion on the Farmers Market. Send Plots at your own risk.',
+    'WARNING: You can exchange your Pods in a decentralized fashion on the Farmers Market. Transfer Plots at your own risk.',
   availableSoil:
     'Soil is the number of Beans that Beanstalk is currently willing to borrow. Anyone can lend any number of Beans up to the Available Soil in exchange for Pods.',
   podLine:
@@ -245,7 +245,7 @@ export const fieldStrings = {
   seasonsToPodClearance:
     'The Seasons to Pod Clearance is a rough estimate based on a liquidity weighted average of Beans minted over the previous 720 Seasons normalized to the current liquidity. For the complete formulas used to calculate Seasons to Pod Clearance,',
   plotTable:
-    'A Plot of Pods is created everytime Beans are Sown. Plots have a place in the Pod Line based on the order they were created. As Pods are harvested, your Plots will automatically advance in line. Entire Plots and sections of Plots can be transferred using the Send tab of the Field module.',
+    'A Plot of Pods is created everytime Beans are Sown. Plots have a place in the Pod Line based on the order they were created. As Pods are harvested, your Plots will automatically advance in line. Entire Plots and sections of Plots can be transferred using the Transfer tab of the Field module.',
   activeFundraiser: 'When there is an active Fundraiser, users can sow Beans in the Field directly from USDC independent of the amount of available Soil remaining. You can participate here: ',
 };
 export const tradeStrings = {

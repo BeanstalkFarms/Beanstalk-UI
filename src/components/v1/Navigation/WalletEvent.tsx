@@ -328,7 +328,7 @@ export default function WalletEvent({ event }) {
         BEAN.decimals
       );
       if (event.returnValues.from.toLowerCase() === account) {
-        eventTitle = 'Send Plot';
+        eventTitle = 'Transfer Plot';
         eventAmount = (
           <TokenFlow
             out={[pods, FarmAsset.Pods]}

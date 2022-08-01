@@ -20,7 +20,7 @@ import { ActionType } from '../../../util/Actions';
 import { IconSize } from '../../App/muiTheme';
 import IconWrapper from '../../Common/IconWrapper';
 
-export type SendFormValues = {
+export type TransferFormValues = {
   plot: PlotFragment;
   to: string | null;
   settings: PlotSettingsFragment & {
@@ -30,9 +30,9 @@ export type SendFormValues = {
 
 export interface SendFormProps {}
 
-const SendForm: React.FC<
+const TransferForm: React.FC<
   SendFormProps &
-  FormikProps<SendFormValues>
+  FormikProps<TransferFormValues>
 > = ({
   values,
   isValid,
@@ -105,20 +105,20 @@ const SendForm: React.FC<
           tokens={[]}
           mode="auto"
         >
-          Send
+          Transfer
         </SmartSubmitButton>
       </Stack>
     </Form>
   );
 };
 
-const Send: React.FC<{}> = () => {
+const Transfer: React.FC<{}> = () => {
   const account = useAccount();
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
 
   // Form setup
-  const initialValues: SendFormValues = useMemo(() => ({
+  const initialValues: TransferFormValues = useMemo(() => ({
     plot: {
       index: null,
       start: null,
@@ -132,7 +132,7 @@ const Send: React.FC<{}> = () => {
     },
   }), []);
 
-  const onSubmit = useCallback(async (values: SendFormValues, formActions: FormikHelpers<SendFormValues>) => {
+  const onSubmit = useCallback(async (values: TransferFormValues, formActions: FormikHelpers<TransferFormValues>) => {
     if (!account) throw new Error('Connect a wallet first.');
     const { to, plot: { index, start, end, amount } } = values;
     if (!to || !index || !start || !end || !amount) throw new Error('Missing data.');
@@ -174,8 +174,8 @@ const Send: React.FC<{}> = () => {
     <Formik
       initialValues={initialValues}
       onSubmit={onSubmit}>
-      {(formikProps: FormikProps<SendFormValues>) => (
-        <SendForm
+      {(formikProps: FormikProps<TransferFormValues>) => (
+        <TransferForm
           {...formikProps}
         />
       )}
@@ -183,4 +183,4 @@ const Send: React.FC<{}> = () => {
   );
 };
 
-export default Send;
+export default Transfer;

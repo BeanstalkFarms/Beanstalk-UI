@@ -11,7 +11,7 @@ import Withdraw from './Withdraw';
 import Claim from './Claim';
 import Deposits from './Deposits';
 import Withdrawals from './Withdrawals';
-import Send from './Send';
+import Transfer from './Transfer';
 import Convert from './Convert';
 
 const SLUGS = ['deposit', 'convert', 'transfer', 'withdraw', 'claim'];
@@ -77,7 +77,7 @@ const SiloActions : React.FC<{
               />
             ) : null}
             {tab === 2 ? (
-              <Send />
+              <Transfer token={props.token} />
             ) : null}
             {tab === 3 ? (
               <Withdraw

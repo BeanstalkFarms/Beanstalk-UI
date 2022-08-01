@@ -168,7 +168,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
         BEAN[SupportedChainId.MAINNET].decimals
       );
       if (event.args?.from.toString().toLowerCase() === account) {
-        eventTitle = 'Send Plot';
+        eventTitle = 'Transfer Plot';
         amountOut = (
           <TokenDisplay color="red" input={[pods, PODS]} />
         );

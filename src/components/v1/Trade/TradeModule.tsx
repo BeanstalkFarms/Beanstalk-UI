@@ -200,7 +200,7 @@ export default function TradeModule() {
     (state) => state.userBalance
   );
   const [section, setSection] = useState(0);
-  const sectionTitles = ['Send'];
+  const sectionTitles = ['Transfer'];
   const sectionTitlesDescription = [tradeStrings.send];
 
   const [fromValue, setFromValue] = useState(new BigNumber(-1));

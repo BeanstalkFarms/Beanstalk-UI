@@ -16,6 +16,7 @@ export enum ActionType {
   IN_TRANSIT,
   UPDATE_SILO_REWARDS,
   CLAIM_WITHDRAWAL,
+  TRANSFER,
 
   /// FIELD
   BUY_BEANS,
@@ -74,6 +75,10 @@ export type SiloTransitAction = SiloAction & {
 }
 export type SiloClaimAction = SiloAction & {
   type: ActionType.CLAIM_WITHDRAWAL;
+}
+export type SiloTransferAction = SiloAction & {
+  type: ActionType.TRANSFER;
+  to: string;
 }
 
 /// FIELD
@@ -137,6 +142,7 @@ export type Action = (
   | SiloTransitAction
   | SiloRewardsAction
   | SiloClaimAction
+  | SiloTransferAction
   /// FIELD
   | BurnBeansAction
   | ReceivePodsAction
@@ -170,6 +176,8 @@ export const parseActionMessage = (a: Action) => {
       return `${a.stalk.lt(0) ? 'Burn' : 'Receive'} ${displayFullBN(a.stalk.abs(), 2)} Stalk and ${displayFullBN(a.seeds.abs(), 2)} Seeds.`;
     case ActionType.CLAIM_WITHDRAWAL:
       return `Claim ${displayFullBN(a.amount, 2)} ${a.token.symbol}.`;
+    case ActionType.TRANSFER:
+      return `Transfer ${displayFullBN(a.amount)} ${a.token.symbol} to ${a.to}.`;
 
     /// FIELD
     case ActionType.BUY_BEANS:

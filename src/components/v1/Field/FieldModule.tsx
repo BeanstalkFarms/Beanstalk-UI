@@ -104,7 +104,7 @@ export default function FieldModule() {
   const [toAddress, setToAddress] = useState('');
   const [isValidAddress, setIsValidAddress] = useState(false);
 
-  const sectionTitles = ['Sow', 'Send'];
+  const sectionTitles = ['Sow', 'Transfer'];
   const sectionTitlesDescription = [fieldStrings.sow, fieldStrings.sendPlot];
 
   const handleTabChange = (event, newSection) => {
