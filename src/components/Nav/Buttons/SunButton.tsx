@@ -202,7 +202,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         </Typography>
         {bySeason.map((s, i) => {
           const deltaWeather = bySeason[i + 1] 
-            ? s.temperature.minus(bySeason[i + 1].temperature) 
+            ? s.temperature?.minus(bySeason[i + 1].temperature)
             : ZERO_BN;
           return (
             <SeasonCard
