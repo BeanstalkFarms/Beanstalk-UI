@@ -403,7 +403,7 @@ function _processFarmerEvents(
 
         // If we've located the plot in a prior event
         if (userPlots[indexStr] !== undefined) {
-          // Transfer partial plot
+          // Send partial plot
           if (!pods.isEqualTo(userPlots[indexStr])) {
             const newStartIndex = index.plus(pods);
             userPlots[newStartIndex.toString()] = userPlots[indexStr].minus(pods);
