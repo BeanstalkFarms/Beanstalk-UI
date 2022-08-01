@@ -11,16 +11,28 @@ const useFiat = () => {
   const [denomination] = useSetting('denomination');
   const poolTokenToUSD = useSiloTokenToUSD();
   const price          = usePrice();
-  return useCallback((token: Token, amount: BigNumber | undefined, bdv?: BigNumber) => {
+  return useCallback(/* displayFiat */(
+    token: Token,
+    amount: BigNumber | undefined,
+    bdv?: BigNumber,
+    allowNegative: boolean = false
+  ) => {
     switch (denomination) {
       case 'bdv':
         if (bdv) return displayBN(bdv);
         if (!amount) return '0 BEAN';
-        return displayTokenAmount(poolTokenToUSD(token, amount).div(price), BEAN[1]);
+        return displayTokenAmount(
+          poolTokenToUSD(token, amount).div(price),
+          BEAN[1],
+          allowNegative,
+        );
       case 'usd':
       default:
         if (!amount) return '$0';
-        return displayUSD(poolTokenToUSD(token, amount));
+        return displayUSD(
+          poolTokenToUSD(token, amount),
+          allowNegative,
+        );
     }
   }, [denomination, poolTokenToUSD, price]);
 };
