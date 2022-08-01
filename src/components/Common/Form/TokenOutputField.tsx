@@ -36,13 +36,13 @@ const TokenOutputField : React.FC<{
 }) => {
   const isZero     = amount.eq(0);
   const isNegative = amount.lt(0);
-  const prefix     = (!isDelta || isZero) ? '' : isNegative ? '- ' : '+ ';
+  const prefix     = (!isDelta || isZero) ? '' : isNegative ? '-' : '+';
   return (
     <OutputField isNegative={isNegative}>
       {!isLoading ? (
         <Tooltip title={amountTooltip}>
-          <Typography display="inline" variant="bodyLarge">
-            {prefix}{displayFullBN(amount.abs(), token.displayDecimals, token.displayDecimals)}
+          <Typography display="inline" variant="bodyLarge" sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
+            {prefix}&nbsp;{displayFullBN(amount.abs(), token.displayDecimals, token.displayDecimals)}
             {value && (
               <>&nbsp;&nbsp;<Typography display="inline" variant="bodySmall">(~{displayUSD(value)})</Typography></>
             )}

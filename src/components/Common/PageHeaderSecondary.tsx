@@ -38,7 +38,7 @@ const PageHeader : React.FC<{
               }
             }}
           >
-            <Stack direction="row" gap={0.5} alignItems="center">
+            <Stack direction="row" gap={0.5} alignItems="center" height="100%">
               <KeyboardBackspaceIcon sx={{ width: IconSize.small }} height="auto" />
               <Typography variant="h4">Back</Typography>
             </Stack>

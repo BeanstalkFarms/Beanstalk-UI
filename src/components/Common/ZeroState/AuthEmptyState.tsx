@@ -56,6 +56,7 @@ const AuthEmptyState: React.FC<{
       }}
       alignItems="center"
       justifyContent="center"
+      textAlign="center"
       gap={1}
     >
       {content}

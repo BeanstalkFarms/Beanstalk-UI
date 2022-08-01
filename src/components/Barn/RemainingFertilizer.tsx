@@ -1,14 +1,14 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Box, Card, Link, Stack, Typography, Tooltip } from '@mui/material';
+import { Box, Card, Stack, Typography, Tooltip } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { displayFullBN } from 'util/index';
 import useHumidity, { INITIAL_HUMIDITY } from 'hooks/useHumidity';
 import { AppState } from 'state';
-import { ZERO_BN } from 'constants/index';
 import SunriseCountdown from 'components/Sun/SunriseCountdown';
 import FertilizerImage from './FertilizerImage';
 import { BeanstalkPalette } from '../App/muiTheme';
+import useFertilizerProgress from '../../hooks/useFertilizerProgress';
 
 const RemainingFertilizer: React.FC = () => {
   const [humidity, nextDecreaseAmount] = useHumidity();
@@ -17,11 +17,7 @@ const RemainingFertilizer: React.FC = () => {
   const nextDecreaseTimeString = humidity.eq(INITIAL_HUMIDITY)
     ? 'when Beanstalk is Replanted'
     :  <SunriseCountdown />;
-  const progress = fertilizer.totalRaised.gt(0)
-    ? fertilizer.totalRaised.div(
-        fertilizer.totalRaised.plus(fertilizer.remaining)
-      )
-    : ZERO_BN;
+  const progress = useFertilizerProgress();
 
   return (
     <Card sx={{ p: 2 }}>
@@ -98,15 +94,16 @@ const RemainingFertilizer: React.FC = () => {
               </Stack>
             </Stack>
             <Stack>
-              <Link
-                href="https://docs.bean.money/farm/barn"
-                rel="noreferrer"
-                color="text.secondary"
-              >
-                <Typography variant="body1">
-                  Learn more about the Barn Raise
-                </Typography>
-              </Link>
+              {null}
+              {/* <Link */}
+              {/*  href="https://docs.bean.money/farm/barn" */}
+              {/*  rel="noreferrer" */}
+              {/*  color="text.secondary" */}
+              {/* > */}
+              {/*  <Typography variant="body1"> */}
+              {/*    Learn more about the Barn Raise */}
+              {/*  </Typography> */}
+              {/* </Link> */}
             </Stack>
           </Stack>
         </Stack>
