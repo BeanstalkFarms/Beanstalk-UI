@@ -7,7 +7,7 @@ import { AppState } from 'state';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BEAN, SEEDS, STALK } from 'constants/tokens';
 import { AddressMap, ZERO_BN } from 'constants/index';
-import { displayFullBN } from 'util/Tokens';
+import { displayFullBN, displayTokenAmount } from 'util/Tokens';
 import useChainConstant from 'hooks/useChainConstant';
 import useBDV from 'hooks/useBDV';
 import { IconSize } from 'components/App/muiTheme';
@@ -56,15 +56,13 @@ const Whitelist : React.FC<{
           </Grid>
           <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
             <Tooltip title="Stalk and Seeds earned for each 1 Bean Denominated Value (BDV) Deposited in the Silo.">
-              <span>
-                <Typography color="gray">
-                  Rewards
-                </Typography>
-              </span>
+              <Typography color="gray">
+                Rewards
+              </Typography>
             </Tooltip>
           </Grid>
           <Grid item md={2.5} xs={0} display={{ xs: 'none', md: 'block' }}>
-            <Tooltip title="Total Value Deposited">
+            <Tooltip title="Total Value Deposited in the Silo.">
               <Typography color="gray">TVD</Typography>
             </Tooltip>
           </Grid>
@@ -95,7 +93,9 @@ const Whitelist : React.FC<{
                 }}
               >
                 <Grid container alignItems="center">
-                  {/* Cell: Token */}
+                  {/**
+                    * Cell: Token
+                    */}
                   <Grid item md={3} xs={9}>
                     <Stack direction="row" alignItems="center" gap={1}>
                       <img
@@ -108,32 +108,41 @@ const Whitelist : React.FC<{
                       </Typography>
                     </Stack>
                   </Grid>
-                  {/* Cell: Rewards */}
+
+                  {/** 
+                    * Cell: Rewards
+                    */}
                   <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
-                    <Tooltip title={<>BDV of 1 {token.symbol} = {displayFullBN(getBDV(token))}</>}>
-                      <Typography color="black">
+                    <Tooltip placement="right" title={<>BDV of 1 {token.symbol} = {displayFullBN(getBDV(token))}</>}>
+                      <Typography display="inline" color="black">
                         <TokenIcon token={STALK} />{token.rewards?.stalk} &nbsp;
                         <TokenIcon token={SEEDS} style={{ marginTop: 1.5 }} />{token.rewards?.seeds}
                       </Typography>
                     </Tooltip>
                   </Grid>
-                  {/* Cell: TVD */}
+
+                  {/**
+                    * Cell: TVD
+                    */}
                   <Grid item md={2.5} xs={0} display={{ xs: 'none', md: 'block' }}>
-                    <Typography color="black">
-                      <Fiat
-                        token={token}
-                        amount={beanstalkSilo.balances[token.address]?.deposited.amount}
-                      />
-                    </Typography>
+                    <Tooltip placement="right" title={<>{displayTokenAmount(beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN, token)}</>}>
+                      <Typography display="inline" color="black">
+                        <Fiat
+                          token={token}
+                          amount={beanstalkSilo.balances[token.address]?.deposited.amount}
+                        />
+                      </Typography>
+                    </Tooltip>
                   </Grid>
-                  {/* Cell: Deposited Amount */}
+
+                  {/**
+                    * Cell: Deposited Amount
+                    */}
                   <Grid item md={3} xs={0} display={{ xs: 'none', md: 'block' }}>
                     <Typography color="black">
-                      {/**
-                        * If this is the entry for Bean deposits,
+                      {/* If this is the entry for Bean deposits,
                         * display Earned Beans and Deposited Beans separately.
-                        * Internally they are both considered "Deposited".
-                        */}
+                        * Internally they are both considered "Deposited". */}
                       {token === Bean
                         ? (
                           <Tooltip title={(
@@ -159,7 +168,10 @@ const Whitelist : React.FC<{
                       <Box display={{ md: 'inline', xs: 'none' }}>&nbsp;{token.name}</Box>
                     </Typography>
                   </Grid>
-                  {/* Cell: My Deposits */}
+                  
+                  {/**
+                    * Cell: My Deposits
+                    */}
                   <Grid item md={1.5} xs={3}>
                     <Stack direction="row" alignItems="center" justifyContent="flex-end">
                       <Typography color="black">
@@ -184,13 +196,3 @@ const Whitelist : React.FC<{
 };
 
 export default Whitelist;
-
-// Aggregate the total TVL
-// const breakdown = useFarmerSiloBreakdown();
-// const aggregateTVL = useMemo(
-//   () => config.whitelist.reduce<BigNumber>(
-//     (agg, token) => agg.plus(getTVL(token)),
-//     new BigNumber(0)
-//   ),
-//   [config.whitelist, getTVL]
-// );

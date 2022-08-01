@@ -47,7 +47,7 @@ const Fiat : React.FC<{
   // }
           
   return (
-    <Stack direction="row" alignItems="center" gap={0.25}>
+    <Stack display="inline-flex" direction="row" alignItems="center" gap={0.25}>
       {denomination === 'bdv' ? (
         <>
           <img src={logo} alt="BEAN" style={{ height: 15 }} />
