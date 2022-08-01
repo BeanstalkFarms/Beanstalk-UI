@@ -63,7 +63,7 @@ const TableCard : React.FC<{
             <Typography variant="h4">
               {displayBN(amount || ZERO_BN)}
               {value && (
-                <Typography display="inline" color="text.secondary">
+                <Typography display={{ xs: 'none', sm: 'inline' }} color="text.secondary">
                   {' '}(~{displayUSD(value)})
                 </Typography>
               )}

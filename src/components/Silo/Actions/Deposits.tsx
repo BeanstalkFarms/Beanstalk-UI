@@ -10,7 +10,7 @@ import { displayBN, displayFullBN, displayUSD } from 'util/index';
 import useSeason from 'hooks/useSeason';
 import { BEAN, STALK } from 'constants/tokens';
 import { ZERO_BN } from 'constants/index';
-import useSiloTokenToUSD from 'hooks/currency/useSiloTokenToUSD';
+import useSiloTokenToFiat from 'hooks/currency/useSiloTokenToFiat';
 import useChainConstant from 'hooks/useChainConstant';
 import COLUMNS from 'components/Common/Table/cells';
 import TableCard from '../../Common/TableCard';
@@ -26,7 +26,7 @@ const Deposits : React.FC<{
   balance,
 }) => {
   const Bean = useChainConstant(BEAN);
-  const getUSD = useSiloTokenToUSD();
+  const getUSD = useSiloTokenToFiat();
   const currentSeason = useSeason();
   const { data: account } = useAccount();
 

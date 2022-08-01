@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { AddressMap, ZERO_BN } from 'constants/index';
-import useSiloTokenToUSD from './currency/useSiloTokenToUSD';
+import useSiloTokenToFiat from './currency/useSiloTokenToFiat';
 import useWhitelist from './useWhitelist';
 
 // -----------------
@@ -70,7 +70,7 @@ export default function useFarmerSiloBreakdown() {
   const tokenBalances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
 
   // Helpers
-  const getUSD = useSiloTokenToUSD();
+  const getUSD = useSiloTokenToFiat();
 
   return useMemo(() => 
     // console.debug('[useFarmerSiloBreakdown] running reducer');

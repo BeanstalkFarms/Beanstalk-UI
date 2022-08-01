@@ -5,14 +5,16 @@ import { Link } from 'react-router-dom';
 import { Pool, Token } from 'classes';
 import { AppState } from 'state';
 import TokenIcon from 'components/Common/TokenIcon';
-import { BEAN, SEEDS, STALK } from 'constants/tokens';
-import { AddressMap, ZERO_BN } from 'constants/index';
+import { BEAN, BEAN_CRV3_LP, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from 'constants/tokens';
+import { AddressMap, ONE_BN, ZERO_BN } from 'constants/index';
 import { displayFullBN, displayTokenAmount } from 'util/Tokens';
-import useChainConstant from 'hooks/useChainConstant';
 import useBDV from 'hooks/useBDV';
-import { IconSize } from 'components/App/muiTheme';
+import { BeanstalkPalette, FontSize, IconSize } from 'components/App/muiTheme';
 import { useSelector } from 'react-redux';
 import Fiat from 'components/Common/Fiat';
+import useGetChainToken from 'hooks/useGetChainToken';
+import BigNumber from 'bignumber.js';
+import useSetting from 'hooks/useSetting';
 
 const ARROW_CONTAINER_WIDTH = 20;
 
@@ -31,11 +33,23 @@ const Whitelist : React.FC<{
   config,
 }) => {
   ///
-  const Bean = useChainConstant(BEAN);
+  const [denomination] = useSetting('denomination');
+
+  ///
+  const getChainToken = useGetChainToken();
+  const Bean          = getChainToken(BEAN);
+  const BeanCrv3      = getChainToken(BEAN_CRV3_LP);
+  const urBean        = getChainToken(UNRIPE_BEAN);
+  const urBeanCrv3    = getChainToken(UNRIPE_BEAN_CRV3);
+  const chopPairs     = {
+    [urBean.address]: Bean,
+    [urBeanCrv3.address]: BeanCrv3,
+  };
 
   ///
   const getBDV        = useBDV();
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
+  const chopPenalties = useSelector<AppState, AppState['_bean']['unripe']['penalties']>((state) => state._bean.unripe.penalties);
 
   return (
     <Card>
@@ -70,13 +84,25 @@ const Whitelist : React.FC<{
             <Typography color="gray">Deposited Amount</Typography>
           </Grid>
           <Grid item md={1.5} xs={8} sx={{ textAlign: 'right', paddingRight: `${ARROW_CONTAINER_WIDTH}px` }}>
-            <Typography color="gray">Deposited Value</Typography>
+            <Tooltip title={(
+              <>
+                The value of your Silo deposits for each whitelisted token, denominated in {denomination === 'bdv' ? 'Beans' : 'USD'}.<br />
+                <Typography color="gray" fontSize={FontSize.sm} fontStyle="italic">
+                  Switch to {denomination === 'bdv' ? 'USD' : 'Beans'}: Option + F
+                </Typography>
+              </>
+            )}>
+              <Typography color="gray">Deposited Value</Typography>
+            </Tooltip>
           </Grid>
         </Grid>
       </Box>
       <Stack direction="column" gap={1} sx={{ p: 1 }}>
         {config.whitelist.map((token) => {
-          const deposited = farmerSilo.balances[token.address]?.deposited;
+          const deposited   = farmerSilo.balances[token.address]?.deposited;
+          /// TEMP: CHOP
+          const isUnripe    = token === urBean || token === urBeanCrv3;
+          const chopPenalty = isUnripe ? new BigNumber(1).minus(chopPenalties[token.address]).multipliedBy(100) : ZERO_BN; 
           return (
             <Box key={`${token.address}-${token.chainId}`}>
               <Button
@@ -165,7 +191,7 @@ const Whitelist : React.FC<{
                           </Tooltip>
                         )
                         : displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)}
-                      <Box display={{ md: 'inline', xs: 'none' }}>&nbsp;{token.name}</Box>
+                      <Box display={{ md: 'inline', xs: 'none' }}>&nbsp;{token.symbol}</Box>
                     </Typography>
                   </Grid>
                   
@@ -174,12 +200,50 @@ const Whitelist : React.FC<{
                     */}
                   <Grid item md={1.5} xs={3}>
                     <Stack direction="row" alignItems="center" justifyContent="flex-end">
-                      <Typography color="black">
-                        <Fiat
-                          token={token}
-                          amount={deposited?.amount}
-                        />
-                      </Typography>
+                      <Tooltip
+                        placement="left"
+                        title={isUnripe ? (
+                          <>
+                            <Typography fontWeight="bold" mb={1}>
+                              {denomination === 'bdv' ? 'Bean' : 'USD'} Value
+                            </Typography>
+                            <div>
+                              {displayTokenAmount(deposited?.amount || ZERO_BN, token)}
+                            </div>
+                            <div>
+                              ×&nbsp;
+                              <Typography display="inline" color={BeanstalkPalette.washedRed}>
+                                {chopPenalty.toFixed(4)}%
+                              </Typography>
+                              &nbsp;Chop Penalty
+                            </div>
+                            <div>
+                              × <Fiat
+                                token={chopPairs[token.address]}
+                                amount={ONE_BN}
+                                chop={false}
+                            /> per {chopPairs[token.address].symbol}
+                            </div>
+                            <Divider sx={{ my: 1 }} />
+                            <div>
+                              =&nbsp;
+                              <Fiat
+                                token={token}
+                                amount={deposited?.amount}
+                              />
+                            </div>
+                          </>
+                      ) : ''}>
+                        <Typography color="black">
+                          <Fiat
+                            token={token}
+                            amount={deposited?.amount}
+                          />
+                          {isUnripe ? (
+                            <Typography display="inline" color={BeanstalkPalette.washedRed}>*</Typography>
+                          ) : null}
+                        </Typography>
+                      </Tooltip>
                       <Stack sx={{ width: ARROW_CONTAINER_WIDTH, }} alignItems="center">
                         <ArrowRightIcon />
                       </Stack>

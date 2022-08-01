@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, Box, Stack, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, Box, CircularProgress, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
@@ -14,7 +14,7 @@ import {
 } from 'components/Common/Form';
 import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import { BeanstalkReplanted } from 'generated/index';
-import { ZERO_BN } from 'constants/index';
+import { NEW_BN, ZERO_BN } from 'constants/index';
 import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from 'constants/tokens';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useToggle from 'hooks/display/useToggle';
@@ -22,8 +22,6 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import useFarmerBalances from 'hooks/useFarmerBalances';
 import useTokenMap from 'hooks/useTokenMap';
 import React, { useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { AppState } from 'state';
 import { displayBN, displayFullBN, getChainConstant, parseError, toStringBaseUnitBN } from 'util/index';
 import { useSigner } from 'hooks/ledger/useSigner';
 import toast from 'react-hot-toast';
@@ -39,6 +37,7 @@ import useAccount from 'hooks/ledger/useAccount';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
 import { optimizeFromMode } from 'util/Farm';
+import useChopPenalty from '../../../hooks/useChopPenalty';
 
 type ChopFormValues = FormState & {
   destination: FarmToMode;
@@ -58,7 +57,6 @@ const ChopForm: React.FC<
   const chainId = useChainId();
   const erc20TokenMap = useTokenMap<ERC20Token | NativeToken>([UNRIPE_BEAN, UNRIPE_BEAN_CRV3]);
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
-  const penalties = useSelector<AppState, AppState['_bean']['unripe']>((state) => state._bean.unripe);
 
   /// Maps an unripe token to its output token
   const tokenOutputMap = {
@@ -70,10 +68,9 @@ const ChopForm: React.FC<
   const state          = values.tokens[0];
   const inputToken     = state.token;
   const tokenBalance   = balances[inputToken.address];
-  const chopPenalty    = penalties.penalties[inputToken.address];
+  const chopPenalty    = useChopPenalty(inputToken.address);
   const outputToken    = tokenOutputMap[inputToken.address];
   const amountOut      = state.amount?.multipliedBy(chopPenalty);
-  const displayPenalty = new BigNumber(1).minus(chopPenalty).multipliedBy(100);
 
   ///
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
@@ -131,7 +128,11 @@ const ChopForm: React.FC<
           />
           <Stack direction="row" justifyContent="space-between" px={0.5}>
             <Typography variant="body1" color="gray">Chop Penalty</Typography>
-            <Typography variant="body1" color={BeanstalkPalette.washedRed}>{displayFullBN(displayPenalty, 5)}%</Typography>
+            {chopPenalty === NEW_BN ? (
+              <CircularProgress size={16} thickness={5} sx={{ color: BeanstalkPalette.washedRed }} />
+            ) : (
+              <Typography variant="body1" color={BeanstalkPalette.washedRed}>{displayFullBN(chopPenalty, 5)}%</Typography>
+            )}
           </Stack>
         </Stack>
         {isValid ? (
