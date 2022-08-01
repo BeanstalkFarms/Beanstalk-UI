@@ -1,27 +1,27 @@
 import { ApolloClient, FieldPolicy, InMemoryCache } from '@apollo/client';
 import { LocalStorageWrapper, persistCacheSync } from 'apollo3-cache-persist';
 
-const mergeSeasons : FieldPolicy = {
+const mergeSeasons: FieldPolicy = {
   // Don't cache separate results based on
   // any of this field's arguments.
   keyArgs: false,
-  
+
   /**
    */
   read(existing, { args, readField }) {
-    const first       = args?.first;
+    const first = args?.first;
     const startSeason = args?.where?.season_lte; // could be larger than the biggest season
-    
+
     console.debug(`[ApolloClient/seasons/read] read first = ${first} startSeason = ${startSeason} for ${existing?.length || 0} existing items`, existing);
 
     if (!existing) return;
-    
+
     let dataset;
     if (!first) {
       dataset = existing;
     } else {
       const maxSeason = Math.min(startSeason || existing.length, existing.length);
-      
+
       // 0 = latest season; always defined
       // maxSeason = 6073
       // existing.length = 6074
@@ -36,10 +36,10 @@ const mergeSeasons : FieldPolicy = {
       // 6071 2
       // 6072 1
       // 6073 0 (this doesnt exist)
-      const left  = Math.max(
+      const left = Math.max(
         0,                           // clamp to first index
-        existing.length - maxSeason, // 
-      ); 
+        existing.length - maxSeason, //
+      );
 
       // n = oldest season
       const right = Math.min(
@@ -84,7 +84,7 @@ const mergeSeasons : FieldPolicy = {
       // Season 1 = Index 0
       merged[(season as number) - 1] = incoming[i];
     }
-    
+
     merged = merged.reverse();
 
     console.debug('[ApolloClient] merge: finalize', merged);
@@ -115,7 +115,7 @@ persistCacheSync({
 });
 
 export const apolloClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/cujowolf/beanstalk-dev-replanted',
+  uri: 'http://graph.playgrounds.academy/subgraphs/name/beanstalk',
   cache,
 });
 

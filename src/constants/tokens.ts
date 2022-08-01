@@ -19,7 +19,7 @@ import rinsableSproutLogo from 'img/beanstalk/rinsable-sprout-icon.svg';
 
 // ERC-20 Token Images
 import crv3LogoUrl from 'img/tokens/crv3-logo.svg';
-import daiLogoUrl  from 'img/tokens/dai-logo.svg';
+import daiLogoUrl from 'img/tokens/dai-logo.svg';
 import usdcLogoUrl from 'img/tokens/usdc-logo.svg';
 import usdtLogoUrl from 'img/tokens/usdt-logo.svg';
 import lusdLogoUrl from 'img/tokens/lusd-logo.svg';
@@ -220,6 +220,20 @@ export const BEAN = {
       seeds: 2,
     }
   ),
+  [SupportedChainId.CUJO]: new ERC20Token(
+    SupportedChainId.CUJO,
+    BEAN_ADDRESSES,
+    6,
+    {
+      name: 'Bean',
+      symbol: 'BEAN',
+      logo: beanCircleLogoUrl,
+    },
+    {
+      stalk: 1,
+      seeds: 2,
+    }
+  ),
 };
 
 // CRV3 + Underlying Stables
@@ -407,6 +421,21 @@ export const BEAN_CRV3_LP = {
       seeds: 4,
     }
   ),
+  [SupportedChainId.CUJO]: new ERC20Token(
+    SupportedChainId.CUJO,
+    BEAN_CRV3_ADDRESSES,
+    18,
+    {
+      name: 'BEAN:3CRV LP',
+      symbol: 'BEAN:3CRV',
+      logo: beanCrv3LpLogoUrl,
+      isLP: true,
+    },
+    {
+      stalk: 1,
+      seeds: 4,
+    }
+  ),
 };
 
 export const BEAN_LUSD_LP = {
@@ -471,13 +500,13 @@ export const UNRIPE_BEAN_CRV3 = {
 // Token Lists
 // ----------------------------------------
 
-export const UNRIPE_TOKENS : ChainConstant<ERC20Token>[] = [
+export const UNRIPE_TOKENS: ChainConstant<ERC20Token>[] = [
   UNRIPE_BEAN,
   UNRIPE_BEAN_CRV3,
 ];
 
 // Show these tokens as whitelisted in the Silo.
-export const SILO_WHITELIST : ChainConstant<ERC20Token>[] = [
+export const SILO_WHITELIST: ChainConstant<ERC20Token>[] = [
   BEAN,
   BEAN_CRV3_LP,
   UNRIPE_BEAN,
@@ -488,7 +517,7 @@ export const SILO_WHITELIST : ChainConstant<ERC20Token>[] = [
 ];
 
 // All supported ERC20 tokens.
-export const ERC20_TOKENS : ChainConstant<ERC20Token>[] = [
+export const ERC20_TOKENS: ChainConstant<ERC20Token>[] = [
   // Whitelisted Silo tokens
   ...SILO_WHITELIST,
   // Commonly-used tokens
@@ -500,13 +529,13 @@ export const ERC20_TOKENS : ChainConstant<ERC20Token>[] = [
 ];
 
 // Preemptively load balances for these tokens.
-export const BALANCE_TOKENS : ChainConstant<NativeToken | ERC20Token>[] = [
+export const BALANCE_TOKENS: ChainConstant<NativeToken | ERC20Token>[] = [
   ETH,
   ...ERC20_TOKENS,
 ];
 
 // Tokens that used the generalized silo whitelist in Beanstalk V1.
-export const GENERALIZED_SILO_WHITELIST : ChainConstant<ERC20Token>[] = [
+export const GENERALIZED_SILO_WHITELIST: ChainConstant<ERC20Token>[] = [
   BEAN_CRV3_LP,
   BEAN_LUSD_LP,
   UNRIPE_BEAN,
@@ -514,7 +543,7 @@ export const GENERALIZED_SILO_WHITELIST : ChainConstant<ERC20Token>[] = [
 ];
 
 // Assets underlying 3CRV (accessible when depositing/removing liquidity)
-export const CRV3_UNDERLYING : ChainConstant<ERC20Token>[] = [
+export const CRV3_UNDERLYING: ChainConstant<ERC20Token>[] = [
   DAI,
   USDC,
   USDT,
