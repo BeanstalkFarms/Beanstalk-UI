@@ -137,7 +137,7 @@ const ConvertForm : React.FC<
 
   /// Change button state and prepare outputs
   if (depositedAmount.eq(0)) {
-    buttonContent = 'Nothing to convert';
+    buttonContent = 'Nothing to Convert';
   } else if (values.maxAmountIn === null) {
     if (values.tokenOut) {
       buttonContent = 'Refreshing convert data...';

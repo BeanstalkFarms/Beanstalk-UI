@@ -133,7 +133,7 @@ const CreateListingForm: React.FC<
               name="destination"
               walletDesc="When Pods are sold, send Beans to your wallet."
               farmDesc="When Pods are sold, send Beans to your Beanstalk farm balance."
-              label="Send proceeds to"
+              label="Transfer proceeds to"
             />
             {isReady && ( 
               <Box>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Card, Stack, Tab, Tabs } from '@mui/material';
 import useTabs from 'hooks/display/useTabs';
 import Sow from './Sow';
-import Send from './Send';
+import Transfer from './Transfer';
 import Harvest from './Harvest';
 
 const SLUGS = ['sow', 'harvest', 'send'];
@@ -16,13 +16,13 @@ const FieldActions : React.FC<{}> = () => {
           <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }} variant="scrollable">
             <Tab label="Sow" />
             <Tab label="Harvest" />
-            <Tab label="Send" />
+            <Tab label="Transfer" />
           </Tabs>
         </Stack>
         <Box sx={{ px: 1, pb: 1 }}>
           {tab === 0 && <Sow />}
           {tab === 1 && <Harvest />}
-          {tab === 2 && <Send />}
+          {tab === 2 && <Transfer />}
         </Box>
       </Stack>
     </Card>

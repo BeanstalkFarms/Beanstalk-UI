@@ -93,7 +93,7 @@ export const useFetchFarmerBarn = () => {
     fromBlock,
     toBlock,
   ) => [
-    /// Send FERT
+    /// Transfer FERT
     fertContract.queryFilter(
       fertContract.filters.TransferSingle(
         null,     // operator

@@ -10,8 +10,8 @@ const DestinationField : React.FC<Partial<PillSelectFieldProps> & {
   farmDesc?:   string;
   name:        string; // force required
 }> = ({
-  walletDesc = 'Send assets to your wallet.',
-  farmDesc = 'Send assets to your Beanstalk farm balance.',
+  walletDesc = 'Transfer assets to your wallet.',
+  farmDesc = 'Transfer assets to your Beanstalk farm balance.',
   ...props
 }) => {
   const options = useMemo(() => ([

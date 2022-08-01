@@ -79,6 +79,7 @@ const TxnStep : React.FC<{
   highlighted,
 }) => {
   let action;
+  console.log('ACTION TYPE', type);
   switch (type) {
     /// SWAP
     case ActionType.SWAP:
@@ -96,6 +97,13 @@ const TxnStep : React.FC<{
           {(actions as SiloDepositAction[]).map((a) => (
             <ActionTokenImage key={a.token.address} token={a.token} />
           ))}
+        </IconRow>
+      );
+      break;
+    case ActionType.TRANSFER:
+      action = (
+        <IconRow>
+          <TokenIcon token={(actions[0] as SiloTransitAction).token} style={{ height: '100%' }} />
         </IconRow>
       );
       break;
@@ -251,13 +259,14 @@ const EXECUTION_STEPS = [
   ActionType.WITHDRAW,
   ActionType.BUY_FERTILIZER,
   ActionType.CREATE_ORDER,
+  ActionType.TRANSFER,
   /// Group 3
   /// Results of Beanstalk function calls
   ActionType.UPDATE_SILO_REWARDS,
   ActionType.RECEIVE_FERT_REWARDS,
   ActionType.IN_TRANSIT,
   ActionType.CLAIM_WITHDRAWAL,
-  // FIXME: incorrectly categroized below
+  // FIXME: incorrectly categorized below
   /// Field 
   ActionType.BUY_BEANS,
   ActionType.BURN_BEANS,
