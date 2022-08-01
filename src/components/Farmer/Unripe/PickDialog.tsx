@@ -33,6 +33,7 @@ import useGetChainToken from 'hooks/useGetChainToken';
 import { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import TransactionToast from 'components/Common/TxnToast';
 import useAccount from 'hooks/ledger/useAccount';
+import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
 import UnripeTokenRow from './UnripeTokenRow';
 
 // ----------------------------------------------------
@@ -112,7 +113,8 @@ const PickBeansDialog: React.FC<{
   const [tab, setTab] = useState(0);
 
   /// Farmer data
-  const breakdown = useFarmerSiloBreakdown();
+  const breakdown           = useFarmerSiloBreakdown();
+  const [refetchFarmerSilo] = useFetchFarmerSilo();
 
   ///
   const chainId           = useChainId();
@@ -207,6 +209,9 @@ const PickBeansDialog: React.FC<{
         txToast.confirming(txn);
         return txn.wait();
       })
+      .then((receipt) => Promise.all([
+        refetchFarmerSilo(),
+      ]).then(() => receipt))
       .then((receipt) => {
         txToast.success(receipt);
         setPickStatus('success');
@@ -221,6 +226,7 @@ const PickBeansDialog: React.FC<{
     merkles,
     beanstalk,
     getChainToken,
+    refetchFarmerSilo,
   ]);
 
   /// Tab: Pick Overview
