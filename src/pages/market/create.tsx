@@ -10,7 +10,7 @@ const CreatePage: React.FC = () => (
   <Container maxWidth="sm">
     <Stack spacing={2}>
       <PageHeader
-        returnPath="/market"
+        returnPath="/market/account"
       />
       <MarketActions />
     </Stack>
