@@ -29,12 +29,12 @@ import TxnSeparator from '../../Common/Form/TxnSeparator';
 import { SEEDS, STALK } from '../../../constants/tokens';
 import { displayFullBN, parseError, toStringBaseUnitBN, trimAddress } from '../../../util';
 import Beanstalk from '../../../lib/Beanstalk';
-import useSiloTokenToUSD from '../../../hooks/currency/useSiloTokenToUSD';
 import IconWrapper from '../../Common/IconWrapper';
 import { IconSize } from '../../App/muiTheme';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 import TransactionToast from '../../Common/TxnToast';
+import useSiloTokenToFiat from '../../../hooks/currency/useSiloTokenToFiat';
 
 export type TransferFormValues = FormState & {
   to: string;
@@ -57,7 +57,7 @@ const TransferForm: React.FC<FormikProps<TransferFormValues> & {
      depositedBalance,
      season,
    }) => {
-    const getUSD = useSiloTokenToUSD();
+    const getUSD = useSiloTokenToFiat();
 
     // Input props
     const InputProps = useMemo(() => ({
