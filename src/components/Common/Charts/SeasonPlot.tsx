@@ -1,12 +1,12 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Stack, Box, CircularProgress } from '@mui/material';
 import Stat, { StatProps } from 'components/Common/Stat';
+import { Line } from '@visx/shape';
 import LineChart, { DataPoint, LineChartProps } from 'components/Common/Charts/LineChart';
 import useSeasons, { MinimumViableSnapshotQuery, SeasonAggregation, SeasonRange } from 'hooks/useSeasons';
 import { DocumentNode } from 'graphql';
+import { BeanstalkPalette } from 'components/App/muiTheme';
 import TimeTabs, { TimeTabState }  from './TimeTabs';
-
-// export type SeasonPlotProps = 
 
 type SeasonDataPoint = DataPoint & { season: number; };
 
@@ -128,6 +128,10 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
     }
   }
 
+  console.debug('[SeasonPlot] raw data ', data, 'series = ', series);
+
+  const seriesInput = useMemo(() => [series], [series]);
+
   return (
     <>
       {/* Statistic & Controls */}
@@ -152,10 +156,24 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
           </Stack>
         ) : (
           <LineChart
-            series={[series]}
+            series={seriesInput}
             onCursor={handleCursor as any} // FIXME
             {...lineChartProps}
-          />
+          >
+            {(props) => {
+              const x = props.scales[0].xScale(6074) as number;
+              return x ? (
+                <Line
+                  from={{ x, y: props.dataRegion.yTop }}
+                  to={{ x, y: props.dataRegion.yBottom }}
+                  stroke={BeanstalkPalette.logoGreen}
+                  strokeDasharray={4}
+                  strokeDashoffset={2}
+                  strokeWidth={1}
+                />
+              ) : null;
+            }}
+          </LineChart>
         )}
       </Box>
     </>

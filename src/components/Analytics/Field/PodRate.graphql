@@ -1,17 +1,3 @@
-# query SeasonalPodRate($season_lte: Int, $first: Int) {
-#   seasons(
-#     where: { seasonInt_lte: $season_lte },
-#     first: $first,
-#     orderBy: seasonInt,
-#     orderDirection: desc,
-#   ) {
-#     id
-#     seasonInt
-#     timestamp
-#     field { podRate }
-#   }
-# }
-
 query SeasonalPodRate($season_lte: Int, $first: Int) {
   seasons: fieldHourlySnapshots(
     where: {

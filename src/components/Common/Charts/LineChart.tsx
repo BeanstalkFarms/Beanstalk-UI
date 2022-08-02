@@ -3,10 +3,9 @@ import { bisector, extent, max, min } from 'd3-array';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { LinePath, Bar, Line } from '@visx/shape';
 import { Group } from '@visx/group';
-import { scaleTime, scaleLinear } from '@visx/scale';
+import { scaleLinear } from '@visx/scale';
 import { localPoint } from '@visx/event';
 import { useTooltip } from '@visx/tooltip';
-import { DateValue } from '@visx/mock-data/lib/generators/genDateValue';
 import {
   curveLinear,
   curveStep,
@@ -26,11 +25,25 @@ const CURVES = {
   monotoneX: curveMonotoneX,
 };
 
+export type Scale = {
+  xScale: ReturnType<typeof scaleLinear>;
+  yScale: ReturnType<typeof scaleLinear>;
+}
+
+export type DataRegion = {
+  yTop: number;
+  yBottom: number;
+}
+
 export type LineChartProps = {
   series: (DataPoint[])[];
   onCursor: (ds?: DataPoint[]) => void;
   isTWAP?: boolean; // used to indicate if we are displaying TWAP price
   curve?: CurveFactory | (keyof typeof CURVES);
+  children: (props: GraphProps & {
+    scales: Scale[];
+    dataRegion: DataRegion;
+  }) => React.ReactElement | null;
 };
 
 type GraphProps = {
@@ -43,15 +56,16 @@ type GraphProps = {
 // ------------------------
 
 export type DataPoint = {
-  date: Date;
-  value: number;
+  season: number;
+  value:  number;
+  date:   Date;
 };
 
 // data accessors
-const getX = (d: DateValue) => d.date;
-const getY = (d: DateValue) => d.value;
-const bisectDate = bisector<DataPoint, Date>(
-  (d) => d.date
+const getX = (d: DataPoint) => d.season;
+const getY = (d: DataPoint) => d.value;
+const bisectSeason = bisector<DataPoint, number>(
+  (d) => d.season
 ).left;
 
 // ------------------------
@@ -95,28 +109,43 @@ export const backgroundColor = '#da7cff';
 export const labelColor = '#340098';
 const axisColor      = BeanstalkPalette.lightishGrey;
 const tickLabelColor = BeanstalkPalette.lightishGrey;
-// const gridColor = '#6e0fca';
 const tickLabelProps = () => ({
   fill: tickLabelColor,
   fontSize: 12,
   fontFamily: 'Futura PT',
   textAnchor: 'middle',
+  // backgroundColor: 'white',
 } as const);
+const tickProps = () => ({
+
+});
+
+// const labelProps = {
+//   fill: labelColor,
+//   fontSize: 18,
+//   strokeWidth: 0,
+//   stroke: '#333',
+//   paintOrder: 'stroke',
+//   fontFamily: 'Futura PT',
+//   textAnchor: 'start',
+// } as const;
 
 // ------------------------
 //      Graph (Inner)
 // ------------------------
 
-const Graph: React.FC<GraphProps> = ({
-  // Chart sizing
-  width,
-  height,
-  // Line Chart Props
-  series,
-  onCursor,
-  isTWAP,
-  curve: _curve = 'linear',
-}) => {
+const Graph: React.FC<GraphProps> = (props) => {
+  const {
+    // Chart sizing
+    width,
+    height,
+    // Line Chart Props
+    series,
+    onCursor,
+    isTWAP,
+    curve: _curve = 'linear',
+    children,
+  } = props;
   // When positioning the circle that accompanies the cursor,
   // use this dataset to decide where it goes. (There is one
   // circle but potentially multiple series).
@@ -141,9 +170,11 @@ const Graph: React.FC<GraphProps> = ({
    *  "range"  = pixel values
    */
   const scales = useMemo(() => series.map((_data) => {
-    const xScale = scaleTime<number>({
-      domain: extent(_data, getX) as [Date, Date],
+    const xScale = scaleLinear<number>({
+      domain: extent(_data, getX) as [number, number],
     });
+
+    //
     let yScale;
 
     // Used for price graphs which should always show y = 1.
@@ -180,7 +211,7 @@ const Graph: React.FC<GraphProps> = ({
       // for each series
       const ds = scales.map((scale, i) => {
         const x0    = scale.xScale.invert(x);   // get Date corresponding to pixel coordinate x
-        const index = bisectDate(data, x0, 1);  // find the closest index of x0 within data
+        const index = bisectSeason(data, x0, 1);  // find the closest index of x0 within data
         
         const d0 = series[i][index - 1];  // value at x0 - 1
         const d1 = series[i][index];      // value at x0
@@ -216,9 +247,26 @@ const Graph: React.FC<GraphProps> = ({
     onCursor(undefined);
   }, [hideTooltip, onCursor]);
 
-  if (!series || series.length === 0) {
-    return null;
-  }
+  const [
+    tickSeasons,
+    tickDates,
+  ] = useMemo(
+    () => {
+      const interval = Math.ceil(series[0].length / 12);
+      const shift    = Math.ceil(interval / 3); // slight shift on tick labels
+      return series[0].reduce<[number[], string[]]>((prev, curr, i) => {
+        if (i % interval === shift) {
+          prev[0].push(curr.season);
+          prev[1].push(`${(curr.date).getMonth() + 1}/${(curr.date).getDate()}`);
+        }
+        return prev;
+      }, [[], []]);
+    },
+    [series]
+  );
+  const tickFormat = useCallback((_, i) => tickDates[i], [tickDates]);
+
+  if (!series || series.length === 0) return null;
   
   //
   const tooltipLeftAttached = tooltipData ? scales[0].xScale(getX(tooltipData[0])) : undefined;
@@ -235,13 +283,20 @@ const Graph: React.FC<GraphProps> = ({
    * |           axes                 | 
    * ----------------------------------
    */
+  const dataRegion = {
+    yTop: margin.top, // chart edge to data region first pixel
+    yBottom: 
+      height // chart edge to data region first pixel
+      - axisHeight // chart edge to data region first pixel
+      - margin.bottom  // chart edge to data region first pixel
+  };
   return (
     <>
       <svg width={width} height={height}>
         {/**
           * Lines
           */}
-        <Group width={width} height={height - axisHeight}>
+        <Group width={width} height={dataRegion.yBottom - dataRegion.yTop}>
           {isTWAP && (
             <Line
               from={{ x: 0,   y: scales[0].yScale(1) }}
@@ -249,8 +304,9 @@ const Graph: React.FC<GraphProps> = ({
               {...strokes[2]}
             />
           )}
+          {children && children({ scales, dataRegion, ...props })}
           {series.map((_data, index) => (
-            <LinePath<DateValue>
+            <LinePath<DataPoint>
               key={index}
               curve={curve}
               data={_data}
@@ -263,27 +319,16 @@ const Graph: React.FC<GraphProps> = ({
         {/**
           * Axis
           */}
-        <g transform={`translate(0, ${height - axisHeight - margin.bottom})`}>
+        <g transform={`translate(0, ${dataRegion.yBottom})`}>
           <Axis
             key="axis"
             orientation={Orientation.bottom}
             scale={scales[0].xScale}
-            tickFormat={(v: any) => `${(v as Date).getMonth() + 1}/${(v as Date).getDate()}`}
             stroke={axisColor}
+            tickFormat={tickFormat}
             tickStroke={axisColor}
             tickLabelProps={tickLabelProps}
-            tickValues={undefined}
-            numTicks={Math.floor(width / 64)} // FIXME: set to intervals of days
-            label="time"
-            labelProps={{
-              fill: labelColor,
-              fontSize: 18,
-              strokeWidth: 0,
-              stroke: '#333',
-              paintOrder: 'stroke',
-              fontFamily: 'Futura PT',
-              textAnchor: 'start',
-            }}
+            tickValues={tickSeasons}
           />
         </g>
         {/**
@@ -292,14 +337,8 @@ const Graph: React.FC<GraphProps> = ({
         {tooltipData && (
           <g>
             <Line
-              from={{
-                x: tooltipLeft,
-                y: margin.top
-              }}
-              to={{
-                x: tooltipLeft,
-                y: height - axisHeight - margin.bottom
-              }}
+              from={{ x: tooltipLeft, y: dataRegion.yTop }}
+              to={{   x: tooltipLeft, y: dataRegion.yBottom }}
               stroke={BeanstalkPalette.lightishGrey}
               strokeWidth={1}
               pointerEvents="none"
@@ -317,10 +356,8 @@ const Graph: React.FC<GraphProps> = ({
             />
           </g>
         )}
-        {/**
-          * Overlay to handle tooltip.
-          * Needs to be the last item to maintain mouse control.
-          */}
+        {/* Overlay to handle tooltip.
+          * Needs to be the last item to maintain mouse control. */}
         <Bar
           x={0}
           y={0}
@@ -349,7 +386,9 @@ const LineChart: React.FC<LineChartProps> = (props) => (
         width={visWidth}
         height={visHeight}
         {...props}
-      />
+      >
+        {props.children}
+      </Graph>
     )}
   </ParentSize>
 );

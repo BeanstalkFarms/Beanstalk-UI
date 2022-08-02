@@ -18,5 +18,6 @@ const AnalyticsPage: React.FC<{}> = () => (
       <FieldAnalytics />
     </Stack>
   </Container>
-  );
+);
+
 export default AnalyticsPage;

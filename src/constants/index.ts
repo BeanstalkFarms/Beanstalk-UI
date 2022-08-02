@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+
 import Pool from 'classes/Pool';
 import Token from 'classes/Token';
 
@@ -52,3 +53,4 @@ export * from './chains';
 export * from './wallets';
 export * from './links';
 export * from './values';
+export * from './rpc';

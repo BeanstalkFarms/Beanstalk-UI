@@ -1,17 +1,15 @@
 import { createClient as createWagmiClient, configureChains, chain, Chain } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
+import { providers } from 'ethers';
 
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 // import { InjectedConnector } from 'wagmi/connectors/injected';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
-
-import { SupportedChainId, TESTNET_RPC_ADDRESSES } from 'constants/chains';
+import { TESTNET_RPC_ADDRESSES, SupportedChainId } from 'constants/index';
 
 // ------------------------------------------------------------
-
-import { providers } from 'ethers';
 
 export type JsonRpcBatchProviderConfig = Omit<providers.FallbackProviderConfig, 'provider'> & {
   pollingInterval?: number

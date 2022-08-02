@@ -42,17 +42,6 @@ export const TESTNET_CHAINS = new Set([
   SupportedChainId.CUJO,
 ]);
 
-/**
- * Unofficial testnets require a custom RPC URL.
- * Ropsten, Goerli etc. are supported by Alchemy.
- */
-export const TESTNET_RPC_ADDRESSES : { [chainId: number] : string } = {
-  [SupportedChainId.LOCALHOST]: 'http://localhost:8545',
-  [SupportedChainId.ASTRO]:     'https://astro.node.bean.money',
-  [SupportedChainId.PHOENIX]:   'https://phoenix.node.bean.money',
-  [SupportedChainId.CUJO]:      'https://bean-rpc.treetree.finance',
-};
-
 // ---------------------------------
 
 export enum NetworkType {

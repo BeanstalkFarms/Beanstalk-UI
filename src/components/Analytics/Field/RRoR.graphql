@@ -1,4 +1,4 @@
-query SeasonalTotalSowers($season_lte: Int, $first: Int) {
+query SeasonalRRoR($season_lte: Int, $first: Int) {
   seasons: fieldHourlySnapshots(
     where: {
       field: "0xc1e088fc1323b20bcbee9bd1b9fc9546db5624c5",
@@ -11,6 +11,6 @@ query SeasonalTotalSowers($season_lte: Int, $first: Int) {
     id
     season
     timestamp
-    totalNumberOfSowers
+    realRateOfReturn
   }
 }

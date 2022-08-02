@@ -1,5 +1,6 @@
 import { ApolloClient, FieldPolicy, InMemoryCache } from '@apollo/client';
 import { LocalStorageWrapper, persistCacheSync } from 'apollo3-cache-persist';
+import { SupportedChainId , BEANSTALK_SUBGRAPH_ADDRESSES } from 'constants/index';
 
 const mergeSeasons: FieldPolicy = {
   // Don't cache separate results based on
@@ -115,14 +116,6 @@ persistCacheSync({
 });
 
 export const apolloClient = new ApolloClient({
-  uri: 'http://graph.playgrounds.academy/subgraphs/name/beanstalk',
+  uri: BEANSTALK_SUBGRAPH_ADDRESSES[SupportedChainId.CUJO],
   cache,
 });
-
-// // A read function should always return undefined if existing is
-// // undefined. Returning undefined signals that the field is
-// // missing from the cache, which instructs Apollo Client to
-// // fetch its value from your GraphQL server.
-// return existing && existing.slice(skip, skip + first);
-
-// return existing && existing.filter()
