@@ -2,7 +2,8 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Box, Button, Link, LinkProps, Stack, Typography } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import React from 'react';
-import { BeanstalkPalette, IconSize } from '../App/muiTheme';
+import EastIcon from '@mui/icons-material/East';
+import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
 
 const PageHeader : React.FC<{
   /** The Field: The Decentralized Credit Facility */
@@ -56,12 +57,18 @@ const PageHeader : React.FC<{
                   // color={BeanstalkPalette.darkNavyBlue}
                   color={BeanstalkPalette.logoGreen}
                   display="flex"
+                  flexDirection="row"
+                  gap={1}
                   alignItems="center"
                   target="_blank"
                   rel="noreferrer"
                   sx={{ display: 'inline', ml: 0.3, '&:hover': { opacity: 0.85 } }}
                 >
-                  <Typography display="inline" variant="subtitle1" sx={{ lineHeight: '1.5rem' }}>Learn more.</Typography>
+                  <Typography display="inline" variant="subtitle1" sx={{ lineHeight: '1.5rem' }} alignItems="center">
+                    Learn more
+                  </Typography>
+                  &nbsp;
+                  <EastIcon sx={{ height: '100%', fontSize: FontSize.base, mb: -0.3 }} />
                 </Link>
               )}
             </Typography>
