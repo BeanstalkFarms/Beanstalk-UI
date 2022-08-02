@@ -199,7 +199,7 @@ export const parseActionMessage = (a: Action) => {
             : ' to your Farm Balance' 
           : ''}.`;
     case ActionType.SEND_PODS:
-      return `Send ${displayTokenAmount(a.amount, PODS)} to ${a.address}.`;
+      return `Send ${displayTokenAmount(a.amount, PODS)} to ${trimAddress(a.address)}.`;
 
     /// FERTILIZER
     case ActionType.BUY_FERTILIZER:
