@@ -3,6 +3,7 @@ import Token from 'classes/Token';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
 import { displayFullBN, displayTokenAmount } from 'util/Tokens';
 import { BEAN, PODS } from '../constants/tokens';
+import { trimAddress } from './index';
 
 export enum ActionType {
   /// GENERIC
@@ -177,7 +178,7 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.CLAIM_WITHDRAWAL:
       return `Claim ${displayFullBN(a.amount, 2)} ${a.token.symbol}.`;
     case ActionType.TRANSFER:
-      return `Transfer ${displayFullBN(a.amount)} ${a.token.symbol} to ${a.to}.`;
+      return `Transfer ${displayFullBN(a.amount)} ${a.token.symbol} to ${trimAddress(a.to)}.`;
 
     /// FIELD
     case ActionType.BUY_BEANS:
