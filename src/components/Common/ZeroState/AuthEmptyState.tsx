@@ -36,7 +36,7 @@ const AuthEmptyState: React.FC<{
   if (!account) {
     content = option !== undefined && option === 'message'
       ? (<Typography variant="body1" color="gray">Connect your wallet to see table.</Typography>)
-      : (<WalletButton variant="contained" color="primary" size="large" />);
+      : (<WalletButton variant="contained" color="primary" />);
   } else {
     content = (
       <>
