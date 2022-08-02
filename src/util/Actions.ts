@@ -3,6 +3,7 @@ import Token from 'classes/Token';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
 import { displayFullBN, displayTokenAmount } from 'util/Tokens';
 import { BEAN, PODS } from '../constants/tokens';
+import { trimAddress } from './index';
 
 export enum ActionType {
   /// GENERIC
@@ -171,13 +172,13 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.WITHDRAW:
       return `Withdraw ${displayTokenAmount(a.amount.abs(), a.token)} from the Silo.`;
     case ActionType.IN_TRANSIT:
-      return `Receive ${displayTokenAmount(a.amount.abs(), a.token, false, 'Claimable')} in ${a.withdrawSeasons.toFixed()} Season${a.withdrawSeasons.eq(1) ? '' : 's'}.`;
+      return `Receive ${displayTokenAmount(a.amount.abs(), a.token)} at the beginning of next season.`;
     case ActionType.UPDATE_SILO_REWARDS: // FIXME: don't like "update" here
       return `${a.stalk.lt(0) ? 'Burn' : 'Receive'} ${displayFullBN(a.stalk.abs(), 2)} Stalk and ${displayFullBN(a.seeds.abs(), 2)} Seeds.`;
     case ActionType.CLAIM_WITHDRAWAL:
       return `Claim ${displayFullBN(a.amount, 2)} ${a.token.symbol}.`;
     case ActionType.TRANSFER:
-      return `Transfer ${displayFullBN(a.amount)} ${a.token.symbol} to ${a.to}.`;
+      return `Transfer ${displayFullBN(a.amount)} ${a.token.symbol} to ${trimAddress(a.to)}.`;
 
     /// FIELD
     case ActionType.BUY_BEANS:
@@ -187,7 +188,7 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.BURN_BEANS:
       return `Burn ${displayFullBN(a.amount, BEAN[1].decimals)} ${a.amount.eq(new BigNumber(1)) ? 'Bean' : 'Beans'}.`;
     case ActionType.RECEIVE_PODS:
-      return `Receive ${displayTokenAmount(a.podAmount, PODS)} at ${displayFullBN(a.placeInLine)} in the Pod Line.`;
+      return `Receive ${displayTokenAmount(a.podAmount, PODS)} at ${displayFullBN(a.placeInLine, 0)} in the Pod Line.`;
     case ActionType.HARVEST:
       return `Harvest ${displayFullBN(a.amount, PODS.decimals)} Harvestable Pods.`;
     case ActionType.RECEIVE_BEANS:
@@ -198,7 +199,7 @@ export const parseActionMessage = (a: Action) => {
             : ' to your Farm Balance' 
           : ''}.`;
     case ActionType.SEND_PODS:
-      return `Send ${displayTokenAmount(a.amount, PODS)} to ${a.address}.`;
+      return `Send ${displayTokenAmount(a.amount, PODS)} to ${trimAddress(a.address)}.`;
 
     /// FERTILIZER
     case ActionType.BUY_FERTILIZER:

@@ -122,10 +122,10 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         }}
       >
         <Stack>
-          <Typography color="text.primary" variant="h4">
-            42m to next season
-          </Typography>
-          <Typography color="gray" variant="bodySmall">
+          {/* <Typography color="text.primary" variant="h4"> */}
+          {/*  42m to next season */}
+          {/* </Typography> */}
+          <Typography color="gray" variant="bodySmall" textAlign="center">
             Beanstalk is currently minting{' '}
             <span style={{ color: BeanstalkPalette.black }}>{ramp.toFixed(0)}%</span> of deltaB.
             It will mint{' '}

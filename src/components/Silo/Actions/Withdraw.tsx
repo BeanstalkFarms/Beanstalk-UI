@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Accordion, AccordionDetails, Box, Divider, Stack, Tooltip } from '@mui/material';
+import { Accordion, AccordionDetails, Alert, Box, Divider, Stack, Tooltip } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { Token } from 'classes';
@@ -34,6 +34,9 @@ import { ZERO_BN } from 'constants/index';
 import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
 import toast from 'react-hot-toast';
 import { useFetchSilo } from 'state/beanstalk/silo/updater';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import IconWrapper from '../../Common/IconWrapper';
+import { IconSize } from '../../App/muiTheme';
 
 // -----------------------------------------------------------------------
 
@@ -133,12 +136,13 @@ const WithdrawForm : React.FC<
           />
         </Box>
       </Stack>
-      <TokenOutputField
-        token={whitelistedToken}
-        amount={withdrawResult.amount.abs()}
-        value={getUSD(whitelistedToken, withdrawResult.amount).abs()}
-        modifier="Withdrawn"
-      />
+      <Alert
+        color="warning"
+        icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
+      >
+        You can claim your withdrawn assets at the beginning of next season.
+      </Alert>
+
     </>
   ) : null;
 

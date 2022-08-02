@@ -168,6 +168,7 @@ const ClaimForm : React.FC<
       <Form noValidate>
         <Stack gap={1}>
           {/* Claimable Token */}
+          {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
           <TokenQuoteProvider
             name="token"
             tokenOut={values.tokenOut}

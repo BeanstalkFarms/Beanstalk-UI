@@ -52,7 +52,7 @@ const Withdrawals : React.FC<{
   const columns = useMemo(() => ([
     {
       field: 'season',
-      flex: 1,
+      flex: 2,
       headerName: 'Seasons to Arrival',
       align: 'left',
       headerAlign: 'left',
@@ -70,7 +70,7 @@ const Withdrawals : React.FC<{
     {
       field: 'amount',
       flex: 2,
-      headerName: 'Withdrawn',
+      headerName: 'Withdrawn Amount',
       align: 'right',
       headerAlign: 'right',
       // valueFormatter: (params) => displayFullBN(params.value, token.displayDecimals, token.displayDecimals),
@@ -86,7 +86,7 @@ const Withdrawals : React.FC<{
         >
           <Typography>
             {displayFullBN(params.value, token.displayDecimals, token.displayDecimals)} 
-            <Typography display="inline" color="text.secondary">
+            <Typography display={{ xs: 'none', md: 'inline' }} color="text.secondary">
               {' '}(~{displayUSD(getUSD(token, params.row.amount))})
             </Typography>
           </Typography>

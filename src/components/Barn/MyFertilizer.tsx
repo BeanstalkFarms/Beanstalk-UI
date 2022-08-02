@@ -22,6 +22,7 @@ import { displayFullBN } from 'util/Tokens';
 import { MY_FERTILIZER } from 'components/Barn/FertilizerItemTooltips';
 import useTabs from 'hooks/display/useTabs';
 import TokenIcon from '../Common/TokenIcon';
+import { FontSize } from '../App/muiTheme';
 
 enum TabState {
   ACTIVE = 0,
@@ -61,17 +62,17 @@ const MyFertilizer: React.FC = () => {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Typography variant="body1">
-              Sprouts&nbsp;
-              <Tooltip
-                title="The number of Beans left to be earned from your Fertilizer."
-                placement="right"
-              >
+            <Tooltip
+              title="The number of Beans left to be earned from your Fertilizer."
+              placement="right"
+            >
+              <Typography variant="body1">
+                Sprouts&nbsp;
                 <HelpOutlineIcon
-                  sx={{ color: 'text.secondary', fontSize: '14px' }}
+                  sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
                 />
-              </Tooltip>
-            </Typography>
+              </Typography>
+            </Tooltip>
             <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={SPROUTS} />
               <Typography>
@@ -84,17 +85,17 @@ const MyFertilizer: React.FC = () => {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Typography variant="body1">
-              Rinsable Sprouts&nbsp;
-              <Tooltip
-                title="Sprouts that are redeemable for 1 Bean each. Rinsable Sprouts must be Rinsed in order to use them."
-                placement="right"
-              >
+            <Tooltip
+              title="Sprouts that are redeemable for 1 Bean each. Rinsable Sprouts must be Rinsed in order to use them."
+              placement="right"
+            >
+              <Typography variant="body1">
+                Rinsable Sprouts&nbsp;
                 <HelpOutlineIcon
-                  sx={{ color: 'text.secondary', fontSize: '14px' }}
+                  sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
                 />
-              </Tooltip>
-            </Typography>
+              </Typography>
+            </Tooltip>
             <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={RINSABLE_SPROUTS} />
               <Typography>
@@ -122,10 +123,10 @@ const MyFertilizer: React.FC = () => {
           {tokenIds.length > 0 ? (
             <Grid container spacing={3}>
               {tokenIds.map((_id) => {
-                const id     = new BigNumber(_id);
+                const id = new BigNumber(_id);
                 const season = new BigNumber(6_074);
                 const amount = farmerBarn.fertilizer[_id];
-                const humidity  = humidityAt(id);
+                const humidity = humidityAt(id);
                 const remaining = humidity ? amount.multipliedBy(humidity.plus(1)) : undefined;
                 return (
                   <Grid key={_id} item xs={12} md={3}>

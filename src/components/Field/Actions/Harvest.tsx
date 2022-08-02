@@ -107,7 +107,7 @@ const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
                   </IconWrapper>
                 }
               >
-                You can Harvest your Pods and Deposit Beans into the Silo in one transaction on the
+                You can Harvest your Pods and Deposit Beans into the Silo in one transaction on the&nbsp;
                 <Link href={`/#/silo/${bean.address}`}>Bean</Link> or <Link href={`/#/silo/${lp.address}`}>LP</Link> Deposit
                 page.
               </Alert>

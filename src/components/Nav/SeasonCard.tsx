@@ -43,8 +43,8 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, twap, newBeans, newSoil
         </Grid>
         <Grid item xs={3} md={2}>
           <Stack alignItems="flex-end" justifyContent="center">
-            <Typography color={newBeans.gt(0) ? 'primary' : 'text.secondary'} variant="bodySmall">
-              {newBeans ? displayBN(newBeans) : '?'}
+            <Typography variant="bodySmall">
+              {newBeans ? `+ ${displayBN(newBeans)}` : '?'}
             </Typography>
           </Stack>
         </Grid>
@@ -60,11 +60,6 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, twap, newBeans, newSoil
               />
             ) : null} */}
             <Typography
-              // color={
-              //   newSoil?.gt(0)
-              //     ? BeanstalkPalette.logoGreen
-              //     : BeanstalkPalette.lightishGrey
-              // }
               variant="bodySmall"
             >
               + {displayBN(newSoil)}

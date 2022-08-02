@@ -82,7 +82,7 @@ const TransferForm: React.FC<FormikProps<TransferFormValues> & {
           token={whitelistedToken}
           amount={withdrawResult.amount}
           value={getUSD(whitelistedToken, withdrawResult.amount).abs()}
-          modifier="Withdrawn"
+          // modifier="Withdrawn"
           />
         <Stack direction={{ xs: 'column', md: 'row' }} gap={1} justifyContent="center">
           <Box sx={{ flex: 1 }}>

@@ -42,7 +42,15 @@ const TokenOutputField : React.FC<{
       {!isLoading ? (
         <Tooltip title={amountTooltip}>
           <Typography display="inline" variant="bodyLarge" sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
-            {prefix}&nbsp;{displayFullBN(amount.abs(), token.displayDecimals, token.displayDecimals)}
+            {amount.abs().gt(new BigNumber(1000000)) ? (
+              <>
+                {prefix}&nbsp;{displayFullBN(amount.abs(), 0)}
+              </>
+            ) : (
+              <>
+                {prefix}&nbsp;{displayFullBN(amount.abs(), token.displayDecimals, token.displayDecimals)}
+              </>
+            )}
             {value && (
               <>&nbsp;&nbsp;<Typography display="inline" variant="bodySmall">(~{displayUSD(value)})</Typography></>
             )}

@@ -7,7 +7,7 @@ import useHumidity, { INITIAL_HUMIDITY } from 'hooks/useHumidity';
 import { AppState } from 'state';
 import SunriseCountdown from 'components/Sun/SunriseCountdown';
 import FertilizerImage from './FertilizerImage';
-import { BeanstalkPalette } from '../App/muiTheme';
+import { BeanstalkPalette, FontSize } from '../App/muiTheme';
 import useFertilizerProgress from '../../hooks/useFertilizerProgress';
 
 const RemainingFertilizer: React.FC = () => {
@@ -36,17 +36,18 @@ const RemainingFertilizer: React.FC = () => {
           {/* right column */}
           <Stack justifyContent="space-between" gap={2}>
             <Stack gap={0.5}>
-              <Typography variant="body1">
-                Available Fertilizer&nbsp;
-                <Tooltip
-                  title="Once bought, Available Fertilizer becomes Active. Active Fertilizer comes with Sprouts, the number of Beans to be earned from Active Fertilizer. One-third of Bean mints go towards Fertilizing Sprouts when there is Active Fertilizer."
-                  placement="top-start"
-                >
+              <Tooltip
+                title="Once bought, Available Fertilizer becomes Active. Active Fertilizer comes with Sprouts, the number of Beans to be earned from Active Fertilizer. One-third of Bean mints go towards Fertilizing Sprouts when there is Active Fertilizer."
+                placement="top-start"
+              >
+                <Typography variant="body1">
+                  Available Fertilizer&nbsp;
                   <HelpOutlineIcon
-                    sx={{ color: 'text.secondary', fontSize: '14px' }}
+                    sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
                   />
-                </Tooltip>
-              </Typography>
+                </Typography>
+              </Tooltip>
+
               <Stack direction="row" gap={1} alignItems="center">
                 <Typography
                   display="inline-block"
@@ -67,17 +68,17 @@ const RemainingFertilizer: React.FC = () => {
               </Stack>
             </Stack>
             <Stack gap={0.5}>
-              <Typography>
-                Humidity&nbsp;
-                <Tooltip
-                  title="The interest rate on Fertilizer. The Humidity will decrease to 250% once Beanstalk is Replanted, and decrease 0.5% every Season until 20% Humidity is reached. The Humidity determines how many Sprouts come with Fertilizer."
-                  placement="top-start"
-                >
+              <Tooltip
+                title="The interest rate on Fertilizer. The Humidity will decrease to 250% once Beanstalk is Replanted, and decrease 0.5% every Season until 20% Humidity is reached. The Humidity determines how many Sprouts come with Fertilizer."
+                placement="top-start"
+              >
+                <Typography>
+                  Humidity&nbsp;
                   <HelpOutlineIcon
-                    sx={{ color: 'text.secondary', fontSize: '14px' }}
+                    sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
                   />
-                </Tooltip>
-              </Typography>
+                </Typography>
+              </Tooltip>
               <Stack direction="row" alignItems="center" gap={1}>
                 <Typography variant="bodyLarge">
                   {displayFullBN(humidity.multipliedBy(100))}%
