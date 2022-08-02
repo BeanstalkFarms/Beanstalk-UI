@@ -24,14 +24,14 @@ const RewardItem: React.FC<RewardItemProps> = ({
   isClaimable,
 }) => (
   <Box sx={{ flex: { lg: 'auto', xs: 1 }, opacity: isClaimable === false ? 0.2 : 1 }}>
-    <Typography>
-      {title}
-      <Tooltip title={tooltip} placement="top">
+    <Tooltip title={tooltip} placement="top">
+      <Typography>
+        {title}
         <HelpOutlineIcon
           sx={{ display: 'inline', mb: 0.5, fontSize: '11px' }}
         />
-      </Tooltip>
-    </Typography>
+      </Typography>
+    </Tooltip>
     <Stack direction="row" gap={0.4} alignItems="center">
       {icon && <img src={icon} alt="" height="17px" />}
       {amount && (
