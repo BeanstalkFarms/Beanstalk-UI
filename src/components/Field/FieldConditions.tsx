@@ -1,7 +1,9 @@
 import React from 'react';
 import { Card, Grid, Stack, Tooltip, Typography } from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { displayBN } from '../../util';
 import { AppState } from '../../state';
+import { FontSize } from '../App/muiTheme';
 
 export interface FieldConditionsProps {
   beanstalkField: AppState['_beanstalk']['field'];
@@ -24,7 +26,12 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
               title="The number of Beans that can currently be Sown, or lent to Beanstalk."
               placement="top"
             >
-              <Typography variant="body1">Available Soil</Typography>
+              <Typography variant="body1">
+                Available Soil&nbsp;
+                <HelpOutlineIcon
+                  sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
+                />
+              </Typography>
             </Tooltip>
             <Typography variant="bodyLarge" fontWeight="400">
               {displayBN(beanstalkField.soil)}
@@ -34,7 +41,12 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
         <Grid item xs={6} md={3}>
           <Stack gap={0.5}>
             <Tooltip title="The interest rate for Sowing Beans." placement="top">
-              <Typography variant="body1">Temperature</Typography>
+              <Typography variant="body1">
+                Temperature&nbsp;
+                <HelpOutlineIcon
+                  sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
+                />
+              </Typography>
             </Tooltip>
             <Typography variant="bodyLarge" fontWeight="400">
               {displayBN(beanstalkField.weather.yield)}%
@@ -44,7 +56,12 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
         <Grid item xs={6} md={3}>
           <Stack gap={0.5}>
             <Tooltip title="The order Pods will become Harvestable based on the FIFO Harvest schedule." placement="top">
-              <Typography variant="body1">Pod Line</Typography>
+              <Typography variant="body1">
+                Pod Line&nbsp;
+                <HelpOutlineIcon
+                  sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
+                />
+              </Typography>
             </Tooltip>
             <Typography variant="bodyLarge" fontWeight="400">
               {displayBN(beanstalkField.podLine)}
@@ -54,7 +71,12 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
         <Grid item xs={6} md={3}>
           <Stack gap={0.5}>
             <Tooltip title="The number of Beans that Beanstalk has paid back to lenders." placement="top">
-              <Typography variant="body1">Pods Harvested</Typography>
+              <Typography variant="body1">
+                Pods Harvested&nbsp;
+                <HelpOutlineIcon
+                  sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
+                />
+              </Typography>
             </Tooltip>
             <Typography variant="bodyLarge" fontWeight="400">
               {displayBN(beanstalkField.harvestableIndex)}
