@@ -64,7 +64,8 @@ const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
       <>
         <Button
           variant="contained"
-          color="light"
+          color="primary"
+          // color="light"
           {...props}
           onClick={showWallets}
         >
