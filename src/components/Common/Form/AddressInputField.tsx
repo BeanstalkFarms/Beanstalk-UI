@@ -1,12 +1,25 @@
 import React, { useCallback, useMemo } from 'react';
-import { Box, IconButton, InputAdornment, Link, Stack, TextField, TextFieldProps, Tooltip, Typography } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  InputAdornment,
+  Link,
+  Stack,
+  TextField,
+  TextFieldProps,
+  Tooltip,
+  Typography,
+  useMediaQuery
+} from '@mui/material';
 import { Field, FieldProps } from 'formik';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import useChainId from 'hooks/useChain';
 import { CHAIN_INFO } from 'constants/index';
 import useAccount from 'hooks/ledger/useAccount';
+import { useTheme } from '@mui/material/styles';
 import OutputField from './OutputField';
+import { trimAddress } from '../../../util';
 
 export type AddressInputFieldProps = (
   Partial<TextFieldProps>
@@ -50,6 +63,10 @@ const AddressInputFieldInner : React.FC<FieldProps & AddressInputFieldProps> = (
       </InputAdornment>
     ) : null
   }), [meta.value]);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   if (isValid) {
     return (
       <OutputField sx={{ height: 67.5 /* lock to same height as input */ }}>
@@ -64,7 +81,7 @@ const AddressInputFieldInner : React.FC<FieldProps & AddressInputFieldProps> = (
                 target="_blank"
                 rel="noreferrer"
               >
-                {field.value}
+                {isMobile ? trimAddress(field.value) : field.value}
               </Link>
             </Tooltip>
           </Typography>

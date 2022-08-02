@@ -10,7 +10,8 @@ import ForecastPage from 'pages/forecast';
 import Barn from 'pages/barn';
 import TransactionHistoryPage from 'pages/history';
 import BalancesPage from 'pages/balances';
-import pageBackgroundGradient from 'img/theme/bg-mainnet-gradient.png';
+// import pageBackgroundGradient from 'img/theme/bg-mainnet-gradient.png';
+import pageBackground from 'img/theme/bg-mainnet.png';
 import NavBar from 'components/Nav/NavBar';
 import PoolsUpdater from 'state/bean/pools/updater';
 import UnripeUpdater from 'state/bean/unripe/updater';
@@ -127,8 +128,8 @@ export default function App() {
           // backgroundColor: BeanstalkPalette.lighterBlue,
           backgroundColor: BeanstalkPalette.lightBlue,
           // backgroundColor: '#dfedfb',
-          // backgroundImage: `url(${pageBackground})`,
-          backgroundImage: `url(${pageBackgroundGradient})`,
+          backgroundImage: `url(${pageBackground})`,
+          // backgroundImage: `url(${pageBackgroundGradient})`,
           backgroundAttachment: 'fixed',
           backgroundPosition: 'bottom center',
           backgroundSize: '100%',

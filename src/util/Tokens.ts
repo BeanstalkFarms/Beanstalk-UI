@@ -125,7 +125,7 @@ export function displayBN(
     return `${TrimBN(bn.dividedBy(1e9), 3)}B`; /* Billions */
   }
   if (bn.isGreaterThanOrEqualTo(1e8)) {
-    return `${TrimBN(bn.dividedBy(1e6), 1)}M`; /* Millions */
+    return `${TrimBN(bn.dividedBy(1e6), 2)}M`; /* Millions */
   }
   if (bn.isGreaterThanOrEqualTo(1e6)) {
     return `${TrimBN(bn.dividedBy(1e6), 2)}M`; /* Millions */

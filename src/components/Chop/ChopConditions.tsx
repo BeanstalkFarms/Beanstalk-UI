@@ -16,7 +16,7 @@ const ChopConditions: React.FC<{}> = () => {
       <Stack gap={1}>
         <Typography variant="h4">Chop Conditions</Typography>
         <Grid container spacing={2}>
-          <Grid item xs={6} md={4}>
+          <Grid item xs={6} md={3.7}>
             <Stack gap={0.5}>
               <Tooltip
                 title="Chop penalty!"
@@ -38,7 +38,7 @@ const ChopConditions: React.FC<{}> = () => {
               )}
             </Stack>
           </Grid>
-          <Grid item xs={6} md={4}>
+          <Grid item xs={6} md={3.7}>
             <Stack gap={0.5}>
               <Tooltip title="Fertilizer sold!" placement="top">
                 <Typography variant="body1">
@@ -53,7 +53,7 @@ const ChopConditions: React.FC<{}> = () => {
               </Typography>
             </Stack>
           </Grid>
-          <Grid item xs={6} md={4}>
+          <Grid item xs={6} md={4.6}>
             <Stack gap={0.5}>
               <Tooltip title="Repaid debt!" placement="top">
                 <Typography variant="body1">

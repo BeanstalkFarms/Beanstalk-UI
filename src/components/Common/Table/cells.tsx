@@ -19,7 +19,7 @@ const COLUMNS = {
   ///
   season: {
     field: 'season',
-    flex: 1,
+    flex: 0.8,
     headerName: 'Season',
     align: 'left',
     headerAlign: 'left',
@@ -37,8 +37,13 @@ const COLUMNS = {
     headerName: 'Seeds',
     align: 'right',
     headerAlign: 'right',
-    valueFormatter: (params: GridValueFormatterParams) => displayBN(params.value),
-    renderCell: basicCell,
+    valueFormatter: (params: GridValueFormatterParams) => displayFullBN(params.value, 2),
+    renderCell: (params : GridRenderCellParams) => (
+      <>
+        <Typography display={{ xs: 'none', md: 'block' }}>{displayFullBN(params.value, 2)}</Typography>
+        <Typography display={{ xs: 'block', md: 'none' }}>{displayBN(params.value)}</Typography>
+      </>
+    ),
     sortable: false,
   } as GridColumns[number],
 

@@ -223,7 +223,7 @@ const ConvertForm : React.FC<
           balanceLabel="Deposited Balance"
           state={values.tokens[0]}
           handleQuote={handleQuote}
-          tokenSelectLabel={`Deposited ${tokenIn.symbol}`}
+          tokenSelectLabel={tokenIn.symbol}
           disabled={(
             !values.maxAmountIn         // still loading `maxAmountIn`
             || values.maxAmountIn.eq(0) // = 0 means we can't make this conversion

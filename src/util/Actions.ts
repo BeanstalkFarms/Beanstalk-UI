@@ -172,7 +172,7 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.WITHDRAW:
       return `Withdraw ${displayTokenAmount(a.amount.abs(), a.token)} from the Silo.`;
     case ActionType.IN_TRANSIT:
-      return `Receive ${displayTokenAmount(a.amount.abs(), a.token, false, 'Claimable')} in ${a.withdrawSeasons.toFixed()} Season${a.withdrawSeasons.eq(1) ? '' : 's'}.`;
+      return `Receive ${displayTokenAmount(a.amount.abs(), a.token)} at the beginning of next season.`;
     case ActionType.UPDATE_SILO_REWARDS: // FIXME: don't like "update" here
       return `${a.stalk.lt(0) ? 'Burn' : 'Receive'} ${displayFullBN(a.stalk.abs(), 2)} Stalk and ${displayFullBN(a.seeds.abs(), 2)} Seeds.`;
     case ActionType.CLAIM_WITHDRAWAL:
@@ -188,7 +188,7 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.BURN_BEANS:
       return `Burn ${displayFullBN(a.amount, BEAN[1].decimals)} ${a.amount.eq(new BigNumber(1)) ? 'Bean' : 'Beans'}.`;
     case ActionType.RECEIVE_PODS:
-      return `Receive ${displayTokenAmount(a.podAmount, PODS)} at ${displayFullBN(a.placeInLine)} in the Pod Line.`;
+      return `Receive ${displayTokenAmount(a.podAmount, PODS)} at ${displayFullBN(a.placeInLine, 0)} in the Pod Line.`;
     case ActionType.HARVEST:
       return `Harvest ${displayFullBN(a.amount, PODS.decimals)} Harvestable Pods.`;
     case ActionType.RECEIVE_BEANS:

@@ -42,7 +42,7 @@ const Deposits : React.FC<{
     COLUMNS.season,
     {
       field: 'amount',
-      flex: 2,
+      flex: 1,
       headerName: 'Amount',
       align: 'left',
       headerAlign: 'left',
@@ -56,7 +56,10 @@ const Deposits : React.FC<{
             </>
           )}
         >
-          <Typography>{displayFullBN(params.value, token.displayDecimals, token.displayDecimals)}</Typography>
+          <>
+            <Typography display={{ xs: 'none', md: 'block' }}>{displayFullBN(params.value, token.displayDecimals, token.displayDecimals)}</Typography>
+            <Typography display={{ xs: 'block', md: 'none' }}>{displayBN(params.value)}</Typography>
+          </>
         </Tooltip>
       ),
       sortable: false,
@@ -81,9 +84,10 @@ const Deposits : React.FC<{
               </>
             )}
           >
-            <Typography>
-              {displayFullBN(params.value.plus(accruedStalk), STALK.displayDecimals, STALK.displayDecimals)}
-            </Typography>
+            <>
+              <Typography display={{ xs: 'none', md: 'block' }}>{displayFullBN(params.value.plus(accruedStalk), STALK.displayDecimals, STALK.displayDecimals)}</Typography>
+              <Typography display={{ xs: 'block', md: 'none' }}>{displayBN(params.value.plus(accruedStalk))}</Typography>
+            </>
           </Tooltip>
         );
       },

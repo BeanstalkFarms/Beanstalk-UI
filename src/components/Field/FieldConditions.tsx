@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Grid, Stack, Tooltip, Typography } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import BigNumber from 'bignumber.js';
 import { displayBN } from '../../util';
 import { AppState } from '../../state';
 import { FontSize } from '../App/muiTheme';
@@ -19,7 +20,7 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
   <Card sx={{ p: 2 }}>
     <Stack gap={1}>
       <Typography variant="h4">Field Conditions</Typography>
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
         <Grid item xs={6} md={3}>
           <Stack gap={0.5}>
             <Tooltip
@@ -79,7 +80,8 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
               </Typography>
             </Tooltip>
             <Typography variant="bodyLarge" fontWeight="400">
-              {displayBN(beanstalkField.harvestableIndex)}
+              {/* {displayBN(beanstalkField.harvestableIndex)} */}
+              {displayBN(new BigNumber(1829327385.1232))}
             </Typography>
           </Stack>
         </Grid>
