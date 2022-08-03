@@ -56,7 +56,7 @@ const PlotSelectDialog: React.FC<PlotSelectDialogProps & DialogProps> = ({
             selected={selected}
           />
         ) : (
-          <EmptyState message="You don't have any plots to send!" />
+          <EmptyState message="You have no Plots." />
         )}
       </StyledDialogContent>
     </Dialog>

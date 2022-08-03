@@ -1,9 +1,10 @@
+import React from 'react';
 import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
 import { displayFullBN, displayTokenAmount } from 'util/Tokens';
 import { BEAN, PODS } from '../constants/tokens';
-import { trimAddress } from './index';
+import { displayBN, trimAddress } from './index';
 
 export enum ActionType {
   /// GENERIC
@@ -25,7 +26,7 @@ export enum ActionType {
   RECEIVE_PODS,
   HARVEST,
   RECEIVE_BEANS,
-  SEND_PODS,
+  TRANSFER_PODS,
 
   /// MARKET
   CREATE_ORDER,
@@ -38,7 +39,7 @@ export enum ActionType {
 /// GENERIC
 export type BaseAction = {
   type: ActionType.BASE;
-  message?: string;
+  message?: string | React.ReactElement;
 }
 
 export type EndTokenAction = {
@@ -109,10 +110,11 @@ export type ReceiveBeansAction = {
   amount: BigNumber;
   destination?: FarmToMode;
 }
-export type SendPodsAction = {
-  type: ActionType.SEND_PODS;
+export type TransferPodsAction = {
+  type: ActionType.TRANSFER_PODS;
   amount: BigNumber;
   address: string;
+  placeInLine: BigNumber;
 }
 
 /// MARKET
@@ -150,7 +152,7 @@ export type Action = (
   | FieldHarvestAction
   | ReceiveBeansAction
   | BuyBeansAction
-  | SendPodsAction
+  | TransferPodsAction
   /// MARKET
   | CreateOrderAction
   /// FERTILIZER
@@ -172,34 +174,34 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.WITHDRAW:
       return `Withdraw ${displayTokenAmount(a.amount.abs(), a.token)} from the Silo.`;
     case ActionType.IN_TRANSIT:
-      return `Receive ${displayTokenAmount(a.amount.abs(), a.token)} at the beginning of next season.`;
+      return `Receive ${displayTokenAmount(a.amount.abs(), a.token, { modifier: 'Claimable', showName: true })} at the start of the next Season.`;
     case ActionType.UPDATE_SILO_REWARDS: // FIXME: don't like "update" here
       return `${a.stalk.lt(0) ? 'Burn' : 'Receive'} ${displayFullBN(a.stalk.abs(), 2)} Stalk and ${displayFullBN(a.seeds.abs(), 2)} Seeds.`;
     case ActionType.CLAIM_WITHDRAWAL:
-      return `Claim ${displayFullBN(a.amount, 2)} ${a.token.symbol}.`;
+      return `Claim ${displayFullBN(a.amount, 2)} ${a.token.name}.`;
     case ActionType.TRANSFER:
-      return `Transfer ${displayFullBN(a.amount)} ${a.token.symbol} to ${trimAddress(a.to)}.`;
+      return `Transfer ${displayFullBN(a.amount)} ${a.token.name} to ${trimAddress(a.to)}.`;
 
     /// FIELD
     case ActionType.BUY_BEANS:
       // if user sows with beans, skip this step
       if (a.token.symbol === BEAN[1].symbol) return null;
-      return `Buy ${displayFullBN(a.beanAmount, BEAN[1].decimals)} Beans with ${displayFullBN(a.tokenAmount, a.token.decimals)} ${a.token.symbol} for $${displayFullBN(a.beanPrice, BEAN[1].decimals)} each.`;
+      return `Buy ${displayFullBN(a.beanAmount, BEAN[1].displayDecimals)} Beans with ${displayFullBN(a.tokenAmount, a.token.displayDecimals)} ${a.token.name} for ~$${displayFullBN(a.beanPrice, BEAN[1].displayDecimals)} each.`;
     case ActionType.BURN_BEANS:
-      return `Burn ${displayFullBN(a.amount, BEAN[1].decimals)} ${a.amount.eq(new BigNumber(1)) ? 'Bean' : 'Beans'}.`;
+      return `Burn ${displayFullBN(a.amount, BEAN[1].displayDecimals)} ${a.amount.eq(new BigNumber(1)) ? 'Bean' : 'Beans'}.`;
     case ActionType.RECEIVE_PODS:
       return `Receive ${displayTokenAmount(a.podAmount, PODS)} at ${displayFullBN(a.placeInLine, 0)} in the Pod Line.`;
     case ActionType.HARVEST:
-      return `Harvest ${displayFullBN(a.amount, PODS.decimals)} Harvestable Pods.`;
+      return `Harvest ${displayFullBN(a.amount, PODS.displayDecimals)} Pods.`;
     case ActionType.RECEIVE_BEANS:
-      return `Receive ${displayFullBN(a.amount, BEAN[1].decimals)} Beans${
+      return `Receive ${displayFullBN(a.amount, BEAN[1].displayDecimals)} Beans${
         a.destination
           ? a.destination === FarmToMode.EXTERNAL
             ? ' to your Circulating Balance' 
             : ' to your Farm Balance' 
           : ''}.`;
-    case ActionType.SEND_PODS:
-      return `Send ${displayTokenAmount(a.amount, PODS)} to ${trimAddress(a.address)}.`;
+    case ActionType.TRANSFER_PODS:
+      return `Transfer ${displayTokenAmount(a.amount, PODS)} at ${displayBN(a.placeInLine)} in Line to ${a.address}.`;
 
     /// FERTILIZER
     case ActionType.BUY_FERTILIZER:

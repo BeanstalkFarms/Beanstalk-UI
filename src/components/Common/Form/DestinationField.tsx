@@ -11,12 +11,12 @@ const DestinationField : React.FC<Partial<PillSelectFieldProps> & {
   name:        string; // force required
 }> = ({
   walletDesc = 'Send assets to your wallet.',
-  farmDesc = 'Send assets to your Beanstalk farm balance.',
+  farmDesc = 'Send assets to your internal balance within Beanstalk.',
   ...props
 }) => {
   const options = useMemo(() => ([
     {
-      title: 'Wallet',
+      title: 'Circulating Balance',
       description: walletDesc,
       pill: <><AddressIcon size={IconSize.xs} /><Typography variant="body1">Wallet</Typography></>,
       icon: <AddressIcon size={IconSize.small} width={IconSize.small} height={IconSize.small} />,

@@ -11,7 +11,6 @@ import useWhitelist from 'hooks/useWhitelist';
 import usePools from 'hooks/usePools';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import useChainId from 'hooks/useChain';
-import BigNumber from 'bignumber.js';
 import useToggle from 'hooks/display/useToggle';
 import useRevitalized from 'hooks/useRevitalized';
 import RewardsDialog from 'components/Silo/RewardsDialog';
@@ -38,16 +37,12 @@ const SiloPage : React.FC = () => {
     poolsByAddress: pools,
   }), [whitelist, pools]);
 
-  /// TEMP: Exploiter calculations
-  const exploiterEarnedBeans = new BigNumber(6458.005059);
-  const ownership = farmerSilo.stalk.active.div(beanstalkSilo.stalk.active);
-
   return (
     <Container maxWidth="lg">
       <Stack gap={2}>
         <PageHeader
           title="The Silo"
-          description="Earn yield by depositing liquidity and participate in protocol governance"
+          description="Earn yield and participate in Beanstalk governance by depositing whitelisted assets"
           href="https://docs.bean.money/farm/silo"
         />
         <Overview
@@ -69,6 +64,7 @@ const SiloPage : React.FC = () => {
               seeds={farmerSilo.seeds}
               revitalizedStalk={revitalizedStalk}
               revitalizedSeeds={revitalizedSeeds}
+              // compact
             />
             <Box
               justifySelf={{ lg: 'flex-end', xs: 'auto' }}

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Box, Divider, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -34,6 +34,7 @@ import TransactionToast from 'components/Common/TxnToast';
 import { displayBN, displayFullBN, tokenResult, toStringBaseUnitBN, toTokenUnitsBN, parseError, getChainConstant } from 'util/index';
 import { BeanstalkReplanted } from 'generated';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
+import useToggle from 'hooks/display/useToggle';
 import FertilizerItem from '../FertilizerItem';
 
 // ---------------------------------------------------
@@ -77,15 +78,13 @@ const BuyForm : React.FC<
   tokenOut: token
 }) => {
   const tokenMap = useTokenMap<ERC20Token | NativeToken>(TOKEN_LIST);
-  const [showTokenSelect, setShowTokenSelect] = useState(false);  
   const { usdc, fert, humidity, actions } = useFertilizerSummary(values.tokens);
 
   // Extract
   const isValid = fert?.gt(0);
 
   // Handlers
-  const handleClose = useCallback(() => setShowTokenSelect(false), []);
-  const handleOpen  = useCallback(() => setShowTokenSelect(true),  []);
+  const [showTokenSelect, handleOpen, handleClose] = useToggle();
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
     setFieldValue(
       'tokens',
@@ -173,8 +172,8 @@ const BuyForm : React.FC<
 const Buy : React.FC<{}> = () => {
   // Wallet connection
   const { data: account } = useAccount();
-  const provider = useProvider();
   const { data: signer } = useSigner();
+  const provider = useProvider();
   const chainId = useChainId();
 
   // Farmer data

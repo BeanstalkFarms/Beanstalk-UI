@@ -22,7 +22,7 @@ const RemainingFertilizer: React.FC = () => {
   return (
     <Card sx={{ p: 2 }}>
       <Stack gap={1}>
-        <Typography variant="h4">Fertilizer</Typography>
+        <Typography variant="h4">Barn Conditions</Typography>
         <Stack
           direction={{ xs: 'column', md: 'row' }}
           alignItems={{ xs: 'left', md: 'stretch' }}
@@ -30,7 +30,7 @@ const RemainingFertilizer: React.FC = () => {
           gap={2}
         >
           {/* left column */}
-          <Box sx={{ minWidth: 200, display: { xs: 'none', md: 'block' } }}>
+          <Box sx={{ minWidth: 10, display: { xs: 'none', md: 'block' } }}>
             <FertilizerImage progress={Math.max(progress.toNumber(), 0.05)} />
           </Box>
           {/* right column */}
@@ -93,18 +93,6 @@ const RemainingFertilizer: React.FC = () => {
                   % {nextDecreaseTimeString}
                 </Typography>
               </Stack>
-            </Stack>
-            <Stack>
-              {null}
-              {/* <Link */}
-              {/*  href="https://docs.bean.money/farm/barn" */}
-              {/*  rel="noreferrer" */}
-              {/*  color="text.secondary" */}
-              {/* > */}
-              {/*  <Typography variant="body1"> */}
-              {/*    Learn more about the Barn Raise */}
-              {/*  </Typography> */}
-              {/* </Link> */}
             </Stack>
           </Stack>
         </Stack>

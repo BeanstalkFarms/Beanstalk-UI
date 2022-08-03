@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, Alert, Box, Link, Stack, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, Alert, Box, Divider, Link, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
@@ -44,7 +44,7 @@ import usePrice from 'hooks/usePrice';
 import { useFetchPools } from 'state/bean/pools/updater';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
-import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
+import { IconSize } from '../../App/muiTheme';
 import IconWrapper from '../../Common/IconWrapper';
 import TokenIcon from '../../Common/TokenIcon';
 
@@ -215,22 +215,14 @@ const SowForm : React.FC<
                 </Stack>
               )}
             />
-            <Box
-              sx={{
-                py: 1,
-                backgroundColor: BeanstalkPalette.washedGreen,
-                borderRadius: 1
-            }}
-            >
-              <Typography variant="body1" textAlign="center" color="primary" alignItems="center">Upon <strong>Harvest</strong>, <span><img src={podIconGreen} alt="" height={IconSize.xs} /></span> {displayBN(numPods)} will be redeemable for <span><img src={beanIcon} alt="" height={IconSize.xs} /></span> {displayBN(numPods)}</Typography>
-            </Box>
             {(maxAmountUsed && maxAmountUsed.gt(0.9)) ? (
               <Box>
                 <Alert
                   color="warning"
                   icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
                 >
-                  You are Sowing {displayFullBN(maxAmountUsed.times(100), 4, 0)}% of remaining Soil. 
+                  If there is less Soil at the time of execution, this transaction will Sow Beans into the remaining Soil and send any unused Beans to your Farm balance.
+                  {/* You are Sowing {displayFullBN(maxAmountUsed.times(100), 4, 0)}% of remaining Soil.  */}
                 </Alert>
               </Box>
             ) : null}
@@ -258,6 +250,10 @@ const SowForm : React.FC<
                       }
                     ]}
                   />
+                  <Divider sx={{ my: 2, opacity: 0.4 }} />
+                  <Box pb={1}>
+                    <Typography variant="body1" alignItems="center">Upon <strong>Harvest</strong>, <span><img src={podIconGreen} alt="" height={IconSize.xs} /></span> {displayBN(numPods)} are redeemed for <span><img src={beanIcon} alt="" height={IconSize.xs} /></span> {displayBN(numPods)}.</Typography>
+                  </Box>
                 </AccordionDetails>
               </Accordion>
             </Box>

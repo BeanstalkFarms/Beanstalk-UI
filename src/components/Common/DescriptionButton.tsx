@@ -52,7 +52,7 @@ const DescriptionButton : React.FC<ButtonProps & {
     <Stack direction="row" gap={0.5} justifyContent="space-between" alignItems="center">
       {/* Icon + Title */}
       <div>
-        <Stack direction="row" gap={0.5} alignItems="center">
+        <Stack direction="row" gap={1} alignItems="center">
           {icon && (
             <Typography variant="bodyMedium">
               {/* FIXME: why the extra stack here? */}

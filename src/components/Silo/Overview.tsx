@@ -93,7 +93,7 @@ const StalkOwnershipTab: React.FC<TabData
           gap={0.25}
         />
         <Stat
-          title="Ownership"
+          title="Stalk Ownership"
           titleTooltip="Your current ownership of Beanstalk is displayed as a percentage. Ownership is determined by your proportional ownership of the total Stalk supply."
           amount={`${displayValue[1].multipliedBy(100).toFixed(3)}%`}
           color="secondary.dark"
@@ -143,7 +143,8 @@ const Overview: React.FC<{
         {/* Tabs */}
         <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0 }}>
           <Tab label="Deposits" />
-          <Tab label="Stalk Ownership" />
+          <Tab label="Stalk" />
+          <Tab label="Seeds" />
         </Tabs>
         {/* "Windows" (time range selector) */}
         <Box sx={{ display: 'none' }}>

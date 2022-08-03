@@ -59,3 +59,16 @@
     transform: rotate(360deg);
   }
 }
+@keyframes pulse {
+  0% {
+    border-color: rgba(240, 223, 146, 1);
+    /* border-color: rgba(193, 222, 242, 1); */
+  }
+  50% {
+    /* border-color: rgba(193, 222, 242, 0.5); */
+    border-color: rgba(240, 223, 146, 0.5);
+  }
+  100% {
+    border-color: rgba(240, 223, 146, 1);
+  }
+}

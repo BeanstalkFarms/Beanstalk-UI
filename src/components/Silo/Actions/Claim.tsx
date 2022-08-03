@@ -384,7 +384,7 @@ const Claim : React.FC<{
   ]);
 
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit}>
+    <Formik initialValues={initialValues} onSubmit={onSubmit} enableReinitialize>
       {(formikProps) => (
         <>
           <TxnSettings placement="form-top-right">

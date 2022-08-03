@@ -23,7 +23,7 @@ const COLUMNS = {
     headerName: 'Season',
     align: 'left',
     headerAlign: 'left',
-    valueFormatter: (params: GridValueFormatterParams) => displayBN(params.value),
+    valueFormatter: (params: GridValueFormatterParams) => params.value.toString(),
     renderCell: basicCell,
     sortable: false,
   } as GridColumns[number],

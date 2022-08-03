@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Token } from 'classes';
 import BigNumber from 'bignumber.js';
 import { useAccount } from 'wagmi';
-import { Tooltip, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { GridColumns } from '@mui/x-data-grid';
 import { FarmerSiloBalance, WithdrawalCrate } from 'state/farmer/silo';
 import { displayFullBN, displayUSD } from 'util/index';
@@ -73,24 +73,13 @@ const Withdrawals : React.FC<{
       headerName: 'Withdrawn Amount',
       align: 'right',
       headerAlign: 'right',
-      // valueFormatter: (params) => displayFullBN(params.value, token.displayDecimals, token.displayDecimals),
       renderCell: (params) => (
-        <Tooltip
-          title={(
-            <>
-              Tooltip
-              {/* <Typography>BDV: {displayBN(params.row.bdv)}</Typography>
-              <Typography>Value: ${displayBN(getUSD(Bean, params.row.bdv))}</Typography> */}
-            </>
-          )}
-        >
-          <Typography>
-            {displayFullBN(params.value, token.displayDecimals, token.displayDecimals)} 
-            <Typography display={{ xs: 'none', md: 'inline' }} color="text.secondary">
-              {' '}(~{displayUSD(getUSD(token, params.row.amount))})
-            </Typography>
+        <Typography>
+          {displayFullBN(params.value, token.displayDecimals, token.displayDecimals)} 
+          <Typography display={{ xs: 'none', md: 'inline' }} color="text.secondary">
+            {' '}(~{displayUSD(getUSD(token, params.row.amount))})
           </Typography>
-        </Tooltip>
+        </Typography>
       ),
       sortable: false,
     },

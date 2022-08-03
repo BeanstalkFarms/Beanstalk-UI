@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Accordion, AccordionDetails, Alert, Box, Link, Stack } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useAccount, useProvider } from 'wagmi';
@@ -23,18 +23,14 @@ import {
   parseError,
   toStringBaseUnitBN
 } from 'util/index';
-import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import { useFetchFarmerField } from 'state/farmer/field/updater';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-import { AppState } from '../../../state';
+import useFarmerField from 'hooks/useFarmerField';
 import DestinationField from '../../Common/Form/DestinationField';
 import TransactionToast from '../../Common/TxnToast';
 import { ZERO_BN } from '../../../constants';
 import TokenAdornment from '../../Common/Form/TokenAdornment';
-import { IconSize } from '../../App/muiTheme';
-import IconWrapper from '../../Common/IconWrapper';
 
 // -----------------------------------------------------------------------
 
@@ -76,7 +72,7 @@ const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
         <TokenInputField
           name="amount"
           balance={amount}
-          balanceLabel="Harvestable Pods"
+          balanceLabel="Harvestable Balance"
           disabled
           InputProps={{
             endAdornment: (
@@ -98,7 +94,7 @@ const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
               token={BEAN[1]}
               amount={values.amount || ZERO_BN}
             />
-            <Box>
+            {/* <Box>
               <Alert
                 color="warning"
                 icon={
@@ -111,7 +107,7 @@ const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
                 <Link href={`/#/silo/${bean.address}`}>Bean</Link> or <Link href={`/#/silo/${lp.address}`}>LP</Link> Deposit
                 page.
               </Alert>
-            </Box>
+            </Box> */}
             <Box>
               <Accordion variant="outlined">
                 <StyledAccordionSummary title="Transaction Details" />
@@ -165,7 +161,7 @@ const Harvest: React.FC<{}> = () => {
   const [refetchFarmerBalances] = useFetchFarmerBalances();
 
   ///
-  const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
+  const farmerField = useFarmerField();
 
   /// Form
   const initialValues: HarvestFormValues = useMemo(() => ({
@@ -185,7 +181,7 @@ const Harvest: React.FC<{}> = () => {
         if (!account?.address) throw new Error('Connect a wallet first.');
 
         txToast = new TransactionToast({
-          loading: `Harvesting ${displayBN(farmerField.harvestablePods)} pods.`,
+          loading: `Harvesting ${displayBN(farmerField.harvestablePods)} Pods.`,
           success: 'Harvest successful.',
         });
 
@@ -198,7 +194,10 @@ const Harvest: React.FC<{}> = () => {
         txToast.confirming(txn);
 
         const receipt = await txn.wait();
-        await Promise.all([refetchFarmerField(), refetchFarmerBalances()]);
+        await Promise.all([
+          refetchFarmerField(),
+          refetchFarmerBalances()
+        ]);
         txToast.success(receipt);
         formActions.resetForm();
       } catch (err) {

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Card, Grid, Stack, Tooltip, Typography } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import BigNumber from 'bignumber.js';
 import { displayBN } from '../../util';
 import { AppState } from '../../state';
 import { FontSize } from '../App/muiTheme';
@@ -79,45 +78,11 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
                 />
               </Typography>
             </Tooltip>
-            <Typography variant="bodyLarge" fontWeight="400">
-              {/* {displayBN(beanstalkField.harvestableIndex)} */}
-              {displayBN(new BigNumber(1829327385.1232))}
+            <Typography variant="bodyLarge">
+              {displayBN(beanstalkField.harvestableIndex)}
             </Typography>
           </Stack>
         </Grid>
-        {/* <Grid item xs={12}>
-            <PodLineSection
-              numPodsTitle="Pod Line"
-              numPodsDisplay={podLine}
-              podLine={podLine}
-              harvestableIndex={beanstalkField.harvestableIndex}
-              plots={farmerField.plots}
-            />
-          </Grid> */}
-        {/* <Grid item xs={12}>
-            <Stack direction="row" justifyContent="space-between">
-              <Stack direction="row" gap={0.5}>
-                <Tooltip
-                  title="This is your total Pod Balance. Pods become Harvestable on a FIFO basis."
-                  placement="top">
-                  <Typography variant="h4">My Pod Balance:</Typography>
-                </Tooltip>
-                <Stack direction="row" alignItems="center" gap={0.25}>
-                  <img alt="" src={podIcon} height="17px" />
-                  <Typography variant="h4">
-                    {displayBN(farmerField.pods)}
-                  </Typography>
-                </Stack>
-              </Stack>
-              <Link
-                onClick={handleOpen}
-                underline="none"
-                sx={{ cursor: 'pointer' }}
-              >
-                <Typography variant="h4">View My Plots</Typography>
-              </Link>
-            </Stack>
-          </Grid> */}
       </Grid>
     </Stack>
   </Card>
