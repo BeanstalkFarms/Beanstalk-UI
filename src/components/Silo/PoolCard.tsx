@@ -51,7 +51,7 @@ const PoolCard: React.FC<{
           <Typography
             color="text.secondary"
             sx={{ fontSize: ButtonProps ? '13px' : null }}>
-            Δb:
+            deltaB:
           </Typography>
           <Stack direction="row" gap={0.25}>
             <Typography

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { ContractReceipt, ContractTransaction } from 'ethers';
 import toast from 'react-hot-toast';
-import { Box, IconButton, Typography } from '@mui/material';
+import { Box, IconButton, Link, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { makeStyles } from '@mui/styles';
 import useChainConstant from 'hooks/useChainConstant';
@@ -34,8 +34,8 @@ export function ToastAlert({ desc, hash, msg, id }: { desc?: string, hash?: stri
           {desc}
           {hash && (
             <>
-              &nbsp;&middot;&nbsp;
-              <a href={`${chainInfo.explorer}/tx/${hash}`} target="_blank" rel="noreferrer">View on Etherscan</a>
+              &nbsp;
+              <Link href={`${chainInfo.explorer}/tx/${hash}`} target="_blank" rel="noreferrer">View on Etherscan</Link>
             </>
           )}
         </span>

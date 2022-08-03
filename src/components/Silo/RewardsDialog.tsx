@@ -148,6 +148,11 @@ const ClaimRewardsForm : React.FC<
                             onMouseLeave={onMouseOutContainer}
                             selected={hovered}
                             disabled={disabled}
+                            sx={{
+                              '&:disabled': {
+                                borderColor: 'gray'
+                              }
+                            }}
                           />
                         </div>
                       </Tooltip>

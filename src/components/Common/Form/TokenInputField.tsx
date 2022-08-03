@@ -95,7 +95,7 @@ const TokenInput: React.FC<
         Farm Balance: {token ? displayTokenAmount(_balance.internal, token) : displayBN(_balance.internal)}<br />
         Circulating Balance: {token ? displayTokenAmount(_balance.external, token) : displayBN(_balance.external)}<br />
         <Divider color="secondary" sx={{ my: 1 }} />
-        The Beanstalk UI uses your Farm Balance first
+        The Beanstalk UI first spends the balance that is most gas-efficient based on the specified amount.
       </>
     )];
   }, [_balance, token]);

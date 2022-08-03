@@ -36,7 +36,7 @@ import toast from 'react-hot-toast';
 import useBDV from 'hooks/useBDV';
 import TokenIcon from 'components/Common/TokenIcon';
 import { useFetchPools } from 'state/bean/pools/updater';
-import { IconSize } from '../../App/muiTheme';
+import { FontSize, IconSize } from '../../App/muiTheme';
 import IconWrapper from '../../Common/IconWrapper';
 
 // -----------------------------------------------------------------------
@@ -98,7 +98,7 @@ const ConvertForm : React.FC<
   /// Derived form state
   let isReady        = false;
   let buttonLoading  = false;
-  let buttonContent;
+  let buttonContent  = 'Convert';
   let bdvOut;     // the BDV received after re-depositing `amountOut` of `tokenOut`.
   let deltaBDV;   // the change in BDV during the convert. should always be >= 0.
   let deltaStalk; // the change in Stalk during the convert. should always be >= 0.
@@ -147,7 +147,7 @@ const ConvertForm : React.FC<
       buttonLoading = false;
     }
   } else if (!canConvert) {
-    buttonContent = 'Pathway unavailable';
+    // buttonContent = 'Pathway unavailable';
   } else  {
     buttonContent = 'Convert';
     if (tokenOut && amountOut?.gt(0)) {
@@ -237,8 +237,22 @@ const ConvertForm : React.FC<
             onClick={showTokenSelect}
           >
             {tokenOut ? <TokenIcon token={tokenOut} /> : null}
-            <Typography>{tokenOut?.name || 'Select token'}</Typography>
+            <Typography>{tokenOut?.symbol || 'Select token'}</Typography>
           </PillRow>
+        ) : null}
+        {(!canConvert && tokenOut) ? (
+          <Box>
+            <Alert
+              color="warning"
+              icon={(
+                <IconWrapper boxSize={IconSize.medium}>
+                  <WarningAmberIcon sx={{ fontSize: IconSize.small, alignItems: 'flex-start' }} />
+                </IconWrapper>
+              )}>
+              {tokenIn.symbol} can only be Converted to {tokenOut.symbol} when deltaB {tokenIn.isLP ? '<' : '>'} 0.<br />
+              <Typography sx={{ opacity: 0.7 }} fontSize={FontSize.sm}>Press ⌥ + 1 to see deltaB.</Typography>
+            </Alert>
+          </Box>
         ) : null}
         {(amountIn && tokenOut && maxAmountIn && amountOut?.gt(0)) ? (
           <>
@@ -254,9 +268,7 @@ const ConvertForm : React.FC<
                   amount={deltaStalk || ZERO_BN}
                   amountTooltip={( 
                     <>
-                      This conversion will increase the BDV of your deposit by {displayFullBN(deltaBDV || ZERO_BN, 6)}{deltaBDV?.gt(0) ? ', resulting in a gain of Stalk' : ''}.
-                      {/* BDV Removed: {displayFullBN(converted.bdv)}<br />
-                      BDV Added: {displayFullBN(bdvOut || ZERO_BN)} */}
+                      Converting will increase the BDV of your Deposit by {displayFullBN(deltaBDV || ZERO_BN, 6)}{deltaBDV?.gt(0) ? ', resulting in a gain of Stalk' : ''}.
                     </>
                   )}
                 />
@@ -270,7 +282,7 @@ const ConvertForm : React.FC<
                       Converting from {tokenIn.symbol} to {tokenOut.symbol} results in {(
                         (!deltaSeedsPerBDV || deltaSeedsPerBDV.eq(0)) 
                           ? 'no change in SEEDS per BDV'
-                          : `a ${deltaSeedsPerBDV.gt(0) ? 'gain' : 'loss'} of ${deltaSeedsPerBDV.abs().toString()} SEEDS per BDV`
+                          : `a ${deltaSeedsPerBDV.gt(0) ? 'gain' : 'loss'} of ${deltaSeedsPerBDV.abs().toString()} Seeds per BDV`
                       )}.
                     </>
                   )}
@@ -297,21 +309,6 @@ const ConvertForm : React.FC<
             </Box>
           </>
         ) : null}
-        {/* <LoadingButton */}
-        {/*  loading={buttonLoading || isQuoting} */}
-        {/*  loadingPosition={ */}
-        {/*    isSubmitting */}
-        {/*      ? 'center'  // when submitting, hide the button text */}
-        {/*      : 'start'   // when loading convert data, show button text */}
-        {/*  } */}
-        {/*  type="submit" */}
-        {/*  variant="contained" */}
-        {/*  color="primary" */}
-        {/*  size="large" */}
-        {/*  disabled={!isReady || isSubmitting} */}
-        {/* > */}
-        {/*  {buttonContent} */}
-        {/* </LoadingButton> */}
         <SmartSubmitButton
           loading={buttonLoading || isQuoting}
           disabled={!isReady || isSubmitting}

@@ -18,7 +18,7 @@ import FertilizerItem from 'components/Barn/FertilizerItem';
 import { ZERO_BN } from 'constants/index';
 import { SPROUTS, RINSABLE_SPROUTS } from 'constants/tokens';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { displayFullBN } from 'util/Tokens';
+import { displayFullBN, MaxBN } from 'util/Tokens';
 import { MY_FERTILIZER } from 'components/Barn/FertilizerItemTooltips';
 import useTabs from 'hooks/display/useTabs';
 import TokenIcon from '../Common/TokenIcon';
@@ -55,7 +55,7 @@ const MyFertilizer: React.FC = () => {
     <Card>
       {/* Card Header */}
       <Stack sx={{ p: 2 }} gap={1}>
-        <Typography variant="h4">My Fertilizer</Typography>
+        <Typography variant="h4">Fertilizer</Typography>
         <Stack gap={1}>
           <Stack
             direction="row"
@@ -76,7 +76,9 @@ const MyFertilizer: React.FC = () => {
             <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={SPROUTS} />
               <Typography>
-                {displayFullBN(farmerBarn.unfertilizedSprouts, SPROUTS.displayDecimals)}
+                {displayFullBN(
+                  MaxBN(farmerBarn.unfertilizedSprouts, ZERO_BN), SPROUTS.displayDecimals
+                )}
               </Typography>
             </Stack>
           </Stack>
@@ -99,7 +101,9 @@ const MyFertilizer: React.FC = () => {
             <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={RINSABLE_SPROUTS} />
               <Typography>
-                {displayFullBN(farmerBarn.fertilizedSprouts, RINSABLE_SPROUTS.displayDecimals)}
+                {displayFullBN(
+                  MaxBN(farmerBarn.fertilizedSprouts, ZERO_BN), RINSABLE_SPROUTS.displayDecimals
+                )}
               </Typography>
             </Stack>
           </Stack>
@@ -112,7 +116,7 @@ const MyFertilizer: React.FC = () => {
           direction="row"
           justifyContent="space-between"
           alignItems="center"
-          sx={{ py: 1 }}
+          sx={{ pt: 1, pb: 2 }}
         >
           <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0 }}>
             <Tab label="Active" />
@@ -151,9 +155,9 @@ const MyFertilizer: React.FC = () => {
               direction="column"
               justifyContent="center"
               alignItems="center"
-              gap={2}
+              gap={1}
             >
-              <Box width={250}>
+              <Box width={150}>
                 <FertilizerItem
                   state="used"
                   amount={ZERO_BN}

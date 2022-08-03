@@ -81,7 +81,7 @@ const Whitelist : React.FC<{
             </Tooltip>
           </Grid>
           <Grid item md={3} xs={0} display={{ xs: 'none', md: 'block' }}>
-            <Typography color="gray">Deposited Amount</Typography>
+            <Typography color="gray">Amount Deposited</Typography>
           </Grid>
           <Grid item md={1.5} xs={8} sx={{ textAlign: 'right', paddingRight: `${ARROW_CONTAINER_WIDTH}px` }}>
             <Tooltip title={(
@@ -92,7 +92,7 @@ const Whitelist : React.FC<{
                 </Typography>
               </>
             )}>
-              <Typography color="gray">Deposited Value</Typography>
+              <Typography color="gray">Value Deposited</Typography>
             </Tooltip>
           </Grid>
         </Grid>
@@ -139,7 +139,7 @@ const Whitelist : React.FC<{
                     * Cell: Rewards
                     */}
                   <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
-                    <Tooltip placement="right" title={<>BDV of 1 {token.symbol} = {displayFullBN(getBDV(token))}</>}>
+                    <Tooltip placement="right" title={<>1 {token.symbol} = {displayFullBN(getBDV(token))} BDV</>}>
                       <Typography display="inline" color="black">
                         <TokenIcon token={STALK} />{token.rewards?.stalk} &nbsp;
                         <TokenIcon token={SEEDS} style={{ marginTop: 1.5 }} />{token.rewards?.seeds}
@@ -208,7 +208,7 @@ const Whitelist : React.FC<{
                               {denomination === 'bdv' ? 'Bean' : 'USD'} Value
                             </Typography>
                             <div>
-                              {displayTokenAmount(deposited?.amount || ZERO_BN, token)}
+                              {displayTokenAmount(deposited?.amount || ZERO_BN, token, { showName: false })} {token.symbol}
                             </div>
                             <div>
                               ×&nbsp;

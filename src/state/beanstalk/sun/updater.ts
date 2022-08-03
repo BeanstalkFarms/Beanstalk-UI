@@ -80,6 +80,7 @@ const SunUpdater = () => {
   useEffect(() => {
     dispatch(setAwaitingSunrise(false));
     dispatch(setNextSunrise(getNextExpectedSunrise(true)));
+    // toast
   }, [dispatch, season]);
 
   return null;

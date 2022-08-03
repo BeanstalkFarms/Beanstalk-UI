@@ -1,3 +1,4 @@
+import React from 'react';
 import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
@@ -38,7 +39,7 @@ export enum ActionType {
 /// GENERIC
 export type BaseAction = {
   type: ActionType.BASE;
-  message?: string;
+  message?: string | React.ReactElement;
 }
 
 export type EndTokenAction = {

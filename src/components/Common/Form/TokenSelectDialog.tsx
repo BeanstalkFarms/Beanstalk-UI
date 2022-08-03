@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
-import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material';
+import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Typography, Link } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Token from 'classes/Token';
 import { displayBN } from 'util/index';
@@ -139,11 +139,10 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
       transitionDuration={0}
       TransitionProps={{}}
     >
-      <StyledDialogTitle id="customized-dialog-title" onClose={handleClose}>
+      <StyledDialogTitle id="customized-dialog-title" onClose={handleClose} sx={{ pb: 0.5 }}>
         {title || mode === TokenSelectMode.MULTI ? 'Select Tokens' : 'Select Token'}
       </StyledDialogTitle>
-      <StyledDialogContent sx={{ pb: mode === TokenSelectMode.MULTI ? 0 : 1 }}>
-        <Typography />
+      <StyledDialogContent sx={{ pb: mode === TokenSelectMode.MULTI ? 0 : 1, pt: 0 }}>
         <List sx={{ p: 0 }}>
           <Stack>
             {tokenList ? tokenList.map((_token) => (
@@ -191,6 +190,11 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
                 </ListItemButton>
               </ListItem>
             )) : null}
+            {_balances ? (
+              <Typography ml={1} pt={0.5} textAlign="center" fontSize={FontSize.sm} color="gray">
+                Displaying total Farm and Circulating balances. <Link href="https://docs.bean.money/additional-resources/asset-states" target="_blank" rel="noreferrer" underline="none">Learn more &rarr;</Link>
+              </Typography>
+            ) : null}
           </Stack>
         </List>
       </StyledDialogContent>

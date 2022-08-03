@@ -469,7 +469,7 @@ export const UNRIPE_BEAN = {
       name: 'Unripe Bean',
       symbol: 'urBEAN',
       logo: unripeBeanLogoUrl,
-      displayDecimals: 3,
+      displayDecimals: 2,
     },
     {
       stalk: 1,
@@ -487,7 +487,7 @@ export const UNRIPE_BEAN_CRV3 = {
       name: 'Unripe BEAN:3CRV LP',
       symbol: 'urBEAN3CRV',
       logo: unripeBeanCrv3LogoUrl,
-      displayDecimals: 3,
+      displayDecimals: 2,
     },
     {
       stalk: 1,

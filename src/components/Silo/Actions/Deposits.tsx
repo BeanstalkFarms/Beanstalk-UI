@@ -6,13 +6,14 @@ import { Tooltip, Typography } from '@mui/material';
 import { GridColumns } from '@mui/x-data-grid';
 import { FarmerSiloBalance } from 'state/farmer/silo';
 import type { DepositCrate } from 'state/farmer/silo';
-import { displayBN, displayFullBN, displayUSD } from 'util/index';
+import { displayBN, displayFullBN } from 'util/index';
 import useSeason from 'hooks/useSeason';
 import { BEAN, STALK } from 'constants/tokens';
 import { ZERO_BN } from 'constants/index';
 import useSiloTokenToFiat from 'hooks/currency/useSiloTokenToFiat';
 import useChainConstant from 'hooks/useChainConstant';
 import COLUMNS from 'components/Common/Table/cells';
+import Fiat from 'components/Common/Fiat';
 import TableCard from '../../Common/TableCard';
 
 /**
@@ -49,17 +50,18 @@ const Deposits : React.FC<{
       valueFormatter: (params) => displayFullBN(params.value, token.displayDecimals, token.displayDecimals),
       renderCell: (params) => (
         <Tooltip
+          placement="right"
           title={(
             <>
-              <Typography>BDV: {displayFullBN(params.row.bdv, token.displayDecimals)}</Typography>
-              <Typography>Value: {displayUSD(getUSD(Bean, params.row.bdv))}</Typography>
+              <Typography>BDV at Deposit: {displayFullBN(params.row.bdv, token.displayDecimals)}</Typography>
+              <Typography>Current Value: <Fiat amount={params.row.amount} token={Bean} /></Typography>
             </>
           )}
         >
-          <>
+          <span>
             <Typography display={{ xs: 'none', md: 'block' }}>{displayFullBN(params.value, token.displayDecimals, token.displayDecimals)}</Typography>
             <Typography display={{ xs: 'block', md: 'none' }}>{displayBN(params.value)}</Typography>
-          </>
+          </span>
         </Tooltip>
       ),
       sortable: false,
@@ -76,30 +78,26 @@ const Deposits : React.FC<{
         const accruedStalk   = seedsPerSeason.times(currentSeason.minus(params.row.season));
         return (
           <Tooltip
+            placement="right"
             title={(
-              <>
-                <Typography>At Deposit: {displayBN(params.row.stalk)} Stalk</Typography>
-                <Typography>Since Deposit: {displayBN(accruedStalk)} Stalk</Typography>
-                <Typography>Earning {displayBN(seedsPerSeason)} Stalk per Season</Typography>
-              </>
+              <span>
+                <Typography>{displayBN(params.row.stalk)} Stalk at Deposit</Typography>
+                <Typography>{displayBN(accruedStalk)} Stalk grown since Deposit</Typography>
+                <Typography color="gray">Earning {displayBN(seedsPerSeason)} Stalk per Season</Typography>
+              </span>
             )}
           >
-            <>
+            <span>
               <Typography display={{ xs: 'none', md: 'block' }}>{displayFullBN(params.value.plus(accruedStalk), STALK.displayDecimals, STALK.displayDecimals)}</Typography>
               <Typography display={{ xs: 'block', md: 'none' }}>{displayBN(params.value.plus(accruedStalk))}</Typography>
-            </>
+            </span>
           </Tooltip>
         );
       },
       sortable: false,
     },
     COLUMNS.seeds,
-  ] as GridColumns), [
-    token.displayDecimals,
-    getUSD,
-    Bean,
-    currentSeason
-  ]);
+  ] as GridColumns), [token.displayDecimals, Bean, currentSeason]);
 
   const amount = balance?.deposited.amount;
   const state = !account ? 'disconnected' : 'ready';

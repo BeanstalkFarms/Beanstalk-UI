@@ -27,14 +27,13 @@ import { BeanstalkReplanted } from '../../../generated';
 import useSeason from '../../../hooks/useSeason';
 import TxnSeparator from '../../Common/Form/TxnSeparator';
 import { SEEDS, STALK } from '../../../constants/tokens';
-import { displayFullBN, parseError, toStringBaseUnitBN, trimAddress } from '../../../util';
+import { displayFullBN, displayTokenAmount, parseError, toStringBaseUnitBN, trimAddress } from '../../../util';
 import Beanstalk from '../../../lib/Beanstalk';
 import IconWrapper from '../../Common/IconWrapper';
-import { IconSize } from '../../App/muiTheme';
+import { FontSize, IconSize } from '../../App/muiTheme';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 import TransactionToast from '../../Common/TxnToast';
-import useSiloTokenToFiat from '../../../hooks/currency/useSiloTokenToFiat';
 
 export type TransferFormValues = FormState & {
   to: string;
@@ -45,144 +44,153 @@ const TransferForm: React.FC<FormikProps<TransferFormValues> & {
   siloBalances: FarmerSilo['balances'];
   depositedBalance: BigNumber;
   season: BigNumber;
-}> =
-  ({
-     // Formik
-     values,
-     isSubmitting,
-     submitForm,
-     // Custom
-     token: whitelistedToken,
-     siloBalances,
-     depositedBalance,
-     season,
-   }) => {
-    const getUSD = useSiloTokenToFiat();
+}> = ({
+  // Formik
+  values,
+  isSubmitting,
+  submitForm,
+  // Custom
+  token: whitelistedToken,
+  siloBalances,
+  depositedBalance,
+  season,
+}) => {
+  // Input props
+  const InputProps = useMemo(() => ({
+    endAdornment: (
+      <TokenAdornment token={whitelistedToken} />
+    )
+  }), [whitelistedToken]);
 
-    // Input props
-    const InputProps = useMemo(() => ({
-      endAdornment: (
-        <TokenAdornment token={whitelistedToken} />
-      )
-    }), [whitelistedToken]);
+  // Results
+  const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
+    whitelistedToken,
+    values.tokens,
+    siloBalances[whitelistedToken.address]?.deposited.crates || [], // fallback
+    season,
+  );
 
-    // Results
-    const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
-      whitelistedToken,
-      values.tokens,
-      siloBalances[whitelistedToken.address]?.deposited.crates || [], // fallback
-      season,
-    );
+  const isReady = (withdrawResult && withdrawResult.amount.lt(0));
 
-    const isReady = (withdrawResult && withdrawResult.amount.lt(0));
-
-    const tokenOutputs = isReady ? (
-      <>
-        <TokenOutputField
-          token={whitelistedToken}
-          amount={withdrawResult.amount}
-          value={getUSD(whitelistedToken, withdrawResult.amount).abs()}
-          // modifier="Withdrawn"
-          />
-        <Stack direction={{ xs: 'column', md: 'row' }} gap={1} justifyContent="center">
-          <Box sx={{ flex: 1 }}>
-            <TokenOutputField
-              token={STALK}
-              amount={withdrawResult.stalk}
-              amountTooltip={(
-                <>
-                  <div>Withdrawing
-                    from {withdrawResult.deltaCrates.length} Deposit{withdrawResult.deltaCrates.length === 1 ? '' : 's'}:
+  const tokenOutputs = isReady ? (
+    <>
+      <TokenOutputField
+        token={whitelistedToken}
+        amount={withdrawResult.amount}
+      />
+      <Stack direction={{ xs: 'column', md: 'row' }} gap={1} justifyContent="center">
+        <Box sx={{ flex: 1 }}>
+          <TokenOutputField
+            token={STALK}
+            amount={withdrawResult.stalk}
+            amountTooltip={(
+              <>
+                <div>Withdrawing
+                  from {withdrawResult.deltaCrates.length} Deposit{withdrawResult.deltaCrates.length === 1 ? '' : 's'}:
+                </div>
+                <Divider sx={{ opacity: 0.2, my: 1 }} />
+                {withdrawResult.deltaCrates.map((_crate, i) => (
+                  <div key={i}>
+                    Season {_crate.season.toString()}: {displayFullBN(_crate.bdv, whitelistedToken.displayDecimals)} BDV, {displayFullBN(_crate.stalk, STALK.displayDecimals)} STALK, {displayFullBN(_crate.seeds, SEEDS.displayDecimals)} SEEDS
                   </div>
-                  <Divider sx={{ opacity: 0.2, my: 1 }} />
-                  {withdrawResult.deltaCrates.map((_crate, i) => (
-                    <div key={i}>
-                      Season {_crate.season.toString()}: {displayFullBN(_crate.bdv, whitelistedToken.displayDecimals)} BDV, {displayFullBN(_crate.stalk, STALK.displayDecimals)} STALK, {displayFullBN(_crate.seeds, SEEDS.displayDecimals)} SEEDS
-                    </div>
-                    ))}
-                </>
-                )}
-              />
-          </Box>
-          <Box sx={{ flex: 1 }}>
-            <TokenOutputField
-              token={SEEDS}
-              amount={withdrawResult.seeds}
-              />
-          </Box>
-        </Stack>
-      </>
-      ) :
-      null;
-
-    return (
-      <Form autoComplete="off">
-        {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
-        <Stack gap={1}>
-          <TokenInputField
-            name="tokens.0.amount"
-            token={whitelistedToken}
-            disabled={!depositedBalance || depositedBalance.eq(0)}
-            balance={depositedBalance || ZERO_BN}
-            balanceLabel="Deposited Balance"
-            InputProps={InputProps}
-          />
-          {depositedBalance?.gt(0) && (
-            <>
-              <FieldWrapper label="Transfer Deposits to">
-                <AddressInputField name="to" />
-              </FieldWrapper>
-              {values.to !== '' && withdrawResult?.amount.abs().gt(0) && (
-                <>
-                  <TxnSeparator />
-                  {tokenOutputs}
-                  <Alert
-                    color="warning"
-                    icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
-                  >
-                    You cannot undo Transferring a Deposit. If you Transfer less than your total deposited balance, the Stalk and Seed associated with your most recent deposits will be prioritized.
-                  </Alert>
-                  <Box>
-                    <Accordion defaultExpanded variant="outlined">
-                      <StyledAccordionSummary title="Transaction Details" />
-                      <AccordionDetails>
-                        <TxnPreview
-                          actions={[
-                            {
-                              type: ActionType.TRANSFER,
-                              amount: withdrawResult ? withdrawResult.amount.abs() : ZERO_BN,
-                              token: whitelistedToken,
-                              to: values.to
-                            },
-                            {
-                              type: ActionType.END_TOKEN,
-                              token: whitelistedToken
-                            }
-                          ]}
-                        />
-                      </AccordionDetails>
-                    </Accordion>
-                  </Box>
-                </>
+                  ))}
+              </>
               )}
-            </>
-          )}
-          <SmartSubmitButton
-            loading={isSubmitting}
-            disabled={!isReady || !depositedBalance || depositedBalance.eq(0) || isSubmitting || values.to === ''}
-            type="submit"
-            variant="contained"
-            color="primary"
-            size="large"
-            tokens={[]}
-            mode="auto"
-          >
-            {!depositedBalance || depositedBalance.eq(0) ? 'Nothing to Transfer' : 'Transfer'}
-          </SmartSubmitButton>
-        </Stack>
-      </Form>
-    );
-  };
+            />
+        </Box>
+        <Box sx={{ flex: 1 }}>
+          <TokenOutputField
+            token={SEEDS}
+            amount={withdrawResult.seeds}
+            />
+        </Box>
+      </Stack>
+    </>
+    ) :
+    null;
+
+  return (
+    <Form autoComplete="off">
+      {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
+      <Stack gap={1}>
+        <TokenInputField
+          name="tokens.0.amount"
+          token={whitelistedToken}
+          disabled={!depositedBalance || depositedBalance.eq(0)}
+          balance={depositedBalance || ZERO_BN}
+          balanceLabel="Deposited Balance"
+          InputProps={InputProps}
+        />
+        {depositedBalance?.gt(0) && (
+          <>
+            <FieldWrapper label="Transfer to">
+              <AddressInputField name="to" />
+            </FieldWrapper>
+            {values.to !== '' && withdrawResult?.amount.abs().gt(0) && (
+              <>
+                <TxnSeparator />
+                {tokenOutputs}
+                <Alert
+                  color="warning"
+                  icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
+                >
+                  More recent Deposits are Transferred first to minimize the loss of Stalk and Seeds.
+                  {/* You cannot undo Transferring Deposits. If you Transfer less than your total deposited balance, the Stalk and Seed associated with your most recent deposits will be prioritized. */}
+                </Alert>
+                <Box>
+                  <Accordion defaultExpanded variant="outlined">
+                    <StyledAccordionSummary title="Transaction Details" />
+                    <AccordionDetails>
+                      <TxnPreview
+                        actions={[
+                          {
+                            type: ActionType.TRANSFER,
+                            amount: withdrawResult ? withdrawResult.amount.abs() : ZERO_BN,
+                            token: whitelistedToken,
+                            to: values.to
+                          },
+                          {
+                            type: ActionType.BASE,
+                            message: (
+                              <>
+                                The following Deposits will be used:<br />
+                                <ul style={{ paddingLeft: '25px', marginTop: '10px', fontSize: FontSize.sm }}>
+                                  {withdrawResult.deltaCrates.map((crate, index) => (
+                                    <li key={index}>{displayTokenAmount(crate.amount, whitelistedToken)} from Deposits in Season {crate.season.toString()}</li>
+                                  ))}
+                                </ul>
+                              </>
+                            )
+                          },
+                          {
+                            type: ActionType.END_TOKEN,
+                            token: whitelistedToken
+                          }
+                        ]}
+                      />
+                    </AccordionDetails>
+                  </Accordion>
+                </Box>
+              </>
+            )}
+          </>
+        )}
+        <SmartSubmitButton
+          loading={isSubmitting}
+          disabled={!isReady || !depositedBalance || depositedBalance.eq(0) || isSubmitting || values.to === ''}
+          type="submit"
+          variant="contained"
+          color="primary"
+          size="large"
+          tokens={[]}
+          mode="auto"
+        >
+          {!depositedBalance || depositedBalance.eq(0) ? 'Nothing to Transfer' : 'Transfer'}
+        </SmartSubmitButton>
+      </Stack>
+    </Form>
+  );
+};
 
 const Transfer: React.FC<{ token: ERC20Token; }> = ({ token }) => {
   ///

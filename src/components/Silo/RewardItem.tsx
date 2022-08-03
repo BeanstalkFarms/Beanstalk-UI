@@ -33,9 +33,9 @@ const RewardItem: React.FC<RewardItemProps> = ({
       </Typography>
     </Tooltip>
     <Stack direction="row" gap={0.4} alignItems="center">
-      {icon && <img src={icon} alt="" height="17px" />}
+      {icon && <img src={icon} alt="" height="16px" />}
       {amount && (
-        <Typography variant="h3">
+        <Typography variant="h4">
           {amount.lt(0) ? '-' : displayFullBN(amount, 2)}
         </Typography>
       )}

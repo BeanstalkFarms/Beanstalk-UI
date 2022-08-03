@@ -129,9 +129,9 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
             Beanstalk is currently minting{' '}
             <span style={{ color: BeanstalkPalette.black }}>{ramp.toFixed(0)}%</span> of deltaB.
             It will mint{' '}
-            <span style={{ color: BeanstalkPalette.black }}>1%</span> more every
+            <span style={{ color: BeanstalkPalette.black }}>1%</span> more of deltaB every
             Season until{' '}
-            <span style={{ color: BeanstalkPalette.black }}>100%</span>
+            <span style={{ color: BeanstalkPalette.black }}>100%</span>.
           </Typography>
         </Stack>
         {/* table header */}
@@ -195,11 +195,8 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           temperature={new BigNumber(5000)}
           deltaDemand={new BigNumber(100)}
           deltaTemperature={new BigNumber(100)}
+          pulse
         />
-        <Typography color="gray" variant="bodySmall" align="center">
-          The values for Season {season.toNumber()} are preductions based on use
-          behavior during the current season
-        </Typography>
         {bySeason.map((s, i) => {
           const deltaWeather = bySeason[i + 1] 
             ? s.temperature?.minus(bySeason[i + 1].temperature)
@@ -222,16 +219,6 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         })}
       </Stack>
       <Divider />
-      <Typography
-        align="center"
-        color={BeanstalkPalette.lightishGrey}
-        sx={{ fontSize: '14px' }}
-      >
-        Sunrise advances Beanstalk to the next Season and Beanstalk pays a Bean
-        reward to the sender of the first successful Sunrise call at the top of
-        the hour. Bots often call Sunrise, so calling this function from the
-        website will often fail.
-      </Typography>
       <SunriseButton />
     </Stack>
   );

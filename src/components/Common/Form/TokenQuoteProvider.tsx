@@ -124,7 +124,7 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
   // when the user switches selected tokens.
   const Quote = useMemo(() => (
     hideQuote ? undefined : (
-      <Stack direction="row" alignItems="center" gap={0.5}>
+      <Stack direction="row" alignItems="center" gap={0.5} sx={{ display: { xs: 'none', md: 'flex' } }}>
         {state.amountOut && (
           <Typography variant="body1">
             ≈ {displayFullBN(state.amountOut, tokenOut.displayDecimals)} {tokenOut.symbol}
