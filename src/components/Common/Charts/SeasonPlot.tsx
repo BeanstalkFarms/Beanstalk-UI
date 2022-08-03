@@ -128,8 +128,6 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
     }
   }
 
-  console.debug('[SeasonPlot] raw data ', data, 'series = ', series);
-
   const seriesInput = useMemo(() => [series], [series]);
 
   return (

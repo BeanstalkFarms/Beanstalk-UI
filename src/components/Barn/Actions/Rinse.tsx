@@ -26,6 +26,7 @@ import toast from 'react-hot-toast';
 import useAccount from 'hooks/ledger/useAccount';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import { ActionType } from 'util/Actions';
+import copy from 'constants/copy';
 
 // ---------------------------------------------------
 
@@ -140,13 +141,13 @@ const Rinse : React.FC<{}> = () => {
   const onSubmit = useCallback(async (values: RinseFormValues, formActions: FormikHelpers<RinseFormValues>) => {
     let txToast;
     try {
-      if (!farmerFertilizer.fertilizedSprouts) throw new Error('No Fertilized Sprouts to Rinse.');
-      if (!values.destination)          throw new Error('No destination set.');
-      if (!account)            throw new Error('Connect a wallet first.');
+      if (!farmerFertilizer.fertilizedSprouts) throw new Error('No Sprouts to Rinse.');
+      if (!values.destination) throw new Error('No destination set.');
+      if (!account) throw new Error('Connect a wallet first.');
 
       txToast = new TransactionToast({
-        loading: `Rinsing ${displayFullBN(farmerFertilizer.fertilizedSprouts)} Fertilized Sprouts`,
-        success: 'Rinse successfull.',
+        loading: `Rinsing ${displayFullBN(farmerFertilizer.fertilizedSprouts, SPROUTS.displayDecimals)} Sprouts...`,
+        success: `Rinse successful. Added ${displayFullBN(farmerFertilizer.fertilizedSprouts, SPROUTS.displayDecimals)} Beans to your ${copy.TO_MODE[values.destination]}.`,
       });
 
       const txn = await beanstalk.claimFertilized(
@@ -180,7 +181,7 @@ const Rinse : React.FC<{}> = () => {
   ]);
 
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit}>
+    <Formik initialValues={initialValues} onSubmit={onSubmit} enableReinitialize>
       {(formikProps) => (
         <RinseForm
           {...formikProps}

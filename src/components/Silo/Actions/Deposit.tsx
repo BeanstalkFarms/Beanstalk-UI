@@ -357,7 +357,7 @@ const Deposit : React.FC<{
                 optimizeFromMode(_amountIn, balanceIn) // use the BN version here
               ),
             ], [amountIn]);
-          } 
+          }
 
           // This is a CRV3-underlying stable (DAI/USDC/USDT etc)
           else if (underlyingTokenIndex > -1) {

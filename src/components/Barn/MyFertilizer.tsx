@@ -21,6 +21,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { displayFullBN, MaxBN } from 'util/Tokens';
 import { MY_FERTILIZER } from 'components/Barn/FertilizerItemTooltips';
 import useTabs from 'hooks/display/useTabs';
+import EmptyState from 'components/Common/ZeroState/EmptyState';
 import TokenIcon from '../Common/TokenIcon';
 import { FontSize } from '../App/muiTheme';
 
@@ -148,33 +149,9 @@ const MyFertilizer: React.FC = () => {
                   </Grid>
                 );
               })}
-              {/* <Grid item xs={6} md={3}>test</Grid> */}
             </Grid>
           ) : (
-            <Stack
-              direction="column"
-              justifyContent="center"
-              alignItems="center"
-              gap={1}
-            >
-              <Box width={150}>
-                <FertilizerItem
-                  state="used"
-                  amount={ZERO_BN}
-                  humidity={ZERO_BN}
-                  remaining={ZERO_BN}
-                  season={ZERO_BN}
-                  tooltip={MY_FERTILIZER}
-                />
-              </Box>
-              <Typography
-                variant="body2"
-                textAlign="center"
-                sx={{ maxWidth: { md: 400 } }}
-              >
-                Buy Fertilizer using the module above.
-              </Typography>
-            </Stack>
+            <EmptyState message={`Your ${tab === 0 ? 'Active' : 'Used'} Fertilizer will appear here.`} height={150} />
           )}
         </Box>
       </Stack>
