@@ -3,6 +3,7 @@ import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
 import { displayFullBN, displayTokenAmount } from 'util/Tokens';
+import copy from 'constants/copy';
 import { BEAN, PODS, SPROUTS } from '../constants/tokens';
 import { displayBN, trimAddress } from './index';
 
@@ -203,10 +204,9 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.RECEIVE_TOKEN:
       return `Add ${displayFullBN(a.amount, a.token.displayDecimals)} ${a.token.name}${
         a.destination
-          ? a.destination === FarmToMode.EXTERNAL
-            ? ' to your Circulating Balance' 
-            : ' to your Farm Balance' 
-          : ''}.`;
+          ? ` to your ${copy.TO_MODE[a.destination]}`
+          : ''
+      }.`;
     case ActionType.END_TOKEN:
       return null;
 
@@ -238,10 +238,9 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.RECEIVE_BEANS:
       return `Add ${displayFullBN(a.amount, BEAN[1].displayDecimals)} Beans${
         a.destination
-          ? a.destination === FarmToMode.EXTERNAL
-            ? ' to your Circulating Balance' 
-            : ' to your Farm Balance' 
-          : ''}.`;
+          ? ` to your ${copy.TO_MODE[a.destination]}`
+          : ''
+      }.`;
     case ActionType.TRANSFER_PODS:
       return `Transfer ${displayTokenAmount(a.amount, PODS)} at ${displayBN(a.placeInLine)} in Line to ${a.address}.`;
 

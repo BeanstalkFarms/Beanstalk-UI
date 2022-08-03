@@ -7,6 +7,7 @@ import {
   Action,
   ActionType,
   parseActionMessage,
+  ReceiveTokenAction,
   SiloDepositAction,
   SiloRewardsAction,
   SiloTransitAction,
@@ -90,6 +91,7 @@ const TxnStep : React.FC<{
     /// SILO
     case ActionType.DEPOSIT:
     case ActionType.WITHDRAW:
+    case ActionType.CLAIM_WITHDRAWAL:
       action = (
         <IconRow>
           <img src={siloIcon} style={{ height: '100%' }} alt="" />
@@ -139,14 +141,14 @@ const TxnStep : React.FC<{
         </IconRow>
       );
       break;
+      case ActionType.HARVEST:
+        action = (
+          <IconRow>
+            <TokenIcon token={PODS} style={{ height: '100%' }} />
+          </IconRow>
+        );
+        break;
     case ActionType.RECEIVE_PODS:
-      action = (
-        <IconRow>
-          <TokenIcon token={PODS} style={{ height: '100%' }} />
-        </IconRow>
-      );
-      break;
-    case ActionType.HARVEST:
       action = (
         <IconRow>
           <TokenIcon token={PODS} style={{ height: '100%' }} />
@@ -157,6 +159,13 @@ const TxnStep : React.FC<{
       action = (
         <IconRow>
           <TokenIcon token={BEAN[1]} style={{ height: '100%' }} />
+        </IconRow>
+      );
+      break;
+    case ActionType.RECEIVE_TOKEN:
+      action = (
+        <IconRow>
+          <TokenIcon token={(actions[0] as ReceiveTokenAction).token} style={{ height: '100%' }} />
         </IconRow>
       );
       break;

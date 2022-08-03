@@ -317,7 +317,7 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
       }
 
       txToast = new TransactionToast({
-        loading: `Withdrawing ${displayFullBN(withdrawResult.amount.abs(), token.displayDecimals, token.displayDecimals)} ${token.name} from the Silo`,
+        loading: `Withdrawing ${displayFullBN(withdrawResult.amount.abs(), token.displayDecimals, token.displayDecimals)} ${token.name} from the Silo...`,
         success: `Withdraw successful. Your ${token.name} will be available to Claim at the start of the next Season.`,
       });
 

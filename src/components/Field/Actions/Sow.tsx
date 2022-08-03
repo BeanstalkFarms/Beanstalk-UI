@@ -383,7 +383,7 @@ const Sow : React.FC<{}> = () => {
       /// Sow directly from BEAN
       if (inputToken === Bean) {
         // Nothing to do
-      } 
+      }
       
       /// Swap to BEAN and Sow
       else {

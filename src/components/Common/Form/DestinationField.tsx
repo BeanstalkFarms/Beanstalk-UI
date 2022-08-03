@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Typography } from '@mui/material';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
+import copy from 'constants/copy';
 import AddressIcon from '../AddressIcon';
 import PillSelectField, { PillSelectFieldProps } from './PillSelectField';
 import { IconSize } from '../../App/muiTheme';
@@ -16,16 +17,27 @@ const DestinationField : React.FC<Partial<PillSelectFieldProps> & {
 }) => {
   const options = useMemo(() => ([
     {
-      title: 'Circulating Balance',
+      title: copy.TO_MODE[FarmToMode.EXTERNAL],
       description: walletDesc,
-      pill: <><AddressIcon size={IconSize.xs} /><Typography variant="body1">Wallet</Typography></>,
+      pill: (
+        <>
+          <AddressIcon size={IconSize.xs} />
+          <Typography variant="body1">
+            {copy.TO_MODE[FarmToMode.EXTERNAL]}
+          </Typography>
+        </>
+      ),
       icon: <AddressIcon size={IconSize.small} width={IconSize.small} height={IconSize.small} />,
       value: FarmToMode.EXTERNAL,
     },
     {
-      title: 'Farm Balance',
+      title: copy.TO_MODE[FarmToMode.INTERNAL],
       description: farmDesc,
-      pill: <Typography variant="body1">🚜 Farm Balance</Typography>,
+      pill: (
+        <Typography variant="body1">
+          🚜 {copy.TO_MODE[FarmToMode.INTERNAL]}
+        </Typography>
+      ),
       icon: '🚜',
       value: FarmToMode.INTERNAL,
     },
