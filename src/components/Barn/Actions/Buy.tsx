@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Box, Divider, Stack, Typography } from '@mui/material';
+import { Alert, Box, Divider, Link, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import toast from 'react-hot-toast';
@@ -16,6 +16,7 @@ import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
 import useFarmerBalances from 'hooks/useFarmerBalances';
 import useTokenMap from 'hooks/useTokenMap';
 import { useBeanstalkContract, useFertilizerContract } from 'hooks/useContract';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import useFertilizerSummary from 'hooks/summary/useFertilizerSummary';
 import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
@@ -31,10 +32,13 @@ import { BUY_FERTILIZER } from 'components/Barn/FertilizerItemTooltips';
 import { QuoteHandler } from 'hooks/useQuote';
 import SmartSubmitButton from 'components/Common/Form/SmartSubmitButton';
 import TransactionToast from 'components/Common/TxnToast';
-import { displayBN, displayFullBN, tokenResult, toStringBaseUnitBN, toTokenUnitsBN, parseError, getChainConstant } from 'util/index';
+import { displayFullBN, tokenResult, toStringBaseUnitBN, toTokenUnitsBN, parseError, getChainConstant } from 'util/index';
 import { BeanstalkReplanted } from 'generated';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import useToggle from 'hooks/display/useToggle';
+import IconWrapper from 'components/Common/IconWrapper';
+import { IconSize } from 'components/App/muiTheme';
+import TokenIcon from 'components/Common/TokenIcon';
 import FertilizerItem from '../FertilizerItem';
 
 // ---------------------------------------------------
@@ -105,24 +109,23 @@ const BuyForm : React.FC<
           mode={TokenSelectMode.SINGLE}
         />
         {/* Form Contents */}
-        <Box>
-          {/* Inputs */}
-          {values.tokens.map((state, index) => (
-            <TokenQuoteProvider
-              key={state.token.address}
-              name={`tokens.${index}`}
-              state={state}
-              tokenOut={token}
-              balance={balances[state.token.address] || undefined}
-              showTokenSelect={handleOpen}
-              handleQuote={handleQuote}
-            />
-          ))}
-          {/* Outputs */}
-          {fert?.gt(0) ? (
+        {values.tokens.map((state, index) => (
+          <TokenQuoteProvider
+            key={state.token.address}
+            name={`tokens.${index}`}
+            state={state}
+            tokenOut={token}
+            balance={balances[state.token.address] || undefined}
+            showTokenSelect={handleOpen}
+            handleQuote={handleQuote}
+          />
+        ))}
+        {/* Outputs */}
+        {fert?.gt(0) ? (
+          <>
             <Stack direction="column" gap={1} alignItems="center" justifyContent="center">
               <KeyboardArrowDownIcon color="secondary" />
-              <Box sx={{ width: 250, pb: 1 }}>
+              <Box sx={{ width: 150, pb: 1 }}>
                 <FertilizerItem
                   isNew
                   amount={fert}
@@ -132,20 +135,27 @@ const BuyForm : React.FC<
                   tooltip={BUY_FERTILIZER}
                 />
               </Box>
+              <Alert
+                color="warning"
+                icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
+              >The amount of Fertilizer received rounds down to the nearest USDC. {usdc?.toFixed(2)} USDC = {fert?.toFixed(0)} FERT.
+              </Alert>
               <Box sx={{ width: '100%', mt: 0 }}>
                 <TxnAccordion defaultExpanded={false}>
                   <TxnPreview
                     actions={actions}
                   />
                   <Divider sx={{ my: 2, opacity: 0.4 }} />
-                  <Box>
-                    <Typography>Note: The amount of FERT received rounds down to the nearest USDC. {usdc?.toFixed(2)} USDC = {fert?.toFixed(0)} FERT.</Typography>
+                  <Box sx={{ pb: 1 }}>
+                    <Typography variant="body2">
+                      Sprouts become <strong>Rinsable</strong> on a <Link href="https://docs.bean.money/additional-resources/glossary#pari-passu" target="_blank" rel="noreferrer" underline="hover">pari passu</Link> basis. Upon <strong>Rinse</strong>, each Sprout is redeemed for <span><TokenIcon token={BEAN[1]} style={{ height: IconSize.xs, marginTop: 2.6 }} /></span>1.
+                    </Typography>
                   </Box>
                 </TxnAccordion>
               </Box>
             </Stack>
-          ) : null}
-        </Box>
+          </>
+        ) : null}
         {/* Submit */}
         <SmartSubmitButton
           mode="auto"
@@ -160,7 +170,7 @@ const BuyForm : React.FC<
           contract={contract}
           tokens={values.tokens}
         >
-          Buy{fert && fert.gt(0) && ` ${displayBN(fert)}`} Fertilizer
+          Buy
         </SmartSubmitButton>
       </Stack>
     </Form>
@@ -275,8 +285,8 @@ const Buy : React.FC<{}> = () => {
       if (!amount || !amountUsdc) throw new Error('An error occurred.');
     
       txToast = new TransactionToast({
-        loading: `Buying ${displayFullBN(amountUsdc, Usdc.displayDecimals)} Fertilizer`,
-        success: 'Success!',
+        loading: `Buying ${displayFullBN(amountUsdc, Usdc.displayDecimals)} Fertilizer...`,
+        success: 'Purchase successful.',
       });
 
       let call;

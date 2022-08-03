@@ -37,8 +37,6 @@ import { useSigner } from 'hooks/ledger/useSigner';
 import toast from 'react-hot-toast';
 import { useFetchFarmerField } from 'state/farmer/field/updater';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
-import podIconGreen from 'img/beanstalk/harvestable-pod-icon.svg';
-import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import { useFetchBeanstalkField } from 'state/beanstalk/field/updater';
 import usePrice from 'hooks/usePrice';
 import { useFetchPools } from 'state/bean/pools/updater';
@@ -221,7 +219,7 @@ const SowForm : React.FC<
                   color="warning"
                   icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
                 >
-                  If there is less Soil at the time of execution, this transaction will Sow Beans into the remaining Soil and send any unused Beans to your Farm balance.
+                  If there is less Soil at the time of execution, this transaction will Sow Beans into the remaining Soil and send any unused Beans to your Farm Balance.
                   {/* You are Sowing {displayFullBN(maxAmountUsed.times(100), 4, 0)}% of remaining Soil.  */}
                 </Alert>
               </Box>
@@ -252,7 +250,9 @@ const SowForm : React.FC<
                   />
                   <Divider sx={{ my: 2, opacity: 0.4 }} />
                   <Box pb={1}>
-                    <Typography variant="body1" alignItems="center">Upon <strong>Harvest</strong>, <span><img src={podIconGreen} alt="" height={IconSize.xs} /></span> {displayBN(numPods)} are redeemed for <span><img src={beanIcon} alt="" height={IconSize.xs} /></span> {displayBN(numPods)}.</Typography>
+                    <Typography variant="body2" alignItems="center">
+                      Pods become <strong>Harvestable</strong> on a first in, first out <Link href="https://docs.bean.money/additional-resources/glossary#fifo" target="_blank" rel="noreferrer" underline="hover">(FIFO)</Link> basis. Upon <strong>Harvest</strong>, each Pod is redeemed for <span><TokenIcon token={BEAN[1]} style={{ height: IconSize.xs, marginTop: 2.6 }} /></span>1.
+                    </Typography>
                   </Box>
                 </AccordionDetails>
               </Accordion>
@@ -376,8 +376,8 @@ const Sow : React.FC<{}> = () => {
       let value = ZERO_BN;
       
       txToast = new TransactionToast({
-        loading: `Sowing ${displayFullBN(amountBeans, Bean.decimals)} Beans for ${displayFullBN(amountPods, PODS.decimals)} Pods`,
-        success: 'Sow complete.',
+        loading: `Sowing ${displayFullBN(amountBeans, Bean.decimals)} Beans for ${displayFullBN(amountPods, PODS.decimals)} Pods...`,
+        success: 'Sow successful.',
       });
       
       /// Sow directly from BEAN

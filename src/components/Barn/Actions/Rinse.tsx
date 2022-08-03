@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Box, Stack } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { useSigner } from 'hooks/ledger/useSigner';
-import { BEAN, RINSABLE_SPROUTS } from 'constants/tokens';
+import { BEAN, SPROUTS } from 'constants/tokens';
 import { ZERO_BN } from 'constants/index';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { useBeanstalkContract } from 'hooks/useContract';
@@ -16,7 +16,7 @@ import {
 import TxnPreview from 'components/Common/Form/TxnPreview';
 import TxnAccordion from 'components/Common/TxnAccordion';
 import { useFetchFarmerBarn } from 'state/farmer/barn/updater';
-import { displayBN, displayFullBN, parseError } from 'util/index';
+import { displayFullBN, parseError } from 'util/index';
 import { BeanstalkReplanted } from 'generated';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
 import DestinationField from 'components/Common/Form/DestinationField';
@@ -25,6 +25,7 @@ import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import useAccount from 'hooks/ledger/useAccount';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
+import { ActionType } from 'util/Actions';
 
 // ---------------------------------------------------
 
@@ -52,8 +53,8 @@ const RinseForm : React.FC<
         <Stack gap={1}>
           {/* Inputs */}
           <TokenInputField
-            token={RINSABLE_SPROUTS}
-            balanceLabel="Fertilized Sprout Balance"
+            token={SPROUTS}
+            balanceLabel="Rinsable Balance"
             balance={amountSprouts || ZERO_BN}
             name="amount"
             disabled
@@ -62,7 +63,7 @@ const RinseForm : React.FC<
             InputProps={{
               endAdornment: (
                 <TokenAdornment
-                  token={RINSABLE_SPROUTS}
+                  token={SPROUTS}
                 />
               )
             }}
@@ -81,7 +82,17 @@ const RinseForm : React.FC<
               <Box sx={{ width: '100%', mt: 0 }}>
                 <TxnAccordion defaultExpanded={false}>
                   <TxnPreview
-                    actions={[]}
+                    actions={[
+                      {
+                        type: ActionType.RINSE,
+                        amount: amountSprouts,
+                      },
+                      {
+                        type: ActionType.RECEIVE_BEANS,
+                        amount: amountSprouts,
+                        destination: values.destination,
+                      },
+                    ]}
                   />
                 </TxnAccordion>
               </Box>
@@ -99,7 +110,7 @@ const RinseForm : React.FC<
           tokens={[]}
           mode="auto"
         >
-          Rinse{amountSprouts && amountSprouts.gt(0) && ` ${displayBN(amountSprouts)}`} Sprouts
+          Rinse
         </SmartSubmitButton>
       </Stack>
     </Form>
@@ -145,7 +156,10 @@ const Rinse : React.FC<{}> = () => {
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
-      await Promise.all([refetchFertilizer(), refetchBalances()]);
+      await Promise.all([
+        refetchFertilizer(),
+        refetchBalances()
+      ]);
       txToast.success(receipt);
       formActions.resetForm({
         values: {

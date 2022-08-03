@@ -135,7 +135,7 @@ const TxnStep : React.FC<{
       action = (
         <IconRow spacing={0.3}>
           <Typography fontWeight="bold" sx={{ fontSize: 20 }}>🔥</Typography>
-          <TokenIcon token={BEAN[1]} />
+          <TokenIcon token={BEAN[1]} style={{ height: '100%' }} />
         </IconRow>
       );
       break;
@@ -150,7 +150,6 @@ const TxnStep : React.FC<{
       action = (
         <IconRow>
           <TokenIcon token={PODS} style={{ height: '100%' }} />
-          {/* <img src={harvestablePodIcon} style={{ height: '100%' }} alt="" /> */}
         </IconRow>
       );
       break;
@@ -181,6 +180,13 @@ const TxnStep : React.FC<{
       break;
 
     /// FERTILIZER
+    case ActionType.RINSE:
+      action = (
+        <IconRow>
+          <TokenIcon token={SPROUTS} style={{ height: '100%' }} />
+        </IconRow>
+      );
+      break;
     case ActionType.BUY_FERTILIZER:
       action = (
         <IconRow>
@@ -248,11 +254,11 @@ const TxnStep : React.FC<{
 
 // -----------------------------------------------------------------------
 
-// order matters
 const EXECUTION_STEPS = [
   /// Group 1:
   /// Actions that must precede a Beanstalk transaction
   ActionType.SWAP,
+
   /// Group 2:
   /// Beanstalk function calls
   ActionType.DEPOSIT,
@@ -260,21 +266,24 @@ const EXECUTION_STEPS = [
   ActionType.BUY_FERTILIZER,
   ActionType.CREATE_ORDER,
   ActionType.TRANSFER,
-  /// Group 3
+  ActionType.BUY_BEANS,
+  ActionType.BURN_BEANS,
+  ActionType.TRANSFER_PODS,
+  ActionType.RINSE,
+  
+  /// Group 3:
   /// Results of Beanstalk function calls
   ActionType.UPDATE_SILO_REWARDS,
   ActionType.RECEIVE_FERT_REWARDS,
   ActionType.IN_TRANSIT,
   ActionType.CLAIM_WITHDRAWAL,
-  // FIXME: incorrectly categorized below
-  /// Field 
-  ActionType.BUY_BEANS,
-  ActionType.BURN_BEANS,
-  ActionType.RECEIVE_PODS,
-  ActionType.HARVEST,
   ActionType.RECEIVE_BEANS,
-  ActionType.TRANSFER_PODS,
-  /// End
+  ActionType.RECEIVE_PODS,
+  ActionType.RECEIVE_TOKEN,
+  ActionType.HARVEST,
+
+  /// Group 4:
+  /// ???
   ActionType.END_TOKEN
 ];
 

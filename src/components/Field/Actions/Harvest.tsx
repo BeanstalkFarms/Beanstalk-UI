@@ -120,7 +120,8 @@ const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
                       },
                       {
                         type: ActionType.RECEIVE_BEANS,
-                        amount: amount
+                        amount: amount,
+                        destination: values.destination,
                       },
                     ]}
                   />
