@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Stack, Typography, ListItem, ListItemButton, ListItemIcon, ListItemText, List, Box } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { makeStyles } from '@mui/styles';
-import { BEAN } from 'constants/tokens';
+import { BEAN, PODS } from 'constants/tokens';
 import useFarmerListings from 'hooks/redux/useFarmerListings';
 import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
 import { displayBN, displayFullBN, toStringBaseUnitBN } from '../../util';
@@ -102,7 +102,7 @@ const PlotSelect: React.FC<PlotSelectProps> = ({
             </Stack>
             {plots[index] ? (
               <Typography variant="bodyLarge">
-                {displayFullBN(plots[index], 0)}
+                {displayFullBN(plots[index], PODS.displayDecimals)}
               </Typography>
               ) : null}
           </Stack>

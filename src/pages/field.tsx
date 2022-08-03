@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import {
   Container,
   Stack,
-  Tooltip,
   Typography,
 } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
@@ -22,8 +21,6 @@ const columns: DataGridProps['columns'] = [
     field: 'placeInLine',
     headerName: 'Place In Line',
     flex: 1,
-    valueFormatter: (params) =>
-      `${displayFullBN(params.value as BigNumber, 0)}`,
     renderCell: (params) => (
       (params.value.eq(-1))
         ? (<Typography color="primary">Harvestable</Typography>)
@@ -40,9 +37,9 @@ const columns: DataGridProps['columns'] = [
     valueFormatter: (params) =>
       `${displayFullBN(params.value as BigNumber, 2)}`,
     renderCell: (params) => (
-      <Tooltip title={<>{displayFullBN(params.value)}</>}>
-        <Typography>{displayBN(params.value, true)}</Typography>
-      </Tooltip>
+      <Typography>
+        {params.formattedValue}
+      </Typography>
     ),
   },
 ];

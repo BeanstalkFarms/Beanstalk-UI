@@ -1,9 +1,9 @@
-import { Accordion, AccordionDetails, Alert, Box, Stack } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
 import AddressInputField from 'components/Common/Form/AddressInputField';
 import FieldWrapper from 'components/Common/Form/FieldWrapper';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
-import { PlotFragment, PlotSettingsFragment, SmartSubmitButton, TxnPreview, TxnSeparator } from 'components/Common/Form';
+import { PlotFragment, PlotSettingsFragment, SmartSubmitButton, TokenOutputField, TxnPreview, TxnSeparator } from 'components/Common/Form';
 import { PODS } from 'constants/tokens';
 import { useSigner } from 'hooks/ledger/useSigner';
 import { useBeanstalkContract } from 'hooks/useContract';
@@ -12,13 +12,12 @@ import TransactionToast from 'components/Common/TxnToast';
 import useAccount from 'hooks/ledger/useAccount';
 import PlotInputField from 'components/Common/Form/PlotInputField';
 import useFarmerPlots from 'hooks/redux/useFarmerPlots';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
+import BigNumber from 'bignumber.js';
 import { ZERO_BN } from '../../../constants';
 import { displayFullBN, toStringBaseUnitBN, trimAddress } from '../../../util';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
-import { IconSize } from '../../App/muiTheme';
-import IconWrapper from '../../Common/IconWrapper';
 
 export type TransferFormValues = {
   plot: PlotFragment;
@@ -40,6 +39,7 @@ const TransferForm: React.FC<
 }) => {
   /// Data
   const plots = useFarmerPlots();
+  const harvestableIndex = useHarvestableIndex();
 
   /// Form Data
   const plot = values.plot;
@@ -60,19 +60,17 @@ const TransferForm: React.FC<
           plots={plots}
         />
         {plot.index && (
+          <FieldWrapper label="Transfer to">
+            <AddressInputField name="to" />
+          </FieldWrapper>
+        )}
+        {(values.to && plot.amount && plot.start && plot.index) && (
           <>
             <TxnSeparator />
-            <FieldWrapper label="Recipient Address">
-              <AddressInputField name="to" />
-            </FieldWrapper>
-            <Box>
-              <Alert
-                color="warning"
-                icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
-              >
-                Pods can be exchanged in a decentralized fashion on the Pod Market. Send at your own risk.
-              </Alert>
-            </Box>
+            <TokenOutputField
+              amount={plot.amount.negated()}
+              token={PODS}
+            />
             <Box>
               <Accordion variant="outlined">
                 <StyledAccordionSummary title="Transaction Details" />
@@ -80,9 +78,10 @@ const TransferForm: React.FC<
                   <TxnPreview
                     actions={[
                       {
-                        type:    ActionType.SEND_PODS,
+                        type:    ActionType.TRANSFER_PODS,
                         amount:  plot.amount || ZERO_BN,
-                        address: values.to !== null ? values.to : ''
+                        address: values.to !== null ? values.to : '',
+                        placeInLine: new BigNumber(plot.index).minus(harvestableIndex).plus(plot.start)
                       },
                       {
                         type: ActionType.END_TOKEN,
@@ -146,8 +145,8 @@ const Transfer: React.FC<{}> = () => {
     );
 
     const txToast = new TransactionToast({
-      loading: `Sending ${displayFullBN(amount.abs(), PODS.decimals)} Pods to ${trimAddress(to)}.`,
-      success: 'Plot sent.',
+      loading: `Transferring ${displayFullBN(amount.abs(), PODS.decimals)} Pods to ${trimAddress(to)}.`,
+      success: 'Plot Transferred.',
     });
 
     /// TODO: refresh field

@@ -11,7 +11,7 @@ import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
 import TxnPreview from 'components/Common/Form/TxnPreview';
 import Beanstalk from 'lib/Beanstalk';
 import { useBeanstalkContract } from 'hooks/useContract';
-import { displayFullBN, MinBN, toStringBaseUnitBN } from 'util/Tokens';
+import { displayFullBN, MaxBN, MinBN, toStringBaseUnitBN } from 'util/Tokens';
 import { BeanstalkReplanted } from 'generated/index';
 import { QuoteHandler } from 'hooks/useQuote';
 import { ZERO_BN } from 'constants/index';
@@ -36,6 +36,7 @@ import toast from 'react-hot-toast';
 import useBDV from 'hooks/useBDV';
 import TokenIcon from 'components/Common/TokenIcon';
 import { useFetchPools } from 'state/bean/pools/updater';
+import { ActionType } from 'util/Actions';
 import { FontSize, IconSize } from '../../App/muiTheme';
 import IconWrapper from '../../Common/IconWrapper';
 
@@ -157,8 +158,9 @@ const ConvertForm : React.FC<
         bdvOut
           .minus(conversion.bdv.abs())
       );
-      deltaStalk = (
-        tokenOut.getStalk(deltaBDV)
+      deltaStalk = MaxBN(
+        tokenOut.getStalk(deltaBDV),
+        ZERO_BN
       );
       deltaSeedsPerBDV = (
         tokenOut.getSeeds()
@@ -302,7 +304,17 @@ const ConvertForm : React.FC<
                 <StyledAccordionSummary title="Transaction Details" />
                 <AccordionDetails>
                   <TxnPreview
-                    actions={conversion.actions}
+                    actions={[
+                      {
+                        type: ActionType.BASE,
+                        message: `Convert ${displayFullBN(amountIn, tokenIn.displayDecimals)} ${tokenIn.name} to ${displayFullBN(amountOut, tokenIn.displayDecimals)} ${tokenOut.name}.`
+                      },
+                      {
+                        type: ActionType.UPDATE_SILO_REWARDS,
+                        stalk: deltaStalk || ZERO_BN,
+                        seeds: deltaSeeds || ZERO_BN,
+                      }
+                    ]}
                   />
                 </AccordionDetails>
               </Accordion>
@@ -436,7 +448,7 @@ const Convert : React.FC<{
       );
 
       txToast = new TransactionToast({
-        loading: 'Converting',
+        loading: 'Converting...',
         success: 'Convert successful.',
       });
 

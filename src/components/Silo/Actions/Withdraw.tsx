@@ -140,7 +140,7 @@ const WithdrawForm : React.FC<
         color="warning"
         icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
       >
-        You can claim your withdrawn assets at the beginning of next season.
+        You can Claim your Withdrawn assets at the start of the next Season.
       </Alert>
 
     </>
@@ -318,7 +318,7 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
 
       txToast = new TransactionToast({
         loading: `Withdrawing ${displayFullBN(withdrawResult.amount.abs(), token.displayDecimals, token.displayDecimals)} ${token.name} from the Silo`,
-        success: `Withdraw successful. Your ${token.name} will be available to Claim in ${withdrawSeasons.toFixed()} Seasons.`,
+        success: `Withdraw successful. Your ${token.name} will be available to Claim at the start of the next Season.`,
       });
 
       const txn = await call;
@@ -340,7 +340,6 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
     beanstalk,
     token,
     season,
-    withdrawSeasons,
     refetchFarmerSilo,
     refetchSilo,
   ]);

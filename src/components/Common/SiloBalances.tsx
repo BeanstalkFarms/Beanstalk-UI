@@ -195,7 +195,7 @@ const SiloBalances: React.FC<{
             {availableStates.map((id) => (
               <TokenRow
                 key={id}
-                label={`${STATE_CONFIG[id][0]} Assets`}
+                label={`${STATE_CONFIG[id][0]} Balances`}
                 value={displayUSD(breakdown.states[id as keyof typeof breakdown.states].value)}
                 isFaded={hoverState !== null && hoverState !== id}
                 isSelected={hoverState === id}
@@ -234,7 +234,7 @@ const SiloBalances: React.FC<{
             </Stack>
           ) : (
             <Stack gap={1}>
-              <Typography variant="h3" sx={{ display: { xs: 'none', md: 'block' }, mx: 0.75 }}>{STATE_CONFIG[hoverState][0]} Assets</Typography>
+              <Typography variant="h4" sx={{ display: { xs: 'none', md: 'block' }, mx: 0.75 }}>{STATE_CONFIG[hoverState][0]} Balances</Typography>
               <Box>
                 {pieChartData.map((dp) => {
                   const token = whitelist[dp.tokenAddress];

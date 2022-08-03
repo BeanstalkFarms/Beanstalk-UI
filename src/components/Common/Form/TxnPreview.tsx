@@ -17,7 +17,6 @@ import Token from 'classes/Token';
 import { FERTILIZER_ICONS } from 'components/Barn/FertilizerImage';
 import { SupportedChainId } from 'constants/chains';
 import siloIcon from 'img/beanstalk/silo-icon.svg';
-import harvestablePodIcon from 'img/beanstalk/harvestable-pod-icon.svg';
 
 // -----------------------------------------------------------------------
 
@@ -119,7 +118,7 @@ const TxnStep : React.FC<{
     case ActionType.IN_TRANSIT:
       action = (
         <IconRow>
-          <TokenIcon token={(actions[0] as SiloTransitAction).token} />
+          <TokenIcon token={(actions[0] as SiloTransitAction).token} style={{ height: '100%' }} />
         </IconRow>
       );
       break;
@@ -150,7 +149,8 @@ const TxnStep : React.FC<{
     case ActionType.HARVEST:
       action = (
         <IconRow>
-          <img src={harvestablePodIcon} style={{ height: '100%' }} alt="" />
+          <TokenIcon token={PODS} style={{ height: '100%' }} />
+          {/* <img src={harvestablePodIcon} style={{ height: '100%' }} alt="" /> */}
         </IconRow>
       );
       break;
@@ -161,7 +161,7 @@ const TxnStep : React.FC<{
         </IconRow>
       );
       break;
-    case ActionType.SEND_PODS:
+    case ActionType.TRANSFER_PODS:
       action = (
         <IconRow>
           <TokenIcon token={PODS} style={{ height: '100%' }} />
@@ -273,7 +273,7 @@ const EXECUTION_STEPS = [
   ActionType.RECEIVE_PODS,
   ActionType.HARVEST,
   ActionType.RECEIVE_BEANS,
-  ActionType.SEND_PODS,
+  ActionType.TRANSFER_PODS,
   /// End
   ActionType.END_TOKEN
 ];

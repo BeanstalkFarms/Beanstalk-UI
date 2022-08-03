@@ -151,11 +151,12 @@ const Whitelist : React.FC<{
                     * Cell: TVD
                     */}
                   <Grid item md={2.5} xs={0} display={{ xs: 'none', md: 'block' }}>
-                    <Tooltip placement="right" title={<>{displayTokenAmount(beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN, token)}</>}>
+                    <Tooltip placement="right" title={<>{displayTokenAmount(beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN, token, { showName: false })} {token.symbol}</>}>
                       <Typography display="inline" color="black">
                         <Fiat
                           token={token}
                           amount={beanstalkSilo.balances[token.address]?.deposited.amount}
+                          truncate
                         />
                       </Typography>
                     </Tooltip>
@@ -173,10 +174,13 @@ const Whitelist : React.FC<{
                         ? (
                           <Tooltip title={(
                             <>
-                              {displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)} Deposited Beans<br />
-                              {displayFullBN(farmerSilo.beans.earned || ZERO_BN, token.displayDecimals)} Earned Beans<br />
-                              <Divider sx={{ my: 0.5, opacity: 0.3 }} />
-                              = {displayFullBN(deposited?.amount.plus(farmerSilo.beans.earned) || ZERO_BN, token.displayDecimals)} Beans<br />
+                              {displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)} Deposited BEAN<br />
+                              +&nbsp;
+                              <Typography display="inline" color="primary">
+                                {displayFullBN(farmerSilo.beans.earned || ZERO_BN, token.displayDecimals)}
+                              </Typography> Earned BEAN<br />
+                              <Divider sx={{ my: 0.5, opacity: 0.7, borderBottomWidth: 0, }} />
+                              = {displayFullBN(farmerSilo.beans.earned.plus(deposited?.amount || ZERO_BN), token.displayDecimals)} BEAN<br />
                             </>
                           )}>
                             <span>
@@ -224,7 +228,7 @@ const Whitelist : React.FC<{
                                 chop={false}
                             /> per {chopPairs[token.address].symbol}
                             </div>
-                            <Divider sx={{ my: 1 }} />
+                            <Divider sx={{ my: 0.5, opacity: 0.7, borderBottomWidth: 0, }} />
                             <div>
                               =&nbsp;
                               <Fiat

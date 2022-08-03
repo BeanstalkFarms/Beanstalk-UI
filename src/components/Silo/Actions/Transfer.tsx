@@ -154,7 +154,7 @@ const TransferForm: React.FC<FormikProps<TransferFormValues> & {
                             message: (
                               <>
                                 The following Deposits will be used:<br />
-                                <ul style={{ paddingLeft: '25px', marginTop: '10px', fontSize: FontSize.sm }}>
+                                <ul style={{ paddingLeft: '25px', marginTop: '10px', marginBottom: 0, fontSize: FontSize.sm }}>
                                   {withdrawResult.deltaCrates.map((crate, index) => (
                                     <li key={index}>{displayTokenAmount(crate.amount, whitelistedToken)} from Deposits in Season {crate.season.toString()}</li>
                                   ))}
