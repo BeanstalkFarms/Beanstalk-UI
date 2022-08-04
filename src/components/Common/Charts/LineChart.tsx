@@ -290,6 +290,7 @@ const Graph: React.FC<GraphProps> = (props) => {
       - axisHeight // chart edge to data region first pixel
       - margin.bottom  // chart edge to data region first pixel
   };
+  
   return (
     <>
       <svg width={width} height={height}>

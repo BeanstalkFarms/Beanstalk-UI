@@ -10,6 +10,7 @@ import LineChart, { DataPoint } from 'components/Common/Charts/LineChart';
 import MainnetBlur from 'components/Common/ZeroState/MainnetBlur';
 import Stat from 'components/Common/Stat';
 import useTabs from 'hooks/display/useTabs';
+import { mockDepositData, mockOwnershipPctData } from 'components/Common/Charts/LineChart.mock';
 import WalletButton from '../Common/Connection/WalletButton';
 import useAccount from '../../hooks/ledger/useAccount';
 
@@ -111,7 +112,10 @@ const StalkOwnershipTab: React.FC<TabData
             </Stack>
           </MainnetBlur>
         )}
-        <LineChart series={series} onCursor={handleCursor} />
+        <LineChart
+          series={series}
+          onCursor={handleCursor}
+        />
       </Box>
     </>
   );
@@ -157,7 +161,7 @@ const Overview: React.FC<{
             breakdown.states.deposited.value
           ]}
           series={[
-            []
+            mockDepositData
           ]}
           season={season}
         />
@@ -169,8 +173,8 @@ const Overview: React.FC<{
             farmerSilo.stalk.active.div(beanstalkSilo.stalk.total),
           ]}
           series={[
-            [],
-            []
+            mockDepositData,
+            mockOwnershipPctData,
           ]}
           season={season}
         />
