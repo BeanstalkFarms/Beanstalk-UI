@@ -24,7 +24,7 @@ export const useEthPrices = () => {
 
   /// Auto-refresh gas prices every 10s.
   /// FIXME: refresh every block or N blocks instead?
-  useTimedRefresh(getGas, 10 * 1000);
+  useTimedRefresh(getGas, 30 * 1000);
 
   return [getGas, () => {}];
 };

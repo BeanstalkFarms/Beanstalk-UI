@@ -110,10 +110,14 @@ const cache = new InMemoryCache({
   }
 });
 
-persistCacheSync({
-  cache,
-  storage: new LocalStorageWrapper(window.localStorage),
-});
+try {
+  persistCacheSync({
+    cache,
+    storage: new LocalStorageWrapper(window.localStorage),
+  });
+} catch (e) {
+  console.error('Failed to persist cache, skipping.');
+}
 
 export const apolloClient = new ApolloClient({
   uri: BEANSTALK_SUBGRAPH_ADDRESSES[SupportedChainId.MAINNET],
