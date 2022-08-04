@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Box, Button,
   Drawer,
-  IconButton, Link, ListItemText, Stack, Typography
+  IconButton, Link, List, ListItemText, Stack, Typography
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -26,6 +26,12 @@ const NavDrawer: React.FC<{
     // Constants
     const chainInfo = useChainConstant(CHAIN_INFO);
     const beanstalkAddress = useChainConstant(BEANSTALK_ADDRESSES);
+
+    /// closes more dropdown when drawer closes
+    useEffect(() => {
+      if (!open) hideMore();
+    }, [open, hideMore]);
+
     return (
       <Drawer
         anchor="bottom"
@@ -47,23 +53,24 @@ const NavDrawer: React.FC<{
             </IconButton>
           </Stack>
           {/* Items */}
-          <Stack sx={{ mt: 1, fontSize: 22 }}>
+          <List sx={{ mt: 1, fontSize: 22 }}>
+            {/* Individual Items */}
             {ROUTES.top.map((item) => (
-              <Box>
+              <Box key={item.path} sx={{ borderBottom: 2, borderColor: BeanstalkPalette.lightBlue }}>
                 <MenuItemMobile
-                  key={item.path}
                   item={item}
                   onClick={hideDrawer}
-                  sx={{ borderBottom: 2, borderColor: BeanstalkPalette.lightBlue }}
                 />
               </Box>
             ))}
-            <MenuItemMobile
-              item={{ title: 'More', href: undefined, path: '' }}
-              onClick={openMore ? hideMore : showMore}
-              sx={{ borderBottom: 2, borderColor: BeanstalkPalette.lightBlue }}
-              endAdornment={<DropdownIcon open={openMore} sx={{ color: 'text.secondary' }} />}
-            >
+            {/* More Dropdown */}
+            <Box key="more" sx={{ borderBottom: 2, borderColor: BeanstalkPalette.lightBlue }}>
+              <MenuItemMobile
+                item={{ title: 'More', path: '#' }}
+                onClick={openMore ? hideMore : showMore}
+                endAdornment={<DropdownIcon open={openMore} sx={{ color: 'text.secondary', height: IconSize.small }} />}
+              />
+              {/* Only show dropdown if openMore === true */}
               <Stack display={openMore ? 'block' : 'none'}>
                 <Box sx={{ pl: 0.5 }}>
                   {ROUTES.more.map((item) => (
@@ -99,8 +106,8 @@ const NavDrawer: React.FC<{
                   </Button>
                 </Box>
               </Stack>
-            </MenuItemMobile>
-          </Stack>
+            </Box>
+          </List>
         </Box>
       </Drawer>
     );
