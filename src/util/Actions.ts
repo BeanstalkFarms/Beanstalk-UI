@@ -32,6 +32,7 @@ export enum ActionType {
   
   /// MARKET
   CREATE_ORDER,
+  BUY_PODS,
   
   /// BARN
   RINSE,
@@ -146,6 +147,13 @@ export type CreateOrderAction = {
   message: string; // lazy!
 }
 
+export type BuyPodsAction = {
+  type: ActionType.BUY_PODS;
+  podAmount: BigNumber;
+  placeInLine: BigNumber;
+  pricePerPod: BigNumber;
+}
+
 /// ////////////////////////////// BARN /////////////////////////////////
 
 export type RinseAction = {
@@ -188,6 +196,7 @@ export type Action = (
   | TransferPodsAction
   /// MARKET
   | CreateOrderAction
+  | BuyPodsAction
   /// BARN
   | RinseAction
   | FertilizerBuyAction
@@ -255,6 +264,9 @@ export const parseActionMessage = (a: Action) => {
     /// MARKET
     case ActionType.CREATE_ORDER:
       return a.message;
+
+    case ActionType.BUY_PODS:
+      return `Buy ${displayTokenAmount(a.podAmount, PODS)} at ${displayFullBN(a.placeInLine, 0)} in the Pod Line for ${displayTokenAmount(a.pricePerPod, BEAN[1])} per Pod.`;
 
     /// DEFAULT
     default: 

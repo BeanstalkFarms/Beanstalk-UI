@@ -219,8 +219,10 @@ const FillListingForm : React.FC<
                         amountOut:  amountOut!,
                       },
                       {
-                        type: ActionType.BASE,
-                        message: `Buy ${displayTokenAmount(podsPurchased, PODS)} at ${displayBN(placeInLine)} in the Pod Line for ${displayBN(podListing.pricePerPod)} Beans per Pod.`
+                        type: ActionType.BUY_PODS,
+                        podAmount: podsPurchased,
+                        pricePerPod: podListing.pricePerPod,
+                        placeInLine: placeInLine
                       },
                     ]}
                   />

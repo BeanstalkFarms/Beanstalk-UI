@@ -188,6 +188,12 @@ const TxnStep : React.FC<{
       );
       break;
 
+    case ActionType.BUY_PODS:
+      action = (
+        <TokenIcon token={PODS} style={{ height: '100%', marginTop: 0, }} />
+      );
+      break;
+
     /// FERTILIZER
     case ActionType.RINSE:
       action = (
@@ -288,6 +294,7 @@ const EXECUTION_STEPS = [
   ActionType.CLAIM_WITHDRAWAL,
   ActionType.RECEIVE_BEANS,
   ActionType.RECEIVE_PODS,
+  ActionType.BUY_PODS,
   ActionType.RECEIVE_TOKEN,
   ActionType.HARVEST,
 
