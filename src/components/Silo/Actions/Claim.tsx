@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Accordion, AccordionDetails, Box, Stack, Tooltip, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Stack, Typography } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useProvider } from 'wagmi';
@@ -163,110 +163,108 @@ const ClaimForm : React.FC<
   }), [claimableBalance]);
 
   return (
-    <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
-      <Form noValidate>
-        <Stack gap={1}>
-          {/* Claimable Token */}
-          {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
-          <TokenQuoteProvider
-            name="token"
-            tokenOut={values.tokenOut}
-            state={values.token}
-            // This input is always disabled but we use
-            // the underlying handleQuote functionality
-            // for consistency with other forms.
-            disabled 
-            // 
-            balance={amount || ZERO_BN}
-            balanceLabel="Claimable Balance"
-            // -----
-            // FIXME:
-            // "disableTokenSelect" applies the disabled prop to
-            // the TokenSelect button. However if we don't pass
-            // a handler to the button then it's effectively disabled
-            // but shows with stronger-colored text. param names are
-            // a bit confusing.
-            // disableTokenSelect={true}
-            quoteSettings={quoteSettings}
-            handleQuote={handleQuote}
-            hideQuote
-          />
-          {/* Setting: Destination */}
-          <DestinationField
-            name="destination"
-          />
-          {/* Setting: Claim LP */}
-          {token.isLP ? (
-            <PillRow
-              isOpen={isTokenSelectVisible}
-              label="Claim LP as"
-              onClick={showTokenSelect}> 
-              <TokenIcon token={values.tokenOut} />
-              <Typography variant="body1">{values.tokenOut.symbol}</Typography>
-            </PillRow>
-          ) : null}
-          <TokenSelectDialog
-            open={isTokenSelectVisible}
-            handleClose={hideTokenSelect}
-            handleSubmit={handleSelectTokens}
-            selected={[values.tokenOut]}
-            balances={undefined} // hide balances from right side of selector
-            tokenList={claimableTokens}
-            mode={TokenSelectMode.SINGLE}
-          />
-          {/* Transaction Details */}
-          {isSubmittable ? (
-            <>
-              <TxnSeparator />
-              <TokenOutputField
-                token={values.tokenOut}
-                amount={values.token.amountOut || ZERO_BN}
-                isLoading={values.token.quoting}
-              />
-              <Box>
-                <Accordion variant="outlined">
-                  <StyledAccordionSummary title="Transaction Details" />
-                  <AccordionDetails>
-                    <TxnPreview
-                      actions={[
-                        {
-                          type: ActionType.CLAIM_WITHDRAWAL,
-                          amount: amount,
-                          token: token,
-                          // message: `Claim ${displayTokenAmount(amount, token)}.`
-                        },
-                        token === BeanCrv3 && values.tokenOut !== token ? {
-                          type: ActionType.BASE,
-                          message: `Unpack ${displayTokenAmount(amount, token)} into ${displayTokenAmount(values.token.amountOut || ZERO_BN, values.tokenOut)}.`
-                        } : undefined,
-                        {
-                          type: ActionType.RECEIVE_TOKEN,
-                          token: values.tokenOut,
-                          amount: values.token.amountOut || ZERO_BN,
-                          destination: values.destination,
-                        }
-                      ]}
-                    />
-                  </AccordionDetails>
-                </Accordion>
-              </Box>
-            </>
-          ) : null}
-          <SmartSubmitButton
-            loading={isSubmitting}
-            disabled={!isSubmittable || isSubmitting}
-            type="submit"
-            variant="contained"
-            color="primary"
-            size="large"
-            tokens={[]}
-            mode="auto"
-          >
-            Claim
-          </SmartSubmitButton>
-        </Stack>
-      </Form>
-    </Tooltip>
+    <Form noValidate>
+      <Stack gap={1}>
+        {/* Claimable Token */}
+        {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
+        <TokenQuoteProvider
+          name="token"
+          tokenOut={values.tokenOut}
+          state={values.token}
+          // This input is always disabled but we use
+          // the underlying handleQuote functionality
+          // for consistency with other forms.
+          disabled 
+          // 
+          balance={amount || ZERO_BN}
+          balanceLabel="Claimable Balance"
+          // -----
+          // FIXME:
+          // "disableTokenSelect" applies the disabled prop to
+          // the TokenSelect button. However if we don't pass
+          // a handler to the button then it's effectively disabled
+          // but shows with stronger-colored text. param names are
+          // a bit confusing.
+          // disableTokenSelect={true}
+          quoteSettings={quoteSettings}
+          handleQuote={handleQuote}
+          hideQuote
+        />
+        {/* Setting: Destination */}
+        <DestinationField
+          name="destination"
+        />
+        {/* Setting: Claim LP */}
+        {token.isLP ? (
+          <PillRow
+            isOpen={isTokenSelectVisible}
+            label="Claim LP as"
+            onClick={showTokenSelect}> 
+            <TokenIcon token={values.tokenOut} />
+            <Typography variant="body1">{values.tokenOut.symbol}</Typography>
+          </PillRow>
+        ) : null}
+        <TokenSelectDialog
+          open={isTokenSelectVisible}
+          handleClose={hideTokenSelect}
+          handleSubmit={handleSelectTokens}
+          selected={[values.tokenOut]}
+          balances={undefined} // hide balances from right side of selector
+          tokenList={claimableTokens}
+          mode={TokenSelectMode.SINGLE}
+        />
+        {/* Transaction Details */}
+        {isSubmittable ? (
+          <>
+            <TxnSeparator />
+            <TokenOutputField
+              token={values.tokenOut}
+              amount={values.token.amountOut || ZERO_BN}
+              isLoading={values.token.quoting}
+            />
+            <Box>
+              <Accordion variant="outlined">
+                <StyledAccordionSummary title="Transaction Details" />
+                <AccordionDetails>
+                  <TxnPreview
+                    actions={[
+                      {
+                        type: ActionType.CLAIM_WITHDRAWAL,
+                        amount: amount,
+                        token: token,
+                        // message: `Claim ${displayTokenAmount(amount, token)}.`
+                      },
+                      token === BeanCrv3 && values.tokenOut !== token ? {
+                        type: ActionType.BASE,
+                        message: `Unpack ${displayTokenAmount(amount, token)} into ${displayTokenAmount(values.token.amountOut || ZERO_BN, values.tokenOut)}.`
+                      } : undefined,
+                      {
+                        type: ActionType.RECEIVE_TOKEN,
+                        token: values.tokenOut,
+                        amount: values.token.amountOut || ZERO_BN,
+                        destination: values.destination,
+                      }
+                    ]}
+                  />
+                </AccordionDetails>
+              </Accordion>
+            </Box>
+          </>
+        ) : null}
+        <SmartSubmitButton
+          loading={isSubmitting}
+          disabled={!isSubmittable || isSubmitting}
+          type="submit"
+          variant="contained"
+          color="primary"
+          size="large"
+          tokens={[]}
+          mode="auto"
+        >
+          Claim
+        </SmartSubmitButton>
+      </Stack>
+    </Form>
   );
 };
 

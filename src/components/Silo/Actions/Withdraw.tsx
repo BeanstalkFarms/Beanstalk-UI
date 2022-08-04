@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Accordion, AccordionDetails, Alert, Box, Divider, Stack, Tooltip } from '@mui/material';
+import { Accordion, AccordionDetails, Alert, Box, Divider, Stack } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { Token } from 'classes';
@@ -147,102 +147,100 @@ const WithdrawForm : React.FC<
   ) : null;
 
   return (
-    <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
-      <Form noValidate>
-        {/* Confirmation Dialog */}
-        {/* <StyledDialog open={confirming} onClose={onClose}>
-          <StyledDialogTitle onClose={onClose}>Confirm Silo Withdrawal</StyledDialogTitle>
-          <StyledDialogContent sx={{ pb: 1 }}>
-            <Stack direction="column" gap={1}>
-              <Box>
-                <Typography variant="body2">
-                  You will forfeit .0001% ownership of Beanstalk. Withdrawing will burn your Grown Stalk & Seeds associated with your initial Deposit. 
-                </Typography>
-              </Box>
-              {tokenOutputs}
-            </Stack>
-          </StyledDialogContent>
-          <StyledDialogActions>
-            <Button disabled={!allowConfirm} type="submit" onClick={onSubmit} variant="contained" color="warning" size="large" fullWidth sx={{ position: 'relative', overflow: 'hidden' }}>
-              <Box
-                sx={{
-                  background: 'rgba(0,0,0,0.03)',
-                  // display: !allowConfirm ? 'none' : 'block',
-                  width: '100%',
+    <Form noValidate>
+      {/* Confirmation Dialog */}
+      {/* <StyledDialog open={confirming} onClose={onClose}>
+        <StyledDialogTitle onClose={onClose}>Confirm Silo Withdrawal</StyledDialogTitle>
+        <StyledDialogContent sx={{ pb: 1 }}>
+          <Stack direction="column" gap={1}>
+            <Box>
+              <Typography variant="body2">
+                You will forfeit .0001% ownership of Beanstalk. Withdrawing will burn your Grown Stalk & Seeds associated with your initial Deposit. 
+              </Typography>
+            </Box>
+            {tokenOutputs}
+          </Stack>
+        </StyledDialogContent>
+        <StyledDialogActions>
+          <Button disabled={!allowConfirm} type="submit" onClick={onSubmit} variant="contained" color="warning" size="large" fullWidth sx={{ position: 'relative', overflow: 'hidden' }}>
+            <Box
+              sx={{
+                background: 'rgba(0,0,0,0.03)',
+                // display: !allowConfirm ? 'none' : 'block',
+                width: '100%',
+                transition: `height ${CONFIRM_DELAY}ms linear`,
+                height: '0%',
+                position: 'absolute',
+                left: 0,
+                bottom: 0,
+                '&.fill': {
                   transition: `height ${CONFIRM_DELAY}ms linear`,
-                  height: '0%',
-                  position: 'absolute',
-                  left: 0,
-                  bottom: 0,
-                  '&.fill': {
-                    transition: `height ${CONFIRM_DELAY}ms linear`,
-                    height: '100%',
-                  }
-                }}
-                className={fill}
-              />
-              Confirm Withdrawal
-            </Button>
-          </StyledDialogActions>
-        </StyledDialog> */}
-        {/* Form Content */}
-        <Stack gap={1}>
-          <TokenInputField
-            name="tokens.0.amount"
-            token={whitelistedToken}
-            disabled={!depositedBalance || depositedBalance.eq(0)}
-            balance={depositedBalance || ZERO_BN}
-            balanceLabel="Deposited Balance"
-            InputProps={InputProps}
-          />
-          {isReady ? (
-            <Stack direction="column" gap={1}>
-              <TxnSeparator />
-              {tokenOutputs}
-              <Box>
-                <Accordion defaultExpanded variant="outlined">
-                  <StyledAccordionSummary title="Transaction Details" />
-                  <AccordionDetails>
-                    <TxnPreview
-                      actions={[
-                        {
-                          type: ActionType.WITHDRAW,
-                          amount: withdrawResult.amount,
-                          token: whitelistedToken,
-                        },
-                        {
-                          type: ActionType.UPDATE_SILO_REWARDS,
-                          stalk: withdrawResult.stalk,
-                          seeds: withdrawResult.seeds,
-                        },
-                        {
-                          type: ActionType.IN_TRANSIT,
-                          amount: withdrawResult.amount,
-                          token: whitelistedToken,
-                          withdrawSeasons
-                        }
-                      ]}
-                    />
-                  </AccordionDetails>
-                </Accordion>
-              </Box>
-            </Stack>
-          ) : null}
-          <SmartSubmitButton
-            loading={isSubmitting}
-            disabled={!isReady || isSubmitting}
-            type="submit"
-            variant="contained"
-            color="primary"
-            size="large"
-            tokens={[]}
-            mode="auto"
-          >
-            Withdraw
-          </SmartSubmitButton>
-        </Stack>
-      </Form>
-    </Tooltip>
+                  height: '100%',
+                }
+              }}
+              className={fill}
+            />
+            Confirm Withdrawal
+          </Button>
+        </StyledDialogActions>
+      </StyledDialog> */}
+      {/* Form Content */}
+      <Stack gap={1}>
+        <TokenInputField
+          name="tokens.0.amount"
+          token={whitelistedToken}
+          disabled={!depositedBalance || depositedBalance.eq(0)}
+          balance={depositedBalance || ZERO_BN}
+          balanceLabel="Deposited Balance"
+          InputProps={InputProps}
+        />
+        {isReady ? (
+          <Stack direction="column" gap={1}>
+            <TxnSeparator />
+            {tokenOutputs}
+            <Box>
+              <Accordion defaultExpanded variant="outlined">
+                <StyledAccordionSummary title="Transaction Details" />
+                <AccordionDetails>
+                  <TxnPreview
+                    actions={[
+                      {
+                        type: ActionType.WITHDRAW,
+                        amount: withdrawResult.amount,
+                        token: whitelistedToken,
+                      },
+                      {
+                        type: ActionType.UPDATE_SILO_REWARDS,
+                        stalk: withdrawResult.stalk,
+                        seeds: withdrawResult.seeds,
+                      },
+                      {
+                        type: ActionType.IN_TRANSIT,
+                        amount: withdrawResult.amount,
+                        token: whitelistedToken,
+                        withdrawSeasons
+                      }
+                    ]}
+                  />
+                </AccordionDetails>
+              </Accordion>
+            </Box>
+          </Stack>
+        ) : null}
+        <SmartSubmitButton
+          loading={isSubmitting}
+          disabled={!isReady || isSubmitting}
+          type="submit"
+          variant="contained"
+          color="primary"
+          size="large"
+          tokens={[]}
+          mode="auto"
+        >
+          Withdraw
+        </SmartSubmitButton>
+      </Stack>
+    </Form>
   );
 };
 

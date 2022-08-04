@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Accordion, AccordionDetails, Box, Stack, Tooltip } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
 import { Token } from 'classes';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
@@ -108,93 +108,91 @@ const DepositForm : React.FC<
   }, [values.tokens, setFieldValue]);
 
   return (
-    <Tooltip title={isMainnet ? <>Deposits will be available once Beanstalk is Replanted.</> : ''} followCursor>
-      <Form noValidate autoComplete="off">
-        <TokenSelectDialog
-          open={isTokenSelectVisible}
-          handleClose={hideTokenSelect}
-          handleSubmit={handleSelectTokens}
-          selected={values.tokens}
-          balances={balances}
-          tokenList={tokenList}
-          mode={TokenSelectMode.SINGLE}
-        />
-        <Stack gap={1}>
-          {values.tokens.map((tokenState, index) => (
-            <TokenQuoteProvider
-              key={`tokens.${index}`}
-              name={`tokens.${index}`}
-              tokenOut={whitelistedToken}
-              balance={balances[tokenState.token.address] || ZERO_BN}
-              state={tokenState}
-              showTokenSelect={showTokenSelect}
-              disabled={isMainnet}
-              disableTokenSelect={isMainnet}
-              handleQuote={handleQuote}
+    <Form noValidate autoComplete="off">
+      <TokenSelectDialog
+        open={isTokenSelectVisible}
+        handleClose={hideTokenSelect}
+        handleSubmit={handleSelectTokens}
+        selected={values.tokens}
+        balances={balances}
+        tokenList={tokenList}
+        mode={TokenSelectMode.SINGLE}
+      />
+      <Stack gap={1}>
+        {values.tokens.map((tokenState, index) => (
+          <TokenQuoteProvider
+            key={`tokens.${index}`}
+            name={`tokens.${index}`}
+            tokenOut={whitelistedToken}
+            balance={balances[tokenState.token.address] || ZERO_BN}
+            state={tokenState}
+            showTokenSelect={showTokenSelect}
+            disabled={isMainnet}
+            disableTokenSelect={isMainnet}
+            handleQuote={handleQuote}
+          />
+        ))}
+        {isReady ? (
+          <>
+            <TxnSeparator />
+            <TokenOutputField
+              token={whitelistedToken}
+              amount={amount}
             />
-          ))}
-          {isReady ? (
-            <>
-              <TxnSeparator />
-              <TokenOutputField
-                token={whitelistedToken}
-                amount={amount}
-              />
-              <Stack direction={{ xs: 'column', md: 'row' }} gap={1} justifyContent="center">
-                <Box sx={{ flex: 1 }}>
-                  <TokenOutputField
-                    token={STALK}
-                    amount={stalk}
-                    amountTooltip={(
-                      <>
-                        1 {whitelistedToken.symbol} &rarr; {displayFullBN(amountToBdv(new BigNumber(1)))} BDV<br />
-                        1 BDV = {whitelistedToken.getStalk().toString()} STALK
-                        {/* {displayFullBN(bdv, BEAN[1].displayDecimals)} BDV &rarr; {displayFullBN(stalk, STALK.displayDecimals)} STALK */}
-                      </>
-                    )}
-                  />
-                </Box>
-                <Box sx={{ flex: 1 }}>
-                  <TokenOutputField
-                    token={SEEDS}
-                    amount={seeds}
-                    amountTooltip={(
-                      <>
-                        1 {whitelistedToken.symbol} &rarr; {displayFullBN(amountToBdv(new BigNumber(1)))} BDV<br />
-                        1 BDV = {whitelistedToken.getSeeds().toString()} SEEDS
-                        {/* {displayFullBN(bdv, BEAN[1].displayDecimals)} BDV &rarr; {displayFullBN(seeds, SEEDS.displayDecimals)} SEED */}
-                      </>
-                    )}
-                  />
-                </Box>
-              </Stack>
-              <Box>
-                <Accordion variant="outlined">
-                  <StyledAccordionSummary title="Transaction Details" />
-                  <AccordionDetails>
-                    <TxnPreview
-                      actions={actions}
-                    />
-                  </AccordionDetails>
-                </Accordion>
+            <Stack direction={{ xs: 'column', md: 'row' }} gap={1} justifyContent="center">
+              <Box sx={{ flex: 1 }}>
+                <TokenOutputField
+                  token={STALK}
+                  amount={stalk}
+                  amountTooltip={(
+                    <>
+                      1 {whitelistedToken.symbol} &rarr; {displayFullBN(amountToBdv(new BigNumber(1)))} BDV<br />
+                      1 BDV = {whitelistedToken.getStalk().toString()} STALK
+                      {/* {displayFullBN(bdv, BEAN[1].displayDecimals)} BDV &rarr; {displayFullBN(stalk, STALK.displayDecimals)} STALK */}
+                    </>
+                  )}
+                />
               </Box>
-            </>
-          ) : null}
-          <SmartSubmitButton
-            loading={isSubmitting}
-            type="submit"
-            variant="contained"
-            color="primary"
-            size="large"
-            contract={contract}
-            tokens={values.tokens}
-            mode="auto"
-          >
-            Deposit
-          </SmartSubmitButton>
-        </Stack>
-      </Form>
-    </Tooltip>
+              <Box sx={{ flex: 1 }}>
+                <TokenOutputField
+                  token={SEEDS}
+                  amount={seeds}
+                  amountTooltip={(
+                    <>
+                      1 {whitelistedToken.symbol} &rarr; {displayFullBN(amountToBdv(new BigNumber(1)))} BDV<br />
+                      1 BDV = {whitelistedToken.getSeeds().toString()} SEEDS
+                      {/* {displayFullBN(bdv, BEAN[1].displayDecimals)} BDV &rarr; {displayFullBN(seeds, SEEDS.displayDecimals)} SEED */}
+                    </>
+                  )}
+                />
+              </Box>
+            </Stack>
+            <Box>
+              <Accordion variant="outlined">
+                <StyledAccordionSummary title="Transaction Details" />
+                <AccordionDetails>
+                  <TxnPreview
+                    actions={actions}
+                  />
+                </AccordionDetails>
+              </Accordion>
+            </Box>
+          </>
+        ) : null}
+        <SmartSubmitButton
+          loading={isSubmitting}
+          type="submit"
+          variant="contained"
+          color="primary"
+          size="large"
+          contract={contract}
+          tokens={values.tokens}
+          mode="auto"
+        >
+          Deposit
+        </SmartSubmitButton>
+      </Stack>
+    </Form>
   );
 };
 
