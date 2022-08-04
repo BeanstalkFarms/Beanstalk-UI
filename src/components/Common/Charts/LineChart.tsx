@@ -40,7 +40,7 @@ export type LineChartProps = {
   onCursor: (ds?: DataPoint[]) => void;
   isTWAP?: boolean; // used to indicate if we are displaying TWAP price
   curve?: CurveFactory | (keyof typeof CURVES);
-  children: (props: GraphProps & {
+  children?: (props: GraphProps & {
     scales: Scale[];
     dataRegion: DataRegion;
   }) => React.ReactElement | null;

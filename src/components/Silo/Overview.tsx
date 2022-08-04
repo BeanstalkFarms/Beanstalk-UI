@@ -6,10 +6,7 @@ import { AppState } from 'state';
 import { displayBN, displayUSD } from 'util/index';
 
 import LineChart, { DataPoint } from 'components/Common/Charts/LineChart';
-import {
-  mockDepositData,
-  mockOwnershipPctData,
-} from 'components/Common/Charts/LineChart.mock';
+
 import MainnetBlur from 'components/Common/ZeroState/MainnetBlur';
 import Stat from 'components/Common/Stat';
 import useTabs from 'hooks/display/useTabs';
@@ -59,7 +56,10 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
             </Stack>
           </MainnetBlur>
         )}
-        <LineChart series={series} onCursor={handleCursor} />
+        <LineChart
+          series={series}
+          onCursor={handleCursor}
+        />
       </Box>
     </>
   );
@@ -157,7 +157,7 @@ const Overview: React.FC<{
             breakdown.states.deposited.value
           ]}
           series={[
-            mockDepositData
+            []
           ]}
           season={season}
         />
@@ -168,7 +168,10 @@ const Overview: React.FC<{
             farmerSilo.stalk.active,
             farmerSilo.stalk.active.div(beanstalkSilo.stalk.total),
           ]}
-          series={[mockDepositData, mockOwnershipPctData]}
+          series={[
+            [],
+            []
+          ]}
           season={season}
         />
       </Box>
