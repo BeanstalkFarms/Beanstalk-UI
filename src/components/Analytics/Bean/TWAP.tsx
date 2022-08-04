@@ -8,7 +8,7 @@ import useSeason from 'hooks/useSeason';
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
-const getValue = (season: Season) => parseFloat(season.twap);
+const getValue = (season: Season) => parseFloat(season.price);
 const formatValue = (value: number) => `$${value.toFixed(4)}`;
 const useStatProps = () => {
   const theme = useTheme();

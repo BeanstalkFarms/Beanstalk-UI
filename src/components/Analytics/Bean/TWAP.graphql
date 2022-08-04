@@ -8,6 +8,6 @@ query SeasonalTWAP($season_lte: Int, $first: Int) {
     id
     season
     timestamp
-    twap
+    price
   }
 }
