@@ -54,6 +54,7 @@ const NavDrawer: React.FC<{
           </Stack>
           {/* Items */}
           <List sx={{ mt: 1, fontSize: 22 }}>
+            {/* Individual Items */}
             {ROUTES.top.map((item) => (
               <Box key={item.path} sx={{ borderBottom: 2, borderColor: BeanstalkPalette.lightBlue }}>
                 <MenuItemMobile
@@ -62,12 +63,14 @@ const NavDrawer: React.FC<{
                 />
               </Box>
             ))}
+            {/* More Dropdown */}
             <Box key="more" sx={{ borderBottom: 2, borderColor: BeanstalkPalette.lightBlue }}>
               <MenuItemMobile
                 item={{ title: 'More', path: '#' }}
                 onClick={openMore ? hideMore : showMore}
                 endAdornment={<DropdownIcon open={openMore} sx={{ color: 'text.secondary', height: IconSize.small }} />}
               />
+              {/* Only show dropdown if openMore === true */}
               <Stack display={openMore ? 'block' : 'none'}>
                 <Box sx={{ pl: 0.5 }}>
                   {ROUTES.more.map((item) => (
