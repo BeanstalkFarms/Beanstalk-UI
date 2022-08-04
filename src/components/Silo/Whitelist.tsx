@@ -158,6 +158,9 @@ const Whitelist : React.FC<{
                           amount={beanstalkSilo.balances[token.address]?.deposited.amount}
                           truncate
                         />
+                        {isUnripe ? (
+                          <Typography display="inline" color={BeanstalkPalette.washedRed}>*</Typography>
+                        ) : null}
                       </Typography>
                     </Tooltip>
                   </Grid>
