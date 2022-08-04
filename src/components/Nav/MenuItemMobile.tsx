@@ -10,9 +10,13 @@ import { FontSize } from '../App/muiTheme';
  *
  */
 const NavItemMobile: React.FC<{
+  /**
+   * Add an adornment to the MenuItem,
+   * such as a dropdown arrow.
+   */
+  endAdornment?: React.ReactElement,
   item: RouteData;
   onClick: () => void,
-  endAdornment?: React.ReactElement,
 } & StackProps> = ({
   item,
   endAdornment,
