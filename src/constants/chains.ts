@@ -14,8 +14,6 @@ import ethereumLogoUrl from 'img/tokens/eth-logo.svg';
  */
 export enum SupportedChainId {
   MAINNET = 1,
-  ASTRO = 6074,     // pre-exploit, no changes
-  PHOENIX = 6075,   // pre-exploit, beanstalk replanted + migration script
   CUJO = 31337,     // pre-exploit, beanstalk replanted
   LOCALHOST = 1337,
 }
@@ -28,7 +26,6 @@ export const REPLANTED_CHAINS = new Set([
   SupportedChainId.MAINNET,
   SupportedChainId.LOCALHOST,
   SupportedChainId.CUJO,
-  SupportedChainId.PHOENIX,
 ]);
 
 /**
@@ -37,8 +34,6 @@ export const REPLANTED_CHAINS = new Set([
  */
 export const TESTNET_CHAINS = new Set([
   SupportedChainId.LOCALHOST,
-  SupportedChainId.ASTRO,
-  SupportedChainId.PHOENIX,
   SupportedChainId.CUJO,
 ]);
 
@@ -51,8 +46,6 @@ export enum NetworkType {
 
 export const L1_CHAIN_IDS = [
   SupportedChainId.MAINNET,
-  SupportedChainId.ASTRO,
-  SupportedChainId.PHOENIX,
   SupportedChainId.LOCALHOST,
   SupportedChainId.CUJO
 ] as const;
@@ -104,20 +97,6 @@ export const CHAIN_INFO : ChainInfoMap = {
     label: 'Ethereum',
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-  },
-  [SupportedChainId.ASTRO]: {
-    networkType: NetworkType.L1,
-    explorer: 'https://etherscan.io',
-    label: 'Astro',
-    logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'Astro Ether', symbol: 'astroETH', decimals: 18 },
-  },
-  [SupportedChainId.PHOENIX]: {
-    networkType: NetworkType.L1,
-    explorer: 'https://etherscan.io',
-    label: 'Phoenix',
-    logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'Phoenix Ether', symbol: 'phoenixETH', decimals: 18 },
   },
   [SupportedChainId.LOCALHOST]: {
     networkType: NetworkType.L1,

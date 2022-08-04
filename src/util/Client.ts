@@ -80,8 +80,6 @@ const baseChains = [
 ];
 
 if (Boolean(process.env.REACT_APP_SHOW_DEV_CHAINS) === true) {
-  baseChains.push(makeTestnet(SupportedChainId.ASTRO, 'Astro'));
-  baseChains.push(makeTestnet(SupportedChainId.PHOENIX, 'Phoenix'));
   baseChains.push(makeTestnet(SupportedChainId.CUJO, 'Cujo'));
   baseChains.push(chain.localhost);
 }
