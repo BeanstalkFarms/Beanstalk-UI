@@ -32,7 +32,9 @@ const ForecastPage: React.FC = () => {
           <PodRate />
         </Card>
       </Stack>
-      <LiquidityOverTime balances={balances} />
+      <LiquidityOverTime
+        balances={balances}
+      />
       {/* <LiquidityByState /> */}
     </>
   );

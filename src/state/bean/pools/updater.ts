@@ -30,7 +30,7 @@ export const useFetchPools = () => {
             beanSupply,
           ] = await Promise.all([
             beanstalkPriceContract.price(),
-            ERC20__factory.connect(Bean.address, provider), // FIXME
+            ERC20__factory.connect(Bean.address, provider).totalSupply(), // FIXME
           ]);
           if (!priceResult) return;
 
