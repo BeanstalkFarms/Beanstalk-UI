@@ -11,6 +11,7 @@ import MainnetBlur from 'components/Common/ZeroState/MainnetBlur';
 import Stat from 'components/Common/Stat';
 import useTabs from 'hooks/display/useTabs';
 import { mockDepositData, mockOwnershipPctData } from 'components/Common/Charts/LineChart.mock';
+import BlurComponent from 'components/Common/ZeroState/BlurComponent';
 import WalletButton from '../Common/Connection/WalletButton';
 import useAccount from '../../hooks/ledger/useAccount';
 
@@ -49,13 +50,15 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
         />
       </Box>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
-        {!account && (
-          <MainnetBlur>
+        {!account ? (
+          <BlurComponent>
             <Stack justifyContent="center" alignItems="center" gap={1}>
               <Typography variant="body1" color="gray">Your Silo Deposits will appear here.</Typography>
               <WalletButton showFullText color="primary" sx={{ height: 45 }} />
             </Stack>
-          </MainnetBlur>
+          </BlurComponent>
+        ) : (
+          <BlurComponent blur={6}>Historical Deposit value will be available soon.</BlurComponent>
         )}
         <LineChart
           series={series}
