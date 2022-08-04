@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Box, Card, Container, Link, Stack, Tab, Tabs, Typography, useMediaQuery, } from '@mui/material';
-import PageHeader from 'components/Common/PageHeader';
 import { useSigner } from 'hooks/ledger/useSigner';
 import fetch from 'node-fetch';
 import { getAccount } from 'util/Account';
@@ -12,7 +11,6 @@ import { BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES } from '../constants'
 import NFTGrid from '../components/NFT/NFTGrid';
 import { useGenesisNFTContract, useWinterNFTContract } from '../hooks/useContract';
 import TransactionToast from '../components/Common/TxnToast';
-import AddressIcon from '../components/Common/AddressIcon';
 import useAccount from '../hooks/ledger/useAccount';
 import AuthEmptyState from '../components/Common/ZeroState/AuthEmptyState';
 
@@ -79,8 +77,8 @@ const NFTPage: React.FC = () => {
   const mintGenesis = () => {
     if (selectedNFT?.claimed === ClaimStatus.UNCLAIMED && account) {
       const txToast = new TransactionToast({
-        loading: `Minting Genesis BeaNFT ${selectedNFT.id}`,
-        success: 'Mint complete!',
+        loading: `Minting Genesis BeaNFT ${selectedNFT.id}...`,
+        success: 'Mint successful.',
       });
 
       genesisContract.mint(getAccount(account), selectedNFT.id, selectedNFT.metadataIpfsHash as string, selectedNFT.signature as string)
@@ -103,8 +101,8 @@ const NFTPage: React.FC = () => {
   const mintAllGenesis = () => {
     if (unmintedGenesis && genesisNFTs && account && unmintedGenesis?.length > 0) {
       const txToast = new TransactionToast({
-        loading: 'Minting all Genesis BeaNFTs',
-        success: 'Mint complete!',
+        loading: 'Minting all Genesis BeaNFTs...',
+        success: 'Mint successful.',
       });
 
       const accounts = Array(unmintedGenesis.length).fill(getAccount(account));
@@ -131,8 +129,8 @@ const NFTPage: React.FC = () => {
   const mintWinter = () => {
     if (selectedNFT?.claimed === ClaimStatus.UNCLAIMED && account) {
       const txToast = new TransactionToast({
-        loading: `Minting Winter BeaNFT ${selectedNFT.id}`,
-        success: 'Mint complete!',
+        loading: `Minting Winter BeaNFT ${selectedNFT.id}...`,
+        success: 'Mint successful.',
       });
 
       winterContract.mint(getAccount(account), selectedNFT.id, selectedNFT.signature2 as string)
@@ -155,8 +153,8 @@ const NFTPage: React.FC = () => {
   const mintAllWinter = () => {
     if (unmintedWinter && winterNFTs && account && (unmintedWinter.length > 0)) {
       const txToast = new TransactionToast({
-        loading: 'Minting all Winter BeaNFTs',
-        success: 'Mint complete!',
+        loading: 'Minting all Winter BeaNFTs...',
+        success: 'Mint successful.',
       });
 
       const tokenIds = unmintedWinter.map((nft) => nft.id);
@@ -203,18 +201,6 @@ const NFTPage: React.FC = () => {
   return (
     <Container maxWidth="lg">
       <Stack spacing={2}>
-        <PageHeader
-          title={(
-            <Stack direction="row" gap={0.5} alignItems="center">
-              <AddressIcon address={account} />
-              {account && account !== undefined ? (
-                <Typography variant="h1">{`${getAccount(account).substring(0, 7)}...'s BeaNFTs`}</Typography>
-              ) : (
-                <Typography variant="h1">BeaNFTs</Typography>
-              )}
-            </Stack>
-          )}
-        />
         <Card sx={{ p: 2 }}>
           <Stack gap={1.5}>
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ px: 0.5 }}>
@@ -260,12 +246,13 @@ const NFTPage: React.FC = () => {
         </Card>
       </Stack>
       {selectedNFT !== null && account &&
-      <NFTDialog
-        nft={selectedNFT}
-        dialogOpen={dialogOpen}
-        handleDialogClose={handleDialogClose}
-        handleMint={contractMap[selectedNFT.subcollection]}
-          />}
+        <NFTDialog
+          nft={selectedNFT}
+          dialogOpen={dialogOpen}
+          handleDialogClose={handleDialogClose}
+          handleMint={contractMap[selectedNFT.subcollection]}
+        />
+      }
     </Container>
   );
 };

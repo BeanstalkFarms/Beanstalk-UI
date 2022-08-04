@@ -1,14 +1,14 @@
 import React from 'react';
-import { Button, Dialog, Divider, Stack } from '@mui/material';
+import { Button, Dialog, Link } from '@mui/material';
 import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
-import NFTDetails from './NFTDetails';
-import { ClaimStatus } from '../../util/BeaNFTs';
+import { ClaimStatus, COLLECTIONS, Nft } from '../../util/BeaNFTs';
+import NFTImage from './NFTImage';
 
 export interface NFTDialogProps {
   handleDialogClose: any;
   dialogOpen: boolean;
   handleMint: any;
-  nft: any;
+  nft: Nft;
 }
 
 const NFTDialog: React.FC<NFTDialogProps> = ({
@@ -16,29 +16,42 @@ const NFTDialog: React.FC<NFTDialogProps> = ({
   dialogOpen,
   handleMint,
   nft
-}) => (
-  <Dialog
-    onClose={handleDialogClose}
-    open={dialogOpen}
-    fullWidth
-    PaperProps={{ sx: { width: '400px' } }}
+}) => {
+  const nftImage = <NFTImage nft={nft} />;
+  return (
+    <Dialog
+      onClose={handleDialogClose}
+      open={dialogOpen}
+      fullWidth
+      PaperProps={{ sx: { width: '400px' } }}
     >
-    <StyledDialogTitle onClose={handleDialogClose}>BeaNFT</StyledDialogTitle>
-    <StyledDialogContent sx={{ px: 1, pb: 1 }}>
-      <Stack gap={1}>
-        <Stack gap={1}>
-          <NFTDetails nft={nft} collection={nft.subcollection} />
-        </Stack>
-        <Divider />
-      </Stack>
-    </StyledDialogContent>
-    <StyledDialogActions sx={{ pt: 0 }}>
-      {/* FIXME: should be a LoadingButton */}
-      <Button onClick={handleMint} disabled={nft.claimed === ClaimStatus.CLAIMED} sx={{ height: '45px', width: '100%' }}>
-        {nft.claimed === ClaimStatus.CLAIMED ? 'Minted' : 'Mint'}
-      </Button>
-    </StyledDialogActions>
-  </Dialog>
+      <StyledDialogTitle onClose={handleDialogClose}>
+        BeaNFT {nft.id}
+      </StyledDialogTitle>
+      <StyledDialogContent sx={{ px: 1, pb: 1 }}>
+        {nft.claimed === 0 ? (
+          <Link
+            href={
+            `https://opensea.io/assets/ethereum/${COLLECTIONS[nft.subcollection]}/${nft.id}`
+          }
+            target="_blank"
+            rel="noreferrer">
+            {nftImage}
+          </Link>
+        ) : nftImage}
+      </StyledDialogContent>
+      <StyledDialogActions sx={{ pt: 0 }}>
+        {/* FIXME: should be a LoadingButton */}
+        <Button
+          onClick={handleMint}
+          disabled={nft.claimed === ClaimStatus.CLAIMED}
+          sx={{ height: '45px', width: '100%' }}
+        >
+          {nft.claimed === ClaimStatus.CLAIMED ? 'Minted' : 'Mint'}
+        </Button>
+      </StyledDialogActions>
+    </Dialog>
   );
+};
 
 export default NFTDialog;
