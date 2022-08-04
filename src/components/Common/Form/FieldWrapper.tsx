@@ -1,5 +1,7 @@
 import React, { ReactNode } from 'react';
 import { Box, Tooltip, Typography } from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { FontSize } from '../../App/muiTheme';
 
 const FieldWrapper : React.FC<{
   label?: ReactNode | string;
@@ -23,7 +25,12 @@ const FieldWrapper : React.FC<{
           }}
           display="inline-block"
         >
-          {label}
+          {label}&nbsp;
+          {tooltip && (
+            <HelpOutlineIcon
+              sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
+            />
+          )}
         </Typography>
       </Tooltip>
     )}
