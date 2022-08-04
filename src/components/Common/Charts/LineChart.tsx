@@ -62,8 +62,8 @@ export type DataPoint = {
 };
 
 // data accessors
-const getX = (d: DataPoint) => d.season;
-const getY = (d: DataPoint) => d.value;
+const getX = (d: DataPoint) => d?.season;
+const getY = (d: DataPoint) => d?.value;
 const bisectSeason = bisector<DataPoint, number>(
   (d) => d.season
 ).left;

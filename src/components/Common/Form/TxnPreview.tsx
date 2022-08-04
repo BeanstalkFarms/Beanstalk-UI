@@ -74,7 +74,7 @@ const TxnStep : React.FC<{
   actions: Action[];
   highlighted: ActionType | undefined;
 }> = ({
-  type, 
+  type,
   actions,
   highlighted,
 }) => {
@@ -87,7 +87,7 @@ const TxnStep : React.FC<{
         <SwapStep actions={actions as SwapAction[]} />
       );
       break;
-    
+
     /// SILO
     case ActionType.DEPOSIT:
     case ActionType.WITHDRAW:
@@ -124,7 +124,7 @@ const TxnStep : React.FC<{
         </IconRow>
       );
       break;
-    
+
     /// FIELD
     case ActionType.BUY_BEANS:
       action = (
@@ -176,7 +176,7 @@ const TxnStep : React.FC<{
         </IconRow>
       );
       break;
-    
+
     /// MARKET
     case ActionType.CREATE_ORDER:
       action = (
@@ -187,8 +187,13 @@ const TxnStep : React.FC<{
         </IconRow>
       );
       break;
-
+    // FIXME: better way to reduce duplicate code here?
     case ActionType.BUY_PODS:
+      action = (
+        <TokenIcon token={PODS} style={{ height: '100%', marginTop: 0, }} />
+      );
+      break;
+    case ActionType.SELL_PODS:
       action = (
         <TokenIcon token={PODS} style={{ height: '100%', marginTop: 0, }} />
       );
@@ -234,8 +239,8 @@ const TxnStep : React.FC<{
   }
 
   return (
-    <Box sx={{ 
-      width: '80px', 
+    <Box sx={{
+      width: '80px',
       height: '100%', // of TXN_PREVIEW_HEIGHT
       textAlign: 'center',
       '&:first-child': {
@@ -276,6 +281,7 @@ const EXECUTION_STEPS = [
 
   /// Group 2:
   /// Beanstalk function calls
+  ActionType.HARVEST,
   ActionType.DEPOSIT,
   ActionType.WITHDRAW,
   ActionType.BUY_FERTILIZER,
@@ -284,8 +290,9 @@ const EXECUTION_STEPS = [
   ActionType.BUY_BEANS,
   ActionType.BURN_BEANS,
   ActionType.TRANSFER_PODS,
+  ActionType.SELL_PODS,
   ActionType.RINSE,
-  
+
   /// Group 3:
   /// Results of Beanstalk function calls
   ActionType.UPDATE_SILO_REWARDS,
@@ -296,7 +303,6 @@ const EXECUTION_STEPS = [
   ActionType.RECEIVE_PODS,
   ActionType.BUY_PODS,
   ActionType.RECEIVE_TOKEN,
-  ActionType.HARVEST,
 
   /// Group 4:
   /// ???
@@ -306,7 +312,7 @@ const EXECUTION_STEPS = [
 const TXN_PREVIEW_HEIGHT = 35;
 const TXN_PREVIEW_LINE_WIDTH = 5;
 
-const TxnPreview : React.FC<{ 
+const TxnPreview : React.FC<{
   actions: (Action | undefined)[]
 }> = ({
   actions
@@ -362,7 +368,7 @@ const TxnPreview : React.FC<{
           }}>
             {/* Distribute content equally spaced
               * across the entire container */}
-            <Stack 
+            <Stack
               direction="row"
               justifyContent="space-between"
               alignItems="center"
@@ -377,8 +383,8 @@ const TxnPreview : React.FC<{
                     type={step}
                     actions={instructionsByType[step]}
                     highlighted={highlighted}
-                  /> 
-                ) : null 
+                  />
+                ) : null
               ))}
             </Stack>
           </Box>
