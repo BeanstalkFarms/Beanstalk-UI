@@ -1,7 +1,6 @@
 // Ethereum Images
 import ethIconCircledUrl from 'img/tokens/eth-logo-circled.svg';
 import wEthIconCircledUrl from 'img/tokens/weth-logo-circled.svg';
-import ropEthIconCircledUrl from 'img/tokens/ropeth-logo-circled.svg';
 
 // Bean Images
 // import beanLogoUrl from 'img/tokens/bean-logo.svg';
@@ -63,17 +62,7 @@ export const ETH = {
       symbol: 'ETH',
       logo: ethIconCircledUrl
     }
-  ),
-  [SupportedChainId.ROPSTEN]: new NativeToken(
-    SupportedChainId.ROPSTEN,
-    'ETH',
-    ETH_DECIMALS,
-    {
-      name: 'Ropsten Ether',
-      symbol: 'ropETH',
-      logo: ropEthIconCircledUrl
-    }
-  ),
+  )
 };
 
 // ----------------------------------------
@@ -149,36 +138,12 @@ export const WETH = {
       symbol: 'WETH',
       logo: wEthIconCircledUrl
     }
-  ),
-  [SupportedChainId.ROPSTEN]: new ERC20Token(
-    SupportedChainId.ROPSTEN,
-    '0xc778417E063141139Fce010982780140Aa0cD5Ab',
-    18,
-    {
-      name: 'Wrapped Ether',
-      symbol: 'WETH',
-      logo: wEthIconCircledUrl
-    }
   )
 };
 
 export const BEAN = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,
-    BEAN_ADDRESSES,
-    6,
-    {
-      name: 'Bean',
-      symbol: 'BEAN',
-      logo: beanCircleLogoUrl,
-    },
-    {
-      stalk: 1,
-      seeds: 2,
-    }
-  ),
-  [SupportedChainId.ROPSTEN]: new ERC20Token(
-    SupportedChainId.ROPSTEN,
     BEAN_ADDRESSES,
     6,
     {
@@ -250,12 +215,6 @@ export const CRV3 = {
     18,
     crv3Meta,
   ),
-  [SupportedChainId.ROPSTEN]: new ERC20Token(
-    SupportedChainId.ROPSTEN,
-    CRV3_ADDRESSES,
-    18,
-    crv3Meta,
-  ),
 };
 
 export const DAI = {
@@ -279,12 +238,6 @@ const usdcMeta = {
 export const USDC = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,
-    USDC_ADDRESSES,
-    6,
-    usdcMeta,
-  ),
-  [SupportedChainId.ROPSTEN]: new ERC20Token(
-    SupportedChainId.ROPSTEN,
     USDC_ADDRESSES,
     6,
     usdcMeta,
@@ -317,12 +270,6 @@ export const LUSD = {
     18,
     lusdMeta,
   ),
-  [SupportedChainId.ROPSTEN]: new ERC20Token(
-    SupportedChainId.ROPSTEN,
-    LUSD_ADDRESSES,
-    18,
-    lusdMeta,
-  ),
 };
 
 // ----------------------------------------
@@ -347,36 +294,11 @@ export const BEAN_ETH_UNIV2_LP = {
       seeds: 4,
     }
   ),
-  [SupportedChainId.ROPSTEN]: new ERC20Token(
-    SupportedChainId.ROPSTEN,
-    '0x298c5f1f902c5bDc2936eb44b3E0E8675F40B8db',
-    18,
-    beanEthLpMeta,
-    {
-      stalk: 1,
-      seeds: 4,
-    }
-  ),
 };
 
 export const BEAN_CRV3_LP = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,
-    BEAN_CRV3_ADDRESSES,
-    18,
-    {
-      name: 'BEAN:3CRV LP',
-      symbol: 'BEAN:3CRV',
-      logo: beanCrv3LpLogoUrl,
-      isLP: true,
-    },
-    {
-      stalk: 1,
-      seeds: 4,
-    }
-  ),
-  [SupportedChainId.ROPSTEN]: new ERC20Token(
-    SupportedChainId.ROPSTEN,
     BEAN_CRV3_ADDRESSES,
     18,
     {

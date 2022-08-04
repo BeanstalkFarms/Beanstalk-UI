@@ -25,38 +25,12 @@ export const BEANETH_UNIV2_MAINNET = new UniswapV2Pool(
   },
 );
 
-export const BEANETH_UNIV2_ROPSTEN = new UniswapV2Pool(
-  SupportedChainId.ROPSTEN,
-  BEAN_ETH_UNIV2_ADDRESSES,
-  BEAN_ETH_UNIV2_LP,  // lpToken
-  [BEAN, WETH],       // tokens
-  {
-    name: 'BEAN:ETH Uniswap V2 Pool',
-    logo: uniswapLogo,
-    symbol: 'BEAN:ETH',
-    color: '#6dcb60'
-  },
-);
-
 // ------------------------------------
 // BEAN:CRV3 Curve MetaPool
 // ------------------------------------
 
 export const BEANCRV3_CURVE_MAINNET = new CurveMetaPool(
   SupportedChainId.MAINNET,
-  BEAN_CRV3_ADDRESSES,
-  BEAN_CRV3_LP,
-  [BEAN, CRV3],
-  {
-    name: 'BEAN:3CRV Pool',
-    logo: curveLogo,
-    symbol: 'BEAN:3CRV',
-    color: '#ed9f9c'
-  },
-);
-
-export const BEANCRV3_CURVE_ROPSTEN = new CurveMetaPool(
-  SupportedChainId.ROPSTEN,
   BEAN_CRV3_ADDRESSES,
   BEAN_CRV3_LP,
   [BEAN, CRV3],
@@ -106,10 +80,6 @@ export const ALL_POOLS: ChainConstant<PoolMap> = {
     [BEANETH_UNIV2_MAINNET.address]: BEANETH_UNIV2_MAINNET,
     [BEANCRV3_CURVE_MAINNET.address]: BEANCRV3_CURVE_MAINNET,
     [BEAN_LUSD_CURVE_POOL_MAINNET.address]: BEAN_LUSD_CURVE_POOL_MAINNET,
-  },
-  [SupportedChainId.ROPSTEN]: {
-    [BEANETH_UNIV2_ROPSTEN.address]: BEANETH_UNIV2_ROPSTEN,
-    [BEANCRV3_CURVE_ROPSTEN.address]: BEANCRV3_CURVE_ROPSTEN,
   },
   [SupportedChainId.PHOENIX]: {
     [REPLANTED_BEANCRV3_CURVE_LOCALHOST.address]: REPLANTED_BEANCRV3_CURVE_LOCALHOST,

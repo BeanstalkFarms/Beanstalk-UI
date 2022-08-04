@@ -126,7 +126,6 @@ export function useContract<T extends Contract = Contract>(
 
 const BEANSTALK_PRICE_ABIS = {
   [SupportedChainId.MAINNET]: BEANSTALK_PRICE_V0_ABI,
-  [SupportedChainId.ROPSTEN]: BEANSTALK_PRICE_ABI,
   [SupportedChainId.PHOENIX]: BEANSTALK_PRICE_REPLANTED_ABI,
   [SupportedChainId.LOCALHOST]: BEANSTALK_PRICE_REPLANTED_ABI,
 };
@@ -172,7 +171,6 @@ export function useFertilizerContract(signer?: ethers.Signer | null) {
 
 const BEANSTALK_ABIS = {
   [SupportedChainId.MAINNET]:   BEANSTALK_ABI,
-  [SupportedChainId.ROPSTEN]:   BEANSTALK_ABI,
   [SupportedChainId.CUJO]:      BEANSTALK_REPLANTED_ABI,
   [SupportedChainId.PHOENIX]:   BEANSTALK_REPLANTED_ABI,
   [SupportedChainId.LOCALHOST]: BEANSTALK_REPLANTED_ABI,
@@ -191,7 +189,6 @@ export function useBeanstalkContract(signer?: ethers.Signer | null) {
 
 const BEANFT_GENESIS_ABIS = {
   [SupportedChainId.MAINNET]:   BEANFT_GENESIS_ABI,
-  [SupportedChainId.ROPSTEN]:   BEANFT_GENESIS_ABI,
   [SupportedChainId.LOCALHOST]: BEANFT_GENESIS_ABI,
   [SupportedChainId.CUJO]:      BEANFT_GENESIS_ABI,
   [SupportedChainId.PHOENIX]:   BEANFT_GENESIS_ABI,
@@ -210,7 +207,6 @@ export function useGenesisNFTContract(signer?: ethers.Signer | null) {
 
 const BEANFT_WINTER_ABIS = {
   [SupportedChainId.MAINNET]:   BEANFT_WINTER_ABI,
-  [SupportedChainId.ROPSTEN]:   BEANFT_WINTER_ABI,
   [SupportedChainId.LOCALHOST]: BEANFT_WINTER_ABI,
   [SupportedChainId.CUJO]:      BEANFT_WINTER_ABI,
   [SupportedChainId.PHOENIX]:   BEANFT_WINTER_ABI,

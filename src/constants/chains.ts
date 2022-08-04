@@ -14,7 +14,6 @@ import ethereumLogoUrl from 'img/tokens/eth-logo.svg';
  */
 export enum SupportedChainId {
   MAINNET = 1,
-  ROPSTEN = 3,
   ASTRO = 6074,     // pre-exploit, no changes
   PHOENIX = 6075,   // pre-exploit, beanstalk replanted + migration script
   CUJO = 31337,     // pre-exploit, beanstalk replanted
@@ -51,7 +50,6 @@ export enum NetworkType {
 
 export const L1_CHAIN_IDS = [
   SupportedChainId.MAINNET,
-  SupportedChainId.ROPSTEN,
   SupportedChainId.ASTRO,
   SupportedChainId.PHOENIX,
   SupportedChainId.LOCALHOST,
@@ -105,13 +103,6 @@ export const CHAIN_INFO : ChainInfoMap = {
     label: 'Ethereum',
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-  },
-  [SupportedChainId.ROPSTEN]: {
-    networkType: NetworkType.L1,
-    explorer: 'https://ropsten.etherscan.io',
-    label: 'Ropsten',
-    logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'Ropsten Ether', symbol: 'ropETH', decimals: 18 },
   },
   [SupportedChainId.ASTRO]: {
     networkType: NetworkType.L1,
