@@ -105,7 +105,7 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
     {
       path: 'github',
       href: 'https://github.com/beanstalkfarms',
-      title: 'Github',
+      title: 'GitHub',
       icon: githubIcon
     },
     {
@@ -123,7 +123,7 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
     },
     {
       path: '/market/account',
-      title: 'My Orders/Listings',
+      title: 'My Orders / Listings',
     },
     {
       path: '/market/activity',

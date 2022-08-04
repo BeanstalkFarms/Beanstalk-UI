@@ -20,12 +20,10 @@ const SiloAnalytics: React.FC<{}> = () => {
     <Card>
       <Stack gap={2}>
         <Tabs value={tab} onChange={handleChangeTab} sx={{ px: 2, pt: 2, pb: 1.5 }}>
-          <Tab label="Deposited Beans" />
-          <Tab label="Withdrawn Beans" />
-          <Tab label="Deposited LP" />
-          <Tab label="Withdrawn LP" />
-          <Tab label="Deposited Unripe Beans" />
-          <Tab label="Deposited Unripe LP" />
+          <Tab label="Deposited BEAN" />
+          <Tab label="Deposited BEAN:3CRV" />
+          <Tab label="Deposited urBEAN" />
+          <Tab label="Deposited urBEAN3CRV" />
           <Tab label="Stalk" />
           <Tab label="Seeds" />
         </Tabs>
@@ -35,8 +33,8 @@ const SiloAnalytics: React.FC<{}> = () => {
         {tab === 3 && <Soon height={300} />}
         {tab === 4 && <Soon height={300} />}
         {tab === 5 && <Soon height={300} />}
-        {tab === 6 && <Soon height={300} />}
-        {tab === 7 && <Soon height={300} />}
+        {/* {tab === 6 && <Soon height={300} />} */}
+        {/* {tab === 7 && <Soon height={300} />} */}
         {/* {tab === 0 && <DepositedBeans season={season} beanPrice={beanPrice} />}
         {tab === 1 && <WithdrawnBeans season={season} beanPrice={beanPrice} />}
         {tab === 2 && <DepositedLP season={season} beanPrice={beanPrice} />}

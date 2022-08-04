@@ -33,11 +33,11 @@ const ListingDetails: React.FC<{
         <TokenIcon token={BEAN[1]} style={{ height: IconSize.xs }} />
         <Typography>{displayBN(podListing.pricePerPod)}</Typography>
       </StatHorizontal>
-      <StatHorizontal label="Pods Available" labelTooltip="The number of Pods left to be purchased from this Listing.">
+      <StatHorizontal label="Amount" labelTooltip="The number of Pods left to be purchased from this Listing.">
         <TokenIcon token={PODS} style={{ height: IconSize.xs }} />
         <Typography>{displayBN(podListing.remainingAmount)}</Typography>
       </StatHorizontal>
-      <StatHorizontal label="Expires In" labelTooltip="If the Pod Line moves forward by this amount, this listing will automatically expire.">
+      <StatHorizontal label="Expires in" labelTooltip="If the Pod Line moves forward by this amount, this listing will automatically expire.">
         <Typography>{displayBN(podListing.maxHarvestableIndex.minus(harvestableIndex))} Pods</Typography>
       </StatHorizontal>
     </Stack>

@@ -52,7 +52,7 @@ const COLUMNS = {
   ///
   numPods: {
     field: 'totalAmount',
-    headerName: 'Number of Pods',
+    headerName: 'Amount',
     type: 'number',
     flex: 1,
     // disableColumnMenu: true,
@@ -72,7 +72,7 @@ const COLUMNS = {
 
   listingId: {
     field: 'id',
-    headerName: 'Listing',
+    headerName: 'Pod Listing',
     flex: 1,
     disableColumnMenu: true,
     align: 'left',
@@ -105,7 +105,7 @@ const COLUMNS = {
 
   orderId: {
     field: 'id',
-    headerName: 'Order',
+    headerName: 'Pod Order',
     flex: 1,
     disableColumnMenu: true,
     align: 'left',
@@ -140,29 +140,19 @@ const COLUMNS = {
   ///
   numPodsActive: {
     field: 'remainingAmount',
-    headerName: 'Number of Pods',
+    headerName: 'Amount',
     flex: 1,
     type: 'number',
     // disableColumnMenu: true,
     align: 'left',
     headerAlign: 'left',
     renderCell: (params: GridRenderCellParams<any, PodListing>) => (
-      <Tooltip
-        placement="right"
-        title={(
-          <>
-            Total: {displayFullBN(params.row.totalAmount)} Pods<br />
-            Remaining: {displayFullBN(params.row.remainingAmount)} Pods<br />
-            {/* {params.row.filledAmount.div(params.row.totalAmount).times(100).toFixed(2)}% Filled */}
-          </>
-        )}>
-        <Stack direction="row" gap={0.3} alignItems="center">
-          <TokenIcon token={PODS} />
-          <Typography>
-            {displayBN(params.row.remainingAmount)}
-          </Typography>
-        </Stack>
-      </Tooltip>
+      <Stack direction="row" gap={0.3} alignItems="center">
+        <TokenIcon token={PODS} />
+        <Typography>
+          {displayBN(params.row.remainingAmount)}
+        </Typography>
+      </Stack>
     )
   } as GridColumns[number],
   progress: {
@@ -201,7 +191,7 @@ const COLUMNS = {
         placement="right"
         title={(
           <>
-            Total Cost: {displayFullBN((params.value as BigNumber).times(params.row.remainingAmount), BEAN[1].displayDecimals)} BEAN
+            Total Value: {displayFullBN((params.value as BigNumber).times(params.row.remainingAmount), BEAN[1].displayDecimals)} BEAN
           </>
         )}>
         <Stack direction="row" gap={0.3} alignItems="center">
@@ -228,7 +218,7 @@ const COLUMNS = {
   // https://mui.com/x/react-data-grid/column-definition/#converting-types
   plotIndex: (harvestableIndex: BigNumber) => ({
     field: 'index',
-    headerName: 'Place In Line',
+    headerName: 'Place in Line',
     flex: 1,
     type: 'number',
     align: 'left',
@@ -244,7 +234,7 @@ const COLUMNS = {
   } as GridColumns[number]),
   maxPlaceInLine: {
     field: 'maxPlaceInLine',
-    headerName: 'Place In Line',
+    headerName: 'Place in Line',
     type: 'number',
     flex: 1,
     align: 'left',
@@ -269,7 +259,7 @@ const COLUMNS = {
     renderCell: (params: GridRenderCellParams) => {
       const expiresIn = MaxBN((params.value as BigNumber).minus(harvestableIndex), ZERO_BN);
       const tip = expiresIn?.gt(0) ? (
-        <>If the Pod Line moves forward {displayFullBN((params.value as BigNumber).minus(harvestableIndex), PODS.displayDecimals)} more Pods, this Listing will expire.</>
+        <>If the Pod Line moves forward {displayFullBN((params.value as BigNumber).minus(harvestableIndex), PODS.displayDecimals)} Pods, this Listing will expire.</>
       ) : '';
       return (
         <Tooltip placement="right" title={tip}>

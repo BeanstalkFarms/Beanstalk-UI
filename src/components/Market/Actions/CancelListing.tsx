@@ -29,7 +29,7 @@ const CancelListing : React.FC<{ id: string }> = ({ id }) => {
       let txToast;
       try {
         txToast = new TransactionToast({
-          loading: 'Cancelling Pod Listing',
+          loading: 'Cancelling Pod Listing...',
           success: 'Cancellation successful.',
         });
         const txn = await beanstalk.cancelPodListing(id);

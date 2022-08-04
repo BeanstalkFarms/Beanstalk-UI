@@ -113,7 +113,7 @@ const CreateListingForm: React.FC<
                 This Plot is already listed on the Market. Creating a new Listing will override the previous one.
               </Alert>
             ) : null}
-            <FieldWrapper label="Price Per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
+            <FieldWrapper label="Price per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
               <TokenInputField
                 name="pricePerPod"
                 placeholder="0.0000"
@@ -121,7 +121,7 @@ const CreateListingForm: React.FC<
                 max={ONE_BN}
               />
             </FieldWrapper>
-            <FieldWrapper label="Expires In" tooltip={POD_MARKET_TOOLTIPS.expiresAt}>
+            <FieldWrapper label="Expires in" tooltip={POD_MARKET_TOOLTIPS.expiresAt}>
               <TokenInputField
                 name="expiresAt"
                 placeholder="0.0000"
@@ -169,7 +169,7 @@ const CreateListingForm: React.FC<
           tokens={[]}
           mode="auto"
         >
-          {alreadyListed ? 'Update' : 'Create'} Listing
+          {alreadyListed ? 'Update Listing' : 'List Pods'}
         </SmartSubmitButton>
       </Stack>
     </Form>
@@ -228,8 +228,8 @@ const CreateListing: React.FC<{}> = () => {
       if (expiresAt.gt(plotIndexBN.minus(harvestableIndex).plus(start))) throw new Error('This listing would expire after the Plot harvests.');
 
       txToast = new TransactionToast({
-        loading: 'Creating listing',
-        success: 'Listing created',
+        loading: 'Listing Pods...',
+        success: 'List successful.',
       });
 
       /// expiresAt is relative (ie 0 = front of pod line)

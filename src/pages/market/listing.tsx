@@ -82,7 +82,7 @@ const ListingPage: React.FC = () => {
           <Card sx={{ position: 'relative' }}>
             <Stack gap={1.5} sx={{ p: 1 }}>
               <Box sx={{ pt: 1, px: 1 }}>
-                <Typography variant="h4">Buy Pods</Typography>
+                <Typography variant="h4">Fill</Typography>
               </Box>
               <Box>
                 <FillListing

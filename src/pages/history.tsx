@@ -81,7 +81,7 @@ const TransactionHistoryPage: React.FC = () => {
                   ))}
               </Grid>
             ) : (
-              <EmptyState message="You don't have any events of this type!" />
+              <EmptyState message="No transactions of this type." />
             )}
           </Stack>
         </Card>

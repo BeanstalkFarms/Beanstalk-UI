@@ -25,7 +25,7 @@ const ChopConditions: React.FC<{}> = () => {
                 <Typography variant="body1" color={BeanstalkPalette.washedRed}>
                   Chop Penalty&nbsp;
                   <HelpOutlineIcon
-                    sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
+                    sx={{ color: BeanstalkPalette.washedRed, fontSize: FontSize.sm }}
                   />
                 </Typography>
               </Tooltip>
@@ -65,7 +65,7 @@ const ChopConditions: React.FC<{}> = () => {
               </Tooltip>
               <Typography variant="bodyLarge" fontWeight="400">
                 {/* TODO / FIXME: CALCULATE THIS */}
-                {displayBN(new BigNumber(-1))}
+                {displayBN(new BigNumber(-1))}%
               </Typography>
             </Stack>
           </Grid>

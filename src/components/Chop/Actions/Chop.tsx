@@ -3,14 +3,12 @@ import BigNumber from 'bignumber.js';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
   FormState,
-  SettingInput,
   SmartSubmitButton,
   TokenAdornment,
   TokenOutputField,
   TokenSelectDialog,
   TxnPreview,
-  TxnSeparator,
-  TxnSettings
+  TxnSeparator
 } from 'components/Common/Form';
 import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import { BeanstalkReplanted } from 'generated/index';
@@ -135,7 +133,7 @@ const ChopForm: React.FC<
             )}
           </Stack>
         </Stack>
-        {isValid ? (
+        {true ? (
           <>
             <TxnSeparator />
             <TokenOutputField
@@ -150,11 +148,11 @@ const ChopForm: React.FC<
                     actions={[
                       {
                         type: ActionType.BASE,
-                        message: `Chop ${displayBN(state.amount || ZERO_BN)} ${inputToken}`
+                        message: `Chop ${displayBN(state.amount || ZERO_BN)} ${inputToken}.`
                       },
                       {
                         type: ActionType.BASE,
-                        message: `Receive ${displayBN(amountOut || ZERO_BN)} ${outputToken}`
+                        message: `Add ${displayBN(amountOut || ZERO_BN)} ${outputToken} TODO add destination balance @coolbean.`
                       },
                     ]}
                   />
@@ -227,7 +225,7 @@ const Chop: React.FC<{}> = () => {
         if (!state.amount?.gt(0)) { throw new Error('No Unfertilized token to Chop.'); }
 
         txToast = new TransactionToast({
-          loading: `Chopping ${displayFullBN(state.amount)} ${state.token.symbol}`,
+          loading: `Chopping ${displayFullBN(state.amount)} ${state.token.symbol}...`,
           success: 'Chop successful.',
         });
 
@@ -264,9 +262,6 @@ const Chop: React.FC<{}> = () => {
     >
       {(formikProps: FormikProps<ChopFormValues>) => (
         <>
-          <TxnSettings placement="form-top-right">
-            <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
-          </TxnSettings>
           <ChopForm
             balances={farmerBalances}
             beanstalk={beanstalk}

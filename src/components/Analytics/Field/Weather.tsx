@@ -9,7 +9,7 @@ import { SnapshotData } from 'hooks/useSeasons';
 const getValue = (snapshot: SnapshotData<SeasonalWeatherQuery>) => snapshot.weather;
 const formatValue = (value: number) => `${value.toFixed(0)}%`;
 const StatProps = {
-  title: 'Weather',
+  title: 'Temperature',
   gap: 0.5,
 };
 

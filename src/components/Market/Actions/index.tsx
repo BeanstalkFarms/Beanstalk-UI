@@ -13,8 +13,8 @@ const MarketActions : React.FC<{}> = () => {
         {/* Header */}
         <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>
           <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }} variant="scrollable">
-            <Tab label="Order Pods" />
-            <Tab label="List Pods" />
+            <Tab label="Order" />
+            <Tab label="List" />
           </Tabs>
         </Stack>
         <Box sx={{ px: 1, pb: 1 }}>

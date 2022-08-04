@@ -20,15 +20,15 @@ import { useFetchFarmerMarket } from 'state/farmer/market/updater';
 
 const OPTIONS = [
   {
-    title: 'Wallet',
-    description: 'Return Beans locked in this order to your Wallet.',
+    title: 'Circulating Balance',
+    description: 'Return Beans in this Order to your wallet.',
     pill: <><AddressIcon size={IconSize.xs} /><Typography variant="body1">Wallet</Typography></>,
     icon: <AddressIcon size={IconSize.small} width={IconSize.small} height={IconSize.small} />,
     value: FarmToMode.EXTERNAL,
   },
   {
     title: 'Farm Balance',
-    description: 'Return Beans locked in this Order to your Farm Balance.',
+    description: 'Return Beans in this Order to your internal balance within Beanstalk  .',
     pill: <Typography variant="body1">🚜 Farm Balance</Typography>,
     icon: '🚜',
     value: FarmToMode.INTERNAL,

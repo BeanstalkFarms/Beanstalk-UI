@@ -344,7 +344,6 @@ export default function FillOrderModal({
   if (index && index.gt(0)) {
     details.push(`Sell ${displayBN(amount)} Pods out of ${displayBN(plots[index])} from your plot at place ${displayBN(index.minus(harvestableIndex))} in line.`);
     details.push(`Receive ${displayBN(beansReceived)} Beans.`);
-    details.push('This sale will settle immediately.');
   }
 
   //
