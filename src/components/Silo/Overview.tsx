@@ -7,7 +7,6 @@ import { displayBN, displayUSD } from 'util/index';
 
 import LineChart, { DataPoint } from 'components/Common/Charts/LineChart';
 
-import MainnetBlur from 'components/Common/ZeroState/MainnetBlur';
 import Stat from 'components/Common/Stat';
 import useTabs from 'hooks/display/useTabs';
 import { mockDepositData, mockOwnershipPctData } from 'components/Common/Charts/LineChart.mock';
@@ -107,13 +106,63 @@ const StalkOwnershipTab: React.FC<TabData
         />
       </Stack>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
-        {!account && (
-          <MainnetBlur>
+        {!account ? (
+          <BlurComponent>
             <Stack justifyContent="center" alignItems="center" gap={1}>
-              <Typography variant="body1" color="gray">Your Stalk Balance and Ownership will appear here.</Typography>
+              <Typography variant="body1" color="gray">Your Stalk Ownership will appear here.</Typography>
               <WalletButton showFullText color="primary" sx={{ height: 45 }} />
             </Stack>
-          </MainnetBlur>
+          </BlurComponent>
+        ) : (
+          <BlurComponent blur={6}>Historical Stalk balance and ownership will be available soon.</BlurComponent>
+        )}
+        <LineChart
+          series={series}
+          onCursor={handleCursor}
+        />
+      </Box>
+    </>
+  );
+};
+
+const SeedsOwnershipTab: React.FC<TabData
+  // & { beanstalkSilo: AppState['_beanstalk']['silo']; }
+> = ({ current, series, season }) => {
+  // Display value is an array [stalk, pct]
+  const account = useAccount();
+  const [displayValue, setDisplayValue] = useState(current);
+  const handleCursor = useCallback(
+    (dps?: DataPoint[]) => {
+      setDisplayValue(dps ? dps.map((dp) => new BigNumber(dp.value)) : current);
+    },
+    [current]
+  );
+  useEffect(() => setDisplayValue(current), [current]);
+
+  return (
+    <>
+      <Stack direction="row" gap={4} sx={{ px: 2 }}>
+        <Stat
+          title="Seed Balance"
+          titleTooltip="This is your total Seed Balance."
+          subtitle={`Season ${displayBN(season)}`}
+          amount={displayBN(displayValue[0])}
+          color="primary"
+          sx={{ minWidth: 180, ml: 0 }}
+          amountIcon={undefined}
+          gap={0.25}
+        />
+      </Stack>
+      <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
+        {!account ? (
+          <BlurComponent>
+            <Stack justifyContent="center" alignItems="center" gap={1}>
+              <Typography variant="body1" color="gray">Your Seed Ownership will appear here.</Typography>
+              <WalletButton showFullText color="primary" sx={{ height: 45 }} />
+            </Stack>
+          </BlurComponent>
+        ) : (
+          <BlurComponent blur={6}>Historical Seed balance will be available soon.</BlurComponent>
         )}
         <LineChart
           series={series}
@@ -178,6 +227,17 @@ const Overview: React.FC<{
           series={[
             mockDepositData,
             mockOwnershipPctData,
+          ]}
+          season={season}
+        />
+      </Box>
+      <Box sx={{ display: tab === 2 ? 'block' : 'none' }}>
+        <SeedsOwnershipTab
+          current={[
+            farmerSilo.seeds.active,
+          ]}
+          series={[
+            mockDepositData,
           ]}
           season={season}
         />
