@@ -56,10 +56,17 @@ const COLUMNS = {
     type: 'number',
     flex: 1,
     // disableColumnMenu: true,
+
     align: 'left',
     headerAlign: 'left',
     renderCell: (params: GridRenderCellParams) => (
-      <Tooltip placement="right" title={<>{displayFullBN(params.value)} Pods</>}>
+      <Tooltip
+        placement="right"
+        title={
+          <>
+            Total Value: {displayFullBN((params.value as BigNumber).times(params.row.pricePerPod), BEAN[1].displayDecimals)} BEAN
+          </>
+      }>
         <Stack direction="row" gap={0.3} alignItems="center">
           <TokenIcon token={PODS} />
           <Typography>
@@ -147,12 +154,21 @@ const COLUMNS = {
     align: 'left',
     headerAlign: 'left',
     renderCell: (params: GridRenderCellParams<any, PodListing>) => (
-      <Stack direction="row" gap={0.3} alignItems="center">
-        <TokenIcon token={PODS} />
-        <Typography>
-          {displayBN(params.row.remainingAmount)}
-        </Typography>
-      </Stack>
+      <Tooltip
+        placement="right"
+        title={
+          <>
+            Total Value: {displayFullBN((params.value as BigNumber).times(params.row.pricePerPod), BEAN[1].displayDecimals)} BEAN
+          </>
+      }>
+        <Stack direction="row" gap={0.3} alignItems="center">
+          <TokenIcon token={PODS} />
+          <Typography>
+            {displayBN(params.row.remainingAmount)}
+          </Typography>
+        </Stack>
+      </Tooltip>
+
     )
   } as GridColumns[number],
   progress: {
@@ -187,20 +203,12 @@ const COLUMNS = {
     headerAlign: 'left',
     flex: 1,
     renderCell: (params: GridRenderCellParams<any, PodListing | PodOrder>) => (
-      <Tooltip
-        placement="right"
-        title={(
-          <>
-            Total Value: {displayFullBN((params.value as BigNumber).times(params.row.remainingAmount), BEAN[1].displayDecimals)} BEAN
-          </>
-        )}>
-        <Stack direction="row" gap={0.3} alignItems="center">
-          <TokenIcon token={BEAN[1]} />
-          <Typography>
-            {displayFullBN(params.value)}
-          </Typography>
-        </Stack>
-      </Tooltip>
+      <Stack direction="row" gap={0.3} alignItems="center">
+        <TokenIcon token={BEAN[1]} />
+        <Typography>
+          {displayFullBN(params.value)}
+        </Typography>
+      </Stack>
     ),
   } as GridColumns[number],
 

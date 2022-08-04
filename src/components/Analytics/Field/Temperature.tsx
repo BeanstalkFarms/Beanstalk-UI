@@ -13,14 +13,14 @@ const StatProps = {
   gap: 0.5,
 };
 
-const Weather: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => {
-  const weather = useSelector<AppState, AppState['_beanstalk']['field']['weather']['yield']>((state) => state._beanstalk.field.weather.yield);
+const Temperature: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => {
+  const temperature = useSelector<AppState, AppState['_beanstalk']['field']['weather']['yield']>((state) => state._beanstalk.field.weather.yield);
   const season  = useSeason();
   return (
     <SeasonPlot<SeasonalWeatherQuery>
       height={height}
       document={SeasonalWeatherDocument}
-      defaultValue={weather?.gt(0) ? weather.toNumber() : 0}
+      defaultValue={temperature?.gt(0) ? temperature.toNumber() : 0}
       defaultSeason={season?.gt(0) ? season.toNumber() : 0}
       getValue={getValue}
       formatValue={formatValue}
@@ -29,4 +29,4 @@ const Weather: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height })
   );
 };
 
-export default Weather;
+export default Temperature;

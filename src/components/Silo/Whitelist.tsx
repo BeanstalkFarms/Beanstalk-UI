@@ -75,15 +75,15 @@ const Whitelist : React.FC<{
               </Typography>
             </Tooltip>
           </Grid>
-          <Grid item md={2.5} xs={0} display={{ xs: 'none', md: 'block' }}>
+          <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
             <Tooltip title="Total Value Deposited in the Silo.">
               <Typography color="gray">TVD</Typography>
             </Tooltip>
           </Grid>
-          <Grid item md={3} xs={0} display={{ xs: 'none', md: 'block' }}>
+          <Grid item md={3.5} xs={0} display={{ xs: 'none', md: 'block' }}>
             <Typography color="gray">Amount Deposited</Typography>
           </Grid>
-          <Grid item md={1.5} xs={8} sx={{ textAlign: 'right', paddingRight: `${ARROW_CONTAINER_WIDTH}px` }}>
+          <Grid item md={1.5} xs={8} sx={{ textAlign: 'right', paddingRight: { xs: 0, md: `${ARROW_CONTAINER_WIDTH}px` } }}>
             <Tooltip title={(
               <>
                 The value of your Silo deposits for each whitelisted token, denominated in {denomination === 'bdv' ? 'Beans' : 'USD'}.<br />
@@ -122,7 +122,7 @@ const Whitelist : React.FC<{
                   {/**
                     * Cell: Token
                     */}
-                  <Grid item md={3} xs={9}>
+                  <Grid item md={3} xs={7}>
                     <Stack direction="row" alignItems="center" gap={1}>
                       <img
                         src={token.logo}
@@ -150,7 +150,7 @@ const Whitelist : React.FC<{
                   {/**
                     * Cell: TVD
                     */}
-                  <Grid item md={2.5} xs={0} display={{ xs: 'none', md: 'block' }}>
+                  <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
                     <Tooltip placement="right" title={<>{displayTokenAmount(beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN, token, { showName: false })} {token.symbol}</>}>
                       <Typography display="inline" color="black">
                         <Fiat
@@ -165,7 +165,7 @@ const Whitelist : React.FC<{
                   {/**
                     * Cell: Deposited Amount
                     */}
-                  <Grid item md={3} xs={0} display={{ xs: 'none', md: 'block' }}>
+                  <Grid item md={3.5} xs={0} display={{ xs: 'none', md: 'block' }}>
                     <Typography color="black">
                       {/* If this is the entry for Bean deposits,
                         * display Earned Beans and Deposited Beans separately.
@@ -202,7 +202,7 @@ const Whitelist : React.FC<{
                   {/**
                     * Cell: My Deposits
                     */}
-                  <Grid item md={1.5} xs={3}>
+                  <Grid item md={1.5} xs={5}>
                     <Stack direction="row" alignItems="center" justifyContent="flex-end">
                       <Tooltip
                         placement="left"
@@ -239,16 +239,18 @@ const Whitelist : React.FC<{
                           </>
                       ) : ''}>
                         <Typography color="black">
-                          <Fiat
-                            token={token}
-                            amount={deposited?.amount}
-                          />
-                          {isUnripe ? (
-                            <Typography display="inline" color={BeanstalkPalette.washedRed}>*</Typography>
-                          ) : null}
+                          <Stack direction="row" gap={0.3}>
+                            <Fiat
+                              token={token}
+                              amount={deposited?.amount}
+                            />
+                            {isUnripe ? (
+                              <Typography display="inline" color={BeanstalkPalette.washedRed}>*</Typography>
+                            ) : null}
+                          </Stack>
                         </Typography>
                       </Tooltip>
-                      <Stack sx={{ width: ARROW_CONTAINER_WIDTH, }} alignItems="center">
+                      <Stack display={{ xs: 'none', md: 'block' }} sx={{ width: ARROW_CONTAINER_WIDTH, }} alignItems="center">
                         <ArrowRightIcon />
                       </Stack>
                     </Stack>

@@ -61,7 +61,8 @@ export const ETH = {
     {
       name: 'Ether',
       symbol: 'ETH',
-      logo: ethIconCircledUrl
+      logo: ethIconCircledUrl,
+      displayDecimals: 4,
     }
   ),
   [SupportedChainId.ROPSTEN]: new NativeToken(

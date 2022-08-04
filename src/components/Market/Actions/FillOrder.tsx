@@ -6,7 +6,7 @@ import {
   TxnSeparator
 } from 'components/Common/Form';
 import { ZERO_BN } from 'constants/index';
-import { BEAN, PODS } from 'constants/tokens';
+import { BEAN } from 'constants/tokens';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import PlotInputField from 'components/Common/Form/PlotInputField';
@@ -21,7 +21,7 @@ import useChainConstant from 'hooks/useChainConstant';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
 import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
-import { displayBN, displayTokenAmount, parseError } from 'util/index';
+import { parseError } from 'util/index';
 import { useFetchFarmerField } from 'state/farmer/field/updater';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import { useSigner } from 'hooks/ledger/useSigner';
@@ -101,8 +101,10 @@ const FillOrderForm: React.FC<
                   <TxnPreview
                     actions={[
                       {
-                        type: ActionType.BASE,
-                        message: `Sell ${displayTokenAmount(plot.amount!, PODS)} from your Plot at ${displayBN(placeInLine!)} in the Pod Line.`
+                        type: ActionType.SELL_PODS,
+                        // message: `Sell ${displayTokenAmount(plot.amount!, PODS)} from your Plot at ${displayBN(placeInLine!)} in the Pod Line.`
+                        podAmount: plot.amount ? plot.amount : ZERO_BN,
+                        placeInLine: placeInLine !== undefined ? placeInLine : ZERO_BN
                       },
                       {
                         type: ActionType.RECEIVE_BEANS,

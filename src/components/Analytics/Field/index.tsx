@@ -5,7 +5,7 @@ import useTabs from 'hooks/display/useTabs';
 import HarvestedPods from './HarvestedPods';
 import PodRate from './PodRate';
 import Pods from './Pods';
-import Weather from './Weather';
+import Temperature from './Temperature';
 import Sown from './Sown';
 import TotalSowers from './TotalSowers';
 import RRoR from './RRoR';
@@ -26,7 +26,7 @@ const FieldAnalytics: React.FC<{}> = () => {
           <Tab label="Total Sowers" />
         </Tabs>
         {tab === 0 && <RRoR />}
-        {tab === 1 && <Weather height={300} />}
+        {tab === 1 && <Temperature height={300} />}
         {tab === 2 && <Pods height={300} />}
         {tab === 3 && <PodRate height={300} />}
         {tab === 4 && <Sown height={300} />}

@@ -28,7 +28,7 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
   const [displayValue, setDisplayValue] = useState(current);
   const handleCursor = useCallback(
     (ds?: DataPoint[]) => {
-      setDisplayValue(ds ? ds.map((d) => new BigNumber(d.value)) : current);
+      setDisplayValue(ds ? ds.map((d) => new BigNumber(d?.value)) : current);
     },
     [current]
   );
