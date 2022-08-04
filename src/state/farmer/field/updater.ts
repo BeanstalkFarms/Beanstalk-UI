@@ -63,7 +63,7 @@ export const useFetchFarmerField = () => {
   const initialized = (
     account
     && fetchFieldEvents
-    && harvestableIndex
+    && harvestableIndex.gt(0) // initialized to 0
   );
 
   /// Handlers

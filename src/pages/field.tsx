@@ -69,9 +69,7 @@ const FieldPage: React.FC = () => {
       data.push(
         ...Object.keys(farmerField.plots).map((index) => ({
           id: index,
-          placeInLine: new BigNumber(index).minus(
-            beanstalkField.harvestableIndex
-          ),
+          placeInLine: new BigNumber(index).minus(beanstalkField.harvestableIndex),
           amount: new BigNumber(farmerField.plots[index]),
         }))
       );
