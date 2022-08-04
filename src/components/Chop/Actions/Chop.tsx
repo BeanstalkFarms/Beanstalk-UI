@@ -35,6 +35,8 @@ import useAccount from 'hooks/ledger/useAccount';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
 import { optimizeFromMode } from 'util/Farm';
+import { useSelector } from 'react-redux';
+import { AppState } from 'state';
 import useChopPenalty from '../../../hooks/useChopPenalty';
 
 type ChopFormValues = FormState & {
@@ -66,9 +68,13 @@ const ChopForm: React.FC<
   const state          = values.tokens[0];
   const inputToken     = state.token;
   const tokenBalance   = balances[inputToken.address];
-  const chopPenalty    = useChopPenalty(inputToken.address);
   const outputToken    = tokenOutputMap[inputToken.address];
-  const amountOut      = state.amount?.multipliedBy(chopPenalty);
+
+  /// Chop Penalty  = 99%
+  /// Chop Rate     = 0.01
+  const chopPenalty = useChopPenalty(inputToken.address);
+  const chopRates   = useSelector<AppState, AppState['_bean']['unripe']['chopRates']>((_state) => _state._bean.unripe.chopRates);
+  const amountOut   = state.amount?.multipliedBy(chopRates[inputToken.address] || ZERO_BN);
 
   ///
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {

@@ -49,7 +49,7 @@ const Whitelist : React.FC<{
   ///
   const getBDV        = useBDV();
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
-  const chopPenalties = useSelector<AppState, AppState['_bean']['unripe']['penalties']>((state) => state._bean.unripe.penalties);
+  const chopPenalties = useSelector<AppState, AppState['_bean']['unripe']['chopRates']>((state) => state._bean.unripe.chopRates);
 
   return (
     <Card>

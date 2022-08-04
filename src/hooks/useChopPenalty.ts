@@ -16,9 +16,9 @@ import { NEW_BN } from '../constants';
  */
 const useChopPenalty = (tokenAddr?: string) => {
   const chainId         = useChainId();
-  const penalties       = useSelector<AppState, AppState['_bean']['unripe']>((state) => state._bean.unripe);
+  const unripe          = useSelector<AppState, AppState['_bean']['unripe']>((state) => state._bean.unripe);
   const unripeBeanAddr  = getChainConstant(UNRIPE_BEAN, chainId).address;
-  const chopPenalty     = penalties.penalties[tokenAddr !== undefined ? tokenAddr : unripeBeanAddr];
+  const chopPenalty     = unripe.chopRates[tokenAddr !== undefined ? tokenAddr : unripeBeanAddr];
   return chopPenalty 
     ? new BigNumber(1).minus(chopPenalty).multipliedBy(100) 
     : NEW_BN;
