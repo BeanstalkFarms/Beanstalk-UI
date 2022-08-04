@@ -6,12 +6,13 @@ import {
   GridColumns,
   GridSortItem
 } from '@mui/x-data-grid';
-import { displayBN, displayUSD } from 'util/index';
+import { displayBN } from 'util/index';
 import { tableStyle } from 'components/Common/Table/styles';
 import { ZERO_BN } from 'constants/index';
 import { Token } from '../../classes';
 import AuthEmptyState from './ZeroState/AuthEmptyState';
 import TablePagination from './TablePagination';
+import Fiat from './Fiat';
 
 const MAX_ROWS = 5;
 
@@ -29,7 +30,7 @@ const TableCard : React.FC<{
   rows: any[];
   /** Aggregate amount */
   amount?: BigNumber;
-  /** Aggregate value */
+  /** Aggregate USD value */
   value?: BigNumber;
   /** Loading / connection state */
   state: 'disconnected' | 'loading' | 'ready';
@@ -64,12 +65,11 @@ const TableCard : React.FC<{
               {displayBN(amount || ZERO_BN)}
               {value && (
                 <Typography display={{ xs: 'none', sm: 'inline' }} color="text.secondary">
-                  {' '}(~{displayUSD(value)})
+                  {' '}(<Fiat value={value} amount={value} />)
                 </Typography>
               )}
             </Typography>
           </Stack>
-
         ) : (
           state === 'loading' ? (
             <CircularProgress color="primary" variant="indeterminate" size={18} thickness={5} />

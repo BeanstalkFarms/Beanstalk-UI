@@ -31,7 +31,9 @@ const LiquidityOverTime: React.FC<LiquidityOverviewProps & CardProps> = ({
         sx={{ ml: 0 }}
       />
       <Box sx={{ position: 'relative ' }}>
-        <BlurComponent>Historical liquidity will be available soon.</BlurComponent>
+        <BlurComponent blur={10} opacity={0.7}>
+          Historical liquidity will be available soon.
+        </BlurComponent>
         <LiquidityBalances
           balances={balances}
         />
