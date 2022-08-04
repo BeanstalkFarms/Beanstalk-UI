@@ -133,7 +133,7 @@ const ChopForm: React.FC<
             )}
           </Stack>
         </Stack>
-        {true ? (
+        {isValid ? (
           <>
             <TxnSeparator />
             <TokenOutputField
