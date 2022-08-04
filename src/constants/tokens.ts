@@ -13,6 +13,8 @@ import seedLogo from 'img/beanstalk/seed-icon.svg';
 import podsLogo from 'img/beanstalk/pod-icon.svg';
 import sproutLogo from 'img/beanstalk/sprout-icon.svg';
 import rinsableSproutLogo from 'img/beanstalk/rinsable-sprout-icon.svg';
+import beanEthLpLogoUrl from 'img/tokens/bean-eth-lp-logo.svg';
+import beanLusdLogoUrl from 'img/tokens/bean-lusd-logo.svg';
 
 // ERC-20 Token Images
 import crv3LogoUrl from 'img/tokens/crv3-logo.svg';
@@ -238,7 +240,7 @@ export const BEAN_ETH_UNIV2_LP = {
     {
       name: 'BEAN:ETH LP',
       symbol: 'BEAN:ETH',
-      logo: '',
+      logo: beanEthLpLogoUrl,
       displayDecimals: 9,
       isLP: true,
     },
@@ -256,7 +258,7 @@ export const BEAN_LUSD_LP = {
     {
       name: 'BEAN:LUSD LP',
       symbol: 'BEAN:LUSD',
-      logo: '',
+      logo: beanLusdLogoUrl,
       isLP: true,
     },
     {

@@ -110,9 +110,9 @@ const SmartSubmitButton : React.FC<{
       txToast = new TransactionToast({
         loading: `Approving ${nextApprovalToken.symbol}...`,
         success: `Success. ${
-          CONTRACT_NAMES[nextApprovalToken.address]
-            ? `The ${CONTRACT_NAMES[nextApprovalToken.address]} contract`
-            : `Contract ${trimAddress(nextApprovalToken.address)}`
+          CONTRACT_NAMES[contract.address]
+            ? `The ${CONTRACT_NAMES[contract.address]} contract`
+            : `Contract ${trimAddress(contract.address)}`
         } can now transact with your ${nextApprovalToken.name}.`,
       });
       setFieldValue('approving', {
