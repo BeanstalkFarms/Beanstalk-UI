@@ -43,6 +43,7 @@ export const useFetchPools = () => {
               // The below address must be lower-cased. All internal Pool/Token
               // addresses are case-insensitive and stored as lowercase strings.
               const address = poolData.pool.toLowerCase();
+              
               // If a new pool is added to the Pools contract before it's
               // configured in the frontend, this function would throw an error.
               // Thus, we only process the pool's data if we have it configured.
@@ -53,9 +54,6 @@ export const useFetchPools = () => {
                     .then((supply) => ({
                       address: poolData.pool,
                       pool: {
-                        // ---------------------- 
-                        // TO HARDCODE ON MAINNET
-                        // ----------------------
                         price: tokenResult(BEAN)(poolData.price.toString()),
                         reserves: [
                           // NOTE:

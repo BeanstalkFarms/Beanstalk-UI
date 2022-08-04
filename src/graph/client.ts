@@ -116,6 +116,6 @@ persistCacheSync({
 });
 
 export const apolloClient = new ApolloClient({
-  uri: BEANSTALK_SUBGRAPH_ADDRESSES[SupportedChainId.CUJO],
+  uri: BEANSTALK_SUBGRAPH_ADDRESSES[SupportedChainId.MAINNET],
   cache,
 });
