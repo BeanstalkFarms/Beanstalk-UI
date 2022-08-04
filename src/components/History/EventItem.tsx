@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Divider, Link, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Divider, Link, Stack, Typography } from '@mui/material';
 import { displayBN, toTokenUnitsBN } from 'util/index';
 import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
@@ -198,15 +198,13 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
             <Typography variant="h4">{eventTitle}</Typography>
             {/* Timestamps */}
             <Stack direction="row">
-              <Tooltip placement="right" title="View transaction on Etherscan.">
-                <Link underline="none" color="text.secondary" sx={{ textDecoration: 'none' }} href={`https://etherscan.io/tx/${event.transactionHash}`} target="_blank" rel="noreferrer">
-                  {event?.args?.season ? (
-                    <Typography color="text.secondary">Season {event.args?.season.toString()}</Typography>
-                  ) : (
-                    <Typography color="text.secondary">{`Block ${event.blockNumber}`}</Typography>
-                  )}
-                </Link>
-              </Tooltip>
+              <Link color="text.secondary" sx={{ textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }} href={`https://etherscan.io/tx/${event.transactionHash}`} target="_blank" rel="noreferrer">
+                {event?.args?.season ? (
+                  <Typography color="text.secondary">Season {event.args?.season.toString()}</Typography>
+                ) : (
+                  <Typography color="text.secondary">{`Block ${event.blockNumber}`}</Typography>
+                )}
+              </Link>
             </Stack>
           </Stack>
           <Stack direction="column" alignItems="flex-end">
