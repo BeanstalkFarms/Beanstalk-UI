@@ -27,7 +27,7 @@ import {
 import { BeanstalkReplanted } from 'generated/index';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import { ZERO_BN } from 'constants/index';
-import { displayFullBN, displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN, parseError } from 'util/index';
+import { displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN, parseError } from 'util/index';
 import DestinationField from 'components/Common/Form/DestinationField';
 import TokenIcon from 'components/Common/TokenIcon';
 import useToggle from 'hooks/display/useToggle';
@@ -39,6 +39,9 @@ import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
+import useChainConstant from 'hooks/useChainConstant';
+import { BEAN_CRV3_LP } from 'constants/tokens';
+import copy from 'constants/copy';
 
 // -----------------------------------------------------------------------
 
@@ -81,6 +84,7 @@ const ClaimForm : React.FC<
   const chainId = useChainId();
   const pools = usePools();
   const isMainnet = chainId === SupportedChainId.MAINNET;
+  const BeanCrv3 = useChainConstant(BEAN_CRV3_LP);
   
   // ASSUMPTION: Pool address === LP Token address
   // Lazy way to do this. Should key pools by lpToken.address.
@@ -97,12 +101,7 @@ const ClaimForm : React.FC<
     && amount.gt(0)
     && values.destination !== undefined
   );
-  const destination = (
-    values.destination === FarmToMode.EXTERNAL
-      ? 'to your wallet'
-      : 'to your internal balance'
-  );
-  
+
   //
   const handleQuote = useCallback<QuoteHandler>(
     async (_tokenIn, _amountIn, _tokenOut) => {
@@ -203,7 +202,7 @@ const ClaimForm : React.FC<
               label="Claim LP as"
               onClick={showTokenSelect}> 
               <TokenIcon token={values.tokenOut} />
-              <Typography variant="body1">{values.tokenOut.name}</Typography>
+              <Typography variant="body1">{values.tokenOut.symbol}</Typography>
             </PillRow>
           ) : null}
           <TokenSelectDialog
@@ -231,16 +230,20 @@ const ClaimForm : React.FC<
                     <TxnPreview
                       actions={[
                         {
-                          type: ActionType.BASE,
-                          message: `Claim ${displayTokenAmount(amount, token)}.`
+                          type: ActionType.CLAIM_WITHDRAWAL,
+                          amount: amount,
+                          token: token,
+                          // message: `Claim ${displayTokenAmount(amount, token)}.`
                         },
-                        {
+                        token === BeanCrv3 && values.tokenOut !== token ? {
                           type: ActionType.BASE,
-                          message: values.tokenOut === token ? (
-                            `Unpack ${displayTokenAmount(amount, token)} into 3CRV and send ${destination}.`
-                          ) : (
-                            `Send ${displayTokenAmount(amount, token)} and send ${destination}.`
-                          )
+                          message: `Unpack ${displayTokenAmount(amount, token)} into ${displayTokenAmount(values.token.amountOut || ZERO_BN, values.tokenOut)}.`
+                        } : undefined,
+                        {
+                          type: ActionType.RECEIVE_TOKEN,
+                          token: values.tokenOut,
+                          amount: values.token.amountOut || ZERO_BN,
+                          destination: values.destination,
                         }
                       ]}
                     />
@@ -310,8 +313,8 @@ const Claim : React.FC<{
       if (!crates || crates.length === 0) throw new Error('No claimable crates');
 
       txToast = new TransactionToast({
-        loading: `Claiming ${displayFullBN(claimableBalance)} ${token.name} from the Silo`,
-        success: 'Claiming successful',
+        loading: `Claiming ${displayTokenAmount(claimableBalance, token)} from the Silo...`,
+        success: `Claim successful. Added ${displayTokenAmount(values.token.amountOut || ZERO_BN, values.tokenOut)} to your ${copy.TO_MODE[values.destination]}.`,
       });
       
       // If the user wants to swap their LP token for something else,

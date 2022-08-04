@@ -3,13 +3,15 @@ import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
 import { displayFullBN, displayTokenAmount } from 'util/Tokens';
-import { BEAN, PODS } from '../constants/tokens';
+import copy from 'constants/copy';
+import { BEAN, PODS, SPROUTS } from '../constants/tokens';
 import { displayBN, trimAddress } from './index';
 
 export enum ActionType {
   /// GENERIC
   BASE,
   END_TOKEN,
+  RECEIVE_TOKEN,
   SWAP,
 
   /// SILO
@@ -27,16 +29,17 @@ export enum ActionType {
   HARVEST,
   RECEIVE_BEANS,
   TRANSFER_PODS,
-
+  
   /// MARKET
   CREATE_ORDER,
-
-  /// FERTILIZER
+  
+  /// BARN
+  RINSE,
   BUY_FERTILIZER,
   RECEIVE_FERT_REWARDS,
 }
 
-/// GENERIC
+/// ////////////////////////////// GENERIC /////////////////////////////////
 export type BaseAction = {
   type: ActionType.BASE;
   message?: string | React.ReactElement;
@@ -55,35 +58,49 @@ export type SwapAction = {
   amountOut: BigNumber;
 }
 
-/// SILO
+export type ReceiveTokenAction = {
+  type: ActionType.RECEIVE_TOKEN;
+  amount: BigNumber;
+  token: Token;
+  destination?: FarmToMode;
+}
+
+/// ////////////////////////////// SILO /////////////////////////////////
 type SiloAction = {
   amount: BigNumber;
   token: Token;
 }
+
 export type SiloRewardsAction = {
   type: ActionType.UPDATE_SILO_REWARDS;
   stalk: BigNumber;
   seeds: BigNumber;
 }
+
 export type SiloDepositAction = SiloAction & {
   type: ActionType.DEPOSIT;
 }
+
 export type SiloWithdrawAction = SiloAction & {
   type: ActionType.WITHDRAW;
 }
+
 export type SiloTransitAction = SiloAction & {
   type: ActionType.IN_TRANSIT;
   withdrawSeasons: BigNumber;
 }
+
 export type SiloClaimAction = SiloAction & {
   type: ActionType.CLAIM_WITHDRAWAL;
 }
+
 export type SiloTransferAction = SiloAction & {
   type: ActionType.TRANSFER;
   to: string;
 }
 
-/// FIELD
+/// ////////////////////////////// FIELD /////////////////////////////////
+
 type FieldAction = {};
 export type BuyBeansAction = {
   type: ActionType.BUY_BEANS;
@@ -92,24 +109,29 @@ export type BuyBeansAction = {
   token: Token;
   tokenAmount: BigNumber;
 }
+
 export type BurnBeansAction = FieldAction & {
   type: ActionType.BURN_BEANS;
   amount: BigNumber;
 }
+
 export type ReceivePodsAction = FieldAction & {
   type: ActionType.RECEIVE_PODS;
   podAmount: BigNumber;
   placeInLine: BigNumber;
 }
+
 export type FieldHarvestAction = {
   type: ActionType.HARVEST;
   amount: BigNumber;
 }
+
 export type ReceiveBeansAction = {
   type: ActionType.RECEIVE_BEANS;
   amount: BigNumber;
   destination?: FarmToMode;
 }
+
 export type TransferPodsAction = {
   type: ActionType.TRANSFER_PODS;
   amount: BigNumber;
@@ -117,27 +139,38 @@ export type TransferPodsAction = {
   placeInLine: BigNumber;
 }
 
-/// MARKET
+/// ////////////////////////////// MARKET /////////////////////////////////
+
 export type CreateOrderAction = {
   type: ActionType.CREATE_ORDER;
   message: string; // lazy!
 }
 
-/// FERTILIZER
+/// ////////////////////////////// BARN /////////////////////////////////
+
+export type RinseAction = {
+  type: ActionType.RINSE;
+  amount: BigNumber;
+}
+
 export type FertilizerBuyAction = {
   type: ActionType.BUY_FERTILIZER;
   amountIn: BigNumber;
   humidity: BigNumber;
 }
+
 export type FertilizerRewardsAction = {
   type: ActionType.RECEIVE_FERT_REWARDS;
   amountOut: BigNumber;
 }
 
-/// AGGREGATE
+/// /////////////////////////// AGGREGATE /////////////////////////////////
+
 export type Action = (
+  /// GENERAL
   BaseAction
   | SwapAction
+  | ReceiveTokenAction
   | EndTokenAction
   /// SILO
   | SiloDepositAction
@@ -155,7 +188,8 @@ export type Action = (
   | TransferPodsAction
   /// MARKET
   | CreateOrderAction
-  /// FERTILIZER
+  /// BARN
+  | RinseAction
   | FertilizerBuyAction
   | FertilizerRewardsAction
 );
@@ -164,9 +198,17 @@ export type Action = (
 
 export const parseActionMessage = (a: Action) => {
   switch (a.type) {
-    /// SWAP
+    /// GENERIC
     case ActionType.SWAP:
       return `Swap ${displayTokenAmount(a.amountIn, a.tokenIn)} for ${displayTokenAmount(a.amountOut, a.tokenOut)}.`;
+    case ActionType.RECEIVE_TOKEN:
+      return `Add ${displayFullBN(a.amount, a.token.displayDecimals)} ${a.token.name}${
+        a.destination
+          ? ` to your ${copy.TO_MODE[a.destination]}`
+          : ''
+      }.`;
+    case ActionType.END_TOKEN:
+      return null;
 
     /// SILO
     case ActionType.DEPOSIT:
@@ -194,28 +236,25 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.HARVEST:
       return `Harvest ${displayFullBN(a.amount, PODS.displayDecimals)} Pods.`;
     case ActionType.RECEIVE_BEANS:
-      return `Receive ${displayFullBN(a.amount, BEAN[1].displayDecimals)} Beans${
+      return `Add ${displayFullBN(a.amount, BEAN[1].displayDecimals)} Beans${
         a.destination
-          ? a.destination === FarmToMode.EXTERNAL
-            ? ' to your Circulating Balance' 
-            : ' to your Farm Balance' 
-          : ''}.`;
+          ? ` to your ${copy.TO_MODE[a.destination]}`
+          : ''
+      }.`;
     case ActionType.TRANSFER_PODS:
       return `Transfer ${displayTokenAmount(a.amount, PODS)} at ${displayBN(a.placeInLine)} in Line to ${a.address}.`;
 
-    /// FERTILIZER
+    /// BARN
+    case ActionType.RINSE:
+      return `Rinse ${displayFullBN(a.amount, SPROUTS.displayDecimals)} Sprouts.`;
     case ActionType.BUY_FERTILIZER:
       return `Buy ${displayFullBN(a.amountIn, 2)} Fertilizer at ${displayFullBN(a.humidity.multipliedBy(100), 1)}% Humidity.`;
     case ActionType.RECEIVE_FERT_REWARDS:
-      return `Receive ${displayFullBN(a.amountOut, 2)} Sprouts. Sprouts become Fertilized pro rata as the Bean supply increases.`;
+      return `Receive ${displayFullBN(a.amountOut, 2)} Sprouts.`;
 
     /// MARKET
     case ActionType.CREATE_ORDER:
       return a.message;
-
-    /// ALL
-    case ActionType.END_TOKEN:
-      return null;
 
     /// DEFAULT
     default: 

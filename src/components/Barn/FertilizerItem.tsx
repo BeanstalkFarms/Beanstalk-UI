@@ -82,19 +82,10 @@ const FertilizerItem: React.FC<FertilizerData & {
         <Typography textAlign="center">x0</Typography>
       ) : (
         <Stack width="100%" direction="column" rowGap={0.25}>
-          {/* {season && (
-            <Stack direction="row" justifyContent="space-between">
-              <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
-                Season {displayBN(season)}
-              </Typography>
-            </Stack>
-          )} */}
           <Stack direction="row" justifyContent="space-between">
-            <Tooltip title={tooltip.fertilizer} placement="left">
-              <Typography sx={{ fontSize: '14px', opacity: 0.6 }} color="text.secondary">
-                x{displayFullBN(amount, 0)}
-              </Typography>
-            </Tooltip>
+            <Typography sx={{ fontSize: '14px', opacity: 0.6 }} color="text.secondary">
+              x{displayFullBN(amount, 0)}
+            </Typography>
             <Tooltip title={tooltip.humidity} placement="right">
               <Stack direction="row" gap={0.2} alignItems="center">
                 <img alt="" src={humidityIcon} height="13px" />

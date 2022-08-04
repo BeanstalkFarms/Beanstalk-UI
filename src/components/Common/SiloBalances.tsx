@@ -8,6 +8,7 @@ import ResizablePieChart, { PieDataPoint } from 'components/Common/Charts/Pie';
 import { Token } from 'classes';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 import TokenIcon from './TokenIcon';
+import Fiat from './Fiat';
 
 // ------------------------------------------------------
 
@@ -76,7 +77,7 @@ const TokenRow: React.FC<{
       {color && (
         <Box sx={{ width: 8, height: 8, borderRadius: 8, backgroundColor: showColor ? color : 'transparent', mt: '-2px', ml: '-13px' }} />
       )}
-      <Typography variant="body1" color="text.secondary" sx={token ? { display: { lg: 'block', md: 'none', xs: 'block' } } : undefined}>
+      <Typography variant="body1" color="text.secondary" sx={token ? { display: 'block' } : undefined}>
         {label}
       </Typography>
       {(assetStates) && (
@@ -107,12 +108,12 @@ const TokenRow: React.FC<{
 
 const STATE_CONFIG: { [key: string]: [name: string, color: string, tooltip: string] } = {
   // Silo
-  deposited:    ['Deposited', 'rgba(70, 185, 85, 1)', 'Assets that are Deposited in the Silo.'],
-  withdrawn:    ['Withdrawn', 'rgba(31, 120, 180, 0.3)', 'Assets being Withdrawn from the Silo. At the end of the current Season, Withdrawn assets become Claimable.'],
-  claimable:    ['Claimable', 'rgba(178, 223, 138, 0.3)', 'Assets that can be claimed to your wallet, Deposited in the Silo, etc.'],
+  deposited:    ['Deposited', BeanstalkPalette.logoGreen, 'Assets that are Deposited in the Silo.'],
+  withdrawn:    ['Withdrawn', '#DFB385', 'Assets being Withdrawn from the Silo. At the end of the current Season, Withdrawn assets become Claimable.'],
+  claimable:    ['Claimable', '#ECBCB3', 'Assets that can be claimed to your wallet, Deposited in the Silo, etc.'],
   // Farm
-  farm:         ['Farm', 'rgba(25, 135, 59, 0.5)', 'Assets stored in Beanstalk but not Deposited.'],
-  circulating:  ['Circulating', 'rgba(25, 135, 59, 1)', 'Beanstalk assets in your wallet.'],
+  farm:         ['Farm', '#F2E797', 'Assets stored in Beanstalk but not Deposited.'],
+  circulating:  ['Circulating', BeanstalkPalette.lightBlue, 'Beanstalk assets in your wallet.'],
 };
 
 type StateID = keyof typeof STATE_CONFIG;
@@ -195,8 +196,14 @@ const SiloBalances: React.FC<{
             {availableStates.map((id) => (
               <TokenRow
                 key={id}
-                label={`${STATE_CONFIG[id][0]} Balances`}
-                value={displayUSD(breakdown.states[id as keyof typeof breakdown.states].value)}
+                label={`${STATE_CONFIG[id][0]} Balance`}
+                value={
+                  <Fiat
+                    value={breakdown.states[id as keyof typeof breakdown.states].value}
+                    amount={breakdown.states[id as keyof typeof breakdown.states].value}
+                  />
+                  // displayUSD(breakdown.states[id as keyof typeof breakdown.states].value)
+                }
                 isFaded={hoverState !== null && hoverState !== id}
                 isSelected={hoverState === id}
                 onMouseOver={onMouseOver(id)}
@@ -234,7 +241,9 @@ const SiloBalances: React.FC<{
             </Stack>
           ) : (
             <Stack gap={1}>
-              <Typography variant="h4" sx={{ display: { xs: 'none', md: 'block' }, mx: 0.75 }}>{STATE_CONFIG[hoverState][0]} Balances</Typography>
+              <Typography variant="h4" sx={{ display: { xs: 'none', md: 'block' }, mx: 0.75 }}>
+                {STATE_CONFIG[hoverState][0]} Balance
+              </Typography>
               <Box>
                 {pieChartData.map((dp) => {
                   const token = whitelist[dp.tokenAddress];
@@ -242,15 +251,16 @@ const SiloBalances: React.FC<{
                   return (
                     <TokenRow
                       key={token.address}
-                      label={`${token.name}`}
+                      label={`${token.symbol}`}
                       color={dp.color}
                       showColor={inThisState?.amount.gt(0)}
                       token={token}
                       isFaded={false}
-                      amount={`${displayFullBN(inThisState?.amount, token.displayDecimals)} ${token.name}`}
+                      amount={`${displayFullBN(inThisState?.amount, token.displayDecimals)}`}
                       tooltip={(
                         <>
-                          {displayFullBN(inThisState?.amount)} {token.name}<br />
+                          <Typography variant="h4">{token.name}</Typography>
+                          {displayFullBN(inThisState?.amount)} {token.symbol}<br />
                           ≈ {displayUSD(inThisState?.value)}
                         </>
                       )}

@@ -12,7 +12,7 @@ import useChainConstant from 'hooks/useChainConstant';
 import { useGetERC20Contract } from 'hooks/useContract';
 import { useConnect } from 'wagmi';
 import Token from 'classes/Token';
-import { parseError } from 'util/index';
+import { parseError, trimAddress } from 'util/index';
 import toast from 'react-hot-toast';
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import TransactionToast from '../TxnToast';
@@ -107,10 +107,15 @@ const SmartSubmitButton : React.FC<{
       if (!contract?.address) throw new Error('Missing ERC20 contract to approve.');
       const [tokenContract] = getErc20Contract(nextApprovalToken.address);
       if (!tokenContract) throw new Error(`Failed to instantiate tokenContract for token ${nextApprovalToken.address}`);
+      
       const amount = MAX_UINT256;
       txToast = new TransactionToast({
-        loading: `Approving ${nextApprovalToken.symbol}`,
-        success: 'Success!',
+        loading: `Approving ${nextApprovalToken.symbol}...`,
+        success: `Success. ${
+          CONTRACT_NAMES[nextApprovalToken.address]
+            ? `The ${CONTRACT_NAMES[nextApprovalToken.address]} contract`
+            : `Contract ${trimAddress(nextApprovalToken.address)}`
+        } can now transact with your ${nextApprovalToken.name}.`,
       });
       setFieldValue('approving', {
         contract: contract.address,

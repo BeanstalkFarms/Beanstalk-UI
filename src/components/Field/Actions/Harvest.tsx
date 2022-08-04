@@ -18,7 +18,7 @@ import {
 import { BeanstalkReplanted } from 'generated/index';
 import Farm, { FarmToMode } from 'lib/Beanstalk/Farm';
 import {
-  displayBN,
+  displayFullBN,
   getChainConstant,
   parseError,
   toStringBaseUnitBN
@@ -27,6 +27,7 @@ import toast from 'react-hot-toast';
 import { useFetchFarmerField } from 'state/farmer/field/updater';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import useFarmerField from 'hooks/useFarmerField';
+import copy from 'constants/copy';
 import DestinationField from '../../Common/Form/DestinationField';
 import TransactionToast from '../../Common/TxnToast';
 import { ZERO_BN } from '../../../constants';
@@ -120,7 +121,8 @@ const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
                       },
                       {
                         type: ActionType.RECEIVE_BEANS,
-                        amount: amount
+                        amount: amount,
+                        destination: values.destination,
                       },
                     ]}
                   />
@@ -181,8 +183,8 @@ const Harvest: React.FC<{}> = () => {
         if (!account?.address) throw new Error('Connect a wallet first.');
 
         txToast = new TransactionToast({
-          loading: `Harvesting ${displayBN(farmerField.harvestablePods)} Pods.`,
-          success: 'Harvest successful.',
+          loading: `Harvesting ${displayFullBN(farmerField.harvestablePods, PODS.displayDecimals)} Pods.`,
+          success: `Harvest successful. Added ${displayFullBN(farmerField.harvestablePods, PODS.displayDecimals)} Beans to your ${copy.TO_MODE[values.destination]}.`,
         });
 
         const txn = await beanstalk.harvest(
