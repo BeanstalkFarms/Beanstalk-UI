@@ -4,13 +4,13 @@ import React from 'react';
 
 export type StatProps = {
   /** Statistic title */
-  title: string;
+  title: JSX.Element | string;
   /** Icon shown with the title */
   titleIcon?: JSX.Element | string;
   /** Show a question mark with tooltip nex to the title */
   titleTooltip?: JSX.Element | string;
   /** Stringified amount (parent should format accordingly) */
-  amount: string;
+  amount: JSX.Element | string;
   /** Icon shown with the amount */
   amountIcon?: JSX.Element | string;
   /**  */
