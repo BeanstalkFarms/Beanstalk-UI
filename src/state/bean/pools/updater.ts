@@ -6,7 +6,6 @@ import { useBeanstalkPriceContract } from 'hooks/useContract';
 import { tokenResult, getChainConstant } from 'util/index';
 import { BEAN } from 'constants/tokens';
 import ALL_POOLS from 'constants/pools';
-import useTimedRefresh from 'hooks/useTimedRefresh';
 import { useProvider } from 'wagmi';
 import { ERC20__factory } from 'generated';
 import { updateBeanPrice, updateBeanSupply } from '../token/actions';
@@ -126,7 +125,7 @@ const PoolsUpdater = () => {
     clear
   ]);
   
-  useTimedRefresh(fetch, 10000);
+  // useTimedRefresh(fetch, 10000);
 
   return null;
 };

@@ -37,7 +37,7 @@ export const BEANFT_WINTER_ADDRESSES = {
 // ----------------------------------------
 
 export const BEAN_ADDRESSES = {
-  [SupportedChainId.MAINNET]: '0xBEA0003eA948Db32082Fc6F4EC0729D258a0444c'.toLowerCase(),
+  [SupportedChainId.MAINNET]: '0xBEA0000029AD1c77D3d5D23Ba2D8893dB9d1Efab'.toLowerCase(),
 };
 
 export const UNRIPE_BEAN_ADDRESSES = {
