@@ -1,4 +1,4 @@
-import { Box, InputAdornment, Stack, Typography } from '@mui/material';
+import { Alert, Box, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
@@ -39,10 +39,12 @@ import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import { useFetchFarmerMarket } from 'state/farmer/market/updater';
 import TxnAccordion from 'components/Common/TxnAccordion';
 import { ActionType } from 'util/Actions';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
-import { BeanstalkPalette } from '../../App/muiTheme';
+import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
 import SliderField from '../../Common/Form/SliderField';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
+import IconWrapper from '../../Common/IconWrapper';
 
 export type CreateOrderFormValues = {
   placeInLine: BigNumber | null;
@@ -196,6 +198,7 @@ const CreateOrderForm : React.FC<
               token={PODS}
               amount={amountPods}
             />
+            <Alert color="warning" icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}>You will only receive this number of Pods if your Order is entirely Filled.</Alert>
             <Box>
               <TxnAccordion>
                 <TxnPreview
