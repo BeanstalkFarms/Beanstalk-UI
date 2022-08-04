@@ -17,7 +17,6 @@ const NavItemMobile: React.FC<{
   item,
   endAdornment,
   onClick,
-  children,
   sx
 }) => (
   <Stack sx={{ ...sx }}>
@@ -26,9 +25,9 @@ const NavItemMobile: React.FC<{
       component={item.href ? 'a' : RouterLink}
       key={item.path}
       href={item.href ? item.href : undefined}
+      to={item.href ? undefined : item.path}
       target={item.href ? '_blank' : undefined}
       rel={item.href ? 'noreferrer' : undefined}
-      to={item.href ? undefined : item.path}
       sx={{ py: item.small ? 0.75 : 2, minWidth: 250, height: '100%', width: '100%' }}
       onClick={onClick}
       disableRipple
@@ -50,7 +49,6 @@ const NavItemMobile: React.FC<{
       </Stack>
     </MenuItem>
     {/* Dropdown section */}
-    {children}
   </Stack>
 );
 
