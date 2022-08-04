@@ -21,7 +21,7 @@ import { SupportedChainId, ZERO_BN } from 'constants/index';
 import Token from 'classes/Token';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
-import { displayFullBN, displayUSD, toTokenUnitsBN, parseError } from 'util/index';
+import { displayFullBN, toTokenUnitsBN, parseError } from 'util/index';
 import useChainId from 'hooks/useChain';
 import pickImage from 'img/pick.png';
 import DescriptionButton from 'components/Common/DescriptionButton';
@@ -46,7 +46,7 @@ type UnripeKeys = (
   'harvestableBeans' |
   'orderedBeans' |
   'farmableBeans' |
-  'wrappedBeans' |
+  'farmBeans' |
   'unripeBeans' |
   // LP
   'circulatingBeanEthLp' |
@@ -73,7 +73,7 @@ const UNRIPE_BEAN_CATEGORIES = [
   'harvestable',
   'ordered',
   // 'farmable',
-  'wrapped',
+  'farm',
 ] as const;
 
 const UNRIPE_LP_CATEGORIES = [
@@ -258,14 +258,14 @@ const PickBeansDialog: React.FC<{
   const tab0 = (
     <>
       <StyledDialogTitle sx={{ pb: 1 }} onClose={handleDialogClose}>
-        Pick non-Deposited Unripe Beans and Unripe LP
+        Pick non-Deposited Unripe Beans and Unripe BEAN:3CRV LP
       </StyledDialogTitle>
       <Stack direction="row" alignItems="center" gap={1} pb={2} pl={1} pr={3}>
         <img src={pickImage} alt="pick" style={{ height: 120 }} />
         <Typography sx={{ fontSize: '15px' }} color="text.secondary">
-          To claim non-Deposited Unripe Beans and Unripe LP, they must be Picked. After Replant, you can Pick assets to your wallet, or Pick and Deposit them directly in the Silo.<br /><br />
+          To claim non-Deposited Unripe Beans and Unripe BEAN:3CRV LP, they must be Picked. After Replant, you can Pick assets to your wallet, or Pick and Deposit them directly in the Silo.<br /><br />
           Unripe Deposited assets <b>do not need to be Picked</b> and will be automatically Deposited at Replant.<br /><br />
-          Unripe assets represent a pro rata share of underlying assets. You can read more about them <Link href="https://bean.money/blog/a-farmers-guide-to-the-barn-raise" target="_blank" rel="noreferrer">here</Link>.
+          Read more about Unripe assets <Link href="https://docs.bean.money/farm/barn#unripe-assets" target="_blank" rel="noreferrer">here</Link>.
         </Typography>
       </Stack>
       <Divider />
@@ -274,7 +274,7 @@ const PickBeansDialog: React.FC<{
           {/**
             * Section 1: Deposited Balance
             */}
-          <Stack gap={0.25}>
+          {/* <Stack gap={0.25}>
             <Stack direction="row" justifyContent="space-between">
               <Typography>Deposited Assets</Typography>
               <Typography>{displayUSD(breakdown.states.deposited.value)}</Typography>
@@ -282,17 +282,8 @@ const PickBeansDialog: React.FC<{
             <Typography sx={{ fontSize: '13px' }} color="text.secondary">
               These assets do not need to be Picked and will be automatically Deposited in their Unripe state at Replant. Head to the Silo page to view your balances.
             </Typography>
-          </Stack>
-          <Stack gap={0.25}>
-            <Stack direction="row" justifyContent="space-between">
-              <Typography>Earned Beans</Typography>
-              <Typography>{displayFullBN(tokenOrZero(unripe?.farmableBeans, BEAN[1]))}</Typography>
-            </Stack>
-            <Typography sx={{ fontSize: '13px' }} color="text.secondary">
-              These assets do not need to be Picked and will be automatically Deposited as Unripe Beans upon Replant.
-            </Typography>
-          </Stack>
-          <Divider />
+          </Stack> */}
+          {/* <Divider /> */}
           {/**
             * Section 2: Unripe Beans
             */}
@@ -300,7 +291,7 @@ const PickBeansDialog: React.FC<{
             {/**
               * Section 2a: Beans by State
               */}
-            <Typography variant="h3">Non-Deposited pre-exploit Bean balances</Typography>
+            <Typography variant="h4">Non-Deposited pre-exploit Bean balances</Typography>
             <Stack gap={0.5} pl={1}>
               {UNRIPE_BEAN_CATEGORIES.map((key) => (
                 <UnripeTokenRow
@@ -322,7 +313,7 @@ const PickBeansDialog: React.FC<{
               </Typography>
               <Stack direction="row" alignItems="center" gap={0.3}>
                 <img src={unripeBeanIcon} alt="Circulating Beans" width={13} />
-                <Typography variant="h3">
+                <Typography variant="h4">
                   {displayFullBN(
                     // HOTFIX:
                     // After launching this dialog, the team decided to
@@ -344,7 +335,7 @@ const PickBeansDialog: React.FC<{
             {/**
               * Section 2a: LP by State
               */}
-            <Typography variant="h3">Non-Deposited pre-exploit LP balances</Typography>
+            <Typography variant="h4">Non-Deposited pre-exploit LP balances</Typography>
             {UNRIPE_LP_CATEGORIES.map((obj) => (
               <Stack key={obj.token.address} gap={0.5} pl={1}>
                 <Typography sx={{ fontSize: '16px' }}>{obj.token.name} Balances</Typography>
@@ -374,7 +365,7 @@ const PickBeansDialog: React.FC<{
               </Typography>
               <Stack direction="row" alignItems="center" gap={0.3}>
                 <img src={brownLPIcon} alt="Circulating Beans" width={13} />
-                <Typography variant="h3">
+                <Typography variant="h4">
                   {displayFullBN(tokenOrZero(unripe?.unripeLp, BEAN[1]))}
                 </Typography>
               </Stack>

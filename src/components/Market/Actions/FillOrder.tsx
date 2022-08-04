@@ -109,10 +109,6 @@ const FillOrderForm: React.FC<
                         amount: beansReceived,
                         destination: values.destination,
                       },
-                      {
-                        type: ActionType.BASE,
-                        message: 'This sale will settle immediately.'
-                      }
                     ]}
                   />
                 </AccordionDetails>
@@ -130,7 +126,7 @@ const FillOrderForm: React.FC<
           tokens={[]}
           mode="auto"
         >
-          {numEligiblePlots === 0 ? 'No eligible plots' : 'Sell Pods'}
+          {numEligiblePlots === 0 ? 'No eligible Plots' : 'Fill'}
         </SmartSubmitButton>
       </Stack>
     </Form>
@@ -199,8 +195,9 @@ const FillOrder: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
       });
 
       txToast = new TransactionToast({
-        loading: 'Filling order',
-        success: 'Order filled'
+        loading: 'Filling Order...',
+        // loading: `Selling ${displayTokenAmount(amount, PODS)} for ${displayTokenAmount(amount.multipliedBy(podOrder.pricePerPod), Bean)}.`,
+        success: 'Fill successful.'
       });
 
       const txn = await beanstalk.fillPodOrder(

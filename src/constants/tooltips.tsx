@@ -20,7 +20,7 @@ export const UNRIPE_ASSET_TOOLTIPS : { [key: string]: string | React.ReactElemen
   farmableBeans:    (
     <>Previously called <em>Farmable Beans</em> — Beans earned from Silo rewards that had not yet been Deposited in a particular Season.</>
   ),
-  wrappedBeans:     'Beans that were stored in Beanstalk but not Deposited.',
+  farmBeans:     'Beans that were stored in Beanstalk but not Deposited.',
   // LP
   circulatingBeanEthLp:   'BEAN:ETH LP tokens that were in Farmers\' wallets. The number of tokens and associated BDV are shown.',
   circulatingBeanLusdLp:  'BEAN:LUSD LP tokens that were in Farmers\' wallets. The number of tokens and associated BDV are shown.',

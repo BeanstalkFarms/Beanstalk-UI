@@ -11,7 +11,7 @@ const AnalyticsPage: React.FC<{}> = () => (
     <Stack gap={2}>
       <PageHeader
         title="Analytics"
-        description="View historical performance of Beanstalk"
+        description="View historical data on Beanstalk"
       />
       <BeanAnalytics />
       <SiloAnalytics />

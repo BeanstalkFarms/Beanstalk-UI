@@ -232,7 +232,7 @@ const FillListingForm : React.FC<
           tokens={values.tokens}
           mode="auto"
         >
-          Buy Pods
+          Fill
         </SmartSubmitButton>
       </Stack>
     </Form>
@@ -347,8 +347,8 @@ const FillListing : React.FC<{
       const amountPods = amountBeans.div(podListing.pricePerPod);
       
       txToast = new TransactionToast({
-        loading: `Purchase ${displayTokenAmount(amountPods, PODS)} Pods for ${displayTokenAmount(amountBeans, Bean)}`,
-        success: 'Purchase complete.',
+        loading: `Buying ${displayTokenAmount(amountPods, PODS)} for ${displayTokenAmount(amountBeans, Bean)}...`,
+        success: 'Fill successful.',
       });
       
       /// Sow directly from BEAN

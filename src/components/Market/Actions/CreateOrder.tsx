@@ -172,7 +172,7 @@ const CreateOrderForm : React.FC<
             // balanceLabel="Maximum Price Per Pod"
           />
         </FieldWrapper>
-        <FieldWrapper label="Buy using">
+        <FieldWrapper label="Order using">
           <>
             {values.tokens.map((state, index) => (
               <TokenQuoteProvider
@@ -232,7 +232,7 @@ const CreateOrderForm : React.FC<
           tokens={values.tokens}
           mode="auto"
         >
-          Create Order
+          Order
         </SmartSubmitButton>
       </Stack>
     </Form>
@@ -324,8 +324,8 @@ const CreateOrder : React.FC<{}> = () => {
 
       ///
       txToast = new TransactionToast({
-        loading: 'Creating Pod Order...',
-        success: 'Pod Order created',
+        loading: 'Ordering Pods...',
+        success: 'Order successful.',
       });
       
       /// Create Pod Order directly

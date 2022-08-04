@@ -113,7 +113,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
           .multipliedBy(100)
           .toFixed(0);
 
-        eventTitle = `Bean Sow (${weather}% Weather)`;
+        eventTitle = `Bean Sow (${weather}% Temperature)`;
         amountOut = (
           <TokenDisplay color="red" input={[beans, BEAN[SupportedChainId.MAINNET]]} />
         );

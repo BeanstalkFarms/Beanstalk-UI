@@ -174,7 +174,7 @@ export default function WalletEvent({ event }) {
           .multipliedBy(100)
           .toFixed(0);
 
-        eventTitle = `Bean Sow (${weather}% Weather)`;
+        eventTitle = `Bean Sow (${weather}% Temperature)`;
         eventAmount = (
           <TokenFlow
             out={[beans, CryptoAsset.Bean]}

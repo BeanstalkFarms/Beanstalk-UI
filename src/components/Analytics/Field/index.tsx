@@ -18,7 +18,7 @@ const FieldAnalytics: React.FC<{}> = () => {
       <Stack>
         <Tabs value={tab} onChange={handleChangeTab} sx={{ px: 2, pt: 2, pb: 1.5 }}>
           <Tab label="RRoR" />
-          <Tab label="Weather" />
+          <Tab label="Temperature" />
           <Tab label="Pods" />
           <Tab label="Pod Rate" />
           <Tab label="Sown" />
