@@ -87,7 +87,9 @@ export default abstract class Token {
     }
   ) {
     this.chainId = chainId;
-    this.address = typeof address === 'string' ? address.toLowerCase() : address[chainId].toLowerCase();
+    this.address = typeof address === 'string' 
+      ? address.toLowerCase() 
+      : address[chainId].toLowerCase();
     this.decimals = decimals;
     this.symbol = metadata.symbol;
     this.name = metadata.name;

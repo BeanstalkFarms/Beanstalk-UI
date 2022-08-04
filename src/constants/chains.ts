@@ -25,6 +25,7 @@ export enum SupportedChainId {
  * function signatures than the Beanstalk V1.
  */
 export const REPLANTED_CHAINS = new Set([
+  SupportedChainId.MAINNET,
   SupportedChainId.LOCALHOST,
   SupportedChainId.CUJO,
   SupportedChainId.PHOENIX,

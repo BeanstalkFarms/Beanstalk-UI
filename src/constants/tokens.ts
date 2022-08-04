@@ -5,9 +5,7 @@ import wEthIconCircledUrl from 'img/tokens/weth-logo-circled.svg';
 // Bean Images
 // import beanLogoUrl from 'img/tokens/bean-logo.svg';
 import beanCircleLogoUrl from 'img/tokens/bean-logo-circled.svg';
-import beanEthLpLogoUrl from 'img/tokens/bean-eth-lp-logo.svg';
 import beanCrv3LpLogoUrl from 'img/tokens/bean-crv3-logo.svg';
-import beanLusdLogoUrl from 'img/tokens/bean-lusd-logo.svg';
 
 // Beanstalk Token Logos
 import stalkLogo from 'img/beanstalk/stalk-icon.svg';
@@ -29,7 +27,7 @@ import unripeBeanCrv3LogoUrl from 'img/tokens/unripe-lp-logo-circled.svg';
 import { ERC20Token, NativeToken, BeanstalkToken } from 'classes/Token';
 import { SupportedChainId } from './chains';
 import { ChainConstant } from '.';
-import { BEAN_CRV3_ADDRESSES, BEAN_LUSD_ADDRESSES, CRV3_ADDRESSES, DAI_ADDRESSES, LUSD_ADDRESSES, USDC_ADDRESSES, USDT_ADDRESSES, UNRIPE_BEAN_ADDRESSES, UNRIPE_BEAN_CRV3_ADDRESSES, BEAN_ADDRESSES } from './addresses';
+import { BEAN_CRV3_ADDRESSES, CRV3_ADDRESSES, DAI_ADDRESSES, LUSD_ADDRESSES, USDC_ADDRESSES, USDT_ADDRESSES, UNRIPE_BEAN_ADDRESSES, UNRIPE_BEAN_CRV3_ADDRESSES, BEAN_ADDRESSES } from './addresses';
 
 // ----------------------------------------
 // Types + Utilities
@@ -156,49 +154,6 @@ export const BEAN = {
       seeds: 2,
     }
   ),
-  // ------[Post-Replant]------
-  [SupportedChainId.PHOENIX]: new ERC20Token(
-    SupportedChainId.PHOENIX,
-    BEAN_ADDRESSES,
-    6,
-    {
-      name: 'Bean',
-      symbol: 'BEAN',
-      logo: beanCircleLogoUrl,
-    },
-    {
-      stalk: 1,
-      seeds: 2,
-    }
-  ),
-  [SupportedChainId.LOCALHOST]: new ERC20Token(
-    SupportedChainId.LOCALHOST,
-    BEAN_ADDRESSES,
-    6,
-    {
-      name: 'Bean',
-      symbol: 'BEAN',
-      logo: beanCircleLogoUrl,
-    },
-    {
-      stalk: 1,
-      seeds: 2,
-    }
-  ),
-  [SupportedChainId.CUJO]: new ERC20Token(
-    SupportedChainId.CUJO,
-    BEAN_ADDRESSES,
-    6,
-    {
-      name: 'Bean',
-      symbol: 'BEAN',
-      logo: beanCircleLogoUrl,
-    },
-    {
-      stalk: 1,
-      seeds: 2,
-    }
-  ),
 };
 
 // CRV3 + Underlying Stables
@@ -272,29 +227,48 @@ export const LUSD = {
   ),
 };
 
-// ----------------------------------------
-// ERC20 Tokens - LP
-// ----------------------------------------
-
-const beanEthLpMeta = {
-  name: 'BEAN:ETH LP',
-  symbol: 'BEAN:ETH',
-  logo: beanEthLpLogoUrl,
-  displayDecimals: 9,
-  isLP: true,
-};
+// TEMP
+// Keep the old BEAN_ETH and BEAN_LUSD tokens to let
+// the Pick dialog properly display pickable assets.
 export const BEAN_ETH_UNIV2_LP = {
   [SupportedChainId.MAINNET]: new ERC20Token(
     SupportedChainId.MAINNET,
     '0x87898263B6C5BABe34b4ec53F22d98430b91e371',
     18,
-    beanEthLpMeta,
+    {
+      name: 'BEAN:ETH LP',
+      symbol: 'BEAN:ETH',
+      logo: '',
+      displayDecimals: 9,
+      isLP: true,
+    },
     {
       stalk: 1,
       seeds: 4,
     }
   ),
 };
+export const BEAN_LUSD_LP = {
+  [SupportedChainId.MAINNET]: new ERC20Token(
+    SupportedChainId.MAINNET,
+    '0xD652c40fBb3f06d6B58Cb9aa9CFF063eE63d465D',
+    18,
+    {
+      name: 'BEAN:LUSD LP',
+      symbol: 'BEAN:LUSD',
+      logo: '',
+      isLP: true,
+    },
+    {
+      stalk: 1,
+      seeds: 3,
+    }
+  ),
+};
+
+// ----------------------------------------
+// ERC20 Tokens - LP
+// ----------------------------------------
 
 export const BEAN_CRV3_LP = {
   [SupportedChainId.MAINNET]: new ERC20Token(
@@ -310,70 +284,6 @@ export const BEAN_CRV3_LP = {
     {
       stalk: 1,
       seeds: 4,
-    }
-  ),
-  // ------[Post-Replant]------
-  [SupportedChainId.PHOENIX]: new ERC20Token(
-    SupportedChainId.PHOENIX,
-    BEAN_CRV3_ADDRESSES,
-    18,
-    {
-      name: 'BEAN:3CRV LP',
-      symbol: 'BEAN:3CRV',
-      logo: beanCrv3LpLogoUrl,
-      isLP: true,
-    },
-    {
-      stalk: 1,
-      seeds: 4,
-    }
-  ),
-  [SupportedChainId.LOCALHOST]: new ERC20Token(
-    SupportedChainId.LOCALHOST,
-    BEAN_CRV3_ADDRESSES,
-    18,
-    {
-      name: 'BEAN:3CRV LP',
-      symbol: 'BEAN:3CRV',
-      logo: beanCrv3LpLogoUrl,
-      isLP: true,
-    },
-    {
-      stalk: 1,
-      seeds: 4,
-    }
-  ),
-  [SupportedChainId.CUJO]: new ERC20Token(
-    SupportedChainId.CUJO,
-    BEAN_CRV3_ADDRESSES,
-    18,
-    {
-      name: 'BEAN:3CRV LP',
-      symbol: 'BEAN:3CRV',
-      logo: beanCrv3LpLogoUrl,
-      isLP: true,
-    },
-    {
-      stalk: 1,
-      seeds: 4,
-    }
-  ),
-};
-
-export const BEAN_LUSD_LP = {
-  [SupportedChainId.MAINNET]: new ERC20Token(
-    SupportedChainId.MAINNET,
-    BEAN_LUSD_ADDRESSES,
-    18,
-    {
-      name: 'BEAN:LUSD LP',
-      symbol: 'BEAN:LUSD',
-      logo: beanLusdLogoUrl,
-      isLP: true,
-    },
-    {
-      stalk: 1,
-      seeds: 3,
     }
   ),
 };
@@ -433,9 +343,6 @@ export const SILO_WHITELIST: ChainConstant<ERC20Token>[] = [
   BEAN_CRV3_LP,
   UNRIPE_BEAN,
   UNRIPE_BEAN_CRV3
-  // Legacy LP tokens
-  // BEAN_ETH_UNIV2_LP,
-  // BEAN_LUSD_LP,
 ];
 
 // All supported ERC20 tokens.
@@ -459,7 +366,6 @@ export const BALANCE_TOKENS: ChainConstant<NativeToken | ERC20Token>[] = [
 // Tokens that used the generalized silo whitelist in Beanstalk V1.
 export const GENERALIZED_SILO_WHITELIST: ChainConstant<ERC20Token>[] = [
   BEAN_CRV3_LP,
-  BEAN_LUSD_LP,
   UNRIPE_BEAN,
   UNRIPE_BEAN_CRV3
 ];

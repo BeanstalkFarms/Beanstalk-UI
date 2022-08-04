@@ -1,9 +1,16 @@
-import { EventParsingParameters } from 'hooks/useEventProcessor';
+import BigNumber from 'bignumber.js';
 import useSeason from 'hooks/useSeason';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import useAccount from './useAccount';
+
+export type EventParsingParameters = {
+  account: string;
+  season: BigNumber;
+  farmableBeans: BigNumber;
+  harvestableIndex: BigNumber;
+};
 
 export default function useEventParsingParams() {
   const account     = useAccount();

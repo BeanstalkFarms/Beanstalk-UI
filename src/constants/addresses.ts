@@ -37,10 +37,7 @@ export const BEANFT_WINTER_ADDRESSES = {
 // ----------------------------------------
 
 export const BEAN_ADDRESSES = {
-  [SupportedChainId.MAINNET]: '0xDC59ac4FeFa32293A95889Dc396682858d52e5Db'.toLowerCase(),
-  [SupportedChainId.PHOENIX]: '0xBEA0003eA948Db32082Fc6F4EC0729D258a0444c'.toLowerCase(),
-  [SupportedChainId.LOCALHOST]: '0xBEA0000029AD1c77D3d5D23Ba2D8893dB9d1Efab'.toLowerCase(),
-  [SupportedChainId.CUJO]: '0xBEA0000029AD1c77D3d5D23Ba2D8893dB9d1Efab'.toLowerCase(),
+  [SupportedChainId.MAINNET]: '0xBEA0003eA948Db32082Fc6F4EC0729D258a0444c'.toLowerCase(),
 };
 
 export const UNRIPE_BEAN_ADDRESSES = {
@@ -48,9 +45,6 @@ export const UNRIPE_BEAN_ADDRESSES = {
   // "Unripe Bean": Unripe vesting asset for the Bean token, Localhost
   // -------------------------------------------------
   [SupportedChainId.MAINNET]: '0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449'.toLowerCase(),
-  [SupportedChainId.PHOENIX]: '0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449'.toLowerCase(),
-  [SupportedChainId.LOCALHOST]: '0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449'.toLowerCase(),
-  [SupportedChainId.CUJO]: '0x1BEA0050E63e05FBb5D8BA2f10cf5800B6224449'.toLowerCase()
 };
 
 export const UNRIPE_BEAN_CRV3_ADDRESSES = {
@@ -58,9 +52,6 @@ export const UNRIPE_BEAN_CRV3_ADDRESSES = {
   // "Unripe BEAN:CRV3 LP": Unripe vesting asset for the BEAN:CRV3 LP token, Localhost
   // -------------------------------------------------
   [SupportedChainId.MAINNET]: '0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D'.toLowerCase(),
-  [SupportedChainId.PHOENIX]: '0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D'.toLowerCase(),
-  [SupportedChainId.LOCALHOST]: '0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D'.toLowerCase(),
-  [SupportedChainId.CUJO]: '0x1BEA3CcD22F4EBd3d37d731BA31Eeca95713716D'.toLowerCase()
 };
 
 // ----------------------------------------
@@ -80,28 +71,11 @@ export const USDT_ADDRESSES = {
 };
 
 export const CRV3_ADDRESSES = {
-  // --------------------------------------------------
-  // "Curve.fi: 3CRV Token"
-  // [Implements: ERC-20]
-  // -------------------------------------------------
   [SupportedChainId.MAINNET]: '0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490'.toLowerCase(),
 };
 
 export const LUSD_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0x5f98805A4E8be255a32880FDeC7F6728C6568bA0'.toLowerCase(),
-};
-
-// ----------------------------------------
-// Uniswap Pools
-// ----------------------------------------
-
-export const BEAN_ETH_UNIV2_ADDRESSES = {
-  // --------------------------------------------------
-  // "Uniswap V2: BEAN 3": Uniswap V2 Pair, Mainnet
-  // --------------------------------------------------
-  // token0 = 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 (WETH)
-  // token1 = 0xdc59ac4fefa32293a95889dc396682858d52e5db (BEAN)
-  [SupportedChainId.MAINNET]: '0x87898263B6C5BABe34b4ec53F22d98430b91e371'.toLowerCase(),
 };
 
 // ----------------------------------------
@@ -113,7 +87,7 @@ export const BEAN_CRV3_ADDRESSES = {
   // "Curve.fi Factory USD Metapool: Bean (BEAN3CRV-f)"
   // [Implements: ERC20 & Metapool]
   // --------------------------------------------------
-  // coins[0] = 0xDC59ac4FeFa32293A95889Dc396682858d52e5Db (BEAN)
+  // coins[0] = 0xBEA0003eA948Db32082Fc6F4EC0729D258a0444c (BEAN)
   // coins[1] = 0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490 (3CRV)
   //
   // 1. Creates a BEAN:3CRV Metapool contract.
@@ -122,23 +96,7 @@ export const BEAN_CRV3_ADDRESSES = {
   //    case for 3pool itself on Mainnet:
   //    - 3CRV (the 3pool LP Token) = 0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490
   //    - 3pool Contract            = 0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7
-  [SupportedChainId.MAINNET]: '0x3a70DfA7d2262988064A2D051dd47521E43c9BdD'.toLowerCase(),
-
-  // --------------------------------------------------
-  // Below is the address for the new BEAN:3CRV
-  // metapool deployed as part of Replanting Beanstalk.
-  // --------------------------------------------------
-  [SupportedChainId.PHOENIX]: '0xc9C32cd16Bf7eFB85Ff14e0c8603cc90F6F2eE49'.toLowerCase(),
-  [SupportedChainId.LOCALHOST]: '0xc9C32cd16Bf7eFB85Ff14e0c8603cc90F6F2eE49'.toLowerCase(),
-  [SupportedChainId.CUJO]: '0xc9C32cd16Bf7eFB85Ff14e0c8603cc90F6F2eE49'.toLowerCase(),
-};
-
-export const BEAN_LUSD_ADDRESSES = {
-  // --------------------------------------------------
-  // "Curve.fi Factory Plain Pool: Bean-LUSD (BEANLUSD-f)"
-  // [Implements: ERC20 & Metapool]
-  // --------------------------------------------------
-  [SupportedChainId.MAINNET]: '0xD652c40fBb3f06d6B58Cb9aa9CFF063eE63d465D'.toLowerCase(),
+  [SupportedChainId.MAINNET]: '0xc9C32cd16Bf7eFB85Ff14e0c8603cc90F6F2eE49'.toLowerCase(),
 };
 
 // ----------------------------------------
