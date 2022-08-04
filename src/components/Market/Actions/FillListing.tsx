@@ -38,6 +38,8 @@ import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import toast from 'react-hot-toast';
 import { PodListing } from 'state/farmer/market';
 import { optimizeFromMode } from 'util/Farm';
+import TokenIcon from '../../Common/TokenIcon';
+import { IconSize } from '../../App/muiTheme';
 
 export type FillListingFormValues = FormState & {
   settings: SlippageSettingsFragment;
@@ -178,15 +180,6 @@ const FillListingForm : React.FC<
         {isReady ? (
           <>
             <TxnSeparator mt={0} />
-            {/* Place in Line */}
-            <Stack direction="row" justifyContent="space-between" sx={{ px: 1 }}>
-              <Typography variant="body1" color="text.secondary">
-                Place in Pod Line
-              </Typography>
-              <Typography variant="body1">
-                {displayBN(placeInLine)}
-              </Typography>
-            </Stack>
             {/* Pods Output */}
             <TokenOutputField
               token={PODS}
@@ -195,6 +188,20 @@ const FillListingForm : React.FC<
                 <>
                   {displayTokenAmount(amountOut!, Bean)} / {displayBN(podListing.pricePerPod)} Beans per Pod<br />= {displayTokenAmount(podsPurchased, PODS)}
                 </>
+              )}
+              override={(
+                <Stack direction="row" alignItems="center" gap={0.5}>
+                  <TokenIcon
+                    token={PODS}
+                    style={{
+                      height: IconSize.small,
+                    }}
+                  />
+                  <Typography variant="bodyMedium">
+                    {PODS.symbol} @ {displayBN(placeInLine)}
+                  </Typography>
+
+                </Stack>
               )}
             />
             <Box>
