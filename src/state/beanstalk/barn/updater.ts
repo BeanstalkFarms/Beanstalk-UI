@@ -1,14 +1,11 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import BigNumber from 'bignumber.js';
 import { BARNRAISE_CUSTODIAN_ADDRESSES, USDC_ADDRESSES } from '~/constants/addresses';
-import { BEAN, USDC } from '~/constants/tokens';
+import { BEAN } from '~/constants/tokens';
 import useChainConstant from '~/hooks/useChainConstant';
 import { useBeanstalkContract, useBeanstalkFertilizerContract, useERC20Contract } from '~/hooks/useContract';
 import { tokenResult, bigNumberResult } from '~/util/index';
 import useChainId from '~/hooks/useChain';
-import useMigrateCall from '~/hooks/useMigrateCall';
-import { Beanstalk } from '~/generated/index';
 import { ZERO_BN } from '~/constants/index';
 import { resetBarn, updateBarn } from './actions';
 
@@ -18,7 +15,6 @@ export const useBarn = () => {
   const [fertContract]  = useBeanstalkFertilizerContract();
   const [usdcContract]  = useERC20Contract(USDC_ADDRESSES);
   const custodian       = useChainConstant(BARNRAISE_CUSTODIAN_ADDRESSES);
-  const migrate         = useMigrateCall();
 
   // Handlers
   const fetch = useCallback(async () => {
@@ -31,31 +27,11 @@ export const useBarn = () => {
         currentBpf,
         endBpf,
       ] = await Promise.all([
-        // Amount of Fertilizer remaining to be sold
-        migrate<Beanstalk, Beanstalk>(beanstalk, [
-          () => fertContract.remaining().then(tokenResult(BEAN)),
-          () => beanstalk.remainingRecapitalization().then(tokenResult(BEAN)),
-        ]),
-        // Amount of USDC already raised
-        migrate<Beanstalk, Beanstalk>(beanstalk, [
-          () => usdcContract.balanceOf(custodian).then(tokenResult(USDC)),
-          () => Promise.resolve(ZERO_BN), // not possible after Replant
-        ]),
-        // Humidity
-        migrate(beanstalk, [
-          () => Promise.resolve(new BigNumber(500)),
-          () => beanstalk.getCurrentHumidity().then(bigNumberResult)
-        ]),
-        // Current BPF
-        migrate(beanstalk, [
-          () => Promise.resolve(ZERO_BN),
-          () => beanstalk.beansPerFertilizer().then(bigNumberResult)
-        ]),
-        // End BPF
-        migrate(beanstalk, [
-          () => Promise.resolve(ZERO_BN),
-          () => beanstalk.getEndBpf().then(bigNumberResult)
-        ]),
+        beanstalk.remainingRecapitalization().then(tokenResult(BEAN)),
+        Promise.resolve(ZERO_BN), // not possible after Replant
+        beanstalk.getCurrentHumidity().then(bigNumberResult),
+        beanstalk.beansPerFertilizer().then(bigNumberResult),
+        beanstalk.getEndBpf().then(bigNumberResult),
       ] as const);
       console.debug(`[beanstalk/fertilizer/updater] RESULT: remaining = ${remaining.toFixed(2)}`);
       dispatch(updateBarn({
@@ -68,7 +44,6 @@ export const useBarn = () => {
     }
   }, [
     dispatch,
-    migrate,
     beanstalk,
     fertContract,
     usdcContract,
