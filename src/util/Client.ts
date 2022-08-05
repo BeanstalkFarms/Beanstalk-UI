@@ -98,14 +98,6 @@ const { chains, provider } = configureChains(
         return { http: TESTNET_RPC_ADDRESSES[_chain.id] };
       },
     }),
-    // jsonRpcProvider({
-    //   priority: 1,
-    //   rpc: (_chain) => {
-    //     if (!TESTNET_RPC_ADDRESSES[_chain.id]) return null;
-    //     return { http: TESTNET_RPC_ADDRESSES[_chain.id] };
-    //   },
-    //   static: false,
-    // }),
     publicProvider({
       priority: 2,
     }),
