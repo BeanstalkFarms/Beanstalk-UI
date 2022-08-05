@@ -1,5 +1,7 @@
 import React from 'react';
-import { Button, ButtonProps, Stack, Typography } from '@mui/material';
+import { Button, ButtonProps, Stack, Tooltip, Typography } from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { FontSize } from '../App/muiTheme';
 
 const GAP = 2;
 
@@ -20,9 +22,12 @@ const DescriptionButton : React.FC<ButtonProps & {
   selected?: boolean;
   /** */
   tag?: JSX.Element;
+  /** */
+  tooltipTitle?: string;
 }> = ({
   title,
   description,
+  tooltipTitle,
   selected,
   tag,
   icon,
@@ -53,17 +58,24 @@ const DescriptionButton : React.FC<ButtonProps & {
       {/* Icon + Title */}
       <div>
         <Stack direction="row" gap={1} alignItems="center">
-          {icon && (
-            <Typography variant="bodyMedium">
-              {/* FIXME: why the extra stack here? */}
-              <Stack alignItems="center">
-                {icon}
-              </Stack>
+          <Tooltip title={tooltipTitle !== undefined ? tooltipTitle : ''} placement="top">
+            <Typography variant="bodyMedium" display="flex" flexDirection="row" alignItems="center">
+              {icon && (
+                <>
+                  {icon}&nbsp;
+                </>
+              )}
+              {title}
+              {tooltipTitle && (
+                <>
+                  &nbsp;
+                  <HelpOutlineIcon
+                    sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
+                  />
+                </>
+              )}
             </Typography>
-          )}
-          <Typography variant="bodyMedium">
-            {title}
-          </Typography>
+          </Tooltip>
         </Stack>
         {/* Description */}
         <Typography variant="bodySmall">

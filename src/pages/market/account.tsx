@@ -33,7 +33,7 @@ const MarketAccountPage: React.FC = () => {
           )}
         />
         <Card>
-          <Stack sx={{ pt: 2, px: 2, pb: 1.5 }} direction="row" justifyContent="space-between">
+          <Stack sx={{ pt: 2, px: 2, pb: 1.5 }} direction="row" justifyContent="space-between" alignItems="center">
             <Tabs
               value={tab}
               onChange={handleChangeTab}
@@ -44,15 +44,27 @@ const MarketAccountPage: React.FC = () => {
               <Tab label="Listings" />
             </Tabs>
             {tab === 0 && (
-              <Button component={Link} to="/market/create" color="primary" variant="text" sx={{ '&:hover': { backgroundColor: 'transparent' } }}>
+              <Button
+                component={Link}
+                to="/market/create"
+                size="small"
+                color="primary"
+                variant="text"
+                sx={{ p: 0, '&:hover': { backgroundColor: 'transparent' } }}>
                 Create Order
               </Button>
             )}
-            {tab === 1 && ( 
-            <Button component={Link} to="/market/create" color="primary" variant="text" sx={{ '&:hover': { backgroundColor: 'transparent' } }}>
-              Create Listing
-            </Button>
-             )} 
+            {tab === 1 && (
+              <Button
+                component={Link}
+                to="/market/create"
+                size="small"
+                color="primary"
+                variant="text"
+                sx={{ p: 0, '&:hover': { backgroundColor: 'transparent' } }}>
+                Create Listing
+              </Button>
+            )}
           </Stack>
           <Box px={1}>
             {tab === 0 && <MyOrdersTable />}
