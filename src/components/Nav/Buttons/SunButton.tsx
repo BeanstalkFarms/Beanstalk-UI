@@ -12,7 +12,7 @@ import rainySeasonIcon from 'img/beanstalk/sun/rainy-season.svg';
 import SunriseButton from 'components/Sun/SunriseButton';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import { SunButtonQuery, useSunButtonQuery } from 'generated/graphql';
+import { SunButtonQuery, useSunButtonQuery } from '~/generated/graphql';
 import usePrice from '~/hooks/usePrice';
 import useSeason from '~/hooks/useSeason';
 import useChainId from '~/hooks/useChain';

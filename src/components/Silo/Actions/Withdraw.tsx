@@ -15,13 +15,13 @@ import {
   SmartSubmitButton
 } from 'components/Common/Form';
 import Beanstalk from '~/lib/Beanstalk';
-import useSeason from 'hooks/useSeason';
+import useSeason from '~/hooks/useSeason';
 import { FarmerSilo } from '~/state/farmer/silo';
-import { useBeanstalkContract } from 'hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/useContract';
 import { displayFullBN, parseError, toStringBaseUnitBN } from '~/util/index';
 import TransactionToast from 'components/Common/TxnToast';
-import { useSigner } from 'hooks/ledger/useSigner';
-import useFarmerSiloBalances from 'hooks/useFarmerSiloBalances';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import useFarmerSiloBalances from '~/hooks/useFarmerSiloBalances';
 import { ERC20Token } from 'classes/Token';
 import { BeanstalkReplanted } from 'generated/index';
 import { useSelector } from 'react-redux';

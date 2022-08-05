@@ -1,5 +1,6 @@
 import { BigNumber as EBN, ethers } from 'ethers';
 import BigNumber from 'bignumber.js';
+import Token from 'classes/Token';
 import {
   SowEvent,
   HarvestEvent,
@@ -10,8 +11,7 @@ import {
   RemoveDepositEvent,
   RemoveWithdrawalsEvent,
   RemoveDepositsEvent,
-  PodListingCancelledEvent, PodListingCreatedEvent, PodListingFilledEvent, PodOrderCancelledEvent, PodOrderCreatedEvent, PodOrderFilledEvent } from 'generated/Beanstalk/BeanstalkReplanted';
-import Token from 'classes/Token';
+  PodListingCancelledEvent, PodListingCreatedEvent, PodListingFilledEvent, PodOrderCancelledEvent, PodOrderCreatedEvent, PodOrderFilledEvent } from '~/generated/Beanstalk/BeanstalkReplanted';
 import { BEAN, PODS } from '~/constants/tokens';
 import { TokenMap } from '~/constants/index';
 import { PlotMap } from '~/state/farmer/field';

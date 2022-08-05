@@ -1,6 +1,6 @@
 import React from 'react';
 import SeasonPlot, { SeasonPlotBaseProps } from 'components/Common/Charts/SeasonPlot';
-import { SeasonalRRoRDocument, SeasonalRRoRQuery } from 'generated/graphql';
+import { SeasonalRRoRDocument, SeasonalRRoRQuery } from '~/generated/graphql';
 import { SnapshotData } from '~/hooks/useSeasons';
 
 const getValue = (season: SnapshotData<SeasonalRRoRQuery>) => parseInt(season.realRateOfReturn, 10) * 100;

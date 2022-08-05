@@ -1,3 +1,6 @@
+import { Contract, ContractInterface, ethers } from 'ethers';
+import { useCallback, useMemo } from 'react';
+import { useProvider, useContract as useWagmiContract } from 'wagmi';
 import {
   Beanstalk,
   BeaNFTGenesis,
@@ -5,10 +8,7 @@ import {
   BeanstalkFertilizer,
   BeanstalkPrice,
   ERC20,
-} from 'generated/index';
-import { Contract, ContractInterface, ethers } from 'ethers';
-import { useCallback, useMemo } from 'react';
-import { useProvider, useContract as useWagmiContract } from 'wagmi';
+} from '~/generated/index';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { getChainConstant } from '~/util/Chain';
 import { ChainConstant } from '~/constants/index';

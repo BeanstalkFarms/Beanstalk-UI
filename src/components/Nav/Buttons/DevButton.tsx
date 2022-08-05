@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 import { Button } from '@mui/material';
-import { BeanstalkReplanted } from 'generated';
 import CachedIcon from '@mui/icons-material/Cached';
 import { useAccount } from 'wagmi';
+import { BeanstalkReplanted } from '~/generated';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useTokenMap from '~/hooks/useTokenMap';
 import { getAccount } from '~/util/Account';
