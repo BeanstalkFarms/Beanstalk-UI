@@ -81,7 +81,7 @@ const TokenRow: React.FC<{
         {label}
       </Typography>
       {(assetStates) && (
-        <Tooltip title={tooltip || ''} placement="right">
+        <Tooltip title={tooltip || ''} placement="top">
           <HelpOutlineIcon
             sx={{ color: 'text.secondary', fontSize: '14px' }}
           />
