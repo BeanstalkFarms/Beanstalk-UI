@@ -58,22 +58,24 @@ const DescriptionButton : React.FC<ButtonProps & {
       {/* Icon + Title */}
       <div>
         <Stack direction="row" gap={1} alignItems="center">
-          <Tooltip title={tooltipTitle !== undefined ? tooltipTitle : ''} placement="top">
-            <Typography variant="bodyMedium" display="flex" flexDirection="row" alignItems="center">
+          <Tooltip title={tooltipTitle !== undefined ? tooltipTitle : ''} placement="top" sx={{ pointerEvents: 'all' }}>
+            <Typography variant="bodyMedium" display="flex" alignItems="center">
               {icon && (
                 <>
                   {icon}&nbsp;
                 </>
               )}
-              {title}
-              {tooltipTitle && (
-                <>
-                  &nbsp;
-                  <HelpOutlineIcon
-                    sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
-                  />
-                </>
-              )}
+              <Typography variant="bodyMedium">
+                {title}
+                {tooltipTitle && (
+                  <>
+                    &nbsp;
+                    <HelpOutlineIcon
+                      sx={{ color: 'text.secondary', fontSize: FontSize.sm, display: 'inline' }}
+                    />
+                  </>
+                )}
+              </Typography>
             </Typography>
           </Tooltip>
         </Stack>
