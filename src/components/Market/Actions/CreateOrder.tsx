@@ -11,7 +11,7 @@ import {
   TxnSeparator,
   TxnSettings
 } from 'components/Common/Form';
-import { ONE_BN, SupportedChainId, ZERO_BN } from 'constants/index';
+import { ONE_BN, ZERO_BN } from 'constants/index';
 import { BEAN, ETH, PODS, WETH } from 'constants/tokens';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useChainId from 'hooks/useChain';
@@ -96,7 +96,6 @@ const CreateOrderForm : React.FC<
   const getChainToken = useGetChainToken();
   const balances = useFarmerBalances();
 
-  const isMainnet = chainId === SupportedChainId.MAINNET;
   const [showTokenSelect, handleOpen, handleClose] = useToggle();
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
     // If the user has typed some existing values in,
@@ -159,7 +158,6 @@ const CreateOrderForm : React.FC<
             placeholder={displayFullBN(podLine, 0).toString()}
             max={podLine}
             InputProps={PlaceInLineInputProps}
-            // balanceLabel="Pod Line"
           />
         </FieldWrapper>
         <FieldWrapper label="Price per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
@@ -168,8 +166,6 @@ const CreateOrderForm : React.FC<
             placeholder="0.0000"
             InputProps={PricePerPodInputProps}
             max={ONE_BN}
-            // balance={new BigNumber(1)}
-            // balanceLabel="Maximum Price Per Pod"
           />
         </FieldWrapper>
         <FieldWrapper label="Order using">
@@ -182,8 +178,6 @@ const CreateOrderForm : React.FC<
                 balance={balances[state.token.address] || ZERO_BN}
                 state={state}
                 showTokenSelect={handleOpen}
-                disabled={isMainnet}
-                disableTokenSelect={isMainnet}
                 handleQuote={handleQuote}
               />
             ))}

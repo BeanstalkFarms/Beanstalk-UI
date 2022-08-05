@@ -6,8 +6,6 @@ import { useProvider } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
 import { Token } from 'classes';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import useChainId from 'hooks/useChain';
-import { SupportedChainId } from 'constants/chains';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { FarmerSiloBalance } from 'state/farmer/silo';
 import { ActionType } from 'util/Actions';
@@ -81,9 +79,7 @@ const ClaimForm : React.FC<
   isSubmitting,
   setFieldValue,
 }) => {
-  const chainId = useChainId();
   const pools = usePools();
-  const isMainnet = chainId === SupportedChainId.MAINNET;
   const BeanCrv3 = useChainConstant(BEAN_CRV3_LP);
   
   // ASSUMPTION: Pool address === LP Token address
@@ -117,14 +113,6 @@ const ClaimForm : React.FC<
       // indices[tokenIndex] = 1; // becomes [0, 1] or [1, 0]
 
       const estimate = await Farm.estimate([
-        // pool.address,
-        // farm.contracts.curve.registries.metaFactory.address,
-        // indices as [number, number],
-        // // Always comes from internal balance
-        // FarmFromMode.INTERNAL,
-        // // FIXME: changes to values.destination trigger
-        // // re-calculations here when they shouldn't
-        // values.destination
         farm.removeLiquidityOneToken(
           pool.address,
           farm.contracts.curve.registries.metaFactory.address,

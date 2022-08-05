@@ -12,8 +12,6 @@ import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary
 import { FormState, SettingInput, TxnSettings } from 'components/Common/Form';
 import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
 import TxnPreview from 'components/Common/Form/TxnPreview';
-import useChainId from 'hooks/useChain';
-import { SupportedChainId } from 'constants/chains';
 import Beanstalk from 'lib/Beanstalk';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useFarmerBalances from 'hooks/useFarmerBalances';
@@ -75,20 +73,17 @@ const DepositForm : React.FC<
   isSubmitting,
   setFieldValue,
 }) => {
-  const chainId = useChainId();
-  // TODO: constrain this when siloToken = Unripe
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
-
-  //
   const { amount, bdv, stalk, seeds, actions } = Beanstalk.Silo.Deposit.deposit(
     whitelistedToken,
     values.tokens,
     amountToBdv,
   );
-  const isMainnet = chainId === SupportedChainId.MAINNET;
+
+  /// Derived
   const isReady   = bdv.gt(0);
 
-  //
+  // /
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
     // If the user has typed some existing values in,
     // save them. Add new tokens to the end of the list.
@@ -127,8 +122,6 @@ const DepositForm : React.FC<
             balance={balances[tokenState.token.address] || ZERO_BN}
             state={tokenState}
             showTokenSelect={showTokenSelect}
-            disabled={isMainnet}
-            disableTokenSelect={isMainnet}
             handleQuote={handleQuote}
           />
         ))}

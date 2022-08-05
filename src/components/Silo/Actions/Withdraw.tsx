@@ -5,8 +5,6 @@ import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { Token } from 'classes';
 import { SEEDS, STALK } from 'constants/tokens';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import useChainId from 'hooks/useChain';
-import { SupportedChainId } from 'constants/chains';
 import {
   FormState,
   TxnPreview,
@@ -28,7 +26,6 @@ import { ERC20Token } from 'classes/Token';
 import { BeanstalkReplanted } from 'generated/index';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import useSiloTokenToFiat from 'hooks/currency/useSiloTokenToFiat';
 import { ActionType } from 'util/Actions';
 import { ZERO_BN } from 'constants/index';
 import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
@@ -62,10 +59,6 @@ const WithdrawForm : React.FC<
   withdrawSeasons,
   season,
 }) => {
-  const chainId = useChainId();
-  const getUSD = useSiloTokenToFiat();
-  const isMainnet = chainId === SupportedChainId.MAINNET;
-
   // Input props
   const InputProps = useMemo(() => ({
     endAdornment: (
@@ -142,7 +135,6 @@ const WithdrawForm : React.FC<
       >
         You can Claim your Withdrawn assets at the start of the next Season.
       </Alert>
-
     </>
   ) : null;
 

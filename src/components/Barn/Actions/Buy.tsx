@@ -424,34 +424,3 @@ const Buy : React.FC<{}> = () => {
 };
 
 export default Buy;
-
-// ---------------------------------------------------
-
-// const launch = 1654531200 * 1000; // June 6th, 2022 12pm EST
-// const getDiff = () => (launch - new Date().getTime()) / 1000;
-
-// export default () => {
-//   const chainId = useChainId();
-//   const [timeStr, setTimeStr] = useState('Loading...');
-//   const [isLaunched, setIsLaunched] = useState(chainId !== SupportedChainId.MAINNET); 
-//   useEffect(() => {
-//     if (!isLaunched && chainId === SupportedChainId.MAINNET) {
-//       const interval = setInterval(() => {
-//         const diff = getDiff();
-//         if (Math.floor(diff) <= 0) {
-//           setIsLaunched(true);
-//         }
-//         setTimeStr(timeToStringDetailed(diff));
-//       }, 1000);
-//       return () => clearInterval(interval);
-//     }
-//   }, [isLaunched, chainId]);
-
-//   if (isLaunched) return <SetupForm />;
-//   return (
-//     <Card component={Stack} gap={0.5} alignItems="center" sx={{ p: 2 }}>
-//       <Typography color="text.secondary">The Barn Raise begins in</Typography>
-//       <Typography variant="h2">{timeStr}</Typography>
-//     </Card>
-//   );
-// };

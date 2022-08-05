@@ -4,10 +4,8 @@ import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useAccount, useProvider } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
-import { BEAN, BEAN_CRV3_LP, PODS } from 'constants/tokens';
+import { BEAN, PODS } from 'constants/tokens';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import useChainId from 'hooks/useChain';
-import { SupportedChainId } from 'constants/chains';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { ActionType } from 'util/Actions';
 import {
@@ -19,7 +17,6 @@ import { BeanstalkReplanted } from 'generated/index';
 import Farm, { FarmToMode } from 'lib/Beanstalk/Farm';
 import {
   displayFullBN,
-  getChainConstant,
   parseError,
   toStringBaseUnitBN
 } from 'util/index';
@@ -46,19 +43,13 @@ const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
   harvestablePods: BigNumber;
   farm: Farm;
 }> = ({
-        // Custom
-        harvestablePods,
-        // Formik
-        values,
-        isSubmitting,
-      }) => {
-  /// Tokens
-  const chainId = useChainId();
-  const bean = getChainConstant(BEAN, chainId);
-  const lp = getChainConstant(BEAN_CRV3_LP, chainId);
-
+  // Custom
+  harvestablePods,
+  // Formik
+  values,
+  isSubmitting,
+}) => {
   /// Derived
-  const isMainnet = chainId === SupportedChainId.MAINNET;
   const amount = harvestablePods;
   const isSubmittable = (
     amount
