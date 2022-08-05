@@ -1,4 +1,4 @@
-import { Box, Dialog, Stack, Tooltip } from '@mui/material';
+import { Box, Dialog, Link, Stack, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import { Field, FieldProps, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useProvider } from 'wagmi';
@@ -22,11 +22,12 @@ import GasTag from 'components/Common/GasTag';
 import useBDV from 'hooks/useBDV';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
+import { useTheme } from '@mui/material/styles';
 import TransactionToast from '../Common/TxnToast';
 import DescriptionButton from '../Common/DescriptionButton';
 import RewardsBar, { RewardsBarProps } from './RewardsBar';
 import { hoverMap } from '../../constants/silo';
-import { BeanstalkPalette } from '../App/muiTheme';
+import { BeanstalkPalette, FontSize } from '../App/muiTheme';
 
 export type SendFormValues = {
   to?: string;
@@ -92,6 +93,9 @@ const ClaimRewardsForm : React.FC<
   /** The currently selected action (after click). */
   const selectedAction = values.action;
 
+  const theme = useTheme();
+ const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   /// Handlers
   const onMouseOver = useCallback((v: ClaimRewardsAction) => () => setHoveredAction(v), []);
   const onMouseOutContainer = useCallback(() => setHoveredAction(undefined), []);
@@ -144,7 +148,8 @@ const ClaimRewardsForm : React.FC<
                           <DescriptionButton
                             key={option.value}
                             title={option.title}
-                            description={`${option.description}`}
+                            description={isMobile ? undefined : `${option.description}`}
+                            tooltipTitle={isMobile ? `${option.description}` : undefined}
                             tag={<GasTag gasLimit={gas?.[option.value] || null} />}
                             // Button
                             fullWidth
@@ -168,6 +173,12 @@ const ClaimRewardsForm : React.FC<
             }}
           </Field>
         </Stack>
+        <Typography ml={1} pt={0.5} textAlign="center" fontSize={FontSize.sm} color="gray">
+          <Link href="https://docs.bean.money/farm/silo#silo-rewards" target="_blank" rel="noreferrer" underline="none">Learn more about Silo Rewards &rarr;</Link>
+        </Typography>
+        {/* <Typography ml={1} pt={0.5} textAlign="center" fontSize={FontSize.sm} color="gray"> */}
+        {/*  Learn more about <Link href="https://docs.bean.money/farm/silo#silo-rewards" target="_blank" rel="noreferrer" underline="none">Silo Rewards &rarr;</Link> */}
+        {/* </Typography> */}
       </StyledDialogContent>
       <StyledDialogActions>
         <LoadingButton
