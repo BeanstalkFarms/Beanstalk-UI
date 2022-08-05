@@ -13,7 +13,7 @@ import {
   RemoveDepositsEvent,
   PodListingCancelledEvent, PodListingCreatedEvent, PodListingFilledEvent, PodOrderCancelledEvent, PodOrderCreatedEvent, PodOrderFilledEvent } from '~/generated/Beanstalk/Beanstalk';
 import { BEAN, PODS } from '~/constants/tokens';
-import { TokenMap } from '~/constants/index';
+import { TokenMap } from '~/constants';
 import { PlotMap } from '~/state/farmer/field';
 import { FarmerSiloBalance, WithdrawalCrate } from '~/state/farmer/silo';
 import { PodListing, PodOrder } from '~/state/farmer/market';

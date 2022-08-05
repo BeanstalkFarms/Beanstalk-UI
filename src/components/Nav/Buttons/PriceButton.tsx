@@ -15,7 +15,7 @@ import BeanProgressIcon from '~/components/Common/BeanProgressIcon';
 import useSeason from '~/hooks/useSeason';
 import usePrice from '~/hooks/usePrice';
 import { displayBN } from '~/util/Tokens';
-import { NEW_BN, ZERO_BN } from '~/constants/index';
+import { NEW_BN, ZERO_BN } from '~/constants';
 import { CHAIN_INFO } from '~/constants/chains';
 import { useFetchPools } from '~/state/bean/pools/updater';
 import { AppState } from '~/state';

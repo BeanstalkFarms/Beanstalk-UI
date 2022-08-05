@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { ZERO_BN, MAX_UINT256, ChainConstant, NEW_BN } from '~/constants/index';
+import { ZERO_BN, MAX_UINT256, ChainConstant, NEW_BN } from '~/constants';
 import { bigNumberResult } from '~/util/Ledger';
 import { erc20TokenContract } from '~/util/Contracts';
 import client from '~/util/Client';

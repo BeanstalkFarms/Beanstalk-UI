@@ -5,9 +5,9 @@ import { Typography } from '@mui/material';
 import { GridColumns } from '@mui/x-data-grid';
 import { Token } from '~/classes';
 import { FarmerSiloBalance, WithdrawalCrate } from '~/state/farmer/silo';
-import { displayFullBN, displayUSD } from '~/util/index';
+import { displayFullBN, displayUSD } from '~/util';
 import useSeason from '~/hooks/useSeason';
-import { ZERO_BN } from '~/constants/index';
+import { ZERO_BN } from '~/constants';
 import useSiloTokenToFiat from '~/hooks/currency/useSiloTokenToFiat';
 import TableCard from '../../Common/TableCard';
 

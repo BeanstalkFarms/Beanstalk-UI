@@ -22,7 +22,7 @@ import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from '~/util/Tokens
 import TransactionToast from '~/components/Common/TxnToast';
 import { Beanstalk } from '~/generated/index';
 import { QuoteHandler } from '~/hooks/useQuote';
-import { ZERO_BN } from '~/constants/index';
+import { ZERO_BN } from '~/constants';
 import { ERC20Token, NativeToken } from '~/classes/Token';
 import Pool from '~/classes/Pool';
 import SmartSubmitButton from '~/components/Common/Form/SmartSubmitButton';
@@ -35,7 +35,7 @@ import usePreferredToken from '~/hooks/usePreferredToken';
 import useTokenMap from '~/hooks/useTokenMap';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
-import { parseError } from '~/util/index';
+import { parseError } from '~/util';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { AppState } from '~/state';
 import { useFetchPools } from '~/state/bean/pools/updater';

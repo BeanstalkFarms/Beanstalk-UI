@@ -3,10 +3,10 @@ import { Box, Chip, LinearProgress, Stack, Tooltip, Typography } from '@mui/mate
 import { GridColumns, GridRenderCellParams, GridValueFormatterParams } from '@mui/x-data-grid';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import BigNumber from 'bignumber.js';
-import { displayBN, displayFullBN, MaxBN } from '~/util/index';
+import { displayBN, displayFullBN, MaxBN } from '~/util';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { BEAN, PODS } from '~/constants/tokens';
-import { ZERO_BN } from '~/constants/index';
+import { ZERO_BN } from '~/constants';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 import TokenIcon from '../TokenIcon';
 import AddressIcon from '../AddressIcon';

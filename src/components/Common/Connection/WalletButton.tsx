@@ -18,7 +18,7 @@ import {
 import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-import { trimAddress } from '~/util/index';
+import { trimAddress } from '~/util';
 
 import useChainConstant from '~/hooks/useChainConstant';
 

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import Token from '~/classes/Token';
-import { ChainConstant } from '~/constants/index';
+import { ChainConstant } from '~/constants';
 import { useGetChainConstant } from './useChainConstant';
 
 /**

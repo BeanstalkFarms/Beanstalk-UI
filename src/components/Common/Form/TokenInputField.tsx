@@ -10,7 +10,7 @@ import {
 import { Field, FieldProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import Token from '~/classes/Token';
-import { displayBN, displayFullBN, displayTokenAmount } from '~/util/index';
+import { displayBN, displayFullBN, displayTokenAmount } from '~/util';
 import { FarmerBalances } from '~/state/farmer/balances';
 import NumberFormatInput from './NumberFormatInput';
 import FieldWrapper from './FieldWrapper';

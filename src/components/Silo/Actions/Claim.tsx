@@ -25,8 +25,8 @@ import {
   SmartSubmitButton
 } from '~/components/Common/Form';
 import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
-import { ZERO_BN } from '~/constants/index';
-import { displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN, parseError } from '~/util/index';
+import { ZERO_BN } from '~/constants';
+import { displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN, parseError } from '~/util';
 import DestinationField from '~/components/Common/Form/DestinationField';
 import TokenIcon from '~/components/Common/TokenIcon';
 import useToggle from '~/hooks/display/useToggle';

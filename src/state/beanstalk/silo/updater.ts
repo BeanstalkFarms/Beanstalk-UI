@@ -1,8 +1,8 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { BEAN_TO_SEEDS, BEAN_TO_STALK,  ONE_BN,  TokenMap, ZERO_BN } from '~/constants/index';
+import { BEAN_TO_SEEDS, BEAN_TO_STALK,  ONE_BN,  TokenMap, ZERO_BN } from '~/constants';
 import { bigNumberResult } from '~/util/Ledger';
-import { tokenResult, toStringBaseUnitBN } from '~/util/index';
+import { tokenResult, toStringBaseUnitBN } from '~/util';
 import { BEAN, SEEDS, STALK } from '~/constants/tokens';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useWhitelist from '~/hooks/useWhitelist';

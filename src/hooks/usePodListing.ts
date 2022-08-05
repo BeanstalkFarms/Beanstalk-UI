@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { usePodListingQuery } from '~/generated/graphql';
-import { Source } from '~/util/index';
+import { Source } from '~/util';
 import { castPodListing } from '~/state/farmer/market';
 import useFarmerListings from './redux/useFarmerListings';
 

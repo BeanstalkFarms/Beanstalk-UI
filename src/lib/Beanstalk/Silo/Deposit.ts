@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 import { Token } from '~/classes';
 import { FormState } from '~/components/Common/Form';
 import { Action, ActionType } from '~/util/Actions';
-import { ZERO_BN } from '~/constants/index';
+import { ZERO_BN } from '~/constants';
 
 /**
  * Summarize the Actions that will occur when making a Deposit.

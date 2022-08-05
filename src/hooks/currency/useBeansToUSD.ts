@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import BigNumber from 'bignumber.js';
 import usePrice from '~/hooks/usePrice';
-import { ZERO_BN } from '~/constants/index';
+import { ZERO_BN } from '~/constants';
 
 /**
  * Convert an amount of Beans into USD.

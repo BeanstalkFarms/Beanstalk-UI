@@ -30,13 +30,13 @@ import useFarmerBalances from '~/hooks/useFarmerBalances';
 import usePreferredToken, { PreferredToken } from '~/hooks/usePreferredToken';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
-import { displayFullBN, tokenResult, toStringBaseUnitBN, toTokenUnitsBN, parseError, getChainConstant } from '~/util/index';
+import { displayFullBN, tokenResult, toStringBaseUnitBN, toTokenUnitsBN, parseError, getChainConstant } from '~/util';
 import { REPLANTED_CHAINS } from '~/constants/chains';
 import { useFetchFarmerAllowances } from '~/state/farmer/allowances/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { useFetchFarmerBarn } from '~/state/farmer/barn/updater';
 import { FarmerBalances } from '~/state/farmer/balances';
-import { ZERO_BN } from '~/constants/index';
+import { ZERO_BN } from '~/constants';
 import { BEAN, ETH, USDC, USDT, WETH } from '~/constants/tokens';
 import FertilizerItem from '../FertilizerItem';
 

@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { NEW_BN } from '~/constants/index';
+import { NEW_BN } from '~/constants';
 import { FarmerBarn } from '.';
 import { resetFarmerBarn, updateFarmerBarn } from './actions';
 

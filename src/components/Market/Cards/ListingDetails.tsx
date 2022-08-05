@@ -7,7 +7,7 @@ import podListingIcon from '~/img/beanstalk/pod-listing-icon.svg';
 import FarmerChip from '~/components/Common/FarmerChip';
 import StatHorizontal from '~/components/Common/StatHorizontal';
 import { BEAN, PODS } from '~/constants/tokens';
-import { displayBN } from '~/util/index';
+import { displayBN } from '~/util';
 import { PodListing } from '~/state/farmer/market';
 
 const ListingDetails: React.FC<{

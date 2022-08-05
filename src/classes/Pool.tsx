@@ -4,7 +4,7 @@ import {
   CurvePlainPool__factory,
   UniswapV2Pair__factory,
 } from '~/generated/index';
-import { ChainConstant, AddressMap, SupportedChainId } from '~/constants/index';
+import { ChainConstant, AddressMap, SupportedChainId } from '~/constants';
 import { MinBN } from '~/util/Tokens';
 import client from '~/util/Client';
 import { CRV3, DAI, USDC, USDT } from '~/constants/tokens';

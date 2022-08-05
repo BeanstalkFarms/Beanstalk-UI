@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 import { BEAN } from '~/constants/tokens';
 import { PodListingFragment, PodOrderFragment } from '~/generated/graphql';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
-import { toTokenUnitsBN } from '~/util/index';
+import { toTokenUnitsBN } from '~/util';
 
 /**
  * Cast a Pod Listing from Subgraph form -> Redux form.

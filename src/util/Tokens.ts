@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import Token from '~/classes/Token';
-import { ZERO_BN } from '~/constants/index';
+import { ZERO_BN } from '~/constants';
 
 // -------------------------
 // BigNumber Comparators

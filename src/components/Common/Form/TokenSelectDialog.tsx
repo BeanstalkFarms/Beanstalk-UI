@@ -4,8 +4,8 @@ import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Sta
 import { makeStyles } from '@mui/styles';
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
 import Token from '~/classes/Token';
-import { displayBN } from '~/util/index';
-import { ZERO_BN } from '~/constants/index';
+import { displayBN } from '~/util';
+import { ZERO_BN } from '~/constants';
 import { FarmerBalances } from '~/state/farmer/balances';
 import { FarmerSilo } from '~/state/farmer/silo';
 import { BeanstalkPalette, FontSize } from '../../App/muiTheme';

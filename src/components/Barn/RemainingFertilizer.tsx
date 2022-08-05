@@ -6,7 +6,7 @@ import useHumidity from '~/hooks/useHumidity';
 import SunriseCountdown from '~/components/Sun/SunriseCountdown';
 import useSeason from '~/hooks/useSeason';
 import { AppState } from '~/state';
-import { displayFullBN } from '~/util/index';
+import { displayFullBN } from '~/util';
 import FertilizerImage from './FertilizerImage';
 import { BeanstalkPalette, FontSize } from '../App/muiTheme';
 import useFertilizerProgress from '../../hooks/useFertilizerProgress';

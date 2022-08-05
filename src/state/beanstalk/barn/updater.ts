@@ -4,9 +4,9 @@ import { BARNRAISE_CUSTODIAN_ADDRESSES, USDC_ADDRESSES } from '~/constants/addre
 import { BEAN } from '~/constants/tokens';
 import useChainConstant from '~/hooks/useChainConstant';
 import { useBeanstalkContract, useBeanstalkFertilizerContract, useERC20Contract } from '~/hooks/useContract';
-import { tokenResult, bigNumberResult } from '~/util/index';
+import { tokenResult, bigNumberResult } from '~/util';
 import useChainId from '~/hooks/useChain';
-import { ZERO_BN } from '~/constants/index';
+import { ZERO_BN } from '~/constants';
 import { resetBarn, updateBarn } from './actions';
 
 export const useBarn = () => {

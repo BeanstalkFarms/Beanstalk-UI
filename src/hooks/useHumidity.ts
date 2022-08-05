@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { MaxBN } from '~/util/Tokens';
 import { SupportedChainId } from '~/constants/chains';
-import { ZERO_BN } from '~/constants/index';
+import { ZERO_BN } from '~/constants';
 import { AppState } from '~/state';
 import useChainConstant from './useChainConstant';
 

@@ -3,7 +3,7 @@ import { BoxProps } from '@mui/material';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import useAccount from '~/hooks/ledger/useAccount';
 import { IconSize } from '~/components/App/muiTheme';
-import { BEANSTALK_ADDRESSES } from '~/constants/index';
+import { BEANSTALK_ADDRESSES } from '~/constants';
 
 const FALLBACK_ADDRESS = BEANSTALK_ADDRESSES[1];
 

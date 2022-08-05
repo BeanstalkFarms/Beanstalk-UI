@@ -8,8 +8,8 @@ import AmountRaisedCard from '~/components/Analytics/Barnraise/AmountRaisedCard'
 import ComingSoonCard from '~/components/Common/ZeroState/ComingSoonCard';
 import useChainId from '~/hooks/useChain';
 import useTabs from '~/hooks/display/useTabs';
-import { displayBN } from '~/util/index';
-import { SupportedChainId } from '~/constants/index';
+import { displayBN } from '~/util';
+import { SupportedChainId } from '~/constants';
 import { AppState } from '~/state';
 
 const BarnraiseAnalytics: React.FC<{}> = () => {

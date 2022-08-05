@@ -12,7 +12,7 @@ import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '~/c
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { ClaimRewardsAction } from '~/lib/Beanstalk/Farm';
 import { useBeanstalkContract } from '~/hooks/useContract';
-import { parseError } from '~/util/index'; 
+import { parseError } from '~/util'; 
 import { UNRIPE_TOKENS } from '~/constants/tokens';
 import useTokenMap from '~/hooks/useTokenMap';
 import { selectCratesForEnroot } from '~/util/Crates';

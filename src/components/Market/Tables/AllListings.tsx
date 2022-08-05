@@ -5,7 +5,7 @@ import COLUMNS from '~/components/Common/Table/cells';
 import { useAllPodListingsQuery } from '~/generated/graphql';
 import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
 import { castPodListing, PodListing } from '~/state/farmer/market';
-import { toStringBaseUnitBN } from '~/util/index';
+import { toStringBaseUnitBN } from '~/util';
 import { BEAN } from '~/constants/tokens';
 import MarketBaseTable from './Base';
 

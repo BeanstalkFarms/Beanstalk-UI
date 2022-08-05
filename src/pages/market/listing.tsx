@@ -17,7 +17,7 @@ import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
 import usePodListing from '~/hooks/usePodListing';
 import useAccount from '~/hooks/ledger/useAccount';
 import { useBeanstalkContract } from '~/hooks/useContract';
-import { bigNumberResult, Source } from '~/util/index';
+import { bigNumberResult, Source } from '~/util';
 
 const ListingPage: React.FC = () => {
   const account = useAccount();

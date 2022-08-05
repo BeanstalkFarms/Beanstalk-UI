@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import throttle from 'lodash/throttle';
 import { useProvider } from 'wagmi';
 import { useBeanstalkPriceContract } from '~/hooks/useContract';
-import { tokenResult, getChainConstant } from '~/util/index';
+import { tokenResult, getChainConstant } from '~/util';
 import { BEAN } from '~/constants/tokens';
 import ALL_POOLS from '~/constants/pools';
 import { ERC20__factory } from '~/generated';

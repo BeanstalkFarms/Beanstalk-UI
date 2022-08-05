@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import Token from '~/classes/Token';
-import { ChainConstant } from '~/constants/index';
+import { ChainConstant } from '~/constants';
 import useGetChainToken from './useGetChainToken';
 import useFarmerBalances from './useFarmerBalances';
 

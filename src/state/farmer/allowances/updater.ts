@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import Token from '~/classes/Token';
-import { toTokenUnitsBN, trimAddress } from '~/util/index';
+import { toTokenUnitsBN, trimAddress } from '~/util';
 import { getAccount } from '~/util/Account';
 import { clearAllowances, UpdateAllowancePayload, updateAllowances } from './actions';
 

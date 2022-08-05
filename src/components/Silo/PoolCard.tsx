@@ -1,10 +1,10 @@
 import React from 'react';
 import { Button, ButtonProps as MuiButtonProps, Card, LinkProps, Stack, Typography } from '@mui/material';
 import { BeanPoolState } from '~/state/bean/pools';
-import { displayBN, displayFullBN } from '~/util/index';
+import { displayBN, displayFullBN } from '~/util';
 import { Pool } from '~/classes';
 import TokenIcon from '~/components/Common/TokenIcon';
-import { ZERO_BN } from '~/constants/index';
+import { ZERO_BN } from '~/constants';
 
 /**
  * Displays data about a Pool containing Beans and other assets.

@@ -20,7 +20,7 @@ import useTabs from '~/hooks/display/useTabs';
 import EmptyState from '~/components/Common/ZeroState/EmptyState';
 import { displayFullBN, MaxBN } from '~/util/Tokens';
 import { SPROUTS, RINSABLE_SPROUTS } from '~/constants/tokens';
-import { ZERO_BN } from '~/constants/index';
+import { ZERO_BN } from '~/constants';
 import { AppState } from '~/state';
 import TokenIcon from '../Common/TokenIcon';
 import { FontSize } from '../App/muiTheme';

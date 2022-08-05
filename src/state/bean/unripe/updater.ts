@@ -4,8 +4,8 @@ import BigNumber from 'bignumber.js';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useChainId from '~/hooks/useChain';
 import useTokenMap from '~/hooks/useTokenMap';
-import { tokenResult } from '~/util/index';
-import { AddressMap } from '~/constants/index';
+import { tokenResult } from '~/util';
+import { AddressMap } from '~/constants';
 import { resetUnripe, updateUnripe } from './actions';
 import { UNRIPE_TOKENS } from '../../../constants/tokens';
 

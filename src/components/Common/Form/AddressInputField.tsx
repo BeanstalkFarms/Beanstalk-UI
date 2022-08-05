@@ -17,7 +17,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useTheme } from '@mui/material/styles';
 import useChainId from '~/hooks/useChain';
 import useAccount from '~/hooks/ledger/useAccount';
-import { CHAIN_INFO } from '~/constants/index';
+import { CHAIN_INFO } from '~/constants';
 import OutputField from './OutputField';
 import { trimAddress } from '../../../util';
 

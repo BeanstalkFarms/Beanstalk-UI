@@ -4,7 +4,7 @@ import { Alert, Button, Dialog, Stack, Typography, useMediaQuery } from '@mui/ma
 import { grey } from '@mui/material/colors';
 import { useTheme } from '@mui/material/styles';
 import { SWITCH_NETWORK_ERRORS } from '~/constants/wallets';
-import { SupportedChainId, TESTNET_RPC_ADDRESSES } from '~/constants/index';
+import { SupportedChainId, TESTNET_RPC_ADDRESSES } from '~/constants';
 import { ETH } from '~/constants/tokens';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 

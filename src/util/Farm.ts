@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { ZERO_BN } from '~/constants/index';
+import { ZERO_BN } from '~/constants';
 import { FarmFromMode } from '~/lib/Beanstalk/Farm';
 import { Balance } from '~/state/farmer/balances';
 

@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { TokenMap } from '~/constants/index';
+import { TokenMap } from '~/constants';
 
 /**
  * A Crate is an `amount` of a token Deposited or

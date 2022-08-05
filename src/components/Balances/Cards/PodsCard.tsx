@@ -3,7 +3,7 @@ import { Link, Stack, Typography } from '@mui/material';
 import { PODS } from '~/constants/tokens';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { AppState } from '~/state';
-import { displayBN } from '~/util/index';
+import { displayBN } from '~/util';
 import StatCard from '../StatCard';
 
 const PodCard: React.FC<{ state: AppState['_farmer']['field'] }> = ({ state }) => (

@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { ZERO_BN } from '~/constants/index';
+import { ZERO_BN } from '~/constants';
 import { BEAN } from '~/constants/tokens';
 import Beanstalk from '../index';
 

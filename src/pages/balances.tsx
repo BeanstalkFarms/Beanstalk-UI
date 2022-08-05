@@ -6,7 +6,7 @@ import TotalBalanceCard from '~/components/Balances/TotalBalancesCard';
 import TokenIcon from '~/components/Common/TokenIcon';
 import useFarmerTotalFertilizer from '~/hooks/useFarmerTotalFertilizer';
 import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
-import { displayFullBN } from '~/util/index';
+import { displayFullBN } from '~/util';
 import { PODS, SEEDS, STALK, SPROUTS } from '~/constants/tokens';
 import { AppState } from '~/state';
 

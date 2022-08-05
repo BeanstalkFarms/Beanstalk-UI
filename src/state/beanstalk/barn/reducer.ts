@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { NEW_BN, ZERO_BN } from '~/constants/index';
+import { NEW_BN, ZERO_BN } from '~/constants';
 import { Barn } from '.';
 import { resetBarn, setRemaining, setTotalRaised, setHumidity, updateBarn } from './actions';
 

@@ -15,7 +15,7 @@ import TokenInputField from '~/components/Common/Form/TokenInputField';
 import DestinationField from '~/components/Common/Form/DestinationField';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import { Beanstalk } from '~/generated/index';
-import { ZERO_BN } from '~/constants/index';
+import { ZERO_BN } from '~/constants';
 import { BEAN, DAI, ETH, USDC, USDT, WETH } from '~/constants/tokens';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useFarmerBalances from '~/hooks/useFarmerBalances';

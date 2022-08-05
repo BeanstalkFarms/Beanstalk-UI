@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { DateTime } from 'luxon';
 import useGasUSD from '~/hooks/ledger/useGasUSD';
 import { AppState } from '~/state';
-import { displayUSD } from '~/util/index';
+import { displayUSD } from '~/util';
 
 const GasTag : React.FC<{
   gasLimit: BigNumber | null;

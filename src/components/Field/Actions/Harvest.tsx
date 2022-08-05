@@ -18,7 +18,7 @@ import {
   displayFullBN,
   parseError,
   toStringBaseUnitBN
-} from '~/util/index';
+} from '~/util';
 import useFarmerField from '~/hooks/useFarmerField';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';

@@ -12,7 +12,7 @@ import GenericZero from '~/components/Common/ZeroState/GenericZero';
 import usePodOrder from '~/hooks/usePodOrder';
 import useAccount from '~/hooks/ledger/useAccount';
 import { useBeanstalkContract } from '~/hooks/useContract';
-import { bigNumberResult, Source } from '~/util/index';
+import { bigNumberResult, Source } from '~/util';
 import FillOrder from '../../components/Market/Actions/FillOrder';
 import OrderDetails from '../../components/Market/Cards/OrderDetails';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';

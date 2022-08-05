@@ -16,7 +16,7 @@ import {
   BEANSTALK_FERTILIZER_ADDRESSES,
   BEANSTALK_PRICE_ADDRESSES,
 } from '~/constants/addresses';
-import { ChainConstant } from '~/constants/index';
+import { ChainConstant } from '~/constants';
 import { getChainConstant } from '~/util/Chain';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import {

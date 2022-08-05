@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { NEW_BN, ZERO_BN } from '~/constants/index';
+import { NEW_BN, ZERO_BN } from '~/constants';
 import { BeanstalkField } from '.';
 import { resetBeanstalkField, updateBeanstalkField, updateHarvestableIndex } from './actions';
 

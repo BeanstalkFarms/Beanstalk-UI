@@ -3,7 +3,7 @@ import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/Seas
 import { SeasonalSownDocument, SeasonalSownQuery } from '~/generated/graphql';
 import useSeason from '~/hooks/useSeason';
 import { SnapshotData } from '~/hooks/useSeasons';
-import { toTokenUnitsBN } from '~/util/index';
+import { toTokenUnitsBN } from '~/util';
 import { BEAN } from '~/constants/tokens';
 
 const getValue = (season: SnapshotData<SeasonalSownQuery>) => toTokenUnitsBN(season.sownBeans, BEAN[1].decimals).toNumber();

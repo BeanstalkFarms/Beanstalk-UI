@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { AddressMap } from '~/constants/index';
+import { AddressMap } from '~/constants';
 
 export type Balance = {
   internal: BigNumber;
