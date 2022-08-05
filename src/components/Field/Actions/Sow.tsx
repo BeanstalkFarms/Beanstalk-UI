@@ -343,8 +343,8 @@ const Sow : React.FC<{}> = () => {
 
       if (_tokenIn === Eth) {
         steps.push(...[
-          farm.wrapEth(FarmToMode.INTERNAL),                // wrap ETH to WETH (internal)
-          ...farm.buyBeans(FarmFromMode.INTERNAL_TOLERANT)  // buy Beans using internal WETH
+          farm.wrapEth(FarmToMode.INTERNAL),       // wrap ETH to WETH (internal)
+          ...farm.buyBeans(FarmFromMode.INTERNAL)  // buy Beans using internal WETH
         ]);
       } else if (_tokenIn === Weth) {
         steps.push(
@@ -375,13 +375,14 @@ const Sow : React.FC<{}> = () => {
     let txToast;
     try {
       const formData = values.tokens[0];
-      const inputToken = formData.token;
-      const amountBeans = inputToken === Bean ? formData.amount : formData.amountOut;
+      const tokenIn = formData.token;
+      const amountBeans = tokenIn === Bean ? formData.amount : formData.amountOut;
       if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
       if (!amountBeans || amountBeans.eq(0)) throw new Error('No amount set');
       
       const data : string[] = [];
       const amountPods = amountBeans.times(weather.div(100).plus(1));
+      let finalFromMode : FarmFromMode;
       
       txToast = new TransactionToast({
         loading: `Sowing ${displayFullBN(amountBeans, Bean.decimals)} Beans for ${displayFullBN(amountPods, PODS.decimals)} Pods...`,
@@ -389,12 +390,14 @@ const Sow : React.FC<{}> = () => {
       });
       
       /// Sow directly from BEAN
-      if (inputToken === Bean) {
-        // Nothing to do
+      if (tokenIn === Bean) {
+        // No swap occurs, so we know exactly how many beans are going in.
+        // We can select from INTERNAL, EXTERNAL, INTERNAL_EXTERNAL.
+        finalFromMode = optimizeFromMode(amountBeans, balances[Bean.address]);
       }
       
       /// Swap to BEAN and Sow
-      else if (inputToken === Eth || inputToken === Weth) {
+      else if (tokenIn === Eth || tokenIn === Weth) {
         // Require a quote
         if (!formData.steps || !formData.amountOut) throw new Error(`No quote available for ${formData.token.symbol}`);
 
@@ -403,14 +406,18 @@ const Sow : React.FC<{}> = () => {
           values.settings.slippage / 100,
         ); // 
         data.push(...encoded);
+
+        // At the end of the Swap step, the assets will be in our INTERNAL balance.
+        // The Swap decides where to route them from (see handleQuote).
+        finalFromMode = FarmFromMode.INTERNAL_TOLERANT;
       } else {
-        throw new Error(`Sowing via ${inputToken.symbol} is not currently supported`);
+        throw new Error(`Sowing via ${tokenIn.symbol} is not currently supported`);
       }
       
       data.push(
         beanstalk.interface.encodeFunctionData('sow', [
           toStringBaseUnitBN(amountBeans, Bean.decimals),
-          FarmFromMode.INTERNAL_TOLERANT,
+          finalFromMode,
         ])
       );
  
@@ -439,6 +446,7 @@ const Sow : React.FC<{}> = () => {
     Bean,
     Eth,
     Weth,
+    balances,
     refetchFarmerField,
     refetchFarmerBalances,
     refetchBeanstalkField,

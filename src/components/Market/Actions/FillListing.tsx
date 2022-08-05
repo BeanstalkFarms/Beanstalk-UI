@@ -302,12 +302,13 @@ const FillListing : React.FC<{
 
       if (_tokenIn === Eth) {
         steps.push(...[
-          farm.wrapEth(FarmToMode.INTERNAL),                // wrap ETH to WETH (internal)
-          ...farm.buyBeans(FarmFromMode.INTERNAL_TOLERANT)  // buy Beans using internal WETH
+          farm.wrapEth(FarmToMode.INTERNAL),       // wrap ETH to WETH (internal)
+          ...farm.buyBeans(FarmFromMode.INTERNAL)  // buy Beans using internal WETH (exact)
         ]);
       } else if (_tokenIn === Weth) {
         steps.push(
           ...farm.buyBeans(
+            /// Use INTERNAL, EXTERNAL, or INTERNAL_EXTERNAL to initiate the swap.
             optimizeFromMode(_amountIn, balances[Weth.address]),
           )
         );
@@ -350,11 +351,11 @@ const FillListing : React.FC<{
         success: 'Fill successful.',
       });
       
-      /// Sow directly from BEAN
+      /// Fill Listing directly from BEAN
       if (tokenIn === Bean) {
         // No swap occurs, so we know exactly how many beans are going in.
         // We can select from INTERNAL, EXTERNAL, INTERNAL_EXTERNAL.
-        finalFromMode = optimizeFromMode(formData.amount, balances[Bean.address]);
+        finalFromMode = optimizeFromMode(amountBeans, balances[Bean.address]);
       } 
       
       /// Swap to BEAN and buy
