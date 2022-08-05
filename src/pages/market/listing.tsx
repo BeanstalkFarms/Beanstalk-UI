@@ -62,21 +62,7 @@ const ListingPage: React.FC = () => {
       </GenericZero>
     );
   }
-
-  /// TEMP: override order for testing
-  // const testListing : PodListing = {
-  //   id: '',          // index with no decimals
-  //   index: '',       // index with decimals
-  //   account: '',
-  //   maxHarvestableIndex: new BigNumber(''),
-  //   pricePerPod:     new BigNumber(''),
-  //   amount:          new BigNumber(''),
-  //   totalAmount:     new BigNumber(''),
-  //   remainingAmount: new BigNumber(''),
-  //   filledAmount: new BigNumber('0'),
-  //   mode: FarmToMode.EXTERNAL,
-  //   status: 'active'
-  // };
+  
   const listing = _listing;
 
   return (

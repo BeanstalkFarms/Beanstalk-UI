@@ -376,7 +376,7 @@ const FillListing : React.FC<{
         throw new Error(`Filling a Listing via ${tokenIn.symbol} is not currently supported`);
       }
 
-      console.debug(`[FillListing] using FarmFromMode = ${finalFromMode}`);
+      console.debug(`[FillListing] using FarmFromMode = ${finalFromMode}`, podListing);
       
       data.push(
         beanstalk.interface.encodeFunctionData('fillPodListing', [

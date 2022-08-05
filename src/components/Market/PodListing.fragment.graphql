@@ -10,9 +10,8 @@ fragment PodListing on PodListing {
   amount          # amount currently `active`
   totalAmount     # amount from the original listing
   remainingAmount # `totalAmount - amount`
+  start
   pricePerPod
   maxHarvestableIndex
   mode
-  #
-  # filledAmount    # amount filled in this fill if status is ['filled-partial', 'filled-full']
 }
