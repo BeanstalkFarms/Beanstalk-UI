@@ -364,7 +364,8 @@ let muiTheme = createTheme({
     },
     MuiTooltip: {
       defaultProps: {
-        enterTouchDelay: 0
+        enterTouchDelay: 0,
+        leaveTouchDelay: 1000000,
       },
       styleOverrides: {
         tooltip: sx({
