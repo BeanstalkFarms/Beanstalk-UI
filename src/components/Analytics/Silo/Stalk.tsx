@@ -3,9 +3,9 @@ import SeasonPlot, { SeasonPlotBaseProps } from 'components/Common/Charts/Season
 import { SeasonalStalkDocument, SeasonalStalkQuery } from 'generated/graphql';
 import { SnapshotData } from 'hooks/useSeasons';
 import { toTokenUnitsBN } from '../../../util';
-import { BEAN } from '../../../constants/tokens';
+import { STALK } from '../../../constants/tokens';
 
-const getValue = (season: SnapshotData<SeasonalStalkQuery>) => toTokenUnitsBN(season.hourlyStalkDelta, BEAN[1].decimals).toNumber();
+const getValue = (season: SnapshotData<SeasonalStalkQuery>) => toTokenUnitsBN(season.hourlyStalkDelta, STALK.decimals).toNumber();
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const StatProps = {
     title: 'Stalk Changes',

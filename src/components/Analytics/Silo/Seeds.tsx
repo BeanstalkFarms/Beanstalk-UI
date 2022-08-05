@@ -3,9 +3,9 @@ import SeasonPlot, { SeasonPlotBaseProps } from 'components/Common/Charts/Season
 import { SeasonalSeedsDocument, SeasonalSeedsQuery } from 'generated/graphql';
 import { SnapshotData } from 'hooks/useSeasons';
 import { toTokenUnitsBN } from '../../../util';
-import { BEAN } from '../../../constants/tokens';
+import { SEEDS } from '../../../constants/tokens';
 
-const getValue = (season: SnapshotData<SeasonalSeedsQuery>) => toTokenUnitsBN(season.hourlySeedsDelta, BEAN[1].decimals).toNumber();
+const getValue = (season: SnapshotData<SeasonalSeedsQuery>) => toTokenUnitsBN(season.hourlySeedsDelta, SEEDS.decimals).toNumber();
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const StatProps = {
     title: 'Seed Changes',
