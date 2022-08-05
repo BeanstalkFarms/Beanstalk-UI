@@ -18,7 +18,7 @@ import TxnAccordion from 'components/Common/TxnAccordion';
 import { useFetchFarmerBarn } from '~/state/farmer/barn/updater';
 import { displayFullBN, parseError } from 'util/index';
 import { BeanstalkReplanted } from 'generated';
-import { FarmToMode } from 'lib/Beanstalk/Farm';
+import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import DestinationField from 'components/Common/Form/DestinationField';
 import useFarmerFertilizer from 'hooks/redux/useFarmerFertilizer';
 import TransactionToast from 'components/Common/TxnToast';

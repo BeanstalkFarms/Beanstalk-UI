@@ -11,7 +11,7 @@ import useToggle from 'hooks/display/useToggle';
 import { useSigner } from 'hooks/ledger/useSigner';
 import useChainConstant from 'hooks/useChainConstant';
 import { useBeanstalkContract } from 'hooks/useContract';
-import { FarmToMode } from 'lib/Beanstalk/Farm';
+import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';

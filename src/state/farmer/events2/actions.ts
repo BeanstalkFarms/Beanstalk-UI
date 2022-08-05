@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { Event } from 'lib/Beanstalk/EventProcessor';
+import { Event } from '~/lib/Beanstalk/EventProcessor';
 import { EventCacheName } from '.';
 
 export type IngestPayload = {

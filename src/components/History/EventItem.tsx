@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
 import { BEAN, PODS, SILO_WHITELIST } from '~/constants/tokens';
 import { SupportedChainId } from '~/constants/chains';
-import { Event } from 'lib/Beanstalk/EventProcessor';
+import { Event } from '~/lib/Beanstalk/EventProcessor';
 import TokenIcon from '../Common/TokenIcon';
 import useTokenMap from '../../hooks/useTokenMap';
 

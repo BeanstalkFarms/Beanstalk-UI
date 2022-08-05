@@ -5,7 +5,7 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import useChainId from 'hooks/useChain';
 import useBlocks from 'hooks/useBlocks';
 import useAccount from 'hooks/ledger/useAccount';
-import EventProcessor from 'lib/Beanstalk/EventProcessor';
+import EventProcessor from '~/lib/Beanstalk/EventProcessor';
 import useWhitelist from 'hooks/useWhitelist';
 import useSeason from 'hooks/useSeason';
 import { BeanstalkReplanted } from 'generated';

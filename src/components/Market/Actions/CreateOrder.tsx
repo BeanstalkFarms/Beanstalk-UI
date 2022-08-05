@@ -27,7 +27,7 @@ import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import { ethers } from 'ethers';
 import useGetChainToken from 'hooks/useGetChainToken';
 import { optimizeFromMode } from 'util/Farm';
-import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
+import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import { useProvider } from 'wagmi';
 import useToggle from 'hooks/display/useToggle';
 import { BeanstalkReplanted } from 'generated';

@@ -13,7 +13,7 @@ import {
   TxnSeparator
 } from 'components/Common/Form';
 import { BeanstalkReplanted } from 'generated/index';
-import Farm, { FarmToMode } from 'lib/Beanstalk/Farm';
+import Farm, { FarmToMode } from '~/lib/Beanstalk/Farm';
 import {
   displayFullBN,
   parseError,

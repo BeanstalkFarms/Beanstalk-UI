@@ -21,7 +21,7 @@ import { displayBN, displayTokenAmount, MinBN, toStringBaseUnitBN, parseError, t
 import useToggle from 'hooks/display/useToggle';
 import useGetChainToken from 'hooks/useGetChainToken';
 import { ethers } from 'ethers';
-import Farm, { ChainableFunction, FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
+import Farm, { ChainableFunction, FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import { useSigner } from 'hooks/ledger/useSigner';
 import { useProvider } from 'wagmi';
 import { useBeanstalkContract } from 'hooks/useContract';

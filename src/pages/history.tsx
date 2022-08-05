@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { Card, Grid, Stack, Tab, Tabs } from '@mui/material';
 import EventItem from 'components/History/EventItem';
 import WalletButton from 'components/Common/Connection/WalletButton';
-import { Event } from 'lib/Beanstalk/EventProcessor';
+import { Event } from '~/lib/Beanstalk/EventProcessor';
 import { AppState } from '~/state';
 import useAccount from '../hooks/ledger/useAccount';
 import useChainId from '../hooks/useChain';

@@ -9,7 +9,7 @@ import { toTokenUnitsBN } from 'util/index';
 import BigNumber from 'bignumber.js';
 import { ZERO_BN } from '~/constants/index';
 import useBlocks from 'hooks/useBlocks';
-import ERC1155EventProcessor from 'lib/ERC1155/ERC1155EventProcessor';
+import ERC1155EventProcessor from '~/lib/ERC1155/ERC1155EventProcessor';
 import useAccount from 'hooks/ledger/useAccount';
 import { resetFarmerBarn, updateFarmerBarn } from './actions';
 import useEvents, { GetQueryFilters } from '../events2/updater';

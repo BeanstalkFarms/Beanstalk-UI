@@ -4,7 +4,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { useProvider } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
 import { LoadingButton } from '@mui/lab';
-import { ClaimRewardsAction } from 'lib/Beanstalk/Farm';
+import { ClaimRewardsAction } from '~/lib/Beanstalk/Farm';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { BeanstalkReplanted } from 'generated/index';
 import toast from 'react-hot-toast';

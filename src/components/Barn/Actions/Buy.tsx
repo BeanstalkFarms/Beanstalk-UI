@@ -34,7 +34,7 @@ import SmartSubmitButton from 'components/Common/Form/SmartSubmitButton';
 import TransactionToast from 'components/Common/TxnToast';
 import { displayFullBN, tokenResult, toStringBaseUnitBN, toTokenUnitsBN, parseError, getChainConstant } from 'util/index';
 import { BeanstalkReplanted } from 'generated';
-import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
+import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import useToggle from 'hooks/display/useToggle';
 import IconWrapper from 'components/Common/IconWrapper';
 import { IconSize } from 'components/App/muiTheme';

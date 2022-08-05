@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { useProvider } from 'wagmi';
 import flattenDeep from 'lodash/flattenDeep';
-import { Event } from 'lib/Beanstalk/EventProcessor';
+import { Event } from '~/lib/Beanstalk/EventProcessor';
 import useEventCache from 'hooks/events/useEventCache';
 import useAccount from 'hooks/ledger/useAccount';
 import { EventCacheName } from '.';

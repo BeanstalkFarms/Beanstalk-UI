@@ -14,7 +14,7 @@ import {
   TxnSeparator,
   SmartSubmitButton
 } from 'components/Common/Form';
-import Beanstalk from 'lib/Beanstalk';
+import Beanstalk from '~/lib/Beanstalk';
 import useSeason from 'hooks/useSeason';
 import { FarmerSilo } from '~/state/farmer/silo';
 import { useBeanstalkContract } from 'hooks/useContract';

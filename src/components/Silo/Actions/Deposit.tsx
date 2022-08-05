@@ -12,7 +12,7 @@ import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary
 import { FormState, SettingInput, TxnSettings } from 'components/Common/Form';
 import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
 import TxnPreview from 'components/Common/Form/TxnPreview';
-import Beanstalk from 'lib/Beanstalk';
+import Beanstalk from '~/lib/Beanstalk';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useFarmerBalances from 'hooks/useFarmerBalances';
 import { Balance, FarmerBalances } from '~/state/farmer/balances';
@@ -24,7 +24,7 @@ import { ZERO_BN } from '~/constants/index';
 import { ERC20Token, NativeToken } from 'classes/Token';
 import Pool from 'classes/Pool';
 import SmartSubmitButton from 'components/Common/Form/SmartSubmitButton';
-import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
+import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import useGetChainToken from 'hooks/useGetChainToken';
 import TxnSeparator from 'components/Common/Form/TxnSeparator';
 import useToggle from 'hooks/display/useToggle';

@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { BEAN } from '~/constants/tokens';
 import { PodListingFragment, PodOrderFragment } from 'generated/graphql';
-import { FarmToMode } from 'lib/Beanstalk/Farm';
+import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import { toTokenUnitsBN } from 'util/index';
 
 /**

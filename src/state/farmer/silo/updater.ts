@@ -8,7 +8,7 @@ import { bigNumberResult, tokenResult } from 'util/index';
 import { BeanstalkReplanted } from 'generated/index';
 import useBlocks from 'hooks/useBlocks';
 import useAccount from 'hooks/ledger/useAccount';
-import EventProcessor from 'lib/Beanstalk/EventProcessor';
+import EventProcessor from '~/lib/Beanstalk/EventProcessor';
 import useWhitelist from 'hooks/useWhitelist';
 import useSeason from 'hooks/useSeason';
 import BigNumber from 'bignumber.js';

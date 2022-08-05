@@ -20,7 +20,7 @@ import useTokenMap from 'hooks/useTokenMap';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSigner } from 'hooks/ledger/useSigner';
 import TokenInputField from 'components/Common/Form/TokenInputField';
-import { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
+import { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import DestinationField from 'components/Common/Form/DestinationField';
 import useGetChainToken from 'hooks/useGetChainToken';
 

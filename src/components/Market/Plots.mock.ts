@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { FarmToMode } from 'lib/Beanstalk/Farm';
+import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 
 /**

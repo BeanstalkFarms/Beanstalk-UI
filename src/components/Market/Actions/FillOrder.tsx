@@ -16,7 +16,7 @@ import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { BeanstalkReplanted } from 'generated';
 import useChainConstant from 'hooks/useChainConstant';
-import { FarmToMode } from 'lib/Beanstalk/Farm';
+import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import { parseError } from 'util/index';

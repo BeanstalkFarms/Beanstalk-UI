@@ -27,7 +27,7 @@ import TokenInputField from 'components/Common/Form/TokenInputField';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 import useChainId from 'hooks/useChain';
 import TransactionToast from 'components/Common/TxnToast';
-import { FarmToMode } from 'lib/Beanstalk/Farm';
+import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import DestinationField from 'components/Common/Form/DestinationField';
 import useAccount from 'hooks/ledger/useAccount';
 import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
