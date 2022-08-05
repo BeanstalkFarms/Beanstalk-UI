@@ -1,12 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
-import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Typography, Link } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Token from 'classes/Token';
 import { displayBN } from 'util/index';
-import { AddressMap, ZERO_BN } from 'constants/index';
-import BigNumber from 'bignumber.js';
+import { ZERO_BN } from 'constants/index';
+import { FarmerBalances } from 'state/farmer/balances';
+import { FarmerSilo } from 'state/farmer/silo';
+import { BeanstalkPalette, FontSize } from '../../App/muiTheme';
 
 const useStyles = makeStyles(() => ({
   tokenIcon: {
@@ -20,14 +22,19 @@ const useStyles = makeStyles(() => ({
     fontSize: '20px'
   },
   tokenLogo: {
-    width: 40,
-    height: 40
+    width: 44,
+    height: 44,
   }
 }));
 
 export enum TokenSelectMode { MULTI, SINGLE }
 
-const TokenSelectDialog : React.FC<{
+export type TokenBalanceMode = {
+  'farm': FarmerBalances;
+  'silo-deposits': FarmerSilo['balances'];
+}
+
+export type TokenSelectDialogProps<K extends keyof TokenBalanceMode> = {
   /** Show the dialog. */
   open: boolean;
   /** Close the dialog. */
@@ -36,35 +43,57 @@ const TokenSelectDialog : React.FC<{
   selected: ({ token: Token } & any)[];
   /** Called when the user "submits" their changes to selected tokens. */
   handleSubmit: (s: Set<Token>) => void;
-  /** The Farmer's current balances. Displayed alongside each token; hidden if not provided. */
-  balances: AddressMap<BigNumber>;
+  /**
+   * 
+   */
+  balancesType?: K;
+  /** The Farmer's current balances. Displayed alongside each token.
+   * Shows 0 for missing balances if `balances` is an object.
+   * Shows nothing if `balances` is undefined`. */
+  balances?: TokenBalanceMode[K] | undefined;
+  // balances: FarmerSiloBalance['deposited'] | FarmerBalances | undefined;
   /** A list of tokens to show in the Dialog. */
   tokenList: Token[];
   /** Single or multi-select */
   mode?: TokenSelectMode;
-}> = React.memo(({
-  open,
-  handleClose,
-  selected,
-  handleSubmit,
-  balances,
-  tokenList,
-  mode = TokenSelectMode.MULTI,
+  /** Override the dialog title */
+  title?: string | JSX.Element;
+}
+
+type TokenSelectDialogC = React.FC<TokenSelectDialogProps<keyof TokenBalanceMode>>;
+
+const TokenSelectDialog : TokenSelectDialogC = React.memo(({
+ open,
+ handleClose,
+ selected,
+ handleSubmit,
+ balancesType = 'farm',
+ balances: _balances,
+ tokenList,
+ mode = TokenSelectMode.MULTI,
+ title,
 }) => {
   const classes = useStyles();
-  const [newSelection, setNewSelection] = useState<Set<Token>>(new Set());
+  /** keep an internal copy of selected tokens */
+  const [selectedInternal, setSelectedInternal] = useState<Set<Token>>(new Set());
+
+  const getBalance = useCallback((addr: string) => {
+    if (!_balances) return ZERO_BN;
+    if (balancesType === 'farm') return (_balances as TokenBalanceMode['farm'])?.[addr]?.total || ZERO_BN;
+    return (_balances as TokenBalanceMode['silo-deposits'])?.[addr]?.deposited?.amount || ZERO_BN;
+  }, [_balances, balancesType]);
 
   // Toggle the selection state of a token.
   const toggle = useCallback((token: Token) => {
-    const copy = new Set(newSelection);
-    if (newSelection.has(token)) {
+    const copy = new Set(selectedInternal);
+    if (selectedInternal.has(token)) {
       copy.delete(token);
-      setNewSelection(copy);
+      setSelectedInternal(copy);
     } else {
       copy.add(token);
-      setNewSelection(copy);
+      setSelectedInternal(copy);
     }
-  }, [newSelection]);
+  }, [selectedInternal]);
 
   // Whenever the Dialog opens, store a temporary copy of the currently
   // selected tokens so we can manipulate them quickly here without
@@ -72,9 +101,11 @@ const TokenSelectDialog : React.FC<{
   useEffect(() => {
     if (open) {
       console.debug('[TokenSelectDialog] resetting _selected');
-      setNewSelection(
+      setSelectedInternal(
         new Set(selected.map(({ token }) => token))
       );
+    } else {
+      setSelectedInternal(new Set());
     }
   }, [open, selected]);
 
@@ -93,7 +124,7 @@ const TokenSelectDialog : React.FC<{
     return onClickSubmit(new Set([_token])); // submit just this token
   }, [mode, onClickSubmit, toggle]);
 
-  if (!newSelection) return null;
+  if (!selectedInternal) return null;
 
   return (
     <StyledDialog
@@ -102,49 +133,84 @@ const TokenSelectDialog : React.FC<{
       open={open}
       PaperProps={{
         sx: {
-          minWidth: '350px'
+          minWidth: '400px'
         }
       }}
       transitionDuration={0}
       TransitionProps={{}}
     >
-      <StyledDialogTitle id="customized-dialog-title" onClose={handleClose}>
-        {mode === TokenSelectMode.MULTI ? 'Select tokens' : 'Select token'}
+      <StyledDialogTitle id="customized-dialog-title" onClose={handleClose} sx={{ pb: 0.5 }}>
+        {title || mode === TokenSelectMode.MULTI ? 'Select Tokens' : 'Select Token'}
       </StyledDialogTitle>
-      <StyledDialogContent sx={{ padding: 0 }}>
-        <List sx={{ padding: 0 }}>
-          {tokenList ? tokenList.map((_token) => (
-            <ListItem
-              key={_token.address}
-              color="primary"
-              selected={newSelection.has(_token)}
-              disablePadding
-              secondaryAction={<Typography>{displayBN(balances ? balances[_token.address] : ZERO_BN)}</Typography>}
-              onClick={onClickItem(_token)}
-            >
-              <ListItemButton disableRipple>
-                <ListItemIcon>
-                  <img src={_token.logo} alt="" className={classes.tokenLogo} />
-                </ListItemIcon>
-                <ListItemText primary={_token.symbol} secondary={_token.name} />
-              </ListItemButton>
-            </ListItem>
-          )) : null}
+      <StyledDialogContent sx={{ pb: mode === TokenSelectMode.MULTI ? 0 : 1, pt: 0 }}>
+        <List sx={{ p: 0 }}>
+          <Stack>
+            {tokenList ? tokenList.map((_token) => (
+              <ListItem
+                key={_token.address}
+                color="primary"
+                selected={selectedInternal.has(_token)}
+                disablePadding
+                onClick={onClickItem(_token)}
+                sx={{
+                  // ListItem is used elsewhere so we define here
+                  // instead of in muiTheme.ts
+                  '& .MuiListItemText-primary': {
+                    fontSize: FontSize['1xl'],
+                    lineHeight: '1.875rem'
+                  },
+                  '& .MuiListItemText-secondary': {
+                    fontSize: FontSize.base,
+                    lineHeight: '1.25rem',
+                    color: BeanstalkPalette.lightishGrey
+                  },
+                }}
+              >
+                <ListItemButton disableRipple>
+                  {/* Top-level button stack */}
+                  <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }}>
+                    {/* Icon & text left side */}
+                    <Stack direction="row" justifyContent="center" alignItems="center" gap={0}>
+                      <ListItemIcon>
+                        <img src={_token.logo} alt="" className={classes.tokenLogo} />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={_token.symbol}
+                        secondary={_token.name}
+                        sx={{ my: 0 }}
+                      />
+                    </Stack>
+                    {/* Balances right side */}
+                    {_balances ? (
+                      <Typography variant="bodyLarge">
+                        {displayBN(getBalance(_token.address))}
+                      </Typography>
+                    ) : null}
+                  </Stack>
+                </ListItemButton>
+              </ListItem>
+            )) : null}
+            {_balances ? (
+              <Typography ml={1} pt={0.5} textAlign="center" fontSize={FontSize.sm} color="gray">
+                Displaying total Farm and Circulating balances. <Link href="https://docs.bean.money/additional-resources/asset-states" target="_blank" rel="noreferrer" underline="none">Learn more &rarr;</Link>
+              </Typography>
+            ) : null}
+          </Stack>
         </List>
       </StyledDialogContent>
       {mode === TokenSelectMode.MULTI && (
-        <StyledDialogActions>
+        <StyledDialogActions sx={{ pb: 2 }}>
           <Button
-            onClick={onClickSubmit(newSelection)}
-            disabled={newSelection.size === 0}
+            onClick={onClickSubmit(selectedInternal)}
+            disabled={selectedInternal.size === 0}
             variant="outlined"
             fullWidth
             color="primary"
             size="large"
           >
-            {newSelection.size === 0 
+            {selectedInternal.size === 0
               ? 'Select Token to Continue'
-              : `Select ${newSelection.size} Token${newSelection.size === 1 ? '' : 's'}`}
+              : `Select ${selectedInternal.size} Token${selectedInternal.size === 1 ? '' : 's'}`}
           </Button>
         </StyledDialogActions>
       )}

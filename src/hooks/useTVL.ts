@@ -7,11 +7,14 @@ import { BEAN } from 'constants/tokens';
 import useBeansToUSD from './currency/useBeansToUSD';
 import useChainConstant from './useChainConstant';
 
-export default function useTVL() {
-  const beansToUSD = useBeansToUSD();
-  const Bean = useChainConstant(BEAN);
+/**
+ * Get the USD value of a given token in the Silo.
+ */
+export default function useTVD() {
+  const beansToUSD  = useBeansToUSD();
+  const Bean        = useChainConstant(BEAN);
   const siloedBeans = useSelector<AppState, AppState['_beanstalk']['silo']['beans']['total']>((state) => state._beanstalk.silo.beans.total);
-  const beanPools = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
+  const beanPools   = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
 
   return useCallback((_token: Token) => {
     // For Beans, grab the amount in the Silo.

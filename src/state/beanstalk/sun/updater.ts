@@ -1,9 +1,13 @@
 import { useBeanstalkContract } from 'hooks/useContract';
+import useSeason from 'hooks/useSeason';
+import useTimedRefresh from 'hooks/useTimedRefresh';
+import { DateTime } from 'luxon';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'state';
 import { bigNumberResult } from 'util/Ledger';
-import { resetSun, setAwaitingSunrise, updateSeason } from './actions';
+import { getNextExpectedSunrise } from '.';
+import { resetSun, setAwaitingSunrise, setNextSunrise, setRemainingUntilSunrise, updateSeason } from './actions';
 
 export const useSun = () => {
   const dispatch = useDispatch();
@@ -19,7 +23,6 @@ export const useSun = () => {
         ] = await Promise.all([
           beanstalk.season().then(bigNumberResult),
         ] as const);
-
         console.debug(`[beanstalk/sun/useSun] RESULT: season = ${season}`);
         dispatch(updateSeason(season));
       }
@@ -42,32 +45,27 @@ export const useSun = () => {
 
 const SunUpdater = () => {
   const [fetch, clear] = useSun();
-  const dispatch = useDispatch();
-  const { season, sunrise } = useSelector<AppState, AppState['_beanstalk']['sun']>((state) => state._beanstalk.sun);
-  const { awaiting } = sunrise;
+  const dispatch  = useDispatch();
+  const season    = useSeason();
+  const next      = useSelector<AppState, DateTime>((state) => state._beanstalk.sun.sunrise.next);
+  const awaiting  = useSelector<AppState, boolean>((state) => state._beanstalk.sun.sunrise.awaiting);
 
   // Update sunrise timer
-  // useEffect(() => {
-  //   if (awaiting === false) {
-  //     const i = setInterval(() => {
-  //       const _remaining = next.diffNow();
-  //       // dispatch(setRemainingUntilSunrise(_remaining));
-  //       // console.debug(`[beanstalk/sun/updater] remaining until sunrise: ${(_remaining.milliseconds / 1000 / 60).toFixed(2)} minutes`);
-  //       if (_remaining.milliseconds < 0 && awaiting === false) {
-  //         dispatch(setAwaitingSunrise(true));
-  //       }
-  //     }, 1000);
-  //     return () => clearInterval(i);
-  //   }
-  // }, [dispatch, awaiting, next]);
-
-  // When the season changes
   useEffect(() => {
-    if (awaiting) {
-      console.debug('[beanstalk/sun/updater] caught new season = ', season?.toNumber());
-      dispatch(setAwaitingSunrise(false));
+    if (awaiting === false) {
+      const i = setInterval(() => {
+        const _remaining = next.diffNow();
+        if (_remaining.as('seconds') <= 0 && awaiting === false) {
+          dispatch(setAwaitingSunrise(true));
+        } else {
+          dispatch(setRemainingUntilSunrise(_remaining));
+        }
+      }, 1000);
+      return () => clearInterval(i);
     }
-  }, [dispatch, awaiting, season]);
+  }, [dispatch, awaiting, next]);
+
+  useTimedRefresh(fetch, 2500, awaiting === true);
 
   // Fetch when chain changes
   useEffect(() => {
@@ -77,6 +75,13 @@ const SunUpdater = () => {
     fetch,
     clear
   ]);
+  
+  /// For each new season...
+  useEffect(() => {
+    dispatch(setAwaitingSunrise(false));
+    dispatch(setNextSunrise(getNextExpectedSunrise(true)));
+    // toast
+  }, [dispatch, season]);
 
   return null;
 };

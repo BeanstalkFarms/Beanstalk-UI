@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+
 import Pool from 'classes/Pool';
 import Token from 'classes/Token';
 
@@ -7,8 +8,9 @@ import Token from 'classes/Token';
 // --------------
 
 /* Diamonds */
-export const ZERO_BN = new BigNumber(0);
 export const NEW_BN  = new BigNumber(-1);
+export const ZERO_BN = new BigNumber(0);
+export const ONE_BN  = new BigNumber(1);
 export const MAX_UINT32  = 4294967295;
 export const MAX_UINT256 = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 
@@ -17,7 +19,7 @@ export const MAX_UINT256 = '0xffffffffffffffffffffffffffffffffffffffffffffffffff
 // --------------
 
 /** A Map of SupportedChainId => any arbitrary type */
-export type ChainConstant<T> = { [chainId: number] : T }
+export type ChainConstant<T> = { [chainId: number] : T };
 /** A Map of address => any arbitrary type. */
 export type AddressMap<T>    = { [address: string] : T };
 
@@ -51,3 +53,4 @@ export * from './chains';
 export * from './wallets';
 export * from './links';
 export * from './values';
+export * from './rpc';

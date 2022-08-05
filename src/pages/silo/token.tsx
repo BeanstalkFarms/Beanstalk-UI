@@ -3,68 +3,69 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import SiloActions from 'components/Silo/Actions';
-import DepositsCard from 'components/Silo/DepositsCard';
 import useWhitelist from 'hooks/useWhitelist';
 import { Container, Stack } from '@mui/material';
 import usePools from 'hooks/usePools';
-import PageHeader from 'components/Common/PageHeader';
 import PoolCard from 'components/Silo/PoolCard';
+import { ERC20Token } from 'classes/Token';
+import PageHeaderSecondary from 'components/Common/PageHeaderSecondary';
+import TokenIcon from 'components/Common/TokenIcon';
 
 const TokenPage: React.FC<{}> = () => {
   // Constants
-  const WHITELIST = useWhitelist();
-  const POOLS     = usePools();
+  const whitelist = useWhitelist();
+  const pools     = usePools();
 
   // Routing
-  const { address } = useParams<{ address: string }>();
+  let { address } = useParams<{ address: string }>();
+  address = address?.toLowerCase();
 
   // State
   const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
-  const beanPools  = useSelector<AppState, AppState['_bean']['pools']>((state) =>  state._bean.pools);
-
-  // console.debug('[page:silo/token] whitelist ', WHITELIST, POOLS, beanPools);
+  const poolStates = useSelector<AppState, AppState['_bean']['pools']>((state) =>  state._bean.pools);
 
   // Ensure this address is a whitelisted token
-  // FIXME: case sensitivity
-  if (!address || !WHITELIST?.[address]) {
+  if (!address || !whitelist?.[address]) {
     return (
       <div>Not found</div>
     );
   }
 
   // Load this Token from the whitelist
-  const TOKEN = WHITELIST[address];
-  const siloBalance = farmerSilo.balances[TOKEN.address];
+  const whitelistedToken = whitelist[address];
+  const siloBalance = farmerSilo.balances[whitelistedToken.address];
 
   // Most Silo Tokens will have a corresponding Pool.
   // If one is available, show a PoolCard with state info.
-  const POOL  = POOLS[address];
-  const beanPool = beanPools[address];
+  const pool      = pools[address];
+  const poolState = poolStates[address];
   
   // If no data loaded...
-  if (!TOKEN) return null;
+  if (!whitelistedToken) return null;
 
   return (
     <Container maxWidth="sm">
       <Stack gap={2}>
-        <PageHeader
-          title={<strong>{TOKEN.name} Deposits</strong>}
-          description={`Deposit ${TOKEN.name} to earn Stalk and Seeds`}
+        <PageHeaderSecondary
+          title={whitelistedToken.name}
+          icon={<TokenIcon token={whitelistedToken} />}
           returnPath="/silo"
         />
-        {beanPool && (
+        {whitelistedToken.isLP && (
           <PoolCard
-            pool={POOL}
-            poolState={beanPool}
+            pool={pool}
+            poolState={poolState}
+          //   ButtonProps={{
+          //     href: `https://etherscan.io/address/${pool.address}`,
+          //     target: '_blank',
+          //     rel: 'noreferrer'
+          //   }}
           />
         )}
         <SiloActions
-          token={TOKEN}
+          pool={pool}
+          token={whitelistedToken as ERC20Token}
           siloBalance={siloBalance}
-        />
-        <DepositsCard
-          token={TOKEN}
-          balance={siloBalance}
         />
       </Stack>
     </Container>

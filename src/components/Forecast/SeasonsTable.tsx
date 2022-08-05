@@ -2,10 +2,9 @@ import { Box, Card } from '@mui/material';
 import React, { useMemo } from 'react';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { BeanstalkPalette } from '../App/muiTheme';
-import { tableStyle } from '../../util/tableStyle';
+import { tableStyle } from '../Common/Table/styles';
 
-export type SeasonsTableProps = {
-}
+export type SeasonsTableProps = {}
 
 const MAX_ROWS = 5;
 
@@ -23,11 +22,11 @@ const SeasonsTable: React.FC<SeasonsTableProps & DataGridProps> = ({ columns, ro
           ...tableStyle,
           '& .MuiDataGrid-row': {
             borderBottom: 1,
-            borderColor: BeanstalkPalette.lightBlue,
+            borderColor: BeanstalkPalette.blue,
           },
           '& .MuiDataGrid-columnHeadersInner': {
             borderBottom: 2, // TODO: why 2 here but 1 above?
-            borderColor: BeanstalkPalette.lightBlue,
+            borderColor: BeanstalkPalette.blue,
           }
         }}>
         <DataGrid

@@ -1,72 +1,129 @@
 import { BigNumber } from 'bignumber.js';
-import Token from 'classes/Token';
-import { useCallback, useEffect, useState } from 'react';
-import { toTokenUnitsBN } from 'util/Tokens';
+import { ERC20Token, NativeToken } from 'classes/Token';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import debounce from 'lodash/debounce';
 import toast from 'react-hot-toast';
+import { ChainableFunctionResult } from 'lib/Beanstalk/Farm';
+import { ethers } from 'ethers';
 
-export type QuoteHandler = (tokenIn: Token, amountIn: BigNumber, tokenOut: Token) => Promise<BigNumber>;
+export type QuoteHandlerResult = {
+  amountOut: BigNumber;
+  value?: ethers.BigNumber;
+  steps?: ChainableFunctionResult[];
+};
+export type QuoteHandler = (
+  tokenIn: ERC20Token | NativeToken,
+  amountIn: BigNumber,
+  tokenOut: ERC20Token | NativeToken
+) => Promise<null | QuoteHandlerResult['amountOut'] | QuoteHandlerResult>; 
+
+export type QuoteSettings = {
+  /** The number of milliseconds to wait before calling */
+  debounceMs : number;
+  /** If true, returns amountOut = amountIn when tokenOut = tokenIn. Otherwise returns void. */
+  ignoreSameToken : boolean;
+  /** */
+  onReset: () => QuoteHandlerResult | null;
+}
+
+const baseSettings = {
+  debounceMs: 250,
+  ignoreSameToken: true,
+  onReset: () => null,
+};
 
 export default function useQuote(
   /** */
-  tokenOut: Token,
-  /** */
+  tokenOut: ERC20Token | NativeToken,
+  /** A function that returns a quoted amountOut value. */
   quoteHandler: QuoteHandler,
-  /** The number of milliseconds to wait before calling */
-  debounceMs : number = 250
+  /** */
+  _settings?: Partial<QuoteSettings>,
 ) : [
-  amountOut: BigNumber | null,
+  result: QuoteHandlerResult | null,
   quoting: boolean,
-  refreshAmountOut: (_tokenIn: Token, _amountIn: BigNumber) => void,
+  refreshAmountOut: (_tokenIn: ERC20Token | NativeToken, _amountIn: BigNumber) => void,
 ] {
-  /** The `amountOut` of `tokenOut` received in exchange for `amountIn` of `tokenIn`. */
-  const [amountOut, setAmountOut] = useState<BigNumber | null>(null);
-  /** Whether we're currently waiting for a quote for this swap. */
+  const [result, setResult]   = useState<QuoteHandlerResult | null>(null);
   const [quoting, setQuoting] = useState<boolean>(false);
+  const settings              = useMemo(() => ({ ...baseSettings, ..._settings }), [_settings]);
+  const abortController       = useRef<null | AbortController>(null);
   
-  // When token changes, reset the amount.
+  /// When token changes, reset the amount.
   useEffect(() => {
-    setAmountOut(null);
+    setResult(settings.onReset());
     setQuoting(false);
-  }, [tokenOut]);
+  }, [tokenOut, settings]);
 
-  // Below prevents error b/c React can't know the deps of debounce
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const _getAmountOut = useCallback(debounce(
-    (tokenIn: Token, amountIn: BigNumber) => {
-      try {
-        return quoteHandler(tokenIn, amountIn, tokenOut)
-          .then((result) => {
-            const _amountOut = toTokenUnitsBN(result.toString(), tokenOut.decimals);
-            console.debug(`[useQuote] got amount out: ${_amountOut?.toString()}`);
-            setAmountOut(_amountOut);
-            setQuoting(false);
-            return result;
-          })
-          .catch((e) => {
-            toast.error(e.toString());
-            setQuoting(false);
-          });
-      } catch (e : any) {
+  /// 
+  const __getAmountOut = useCallback((
+    tokenIn: ERC20Token | NativeToken,
+    amountIn: BigNumber
+  ) => {
+    /// If a quote request is currently in flight, cancel it.
+    if (abortController.current) abortController.current.abort();
+    /// Set up a new abort controller for this request only.
+    abortController.current = new AbortController();
+    return new Promise((resolve, reject) => {
+      /// Listen for an abort event.
+      abortController.current?.signal.addEventListener('abort', () => {
+        setResult(null);
         setQuoting(false);
-        console.error(e);
-        toast.error(e?.toString());
-      }
-    },  
-    debounceMs,
-    { trailing: true }
-  ), [
+        reject();
+      });
+      // NOTE: quoteHandler should parse amountOut to the necessary decimals
+      quoteHandler(tokenIn, amountIn, tokenOut)
+        .then((_result) => {
+          /// This line is crucial: it ignores the request if it was cancelled in-flight.
+          if (abortController.current?.signal.aborted) return reject();
+          if (_result === null) return resolve(_result);
+          /// FIXME: this is for backwards-compat, find everywhere that doesnt use the obj form.
+          setResult(_result instanceof BigNumber ? { amountOut: _result } : _result);
+          /// Return the result back to wherever it was called.
+          setQuoting(false);
+          resolve(_result);
+        })
+        .catch((e) => {
+          console.error(e);
+          toast.error(e.toString());
+          setQuoting(false);
+          reject(e);
+        })
+        .finally(() => {
+          /// After every invocation, clear the abort controller.
+          abortController.current = null;
+          /// Moved the `setQuoting` call to the above blocks because
+          /// we don't want to set the loading state to false if another
+          /// request is about to be in flight behind this one.
+        });
+    });
+  }, [
     tokenOut,
     setQuoting,
-    setAmountOut,
+    setResult,
     quoteHandler,
+    abortController,
   ]);
 
+  /// Debounced function is pulled out of the useCallback method
+  /// to (a) allow React to calculate the right dependency array,
+  /// and (b) to let us easily use the cancel() method below.
+  const _getAmountOut = useMemo(
+    () => debounce(__getAmountOut, settings.debounceMs, { trailing: true }),
+    [__getAmountOut, settings.debounceMs]
+  );
+
   // Handler to refresh
-  const getAmountOut = useCallback((tokenIn: Token, amountIn: BigNumber) => {
-    if (tokenIn === tokenOut) return;
+  const getAmountOut = useCallback((tokenIn: ERC20Token | NativeToken, amountIn: BigNumber) => {
+    if (tokenIn === tokenOut) {
+      if (settings.ignoreSameToken) return;
+      setQuoting(true);
+      _getAmountOut(tokenIn, amountIn);
+    }
+    abortController.current?.abort(); // cancel promise if it's already in flight
+    _getAmountOut.cancel();           // cancel handler if it's currently pending being called by the debouncer
     if (amountIn.lte(0)) {
-      setAmountOut(null);
+      setResult(null);
       setQuoting(false);
     } else {
       setQuoting(true);
@@ -74,10 +131,12 @@ export default function useQuote(
     }
   }, [
     tokenOut,
+    settings.ignoreSameToken,
     _getAmountOut,
-    setAmountOut,
-    setQuoting
+    setResult,
+    setQuoting,
+    abortController,
   ]);
 
-  return [amountOut, quoting, getAmountOut];
+  return [result, quoting, getAmountOut];
 }

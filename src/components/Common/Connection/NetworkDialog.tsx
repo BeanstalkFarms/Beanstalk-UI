@@ -4,15 +4,9 @@ import { Alert, Button, Dialog, Stack, Typography, useMediaQuery } from '@mui/ma
 import { grey } from '@mui/material/colors';
 import { useTheme } from '@mui/material/styles';
 import { SWITCH_NETWORK_ERRORS } from 'constants/wallets';
-import { SupportedChainId } from 'constants/chains';
+import { SupportedChainId, TESTNET_RPC_ADDRESSES } from 'constants/index';
 import { ETH } from 'constants/tokens';
-import { TESTNET_RPC_ADDRESSES } from 'util/Client';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
-
-const chainImgMap : { [key: string] : string | undefined } = {
-  Ethereum: ETH[SupportedChainId.MAINNET].logo,
-  Ropsten:  ETH[SupportedChainId.ROPSTEN].logo
-};
 
 const NetworkDialog: React.FC<{
   open: boolean;
@@ -60,6 +54,7 @@ const NetworkDialog: React.FC<{
           ) : null}
           {chains.map((chain) => (
             <Button
+              size="large"
               variant="outlined"
               color="primary"
               key={chain.id}
@@ -79,7 +74,7 @@ const NetworkDialog: React.FC<{
                     {TESTNET_RPC_ADDRESSES[chain.id]}
                   </Typography>
                 ) : (
-                  <img src={chainImgMap[chain.name]} alt="" style={{ height: 35 }} />
+                  <img src={ETH[chain.id as keyof typeof ETH]?.logo || ETH[SupportedChainId.MAINNET].logo} alt="" style={{ height: 35 }} />
                 )}
               </Stack>
             </Button>

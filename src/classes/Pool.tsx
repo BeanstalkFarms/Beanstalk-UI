@@ -3,10 +3,12 @@ import {
   CurveMetaPool__factory,
   CurvePlainPool__factory,
   UniswapV2Pair__factory,
-} from 'constants/generated';
-import { ChainConstant, AddressMap } from 'constants/index';
+} from 'generated/index';
+import { ChainConstant, AddressMap, SupportedChainId } from 'constants/index';
 import { MinBN } from 'util/Tokens';
 import client from 'util/Client';
+import { CRV3, DAI, USDC, USDT } from 'constants/tokens';
+import { getChainConstant } from 'util/Chain';
 import Token, { ERC20Token } from './Token';
 
 type Reserves = [BigNumber, BigNumber];
@@ -41,6 +43,11 @@ export default abstract class Pool {
   public readonly tokens: ERC20Token[];
 
   /**
+   * 
+   */
+  public readonly underlying: ERC20Token[];
+
+  /**
    * The name of the currency, i.e. a descriptive textual non-unique identifier
    */
   public readonly name: string;
@@ -64,11 +71,11 @@ export default abstract class Pool {
    * @param name of the currency
    */
   constructor(
-    chainId: number,
+    chainId: SupportedChainId,
     address: AddressMap<string>,
     // dex: Dex,
     lpToken: ChainConstant<ERC20Token>,
-    tokens: ChainConstant<ERC20Token>[],
+    tokens:  ChainConstant<ERC20Token>[],
     metadata: {
       name: string;
       symbol: string;
@@ -77,9 +84,23 @@ export default abstract class Pool {
     }
   ) {
     this.chainId = chainId;
-    this.address = address[chainId].toLowerCase();
-    this.lpToken = lpToken[chainId];
-    this.tokens = tokens.map((token) => token[chainId]);
+    this.address = getChainConstant(address, chainId).toLowerCase();
+    this.lpToken = getChainConstant(lpToken, chainId);
+    this.tokens = tokens.map((token) => getChainConstant(token, chainId));
+    this.underlying = tokens.reduce<ERC20Token[]>((prev, token) => {
+      // CRV3 pools can access the underlying stables [DAI, USDC, USDT].
+      if (token === CRV3) {
+        // FIXME: hardcoded indices for 3CRV
+        prev.push(...[
+          getChainConstant(DAI, chainId),
+          getChainConstant(USDC, chainId),
+          getChainConstant(USDT, chainId),
+        ]);
+      } else {
+        prev.push(getChainConstant(token, chainId));
+      }
+      return prev;
+    }, []);
 
     this.name = metadata.name;
     this.symbol = metadata.symbol;
@@ -231,6 +252,11 @@ export class CurveMetaPool extends Pool {
           ] as Reserves
       );
   }
+
+  // public getAmountOut(): Promise<BigNumber> {
+  //   return this.getContract()
+  //     .get_dy()
+  // }
 }
 
 // ------------------------------------

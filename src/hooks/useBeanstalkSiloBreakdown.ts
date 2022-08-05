@@ -3,7 +3,7 @@ import { AddressMap, ZERO_BN } from 'constants/index';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
-import useSiloTokenToUSD from './currency/useSiloTokenToUSD';
+import useSiloTokenToFiat from './currency/useSiloTokenToFiat';
 import useWhitelist from './useWhitelist';
 
 // -----------------
@@ -28,7 +28,7 @@ export type SiloStateBreakdown = {
   byToken: AddressMap<{ amount: BigNumber, value: BigNumber }>;
 }
 
-const initState = (tokenAddresses: string[]) => ({
+const _initState = (tokenAddresses: string[]) => ({
   value: new BigNumber(0),
   byToken: tokenAddresses.reduce<SiloStateBreakdown['byToken']>(
     (prev, curr) => { 
@@ -64,12 +64,11 @@ export default function useBeanstalkSiloBreakdown() {
 
   //
   const siloBalances = useSelector<AppState, AppState['_beanstalk']['silo']['balances']>((state) => state._beanstalk.silo.balances);
-  const getUSD = useSiloTokenToUSD();
+  const getUSD = useSiloTokenToFiat();
 
-  return useMemo(() => {
-    console.debug('[useFarmerSiloBalances] running reducer');
-    const baseState = initState(WHITELIST_ADDRS);
-    return WHITELIST_ADDRS.reduce((prev, address) => {
+  return useMemo(() => 
+    // console.debug('[useBeanstalkSiloBreakdown] running reducer');
+     WHITELIST_ADDRS.reduce((prev, address) => {
       const TOKEN        = WHITELIST[address];
       const siloBalance  = siloBalances[address];
 
@@ -105,11 +104,10 @@ export default function useBeanstalkSiloBreakdown() {
       totalValue:   new BigNumber(0),
       /** */
       states: {
-        deposited: initState(WHITELIST_ADDRS),
-        withdrawn: initState(WHITELIST_ADDRS),
+        deposited: _initState(WHITELIST_ADDRS),
+        withdrawn: _initState(WHITELIST_ADDRS),
       }
-    });
-  },
+    }),  
   [
     WHITELIST,
     WHITELIST_ADDRS,

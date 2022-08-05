@@ -52,57 +52,57 @@ const plotMarker2 = (width: number, height: number) => (
   </svg>
 );
 
-const PodLineChart: React.FC<GraphProps> = withTooltip(
-  ({
-     width,
-     harvestableIndex,
-     height,
-     farmerPlots,
-     podLineSize
-   }) => {
-    // scales
-    const xScale = scaleLinear<number>({
-      domain: [0, podLineSize.toNumber()],
-      range: [0, width - 49]
-    });
-    const yScale = scaleLinear<number>({
-      domain: [0, 18],
-      range: [height - margin.top, margin.bottom]
-    });
-
-    return (
-      <svg width={width} height={height}>
-        <Bar
-          key={0}
-          x={0}
-          y={20}
-          width={width}
-          height={20}
-          fill="#9e8773"
-          rx={10}
-        />
-        {Object.keys(farmerPlots).map((key) => (
-          <Tooltip
-            key={key}
-            title={(
-              <Stack width={150}>
-                <Stack direction="row" gap={1} justifyContent="space-between">
-                  <Typography>Place in line:</Typography>
-                  <Typography>{displayBN(new BigNumber(key).minus(harvestableIndex))}</Typography>
-                </Stack>
-                <Stack direction="row" gap={1} justifyContent="space-between">
-                  <Typography>Num Pods:</Typography>
-                  <Typography>{displayBN(new BigNumber(farmerPlots[key]))}</Typography>
-                </Stack>
-              </Stack>
-            )}
-          >
-            {plotMarker2(xScale(new BigNumber(key).minus(harvestableIndex).toNumber()), 2)}
-          </Tooltip>
-        ))}
-      </svg>
-    );
+const PodLineChart: React.FC<GraphProps> = withTooltip(({
+  width,
+  harvestableIndex,
+  height,
+  farmerPlots,
+  podLineSize
+}) => {
+  // scales
+  const xScale = scaleLinear<number>({
+    domain: [0, podLineSize.toNumber()],
+    range: [0, width - 49]
   });
+
+  // const yScale = scaleLinear<number>({
+  //   domain: [0, 18],
+  //   range: [height - margin.top, margin.bottom]
+  // });
+
+  return (
+    <svg width={width} height={height}>
+      <Bar
+        key={0}
+        x={0}
+        y={20}
+        width={width}
+        height={20}
+        fill="#9e8773"
+        rx={10}
+      />
+      {Object.keys(farmerPlots).map((key) => (
+        <Tooltip
+          key={key}
+          title={(
+            <Stack width={150}>
+              <Stack direction="row" gap={1} justifyContent="space-between">
+                <Typography>Place in line:</Typography>
+                <Typography>{displayBN(new BigNumber(key).minus(harvestableIndex))}</Typography>
+              </Stack>
+              <Stack direction="row" gap={1} justifyContent="space-between">
+                <Typography>Num Pods:</Typography>
+                <Typography>{displayBN(new BigNumber(farmerPlots[key]))}</Typography>
+              </Stack>
+            </Stack>
+          )}
+        >
+          {plotMarker2(xScale(new BigNumber(key).minus(harvestableIndex).toNumber()), 2)}
+        </Tooltip>
+      ))}
+    </svg>
+  );
+});
 
 /**
  * Wrap the graph in a ParentSize handler.

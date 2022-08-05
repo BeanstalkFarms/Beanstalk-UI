@@ -1,10 +1,12 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { NEW_BN } from 'constants/index';
 import { BeanstalkSilo } from '.';
-import { resetBeanstalkSilo, updateBeanstalkSiloAssets } from './actions';
+import { resetBeanstalkSilo, updateBeanstalkSilo } from './actions';
 
 export const initialBeanstalkSilo : BeanstalkSilo = {
+  // Balances
   balances: {},
+  // Rewards
   beans: {
     total: NEW_BN,
     earned: NEW_BN,
@@ -22,7 +24,9 @@ export const initialBeanstalkSilo : BeanstalkSilo = {
   },
   roots: {
     total: NEW_BN, 
-  }
+  },
+  // Metadata
+  withdrawSeasons: NEW_BN,
 };
 
 export default createReducer(initialBeanstalkSilo, (builder) =>
@@ -31,11 +35,12 @@ export default createReducer(initialBeanstalkSilo, (builder) =>
       console.debug('[beanstalk/silo/reducer] reset');
       return initialBeanstalkSilo;
     })
-    .addCase(updateBeanstalkSiloAssets, (state, { payload }) => {
+    .addCase(updateBeanstalkSilo, (state, { payload }) => {
       state.balances = payload.balances;
       state.beans = payload.beans;
       state.stalk = payload.stalk;
       state.seeds = payload.seeds;
       state.roots = payload.roots;
+      state.withdrawSeasons = payload.withdrawSeasons;
     })
 );

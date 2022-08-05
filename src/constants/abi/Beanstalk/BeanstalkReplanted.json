@@ -257,6 +257,11 @@
                 "type": "address"
             },
             {
+                "internalType": "address",
+                "name": "registry",
+                "type": "address"
+            },
+            {
                 "internalType": "uint256[]",
                 "name": "amounts",
                 "type": "uint256[]"
@@ -265,11 +270,6 @@
                 "internalType": "uint256",
                 "name": "minAmountOut",
                 "type": "uint256"
-            },
-            {
-                "internalType": "bool",
-                "name": "stable",
-                "type": "bool"
             },
             {
                 "internalType": "enum LibTransfer.From",
@@ -296,6 +296,11 @@
             },
             {
                 "internalType": "address",
+                "name": "registry",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
                 "name": "fromToken",
                 "type": "address"
             },
@@ -313,11 +318,6 @@
                 "internalType": "uint256",
                 "name": "minAmountOut",
                 "type": "uint256"
-            },
-            {
-                "internalType": "bool",
-                "name": "stable",
-                "type": "bool"
             },
             {
                 "internalType": "enum LibTransfer.From",
@@ -386,6 +386,11 @@
                 "type": "address"
             },
             {
+                "internalType": "address",
+                "name": "registry",
+                "type": "address"
+            },
+            {
                 "internalType": "uint256",
                 "name": "amountIn",
                 "type": "uint256"
@@ -394,11 +399,6 @@
                 "internalType": "uint256[]",
                 "name": "minAmountsOut",
                 "type": "uint256[]"
-            },
-            {
-                "internalType": "bool",
-                "name": "stable",
-                "type": "bool"
             },
             {
                 "internalType": "enum LibTransfer.From",
@@ -424,6 +424,11 @@
                 "type": "address"
             },
             {
+                "internalType": "address",
+                "name": "registry",
+                "type": "address"
+            },
+            {
                 "internalType": "uint256[]",
                 "name": "amountsOut",
                 "type": "uint256[]"
@@ -432,11 +437,6 @@
                 "internalType": "uint256",
                 "name": "maxAmountIn",
                 "type": "uint256"
-            },
-            {
-                "internalType": "bool",
-                "name": "stable",
-                "type": "bool"
             },
             {
                 "internalType": "enum LibTransfer.From",
@@ -463,6 +463,11 @@
             },
             {
                 "internalType": "address",
+                "name": "registry",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
                 "name": "toToken",
                 "type": "address"
             },
@@ -475,11 +480,6 @@
                 "internalType": "uint256",
                 "name": "minAmountOut",
                 "type": "uint256"
-            },
-            {
-                "internalType": "bool",
-                "name": "stable",
-                "type": "bool"
             },
             {
                 "internalType": "enum LibTransfer.From",
@@ -895,6 +895,19 @@
     },
     {
         "inputs": [],
+        "name": "getCurrentHumidity",
+        "outputs": [
+            {
+                "internalType": "uint128",
+                "name": "humidity",
+                "type": "uint128"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "getEndBpf",
         "outputs": [
             {
@@ -927,6 +940,31 @@
     },
     {
         "inputs": [],
+        "name": "getFertilizers",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "uint128",
+                        "name": "endBpf",
+                        "type": "uint128"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "supply",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct FertilizerFacet.Supply[]",
+                "name": "fertilizers",
+                "type": "tuple[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "getFirst",
         "outputs": [
             {
@@ -942,7 +980,7 @@
         "inputs": [
             {
                 "internalType": "uint128",
-                "name": "id",
+                "name": "_s",
                 "type": "uint128"
             }
         ],
@@ -1130,7 +1168,7 @@
                 "type": "address"
             },
             {
-                "indexed": true,
+                "indexed": false,
                 "internalType": "uint256",
                 "name": "index",
                 "type": "uint256"
@@ -1647,25 +1685,6 @@
             }
         ],
         "name": "PodApproval",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "account",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "index",
-                "type": "uint256"
-            }
-        ],
-        "name": "PodListingCancelled",
         "type": "event"
     },
     {
@@ -2234,11 +2253,31 @@
     },
     {
         "inputs": [],
+        "name": "claimOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "owner",
         "outputs": [
             {
                 "internalType": "address",
                 "name": "owner_",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "ownerCandidate",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "ownerCandidate_",
                 "type": "address"
             }
         ],
@@ -2327,6 +2366,37 @@
         "anonymous": false,
         "inputs": [
             {
+                "indexed": true,
+                "internalType": "uint32",
+                "name": "season",
+                "type": "uint32"
+            },
+            {
+                "indexed": false,
+                "internalType": "int256",
+                "name": "deltaB",
+                "type": "int256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256[2]",
+                "name": "balances",
+                "type": "uint256[2]"
+            }
+        ],
+        "name": "MetapoolOracle",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint32",
+                "name": "season",
+                "type": "uint32"
+            },
+            {
                 "indexed": false,
                 "internalType": "uint256",
                 "name": "toField",
@@ -2376,6 +2446,12 @@
     {
         "anonymous": false,
         "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint32",
+                "name": "season",
+                "type": "uint32"
+            },
             {
                 "indexed": false,
                 "internalType": "uint256",
@@ -2468,7 +2544,7 @@
         "outputs": [
             {
                 "internalType": "int256",
-                "name": "bdv",
+                "name": "deltaB",
                 "type": "int256"
             }
         ],
@@ -2609,7 +2685,7 @@
         "outputs": [
             {
                 "internalType": "int256",
-                "name": "bdv",
+                "name": "deltaB",
                 "type": "int256"
             }
         ],
@@ -2701,9 +2777,9 @@
             },
             {
                 "indexed": false,
-                "internalType": "uint256",
+                "internalType": "uint32",
                 "name": "season",
-                "type": "uint256"
+                "type": "uint32"
             },
             {
                 "indexed": false,
@@ -2787,7 +2863,7 @@
                 "type": "uint256"
             }
         ],
-        "name": "Earn",
+        "name": "Plant",
         "type": "event"
     },
     {
@@ -2819,43 +2895,6 @@
             }
         ],
         "name": "RemoveDeposit",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "account",
-                "type": "address"
-            },
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "token",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint32[]",
-                "name": "seasons",
-                "type": "uint32[]"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256[]",
-                "name": "amounts",
-                "type": "uint256[]"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            }
-        ],
-        "name": "RemoveDeposits",
         "type": "event"
     },
     {
@@ -3267,19 +3306,46 @@
         "inputs": [
             {
                 "internalType": "address",
-                "name": "account",
+                "name": "token",
                 "type": "address"
-            }
-        ],
-        "name": "earn",
-        "outputs": [
+            },
+            {
+                "internalType": "uint32",
+                "name": "_season",
+                "type": "uint32"
+            },
             {
                 "internalType": "uint256",
-                "name": "beans",
+                "name": "amount",
                 "type": "uint256"
             }
         ],
-        "stateMutability": "payable",
+        "name": "enrootDeposit",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+            },
+            {
+                "internalType": "uint32[]",
+                "name": "seasons",
+                "type": "uint32[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "amounts",
+                "type": "uint256[]"
+            }
+        ],
+        "name": "enrootDeposits",
+        "outputs": [],
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -3413,6 +3479,19 @@
             }
         ],
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "plant",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "beans",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "payable",
         "type": "function"
     },
     {
@@ -3570,52 +3649,6 @@
         "name": "update",
         "outputs": [],
         "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "token",
-                "type": "address"
-            },
-            {
-                "internalType": "uint32",
-                "name": "_season",
-                "type": "uint32"
-            },
-            {
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            }
-        ],
-        "name": "updateUnripeDeposit",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "token",
-                "type": "address"
-            },
-            {
-                "internalType": "uint32[]",
-                "name": "seasons",
-                "type": "uint32[]"
-            },
-            {
-                "internalType": "uint256[]",
-                "name": "amounts",
-                "type": "uint256[]"
-            }
-        ],
-        "name": "updateUnripeDeposits",
-        "outputs": [],
-        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -4061,9 +4094,15 @@
                 "internalType": "uint256",
                 "name": "amount",
                 "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "underlying",
+                "type": "uint256"
             }
         ],
-        "name": "ClaimUnripe",
+        "name": "Chop",
         "type": "event"
     },
     {
@@ -4086,15 +4125,9 @@
                 "internalType": "uint256",
                 "name": "amount",
                 "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "underlying",
-                "type": "uint256"
             }
         ],
-        "name": "Ripen",
+        "name": "Pick",
         "type": "event"
     },
     {
@@ -4172,7 +4205,7 @@
         "inputs": [
             {
                 "internalType": "address",
-                "name": "token",
+                "name": "unripeToken",
                 "type": "address"
             },
             {
@@ -4181,13 +4214,24 @@
                 "type": "uint256"
             },
             {
-                "internalType": "bytes32[]",
-                "name": "proof",
-                "type": "bytes32[]"
+                "internalType": "enum LibTransfer.From",
+                "name": "fromMode",
+                "type": "uint8"
+            },
+            {
+                "internalType": "enum LibTransfer.To",
+                "name": "toMode",
+                "type": "uint8"
             }
         ],
-        "name": "claimUnripe",
-        "outputs": [],
+        "name": "chop",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "underlyingAmount",
+                "type": "uint256"
+            }
+        ],
         "stateMutability": "payable",
         "type": "function"
     },
@@ -4370,7 +4414,7 @@
         "inputs": [
             {
                 "internalType": "address",
-                "name": "unripeToken",
+                "name": "token",
                 "type": "address"
             },
             {
@@ -4379,20 +4423,43 @@
                 "type": "uint256"
             },
             {
+                "internalType": "bytes32[]",
+                "name": "proof",
+                "type": "bytes32[]"
+            },
+            {
                 "internalType": "enum LibTransfer.To",
                 "name": "mode",
                 "type": "uint8"
             }
         ],
-        "name": "ripen",
-        "outputs": [
+        "name": "pick",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [
             {
-                "internalType": "uint256",
-                "name": "underlyingAmount",
-                "type": "uint256"
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
             }
         ],
-        "stateMutability": "payable",
+        "name": "picked",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {

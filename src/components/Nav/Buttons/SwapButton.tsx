@@ -1,6 +1,6 @@
 import { Box, Button } from '@mui/material';
 import React from 'react';
-import swapIcon from 'img/swap.svg';
+import swapIcon from 'img/interface/swap.svg';
 
 const SwapButton : React.FC = () => (
   <Box sx={{ display: { lg: 'block', xs: 'none' } }}>

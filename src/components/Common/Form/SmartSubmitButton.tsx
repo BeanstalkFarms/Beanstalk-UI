@@ -11,6 +11,9 @@ import { BEANSTALK_ADDRESSES, BEANSTALK_FERTILIZER_ADDRESSES } from 'constants/a
 import useChainConstant from 'hooks/useChainConstant';
 import { useGetERC20Contract } from 'hooks/useContract';
 import { useConnect } from 'wagmi';
+import Token from 'classes/Token';
+import { parseError, trimAddress } from 'util/index';
+import toast from 'react-hot-toast';
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import TransactionToast from '../TxnToast';
 import { FormState, FormTokenState } from '.';
@@ -18,19 +21,23 @@ import WalletButton from '../Connection/WalletButton';
 
 const CONTRACT_NAMES : { [address: string] : string } = {
   [BEANSTALK_ADDRESSES[SupportedChainId.MAINNET]]: 'Beanstalk',
-  [BEANSTALK_ADDRESSES[SupportedChainId.ROPSTEN]]: 'Beanstalk',
   [BEANSTALK_FERTILIZER_ADDRESSES[SupportedChainId.MAINNET]]: 'Beanstalk Fertilizer',
-  [BEANSTALK_FERTILIZER_ADDRESSES[SupportedChainId.ROPSTEN]]: 'Beanstalk Fertilizer',
 };
 
+/**
+ * FIXME:
+ * - Since this depends on `tokens` which is derived directly from
+ *   form state, it changes every time an input value changes.
+ */
 const SmartSubmitButton : React.FC<{
   /**
    * The contract we're interacting with. Must approve 
    * `contract.address` to use `tokens`.
    */
-  contract: ethers.Contract;
+  contract?: ethers.Contract;
   /**
    * The tokens (and respective values) currently tracked in the form.
+   * Pass an empty list if no tokens need to be approved for this txn.
    */
   tokens: FormTokenState[];
   /**
@@ -38,11 +45,14 @@ const SmartSubmitButton : React.FC<{
    * manual = show a modal to let the user decide their allowance.
    */
   mode: 'auto' | 'manual';
+  /**
+   * 
+   */
 } & {
   /**
    * LoadingButton
    */
-  loading: boolean;
+  loading?: boolean;
 } & ButtonProps> = ({
   contract,
   tokens,
@@ -57,7 +67,7 @@ const SmartSubmitButton : React.FC<{
 
   // Convert the current `FormTokenState[]` into more convenient forms,
   // and find the next token that we need to seek approval for.
-  const selectedTokens = useMemo(() => tokens.map((elem) => elem.token), [tokens]);
+  const selectedTokens : Token[] = useMemo(() => tokens?.map((elem) => elem.token), [tokens]);
   const [allowances, refetchAllowances] = useAllowances(
     contract?.address,
     selectedTokens,
@@ -67,10 +77,11 @@ const SmartSubmitButton : React.FC<{
     () => allowances.findIndex(
       (allowance, index) => {
         const amt = tokens[index].amount;
+        // console.debug(`allowance ${index} ${tokens[index].token.symbol}`, allowance, amt)
         return (
           !allowance                    // waiting for allowance to load
           || allowance.eq(0)            // allowance is zero
-          || (amt !== null && amt.gt(0) // entered amount is greater than allowance
+          || (amt && amt.gt(0)          // entered amount is greater than allowance
               ? amt.gt(allowance)
               : false)
         );
@@ -87,49 +98,39 @@ const SmartSubmitButton : React.FC<{
   const [open, setOpen] = useState(false);
   const handleOpen  = useCallback(() => setOpen(true),  []);
   const handleClose = useCallback(() => setOpen(false), []);
-  const handleApproval = useCallback(() => {
-    if (nextApprovalToken && contract?.address) {
+  const handleApproval = useCallback(async () => {
+    let txToast;
+    try {
+      if (!nextApprovalToken) throw new Error('Nothing to approve.');
+      if (!contract?.address) throw new Error('Missing ERC20 contract to approve.');
+      const [tokenContract] = getErc20Contract(nextApprovalToken.address);
+      if (!tokenContract) throw new Error(`Failed to instantiate tokenContract for token ${nextApprovalToken.address}`);
+      
       const amount = MAX_UINT256;
-
-      // State
-      const txToast = new TransactionToast({
-        loading: `Approving ${nextApprovalToken.symbol}`,
-        success: 'Success!',
+      txToast = new TransactionToast({
+        loading: `Approving ${nextApprovalToken.symbol}...`,
+        success: `Success. ${
+          CONTRACT_NAMES[contract.address]
+            ? `The ${CONTRACT_NAMES[contract.address]} contract`
+            : `Contract ${trimAddress(contract.address)}`
+        } can now transact with your ${nextApprovalToken.name}.`,
       });
       setFieldValue('approving', {
         contract: contract.address,
-        token: nextApprovalToken,
-        amount: new BigNumber(MAX_UINT256),
+        token:    nextApprovalToken,
+        amount:   new BigNumber(MAX_UINT256),
       });
-
+      
       // Execute
-      const [tokenContract] = getErc20Contract(nextApprovalToken.address);
-      if (!tokenContract) throw new Error(`Failed to instantiate tokenContract for token ${nextApprovalToken.address}`);
-      tokenContract.approve(
-        contract.address,
-        amount,
-      )
-      .then((txn) => {
-        // submitted
-        // TODO: some sort of global txn tracker here
-        txToast.confirming(txn);
-        return txn.wait();
-      })
-      .then((receipt) => {
-        // confirmed
-        if (refetchAllowances) {
-          refetchAllowances()
-            .then(() => {
-              txToast.success(receipt);
-              setFieldValue('approving', undefined);
-            });
-        }
-      })
-      .catch((err) => {
-        // failed
-        txToast.error(err);
-        setFieldValue('approving', undefined);
-      });
+      const txn = await tokenContract.approve(contract.address, amount);
+      txToast.confirming(txn);
+      const receipt = await txn.wait();
+      if (refetchAllowances) await refetchAllowances();
+      txToast.success(receipt);
+    } catch (err) {
+      txToast?.error(err) || toast.error(parseError(err));
+    } finally {
+      setFieldValue('approving', undefined);
     }
   }, [
     contract?.address,
@@ -207,7 +208,8 @@ const SmartSubmitButton : React.FC<{
           onClick={handleClickApproveButton}
           loading={isApproving}
         >
-          Approve {nextApprovalToken.symbol}
+          {/* If the button is disabled & not loading, let the parent choose the display text. */}
+          {(props.disabled && !props.loading && children) ? children : <>Approve {nextApprovalToken.symbol}</>}
         </LoadingButton>
       ) : (
         <LoadingButton {...props}>

@@ -1,25 +1,43 @@
 import ethereumLogoUrl from 'img/tokens/eth-logo.svg';
 
+/**
+ * Guide to adding a new chain:
+ * 1. Pick a chainId and add to SupportedChainId
+ * 2. Add to REPLANTED_CHAINS and TESTNET_CHAINS if appropriate
+ * 3. If this is an unofficial testnet, add a RPC URL to TESTNET_RPC_ADDRESSES
+ * 4. Add a chainInfo entry in subsequent constants
+ * 5. If this contract uses a different ABI for some contracts, add those in `useContract`
+ */
+
+/**
+ * List of supported chains
+ */
 export enum SupportedChainId {
   MAINNET = 1,
-  ROPSTEN = 3,
-  ASTRO = 6074,
-  CUJO = 31337,
+  CUJO = 31337,     // pre-exploit, beanstalk replanted
   LOCALHOST = 1337,
 }
 
+/**
+ * These chains use Beanstalk Replanted, which has different
+ * function signatures than the Beanstalk V1.
+ */
 export const REPLANTED_CHAINS = new Set([
+  SupportedChainId.MAINNET,
   SupportedChainId.LOCALHOST,
   SupportedChainId.CUJO,
 ]);
 
-export const CHAIN_IDS_TO_NAMES = {
-  [SupportedChainId.MAINNET]: 'Mainnet',
-  [SupportedChainId.ROPSTEN]: 'Ropsten',
-  [SupportedChainId.ASTRO]: 'Astro',
-  [SupportedChainId.LOCALHOST]: 'Localhost',
-  [SupportedChainId.CUJO]: 'Cujo',
-};
+/**
+ * These chains are forks of mainnet,
+ * therefore they use the same token addresses as mainnet.
+ */
+export const TESTNET_CHAINS = new Set([
+  SupportedChainId.LOCALHOST,
+  SupportedChainId.CUJO,
+]);
+
+// ---------------------------------
 
 export enum NetworkType {
   L1,
@@ -28,8 +46,6 @@ export enum NetworkType {
 
 export const L1_CHAIN_IDS = [
   SupportedChainId.MAINNET,
-  SupportedChainId.ROPSTEN,
-  SupportedChainId.ASTRO,
   SupportedChainId.LOCALHOST,
   SupportedChainId.CUJO
 ] as const;
@@ -71,6 +87,9 @@ export type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainIn
 & { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
 & { readonly [chainId in SupportedL2ChainId]: L2ChainInfo }
 
+/**
+ * FIXME: this was forked from Uniswap's uI but we only use `explorer` here.
+ */
 export const CHAIN_INFO : ChainInfoMap = {
   [SupportedChainId.MAINNET]: {
     networkType: NetworkType.L1,
@@ -78,20 +97,6 @@ export const CHAIN_INFO : ChainInfoMap = {
     label: 'Ethereum',
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-  },
-  [SupportedChainId.ROPSTEN]: {
-    networkType: NetworkType.L1,
-    explorer: 'https://ropsten.etherscan.io',
-    label: 'Ropsten',
-    logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'Ropsten Ether', symbol: 'ropETH', decimals: 18 },
-  },
-  [SupportedChainId.ASTRO]: {
-    networkType: NetworkType.L1,
-    explorer: 'https://etherscan.io',
-    label: 'Astro',
-    logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'Astro Ether', symbol: 'astroETH', decimals: 18 },
   },
   [SupportedChainId.LOCALHOST]: {
     networkType: NetworkType.L1,

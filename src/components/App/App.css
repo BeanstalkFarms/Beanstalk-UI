@@ -2,6 +2,24 @@
  * Toast
  */
 
+/*@media only screen and (max-width: 1450px) {*/
+/*  .navbar {*/
+/*    background-color: #DBEDFD;*/
+/*  }*/
+/*}*/
+
+/*@media only screen and (min-width: 1450px) and (max-width: 2100px) {*/
+/*  .navbar {*/
+/*    background-color: #e8f3fd;*/
+/*  }*/
+/*}*/
+
+/*@media only screen and (min-width: 2100px) {*/
+/*  .navbar {*/
+/*    background-color: #eaf3fd;*/
+/*  }*/
+/*}*/
+
 @keyframes custom-enter {
   0% {
     right: -500px;
@@ -20,5 +38,37 @@
   50% {
     right: -500px;
     /* opacity: 0; */
+  }
+}
+@keyframes grow-width {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes pulse {
+  0% {
+    border-color: rgba(240, 223, 146, 1);
+    /* border-color: rgba(193, 222, 242, 1); */
+  }
+  50% {
+    /* border-color: rgba(193, 222, 242, 0.5); */
+    border-color: rgba(240, 223, 146, 0.5);
+  }
+  100% {
+    border-color: rgba(240, 223, 146, 1);
   }
 }

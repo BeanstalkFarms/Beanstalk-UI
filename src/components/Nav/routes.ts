@@ -5,13 +5,32 @@ import githubIcon from 'img/nav-icons/github.svg';
 import governanceIcon from 'img/nav-icons/governance.svg';
 import tradeIcon from 'img/nav-icons/trade.svg';
 import twitterIcon from 'img/nav-icons/twitter.svg';
+import duneIcon from 'img/nav-icons/dune.svg';
+import docsIcon from 'img/nav-icons/docs.svg';
 
-const ROUTES = {
+export type RouteData = {
+  /** If set, link to this internal path. */
+  path: string;
+  /** Nav item title */
+  title: string;
+  /** Tag to show inside the nav item */
+  tag?: string;
+  /** If set, link out to this external URL. */
+  href?: string;
+  //
+  icon?: string;
+  disabled?: boolean;
+  small?: boolean;
+}
+
+type RouteKeys = 'top' | 'market' | 'more' | 'additional' // | 'analytics'
+
+const ROUTES : { [key in RouteKeys] : RouteData[] } = {
+  // Main Navigation
   top: [
     {
       path: '/',
-      title: 'Barn Raise',
-      tag: 'NEW'
+      title: 'Forecast',
     },
     {
       path: '/silo',
@@ -22,75 +41,53 @@ const ROUTES = {
       title: 'Field',
     },
     {
-      path: '/forecast',
-      title: 'Forecast',
+      path: '/barn',
+      title: 'Barn',
+    },
+    {
+      path: '/market',
+      title: 'Market',
+    },
+    {
+      path: '/analytics',
+      title: 'Analytics',
     },
   ],
-  analytics: [
-    {
-      path: 'analytics/barnraise',
-      title: 'Barn Raise Analytics',
-      disabled: false,
-      href: null
-    },
-    {
-      path: 'analytics/bean',
-      title: 'Bean Analytics',
-      disabled: false,
-      href: null
-    },
-    {
-      path: 'analytics/silo',
-      title: 'Silo Analytics',
-      disabled: false,
-      href: null
-    },
-    {
-      path: 'analytics/field',
-      title: 'Field Analytics',
-      disabled: false,
-      href: null
-    }
-  ],
+  // More Menu
   more: [
     {
-      path: 'market',
-      title: 'Pod Market',
-      icon: tradeIcon
+      path: 'nft',
+      title: 'BeaNFTs',
+      icon: beanNFTIcon,
+      small: true
+    },
+    {
+      path: 'trade',
+      title: 'Trade',
+      icon: tradeIcon,
+      small: true
     },
     {
       path: 'governance',
       href: 'https://snapshot.org/#/beanstalkdao.eth',
       title: 'Governance',
-      icon: governanceIcon
+      icon: governanceIcon,
+      small: true
     },
     {
-      path: 'analytics',
-      href: 'https://dune.xyz/tbiq/Beanstalk',
-      title: 'Analytics',
-      icon: beanNFTIcon
-    },
-    {
-      path: 'beanfts',
-      title: 'BeaNFTs',
-      disabled: true,
-      small: true,
-      icon: beanNFTIcon
-    },
-    {
-      path: 'trade',
-      title: 'Trade',
-      disabled: true,
-      small: true,
-      icon: tradeIcon
+      path: 'docs',
+      href: 'https://docs.bean.money',
+      title: 'Docs',
+      icon: docsIcon,
+      small: true
     },
   ],
+  // About Button
   additional: [
     {
       path: 'about',
       title: 'About',
       href: 'https://bean.money',
-      disabled: false,
       icon: aboutIcon
     },
     {
@@ -108,10 +105,50 @@ const ROUTES = {
     {
       path: 'github',
       href: 'https://github.com/beanstalkfarms',
-      title: 'Github',
+      title: 'GitHub',
       icon: githubIcon
-    }
+    },
+    {
+      path: 'analytics',
+      href: 'https://dune.xyz/tbiq/Beanstalk',
+      title: 'Dune',
+      icon: duneIcon
+    },
   ],
+  // Market Menu
+  market: [
+    {
+      path: '/market',
+      title: 'Pod Market',
+    },
+    {
+      path: '/market/account',
+      title: 'My Orders / Listings',
+    },
+    {
+      path: '/market/activity',
+      title: 'Marketplace Activity',
+    },
+  ],
+  // Analytics Menu
+  // analytics: [
+  //   {
+  //     path: 'analytics/barnraise',
+  //     title: 'Barn Raise Analytics',
+  //   },
+  //   {
+  //     path: 'analytics/bean',
+  //     title: 'Bean Analytics',
+  //   },
+  //   {
+  //     path: 'analytics/silo',
+  //     title: 'Silo Analytics',
+  //   },
+  //   {
+  //     path: 'analytics/field',
+  //     title: 'Field Analytics',
+  //   }
+  // ],
 };
 
 export default ROUTES;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Stack, Tooltip, Typography, useMediaQuery } from '@mui/material';
+import { Box, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import BigNumber from 'bignumber.js';
 import { displayBN } from '../../util';
@@ -14,42 +14,39 @@ export interface PodLineSectionProps {
   plots: PlotMap<BigNumber>;
 }
 
-const PodLineSection: React.FC<PodLineSectionProps> =
-  ({
-     numPodsDisplay,
-     numPodsTitle,
-     podLine,
-     harvestableIndex,
-     plots
-   }) => {
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-    return (
-      <Box
-        sx={{
-          backgroundColor: '#F6FAFE',
-          px: 2,
-          py: 1.5,
-          borderRadius: 1.5,
-        }}
-      >
-        <Stack direction={isMobile ? 'column' : 'row'} gap={2} alignItems={isMobile ? 'left' : 'center'}>
-          <Stack width={isMobile ? '100%' : '20%'} gap={0.5}>
-            <Typography variant="h4">{numPodsTitle}</Typography>
-            <Typography variant="h1">{displayBN(numPodsDisplay)}</Typography>
-          </Stack>
-          <Stack width={isMobile ? '100%' : '80%'}>
-            <SimplePodLineChart
-              harvestableIndex={harvestableIndex}
-              // width={graphWidth}
-              // height={50}
-              farmerPlots={plots}
-              podLineSize={podLine}
-            />
-          </Stack>
+const PodLineSection: React.FC<PodLineSectionProps> = ({
+  numPodsDisplay,
+  numPodsTitle,
+  podLine,
+  harvestableIndex,
+  plots
+}) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  return (
+    <Box
+      sx={{
+        backgroundColor: '#F6FAFE',
+        px: 2,
+        py: 1.5,
+        borderRadius: 1.5,
+      }}
+    >
+      <Stack direction={isMobile ? 'column' : 'row'} gap={2} alignItems={isMobile ? 'left' : 'center'}>
+        <Stack width={isMobile ? '100%' : '20%'} gap={0.5}>
+          <Typography variant="h4">{numPodsTitle}</Typography>
+          <Typography variant="h1">{displayBN(numPodsDisplay)}</Typography>
         </Stack>
-      </Box>
-    );
-  };
+        <Stack width={isMobile ? '100%' : '80%'}>
+          <SimplePodLineChart
+            harvestableIndex={harvestableIndex}
+            farmerPlots={plots}
+            podLineSize={podLine}
+          />
+        </Stack>
+      </Stack>
+    </Box>
+  );
+};
 
 export default PodLineSection;

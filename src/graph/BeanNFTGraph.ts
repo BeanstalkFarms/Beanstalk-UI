@@ -120,31 +120,7 @@ export async function queryAccountNFTStats(account: string) {
   return user;
 }
 
-type Nft = {
-  id: number;
-  metadataIpfsHash?: string;
-  imageIpfsHash?: string;
-  signature?: string;
-  account: string;
-  subcollection: string;
-}
-
-export async function loadNFTs(account: string) {
-  // FIXME: API load this
-  const nftData = (await import('../data/parsed-accounts.json')).default as { [key: string] : Nft[] };
-  if (!nftData[account]) {
-    return {
-      genesis: [],
-      winter: [],
-    };
-  }
-  const genesisNFTs = nftData[account].filter((n) => n.subcollection === 'Genesis');
-  const winterNFTs = nftData[account].filter((n) => n.subcollection === 'Winter');
-  return {
-    genesis: genesisNFTs,
-    winter: winterNFTs,
-  };
-}
+// ----
 
 // const SowQuery = `
 // query sows($season: String) {

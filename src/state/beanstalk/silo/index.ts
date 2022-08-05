@@ -6,6 +6,7 @@ import { TokenMap } from '../../../constants';
  * about a Farmer's ownership of a Whitelisted Silo Token.
  */
 export type BeanstalkSiloBalance = {
+  bdvPerToken: BigNumber;
   deposited: {
     /** The total amount of this Token currently in the Deposited state. */
     amount: BigNumber;
@@ -45,6 +46,7 @@ export type BeanstalkSiloAssets = {
   seeds: {
     total: BigNumber;
     active: BigNumber;
+    // FIXME: earned -> plantable
     earned: BigNumber;
   };
   roots: {
@@ -53,5 +55,7 @@ export type BeanstalkSiloAssets = {
 }
 
 export type BeanstalkSilo = (
-  BeanstalkSiloAssets & BeanstalkSiloBalances
+  BeanstalkSiloBalances
+  & BeanstalkSiloAssets
+  & { withdrawSeasons: BigNumber; }
 );

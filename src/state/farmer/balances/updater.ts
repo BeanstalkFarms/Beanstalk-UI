@@ -1,46 +1,88 @@
-import { BALANCE_TOKENS } from 'constants/tokens';
-import useChainId from 'hooks/useChain';
-import useTokenMap from 'hooks/useTokenMap';
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { getAccount } from 'util/Account';
-
-import { tokenResult } from 'util/Tokens';
-import { useAccount } from 'wagmi';
+import flatMap from 'lodash/flatMap';
+import { ZERO_BN } from 'constants/index';
+import { BeanstalkReplanted } from 'generated/index';
+import { BALANCE_TOKENS, ERC20_TOKENS, ETH } from 'constants/tokens';
+import useChainId from 'hooks/useChain';
+import { useBeanstalkContract } from 'hooks/useContract';
+import useMigrateCall from 'hooks/useMigrateCall';
+import useTokenMap from 'hooks/useTokenMap';
+import { tokenResult } from 'util/index';
+import useChainConstant from 'hooks/useChainConstant';
+import useAccount from 'hooks/ledger/useAccount';
 import { clearBalances, updateBalances } from './actions';
 
 // -- Hooks
 
 export const useFetchFarmerBalances = () => {
+  // State
   const dispatch = useDispatch();
+  const account  = useAccount();
+  
+  // Constants
+  const Eth = useChainConstant(ETH);
   const tokenMap = useTokenMap(BALANCE_TOKENS);
+  const erc20TokenMap = useTokenMap(ERC20_TOKENS);
+
+  // Contracts
+  const beanstalk = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const migrate   = useMigrateCall();
 
   // Handlers
   // FIXME: make this callback accept a tokens array to prevent reloading all balances on every call
-  const fetch = useCallback(async (_account: string/* , _tokens? : any */) => {
-    const account = getAccount(_account);
+  const fetch = useCallback(async () => {
     try {
       if (account && tokenMap) {
-        const balancePromises = Object.keys(tokenMap).map((tokenAddr) => (
-          tokenMap[tokenAddr]?.getBalance(account)
-            .then(tokenResult(tokenMap[tokenAddr]))
+        const erc20Addresses = Object.keys(erc20TokenMap);
+        console.debug('Token Addresses', erc20Addresses);
+        const promises = Promise.all([
+          // ETH cannot have an internal balance and isn't returned
+          // from the standard getAllBalances call.
+          // multiCall.getEthBalance(account)
+          Eth.getBalance(account)
+            .then(tokenResult(Eth))
+            .then((result) => ({
+              token: Eth,
+              balance: {
+                internal: ZERO_BN,
+                external: result,
+                total:    result,
+              },
+            })),
+          beanstalk.getAllBalances(account, erc20Addresses)
             .then((result) => {
-              console.debug(`[farmer/balances/updater] | ${tokenMap[tokenAddr].symbol} => ${result.toString()}`);
+              console.debug('[farmer/balances/updater]: getAllBalances = ', result);
               return result;
             })
-            .then((balanceResult) => ({
-              token: tokenMap[tokenAddr],
-              balance: balanceResult
-            }))
-        ));
+            .then((result) => result.map((struct, index) => {
+              const _token = erc20TokenMap[erc20Addresses[index]];
+              const _tokenResult = tokenResult(_token);
+              return {
+                token: _token,
+                balance: {
+                  internal: _tokenResult(struct.internalBalance),
+                  external: _tokenResult(struct.externalBalance),
+                  total:    _tokenResult(struct.totalBalance),
+                }
+              };
+            })),
+        ]).then((results) => flatMap(results));
 
-        console.debug(`[farmer/updater/useFetchBalances] FETCH: ${balancePromises.length} balances (account = ${account})`);
-        const balances = await Promise.all(balancePromises);
+        // const calls = [
+        //   // ETH cannot have an internal balance and isn't returned
+        //   // from the standard getAllBalances call.
+        //   multiCall.getEthBalance(account),
+        //   wrap(beanstalkReplanted).getAllBalances(account, erc20Addresses)
+        // ];
+
+        console.debug(`[farmer/updater/useFetchBalances] FETCH: balances (account = ${account})`);
+        const balances = await promises;
         console.debug('[farmer/updater/useFetchBalances] RESULT: ', balances);
         // console.table(balances);
 
         dispatch(updateBalances(balances));
-        return balancePromises;
+        return promises;
       }
     } catch (e) {
       console.debug('[farmer/updater/useFetchBalances] FAILED', e);
@@ -48,7 +90,11 @@ export const useFetchFarmerBalances = () => {
     }
   }, [
     dispatch,
-    tokenMap
+    tokenMap,
+    beanstalk,
+    Eth,
+    erc20TokenMap,
+    account,
   ]);
 
   const clear = useCallback(() => {
@@ -62,17 +108,17 @@ export const useFetchFarmerBalances = () => {
 
 const FarmerBalancesUpdater = () => {
   const [fetch, clear] = useFetchFarmerBalances();
-  const { data: account } = useAccount();
+  const account = useAccount();
   const chainId = useChainId();
 
   useEffect(() => {
     clear();
-    if (account?.address) {
-      fetch(account.address);
+    if (account) {
+      fetch();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    account?.address,
+    account,
     chainId,
   ]);
 

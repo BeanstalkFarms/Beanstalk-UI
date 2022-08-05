@@ -8,7 +8,7 @@ import greenBeanIcon from 'img/tokens/bean-logo-circled.svg';
 import { useTheme } from '@mui/material/styles';
 import { Token } from 'classes';
 import BigNumber from 'bignumber.js';
-import { displayBN } from '../../../util';
+import { displayFullBN } from '../../../util';
 
 const UnripeTokenRow: React.FC<{
   name: string;
@@ -57,7 +57,7 @@ const UnripeTokenRow: React.FC<{
             <Stack direction="row" alignItems="center" gap={0.3}>
               <img src={token.logo} alt="Circulating Beans" height={13} />
               <Typography sx={{ color: primaryColor }}>
-                {displayBN(amount)}
+                {displayFullBN(amount)}
               </Typography>
             </Stack>
             <Stack direction="row" alignItems="center" gap={0.3}>
@@ -66,7 +66,7 @@ const UnripeTokenRow: React.FC<{
               </Typography>
               <img src={greenBeanIcon} alt="Circulating Beans" width={13} />
               <Typography sx={{ color: primaryColor }}>
-                {displayBN(bdv)}
+                {displayFullBN(bdv)}
                 )
               </Typography>
             </Stack>
@@ -79,7 +79,7 @@ const UnripeTokenRow: React.FC<{
               fontSize: '16px',
               color: amount.eq(0) ? BeanstalkPalette.lightishGrey : null
             }}>
-              {displayBN(amount)}
+              {displayFullBN(amount)}
             </Typography>
           </Stack>
         )}

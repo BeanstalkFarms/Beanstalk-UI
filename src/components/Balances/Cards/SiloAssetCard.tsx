@@ -4,7 +4,7 @@ import { SEEDS, STALK } from 'constants/tokens';
 import TokenIcon from 'components/Common/TokenIcon';
 import { AppState } from 'state';
 import { displayBN, displayFullBN } from 'util/index';
-import ResizablePieChart, { PieDataPoint } from 'components/Charts/Pie';
+import ResizablePieChart, { PieDataPoint } from 'components/Common/Charts/Pie';
 import StatCard from '../StatCard';
 
 export type StalkCardProps = (
@@ -29,20 +29,20 @@ const SiloAssetCard: React.FC<StalkCardProps> = ({
   state,
 }) => {
   const pieChartData = useMemo(() => Object.keys(state).reduce<PieDataPoint[]>((prev, _curr) => {
-      const curr = _curr as keyof typeof state; // ts hack
-      if (curr !== 'total' && state[curr]) {
-        prev.push({
-          label: MAPPING[curr][0],
-          value: state[curr].toNumber(),
-          color: MAPPING[curr][1],
-        });
-      }
-      return prev;
-    }, [] as PieDataPoint[]), [state]);
+    const curr = _curr as keyof typeof state; // ts hack
+    if (curr !== 'total' && state[curr]) {
+      prev.push({
+        label: MAPPING[curr][0],
+        value: state[curr].toNumber(),
+        color: MAPPING[curr][1],
+      });
+    }
+    return prev;
+  }, [] as PieDataPoint[]), [state]);
   return (
     <StatCard
       title={`My ${token.name}`}
-      icon={<TokenIcon token={token} />}
+      amountIcon={<TokenIcon token={token} />}
       amount={displayBN(state.total)}
     >
       <Stack gap={2} justifyContent="space-between" height="100%">

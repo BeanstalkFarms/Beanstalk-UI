@@ -123,12 +123,10 @@ export type FarmerSiloRewards = {
      */
     active: BigNumber;
     /** 
-     * Earned Seeds are Seeds granted upon reception of 
+     * Plantable Seeds are Seeds granted upon reception of 
      * earned Beans (since 1 Deposited Bean = 2 Stalk).
      */
-    earned: BigNumber;
-    /** There are no "Grown Seeds". */
-    // grown: undefined;
+    plantable: BigNumber;
   };
   roots: {
     total: BigNumber;
