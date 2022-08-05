@@ -13,8 +13,8 @@ const components = {
   NoRowsOverlay() {
     return (
       <AuthEmptyState message="Your Orders will appear here.">
-        <Button component={Link} to="/market/create" variant="outlined" color="primary">
-          New Order
+        <Button component={Link} to="/market/create" variant="contained" color="primary">
+          Create Order
         </Button>
       </AuthEmptyState>
     );

@@ -2,29 +2,23 @@ import React from 'react';
 import SeasonPlot, {
   SeasonPlotBaseProps,
 } from 'components/Common/Charts/SeasonPlot';
-import { Season, SeasonalTwapDocument } from 'generated/graphql';
+import { Season, SeasonalPriceDocument } from 'generated/graphql';
 import usePrice from 'hooks/usePrice';
 import useSeason from 'hooks/useSeason';
-import { useMediaQuery } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 
 const getValue = (season: Season) => parseFloat(season.price);
 const formatValue = (value: number) => `$${value.toFixed(4)}`;
-const useStatProps = () => {
-  const theme = useTheme();
-  const isTiny = useMediaQuery(theme.breakpoints.down('md'));
-  return {
-    title: isTiny ? 'TWAP' : 'Time Weighted Avg. Price',
-    gap: 0.25,
-    color: 'primary',
-    sx: { ml: 0 },
-  };
-};
+const useStatProps = () => ({
+  title: 'Bean Price',
+  gap: 0.25,
+  color: 'primary',
+  sx: { ml: 0 },
+});
 const LineChartProps = {
   isTWAP: true,
 };
 
-const TWAP: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({
+const Price: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({
   height,
 }) => {
   const price = usePrice();
@@ -32,7 +26,7 @@ const TWAP: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({
   const StatProps = useStatProps();
   return (
     <SeasonPlot
-      document={SeasonalTwapDocument}
+      document={SeasonalPriceDocument}
       height={height}
       defaultValue={price?.gt(0) ? price.toNumber() : 0}
       defaultSeason={season?.gt(0) ? season.toNumber() : 0}
@@ -44,4 +38,4 @@ const TWAP: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({
   );
 };
 
-export default TWAP;
+export default Price;

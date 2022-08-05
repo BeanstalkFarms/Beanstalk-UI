@@ -1,5 +1,7 @@
 import React from 'react';
 import {
+  Box,
+  Card,
   Container,
   Link,
   Stack,
@@ -12,6 +14,7 @@ import beanIcon from 'img/tokens/bean-logo-circled.svg';
 import ActivityTable from 'components/Market/Tables/Activity';
 import { displayBN, displayFullBN } from '../../util';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
+import BlurComponent from '../../components/Common/ZeroState/BlurComponent';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -95,6 +98,7 @@ const rows = new Array(20).fill(null).map((_, i) => (
 
 const MarketActivityPage: React.FC = () => {
   const content = (<ActivityTable columns={columns} rows={rows} />);
+  // const content = <Card sx={{ height: '300px' }}><Soon /></Card>
 
   return (
     <Container maxWidth="lg">
@@ -102,7 +106,14 @@ const MarketActivityPage: React.FC = () => {
         <PageHeaderSecondary
           title="Marketplace Activity"
         />
-        {content}
+        <Card>
+          <Box sx={{ position: 'relative ' }}>
+            <BlurComponent blur={10} opacity={0.7}>
+              Marketplace activity will be available soon.
+            </BlurComponent>
+            {content}
+          </Box>
+        </Card>
       </Stack>
     </Container>
   );

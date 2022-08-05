@@ -3,19 +3,21 @@ import { useSelector } from 'react-redux';
 import { Box, Card, Stack, Typography, Tooltip } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { displayFullBN } from 'util/index';
-import useHumidity, { INITIAL_HUMIDITY } from 'hooks/useHumidity';
+import useHumidity from 'hooks/useHumidity';
 import { AppState } from 'state';
 import SunriseCountdown from 'components/Sun/SunriseCountdown';
+import useSeason from 'hooks/useSeason';
 import FertilizerImage from './FertilizerImage';
 import { BeanstalkPalette, FontSize } from '../App/muiTheme';
 import useFertilizerProgress from '../../hooks/useFertilizerProgress';
 
 const RemainingFertilizer: React.FC = () => {
   const [humidity, nextDecreaseAmount] = useHumidity();
-  const fertilizer = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
+  const barn = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
+  const season = useSeason();
   
-  const nextDecreaseTimeString = humidity.eq(INITIAL_HUMIDITY)
-    ? 'when Beanstalk is Replanted'
+  const nextDecreaseTimeString = season.eq(6074)
+    ? 'per Season upon Unpause'
     :  <SunriseCountdown />;
   const progress = useFertilizerProgress();
 
@@ -54,7 +56,7 @@ const RemainingFertilizer: React.FC = () => {
                   variant="bodyLarge"
                   sx={{ fontWeight: 400 }}
                 >
-                  {displayFullBN(fertilizer.remaining, 0)}&nbsp;
+                  {displayFullBN(barn.remaining, 0)}&nbsp;
                 </Typography>
                 {progress.gt(0) ? (
                   <Typography

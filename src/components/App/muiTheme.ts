@@ -363,6 +363,9 @@ let muiTheme = createTheme({
       }
     },
     MuiTooltip: {
+      defaultProps: {
+        enterTouchDelay: 0
+      },
       styleOverrides: {
         tooltip: sx({
           typography: 'body1',
@@ -374,7 +377,6 @@ let muiTheme = createTheme({
           p: 1,
           px: 1.25,
         }),
-        
       }
     },
     MuiAccordion: {
