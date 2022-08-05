@@ -1,7 +1,7 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { Box, CssBaseline } from '@mui/material';
+import { Box, Card, CssBaseline, Stack, Typography } from '@mui/material';
 import { ToastBar, Toaster } from 'react-hot-toast';
 import SiloPage from 'pages/silo';
 import SiloTokenPage from 'pages/silo/token';
