@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Box, Card, Container, Link, Stack, Tab, Tabs, Typography, useMediaQuery, } from '@mui/material';
+import { Box, Button, Card, Container, Stack, Tab, Tabs, useMediaQuery, } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import useTabs from '~/hooks/display/useTabs';
@@ -207,15 +207,16 @@ const NFTPage: React.FC = () => {
                 <Tab label={`Genesis (${genesisNFTs === null ? 0 : genesisNFTs?.length})`} />\
                 <Tab label={`Winter (${winterNFTs === null ? 0 : winterNFTs?.length})`} />
               </Tabs>
+              {/* TODO: componentize these card action buttons */}
               {tab === 0 && genesisNFTs && !hideGenesis && (
-                <Link underline="none" onClick={mintAllGenesis} sx={{ cursor: 'pointer', position: 'relative', zIndex: 5 }}>
-                  <Typography variant="h4">{isMobile ? 'Mint all' : 'Mint All Genesis'}</Typography>
-                </Link>
+                <Button size="small" onClick={mintAllGenesis} color="primary" variant="text" sx={{ p: 0, '&:hover': { backgroundColor: 'transparent' } }}>
+                  {isMobile ? 'Mint all' : 'Mint All Genesis'}
+                </Button>
               )}
               {tab === 1 && winterNFTs && !hideWinter && (
-                <Link underline="none" onClick={mintAllWinter} sx={{ cursor: 'pointer', position: 'relative', zIndex: 5 }}>
-                  <Typography variant="h4">{isMobile ? 'Mint all' : 'Mint All Winter'}</Typography>
-                </Link>
+                <Button size="small" onClick={mintAllWinter} color="primary" variant="text" sx={{ p: 0, '&:hover': { backgroundColor: 'transparent' } }}>
+                  {isMobile ? 'Mint all' : 'Mint All Winter'}
+                </Button>
               )}
             </Stack>
             {/* Zero state when not logged in */}

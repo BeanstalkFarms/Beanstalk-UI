@@ -131,11 +131,6 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
       onClose={handleClose}
       aria-labelledby="customized-dialog-title"
       open={open}
-      PaperProps={{
-        sx: {
-          minWidth: '400px'
-        }
-      }}
       transitionDuration={0}
       TransitionProps={{}}
     >

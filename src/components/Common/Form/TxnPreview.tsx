@@ -79,7 +79,6 @@ const TxnStep : React.FC<{
   highlighted,
 }) => {
   let action;
-  console.log('ACTION TYPE', type);
   switch (type) {
     /// SWAP
     case ActionType.SWAP:
