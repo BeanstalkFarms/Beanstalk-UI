@@ -1,24 +1,20 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src",
-    "target": "es2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
+    "target": "ESNext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "types": ["vite/client"],
+    "allowJs": false,
+    "skipLibCheck": false,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "esModuleInterop": true,
+    "noFallthroughCasesInSwitch": true,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "allowSyntheticDefaultImports": true,
-    "noFallthroughCasesInSwitch": true,
+    "noEmit": true,
     "jsx": "react-jsx",
     "downlevelIteration": true,
     "incremental": true
@@ -27,10 +23,6 @@
     "src"
   ],
   "exclude": [
-    "src/components/v1/**/*",
-    "src/state/v1/**/*",
-    "src/util/v1/**/*",
-    "src/constants/v1/**/*",
     "src/generated/**/*"
   ]
 }

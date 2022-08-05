@@ -35,7 +35,6 @@
     "react-number-format": "^4.9.3",
     "react-redux": "^7.2.2",
     "react-router-dom": "6",
-    "react-scripts": "^4.0.3",
     "react-spring": "^9.4.4",
     "typescript": "^4.1.2",
     "wagmi": "^0.4.4",
@@ -76,6 +75,7 @@
     "@typescript-eslint/parser": "4.13.0",
     "@visx/gradient": "^2.10.0",
     "@visx/mock-data": "^2.1.2",
+    "@vitejs/plugin-react": "^2.0.0",
     "babel-plugin-import": "^1.13.5",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "circular-dependency-plugin": "^5.2.2",
@@ -97,6 +97,7 @@
     "react-app-rewired": "^2.2.1",
     "react-error-overlay": "6.0.9",
     "typechain": "^8.0.0",
+    "vite": "^3.0.4",
     "webpack-cli": "^4.9.2"
   },
   "resolutions": {
@@ -106,11 +107,12 @@
     "@types/react-dom": "17.0.17"
   },
   "scripts": {
-    "start": "node --max_old_space_size=4096 node_modules/.bin/react-app-rewired start",
+    "start": "vite",
     "clean": "rm -rf ./src/generated && echo \"Cleaned src/generated.\"",
-    "build": "yarn generate && node --optimize_for_size --max_old_space_size=8192 node_modules/.bin/react-app-rewired build",
+    "build": "yarn generate && tsc && vite build",
     "build-netlify": "REACT_APP_NAME=$npm_package_name REACT_APP_VERSION=$npm_package_version REACT_APP_HOST='netlify' REACT_APP_NETLIFY_CONTEXT=$CONTEXT REACT_APP_NETLIFY_BUILD_ID=$BUILD_ID REACT_APP_GIT_COMMIT_REF=$COMMIT_REF yarn build",
     "build-fleek": "REACT_APP_NAME=$npm_package_name REACT_APP_VERSION=$npm_package_version REACT_APP_HOST='fleek' REACT_APP_GIT_COMMIT_REF=$(git rev-parse HEAD) yarn build",
+    "serve": "vite preview",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "test": "react-scripts test",
     "format": "prettier --write \"**/*.{ts,tsx,json,md,js}\"",
