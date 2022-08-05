@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Accordion, AccordionDetails, Alert, Box, Divider, Stack } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import { Token } from 'classes';
+import { Token } from '~/classes';
 import { SEEDS, STALK } from '~/constants/tokens';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import {
@@ -22,7 +22,7 @@ import { displayFullBN, parseError, toStringBaseUnitBN } from '~/util/index';
 import TransactionToast from 'components/Common/TxnToast';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import useFarmerSiloBalances from '~/hooks/useFarmerSiloBalances';
-import { ERC20Token } from 'classes/Token';
+import { ERC20Token } from '~/classes/Token';
 import { BeanstalkReplanted } from '~/generated/index';
 import { useSelector } from 'react-redux';
 import { AppState } from '~/state';

@@ -1,6 +1,5 @@
 import { Alert, Box, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
   FormTokenState,
   SettingInput, SmartSubmitButton, TokenAdornment, TokenInputField,
@@ -21,6 +20,7 @@ import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import TxnAccordion from 'components/Common/TxnAccordion';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import useChainId from '~/hooks/useChain';
 import useChainConstant from '~/hooks/useChainConstant';
 import useFarmerBalances from '~/hooks/useFarmerBalances';

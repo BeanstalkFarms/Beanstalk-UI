@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Card, Stack, Tab, Tabs } from '@mui/material';
-import { Pool } from 'classes';
-import { ERC20Token } from 'classes/Token';
+import { Pool } from '~/classes';
+import { ERC20Token } from '~/classes/Token';
 import { FarmerSiloBalance } from '~/state/farmer/silo';
 import useTabs from '~/hooks/display/useTabs';
 import BadgeTab from 'components/Common/BadgeTab';

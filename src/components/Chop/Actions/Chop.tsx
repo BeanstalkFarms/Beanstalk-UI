@@ -1,6 +1,5 @@
 import { Accordion, AccordionDetails, Box, CircularProgress, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
   FormState,
   SmartSubmitButton,
@@ -20,6 +19,7 @@ import { BeanstalkPalette } from 'components/App/muiTheme';
 import TransactionToast from 'components/Common/TxnToast';
 import DestinationField from 'components/Common/Form/DestinationField';
 import { useSelector } from 'react-redux';
+import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import { BeanstalkReplanted } from '~/generated/index';
 import useToggle from '~/hooks/display/useToggle';
 import { useBeanstalkContract } from '~/hooks/useContract';

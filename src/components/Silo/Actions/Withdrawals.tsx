@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Token } from 'classes';
+import { Token } from '~/classes';
 import BigNumber from 'bignumber.js';
 import { useAccount } from 'wagmi';
 import { Typography } from '@mui/material';

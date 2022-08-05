@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
-import { Token } from 'classes';
+import { Token } from '~/classes';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useProvider } from 'wagmi';
@@ -21,8 +21,8 @@ import TransactionToast from 'components/Common/TxnToast';
 import { BeanstalkReplanted } from '~/generated/index';
 import { QuoteHandler } from '~/hooks/useQuote';
 import { ZERO_BN } from '~/constants/index';
-import { ERC20Token, NativeToken } from 'classes/Token';
-import Pool from 'classes/Pool';
+import { ERC20Token, NativeToken } from '~/classes/Token';
+import Pool from '~/classes/Pool';
 import SmartSubmitButton from 'components/Common/Form/SmartSubmitButton';
 import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import useGetChainToken from '~/hooks/useGetChainToken';

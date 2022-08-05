@@ -1,4 +1,4 @@
-import { Token } from 'classes';
+import { Token } from '~/classes';
 import BigNumber from 'bignumber.js';
 import { defaultAbiCoder } from 'ethers/lib/utils';
 import { DepositCrate } from '~/state/farmer/silo';

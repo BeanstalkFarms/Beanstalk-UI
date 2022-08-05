@@ -1,7 +1,7 @@
 import { Box, CircularProgress, Stack, Tooltip, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { Token } from 'classes';
 import React from 'react';
+import { Token } from '~/classes';
 import { displayFullBN, displayUSD } from '~/util/index';
 import TokenIcon from '../TokenIcon';
 import OutputField from './OutputField';

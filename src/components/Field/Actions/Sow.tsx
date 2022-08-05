@@ -1,6 +1,6 @@
 import { Accordion, AccordionDetails, Alert, Box, Divider, Link, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import Token, { ERC20Token, NativeToken } from 'classes/Token';
+import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import {
   FormState,
   SettingInput,

@@ -1,5 +1,5 @@
 import React from 'react';
-import Token from 'classes/Token';
+import Token from '~/classes/Token';
 
 const TokenIcon : React.FC<{
   token: Token;

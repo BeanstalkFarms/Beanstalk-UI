@@ -1,6 +1,6 @@
 import { createAction } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
-import { Token } from 'classes';
+import { Token } from '~/classes';
 
 export type UpdateAllowancePayload = {
   contract: string;

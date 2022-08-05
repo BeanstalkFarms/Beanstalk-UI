@@ -1,4 +1,4 @@
-import { Token } from 'classes';
+import { Token } from '~/classes';
 import { FormState } from 'components/Common/Form';
 // import { Action, ActionType } from '~/util/Actions';
 import BigNumber from 'bignumber.js';

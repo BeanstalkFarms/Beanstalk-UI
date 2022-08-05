@@ -1,5 +1,4 @@
 import { Stack } from '@mui/material';
-import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import {
   FormApprovingState, FormTokenState,
   SettingInput,
@@ -14,6 +13,7 @@ import { Form, Formik, FormikProps } from 'formik';
 import React, { useCallback, useMemo, useState } from 'react';
 import TokenInputField from 'components/Common/Form/TokenInputField';
 import DestinationField from 'components/Common/Form/DestinationField';
+import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import { BeanstalkReplanted } from '~/generated/index';
 import { ZERO_BN } from '~/constants/index';
 import { BEAN, DAI, ETH, USDC, USDT, WETH } from '~/constants/tokens';

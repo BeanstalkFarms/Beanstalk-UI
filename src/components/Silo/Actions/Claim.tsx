@@ -4,13 +4,13 @@ import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useProvider } from 'wagmi';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import { Token } from 'classes';
+import { Token } from '~/classes';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import { FarmerSiloBalance } from '~/state/farmer/silo';
 import { ActionType } from '~/util/Actions';
 import usePools from '~/hooks/usePools';
-import { ERC20Token } from 'classes/Token';
+import { ERC20Token } from '~/classes/Token';
 import {
   FormTokenState,
   TxnPreview,

@@ -1,4 +1,4 @@
-import { CurveMetaPool } from 'classes/Pool';
+import { CurveMetaPool } from '~/classes/Pool';
 import { SupportedChainId } from '~/constants/chains';
 
 import curveLogo from 'img/dexes/curve-logo.svg';

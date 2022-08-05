@@ -8,8 +8,8 @@ import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary
 import { FormState, SettingInput, SmartSubmitButton, TxnSettings } from 'components/Common/Form';
 import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
 import TxnPreview from 'components/Common/Form/TxnPreview';
-import Token, { ERC20Token, NativeToken } from 'classes/Token';
-import Pool from 'classes/Pool';
+import Token, { ERC20Token, NativeToken } from '~/classes/Token';
+import Pool from '~/classes/Pool';
 import TxnSeparator from 'components/Common/Form/TxnSeparator';
 import PillRow from 'components/Common/Form/PillRow';
 import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';

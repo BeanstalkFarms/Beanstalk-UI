@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Button, Card, Divider, Grid, Stack, Tooltip, Typography } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Link } from 'react-router-dom';
-import { Pool, Token } from 'classes';
+import { Pool, Token } from '~/classes';
 import { AppState } from '~/state';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BEAN, BEAN_CRV3_LP, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';

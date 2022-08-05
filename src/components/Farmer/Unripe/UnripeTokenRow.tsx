@@ -6,8 +6,8 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 import greenBeanIcon from 'img/tokens/bean-logo-circled.svg';
 import { useTheme } from '@mui/material/styles';
-import { Token } from 'classes';
 import BigNumber from 'bignumber.js';
+import { Token } from '~/classes';
 import { displayFullBN } from '../../../util';
 
 const UnripeTokenRow: React.FC<{

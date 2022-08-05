@@ -1,5 +1,5 @@
 import { Accordion, AccordionDetails, Box, Stack, Typography } from '@mui/material';
-import Token, { ERC20Token, NativeToken } from 'classes/Token';
+import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import {
   FormState,
   SettingInput, SlippageSettingsFragment, SmartSubmitButton, TokenOutputField,

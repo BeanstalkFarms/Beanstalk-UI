@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import Token from 'classes/Token';
+import Token from '~/classes/Token';
 import { ZERO_BN } from '~/constants/index';
 import { AppState } from '~/state';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
-import Token from 'classes/Token';
+import Token from '~/classes/Token';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import { displayFullBN, displayTokenAmount } from '~/util/Tokens';
 import copy from '~/constants/copy';
