@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, Divider, Stack } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import beanIcon from 'img/tokens/bean-logo-circled.svg';
-import stalkIcon from 'img/beanstalk/stalk-icon.svg';
-import seedIcon from 'img/beanstalk/seed-icon.svg';
+import beanIcon from '~/img/tokens/bean-logo-circled.svg';
+import stalkIcon from '~/img/beanstalk/stalk-icon.svg';
+import seedIcon from '~/img/beanstalk/seed-icon.svg';
 import { NEW_BN } from '~/constants/index';
 import { FarmerSiloRewards } from '~/state/farmer/silo';
 import RewardItem from './RewardItem';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { CircularProgress, CircularProgressProps, Stack } from '@mui/material';
-import beanCircleIcon from 'img/tokens/bean-logo-circled.svg';
+import beanCircleIcon from '~/img/tokens/bean-logo-circled.svg';
 
 const PROGRESS_THICKNESS = 2;
 const PROGRESS_GAP = 3.5;

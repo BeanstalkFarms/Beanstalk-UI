@@ -1,8 +1,8 @@
 // FIXME: rename
 import { Connector } from 'wagmi';
-import metamaskIcon from 'img/wallets/metamask-logo.png';
-import walletConnectIcon from 'img/wallets/walletconnect-logo.svg';
-import coinbaseWalletIcon from 'img/wallets/coinbase-wallet-logo.png';
+import metamaskIcon from '~/img/wallets/metamask-logo.png';
+import walletConnectIcon from '~/img/wallets/walletconnect-logo.svg';
+import coinbaseWalletIcon from '~/img/wallets/coinbase-wallet-logo.png';
 import { SupportedChainId } from './chains';
 
 export const CONNECTOR_LOGOS : { [key: string] : string } = {

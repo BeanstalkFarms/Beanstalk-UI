@@ -22,10 +22,10 @@ import { trimAddress } from '~/util/index';
 
 import useChainConstant from '~/hooks/useChainConstant';
 
-import balancesIcon from 'img/nav-icons/balances.svg';
-import historyIcon from 'img/nav-icons/history.svg';
-import etherscanIcon from 'img/nav-icons/etherscan.svg';
-import disconnectIcon from 'img/nav-icons/disconnect.svg';
+import balancesIcon from '~/img/nav-icons/balances.svg';
+import historyIcon from '~/img/nav-icons/history.svg';
+import etherscanIcon from '~/img/nav-icons/etherscan.svg';
+import disconnectIcon from '~/img/nav-icons/disconnect.svg';
 import useAnchor from '~/hooks/display/useAnchor';
 import useToggle from '~/hooks/display/useToggle';
 import useAccount from '~/hooks/ledger/useAccount';

@@ -1,7 +1,7 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 import { Stack } from '@mui/material';
-import logo from 'img/tokens/bean-logo.svg';
+import logo from '~/img/tokens/bean-logo.svg';
 import { Token } from '~/classes';
 import useSiloTokenToFiat from '~/hooks/currency/useSiloTokenToFiat';
 import useSetting from '~/hooks/useSetting';

@@ -7,7 +7,7 @@ import { PodOrder } from '~/state/farmer/market';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BEAN, PODS } from '~/constants/tokens';
 import FarmerChip from 'components/Common/FarmerChip';
-import podOrderIcon from 'img/beanstalk/pod-order-icon.svg';
+import podOrderIcon from '~/img/beanstalk/pod-order-icon.svg';
 import StatHorizontal from 'components/Common/StatHorizontal';
 import { displayBN, displayFullBN } from '../../../util';
 import { IconSize } from '../../App/muiTheme';

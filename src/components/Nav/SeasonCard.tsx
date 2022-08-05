@@ -1,8 +1,8 @@
 import React from 'react';
 import { Stack, Typography, Box, Grid } from '@mui/material';
-import rainySeasonIcon from 'img/beanstalk/sun/rainy-season.svg';
+import rainySeasonIcon from '~/img/beanstalk/sun/rainy-season.svg';
 import BigNumber from 'bignumber.js';
-import drySeasonIcon from 'img/beanstalk/sun/dry-season.svg';
+import drySeasonIcon from '~/img/beanstalk/sun/dry-season.svg';
 import { ZERO_BN } from '~/constants/index';
 import { displayBN } from '../../util';
 import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';

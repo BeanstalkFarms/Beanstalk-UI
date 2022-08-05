@@ -1,9 +1,9 @@
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import BigNumber from 'bignumber.js';
-import fertActiveImage from 'img/tokens/fert-logo-active.svg';
-import fertUnusedImage from 'img/tokens/fert-logo-unused.svg';
-import fertUsedImage from 'img/tokens/fert-logo-used.svg';
+import fertActiveImage from '~/img/tokens/fert-logo-active.svg';
+import fertUnusedImage from '~/img/tokens/fert-logo-unused.svg';
+import fertUsedImage from '~/img/tokens/fert-logo-used.svg';
 import React from 'react';
 import { BeanstalkPalette } from '../App/muiTheme';
 import './FertilizerImage.css';

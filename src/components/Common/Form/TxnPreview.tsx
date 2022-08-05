@@ -4,7 +4,7 @@ import groupBy from 'lodash/groupBy';
 import TokenIcon from 'components/Common/TokenIcon';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import { FERTILIZER_ICONS } from 'components/Barn/FertilizerImage';
-import siloIcon from 'img/beanstalk/silo-icon.svg';
+import siloIcon from '~/img/beanstalk/silo-icon.svg';
 import Token from '~/classes/Token';
 import {
   Action,

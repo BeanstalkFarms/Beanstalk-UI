@@ -1,5 +1,5 @@
 import React from 'react';
-import forecast from 'img/beanstalk/forecast-banner.svg';
+import forecast from '~/img/beanstalk/forecast-banner.svg';
 import { Link as RouterLink } from 'react-router-dom';
 import { Button, Card, Stack, Typography } from '@mui/material';
 
