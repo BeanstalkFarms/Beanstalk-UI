@@ -88,7 +88,7 @@
     "eslint-plugin-unused-imports": "^2.0.0",
     "husky": "^8.0.0",
     "lint-staged": "^13.0.3",
-    "netlify-cli": "^10.10.0",
+    "netlify-cli": "^10.5.1",
     "prettier": "^2.3.0",
     "rollup-plugin-analyzer": "^4.0.0",
     "typechain": "^8.0.0",
@@ -100,7 +100,7 @@
     "@types/react-dom": "17.0.17"
   },
   "scripts": {
-    "start": "vite --port 3000",
+    "start": "vite --port 4173",
     "dev": "netlify dev --targetPort 4173",
     "serve": "vite preview",
     "build": "yarn generate && tsc && vite build",
