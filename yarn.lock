@@ -10269,7 +10269,6 @@ __metadata:
     babel-plugin-transform-remove-console: ^6.9.4
     bignumber.js: ^9.0.1
     circular-dependency-plugin: ^5.2.2
-    customize-cra: ^1.0.0
     d3-time-format: ^4.1.0
     eslint: ^7.32.0
     eslint-config-airbnb: 18.2.1
@@ -10291,7 +10290,6 @@ __metadata:
     netlify-cli: ^10.10.0
     prettier: ^2.3.0
     react: ^17.0.2
-    react-app-rewired: ^2.2.1
     react-dom: ^17.0.2
     react-error-overlay: 6.0.9
     react-hot-toast: ^2.2.0
@@ -10301,6 +10299,7 @@ __metadata:
     react-redux: ^7.2.2
     react-router-dom: 6
     react-spring: ^9.4.4
+    rollup-plugin-analyzer: ^4.0.0
     typechain: ^8.0.0
     typescript: ^4.1.2
     vite: ^3.0.4
@@ -12405,15 +12404,6 @@ __metadata:
   dependencies:
     array-find-index: ^1.0.1
   checksum: 1f59fe10b5339b54b1a1eee110022f663f3495cf7cf2f480686e89edc7fa8bfe42dbab4b54f85034bc8b092a76cc7becbc2dad4f9adad332ab5831bec39ad540
-  languageName: node
-  linkType: hard
-
-"customize-cra@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "customize-cra@npm:1.0.0"
-  dependencies:
-    lodash.flow: ^3.5.0
-  checksum: b38c48a607efc2321e6f2f12a3b53f3497b2f9b0008b48242524a92a1f26f8ae50bd73c97526e7d89c32b51f53711948e0da8f7e3618c9875087227a11a5feeb
   languageName: node
   linkType: hard
 
@@ -19166,13 +19156,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.flow@npm:^3.5.0":
-  version: 3.5.0
-  resolution: "lodash.flow@npm:3.5.0"
-  checksum: a9a62ad344e3c5a1f42bc121da20f64dd855aaafecee24b1db640f29b88bd165d81c37ff7e380a7191de6f70b26f5918abcebbee8396624f78f3618a0b18634c
-  languageName: node
-  linkType: hard
-
 "lodash.get@npm:^4":
   version: 4.4.2
   resolution: "lodash.get@npm:4.4.2"
@@ -22692,19 +22675,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-app-rewired@npm:^2.2.1":
-  version: 2.2.1
-  resolution: "react-app-rewired@npm:2.2.1"
-  dependencies:
-    semver: ^5.6.0
-  peerDependencies:
-    react-scripts: ">=2.1.3"
-  bin:
-    react-app-rewired: bin/index.js
-  checksum: 0b330c2b46413dc5fbb68e68c07704830397b1cfc8335f65d8f856bfbb6c4d8259fad049fc2a117c18794f321e726b844649266f42ff4c3fa044f00be48c1850
-  languageName: node
-  linkType: hard
-
 "react-docgen-typescript-plugin@npm:^1.0.0":
   version: 1.0.1
   resolution: "react-docgen-typescript-plugin@npm:1.0.1"
@@ -23829,6 +23799,13 @@ __metadata:
   bin:
     rlp: bin/rlp
   checksum: 3db4dfe5c793f40ac7e0be689a1f75d05e6f2ca0c66189aeb62adab8c436b857ab4420a419251ee60370d41d957a55698fc5e23ab1e1b41715f33217bc4bb558
+  languageName: node
+  linkType: hard
+
+"rollup-plugin-analyzer@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "rollup-plugin-analyzer@npm:4.0.0"
+  checksum: 72f794f79efe4f620674a48949be9f64dc3cbf601c52ff90ae7cbeaacb604b86bb34321695d0f8f320e5c0b47880022849d92c51d231e1b32c6757a2c627be5e
   languageName: node
   linkType: hard
 

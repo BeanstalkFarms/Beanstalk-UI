@@ -1,12 +1,11 @@
 import { useCallback, useEffect } from 'react';
-import fetch from 'node-fetch';
 import { useDispatch } from 'react-redux';
-import useAppFlag from '~/hooks/display/useAppFlag';
-import useTimedRefresh from '~/hooks/useTimedRefresh';
 import { useHotkeys } from 'react-hotkeys-hook';
-import useSetting from '~/hooks/useSetting';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import useAppFlag from '~/hooks/display/useAppFlag';
+import useTimedRefresh from '~/hooks/useTimedRefresh';
+import useSetting from '~/hooks/useSetting';
 import { setAlmanacView, setEthPrices, updateSetting } from './actions';
 
 export const useEthPrices = () => {

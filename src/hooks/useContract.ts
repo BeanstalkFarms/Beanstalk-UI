@@ -1,6 +1,24 @@
 import { Contract, ContractInterface, ethers } from 'ethers';
 import { useCallback, useMemo } from 'react';
 import { useProvider, useContract as useWagmiContract } from 'wagmi';
+
+import BEANSTALK_REPLANTED_ABI from '~/constants/abi/Beanstalk/BeanstalkReplanted.json';
+import BEANSTALK_PRICE_REPLANTED_ABI from '~/constants/abi/Beanstalk/BeanstalkPriceReplanted.json';
+import BEANSTALK_FERTILIZER_ABI from '~/constants/abi/Beanstalk/BeanstalkFertilizer.json';
+import ERC20_ABI from '~/constants/abi/ERC20.json';
+import BEANFT_GENESIS_ABI from '~/constants/abi/BeaNFT/BeaNFTGenesis.json';
+import BEANFT_WINTER_ABI from '~/constants/abi/BeaNFT/BeaNFTWinter.json';
+import useChainConstant from './useChainConstant';
+import { SupportedChainId } from '~/constants/chains';
+import {
+  BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES,
+  BEANSTALK_ADDRESSES,
+  BEANSTALK_FERTILIZER_ADDRESSES,
+  BEANSTALK_PRICE_ADDRESSES,
+} from '~/constants/addresses';
+import { ChainConstant } from '~/constants/index';
+import { getChainConstant } from '~/util/Chain';
+import { useSigner } from '~/hooks/ledger/useSigner';
 import {
   Beanstalk,
   BeaNFTGenesis,
@@ -9,29 +27,6 @@ import {
   BeanstalkPrice,
   ERC20,
 } from '~/generated/index';
-import { useSigner } from '~/hooks/ledger/useSigner';
-import { getChainConstant } from '~/util/Chain';
-import { ChainConstant } from '~/constants/index';
-import {
-  BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES,
-  BEANSTALK_ADDRESSES,
-  BEANSTALK_FERTILIZER_ADDRESSES,
-  BEANSTALK_PRICE_ADDRESSES,
-} from '~/constants/addresses';
-import { SupportedChainId } from '~/constants/chains';
-import useChainConstant from './useChainConstant';
-
-// -------------------------------------------------
-
-const BEANSTALK_ABI = require('constants/abi/Beanstalk/Beanstalk.json');
-const BEANSTALK_REPLANTED_ABI = require('constants/abi/Beanstalk/BeanstalkReplanted.json');
-const BEANSTALK_PRICE_ABI = require('constants/abi/Beanstalk/BeanstalkPrice.json');
-const BEANSTALK_PRICE_V0_ABI = require('constants/abi/Beanstalk/BeanstalkPriceV0.json');
-const BEANSTALK_PRICE_REPLANTED_ABI = require('constants/abi/Beanstalk/BeanstalkPriceReplanted.json');
-const BEANSTALK_FERTILIZER_ABI = require('constants/abi/Beanstalk/BeanstalkFertilizer.json');
-const ERC20_ABI = require('constants/abi/ERC20.json');
-const BEANFT_GENESIS_ABI = require('constants/abi/BeaNFT/BeaNFTGenesis.json');
-const BEANFT_WINTER_ABI = require('constants/abi/BeaNFT/BeaNFTWinter.json');
 
 export type AddressOrAddressMap = string | ChainConstant<string>;
 export type AbiOrAbiMap = ContractInterface | ChainConstant<ContractInterface>;

@@ -10,17 +10,17 @@ import {
   Link,
   CircularProgress
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { LoadingButton } from '@mui/lab';
+import toast from 'react-hot-toast';
 import unripeBeanIcon from '~/img/tokens/unripe-bean-logo-circled.svg';
 import brownLPIcon from '~/img/tokens/unripe-lp-logo-circled.svg';
-import { useTheme } from '@mui/material/styles';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
 import pickImage from '~/img/pick.png';
 import DescriptionButton from '~/components/Common/DescriptionButton';
-import { PickMerkleResponse } from '~/functions/pick/pick';
-import { LoadingButton } from '@mui/lab';
+import type { PickMerkleResponse } from '~/functions/pick/pick';
 import TransactionToast from '~/components/Common/TxnToast';
-import toast from 'react-hot-toast';
 import Token from '~/classes/Token';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';

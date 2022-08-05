@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Box, Card, Container, Link, Stack, Tab, Tabs, Typography, useMediaQuery, } from '@mui/material';
-import fetch from 'node-fetch';
 import { useTheme } from '@mui/material/styles';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import useTabs from '~/hooks/display/useTabs';
