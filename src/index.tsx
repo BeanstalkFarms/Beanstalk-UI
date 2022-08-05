@@ -23,6 +23,20 @@ declare module '@mui/styles/defaultTheme' {
   interface DefaultTheme extends Theme {}
 }
 
+if (import.meta.env.DEV) {
+  const showErrorOverlay = (err: any) => {
+    // must be within function call because that's when the element is defined for sure.
+    const ErrorOverlay = customElements.get('vite-error-overlay');
+    // don't open outside vite environment
+    if (!ErrorOverlay) { return; }
+    console.log(err);
+    const overlay = new ErrorOverlay(err);
+    document.body.appendChild(overlay);
+  };
+  window.addEventListener('error', ({ error }) => showErrorOverlay(error));
+  window.addEventListener('unhandledrejection', ({ reason }) => showErrorOverlay(reason));
+}
+
 ReactDOM.render(
   <React.StrictMode>
     <Wrapper>

@@ -13,6 +13,7 @@ import LiquidityOverTime from '~/components/Forecast/LiquidityOverTime';
 import PodRate from '~/components/Analytics/Field/PodRate';
 import Price from '~/components/Analytics/Bean/Price';
 import { AppState } from '~/state';
+import LiquidityByState from '~/components/Forecast/LiquidityByState';
 
 const ForecastPage: React.FC = () => {
   // Data
@@ -35,7 +36,7 @@ const ForecastPage: React.FC = () => {
       <LiquidityOverTime
         balances={balances}
       />
-      {/* <LiquidityByState /> */}
+      <LiquidityByState />
     </>
   );
 
