@@ -1,6 +1,4 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
-import { saveState } from 'util/State';
-import throttle from 'lodash/throttle';
 
 import app from './app/reducer';
 import _bean from './bean/reducer';
@@ -26,9 +24,9 @@ const store = configureStore({
   preloadedState: {}
 });
 
-store.subscribe(throttle(() => {
-  saveState(store.getState());
-}, 1000));
+// store.subscribe(throttle(() => {
+//   saveState(store.getState());
+// }, 1000));
 
 export default store;
 

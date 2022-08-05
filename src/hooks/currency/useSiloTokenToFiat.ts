@@ -41,7 +41,7 @@ const useSiloTokenToFiat = () => {
     /// For Unripe assets
     if (_token === urBean) {
       const choppedBeans = _chop
-        ? _amount.times(unripe.penalties[urBean.address])
+        ? _amount.times(unripe.chopRates[urBean.address])
         : _amount;
       return _denomination === 'bdv' ? choppedBeans : choppedBeans.times(price);
     }
@@ -55,7 +55,7 @@ const useSiloTokenToFiat = () => {
     if (_token === urBeanCrv3) {
       _poolAddress = BeanCrv3.address;
       _amountLP    = _chop 
-        ? _amount.times(unripe.penalties[urBeanCrv3.address]) 
+        ? _amount.times(unripe.chopRates[urBeanCrv3.address]) 
         : _amount;
     }
 
@@ -65,7 +65,7 @@ const useSiloTokenToFiat = () => {
 
     const usd = _amountLP.div(pool.supply).times(pool.liquidity); // usd value; liquidity
     return _denomination === 'bdv' ? usd.div(price) : usd;
-  }, [Bean, BeanCrv3.address, beanPools, price, unripe.penalties, urBean, urBeanCrv3]);
+  }, [Bean, BeanCrv3.address, beanPools, price, unripe.chopRates, urBean, urBeanCrv3]);
 };
 
 export default useSiloTokenToFiat;

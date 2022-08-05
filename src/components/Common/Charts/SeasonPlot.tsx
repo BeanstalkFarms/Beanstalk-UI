@@ -16,11 +16,6 @@ export type SeasonPlotBaseProps = {
   /** */
   document: DocumentNode;
   /**
-   * Height applied to the chart range. Can be a fixed
-   * pixel number or a percent if the parent element has a constrained height.
-   */
-  height?: number | string;
-  /**
    * The value displayed when the chart isn't being hovered.
    * If not provided, uses the `value` of the last data point if available,
    * otherwise returns 0.
@@ -32,6 +27,11 @@ export type SeasonPlotBaseProps = {
    * otherwise returns 0.
    */
   defaultSeason?: number;
+  /**
+   * Height applied to the chart range. Can be a fixed
+   * pixel number or a percent if the parent element has a constrained height.
+   */
+  height?: number | string;
 }
 type SeasonPlotFinalProps<T extends MinimumViableSnapshotQuery> = (
   SeasonPlotBaseProps
@@ -49,17 +49,18 @@ type SeasonPlotFinalProps<T extends MinimumViableSnapshotQuery> = (
   & { LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP'> }
 )
 
+/**
+ * 
+ */
 function SeasonPlot<T extends MinimumViableSnapshotQuery>({
-  // Query
   document,
-  height = '175px',
   defaultValue: _defaultValue,
   defaultSeason: _defaultSeason,
   getValue,
   formatValue = defaultValueFormatter,
-  //
-  StatProps: statProps, // renamed to prevent type collision
-  LineChartProps: lineChartProps,
+  height = '175px',
+  StatProps: statProps,           // renamed to prevent type collision
+  LineChartProps: lineChartProps, // renamed to prevent type collision
 }: SeasonPlotFinalProps<T>) {
   /// Selected state
   const [tabState, setTimeTab] = useState<TimeTabState>([SeasonAggregation.HOUR, SeasonRange.WEEK]);

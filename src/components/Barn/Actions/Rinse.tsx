@@ -48,7 +48,7 @@ const RinseForm : React.FC<
   const isValid = amountSprouts?.gt(0);
 
   return (
-    <Form noValidate>
+    <Form autoComplete="off" noValidate>
       <Stack gap={1}>
         {/* Form Contents */}
         <Stack gap={1}>

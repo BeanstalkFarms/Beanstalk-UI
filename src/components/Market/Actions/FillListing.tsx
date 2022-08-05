@@ -7,7 +7,7 @@ import {
   TokenSelectDialog, TxnPreview, TxnSeparator,
   TxnSettings
 } from 'components/Common/Form';
-import { SupportedChainId, ZERO_BN } from 'constants/index';
+import { ZERO_BN } from 'constants/index';
 import { BEAN, ETH, PODS, WETH } from 'constants/tokens';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useChainId from 'hooks/useChain';
@@ -32,7 +32,6 @@ import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary
 import BigNumber from 'bignumber.js';
 import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
 import TransactionToast from 'components/Common/TxnToast';
-import { useFetchBeanstalkField } from 'state/beanstalk/field/updater';
 import { useFetchFarmerField } from 'state/farmer/field/updater';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import toast from 'react-hot-toast';
@@ -81,7 +80,6 @@ const FillListingForm : React.FC<
   );
 
   /// Derived
-  const isMainnet = chainId === SupportedChainId.MAINNET;
   const tokenIn   = values.tokens[0].token;
   const amountIn  = values.tokens[0].amount;
   const tokenOut  = Bean;
@@ -286,8 +284,8 @@ const FillListing : React.FC<{
   const farm      = useMemo(() => new Farm(provider), [provider]);
 
   /// Data
+  // const [refetchBeanstalkField] = useFetchBeanstalkField();
   const balances                = useFarmerBalances();
-  const [refetchBeanstalkField] = useFetchBeanstalkField();
   const [refetchFarmerField]    = useFetchFarmerField();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
 
@@ -313,12 +311,13 @@ const FillListing : React.FC<{
 
       if (_tokenIn === Eth) {
         steps.push(...[
-          farm.wrapEth(FarmToMode.INTERNAL),                // wrap ETH to WETH (internal)
-          ...farm.buyBeans(FarmFromMode.INTERNAL_TOLERANT)  // buy Beans using internal WETH
+          farm.wrapEth(FarmToMode.INTERNAL),       // wrap ETH to WETH (internal)
+          ...farm.buyBeans(FarmFromMode.INTERNAL)  // buy Beans using internal WETH (exact)
         ]);
       } else if (_tokenIn === Weth) {
         steps.push(
           ...farm.buyBeans(
+            /// Use INTERNAL, EXTERNAL, or INTERNAL_EXTERNAL to initiate the swap.
             optimizeFromMode(_amountIn, balances[Weth.address]),
           )
         );
@@ -345,8 +344,8 @@ const FillListing : React.FC<{
     let txToast;
     try {
       const formData    = values.tokens[0];
-      const inputToken  = formData.token;
-      const amountBeans = inputToken === Bean ? formData.amount : formData.amountOut;
+      const tokenIn     = formData.token;
+      const amountBeans = tokenIn === Bean ? formData.amount : formData.amountOut;
       if (!podListing) throw new Error('No pod listing.');
       if (!signer) throw new Error('Connect a wallet that can sign transactions first.');
       if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
@@ -354,19 +353,22 @@ const FillListing : React.FC<{
       
       const data : string[] = [];
       const amountPods = amountBeans.div(podListing.pricePerPod);
+      let finalFromMode : FarmFromMode;
       
       txToast = new TransactionToast({
         loading: `Buying ${displayTokenAmount(amountPods, PODS)} for ${displayTokenAmount(amountBeans, Bean)}...`,
         success: 'Fill successful.',
       });
       
-      /// Sow directly from BEAN
-      if (inputToken === Bean) {
-        // Nothing to do
+      /// Fill Listing directly from BEAN
+      if (tokenIn === Bean) {
+        // No swap occurs, so we know exactly how many beans are going in.
+        // We can select from INTERNAL, EXTERNAL, INTERNAL_EXTERNAL.
+        finalFromMode = optimizeFromMode(amountBeans, balances[Bean.address]);
       } 
       
       /// Swap to BEAN and buy
-      else {
+      else if (tokenIn === Eth || tokenIn === Weth) {
         // Require a quote
         if (!formData.steps || !formData.amountOut) throw new Error(`No quote available for ${formData.token.symbol}`);
 
@@ -375,18 +377,19 @@ const FillListing : React.FC<{
           values.settings.slippage / 100,
         );
         data.push(...encoded);
+
+        // At the end of the Swap step, the assets will be in our INTERNAL balance.
+        // The Swap decides where to route them from (see handleQuote).
+        finalFromMode = FarmFromMode.INTERNAL_TOLERANT;
+      } else {
+        throw new Error(`Filling a Listing via ${tokenIn.symbol} is not currently supported`);
       }
+
+      console.debug(`[FillListing] using FarmFromMode = ${finalFromMode}`, podListing);
       
       data.push(
         beanstalk.interface.encodeFunctionData('fillPodListing', [
           {
-            // account: string;
-            // index: BigNumberish;
-            // start: BigNumberish;
-            // amount: BigNumberish;
-            // pricePerPod: BigNumberish;
-            // maxHarvestableIndex: BigNumberish;
-            // mode: BigNumberish;
             account:  podListing.account,
             index:    Bean.stringify(podListing.index),
             start:    Bean.stringify(podListing.start),
@@ -396,7 +399,7 @@ const FillListing : React.FC<{
             mode:     podListing.mode,
           },
           Bean.stringify(amountBeans),
-          FarmFromMode.INTERNAL_EXTERNAL,
+          finalFromMode,
         ])
       );
 
@@ -430,7 +433,7 @@ const FillListing : React.FC<{
     } finally {
       formActions.setSubmitting(false);
     }
-  }, [Bean, beanstalk, podListing, signer, refetchFarmerBalances, refetchFarmerField]);
+  }, [Bean, podListing, signer, Eth, Weth, beanstalk, refetchFarmerField, refetchFarmerBalances, balances]);
 
   return (
     <Formik<FillListingFormValues>

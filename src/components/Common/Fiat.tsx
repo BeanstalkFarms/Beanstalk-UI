@@ -46,10 +46,14 @@ const Fiat : React.FC<{
     ? displayBN(value, allowNegative)
     : displayFullBN(value, 2, 2);
   return (
-    <Stack display="inline-flex" direction="row" alignItems="center" gap={0.25}>
+    <Stack display="inline-flex" direction="row" alignItems="center" sx={{ verticalAlign: 'top', position: 'relative', }}>
       {denomination === 'bdv' ? (
         <>
-          <img src={logo} alt="BEAN" style={{ height: 14 }} />
+          <img
+            src={logo}
+            alt="BEAN"
+            style={{ height: '1em', marginRight: '0.25em', display: 'inline', position: 'relative', top: 0, left: 0 }}
+          />
           <span>
             {displayValue}
           </span>

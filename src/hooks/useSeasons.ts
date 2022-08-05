@@ -43,7 +43,10 @@ export type MinimumViableSnapshotQuery = {
 export type SnapshotData<T extends MinimumViableSnapshotQuery> = T['seasons'][number]; 
 
 /**
- *
+ * Iteratively query entities that have a `season` entity.
+ * This allows for loading of full datasets when the user
+ * requests to see "all" data for a given chart.
+ * 
  * @param document an arbitrary graphql query document
  * @param range 
  * @returns QueryDocument

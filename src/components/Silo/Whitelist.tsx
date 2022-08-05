@@ -49,7 +49,7 @@ const Whitelist : React.FC<{
   ///
   const getBDV        = useBDV();
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
-  const chopPenalties = useSelector<AppState, AppState['_bean']['unripe']['penalties']>((state) => state._bean.unripe.penalties);
+  const chopPenalties = useSelector<AppState, AppState['_bean']['unripe']['chopRates']>((state) => state._bean.unripe.chopRates);
 
   return (
     <Card>
@@ -158,6 +158,9 @@ const Whitelist : React.FC<{
                           amount={beanstalkSilo.balances[token.address]?.deposited.amount}
                           truncate
                         />
+                        {isUnripe ? (
+                          <Typography display="inline" color={BeanstalkPalette.washedRed}>*</Typography>
+                        ) : null}
                       </Typography>
                     </Tooltip>
                   </Grid>

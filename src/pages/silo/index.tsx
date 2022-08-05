@@ -1,12 +1,11 @@
 import React, { useMemo } from 'react';
-import { Box, Button, Card, Container, Stack, Tooltip } from '@mui/material';
+import { Box, Button, Card, Container, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { AppState } from 'state';
 import Overview from 'components/Silo/Overview';
 import RewardsBar from 'components/Silo/RewardsBar';
 import Whitelist from 'components/Silo/Whitelist';
 import PageHeader from 'components/Common/PageHeader';
-import { SupportedChainId } from 'constants/index';
 import useWhitelist from 'hooks/useWhitelist';
 import usePools from 'hooks/usePools';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
@@ -70,20 +69,15 @@ const SiloPage : React.FC = () => {
               justifySelf={{ lg: 'flex-end', xs: 'auto' }}
               width={{ xs: '100%', lg: 'auto' }}
             >
-              <Tooltip title={chainId === SupportedChainId.MAINNET ? <>Claiming Silo rewards will be available upon Replant.</> : ''}>
-                <span>
-                  <Button
-                    disabled={chainId === SupportedChainId.MAINNET}
-                    size="medium"
-                    variant="contained"
-                    sx={{ width: { xs: '100%', lg: 'auto' } }}
-                    endIcon={<DropdownIcon open={false} />}
-                    onClick={show}
-                  >
-                    Claim Rewards
-                  </Button>
-                </span>
-              </Tooltip>
+              <Button
+                size="medium"
+                variant="contained"
+                sx={{ width: { xs: '100%', lg: 'auto' } }}
+                endIcon={<DropdownIcon open={false} />}
+                onClick={show}
+              >
+                Claim Rewards
+              </Button>
             </Box>
           </Stack>
         </Card>

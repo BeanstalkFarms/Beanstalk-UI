@@ -1,5 +1,4 @@
 import { useCallback, useEffect } from 'react';
-import { REPLANTED_CHAINS } from 'constants/index';
 import { useDispatch } from 'react-redux';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useChainId from 'hooks/useChain';
@@ -8,8 +7,8 @@ import useAccount from 'hooks/ledger/useAccount';
 import EventProcessor from 'lib/Beanstalk/EventProcessor';
 import useWhitelist from 'hooks/useWhitelist';
 import useSeason from 'hooks/useSeason';
-import useEventProcessor from 'hooks/useEventProcessor';
-import useEventParsingParams from 'hooks/ledger/useEventParsingParams';
+import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
+import { BeanstalkReplanted } from 'generated';
 import { EventCacheName } from '../events2';
 import useEvents, { GetQueryFilters } from '../events2/updater';
 import { updateFarmerField, resetFarmerField } from './actions';
@@ -19,18 +18,14 @@ export const useFetchFarmerField = () => {
   const dispatch  = useDispatch();
 
   /// Contracts
-  const beanstalk = useBeanstalkContract();
+  const beanstalk = useBeanstalkContract() as unknown as BeanstalkReplanted;
 
   /// Data
   const account   = useAccount();
-  const chainId   = useChainId();
   const blocks    = useBlocks();
   const whitelist = useWhitelist();
   const season    = useSeason();
-
-  /// v1
-  const eventParsingParameters  = useEventParsingParams();
-  const processFarmerEventsV1   = useEventProcessor();
+  const harvestableIndex = useHarvestableIndex();
 
   /// Events
   const getQueryFilters = useCallback<GetQueryFilters>((
@@ -68,36 +63,22 @@ export const useFetchFarmerField = () => {
   const initialized = (
     account
     && fetchFieldEvents
-    && eventParsingParameters
+    && harvestableIndex.gt(0) // initialized to 0
   );
 
   /// Handlers
   const fetch = useCallback(async () => {
     if (initialized) {
       const allEvents = await fetchFieldEvents();
-
       if (!allEvents) return;
 
-      if (REPLANTED_CHAINS.has(chainId)) {
-        const p = new EventProcessor(account, { season, whitelist });
-        p.ingestAll(allEvents);
+      const p = new EventProcessor(account, { season, whitelist });
+      p.ingestAll(allEvents);
 
-        // Update Field
-        dispatch(updateFarmerField(
-          p.parsePlots(eventParsingParameters.harvestableIndex)
-        ));
-      } else {
-        const results = processFarmerEventsV1(allEvents, eventParsingParameters);
-        
-        // TEMP:
-        // Hardcode this because the event process returns `beanDepositsBalance`, etc.
-        dispatch(updateFarmerField({
-          plots:  results.plots,
-          pods:   results.podBalance,
-          harvestablePlots: results.harvestablePlots,
-          harvestablePods:  results.harvestablePodBalance,
-        }));
-      }
+      // Update Field
+      dispatch(updateFarmerField(
+        p.parsePlots(harvestableIndex)
+      ));
     }
   }, [
     dispatch,
@@ -107,10 +88,7 @@ export const useFetchFarmerField = () => {
     season,
     whitelist,
     account,
-    // v1
-    chainId,
-    eventParsingParameters,
-    processFarmerEventsV1,
+    harvestableIndex
   ]);
   
   const clear = useCallback(() => {

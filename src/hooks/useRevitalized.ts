@@ -53,8 +53,8 @@ export default function useRevitalized() {
       deltaGrown1.times(BEAN_TO_SEEDS).div('10000')).plus(
       deltaGrown2.times(LP_TO_SEEDS).div('10000'));
 
-    console.debug('[useRevitalized] delta1 = ', `${delta1}`);
-    console.debug('[useRevitalized] delta2 = ', `${delta2}`);
+    // console.debug('[useRevitalized] delta1 = ', `${delta1}`);
+    // console.debug('[useRevitalized] delta2 = ', `${delta2}`);
     
     return {
       revitalizedStalk: stalk,

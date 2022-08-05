@@ -3,6 +3,7 @@ query AllPodOrders($first: Int) {
     first: $first,
     orderBy: createdAt,
     orderDirection: desc,
+    where: { status: "active" }
   ) {
     ...PodOrder
   }

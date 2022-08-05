@@ -21,9 +21,7 @@ import WalletButton from '../Connection/WalletButton';
 
 const CONTRACT_NAMES : { [address: string] : string } = {
   [BEANSTALK_ADDRESSES[SupportedChainId.MAINNET]]: 'Beanstalk',
-  [BEANSTALK_ADDRESSES[SupportedChainId.ROPSTEN]]: 'Beanstalk',
   [BEANSTALK_FERTILIZER_ADDRESSES[SupportedChainId.MAINNET]]: 'Beanstalk Fertilizer',
-  [BEANSTALK_FERTILIZER_ADDRESSES[SupportedChainId.ROPSTEN]]: 'Beanstalk Fertilizer',
 };
 
 /**
@@ -112,9 +110,9 @@ const SmartSubmitButton : React.FC<{
       txToast = new TransactionToast({
         loading: `Approving ${nextApprovalToken.symbol}...`,
         success: `Success. ${
-          CONTRACT_NAMES[nextApprovalToken.address]
-            ? `The ${CONTRACT_NAMES[nextApprovalToken.address]} contract`
-            : `Contract ${trimAddress(nextApprovalToken.address)}`
+          CONTRACT_NAMES[contract.address]
+            ? `The ${CONTRACT_NAMES[contract.address]} contract`
+            : `Contract ${trimAddress(contract.address)}`
         } can now transact with your ${nextApprovalToken.name}.`,
       });
       setFieldValue('approving', {

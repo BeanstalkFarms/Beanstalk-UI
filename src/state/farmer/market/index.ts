@@ -1,5 +1,4 @@
 import BigNumber from 'bignumber.js';
-import { ZERO_BN } from 'constants/index';
 import { BEAN } from 'constants/tokens';
 import { PodListingFragment, PodOrderFragment } from 'generated/graphql';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
@@ -27,7 +26,7 @@ export const castPodListing = (listing: PodListingFragment) : PodListing => {
     remainingAmount:      remainingAmount,
     maxHarvestableIndex:  toTokenUnitsBN(listing.maxHarvestableIndex, BEAN[1].decimals),
     pricePerPod:          toTokenUnitsBN(listing.pricePerPod, BEAN[1].decimals),
-    start:                ZERO_BN,
+    start:                toTokenUnitsBN(listing.start, BEAN[1].decimals),
     status:               listing.status as 'active' | 'filled',
     mode:                 listing.mode.toString() as FarmToMode, // FIXME: use numbers instead?
     // HACK: 'mode' is 'toWallet'

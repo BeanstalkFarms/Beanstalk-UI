@@ -27,8 +27,6 @@ if (process.env.NODE_ENV === 'development' && process.env.REACT_APP_OVERRIDE_FAR
           } catch (e) {
             console.error(e);
           }
-        } else {
-          console.error('Missing send on provider');
         }
       })();
     }, [

@@ -6,6 +6,7 @@ import { scaleTime, scaleLinear } from '@visx/scale';
 import { timeParse } from 'd3-time-format';
 import ALL_POOLS from 'constants/pools';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
+import { BeanstalkPalette } from 'components/App/muiTheme';
 import { SupportedChainId, TokenMap } from '../../../constants';
 import { BeanstalkSiloBalance } from '../../../state/beanstalk/silo';
 
@@ -107,7 +108,7 @@ const StackedAreaChart: React.FC<StackedAreasProps> = ({
                   key={`stack-${stack.key}`}
                   d={path(stack) || ''}
                   stroke="transparent"
-                  fill={`${ALL_POOLS[SupportedChainId.MAINNET][`${stack.key}`.toLowerCase()]?.color}`}
+                  fill={`${ALL_POOLS[SupportedChainId.MAINNET][`${stack.key}`.toLowerCase()]?.color || BeanstalkPalette.logoGreen}`}
                   onClick={() => {}}
                 />
               </>

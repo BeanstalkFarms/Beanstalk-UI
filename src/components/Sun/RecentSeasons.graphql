@@ -2,7 +2,7 @@ query Seasons {
   seasons(first: 24, orderBy: season, orderDirection: desc) {
     id
     season
-    twap
+    price
     deltaBeans
   }
   fields(first: 24, orderBy: season, orderDirection: desc) {

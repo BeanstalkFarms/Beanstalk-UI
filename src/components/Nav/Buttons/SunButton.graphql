@@ -6,7 +6,7 @@ query SunButton {
   ) {
     id
     season
-    twap
+    price
     deltaBeans
   }
   fields: fieldHourlySnapshots(

@@ -7,7 +7,7 @@ import {
   Box,
   Grid, Divider,
 } from '@mui/material';
-import { NEW_BN, ZERO_BN } from 'constants/index';
+import { NEW_BN, SupportedChainId, ZERO_BN } from 'constants/index';
 import useSeason from 'hooks/useSeason';
 import drySeasonIcon from 'img/beanstalk/sun/dry-season.svg';
 import rainySeasonIcon from 'img/beanstalk/sun/rainy-season.svg';
@@ -19,6 +19,7 @@ import { AppState } from 'state';
 import { SunButtonQuery, useSunButtonQuery } from 'generated/graphql';
 import { MaxBN, MinBN, toTokenUnitsBN } from 'util/index';
 import { BEAN } from 'constants/tokens';
+import useChainId from 'hooks/useChain';
 import FolderMenu from '../FolderMenu';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import SeasonCard from '../SeasonCard';
@@ -41,7 +42,7 @@ const castField = (data: SunButtonQuery['fields'][number]) => ({
 });
 const castSeason = (data: SunButtonQuery['seasons'][number]) => ({
   season:     new BigNumber(data.season),
-  twap:       new BigNumber(data.twap),
+  twap:       new BigNumber(data.price),
   deltaBeans: toTokenUnitsBN(data.deltaBeans, BEAN[1].decimals),
 });
 
@@ -51,6 +52,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   /// DATA
   const season    = useSeason();
   const beanPrice = usePrice();
+  const chainId   = useChainId();
   const awaiting  = useSelector<AppState, boolean>((state) => state._beanstalk.sun.sunrise.awaiting);
   const { data, loading } = useSunButtonQuery();
 
@@ -219,7 +221,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         })}
       </Stack>
       <Divider />
-      <SunriseButton />
+      {chainId === SupportedChainId.MAINNET ? null : <SunriseButton />}
     </Stack>
   );
 

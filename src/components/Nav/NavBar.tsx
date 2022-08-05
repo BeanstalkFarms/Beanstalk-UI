@@ -15,20 +15,17 @@ import ROUTES from './routes';
 import HoverMenu from './HoverMenu';
 
 const NavBar: React.FC<{}> = () => (
-      
   <AppBar
-      // Using position: sticky means that
-      // the main content region will always start
-      // below the header, regardless of height!
+    // Using position: sticky means that
+    // the main content region will always start
+    // below the header, regardless of height!
     className="navbar"
     sx={{
-        position: 'sticky',
-        backgroundColor: BeanstalkPalette.lightBlue,
-        borderBottom: `1px solid ${BeanstalkPalette.blue}`,
-        // height: '65px'
-        // pt: chainId === SupportedChainId.MAINNET ? 0.75 : 1
-      }}
-    >
+      position: 'sticky',
+      backgroundColor: BeanstalkPalette.lightBlue,
+      borderBottom: `1px solid ${BeanstalkPalette.blue}`,
+    }}
+  >
     <Stack
       direction="row"
       alignItems="center"
@@ -66,7 +63,7 @@ const NavBar: React.FC<{}> = () => (
         justifyContent="flex-end"
         alignItems="center"
         gap={1}
-        >
+      >
         <Box sx={{ display: { sm: 'block', xs: 'none' } }}>
           <NetworkButton sx={{ height: 45 }} />
         </Box>
@@ -75,7 +72,6 @@ const NavBar: React.FC<{}> = () => (
       </Stack>
     </Stack>
   </AppBar>
-
-  );
+);
 
 export default NavBar;

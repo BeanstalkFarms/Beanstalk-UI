@@ -7,7 +7,7 @@ import Sow from './Sow';
 import Transfer from './Transfer';
 import Harvest from './Harvest';
 
-const SLUGS = ['sow', 'harvest', 'send'];
+const SLUGS = ['sow', 'transfer', 'harvest'];
 const FieldActions : React.FC<{}> = () => {
   const [tab, handleChange] = useTabs(SLUGS, 'action');
   const farmerField = useFarmerField();

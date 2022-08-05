@@ -135,7 +135,6 @@ const TransferForm: React.FC<FormikProps<TransferFormValues> & {
                   icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
                 >
                   More recent Deposits are Transferred first to minimize the loss of Stalk and Seeds.
-                  {/* You cannot undo Transferring Deposits. If you Transfer less than your total deposited balance, the Stalk and Seed associated with your most recent deposits will be prioritized. */}
                 </Alert>
                 <Box>
                   <Accordion defaultExpanded variant="outlined">
@@ -199,7 +198,6 @@ const Transfer: React.FC<{ token: ERC20Token; }> = ({ token }) => {
 
   ///
   const season = useSeason();
-  ///
   const siloBalances = useFarmerSiloBalances();
   const [refetchFarmerSilo] = useFetchFarmerSilo();
   const [refetchSilo] = useFetchSilo();

@@ -37,7 +37,7 @@ import useBDV from 'hooks/useBDV';
 import TokenIcon from 'components/Common/TokenIcon';
 import { useFetchPools } from 'state/bean/pools/updater';
 import { ActionType } from 'util/Actions';
-import { FontSize, IconSize } from '../../App/muiTheme';
+import { IconSize } from '../../App/muiTheme';
 import IconWrapper from '../../Common/IconWrapper';
 
 // -----------------------------------------------------------------------
@@ -187,6 +187,7 @@ const ConvertForm : React.FC<
 
   /// When `tokenIn` or `tokenOut` changes, refresh the
   /// max amount that the user can input of `tokenIn`.
+  /// FIXME: flash when clicking convert tab
   useEffect(() => {
     (async () => {
       if (tokenOut) {
@@ -251,8 +252,8 @@ const ConvertForm : React.FC<
                   <WarningAmberIcon sx={{ fontSize: IconSize.small, alignItems: 'flex-start' }} />
                 </IconWrapper>
               )}>
-              {tokenIn.symbol} can only be Converted to {tokenOut.symbol} when deltaB {tokenIn.isLP ? '<' : '>'} 0.<br />
-              <Typography sx={{ opacity: 0.7 }} fontSize={FontSize.sm}>Press ⌥ + 1 to see deltaB.</Typography>
+              {tokenIn.symbol} can only be Converted to {tokenOut.symbol} when deltaB {tokenIn.isLP ? '>' : '<'} 0.<br />
+              {/* <Typography sx={{ opacity: 0.7 }} fontSize={FontSize.sm}>Press ⌥ + 1 to see deltaB.</Typography> */}
             </Alert>
           </Box>
         ) : null}

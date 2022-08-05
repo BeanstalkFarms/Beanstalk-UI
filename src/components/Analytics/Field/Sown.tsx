@@ -3,9 +3,11 @@ import SeasonPlot, { SeasonPlotBaseProps } from 'components/Common/Charts/Season
 import { SeasonalSownDocument, SeasonalSownQuery } from 'generated/graphql';
 import useSeason from 'hooks/useSeason';
 import { SnapshotData } from 'hooks/useSeasons';
+import { BEAN } from 'constants/tokens';
+import { toTokenUnitsBN } from 'util/index';
 
-const getValue = (season: SnapshotData<SeasonalSownQuery>) => parseFloat(season.sownBeans);
-const formatValue = (value: number) => `${(value * 100).toFixed(2)}%`;
+const getValue = (season: SnapshotData<SeasonalSownQuery>) => toTokenUnitsBN(season.sownBeans, BEAN[1].decimals).toNumber();
+const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const StatProps = {
   title: 'Sown',
   gap: 0.25,

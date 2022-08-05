@@ -1,17 +1,12 @@
 import React from 'react';
 import {
-  Card,
   Container,
-  Stack,
 } from '@mui/material';
-import Soon from 'components/Analytics/Soon';
+import TradeActions from 'components/Trade/Actions';
 
 const TradePage: React.FC = () => (
   <Container maxWidth="sm">
-    <Stack spacing={2}>
-      {/* <TradeActions /> */}
-      <Card><Soon /></Card>
-    </Stack>
+    <TradeActions />
   </Container>
 );
 export default TradePage;

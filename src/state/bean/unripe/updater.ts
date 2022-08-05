@@ -27,7 +27,7 @@ export const useUnripe = () => {
           ))
         ); // [BigNumber(0.001), BigNumber(0.0014)]
         dispatch(updateUnripe({
-          penalties: tokenAddresses.reduce<AddressMap<BigNumber>>((prev, key, index) => {
+          chopRates: tokenAddresses.reduce<AddressMap<BigNumber>>((prev, key, index) => {
             prev[key] = results[index];
             return prev;
           }, {})
