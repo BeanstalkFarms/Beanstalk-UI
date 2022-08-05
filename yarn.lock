@@ -5280,6 +5280,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pkgr/utils@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "@pkgr/utils@npm:2.3.0"
+  dependencies:
+    cross-spawn: ^7.0.3
+    is-glob: ^4.0.3
+    open: ^8.4.0
+    picocolors: ^1.0.0
+    tiny-glob: ^0.2.9
+    tslib: ^2.4.0
+  checksum: d2fe95c51d548497425182b284dea8155d9e80bb36fa744c670174d7deae53743b13aa9f63a8bfaa8b31dcf7c53dc279a99372f2c2c35ff9fcebf91c5c5c8190
+  languageName: node
+  linkType: hard
+
 "@pmmmwh/react-refresh-webpack-plugin@npm:^0.5.3":
   version: 0.5.7
   resolution: "@pmmmwh/react-refresh-webpack-plugin@npm:0.5.7"
@@ -10179,6 +10193,7 @@ __metadata:
     d3-time-format: ^4.1.0
     eslint: ^7.32.0
     eslint-config-airbnb: 18.2.1
+    eslint-import-resolver-typescript: ^3.4.0
     eslint-plugin-import: 2.22.1
     eslint-plugin-jest: 24.1.10
     eslint-plugin-jsx-a11y: 6.4.1
@@ -13410,6 +13425,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"enhanced-resolve@npm:^5.10.0":
+  version: 5.10.0
+  resolution: "enhanced-resolve@npm:5.10.0"
+  dependencies:
+    graceful-fs: ^4.2.4
+    tapable: ^2.2.0
+  checksum: 0bb9830704db271610f900e8d79d70a740ea16f251263362b0c91af545576d09fe50103496606c1300a05e588372d6f9780a9bc2e30ce8ef9b827ec8f44687ff
+  languageName: node
+  linkType: hard
+
 "enhanced-resolve@npm:^5.9.3":
   version: 5.9.3
   resolution: "enhanced-resolve@npm:5.9.3"
@@ -13977,6 +14002,24 @@ __metadata:
     debug: ^3.2.7
     resolve: ^1.20.0
   checksum: 6266733af1e112970e855a5bcc2d2058fb5ae16ad2a6d400705a86b29552b36131ffc5581b744c23d550de844206fb55e9193691619ee4dbf225c4bde526b1c8
+  languageName: node
+  linkType: hard
+
+"eslint-import-resolver-typescript@npm:^3.4.0":
+  version: 3.4.0
+  resolution: "eslint-import-resolver-typescript@npm:3.4.0"
+  dependencies:
+    debug: ^4.3.4
+    enhanced-resolve: ^5.10.0
+    get-tsconfig: ^4.2.0
+    globby: ^13.1.2
+    is-core-module: ^2.9.0
+    is-glob: ^4.0.3
+    synckit: ^0.8.1
+  peerDependencies:
+    eslint: "*"
+    eslint-plugin-import: "*"
+  checksum: 42fa7fbf7a2144d27152567a2f2a6e6847d964a87ef7da29f559d09be44d0328a1894ea5186cf0824cecf3c9aec95bbb481d8ecbc129a3dd21614fbf3eb9a3b6
   languageName: node
   linkType: hard
 
@@ -15859,6 +15902,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"get-tsconfig@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "get-tsconfig@npm:4.2.0"
+  checksum: dfae3520bee20b71a651fdc93fd29901013dfc4df9fb41a423cf3efb4468c79087ef9d3bc3d0625b6486397730991d2a749eed4985d8ab411f481319c3e931e5
+  languageName: node
+  linkType: hard
+
 "get-value@npm:^2.0.3, get-value@npm:^2.0.6":
   version: 2.0.6
   resolution: "get-value@npm:2.0.6"
@@ -16042,6 +16092,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"globalyzer@npm:0.1.0":
+  version: 0.1.0
+  resolution: "globalyzer@npm:0.1.0"
+  checksum: 419a0f95ba542534fac0842964d31b3dc2936a479b2b1a8a62bad7e8b61054faa9b0a06ad9f2e12593396b9b2621cac93358d9b3071d33723fb1778608d358a1
+  languageName: node
+  linkType: hard
+
 "globby@npm:^11.0.1, globby@npm:^11.0.2, globby@npm:^11.0.3, globby@npm:^11.1.0":
   version: 11.1.0
   resolution: "globby@npm:11.1.0"
@@ -16056,7 +16113,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globby@npm:^13.0.0":
+"globby@npm:^13.0.0, globby@npm:^13.1.2":
   version: 13.1.2
   resolution: "globby@npm:13.1.2"
   dependencies:
@@ -16082,6 +16139,13 @@ __metadata:
     pify: ^4.0.1
     slash: ^2.0.0
   checksum: 9b4cb70aa0b43bf89b18cf0e543695185e16d8dd99c17bdc6a1df0a9f88ff9dc8d2467aebace54c3842fc451a564882948c87a3b4fbdb1cacf3e05fd54b6ac5d
+  languageName: node
+  linkType: hard
+
+"globrex@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "globrex@npm:0.1.2"
+  checksum: adca162494a176ce9ecf4dd232f7b802956bb1966b37f60c15e49d2e7d961b66c60826366dc2649093cad5a0d69970cfa8875bd1695b5a1a2f33dcd2aa88da3c
   languageName: node
   linkType: hard
 
@@ -25152,6 +25216,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"synckit@npm:^0.8.1":
+  version: 0.8.1
+  resolution: "synckit@npm:0.8.1"
+  dependencies:
+    "@pkgr/utils": ^2.3.0
+    tslib: ^2.4.0
+  checksum: 36a1b699996f3bb251c8f828364e101cf08b2a20225cb39df9d7c2186380554b8172374babfe10f03f4b52ab8c453c16447c3cbf61108221f2c58c446bf8425a
+  languageName: node
+  linkType: hard
+
 "table-layout@npm:^1.0.2":
   version: 1.0.2
   resolution: "table-layout@npm:1.0.2"
@@ -25472,6 +25546,16 @@ __metadata:
     es5-ext: ~0.10.46
     next-tick: 1
   checksum: ef3f27a0702a88d885bcbb0317c3e3ecd094ce644da52e7f7d362394a125d9e3578292a8f8966071a980d8abbc3395725333b1856f3ae93835b46589f700d938
+  languageName: node
+  linkType: hard
+
+"tiny-glob@npm:^0.2.9":
+  version: 0.2.9
+  resolution: "tiny-glob@npm:0.2.9"
+  dependencies:
+    globalyzer: 0.1.0
+    globrex: ^0.1.2
+  checksum: aea5801eb6663ddf77ebb74900b8f8bd9dfcfc9b6a1cc8018cb7421590c00bf446109ff45e4b64a98e6c95ddb1255a337a5d488fb6311930e2a95334151ec9c6
   languageName: node
   linkType: hard
 
