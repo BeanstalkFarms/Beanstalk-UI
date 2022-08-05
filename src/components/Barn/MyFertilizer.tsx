@@ -65,7 +65,7 @@ const MyFertilizer: React.FC = () => {
           >
             <Tooltip
               title="The number of Beans left to be earned from your Fertilizer."
-              placement="right"
+              placement="bottom"
             >
               <Typography variant="body1">
                 Sprouts&nbsp;
@@ -90,7 +90,7 @@ const MyFertilizer: React.FC = () => {
           >
             <Tooltip
               title="Sprouts that are redeemable for 1 Bean each. Rinsable Sprouts must be Rinsed in order to use them."
-              placement="right"
+              placement="bottom"
             >
               <Typography variant="body1">
                 Rinsable Sprouts&nbsp;
