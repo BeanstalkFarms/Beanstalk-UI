@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { useDispatch } from 'react-redux';
 import throttle from 'lodash/throttle';
 import { useBeanstalkPriceContract } from 'hooks/useContract';
-import { tokenResult, getChainConstant } from 'util/index';
+import { tokenResult, getChainConstant } from '~/util/index';
 import { BEAN } from '~/constants/tokens';
 import ALL_POOLS from '~/constants/pools';
 import { useProvider } from 'wagmi';

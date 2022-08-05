@@ -8,7 +8,7 @@ import useChainId from 'hooks/useChain';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useMigrateCall from 'hooks/useMigrateCall';
 import useTokenMap from 'hooks/useTokenMap';
-import { tokenResult } from 'util/index';
+import { tokenResult } from '~/util/index';
 import useChainConstant from 'hooks/useChainConstant';
 import useAccount from 'hooks/ledger/useAccount';
 import { clearBalances, updateBalances } from './actions';

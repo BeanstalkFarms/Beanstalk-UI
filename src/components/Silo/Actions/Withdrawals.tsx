@@ -5,7 +5,7 @@ import { useAccount } from 'wagmi';
 import { Typography } from '@mui/material';
 import { GridColumns } from '@mui/x-data-grid';
 import { FarmerSiloBalance, WithdrawalCrate } from '~/state/farmer/silo';
-import { displayFullBN, displayUSD } from 'util/index';
+import { displayFullBN, displayUSD } from '~/util/index';
 import useSeason from 'hooks/useSeason';
 import { ZERO_BN } from '~/constants/index';
 import useSiloTokenToFiat from 'hooks/currency/useSiloTokenToFiat';

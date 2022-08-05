@@ -5,7 +5,7 @@ import { useBeanstalkContract, useFertilizerContract } from 'hooks/useContract';
 import { REPLANT_INITIAL_ID } from 'hooks/useHumidity';
 import useChainId from 'hooks/useChain';
 import { BeanstalkReplanted } from 'generated';
-import { toTokenUnitsBN } from 'util/index';
+import { toTokenUnitsBN } from '~/util/index';
 import BigNumber from 'bignumber.js';
 import { ZERO_BN } from '~/constants/index';
 import useBlocks from 'hooks/useBlocks';

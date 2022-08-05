@@ -5,10 +5,10 @@ import {
   UniswapV2Pair__factory,
 } from 'generated/index';
 import { ChainConstant, AddressMap, SupportedChainId } from '~/constants/index';
-import { MinBN } from 'util/Tokens';
-import client from 'util/Client';
+import { MinBN } from '~/util/Tokens';
+import client from '~/util/Client';
 import { CRV3, DAI, USDC, USDT } from '~/constants/tokens';
-import { getChainConstant } from 'util/Chain';
+import { getChainConstant } from '~/util/Chain';
 import Token, { ERC20Token } from './Token';
 
 type Reserves = [BigNumber, BigNumber];

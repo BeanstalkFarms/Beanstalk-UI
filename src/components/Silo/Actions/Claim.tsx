@@ -8,7 +8,7 @@ import { Token } from 'classes';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import { useBeanstalkContract } from 'hooks/useContract';
 import { FarmerSiloBalance } from '~/state/farmer/silo';
-import { ActionType } from 'util/Actions';
+import { ActionType } from '~/util/Actions';
 import usePools from 'hooks/usePools';
 import { ERC20Token } from 'classes/Token';
 import {
@@ -25,7 +25,7 @@ import {
 import { BeanstalkReplanted } from 'generated/index';
 import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import { ZERO_BN } from '~/constants/index';
-import { displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN, parseError } from 'util/index';
+import { displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN, parseError } from '~/util/index';
 import DestinationField from 'components/Common/Form/DestinationField';
 import TokenIcon from 'components/Common/TokenIcon';
 import useToggle from 'hooks/display/useToggle';

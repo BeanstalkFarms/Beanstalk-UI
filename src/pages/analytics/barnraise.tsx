@@ -6,9 +6,9 @@ import Stat from 'components/Common/Stat';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 import AmountRaisedCard from 'components/Analytics/Barnraise/AmountRaisedCard';
 import ComingSoonCard from 'components/Common/ZeroState/ComingSoonCard';
-import { displayBN } from 'util/index';
 import useChainId from 'hooks/useChain';
 import useTabs from 'hooks/display/useTabs';
+import { displayBN } from '~/util/index';
 import { SupportedChainId } from '~/constants/index';
 import { AppState } from '~/state';
 

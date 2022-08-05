@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import React, { useCallback, useEffect, useState } from 'react';
 import { AppState } from '~/state';
-import { displayBN, displayUSD } from 'util/index';
+import { displayBN, displayUSD } from '~/util/index';
 
 import LineChart, { DataPoint } from 'components/Common/Charts/LineChart';
 

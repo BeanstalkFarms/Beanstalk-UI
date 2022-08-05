@@ -10,7 +10,7 @@ import { Contract, ContractInterface, ethers } from 'ethers';
 import { useCallback, useMemo } from 'react';
 import { useProvider, useContract as useWagmiContract } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
-import { getChainConstant } from 'util/Chain';
+import { getChainConstant } from '~/util/Chain';
 import { ChainConstant } from '~/constants/index';
 import {
   BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES,

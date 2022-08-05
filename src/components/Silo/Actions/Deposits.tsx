@@ -6,7 +6,7 @@ import { Tooltip, Typography } from '@mui/material';
 import { GridColumns } from '@mui/x-data-grid';
 import { FarmerSiloBalance } from '~/state/farmer/silo';
 import type { DepositCrate } from '~/state/farmer/silo';
-import { displayBN, displayFullBN } from 'util/index';
+import { displayBN, displayFullBN } from '~/util/index';
 import useSeason from 'hooks/useSeason';
 import { BEAN, STALK } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants/index';

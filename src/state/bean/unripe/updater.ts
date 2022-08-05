@@ -4,7 +4,7 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import useChainId from 'hooks/useChain';
 import { BeanstalkReplanted } from 'generated/index';
 import useTokenMap from 'hooks/useTokenMap';
-import { tokenResult } from 'util/index';
+import { tokenResult } from '~/util/index';
 import BigNumber from 'bignumber.js';
 import { AddressMap } from '~/constants/index';
 import { resetUnripe, updateUnripe } from './actions';

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Stack, Tooltip, Typography } from '@mui/material';
-import { SPROUTS } from '~/constants/tokens';
 import TokenIcon from 'components/Common/TokenIcon';
 import BigNumber from 'bignumber.js';
-import { displayBN, displayFullBN } from 'util/index';
 import humidityIcon from 'img/beanstalk/humidity-icon.svg';
+import { displayBN, displayFullBN } from '~/util/index';
+import { SPROUTS } from '~/constants/tokens';
 import FertilizerImage, { FertilizerState } from './FertilizerImage';
 import { FertilizerTooltip } from './FertilizerItemTooltips';
 

@@ -6,7 +6,7 @@ import { useAccount, useProvider } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import { useBeanstalkContract } from 'hooks/useContract';
-import { ActionType } from 'util/Actions';
+import { ActionType } from '~/util/Actions';
 import {
   SmartSubmitButton, TokenInputField, TokenOutputField,
   TxnPreview,
@@ -18,7 +18,7 @@ import {
   displayFullBN,
   parseError,
   toStringBaseUnitBN
-} from 'util/index';
+} from '~/util/index';
 import toast from 'react-hot-toast';
 import useFarmerField from 'hooks/useFarmerField';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';

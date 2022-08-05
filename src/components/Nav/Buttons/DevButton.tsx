@@ -3,10 +3,10 @@ import { Button } from '@mui/material';
 import { BeanstalkReplanted } from 'generated';
 import { useBeanstalkContract } from 'hooks/useContract';
 import CachedIcon from '@mui/icons-material/Cached';
-import { getAccount } from 'util/Account';
 import { useAccount } from 'wagmi';
 import useTokenMap from 'hooks/useTokenMap';
-import { toTokenUnitsBN } from 'util/Tokens';
+import { getAccount } from '~/util/Account';
+import { toTokenUnitsBN } from '~/util/Tokens';
 import { ERC20_TOKENS } from '~/constants/tokens';
 
 export default function DevButton(props: any) {

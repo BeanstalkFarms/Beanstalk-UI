@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import { MaxBN } from 'util/Tokens';
+import { MaxBN } from '~/util/Tokens';
 import { SupportedChainId } from '~/constants/chains';
 import { ZERO_BN } from '~/constants/index';
 import { AppState } from '~/state';

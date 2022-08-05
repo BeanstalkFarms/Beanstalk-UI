@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '~/state';
-import { bigNumberResult } from 'util/Ledger';
+import { bigNumberResult } from '~/util/Ledger';
 import { getNextExpectedSunrise } from '.';
 import { resetSun, setAwaitingSunrise, setNextSunrise, setRemainingUntilSunrise, updateSeason } from './actions';
 

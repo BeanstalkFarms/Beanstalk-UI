@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Chip, LinearProgress, Stack, Tooltip, Typography } from '@mui/material';
 import { GridColumns, GridRenderCellParams, GridValueFormatterParams } from '@mui/x-data-grid';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import { displayBN, displayFullBN, MaxBN } from 'util/index';
+import { displayBN, displayFullBN, MaxBN } from '~/util/index';
 import BigNumber from 'bignumber.js';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 import { BEAN, PODS } from '~/constants/tokens';

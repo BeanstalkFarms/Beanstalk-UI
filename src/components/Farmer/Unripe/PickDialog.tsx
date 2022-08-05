@@ -20,7 +20,7 @@ import { UNRIPE_ASSET_TOOLTIPS } from '~/constants/tooltips';
 import { ZERO_BN } from '~/constants/index';
 import Token from 'classes/Token';
 import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
-import { displayFullBN, toTokenUnitsBN, parseError } from 'util/index';
+import { displayFullBN, toTokenUnitsBN, parseError } from '~/util/index';
 import pickImage from 'img/pick.png';
 import DescriptionButton from 'components/Common/DescriptionButton';
 import { PickMerkleResponse } from 'functions/pick/pick';
