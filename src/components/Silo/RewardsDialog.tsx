@@ -176,9 +176,6 @@ const ClaimRewardsForm : React.FC<
         <Typography ml={1} pt={0.5} textAlign="center" fontSize={FontSize.sm} color="gray">
           <Link href="https://docs.bean.money/farm/silo#silo-rewards" target="_blank" rel="noreferrer" underline="none">Learn more about Silo Rewards &rarr;</Link>
         </Typography>
-        {/* <Typography ml={1} pt={0.5} textAlign="center" fontSize={FontSize.sm} color="gray"> */}
-        {/*  Learn more about <Link href="https://docs.bean.money/farm/silo#silo-rewards" target="_blank" rel="noreferrer" underline="none">Silo Rewards &rarr;</Link> */}
-        {/* </Typography> */}
       </StyledDialogContent>
       <StyledDialogActions>
         <LoadingButton
