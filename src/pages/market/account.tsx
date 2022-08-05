@@ -6,19 +6,23 @@ import {
   Stack,
   Tab,
   Tabs,
-  Typography,
+  Typography, useMediaQuery,
 } from '@mui/material';
 import useTabs from 'hooks/display/useTabs';
 import MyOrdersTable from 'components/Market/Tables/MyOrders';
 import AddressIcon from 'components/Common/AddressIcon';
 import MyListingsTable from 'components/Market/Tables/MyListings';
 import { Link } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 
 const SLUGS = ['orders', 'listings'];
 const MarketAccountPage: React.FC = () => {
   ///
   const [tab, handleChangeTab] = useTabs(SLUGS, 'view');
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <Container maxWidth="lg">
@@ -50,8 +54,9 @@ const MarketAccountPage: React.FC = () => {
                 size="small"
                 color="primary"
                 variant="text"
-                sx={{ p: 0, '&:hover': { backgroundColor: 'transparent' } }}>
-                Create Order
+                sx={{ p: 0, '&:hover': { backgroundColor: 'transparent' } }}
+              >
+                {isMobile ? '+ Create Order' : '+ Create New Order'}
               </Button>
             )}
             {tab === 1 && (
@@ -61,8 +66,9 @@ const MarketAccountPage: React.FC = () => {
                 size="small"
                 color="primary"
                 variant="text"
-                sx={{ p: 0, '&:hover': { backgroundColor: 'transparent' } }}>
-                Create Listing
+                sx={{ p: 0, '&:hover': { backgroundColor: 'transparent' } }}
+              >
+                {isMobile ? '+ Create Listing' : '+ Create New Listing'}
               </Button>
             )}
           </Stack>
