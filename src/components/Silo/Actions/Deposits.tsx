@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
-import { Token } from '~/classes';
 import BigNumber from 'bignumber.js';
 import { useAccount } from 'wagmi';
 import { Tooltip, Typography } from '@mui/material';
 import { GridColumns } from '@mui/x-data-grid';
+import { Token } from '~/classes';
 import { FarmerSiloBalance } from '~/state/farmer/silo';
 import type { DepositCrate } from '~/state/farmer/silo';
 import { displayBN, displayFullBN } from '~/util/index';

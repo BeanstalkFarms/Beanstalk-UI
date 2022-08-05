@@ -1,6 +1,6 @@
 import React from 'react';
-import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
 import { useSelector } from 'react-redux';
+import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
 import { SeasonalWeatherDocument, SeasonalWeatherQuery } from '~/generated/graphql';
 import useSeason from '~/hooks/useSeason';
 import { SnapshotData } from '~/hooks/useSeasons';

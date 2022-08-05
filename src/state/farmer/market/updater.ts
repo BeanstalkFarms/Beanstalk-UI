@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
-import { REPLANTED_CHAINS } from '~/constants/index';
 import { useDispatch } from 'react-redux';
+import { REPLANTED_CHAINS } from '~/constants/index';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useChainId from '~/hooks/useChain';
 import useBlocks from '~/hooks/useBlocks';
@@ -8,7 +8,6 @@ import useAccount from '~/hooks/ledger/useAccount';
 import EventProcessor from '~/lib/Beanstalk/EventProcessor';
 import useWhitelist from '~/hooks/useWhitelist';
 import useSeason from '~/hooks/useSeason';
-import { Beanstalk } from '~/generated';
 import { EventCacheName } from '../events2';
 import useEvents, { GetQueryFilters } from '../events2/updater';
 import { resetFarmerMarket, updateFarmerMarket } from './actions';

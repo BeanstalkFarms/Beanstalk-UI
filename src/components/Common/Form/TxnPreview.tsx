@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import groupBy from 'lodash/groupBy';
-import TokenIcon from '~/components/Common/TokenIcon';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
+import TokenIcon from '~/components/Common/TokenIcon';
 import { FERTILIZER_ICONS } from '~/components/Barn/FertilizerImage';
 import siloIcon from '~/img/beanstalk/silo-icon.svg';
 import Token from '~/classes/Token';

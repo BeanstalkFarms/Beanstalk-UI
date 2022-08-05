@@ -1,6 +1,6 @@
 import { Card, Stack, Tab, Tabs } from '@mui/material';
-import useTabs from '~/hooks/display/useTabs';
 import React from 'react';
+import useTabs from '~/hooks/display/useTabs';
 import Soon from '../Soon';
 
 const SLUGS = [

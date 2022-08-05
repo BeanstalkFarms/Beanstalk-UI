@@ -7,11 +7,11 @@ import {
   Box,
   Grid, Divider,
 } from '@mui/material';
+import BigNumber from 'bignumber.js';
+import { useSelector } from 'react-redux';
 import drySeasonIcon from '~/img/beanstalk/sun/dry-season.svg';
 import rainySeasonIcon from '~/img/beanstalk/sun/rainy-season.svg';
 import SunriseButton from '~/components/Sun/SunriseButton';
-import BigNumber from 'bignumber.js';
-import { useSelector } from 'react-redux';
 import { SunButtonQuery, useSunButtonQuery } from '~/generated/graphql';
 import usePrice from '~/hooks/usePrice';
 import useSeason from '~/hooks/useSeason';

@@ -1,7 +1,7 @@
 import { Box, Card, Stack, Tab, Tabs, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
 import React, { useCallback, useEffect, useState } from 'react';
+import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
 import { AppState } from '~/state';
 import { displayBN, displayUSD } from '~/util/index';
 

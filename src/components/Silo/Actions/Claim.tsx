@@ -3,6 +3,8 @@ import { Accordion, AccordionDetails, Box, Stack, Typography } from '@mui/materi
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useProvider } from 'wagmi';
+import { ethers } from 'ethers';
+import toast from 'react-hot-toast';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { Token } from '~/classes';
 import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
@@ -22,7 +24,6 @@ import {
   SettingInput,
   SmartSubmitButton
 } from '~/components/Common/Form';
-import { Beanstalk } from '~/generated/index';
 import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import { ZERO_BN } from '~/constants/index';
 import { displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN, parseError } from '~/util/index';
@@ -32,9 +33,7 @@ import useToggle from '~/hooks/display/useToggle';
 import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
 import PillRow from '~/components/Common/Form/PillRow';
 import { QuoteHandler } from '~/hooks/useQuote';
-import { ethers } from 'ethers';
 import TransactionToast from '~/components/Common/TxnToast';
-import toast from 'react-hot-toast';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import useChainConstant from '~/hooks/useChainConstant';

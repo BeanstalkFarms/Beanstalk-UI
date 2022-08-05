@@ -1,11 +1,10 @@
 import React, { useCallback } from 'react';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import sunIcon from '~/img/beanstalk/sun/sun-icon.svg';
-import TransactionToast from '~/components/Common/TxnToast';
 import { LoadingButton } from '@mui/lab';
 import { useSelector } from 'react-redux';
+import sunIcon from '~/img/beanstalk/sun/sun-icon.svg';
+import TransactionToast from '~/components/Common/TxnToast';
 import { useBeanstalkContract } from '~/hooks/useContract';
-import { Beanstalk } from '~/generated/index';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { AppState } from '~/state';
 

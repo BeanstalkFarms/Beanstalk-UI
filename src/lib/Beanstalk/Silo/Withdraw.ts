@@ -1,7 +1,7 @@
+import BigNumber from 'bignumber.js';
 import { Token } from '~/classes';
 import { FormState } from '~/components/Common/Form';
 // import { Action, ActionType } from '~/util/Actions';
-import BigNumber from 'bignumber.js';
 import { DepositCrate } from '~/state/farmer/silo';
 import { sortCratesBySeason } from './Utils';
 
