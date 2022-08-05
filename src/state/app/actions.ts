@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { EthPriceResponse } from 'functions/ethprice/ethprice';
+import { EthPriceResponse } from '~/functions/ethprice/ethprice';
 import { AppSettings } from '.';
 
 export const setAlmanacView = createAction<boolean>(

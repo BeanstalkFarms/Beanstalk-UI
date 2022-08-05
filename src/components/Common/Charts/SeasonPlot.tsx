@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Stack, Box, CircularProgress } from '@mui/material';
-import Stat, { StatProps } from '~/components/Common/Stat';
 import { Line } from '@visx/shape';
+import { DocumentNode } from 'graphql';
+import Stat, { StatProps } from '~/components/Common/Stat';
 import LineChart, { DataPoint, LineChartProps } from '~/components/Common/Charts/LineChart';
 import useSeasons, { MinimumViableSnapshotQuery, SeasonAggregation, SeasonRange } from '~/hooks/useSeasons';
-import { DocumentNode } from 'graphql';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import TimeTabs, { TimeTabState }  from './TimeTabs';
 

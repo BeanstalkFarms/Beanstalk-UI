@@ -17,7 +17,7 @@ import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
 import pickImage from '~/img/pick.png';
 import DescriptionButton from '~/components/Common/DescriptionButton';
-import { PickMerkleResponse } from 'functions/pick/pick';
+import { PickMerkleResponse } from '~/functions/pick/pick';
 import { LoadingButton } from '@mui/lab';
 import TransactionToast from '~/components/Common/TxnToast';
 import toast from 'react-hot-toast';

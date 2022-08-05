@@ -12,9 +12,7 @@ const Bean = BEAN[1];
 const BeanCrv3 = BEAN_CRV3_LP[1];
 const account = '0xFARMER';
 const epp : EventProcessingParameters = {
-  farmableBeans: BN(0),
   season: BN(6074),
-  harvestableIndex: BN(100),  // fixme
   whitelist: SILO_WHITELIST.reduce<TokenMap>((prev, curr) => {
     prev[curr[1].address] = curr[1];
     return prev;

@@ -7,7 +7,7 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 
 import theme from '~/components/App/muiTheme';
 import client from '~/util/Client';
-import { apolloClient } from 'graph/client';
+import { apolloClient } from '~/graph/client';
 import store from '~/state';
 
 const Wrapper : React.FC = ({ children }) => (

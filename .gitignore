@@ -4,6 +4,7 @@
 # Build files
 src/generated
 build
+dist
 
 # Environment
 .env

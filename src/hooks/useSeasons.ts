@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apolloClient } from 'graph/client';
+import { apolloClient } from '~/graph/client';
 import { DocumentNode, useLazyQuery } from '@apollo/client';
 
 const PAGE_SIZE = 1000;
