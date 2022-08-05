@@ -56,7 +56,14 @@ const BalancesPage: React.FC = () => {
                   title="Pods"
                   titleTooltip="This is your total Pod Balance. Pods become Harvestable on a FIFO basis. For more information on your place in the Pod Line, head over to the Field page."
                   amountIcon={<TokenIcon token={PODS} />}
-                  amount={displayFullBN(farmerField.pods, PODS.displayDecimals)}
+                  amount={(
+                    <>
+                      {displayFullBN(farmerField.pods, PODS.displayDecimals)}
+                      {farmerField.harvestablePods?.gt(0) && (
+                        <Typography color="primary" variant="h4">+ {displayFullBN(farmerField.harvestablePods, PODS.displayDecimals)}</Typography>
+                      )}
+                    </>
+                  )}
                   variant="h4"
                   gap={0}
                 />
@@ -69,7 +76,9 @@ const BalancesPage: React.FC = () => {
                   amount={(
                     <>
                       {displayFullBN(farmerBarn.unfertilizedSprouts, SPROUTS.displayDecimals)}
-                      <Typography color="primary">+ {displayFullBN(farmerBarn.fertilizedSprouts.plus(9999999), SPROUTS.displayDecimals)}</Typography>
+                      {farmerBarn.fertilizedSprouts?.gt(0) && (
+                        <Typography color="primary" variant="h4">+ {displayFullBN(farmerBarn.fertilizedSprouts, SPROUTS.displayDecimals)}</Typography>
+                      )}
                     </>
                   )}
                   variant="h4"
