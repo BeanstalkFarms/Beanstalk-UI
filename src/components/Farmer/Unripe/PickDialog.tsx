@@ -148,6 +148,7 @@ const PickBeansDialog: React.FC<{
               beanstalk.picked(account, urBeanCRV3.address),
             ]),
           ]);
+          console.debug('[PickDialog] loaded states', { _unripe, _merkles, _picked });
           setUnripe(_unripe);
           setMerkles(_merkles);
           setPicked(_picked);
@@ -236,7 +237,7 @@ const PickBeansDialog: React.FC<{
   }, [merkles, picked, beanstalk, urBean.address, urBeanCRV3.address, refetchFarmerSilo]);
 
   /// Tab: Pick Overview
-  const alreadyPicked = picked[0] === true && picked[1] === true;
+  const alreadyPicked = picked[0] === true || picked[1] === true;
   const buttonLoading = !merkles;
   let buttonText      = 'Nothing to Pick';
   let buttonDisabled  = true;
