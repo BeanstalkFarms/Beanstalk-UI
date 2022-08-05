@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Card, Stack, Tabs, Tab } from '@mui/material';
-import useTabs from 'hooks/display/useTabs';
+import useTabs from '~/hooks/display/useTabs';
 import HarvestedPods from './HarvestedPods';
 import PodRate from './PodRate';
 import Pods from './Pods';

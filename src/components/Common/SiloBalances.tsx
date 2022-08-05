@@ -1,12 +1,12 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Stack, Typography, Grid, Box, Tooltip } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
-import useBeanstalkSiloBreakdown from 'hooks/useBeanstalkSiloBreakdown';
-import { displayFullBN, displayUSD } from 'util/index';
-import ResizablePieChart, { PieDataPoint } from 'components/Common/Charts/Pie';
-import { Token } from 'classes';
-import { BeanstalkPalette } from 'components/App/muiTheme';
+import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/Pie';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
+import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
+import useBeanstalkSiloBreakdown from '~/hooks/useBeanstalkSiloBreakdown';
+import { displayFullBN, displayUSD } from '~/util';
+import { Token } from '~/classes';
 import TokenIcon from './TokenIcon';
 import Fiat from './Fiat';
 

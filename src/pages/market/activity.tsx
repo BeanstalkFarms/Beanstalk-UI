@@ -9,9 +9,9 @@ import {
 } from '@mui/material';
 import { DataGridProps } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
-import podIcon from 'img/beanstalk/pod-icon.svg';
-import beanIcon from 'img/tokens/bean-logo-circled.svg';
-import ActivityTable from 'components/Market/Tables/Activity';
+import podIcon from '~/img/beanstalk/pod-icon.svg';
+import beanIcon from '~/img/tokens/bean-logo-circled.svg';
+import ActivityTable from '~/components/Market/Tables/Activity';
 import { displayBN, displayFullBN } from '../../util';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 import BlurComponent from '../../components/Common/ZeroState/BlurComponent';

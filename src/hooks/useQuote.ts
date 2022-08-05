@@ -1,10 +1,10 @@
 import { BigNumber } from 'bignumber.js';
-import { ERC20Token, NativeToken } from 'classes/Token';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import debounce from 'lodash/debounce';
 import toast from 'react-hot-toast';
-import { ChainableFunctionResult } from 'lib/Beanstalk/Farm';
 import { ethers } from 'ethers';
+import { ChainableFunctionResult } from '~/lib/Beanstalk/Farm';
+import { ERC20Token, NativeToken } from '~/classes/Token';
 
 export type QuoteHandlerResult = {
   amountOut: BigNumber;

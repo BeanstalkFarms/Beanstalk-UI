@@ -3,12 +3,12 @@ import {
   CurveMetaPool__factory,
   CurvePlainPool__factory,
   UniswapV2Pair__factory,
-} from 'generated/index';
-import { ChainConstant, AddressMap, SupportedChainId } from 'constants/index';
-import { MinBN } from 'util/Tokens';
-import client from 'util/Client';
-import { CRV3, DAI, USDC, USDT } from 'constants/tokens';
-import { getChainConstant } from 'util/Chain';
+} from '~/generated/index';
+import { ChainConstant, AddressMap, SupportedChainId } from '~/constants';
+import { MinBN } from '~/util/Tokens';
+import client from '~/util/Client';
+import { CRV3, DAI, USDC, USDT } from '~/constants/tokens';
+import { getChainConstant } from '~/util/Chain';
 import Token, { ERC20Token } from './Token';
 
 type Reserves = [BigNumber, BigNumber];

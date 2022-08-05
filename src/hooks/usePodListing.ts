@@ -1,7 +1,7 @@
-import { usePodListingQuery } from 'generated/graphql';
 import { useMemo } from 'react';
-import { castPodListing } from 'state/farmer/market';
-import { Source } from 'util/index';
+import { usePodListingQuery } from '~/generated/graphql';
+import { Source } from '~/util';
+import { castPodListing } from '~/state/farmer/market';
 import useFarmerListings from './redux/useFarmerListings';
 
 const usePodListing = (index: string | undefined) => {

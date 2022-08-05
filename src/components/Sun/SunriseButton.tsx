@@ -1,17 +1,16 @@
 import React, { useCallback } from 'react';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import sunIcon from 'img/beanstalk/sun/sun-icon.svg';
-import { useBeanstalkContract } from 'hooks/useContract';
-import { BeanstalkReplanted } from 'generated/index';
-import { useSigner } from 'hooks/ledger/useSigner';
-import TransactionToast from 'components/Common/TxnToast';
 import { LoadingButton } from '@mui/lab';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
+import sunIcon from '~/img/beanstalk/sun/sun-icon.svg';
+import TransactionToast from '~/components/Common/TxnToast';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import { AppState } from '~/state';
 
 const SunriseButton : React.FC = () => {
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
   
   const awaiting = useSelector<AppState, AppState['_beanstalk']['sun']['sunrise']['awaiting']>((state) => state._beanstalk.sun.sunrise.awaiting);
 

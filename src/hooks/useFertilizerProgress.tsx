@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
+import { AppState } from '~/state';
 import { ZERO_BN } from '../constants';
 
 /**

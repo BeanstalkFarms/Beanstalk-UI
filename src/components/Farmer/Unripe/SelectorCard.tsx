@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Stack, Typography } from '@mui/material';
-import { BeanstalkPalette } from 'components/App/muiTheme';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 export type SelectorCardProps = {
   title: string;

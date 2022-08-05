@@ -1,11 +1,11 @@
 import { Accordion, AccordionDetails, Alert, Box, Divider, Stack } from '@mui/material';
-import AddressInputField from 'components/Common/Form/AddressInputField';
-import FieldWrapper from 'components/Common/Form/FieldWrapper';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import toast from 'react-hot-toast';
+import FieldWrapper from '~/components/Common/Form/FieldWrapper';
+import AddressInputField from '~/components/Common/Form/AddressInputField';
 import {
   FormState,
   SmartSubmitButton,
@@ -13,27 +13,26 @@ import {
   TokenInputField,
   TokenOutputField,
   TxnPreview
-} from '../../Common/Form';
-import { ZERO_BN } from '../../../constants';
-import { Token } from '../../../classes';
-import { FarmerSilo } from '../../../state/farmer/silo';
-import { ERC20Token } from '../../../classes/Token';
-import useFarmerSiloBalances from '../../../hooks/useFarmerSiloBalances';
-import { useFetchFarmerSilo } from '../../../state/farmer/silo/updater';
-import { useFetchSilo } from '../../../state/beanstalk/silo/updater';
-import { useSigner } from '../../../hooks/ledger/useSigner';
-import { useBeanstalkContract } from '../../../hooks/useContract';
-import { BeanstalkReplanted } from '../../../generated';
-import useSeason from '../../../hooks/useSeason';
-import TxnSeparator from '../../Common/Form/TxnSeparator';
-import { SEEDS, STALK } from '../../../constants/tokens';
-import { displayFullBN, displayTokenAmount, parseError, toStringBaseUnitBN, trimAddress } from '../../../util';
-import Beanstalk from '../../../lib/Beanstalk';
-import IconWrapper from '../../Common/IconWrapper';
-import { FontSize, IconSize } from '../../App/muiTheme';
-import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
-import { ActionType } from '../../../util/Actions';
-import TransactionToast from '../../Common/TxnToast';
+} from '~/components/Common/Form';
+import { ZERO_BN } from '~/constants';
+import { Token } from '~/classes';
+import { FarmerSilo } from '~/state/farmer/silo';
+import { ERC20Token } from '~/classes/Token';
+import useFarmerSiloBalances from '~/hooks/useFarmerSiloBalances';
+import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
+import { useFetchSilo } from '~/state/beanstalk/silo/updater';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import BeanstalkSDK from '~/lib/Beanstalk';
+import useSeason from '~/hooks/useSeason';
+import TxnSeparator from '~/components/Common/Form/TxnSeparator';
+import { SEEDS, STALK } from '~/constants/tokens';
+import { displayFullBN, displayTokenAmount, parseError, toStringBaseUnitBN, trimAddress } from '~/util';
+import IconWrapper from '~/components/Common/IconWrapper';
+import { FontSize, IconSize } from '~/components/App/muiTheme';
+import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
+import { ActionType } from '~/util/Actions';
+import TransactionToast from '~/components/Common/TxnToast';
 
 export type TransferFormValues = FormState & {
   to: string;
@@ -63,7 +62,7 @@ const TransferForm: React.FC<FormikProps<TransferFormValues> & {
   }), [whitelistedToken]);
 
   // Results
-  const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
+  const withdrawResult = BeanstalkSDK.Silo.Withdraw.withdraw(
     whitelistedToken,
     values.tokens,
     siloBalances[whitelistedToken.address]?.deposited.crates || [], // fallback
@@ -194,7 +193,7 @@ const TransferForm: React.FC<FormikProps<TransferFormValues> & {
 const Transfer: React.FC<{ token: ERC20Token; }> = ({ token }) => {
   ///
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
 
   ///
   const season = useSeason();
@@ -219,7 +218,7 @@ const Transfer: React.FC<{ token: ERC20Token; }> = ({ token }) => {
   const onSubmit = useCallback(async (values: TransferFormValues, formActions: FormikHelpers<TransferFormValues>) => {
     let txToast;
     try {
-      const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
+      const withdrawResult = BeanstalkSDK.Silo.Withdraw.withdraw(
         token,
         values.tokens,
         siloBalances[token.address]?.deposited.crates,

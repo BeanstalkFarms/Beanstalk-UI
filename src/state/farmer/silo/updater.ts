@@ -1,18 +1,17 @@
 import { useCallback, useEffect } from 'react';
-import { BEAN_TO_SEEDS, BEAN_TO_STALK, ZERO_BN } from 'constants/index';
 import { useDispatch } from 'react-redux';
-import { BEAN, SEEDS, STALK } from 'constants/tokens';
-import { useBeanstalkContract } from 'hooks/useContract';
-import useChainId from 'hooks/useChain';
-import { bigNumberResult, tokenResult } from 'util/index';
-import { BeanstalkReplanted } from 'generated/index';
-import useBlocks from 'hooks/useBlocks';
-import useAccount from 'hooks/ledger/useAccount';
-import EventProcessor from 'lib/Beanstalk/EventProcessor';
-import useWhitelist from 'hooks/useWhitelist';
-import useSeason from 'hooks/useSeason';
 import BigNumber from 'bignumber.js';
-import useEventParsingParams from 'hooks/ledger/useEventParsingParams';
+import { BEAN_TO_SEEDS, BEAN_TO_STALK, ZERO_BN } from '~/constants';
+import { BEAN, SEEDS, STALK } from '~/constants/tokens';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import useChainId from '~/hooks/useChain';
+import { bigNumberResult, tokenResult } from '~/util';
+import useBlocks from '~/hooks/useBlocks';
+import useAccount from '~/hooks/ledger/useAccount';
+import EventProcessor from '~/lib/Beanstalk/EventProcessor';
+import useWhitelist from '~/hooks/useWhitelist';
+import useSeason from '~/hooks/useSeason';
+import useEventParsingParams from '~/hooks/ledger/useEventParsingParams';
 import { DepositCrate } from '.';
 import { EventCacheName } from '../events2';
 import useEvents, { GetQueryFilters } from '../events2/updater';
@@ -23,7 +22,7 @@ export const useFetchFarmerSilo = () => {
   const dispatch  = useDispatch();
 
   /// Contracts
-  const beanstalk = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract();
 
   /// Data
   const account   = useAccount();

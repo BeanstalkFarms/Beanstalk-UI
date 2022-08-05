@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, Card, CardProps } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import Fiat from 'components/Common/Fiat';
-import BlurComponent from 'components/Common/ZeroState/BlurComponent';
+import { AppState } from '~/state';
+import Fiat from '~/components/Common/Fiat';
+import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
 import Stat from '../Common/Stat';
 import { TokenMap, ZERO_BN } from '../../constants';
 import { BeanstalkSiloBalance } from '../../state/beanstalk/silo';

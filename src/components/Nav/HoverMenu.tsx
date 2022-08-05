@@ -6,8 +6,8 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import DropdownIcon from 'components/Common/DropdownIcon';
-import useToggle from 'hooks/display/useToggle';
+import DropdownIcon from '~/components/Common/DropdownIcon';
+import useToggle from '~/hooks/display/useToggle';
 import { RouteData } from './routes';
 import MenuItem from './MenuItem';
 

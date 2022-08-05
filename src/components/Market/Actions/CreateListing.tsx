@@ -1,5 +1,9 @@
 import { Alert, Box, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import React, { useCallback, useMemo } from 'react';
+import toast from 'react-hot-toast';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import {
   PlotFragment,
   PlotSettingsFragment,
@@ -7,29 +11,24 @@ import {
   TokenAdornment,
   TokenInputField,
   TxnPreview
-} from 'components/Common/Form';
-import { ONE_BN, ZERO_BN } from 'constants/index';
-import { BEAN, PODS } from 'constants/tokens';
-import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import React, { useCallback, useMemo } from 'react';
-import { toStringBaseUnitBN , parseError, displayTokenAmount, displayBN, displayFullBN } from 'util/index';
-import DestinationField from 'components/Common/Form/DestinationField';
-import { FarmToMode } from 'lib/Beanstalk/Farm';
-import { useBeanstalkContract } from 'hooks/useContract';
-import { BeanstalkReplanted } from 'generated';
-import useGetChainToken from 'hooks/useGetChainToken';
-import { PlotMap } from 'state/farmer/field';
-import TransactionToast from 'components/Common/TxnToast';
-import toast from 'react-hot-toast';
-import { useSigner } from 'hooks/ledger/useSigner';
-import PlotInputField from 'components/Common/Form/PlotInputField';
-import { useFetchFarmerMarket } from 'state/farmer/market/updater';
-import useFarmerListings from 'hooks/redux/useFarmerListings';
-import TxnAccordion from 'components/Common/TxnAccordion';
-import { ActionType } from 'util/Actions';
-import useFarmerPlots from 'hooks/redux/useFarmerPlots';
-import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+} from '~/components/Common/Form';
+import DestinationField from '~/components/Common/Form/DestinationField';
+import TransactionToast from '~/components/Common/TxnToast';
+import PlotInputField from '~/components/Common/Form/PlotInputField';
+import TxnAccordion from '~/components/Common/TxnAccordion';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import useGetChainToken from '~/hooks/useGetChainToken';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import useFarmerListings from '~/hooks/redux/useFarmerListings';
+import useFarmerPlots from '~/hooks/redux/useFarmerPlots';
+import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
+import { ActionType } from '~/util/Actions';
+import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
+import { PlotMap } from '~/state/farmer/field';
+import { FarmToMode } from '~/lib/Beanstalk/Farm';
+import { toStringBaseUnitBN , parseError, displayTokenAmount, displayBN, displayFullBN } from '~/util';
+import { BEAN, PODS } from '~/constants/tokens';
+import { ONE_BN, ZERO_BN } from '~/constants';
 import FieldWrapper from '../../Common/Form/FieldWrapper';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 
@@ -184,7 +183,7 @@ const CreateListing: React.FC<{}> = () => {
   
   ///
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
   
   ///
   const plots            = useFarmerPlots();

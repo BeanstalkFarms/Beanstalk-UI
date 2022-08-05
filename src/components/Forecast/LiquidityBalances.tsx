@@ -1,7 +1,7 @@
 import { Stack, Typography, Box } from '@mui/material';
 import React, { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
-import usePools from 'hooks/usePools';
+import usePools from '~/hooks/usePools';
 import { BeanstalkPalette } from '../App/muiTheme';
 import { BeanstalkSiloBalance } from '../../state/beanstalk/silo';
 import { TokenMap } from '../../constants';

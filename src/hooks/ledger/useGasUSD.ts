@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
+import { AppState } from '~/state';
 
 const ETH_PER_GWEI = new BigNumber(10).pow(-9);
 

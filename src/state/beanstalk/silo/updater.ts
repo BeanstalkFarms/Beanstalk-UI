@@ -1,19 +1,18 @@
 import { useCallback, useEffect } from 'react';
-import { BEAN_TO_SEEDS, BEAN_TO_STALK,  ONE_BN,  TokenMap, ZERO_BN } from 'constants/index';
 import { useDispatch } from 'react-redux';
-import { bigNumberResult } from 'util/Ledger';
-import { tokenResult, toStringBaseUnitBN } from 'util/index';
-import { BEAN, SEEDS, STALK } from 'constants/tokens';
-import { useBeanstalkContract } from 'hooks/useContract';
-import { BeanstalkReplanted } from 'generated/index';
-import useWhitelist from 'hooks/useWhitelist';
-import { useGetChainConstant } from 'hooks/useChainConstant';
+import { BEAN_TO_SEEDS, BEAN_TO_STALK,  ONE_BN,  TokenMap, ZERO_BN } from '~/constants';
+import { bigNumberResult } from '~/util/Ledger';
+import { tokenResult, toStringBaseUnitBN } from '~/util';
+import { BEAN, SEEDS, STALK } from '~/constants/tokens';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import useWhitelist from '~/hooks/useWhitelist';
+import { useGetChainConstant } from '~/hooks/useChainConstant';
 import { resetBeanstalkSilo, updateBeanstalkSilo } from './actions';
 import { BeanstalkSiloBalance } from './index';
 
 export const useFetchSilo = () => {
   const dispatch = useDispatch();
-  const beanstalk = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract();
   const FULL_WHITELIST = useWhitelist();
   const WHITELIST = FULL_WHITELIST;
 

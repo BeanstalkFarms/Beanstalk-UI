@@ -3,14 +3,16 @@ import { Accordion, AccordionDetails, Box, Stack, Typography } from '@mui/materi
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useProvider } from 'wagmi';
-import { useSigner } from 'hooks/ledger/useSigner';
-import { Token } from 'classes';
-import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import { useBeanstalkContract } from 'hooks/useContract';
-import { FarmerSiloBalance } from 'state/farmer/silo';
-import { ActionType } from 'util/Actions';
-import usePools from 'hooks/usePools';
-import { ERC20Token } from 'classes/Token';
+import { ethers } from 'ethers';
+import toast from 'react-hot-toast';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import { Token } from '~/classes';
+import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import { FarmerSiloBalance } from '~/state/farmer/silo';
+import { ActionType } from '~/util/Actions';
+import usePools from '~/hooks/usePools';
+import { ERC20Token } from '~/classes/Token';
 import {
   FormTokenState,
   TxnPreview,
@@ -21,25 +23,22 @@ import {
   TxnSettings,
   SettingInput,
   SmartSubmitButton
-} from 'components/Common/Form';
-import { BeanstalkReplanted } from 'generated/index';
-import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
-import { ZERO_BN } from 'constants/index';
-import { displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN, parseError } from 'util/index';
-import DestinationField from 'components/Common/Form/DestinationField';
-import TokenIcon from 'components/Common/TokenIcon';
-import useToggle from 'hooks/display/useToggle';
-import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
-import PillRow from 'components/Common/Form/PillRow';
-import { QuoteHandler } from 'hooks/useQuote';
-import { ethers } from 'ethers';
-import TransactionToast from 'components/Common/TxnToast';
-import toast from 'react-hot-toast';
-import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
-import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
-import useChainConstant from 'hooks/useChainConstant';
-import { BEAN_CRV3_LP } from 'constants/tokens';
-import copy from 'constants/copy';
+} from '~/components/Common/Form';
+import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
+import { ZERO_BN } from '~/constants';
+import { displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN, parseError } from '~/util';
+import DestinationField from '~/components/Common/Form/DestinationField';
+import TokenIcon from '~/components/Common/TokenIcon';
+import useToggle from '~/hooks/display/useToggle';
+import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
+import PillRow from '~/components/Common/Form/PillRow';
+import { QuoteHandler } from '~/hooks/useQuote';
+import TransactionToast from '~/components/Common/TxnToast';
+import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
+import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
+import useChainConstant from '~/hooks/useChainConstant';
+import { BEAN_CRV3_LP } from '~/constants/tokens';
+import copy from '~/constants/copy';
 
 // -----------------------------------------------------------------------
 
@@ -271,7 +270,7 @@ const Claim : React.FC<{
   const farm = useMemo(() => new Farm(provider), [provider]);
 
   /// Contracts
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
 
   /// Data
   const [refetchFarmerSilo]     = useFetchFarmerSilo();

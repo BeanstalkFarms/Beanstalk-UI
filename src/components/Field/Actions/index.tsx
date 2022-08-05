@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Card, Stack, Tab, Tabs } from '@mui/material';
-import useTabs from 'hooks/display/useTabs';
-import BadgeTab from 'components/Common/BadgeTab';
-import useFarmerField from 'hooks/useFarmerField';
+import useTabs from '~/hooks/display/useTabs';
+import BadgeTab from '~/components/Common/BadgeTab';
+import useFarmerField from '~/hooks/useFarmerField';
 import Sow from './Sow';
 import Transfer from './Transfer';
 import Harvest from './Harvest';

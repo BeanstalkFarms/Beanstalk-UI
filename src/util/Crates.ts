@@ -1,9 +1,9 @@
 import BigNumber from 'bignumber.js';
-import Token from 'classes/Token';
-import { TokenMap } from 'constants/index';
-import { BeanstalkReplanted } from 'generated';
-import { SeasonMap } from 'state/farmer/field';
-import { Crate, DepositCrate, FarmerSiloBalance, WithdrawalCrate } from 'state/farmer/silo';
+import Token from '~/classes/Token';
+import { TokenMap } from '~/constants';
+import { Beanstalk } from '~/generated';
+import { SeasonMap } from '~/state/farmer/field';
+import { Crate, DepositCrate, FarmerSiloBalance, WithdrawalCrate } from '~/state/farmer/silo';
 
 export type Withdrawals = SeasonMap<BigNumber>;
 
@@ -61,7 +61,7 @@ export function parseWithdrawals(
 }
 
 export const selectCratesForEnroot = (
-  beanstalk:    BeanstalkReplanted,
+  beanstalk:    Beanstalk,
   unripeTokens: TokenMap<Token>,
   siloBalances: TokenMap<FarmerSiloBalance>,
   getBDV:       (_token: Token) => BigNumber,

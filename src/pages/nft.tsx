@@ -1,18 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Box, Button, Card, Container, Stack, Tab, Tabs, useMediaQuery, } from '@mui/material';
-import { useSigner } from 'hooks/ledger/useSigner';
-import fetch from 'node-fetch';
-import { getAccount } from 'util/Account';
-import { ClaimStatus, loadNFTs, Nft } from 'util/BeaNFTs';
+import { Box, Button, Card, Container, Stack, Tab, Tabs, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import useTabs from 'hooks/display/useTabs';
-import NFTDialog from '../components/NFT/NFTDialog';
-import { BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES } from '../constants';
-import NFTGrid from '../components/NFT/NFTGrid';
-import { useGenesisNFTContract, useWinterNFTContract } from '../hooks/useContract';
-import TransactionToast from '../components/Common/TxnToast';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import useTabs from '~/hooks/display/useTabs';
+import { getAccount } from '~/util/Account';
+import { ClaimStatus, loadNFTs, Nft } from '~/util/BeaNFTs';
+import NFTDialog from '~/components/NFT/NFTDialog';
+import { BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES } from '~/constants';
+import NFTGrid from '~/components/NFT/NFTGrid';
+import { useGenesisNFTContract, useWinterNFTContract } from '~/hooks/useContract';
+import TransactionToast from '~/components/Common/TxnToast';
 import useAccount from '../hooks/ledger/useAccount';
-import AuthEmptyState from '../components/Common/ZeroState/AuthEmptyState';
+import AuthEmptyState from '~/components/Common/ZeroState/AuthEmptyState';
 
 const SLUGS = ['genesis', 'winter'];
 const NFTPage: React.FC = () => {

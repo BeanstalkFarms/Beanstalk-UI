@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack, StackProps, Typography } from '@mui/material';
-import useAccount from 'hooks/ledger/useAccount';
+import useAccount from '~/hooks/ledger/useAccount';
 import WalletButton from '../Connection/WalletButton';
 
 /**

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { ConstantByChain, getChainConstant } from 'util/Chain';
 import { useNetwork } from 'wagmi';
+import { ConstantByChain, getChainConstant } from '~/util/Chain';
 
 export function useGetChainConstant() {
   const { activeChain } = useNetwork();

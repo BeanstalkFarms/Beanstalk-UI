@@ -1,14 +1,13 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useBeanstalkContract } from 'hooks/useContract';
-import useChainId from 'hooks/useChain';
-import useBlocks from 'hooks/useBlocks';
-import useAccount from 'hooks/ledger/useAccount';
-import EventProcessor from 'lib/Beanstalk/EventProcessor';
-import useWhitelist from 'hooks/useWhitelist';
-import useSeason from 'hooks/useSeason';
-import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
-import { BeanstalkReplanted } from 'generated';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import useChainId from '~/hooks/useChain';
+import useBlocks from '~/hooks/useBlocks';
+import useAccount from '~/hooks/ledger/useAccount';
+import EventProcessor from '~/lib/Beanstalk/EventProcessor';
+import useWhitelist from '~/hooks/useWhitelist';
+import useSeason from '~/hooks/useSeason';
+import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
 import { EventCacheName } from '../events2';
 import useEvents, { GetQueryFilters } from '../events2/updater';
 import { updateFarmerField, resetFarmerField } from './actions';
@@ -18,7 +17,7 @@ export const useFetchFarmerField = () => {
   const dispatch  = useDispatch();
 
   /// Contracts
-  const beanstalk = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract();
 
   /// Data
   const account   = useAccount();

@@ -2,26 +2,25 @@ import { Box, Dialog, Link, Stack, Tooltip, Typography, useMediaQuery } from '@m
 import { Field, FieldProps, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useProvider } from 'wagmi';
-import { useSigner } from 'hooks/ledger/useSigner';
 import { LoadingButton } from '@mui/lab';
-import { ClaimRewardsAction } from 'lib/Beanstalk/Farm';
-import { useBeanstalkContract } from 'hooks/useContract';
-import { BeanstalkReplanted } from 'generated/index';
 import toast from 'react-hot-toast';
-import { parseError } from 'util/index'; 
-import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
-import { UNRIPE_TOKENS } from 'constants/tokens';
-import useTokenMap from 'hooks/useTokenMap';
-import { selectCratesForEnroot } from 'util/Crates';
-import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
-import useAccount from 'hooks/ledger/useAccount';
 import { ethers } from 'ethers';
 import BigNumber from 'bignumber.js';
-import useTimedRefresh from 'hooks/useTimedRefresh';
-import GasTag from 'components/Common/GasTag';
-import useBDV from 'hooks/useBDV';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
+import GasTag from '~/components/Common/GasTag';
+import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import { ClaimRewardsAction } from '~/lib/Beanstalk/Farm';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import { parseError } from '~/util'; 
+import { UNRIPE_TOKENS } from '~/constants/tokens';
+import useTokenMap from '~/hooks/useTokenMap';
+import { selectCratesForEnroot } from '~/util/Crates';
+import useAccount from '~/hooks/ledger/useAccount';
+import useTimedRefresh from '~/hooks/useTimedRefresh';
+import useBDV from '~/hooks/useBDV';
+import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
+import { AppState } from '~/state';
 import { useTheme } from '@mui/material/styles';
 import TransactionToast from '../Common/TxnToast';
 import DescriptionButton from '../Common/DescriptionButton';
@@ -223,7 +222,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
   const getBDV = useBDV();
   
   /// Contracts
-  const beanstalk         = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk         = useBeanstalkContract(signer);
 
   /// Form
   const initialValues: ClaimRewardsFormValues = useMemo(() => ({

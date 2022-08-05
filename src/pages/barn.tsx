@@ -1,9 +1,9 @@
 import React from 'react';
 import { Container, Stack } from '@mui/material';
-import PageHeader from 'components/Common/PageHeader';
-import RemainingFertilizer from 'components/Barn/RemainingFertilizer';
-import MyFertilizer from 'components/Barn/MyFertilizer';
-import BarnActions from 'components/Barn/Actions';
+import PageHeader from '~/components/Common/PageHeader';
+import RemainingFertilizer from '~/components/Barn/RemainingFertilizer';
+import MyFertilizer from '~/components/Barn/MyFertilizer';
+import BarnActions from '~/components/Barn/Actions';
 
 const Barn: React.FC = () => (
   <Container maxWidth="sm">

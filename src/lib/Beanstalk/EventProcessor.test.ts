@@ -1,9 +1,9 @@
 import { BigNumber as EBN } from 'ethers';
-import { AddDepositEvent, AddWithdrawalEvent, PlotTransferEvent, RemoveDepositEvent, RemoveWithdrawalEvent, RemoveWithdrawalsEvent, SowEvent } from 'generated/Beanstalk/BeanstalkReplanted';
-import { BEAN, BEAN_CRV3_LP, SILO_WHITELIST } from 'constants/tokens';
 import BigNumber from 'bignumber.js';
-import { HarvestEvent } from 'generated/Beanstalk/Beanstalk';
-import { TokenMap } from 'constants/index';
+import { AddDepositEvent, AddWithdrawalEvent, PlotTransferEvent, RemoveDepositEvent, RemoveWithdrawalEvent, RemoveWithdrawalsEvent, SowEvent , HarvestEvent } from '~/generated/Beanstalk/Beanstalk';
+
+import { BEAN, BEAN_CRV3_LP, SILO_WHITELIST } from '~/constants/tokens';
+import { TokenMap } from '~/constants';
 import EventProcessor, { BN, EventProcessingParameters } from './EventProcessor';
 
 // ------------------------------------------
@@ -12,9 +12,7 @@ const Bean = BEAN[1];
 const BeanCrv3 = BEAN_CRV3_LP[1];
 const account = '0xFARMER';
 const epp : EventProcessingParameters = {
-  farmableBeans: BN(0),
   season: BN(6074),
-  harvestableIndex: BN(100),  // fixme
   whitelist: SILO_WHITELIST.reduce<TokenMap>((prev, curr) => {
     prev[curr[1].address] = curr[1];
     return prev;

@@ -2,12 +2,12 @@ import { useCallback, useEffect, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import { useDispatch } from 'react-redux';
 import throttle from 'lodash/throttle';
-import { useBeanstalkPriceContract } from 'hooks/useContract';
-import { tokenResult, getChainConstant } from 'util/index';
-import { BEAN } from 'constants/tokens';
-import ALL_POOLS from 'constants/pools';
 import { useProvider } from 'wagmi';
-import { ERC20__factory } from 'generated';
+import { useBeanstalkPriceContract } from '~/hooks/useContract';
+import { tokenResult, getChainConstant } from '~/util';
+import { BEAN } from '~/constants/tokens';
+import ALL_POOLS from '~/constants/pools';
+import { ERC20__factory } from '~/generated';
 import { updateBeanPrice, updateBeanSupply } from '../token/actions';
 import { resetPools, updateBeanPools, UpdatePoolPayload } from './actions';
 
