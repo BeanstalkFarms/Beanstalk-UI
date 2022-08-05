@@ -2,7 +2,7 @@ import { Handler } from '@netlify/functions';
 import { ethers } from 'ethers';
 import { ERC20__factory } from '~/generated';
 
-const provider = new ethers.providers.AlchemyProvider(1, process.env.REACT_APP_ALCHEMY_API_KEY);
+const provider = new ethers.providers.AlchemyProvider(1, import.meta.env.VITE_ALCHEMY_API_KEY);
 const address  = '0xBEA0000029AD1c77D3d5D23Ba2D8893dB9d1Efab';
 const bean     = ERC20__factory.connect(address, provider);
 

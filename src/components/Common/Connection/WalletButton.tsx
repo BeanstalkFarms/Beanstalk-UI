@@ -196,7 +196,7 @@ const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
         endIcon={<DropdownIcon open={menuVisible} />}
         {...props}
         onClick={toggleMenuAnchor}
-        sx={process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT ? {
+        sx={import.meta.env.VITE_OVERRIDE_FARMER_ACCOUNT ? {
           borderBottomColor: 'red',
           borderBottomWidth: 2,
           borderBottomStyle: 'solid',

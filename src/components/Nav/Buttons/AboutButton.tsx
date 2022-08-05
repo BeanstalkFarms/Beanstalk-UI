@@ -74,11 +74,11 @@ const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
       {/* Build Information */}
       <Box sx={{ px: 1, pt: 0.75, opacity: 0.7 }}>
         <Typography color="text.secondary" fontSize={12} textAlign="center">
-          {process.env.REACT_APP_NAME || 'beanstalk-ui'} v
-          {process.env.REACT_APP_VERSION || '0.0.0'}@
-          {process.env.REACT_APP_GIT_COMMIT_REF?.slice(0, 6) || 'HEAD'}
+          {import.meta.env.VITE_NAME || 'beanstalk-ui'} v
+          {import.meta.env.VITE_VERSION || '0.0.0'}@
+          {import.meta.env.VITE_GIT_COMMIT_REF?.slice(0, 6) || 'HEAD'}
           {' · '}
-          hosted on {process.env.REACT_APP_HOST || 'unknown'}
+          hosted on {import.meta.env.VITE_HOST || 'unknown'}
         </Typography>
       </Box>
     </MenuList>

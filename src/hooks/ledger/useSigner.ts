@@ -6,15 +6,15 @@ import { TESTNET_CHAINS, TESTNET_RPC_ADDRESSES } from '~/constants/index';
 
 export let useSigner = useWagmiSigner;
 
-if (process.env.NODE_ENV === 'development' && process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT) {
-  console.warn(`Using overridden Farmer account: ${process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT}`);
+if (import.meta.env.NODE_ENV === 'development' && import.meta.env.VITE_OVERRIDE_FARMER_ACCOUNT) {
+  console.warn(`Using overridden Farmer account: ${import.meta.env.VITE_OVERRIDE_FARMER_ACCOUNT}`);
 
   // @ts-ignore
   useSigner = () => {
     const [signer, setSigner] = useState<ethers.Signer | undefined>(undefined);
     const chainId = useChainId();
     const wagmiSigner = useWagmiSigner();
-    const account   = { address: process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT };
+    const account   = { address: import.meta.env.VITE_OVERRIDE_FARMER_ACCOUNT };
     const isTestnet = TESTNET_CHAINS.has(chainId);
 
     useEffect(() => {

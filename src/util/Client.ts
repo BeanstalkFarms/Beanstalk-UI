@@ -79,7 +79,7 @@ const baseChains = [
   chain.mainnet,
 ];
 
-if (Boolean(process.env.REACT_APP_SHOW_DEV_CHAINS) === true) {
+if (Boolean(import.meta.env.VITE_SHOW_DEV_CHAINS) === true) {
   baseChains.push(makeTestnet(SupportedChainId.CUJO, 'Cujo'));
   baseChains.push(chain.localhost);
 }
@@ -88,7 +88,7 @@ const { chains, provider } = configureChains(
   baseChains, 
   [
     alchemyProvider({
-      alchemyId: process.env.REACT_APP_ALCHEMY_API_KEY,
+      alchemyId: import.meta.env.VITE_ALCHEMY_API_KEY,
       priority: 0,
     }),
     jsonRpcBatchProvider({
