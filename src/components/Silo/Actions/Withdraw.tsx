@@ -147,7 +147,7 @@ const WithdrawForm : React.FC<
   ) : null;
 
   return (
-    <Form noValidate>
+    <Form autoComplete="off" noValidate>
       {/* Confirmation Dialog */}
       {/* <StyledDialog open={confirming} onClose={onClose}>
         <StyledDialogTitle onClose={onClose}>Confirm Silo Withdrawal</StyledDialogTitle>

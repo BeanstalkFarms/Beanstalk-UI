@@ -97,7 +97,7 @@ const BuyForm : React.FC<
   }, [setFieldValue]);
 
   return (
-    <Form noValidate>
+    <Form autoComplete="off" noValidate>
       <Stack gap={1}>
         <TokenSelectDialog
           open={showTokenSelect}

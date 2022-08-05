@@ -163,7 +163,7 @@ const ClaimForm : React.FC<
   }), [claimableBalance]);
 
   return (
-    <Form noValidate>
+    <Form autoComplete="off" noValidate>
       <Stack gap={1}>
         {/* Claimable Token */}
         {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}

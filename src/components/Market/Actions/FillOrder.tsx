@@ -78,7 +78,7 @@ const FillOrderForm: React.FC<
   );
   
   return (
-    <Form noValidate>
+    <Form autoComplete="off" noValidate>
       <Stack gap={1}>
         <PlotInputField
           plots={eligiblePlots}

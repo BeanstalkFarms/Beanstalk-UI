@@ -134,7 +134,7 @@ const CreateOrderForm : React.FC<
   );
 
   return (
-    <Form noValidate>
+    <Form autoComplete="off" noValidate>
       <TokenSelectDialog
         open={showTokenSelect}
         handleClose={handleClose}

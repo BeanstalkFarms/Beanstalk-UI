@@ -67,7 +67,7 @@ const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
   );
 
   return (
-    <Form noValidate>
+    <Form autoComplete="off" noValidate>
       <Stack gap={1}>
         {/* Claimable Token */}
         <TokenInputField
