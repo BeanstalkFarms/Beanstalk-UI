@@ -2,8 +2,8 @@ import { Contract, ContractInterface, ethers } from 'ethers';
 import { useCallback, useMemo } from 'react';
 import { useProvider, useContract as useWagmiContract } from 'wagmi';
 
-import BEANSTALK_REPLANTED_ABI from '~/constants/abi/Beanstalk/BeanstalkReplanted.json';
-import BEANSTALK_PRICE_REPLANTED_ABI from '~/constants/abi/Beanstalk/BeanstalkPriceReplanted.json';
+import BEANSTALK_ABI from '~/constants/abi/Beanstalk/Beanstalk.json';
+import BEANSTALK_PRICE_ABI from '~/constants/abi/Beanstalk/BeanstalkPrice.json';
 import BEANSTALK_FERTILIZER_ABI from '~/constants/abi/Beanstalk/BeanstalkFertilizer.json';
 import ERC20_ABI from '~/constants/abi/ERC20.json';
 import BEANFT_GENESIS_ABI from '~/constants/abi/BeaNFT/BeaNFTGenesis.json';
@@ -113,7 +113,7 @@ export function useContract<T extends Contract = Contract>(
 // --------------------------------------------------
 
 const BEANSTALK_PRICE_ABIS = {
-  [SupportedChainId.MAINNET]: BEANSTALK_PRICE_REPLANTED_ABI,
+  [SupportedChainId.MAINNET]: BEANSTALK_PRICE_ABI,
 };
 
 export function useBeanstalkPriceContract() {
@@ -156,7 +156,7 @@ export function useFertilizerContract(signer?: ethers.Signer | null) {
 }
 
 const BEANSTALK_ABIS = {
-  [SupportedChainId.MAINNET]:   BEANSTALK_REPLANTED_ABI,
+  [SupportedChainId.MAINNET]:   BEANSTALK_ABI,
 };
 
 export function useBeanstalkContract(signer?: ethers.Signer | null) {

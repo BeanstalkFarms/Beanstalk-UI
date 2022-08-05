@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { Result } from 'ethers/lib/utils';
-import { BeanstalkReplanted__factory, Curve3Pool__factory, CurveTriCrypto2Pool__factory, CurveRegistry__factory, CurveMetaFactory__factory, CurveCryptoFactory__factory, CurveMetaPool__factory, CurvePlainPool__factory, CurveZap__factory } from '~/generated';
+import { Beanstalk__factory, Curve3Pool__factory, CurveTriCrypto2Pool__factory, CurveRegistry__factory, CurveMetaFactory__factory, CurveCryptoFactory__factory, CurveMetaPool__factory, CurvePlainPool__factory, CurveZap__factory } from '~/generated';
 import { getChainConstant } from '~/util/Chain';
 import { BEANSTALK_ADDRESSES, BEAN_CRV3_ADDRESSES, CRYPTO_FACTORY_ADDRESSES, CURVE_ZAP_ADDRESSES, META_FACTORY_ADDRESSES, POOL3_ADDRESSES, POOL_REGISTRY_ADDRESSES, TRICRYPTO2_ADDRESSES } from '~/constants/index';
 import { BEAN, USDT, WETH } from '~/constants/tokens';
@@ -102,7 +102,7 @@ const getContracts = (provider: ethers.providers.BaseProvider) => {
   });
 
   return {
-    beanstalk: BeanstalkReplanted__factory.connect(BEANSTALK, provider),
+    beanstalk: Beanstalk__factory.connect(BEANSTALK, provider),
     curve: {
       // Pools
       pools: {
