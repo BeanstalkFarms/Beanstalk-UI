@@ -12,34 +12,6 @@ const Barn: React.FC = () => (
         title="The Barn"
         description="Earn yield and recapitalize Beanstalk by buying Fertilizer"
         href="https://docs.bean.money/farm/barn"
-        // control={
-        //   <Stack direction="row" gap={1}>
-        //     <Button
-        //       href="https://dune.com/tbiq/beanstalk-barn-raise"
-        //       target="_blank"
-        //       rel="noreferrer"
-        //       color="light"
-        //       variant="contained"
-        //       endIcon={
-        //         <ArrowForwardIcon sx={{ width: IconSize.xs, transform: 'rotate(-45deg)' }} />
-        //       }
-        //     >
-        //       Analytics
-        //     </Button>
-        //     <Button
-        //       href="https://docs.bean.money/guides/earn-interest-on-beans/buy-fertilizer"
-        //       target="_blank"
-        //       rel="noreferrer"
-        //       color="light"
-        //       variant="contained"
-        //       endIcon={
-        //         <ArrowForwardIcon sx={{ width: IconSize.xs, transform: 'rotate(-45deg)' }} />
-        //       }
-        //     >
-        //       Guide
-        //     </Button>
-        //   </Stack>
-        // }
       />
       {/* Section 1: Fertilizer Remaining */}
       <RemainingFertilizer />
