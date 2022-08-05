@@ -25,6 +25,7 @@ import { AppState } from 'state';
 import TransactionToast from '../Common/TxnToast';
 import DescriptionButton from '../Common/DescriptionButton';
 import RewardsBar, { RewardsBarProps } from './RewardsBar';
+import { BeanstalkPalette } from '../App/muiTheme';
 
 export type SendFormValues = {
   to?: string;
@@ -131,8 +132,8 @@ const ClaimRewardsForm : React.FC<
               return (
                 <Stack gap={1}>
                   {options.map((option) => {
-                    const hovered = isHovering(option.value);
                     const disabled = !calls || calls[option.value].enabled === false;
+                    const hovered = isHovering(option.value) && !disabled;
                     return (
                       <Tooltip title={!disabled ? '' : 'Nothing to claim'}>
                         <div>
@@ -150,8 +151,8 @@ const ClaimRewardsForm : React.FC<
                             disabled={disabled}
                             sx={{
                               '&:disabled': {
-                                borderColor: 'gray'
-                              }
+                                borderColor: BeanstalkPalette.lightGrey,
+                              },
                             }}
                           />
                         </div>
