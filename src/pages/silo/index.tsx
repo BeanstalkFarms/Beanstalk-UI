@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
 import { Box, Button, Card, Container, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
-import Overview from 'components/Silo/Overview';
-import RewardsBar from 'components/Silo/RewardsBar';
-import Whitelist from 'components/Silo/Whitelist';
-import PageHeader from 'components/Common/PageHeader';
-import RewardsDialog from 'components/Silo/RewardsDialog';
-import DropdownIcon from 'components/Common/DropdownIcon';
+import Overview from '~/components/Silo/Overview';
+import RewardsBar from '~/components/Silo/RewardsBar';
+import Whitelist from '~/components/Silo/Whitelist';
+import PageHeader from '~/components/Common/PageHeader';
+import RewardsDialog from '~/components/Silo/RewardsDialog';
+import DropdownIcon from '~/components/Common/DropdownIcon';
 import useWhitelist from '~/hooks/useWhitelist';
 import usePools from '~/hooks/usePools';
 import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';

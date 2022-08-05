@@ -1,17 +1,17 @@
 import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import React, { useCallback, useMemo } from 'react';
+import BigNumber from 'bignumber.js';
+import toast from 'react-hot-toast';
+import PlotInputField from '~/components/Common/Form/PlotInputField';
+import TransactionToast from '~/components/Common/TxnToast';
 import {
   PlotFragment,
   PlotSettingsFragment, SmartSubmitButton,
   TokenOutputField, TxnPreview,
   TxnSeparator
-} from 'components/Common/Form';
-import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import React, { useCallback, useMemo } from 'react';
-import PlotInputField from 'components/Common/Form/PlotInputField';
-import BigNumber from 'bignumber.js';
-import TransactionToast from 'components/Common/TxnToast';
-import toast from 'react-hot-toast';
-import DestinationField from 'components/Common/Form/DestinationField';
+} from '~/components/Common/Form';
+import DestinationField from '~/components/Common/Form/DestinationField';
 import useFarmerPlots from '~/hooks/redux/useFarmerPlots';
 import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
 import { useBeanstalkContract } from '~/hooks/useContract';

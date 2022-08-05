@@ -1,10 +1,10 @@
 import React from 'react';
 import { Box, Stack, Typography } from '@mui/material';
-import Stat from 'components/Common/Stat';
+import Stat from '~/components/Common/Stat';
 import { useAccount } from 'wagmi';
-import BlurComponent from 'components/Common/ZeroState/BlurComponent';
-import SiloBalances from 'components/Common/SiloBalances';
-import Fiat from 'components/Common/Fiat';
+import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
+import SiloBalances from '~/components/Common/SiloBalances';
+import Fiat from '~/components/Common/Fiat';
 import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
 import useWhitelist from '../../hooks/useWhitelist';
 import WalletButton from '../Common/Connection/WalletButton';

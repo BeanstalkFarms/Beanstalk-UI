@@ -1,5 +1,5 @@
 import { Token } from '~/classes';
-import { FormState } from 'components/Common/Form';
+import { FormState } from '~/components/Common/Form';
 import { Action, ActionType } from '~/util/Actions';
 import BigNumber from 'bignumber.js';
 import { ZERO_BN } from '~/constants/index';

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Stack, Typography, Box } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { IconSize } from 'components/App/muiTheme';
-import TokenIcon from 'components/Common/TokenIcon';
+import { IconSize } from '~/components/App/muiTheme';
+import TokenIcon from '~/components/Common/TokenIcon';
 import podListingIcon from '~/img/beanstalk/pod-listing-icon.svg';
-import FarmerChip from 'components/Common/FarmerChip';
-import StatHorizontal from 'components/Common/StatHorizontal';
+import FarmerChip from '~/components/Common/FarmerChip';
+import StatHorizontal from '~/components/Common/StatHorizontal';
 import { BEAN, PODS } from '~/constants/tokens';
 import { displayBN } from '~/util/index';
 import { PodListing } from '~/state/farmer/market';

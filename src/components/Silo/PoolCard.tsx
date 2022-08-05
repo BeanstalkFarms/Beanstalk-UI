@@ -3,7 +3,7 @@ import { Button, ButtonProps as MuiButtonProps, Card, LinkProps, Stack, Typograp
 import { BeanPoolState } from '~/state/bean/pools';
 import { displayBN, displayFullBN } from '~/util/index';
 import { Pool } from '~/classes';
-import TokenIcon from 'components/Common/TokenIcon';
+import TokenIcon from '~/components/Common/TokenIcon';
 import { ZERO_BN } from '~/constants/index';
 
 /**

@@ -8,11 +8,11 @@ import {
   Typography,
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import FillListing from 'components/Market/Actions/FillListing';
-import ListingDetails from 'components/Market/Cards/ListingDetails';
-import PageHeaderSecondary from 'components/Common/PageHeaderSecondary';
-import CancelListing from 'components/Market/Actions/CancelListing';
-import GenericZero from 'components/Common/ZeroState/GenericZero';
+import FillListing from '~/components/Market/Actions/FillListing';
+import ListingDetails from '~/components/Market/Cards/ListingDetails';
+import PageHeaderSecondary from '~/components/Common/PageHeaderSecondary';
+import CancelListing from '~/components/Market/Actions/CancelListing';
+import GenericZero from '~/components/Common/ZeroState/GenericZero';
 import { BeanstalkReplanted } from '~/generated';
 import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
 import usePodListing from '~/hooks/usePodListing';

@@ -3,7 +3,7 @@ import { Stack, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { BeanstalkPalette } from 'components/App/muiTheme';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 import greenBeanIcon from '~/img/tokens/bean-logo-circled.svg';
 import { useTheme } from '@mui/material/styles';
 import BigNumber from 'bignumber.js';

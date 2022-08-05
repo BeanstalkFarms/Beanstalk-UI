@@ -1,5 +1,9 @@
 import { Alert, Box, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import React, { useCallback, useMemo } from 'react';
+import toast from 'react-hot-toast';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import {
   PlotFragment,
   PlotSettingsFragment,
@@ -7,15 +11,11 @@ import {
   TokenAdornment,
   TokenInputField,
   TxnPreview
-} from 'components/Common/Form';
-import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import React, { useCallback, useMemo } from 'react';
-import DestinationField from 'components/Common/Form/DestinationField';
-import TransactionToast from 'components/Common/TxnToast';
-import toast from 'react-hot-toast';
-import PlotInputField from 'components/Common/Form/PlotInputField';
-import TxnAccordion from 'components/Common/TxnAccordion';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+} from '~/components/Common/Form';
+import DestinationField from '~/components/Common/Form/DestinationField';
+import TransactionToast from '~/components/Common/TxnToast';
+import PlotInputField from '~/components/Common/Form/PlotInputField';
+import TxnAccordion from '~/components/Common/TxnAccordion';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import { BeanstalkReplanted } from '~/generated';
 import useGetChainToken from '~/hooks/useGetChainToken';

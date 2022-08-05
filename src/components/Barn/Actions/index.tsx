@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Card, Stack, Tab, Tabs } from '@mui/material';
 
 import useTabs from '~/hooks/display/useTabs';
-import BadgeTab from 'components/Common/BadgeTab';
+import BadgeTab from '~/components/Common/BadgeTab';
 import useFarmerFertilizer from '~/hooks/redux/useFarmerFertilizer';
 import Rinse from './Rinse';
 import Buy from './Buy';

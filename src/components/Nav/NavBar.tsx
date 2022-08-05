@@ -4,9 +4,9 @@ import {
   Box,
   Stack,
 } from '@mui/material';
-import { BeanstalkPalette } from 'components/App/muiTheme';
-import WalletButton from 'components/Common/Connection/WalletButton';
-import NetworkButton from 'components/Common/Connection/NetworkButton';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
+import WalletButton from '~/components/Common/Connection/WalletButton';
+import NetworkButton from '~/components/Common/Connection/NetworkButton';
 import PriceButton from './Buttons/PriceButton';
 import SunButton from './Buttons/SunButton';
 import LinkButton from './Buttons/LinkButton';

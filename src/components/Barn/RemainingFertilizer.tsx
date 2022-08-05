@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Box, Card, Stack, Typography, Tooltip } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import useHumidity from '~/hooks/useHumidity';
-import SunriseCountdown from 'components/Sun/SunriseCountdown';
+import SunriseCountdown from '~/components/Sun/SunriseCountdown';
 import useSeason from '~/hooks/useSeason';
 import { AppState } from '~/state';
 import { displayFullBN } from '~/util/index';

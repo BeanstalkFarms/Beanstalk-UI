@@ -1,6 +1,6 @@
 import { Accordion, AccordionDetails, Alert, Box, Divider, Stack } from '@mui/material';
-import AddressInputField from 'components/Common/Form/AddressInputField';
-import FieldWrapper from 'components/Common/Form/FieldWrapper';
+import AddressInputField from '~/components/Common/Form/AddressInputField';
+import FieldWrapper from '~/components/Common/Form/FieldWrapper';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import BigNumber from 'bignumber.js';

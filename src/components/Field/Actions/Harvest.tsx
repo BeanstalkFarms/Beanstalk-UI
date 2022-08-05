@@ -3,13 +3,13 @@ import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useAccount, useProvider } from 'wagmi';
-import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
+import toast from 'react-hot-toast';
+import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
 import {
   SmartSubmitButton, TokenInputField, TokenOutputField,
   TxnPreview,
   TxnSeparator
-} from 'components/Common/Form';
-import toast from 'react-hot-toast';
+} from '~/components/Common/Form';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import { ActionType } from '~/util/Actions';

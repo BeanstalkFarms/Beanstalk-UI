@@ -7,12 +7,12 @@ import {
   TokenSelectDialog,
   TxnSeparator,
   TxnSettings
-} from 'components/Common/Form';
-import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
+} from '~/components/Common/Form';
+import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
 import { Form, Formik, FormikProps } from 'formik';
 import React, { useCallback, useMemo, useState } from 'react';
-import TokenInputField from 'components/Common/Form/TokenInputField';
-import DestinationField from 'components/Common/Form/DestinationField';
+import TokenInputField from '~/components/Common/Form/TokenInputField';
+import DestinationField from '~/components/Common/Form/DestinationField';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import { BeanstalkReplanted } from '~/generated/index';
 import { ZERO_BN } from '~/constants/index';

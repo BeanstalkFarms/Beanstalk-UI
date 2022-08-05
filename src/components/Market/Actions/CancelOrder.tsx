@@ -1,12 +1,12 @@
 import { LoadingButton } from '@mui/lab';
 import { Stack, Typography } from '@mui/material';
-import { IconSize } from 'components/App/muiTheme';
-import AddressIcon from 'components/Common/AddressIcon';
-import DescriptionButton from 'components/Common/DescriptionButton';
-import { StyledDialog, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
-import TransactionToast from 'components/Common/TxnToast';
 import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { IconSize } from '~/components/App/muiTheme';
+import AddressIcon from '~/components/Common/AddressIcon';
+import DescriptionButton from '~/components/Common/DescriptionButton';
+import { StyledDialog, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
+import TransactionToast from '~/components/Common/TxnToast';
 import { BEAN } from '~/constants/tokens';
 import { BeanstalkReplanted } from '~/generated';
 import useToggle from '~/hooks/display/useToggle';

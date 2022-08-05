@@ -8,10 +8,10 @@ import {
   Tabs,
   Typography,
 } from '@mui/material';
-import MyOrdersTable from 'components/Market/Tables/MyOrders';
-import AddressIcon from 'components/Common/AddressIcon';
-import MyListingsTable from 'components/Market/Tables/MyListings';
 import { Link } from 'react-router-dom';
+import MyOrdersTable from '~/components/Market/Tables/MyOrders';
+import AddressIcon from '~/components/Common/AddressIcon';
+import MyListingsTable from '~/components/Market/Tables/MyListings';
 import useTabs from '~/hooks/display/useTabs';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 

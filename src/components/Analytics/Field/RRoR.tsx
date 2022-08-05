@@ -1,5 +1,5 @@
 import React from 'react';
-import SeasonPlot, { SeasonPlotBaseProps } from 'components/Common/Charts/SeasonPlot';
+import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
 import { SeasonalRRoRDocument, SeasonalRRoRQuery } from '~/generated/graphql';
 import { SnapshotData } from '~/hooks/useSeasons';
 

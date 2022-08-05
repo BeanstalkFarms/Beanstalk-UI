@@ -13,13 +13,13 @@ import {
 import unripeBeanIcon from '~/img/tokens/unripe-bean-logo-circled.svg';
 import brownLPIcon from '~/img/tokens/unripe-lp-logo-circled.svg';
 import { useTheme } from '@mui/material/styles';
-import { BeanstalkPalette } from 'components/App/muiTheme';
-import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
+import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
 import pickImage from '~/img/pick.png';
-import DescriptionButton from 'components/Common/DescriptionButton';
+import DescriptionButton from '~/components/Common/DescriptionButton';
 import { PickMerkleResponse } from 'functions/pick/pick';
 import { LoadingButton } from '@mui/lab';
-import TransactionToast from 'components/Common/TxnToast';
+import TransactionToast from '~/components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import Token from '~/classes/Token';
 import { useSigner } from '~/hooks/ledger/useSigner';

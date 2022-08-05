@@ -1,6 +1,14 @@
 import { Accordion, AccordionDetails, Alert, Box, Divider, Link, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import Token, { ERC20Token, NativeToken } from '~/classes/Token';
+import { ethers } from 'ethers';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { useProvider } from 'wagmi';
+import toast from 'react-hot-toast';
+import TransactionToast from '~/components/Common/TxnToast';
+import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
 import {
   FormState,
   SettingInput,
@@ -12,16 +20,8 @@ import {
   TxnPreview,
   TxnSeparator,
   TxnSettings
-} from 'components/Common/Form';
-import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
-import TransactionToast from 'components/Common/TxnToast';
-import { ethers } from 'ethers';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { useProvider } from 'wagmi';
-import toast from 'react-hot-toast';
+} from '~/components/Common/Form';
+import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import { BeanstalkReplanted } from '~/generated/index';
 import useToggle from '~/hooks/display/useToggle';
 import { useBeanstalkContract } from '~/hooks/useContract';

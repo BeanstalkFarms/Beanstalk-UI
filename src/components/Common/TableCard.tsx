@@ -6,7 +6,7 @@ import {
   GridColumns,
   GridSortItem
 } from '@mui/x-data-grid';
-import { tableStyle } from 'components/Common/Table/styles';
+import { tableStyle } from '~/components/Common/Table/styles';
 import { displayBN } from '~/util/index';
 import { ZERO_BN } from '~/constants/index';
 import { Token } from '../../classes';

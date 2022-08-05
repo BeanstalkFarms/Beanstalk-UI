@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Theme } from '@mui/material/styles';
 
-import App from 'components/App';
-import Wrapper from 'components/App/Wrapper';
+import App from '~/components/App';
+import Wrapper from '~/components/App/Wrapper';
 
 import './index.css';
 import reportWebVitals from './reportWebVitals';

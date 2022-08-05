@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
-import COLUMNS from 'components/Common/Table/cells';
+import COLUMNS from '~/components/Common/Table/cells';
 import { castPodOrder, PodOrder } from '~/state/farmer/market';
 import { useAllPodOrdersQuery } from '~/generated/graphql';
 import MarketBaseTable from './Base';

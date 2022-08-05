@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { Token } from '~/classes';
 import { SEEDS, STALK } from '~/constants/tokens';
-import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
+import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
 import {
   FormState,
   TxnPreview,
@@ -13,13 +13,13 @@ import {
   TokenAdornment,
   TxnSeparator,
   SmartSubmitButton
-} from 'components/Common/Form';
+} from '~/components/Common/Form';
 import Beanstalk from '~/lib/Beanstalk';
 import useSeason from '~/hooks/useSeason';
 import { FarmerSilo } from '~/state/farmer/silo';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import { displayFullBN, parseError, toStringBaseUnitBN } from '~/util/index';
-import TransactionToast from 'components/Common/TxnToast';
+import TransactionToast from '~/components/Common/TxnToast';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import useFarmerSiloBalances from '~/hooks/useFarmerSiloBalances';
 import { ERC20Token } from '~/classes/Token';

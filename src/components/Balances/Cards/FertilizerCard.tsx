@@ -3,7 +3,7 @@ import React from 'react';
 import {Box, Link, Stack, Typography} from '@mui/material';
 import fertilizerOpenIcon from "img/fertilizer-opened.svg";
 import StatCard from '../StatCard';
-import TokenIcon from 'components/Common/TokenIcon';
+import TokenIcon from '~/components/Common/TokenIcon';
 import { PODS } from '~/constants/tokens';
 
 const FertilizerCard: React.FC<{}> = () => {

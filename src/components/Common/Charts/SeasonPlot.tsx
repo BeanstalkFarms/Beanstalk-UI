@@ -1,11 +1,11 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Stack, Box, CircularProgress } from '@mui/material';
-import Stat, { StatProps } from 'components/Common/Stat';
+import Stat, { StatProps } from '~/components/Common/Stat';
 import { Line } from '@visx/shape';
-import LineChart, { DataPoint, LineChartProps } from 'components/Common/Charts/LineChart';
+import LineChart, { DataPoint, LineChartProps } from '~/components/Common/Charts/LineChart';
 import useSeasons, { MinimumViableSnapshotQuery, SeasonAggregation, SeasonRange } from '~/hooks/useSeasons';
 import { DocumentNode } from 'graphql';
-import { BeanstalkPalette } from 'components/App/muiTheme';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 import TimeTabs, { TimeTabState }  from './TimeTabs';
 
 type SeasonDataPoint = DataPoint & { season: number; };

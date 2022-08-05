@@ -1,5 +1,5 @@
 import React from 'react';
-import SeasonPlot, { SeasonPlotBaseProps } from 'components/Common/Charts/SeasonPlot';
+import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
 import { SeasonalPodRateDocument, SeasonalPodRateQuery } from '~/generated/graphql';
 import useSeason from '~/hooks/useSeason';
 import usePodRate from '~/hooks/usePodRate';

@@ -12,7 +12,7 @@ import TransactionHistoryPage from 'pages/history';
 import BalancesPage from 'pages/balances';
 // import pageBackgroundGradient from '~/img/theme/bg-mainnet-gradient.png';
 import pageBackground from '~/img/theme/bg-mainnet.png';
-import NavBar from 'components/Nav/NavBar';
+import NavBar from '~/components/Nav/NavBar';
 import PoolsUpdater from '~/state/bean/pools/updater';
 import UnripeUpdater from '~/state/bean/unripe/updater';
 import SunUpdater from '~/state/beanstalk/sun/updater';

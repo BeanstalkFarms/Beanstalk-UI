@@ -8,16 +8,16 @@ import {
   TokenSelectDialog,
   TxnPreview,
   TxnSeparator
-} from 'components/Common/Form';
-import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
+} from '~/components/Common/Form';
+import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import toast from 'react-hot-toast';
-import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import TokenInputField from 'components/Common/Form/TokenInputField';
-import { BeanstalkPalette } from 'components/App/muiTheme';
-import TransactionToast from 'components/Common/TxnToast';
-import DestinationField from 'components/Common/Form/DestinationField';
+import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
+import TokenInputField from '~/components/Common/Form/TokenInputField';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
+import TransactionToast from '~/components/Common/TxnToast';
+import DestinationField from '~/components/Common/Form/DestinationField';
 import { useSelector } from 'react-redux';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import { BeanstalkReplanted } from '~/generated/index';

@@ -1,7 +1,7 @@
 import React from 'react';
 import SeasonPlot, {
   SeasonPlotBaseProps,
-} from 'components/Common/Charts/SeasonPlot';
+} from '~/components/Common/Charts/SeasonPlot';
 import { Season, SeasonalPriceDocument } from '~/generated/graphql';
 import usePrice from '~/hooks/usePrice';
 import useSeason from '~/hooks/useSeason';

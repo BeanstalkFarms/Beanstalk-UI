@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Stack, Typography } from '@mui/material';
-import { IconSize } from 'components/App/muiTheme';
+import { IconSize } from '~/components/App/muiTheme';
 import AddressIcon from './AddressIcon';
 
 const FarmerChip : React.FC<{ account: string }> = ({ account }) => (

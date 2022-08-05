@@ -9,7 +9,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import DropdownIcon from 'components/Common/DropdownIcon';
+import DropdownIcon from '~/components/Common/DropdownIcon';
 import { useHotkeys } from 'react-hotkeys-hook';
 import useToggle from '~/hooks/display/useToggle';
 import useAnchor from '~/hooks/display/useAnchor';

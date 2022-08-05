@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack, Tooltip, Typography } from '@mui/material';
-import TokenIcon from 'components/Common/TokenIcon';
+import TokenIcon from '~/components/Common/TokenIcon';
 import BigNumber from 'bignumber.js';
 import humidityIcon from '~/img/beanstalk/humidity-icon.svg';
 import { displayBN, displayFullBN } from '~/util/index';

@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import { useProvider } from 'wagmi';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { Token } from '~/classes';
-import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
+import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import { FarmerSiloBalance } from '~/state/farmer/silo';
 import { ActionType } from '~/util/Actions';
@@ -21,19 +21,19 @@ import {
   TxnSettings,
   SettingInput,
   SmartSubmitButton
-} from 'components/Common/Form';
+} from '~/components/Common/Form';
 import { BeanstalkReplanted } from '~/generated/index';
 import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import { ZERO_BN } from '~/constants/index';
 import { displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN, parseError } from '~/util/index';
-import DestinationField from 'components/Common/Form/DestinationField';
-import TokenIcon from 'components/Common/TokenIcon';
+import DestinationField from '~/components/Common/Form/DestinationField';
+import TokenIcon from '~/components/Common/TokenIcon';
 import useToggle from '~/hooks/display/useToggle';
-import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
-import PillRow from 'components/Common/Form/PillRow';
+import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
+import PillRow from '~/components/Common/Form/PillRow';
 import { QuoteHandler } from '~/hooks/useQuote';
 import { ethers } from 'ethers';
-import TransactionToast from 'components/Common/TxnToast';
+import TransactionToast from '~/components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';

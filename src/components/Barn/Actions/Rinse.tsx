@@ -8,11 +8,11 @@ import {
   TokenInputField,
   TokenOutputField,
   TxnSeparator
-} from 'components/Common/Form';
-import TxnPreview from 'components/Common/Form/TxnPreview';
-import TxnAccordion from 'components/Common/TxnAccordion';
-import DestinationField from 'components/Common/Form/DestinationField';
-import TransactionToast from 'components/Common/TxnToast';
+} from '~/components/Common/Form';
+import TxnPreview from '~/components/Common/Form/TxnPreview';
+import TxnAccordion from '~/components/Common/TxnAccordion';
+import DestinationField from '~/components/Common/Form/DestinationField';
+import TransactionToast from '~/components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import useFarmerFertilizer from '~/hooks/redux/useFarmerFertilizer';
 import { BeanstalkReplanted } from '~/generated';

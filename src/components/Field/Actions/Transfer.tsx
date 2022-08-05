@@ -1,12 +1,12 @@
 import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
-import AddressInputField from 'components/Common/Form/AddressInputField';
-import FieldWrapper from 'components/Common/Form/FieldWrapper';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
-import { PlotFragment, PlotSettingsFragment, SmartSubmitButton, TokenOutputField, TxnPreview, TxnSeparator } from 'components/Common/Form';
-import TransactionToast from 'components/Common/TxnToast';
-import PlotInputField from 'components/Common/Form/PlotInputField';
 import BigNumber from 'bignumber.js';
+import AddressInputField from '~/components/Common/Form/AddressInputField';
+import FieldWrapper from '~/components/Common/Form/FieldWrapper';
+import { PlotFragment, PlotSettingsFragment, SmartSubmitButton, TokenOutputField, TxnPreview, TxnSeparator } from '~/components/Common/Form';
+import TransactionToast from '~/components/Common/TxnToast';
+import PlotInputField from '~/components/Common/Form/PlotInputField';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import { BeanstalkReplanted } from '~/generated/index';

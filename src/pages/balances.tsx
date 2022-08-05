@@ -1,9 +1,9 @@
 import React from 'react';
 import { Card, Container, Grid, Stack, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
-import Stat from 'components/Common/Stat';
-import TotalBalanceCard from 'components/Balances/TotalBalancesCard';
-import TokenIcon from 'components/Common/TokenIcon';
+import Stat from '~/components/Common/Stat';
+import TotalBalanceCard from '~/components/Balances/TotalBalancesCard';
+import TokenIcon from '~/components/Common/TokenIcon';
 import useFarmerTotalFertilizer from '~/hooks/useFarmerTotalFertilizer';
 import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
 import { displayFullBN } from '~/util/index';

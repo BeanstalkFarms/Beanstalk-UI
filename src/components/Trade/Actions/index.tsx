@@ -1,5 +1,5 @@
 import { Box, Card, Link, Stack, Typography } from '@mui/material';
-import Soon from 'components/Analytics/Soon';
+import Soon from '~/components/Analytics/Soon';
 import React from 'react';
 
 const TradeActions : React.FC<{}> = () => (
