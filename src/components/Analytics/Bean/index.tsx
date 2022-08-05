@@ -3,6 +3,7 @@ import { Card, Stack, Tab, Tabs } from '@mui/material';
 
 import useTabs from 'hooks/display/useTabs';
 import TWAP from './TWAP';
+import Supply from './Supply';
 import Soon from '../Soon';
 
 const SLUGS = ['price', 'volume', 'liquidity', 'mktcap', 'supply', 'crosses'];
@@ -24,7 +25,7 @@ const BeanAnalytics: React.FC<{}> = () => {
         {tab === 1 && <Soon height={300} />}
         {tab === 2 && <Soon height={300} />}
         {tab === 3 && <Soon height={300} />}
-        {tab === 4 && <Soon height={300} />}
+        {tab === 4 && <Supply height={300} />}
         {tab === 5 && <Soon height={300} />}
       </Stack>
     </Card>

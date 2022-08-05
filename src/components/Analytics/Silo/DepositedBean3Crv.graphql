@@ -1,0 +1,16 @@
+query SeasonalDepositedBean3CRV($season_lte: Int, $first: Int) {
+  seasons: siloAssetHourlySnapshots(
+    where: {
+        season_lte: $season_lte,
+        siloAsset: "0xc1e088fc1323b20bcbee9bd1b9fc9546db5624c5-0xc9c32cd16bf7efb85ff14e0c8603cc90f6f2ee49"
+    }
+    first: $first
+    orderBy: season
+    orderDirection: desc
+  ) { 
+      id
+      season
+      timestamp
+      hourlyDepositedAmount
+  }
+}

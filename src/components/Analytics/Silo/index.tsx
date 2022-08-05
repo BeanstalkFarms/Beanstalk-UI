@@ -1,7 +1,12 @@
 import { Card, Stack, Tab, Tabs } from '@mui/material';
 import useTabs from 'hooks/display/useTabs';
 import React from 'react';
-import Soon from '../Soon';
+import DepositedBeans from './DepositedBeans';
+import DepositedBean3CRV from './DepositedBean3Crv';
+import DepositedUnripeBeans from './DepositedUnripeBeans';
+import DepositedUnripeBean3CRV from './DepositedUnripeBean3Crv';
+import Stalk from './Stalk';
+import Seeds from './Seeds';
 
 const SLUGS = [
   'deposited_bean',
@@ -27,12 +32,12 @@ const SiloAnalytics: React.FC<{}> = () => {
           <Tab label="Stalk" />
           <Tab label="Seeds" />
         </Tabs>
-        {tab === 0 && <Soon height={300} />}
-        {tab === 1 && <Soon height={300} />}
-        {tab === 2 && <Soon height={300} />}
-        {tab === 3 && <Soon height={300} />}
-        {tab === 4 && <Soon height={300} />}
-        {tab === 5 && <Soon height={300} />}
+        {tab === 0 && <DepositedBeans height={300} />}
+        {tab === 1 && <DepositedBean3CRV height={300} />}
+        {tab === 2 && <DepositedUnripeBeans height={300} />}
+        {tab === 3 && <DepositedUnripeBean3CRV height={300} />}
+        {tab === 4 && <Stalk height={300} />}
+        {tab === 5 && <Seeds height={300} />}
         {/* {tab === 6 && <Soon height={300} />} */}
         {/* {tab === 7 && <Soon height={300} />} */}
         {/* {tab === 0 && <DepositedBeans season={season} beanPrice={beanPrice} />}
