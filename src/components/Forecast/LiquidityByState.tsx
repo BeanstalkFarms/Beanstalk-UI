@@ -13,7 +13,7 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
   return (
     <Card sx={{ p: 2, width: '100%', ...sx }}>
       <Stat
-        title="Total Value"
+        title="Total Beanstalk Balances"
         amount={displayUSD(breakdown.totalValue.abs())}
         amountIcon={undefined}
         gap={0.25}
