@@ -25,7 +25,7 @@ import useToggle from '~/hooks/display/useToggle';
 import useGetChainToken from '~/hooks/useGetChainToken';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { useBeanstalkContract } from '~/hooks/useContract';
-import { BeanstalkReplanted } from '~/generated';
+import { Beanstalk } from '~/generated';
 import usePreferredToken, { PreferredToken } from '~/hooks/usePreferredToken';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
@@ -49,7 +49,7 @@ const FillListingForm : React.FC<
   FormikProps<FillListingFormValues>
   & {
     podListing: PodListing;
-    contract: BeanstalkReplanted;
+    contract: Beanstalk;
     handleQuote: QuoteHandler;
     farm: Farm;
   }
@@ -280,7 +280,7 @@ const FillListing : React.FC<{
   /// Ledger
   const { data: signer } = useSigner();
   const provider  = useProvider();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
   const farm      = useMemo(() => new Farm(provider), [provider]);
 
   /// Data

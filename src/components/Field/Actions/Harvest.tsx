@@ -13,7 +13,6 @@ import {
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import { ActionType } from '~/util/Actions';
-import { BeanstalkReplanted } from '~/generated/index';
 import Farm, { FarmToMode } from '~/lib/Beanstalk/Farm';
 import {
   displayFullBN,
@@ -146,7 +145,7 @@ const Harvest: React.FC<{}> = () => {
   const { data: account } = useAccount();
   const provider = useProvider();
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
   const farm = useMemo(() => new Farm(provider), [provider]);
 
   ///

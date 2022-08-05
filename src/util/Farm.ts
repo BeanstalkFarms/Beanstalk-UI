@@ -29,7 +29,7 @@ export const optimizeFromMode = (
 };
 
 // export const optimizeFarmCall = (
-//   contract: BeanstalkReplanted,
+//   contract: Beanstalk,
 //   encodedFunctionData: string[],
 //   overrides: any
 // ) => {

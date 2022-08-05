@@ -17,7 +17,6 @@ import TransactionToast from '~/components/Common/TxnToast';
 import PlotInputField from '~/components/Common/Form/PlotInputField';
 import TxnAccordion from '~/components/Common/TxnAccordion';
 import { useBeanstalkContract } from '~/hooks/useContract';
-import { BeanstalkReplanted } from '~/generated';
 import useGetChainToken from '~/hooks/useGetChainToken';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import useFarmerListings from '~/hooks/redux/useFarmerListings';
@@ -184,7 +183,7 @@ const CreateListing: React.FC<{}> = () => {
   
   ///
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
   
   ///
   const plots            = useFarmerPlots();

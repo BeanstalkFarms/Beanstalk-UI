@@ -21,7 +21,6 @@ import TokenIcon from '~/components/Common/TokenIcon';
 import { ERC20Token, NativeToken } from '~/classes/Token';
 import { Token } from '~/classes';
 import useToggle from '~/hooks/display/useToggle';
-import { BeanstalkReplanted } from '~/generated';
 import { QuoteHandler } from '~/hooks/useQuote';
 import useChainId from '~/hooks/useChain';
 import useFertilizerSummary from '~/hooks/summary/useFertilizerSummary';
@@ -196,7 +195,7 @@ const Buy : React.FC<{}> = () => {
   
   // Contracts
   const fertContract = useFertilizerContract(signer);
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
   const farm = useMemo(() => new Farm(provider), [provider]);
 
   // Constants

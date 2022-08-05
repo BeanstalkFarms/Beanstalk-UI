@@ -15,7 +15,6 @@ import DestinationField from '~/components/Common/Form/DestinationField';
 import useFarmerPlots from '~/hooks/redux/useFarmerPlots';
 import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
 import { useBeanstalkContract } from '~/hooks/useContract';
-import { BeanstalkReplanted } from '~/generated';
 import useChainConstant from '~/hooks/useChainConstant';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { parseError } from '~/util/index';
@@ -166,7 +165,7 @@ const FillOrder: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
   
   /// Chain
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
 
   const onSubmit = useCallback(async (values: FillOrderFormValues, formActions: FormikHelpers<FillOrderFormValues>) => {
     let txToast;

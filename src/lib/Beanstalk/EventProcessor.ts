@@ -11,7 +11,7 @@ import {
   RemoveDepositEvent,
   RemoveWithdrawalsEvent,
   RemoveDepositsEvent,
-  PodListingCancelledEvent, PodListingCreatedEvent, PodListingFilledEvent, PodOrderCancelledEvent, PodOrderCreatedEvent, PodOrderFilledEvent } from '~/generated/Beanstalk/BeanstalkReplanted';
+  PodListingCancelledEvent, PodListingCreatedEvent, PodListingFilledEvent, PodOrderCancelledEvent, PodOrderCreatedEvent, PodOrderFilledEvent } from '~/generated/Beanstalk/Beanstalk';
 import { BEAN, PODS } from '~/constants/tokens';
 import { TokenMap } from '~/constants/index';
 import { PlotMap } from '~/state/farmer/field';
@@ -21,7 +21,7 @@ import { FarmToMode } from './Farm';
 
 // ----------------------------------------
 
-// : Readonly<(keyof BeanstalkReplanted['filters'])[]>
+// : Readonly<(keyof Beanstalk['filters'])[]>
 const SupportedEvents  = [
   // Field
   'Sow',

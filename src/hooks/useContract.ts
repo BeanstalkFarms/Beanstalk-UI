@@ -155,47 +155,32 @@ export function useFertilizerContract(signer?: ethers.Signer | null) {
   });
 }
 
-const BEANSTALK_ABIS = {
-  [SupportedChainId.MAINNET]:   BEANSTALK_ABI,
-};
-
 export function useBeanstalkContract(signer?: ethers.Signer | null) {
   const address   = useChainConstant(BEANSTALK_ADDRESSES);
-  const abi       = useChainConstant(BEANSTALK_ABIS);
   const provider  = useProvider();
   return useWagmiContract<Beanstalk>({
     addressOrName: address,
-    contractInterface: abi,
+    contractInterface: BEANSTALK_ABI,
     signerOrProvider: signer || provider,
   });
 }
-
-const BEANFT_GENESIS_ABIS = {
-  [SupportedChainId.MAINNET]:   BEANFT_GENESIS_ABI,
-};
 
 export function useGenesisNFTContract(signer?: ethers.Signer | null) {
   const address = useChainConstant(BEANFT_GENESIS_ADDRESSES);
-  const abi     = useChainConstant(BEANFT_GENESIS_ABIS);
   const provider = useProvider();
   return useWagmiContract<BeaNFTGenesis>({
     addressOrName: address,
-    contractInterface: abi,
+    contractInterface: BEANFT_GENESIS_ABI,
     signerOrProvider: signer || provider,
   });
 }
 
-const BEANFT_WINTER_ABIS = {
-  [SupportedChainId.MAINNET]:   BEANFT_WINTER_ABI,
-};
-
 export function useWinterNFTContract(signer?: ethers.Signer | null) {
   const address = useChainConstant(BEANFT_WINTER_ADDRESSES);
-  const abi     = useChainConstant(BEANFT_WINTER_ABIS);
   const provider = useProvider();
   return useWagmiContract<BeaNFTWinter>({
     addressOrName: address,
-    contractInterface: abi,
+    contractInterface: BEANFT_WINTER_ABI,
     signerOrProvider: signer || provider,
   });
 }

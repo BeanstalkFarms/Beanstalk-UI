@@ -1,5 +1,9 @@
 import { Accordion, AccordionDetails, Box, CircularProgress, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import React, { useCallback, useMemo } from 'react';
+import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 import {
   FormState,
   SmartSubmitButton,
@@ -10,17 +14,13 @@ import {
   TxnSeparator
 } from '~/components/Common/Form';
 import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
-import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import React, { useCallback, useMemo } from 'react';
-import toast from 'react-hot-toast';
 import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
 import TokenInputField from '~/components/Common/Form/TokenInputField';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import TransactionToast from '~/components/Common/TxnToast';
 import DestinationField from '~/components/Common/Form/DestinationField';
-import { useSelector } from 'react-redux';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
-import { BeanstalkReplanted } from '~/generated/index';
+import { Beanstalk } from '~/generated/index';
 import useToggle from '~/hooks/display/useToggle';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useFarmerBalances from '~/hooks/useFarmerBalances';
@@ -37,7 +37,7 @@ import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/t
 import { NEW_BN, ZERO_BN } from '~/constants/index';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { AppState } from '~/state';
-import useChopPenalty from '../../../hooks/useChopPenalty';
+import useChopPenalty from '~/hooks/useChopPenalty';
 
 type ChopFormValues = FormState & {
   destination: FarmToMode;
@@ -46,7 +46,7 @@ type ChopFormValues = FormState & {
 const ChopForm: React.FC<
   FormikProps<ChopFormValues> & {
     balances: ReturnType<typeof useFarmerBalances>;
-    beanstalk: BeanstalkReplanted;
+    beanstalk: Beanstalk;
   }
 > = ({
   values,
@@ -201,7 +201,7 @@ const Chop: React.FC<{}> = () => {
   ///
   const account           = useAccount();
   const { data: signer }  = useSigner();
-  const beanstalk         = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk         = useBeanstalkContract(signer);
 
   ///
   const baseToken         = usePreferredToken(PREFERRED_TOKENS, 'use-best');

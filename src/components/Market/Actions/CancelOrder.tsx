@@ -8,7 +8,6 @@ import DescriptionButton from '~/components/Common/DescriptionButton';
 import { StyledDialog, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
 import TransactionToast from '~/components/Common/TxnToast';
 import { BEAN } from '~/constants/tokens';
-import { BeanstalkReplanted } from '~/generated';
 import useToggle from '~/hooks/display/useToggle';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import useChainConstant from '~/hooks/useChainConstant';
@@ -51,7 +50,7 @@ const CancelOrder : React.FC<{
   
   /// Contracts
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
   
   /// Refetch
   const [refetchFarmerBalances]  = useFetchFarmerBalances();

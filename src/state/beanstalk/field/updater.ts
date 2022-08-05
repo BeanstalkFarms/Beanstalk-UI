@@ -4,6 +4,7 @@ import { bigNumberResult, tokenResult } from '~/util/index';
 import { BEAN } from '~/constants/tokens';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import { resetBeanstalkField, updateBeanstalkField } from './actions';
+import { ZERO_BN } from '~/constants';
 
 export const useFetchBeanstalkField = () => {
   const dispatch = useDispatch();
@@ -19,7 +20,6 @@ export const useFetchBeanstalkField = () => {
         podIndex,
         soil,
         weather,
-        rain
       ] = await Promise.all([
         beanstalk.harvestableIndex().then(tokenResult(BEAN)), // FIXME
         beanstalk.podIndex().then(tokenResult(BEAN)),
@@ -34,10 +34,6 @@ export const useFetchBeanstalkField = () => {
           startSoil: tokenResult(BEAN)(_weather.startSoil),
           yield: bigNumberResult(_weather.yield),
         })),
-        beanstalk.rain().then((_rain) => ({
-          raining: _rain.raining,
-          rainStart: bigNumberResult(_rain.start),
-        }))
       ] as const);
 
       console.debug('[beanstalk/field/useBeanstalkField] RESULT');
@@ -48,7 +44,11 @@ export const useFetchBeanstalkField = () => {
         podLine: podIndex.minus(harvestableIndex),
         soil,
         weather,
-        rain,
+        rain: {
+          // FIXME
+          raining: false,
+          rainStart: ZERO_BN,
+        },
       }));
     }
   }, [

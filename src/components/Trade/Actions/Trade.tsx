@@ -1,4 +1,6 @@
 import { Stack } from '@mui/material';
+import { Form, Formik, FormikProps } from 'formik';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   FormApprovingState, FormTokenState,
   SettingInput,
@@ -9,12 +11,10 @@ import {
   TxnSettings
 } from '~/components/Common/Form';
 import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
-import { Form, Formik, FormikProps } from 'formik';
-import React, { useCallback, useMemo, useState } from 'react';
 import TokenInputField from '~/components/Common/Form/TokenInputField';
 import DestinationField from '~/components/Common/Form/DestinationField';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
-import { BeanstalkReplanted } from '~/generated/index';
+import { Beanstalk } from '~/generated/index';
 import { ZERO_BN } from '~/constants/index';
 import { BEAN, DAI, ETH, USDC, USDT, WETH } from '~/constants/tokens';
 import { useBeanstalkContract } from '~/hooks/useContract';
@@ -34,7 +34,7 @@ type TradeFormValues = {
 
 const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   balances: ReturnType<typeof useFarmerBalances>;
-  beanstalk: BeanstalkReplanted;
+  beanstalk: Beanstalk;
   tokenList: (ERC20Token | NativeToken)[]
 }> = ({
   //
@@ -245,7 +245,7 @@ const SUPPORTED_TOKENS = [
 const Trade: React.FC<{}> = () => {
   ///
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
 
   ///
   const getChainToken = useGetChainToken();

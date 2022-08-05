@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import flatMap from 'lodash/flatMap';
 import { ZERO_BN } from '~/constants/index';
-import { BeanstalkReplanted } from '~/generated/index';
+import { Beanstalk } from '~/generated/index';
 import { BALANCE_TOKENS, ERC20_TOKENS, ETH } from '~/constants/tokens';
 import useChainId from '~/hooks/useChain';
 import { useBeanstalkContract } from '~/hooks/useContract';
@@ -26,7 +26,7 @@ export const useFetchFarmerBalances = () => {
   const erc20TokenMap = useTokenMap(ERC20_TOKENS);
 
   // Contracts
-  const beanstalk = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract();
   const migrate   = useMigrateCall();
 
   // Handlers

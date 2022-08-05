@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import BigNumber from 'bignumber.js';
 import { BARNRAISE_CUSTODIAN_ADDRESSES, USDC_ADDRESSES } from '~/constants/addresses';
 import { BEAN, USDC } from '~/constants/tokens';
 import useChainConstant from '~/hooks/useChainConstant';
@@ -7,14 +8,13 @@ import { useBeanstalkContract, useBeanstalkFertilizerContract, useERC20Contract 
 import { tokenResult, bigNumberResult } from '~/util/index';
 import useChainId from '~/hooks/useChain';
 import useMigrateCall from '~/hooks/useMigrateCall';
-import { Beanstalk, BeanstalkReplanted } from '~/generated/index';
+import { Beanstalk } from '~/generated/index';
 import { ZERO_BN } from '~/constants/index';
-import BigNumber from 'bignumber.js';
 import { resetBarn, updateBarn } from './actions';
 
 export const useBarn = () => {
   const dispatch        = useDispatch();
-  const beanstalk       = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const beanstalk       = useBeanstalkContract();
   const [fertContract]  = useBeanstalkFertilizerContract();
   const [usdcContract]  = useERC20Contract(USDC_ADDRESSES);
   const custodian       = useChainConstant(BARNRAISE_CUSTODIAN_ADDRESSES);
@@ -32,12 +32,12 @@ export const useBarn = () => {
         endBpf,
       ] = await Promise.all([
         // Amount of Fertilizer remaining to be sold
-        migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
+        migrate<Beanstalk, Beanstalk>(beanstalk, [
           () => fertContract.remaining().then(tokenResult(BEAN)),
           () => beanstalk.remainingRecapitalization().then(tokenResult(BEAN)),
         ]),
         // Amount of USDC already raised
-        migrate<Beanstalk, BeanstalkReplanted>(beanstalk, [
+        migrate<Beanstalk, Beanstalk>(beanstalk, [
           () => usdcContract.balanceOf(custodian).then(tokenResult(USDC)),
           () => Promise.resolve(ZERO_BN), // not possible after Replant
         ]),

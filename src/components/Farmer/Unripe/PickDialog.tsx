@@ -28,7 +28,6 @@ import { UNRIPE_ASSET_TOOLTIPS } from '~/constants/tooltips';
 import { ZERO_BN } from '~/constants/index';
 import { displayFullBN, toTokenUnitsBN, parseError } from '~/util/index';
 import { useBeanstalkContract } from '~/hooks/useContract';
-import { BeanstalkReplanted } from '~/generated';
 import useGetChainToken from '~/hooks/useGetChainToken';
 import { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import useAccount from '~/hooks/ledger/useAccount';
@@ -123,7 +122,7 @@ const PickBeansDialog: React.FC<{
   /// Contracts
   const account          = useAccount();
   const { data: signer } = useSigner();
-  const beanstalk        = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk        = useBeanstalkContract(signer);
   
   /// Local data
   const [unripe, setUnripe]         = useState<GetUnripeResponse | null>(null);

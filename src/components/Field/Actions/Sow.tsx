@@ -22,7 +22,7 @@ import {
   TxnSettings
 } from '~/components/Common/Form';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
-import { BeanstalkReplanted } from '~/generated/index';
+import { Beanstalk } from '~/generated/index';
 import useToggle from '~/hooks/display/useToggle';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useFarmerBalances from '~/hooks/useFarmerBalances';
@@ -58,7 +58,7 @@ const SowForm : React.FC<
   & {
     handleQuote: QuoteHandler;
     balances: ReturnType<typeof useFarmerBalances>;
-    beanstalk: BeanstalkReplanted;
+    beanstalk: Beanstalk;
     weather: BigNumber;
     soil: BigNumber;
     farm: Farm;
@@ -306,7 +306,7 @@ const Sow : React.FC<{}> = () => {
   /// Ledger
   const { data: signer } = useSigner();
   const provider  = useProvider();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
   const farm      = useMemo(() => new Farm(provider), [provider]);
 
   /// Data

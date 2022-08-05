@@ -5,7 +5,6 @@ import useChainConstant from '~/hooks/useChainConstant';
 import { useBeanstalkContract, useFertilizerContract } from '~/hooks/useContract';
 import { REPLANT_INITIAL_ID } from '~/hooks/useHumidity';
 import useChainId from '~/hooks/useChain';
-import { BeanstalkReplanted } from '~/generated';
 import { toTokenUnitsBN } from '~/util/index';
 import { ZERO_BN } from '~/constants/index';
 import useBlocks from '~/hooks/useBlocks';
@@ -83,7 +82,7 @@ export const useFetchFarmerBarn = () => {
 
   /// Contracts
   const fertContract = useFertilizerContract();
-  const beanstalk    = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const beanstalk    = useBeanstalkContract();
   const blocks       = useBlocks();
   const account      = useAccount();
 

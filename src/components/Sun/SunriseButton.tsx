@@ -5,13 +5,13 @@ import TransactionToast from '~/components/Common/TxnToast';
 import { LoadingButton } from '@mui/lab';
 import { useSelector } from 'react-redux';
 import { useBeanstalkContract } from '~/hooks/useContract';
-import { BeanstalkReplanted } from '~/generated/index';
+import { Beanstalk } from '~/generated/index';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { AppState } from '~/state';
 
 const SunriseButton : React.FC = () => {
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
   
   const awaiting = useSelector<AppState, AppState['_beanstalk']['sun']['sunrise']['awaiting']>((state) => state._beanstalk.sun.sunrise.awaiting);
 

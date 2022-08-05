@@ -9,7 +9,6 @@ import {
 import { useParams } from 'react-router-dom';
 import CancelOrder from '~/components/Market/Actions/CancelOrder';
 import GenericZero from '~/components/Common/ZeroState/GenericZero';
-import { BeanstalkReplanted } from '~/generated';
 import usePodOrder from '~/hooks/usePodOrder';
 import useAccount from '~/hooks/ledger/useAccount';
 import { useBeanstalkContract } from '~/hooks/useContract';
@@ -22,7 +21,7 @@ const OrderPage: React.FC = () => {
   const account = useAccount();
   const { id } = useParams<{ id: string }>();
   const { data: _order, source, loading, error } = usePodOrder(id);
-  const beanstalk = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract();
 
   const [orderValid, setOrderValid] = useState<null | boolean>(null);
   useEffect(() => {

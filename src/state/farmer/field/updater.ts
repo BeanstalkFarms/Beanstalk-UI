@@ -8,7 +8,6 @@ import EventProcessor from '~/lib/Beanstalk/EventProcessor';
 import useWhitelist from '~/hooks/useWhitelist';
 import useSeason from '~/hooks/useSeason';
 import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
-import { BeanstalkReplanted } from '~/generated';
 import { EventCacheName } from '../events2';
 import useEvents, { GetQueryFilters } from '../events2/updater';
 import { updateFarmerField, resetFarmerField } from './actions';
@@ -18,7 +17,7 @@ export const useFetchFarmerField = () => {
   const dispatch  = useDispatch();
 
   /// Contracts
-  const beanstalk = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract();
 
   /// Data
   const account   = useAccount();

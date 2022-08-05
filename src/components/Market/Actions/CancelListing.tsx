@@ -3,7 +3,6 @@ import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import TransactionToast from '~/components/Common/TxnToast';
-import { BeanstalkReplanted } from '~/generated';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
@@ -18,7 +17,7 @@ const CancelListing : React.FC<{ id: string }> = ({ id }) => {
   
   /// Contracts
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
   
   /// Refetch
   const [refetchFarmerField]  = useFetchFarmerField();

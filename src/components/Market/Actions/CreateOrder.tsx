@@ -28,7 +28,7 @@ import { QuoteHandler } from '~/hooks/useQuote';
 import useTokenMap from '~/hooks/useTokenMap';
 import useGetChainToken from '~/hooks/useGetChainToken';
 import useToggle from '~/hooks/display/useToggle';
-import { BeanstalkReplanted } from '~/generated';
+import { Beanstalk } from '~/generated';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
@@ -83,7 +83,7 @@ const CreateOrderForm : React.FC<
     podLine: BigNumber;
     handleQuote: QuoteHandler;
     tokenList: (ERC20Token | NativeToken)[];
-    contract: BeanstalkReplanted;
+    contract: Beanstalk;
   }
 > = ({
   values,
@@ -249,7 +249,7 @@ const CreateOrder : React.FC<{}> = () => {
   ///
   const { data: signer } = useSigner();
   const provider  = useProvider();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
   const farm      = useMemo(() => new Farm(provider), [provider]);
 
   ///

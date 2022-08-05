@@ -2,6 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Box, Stack } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import toast from 'react-hot-toast';
 import {
   SmartSubmitButton,
   TokenAdornment,
@@ -13,9 +14,7 @@ import TxnPreview from '~/components/Common/Form/TxnPreview';
 import TxnAccordion from '~/components/Common/TxnAccordion';
 import DestinationField from '~/components/Common/Form/DestinationField';
 import TransactionToast from '~/components/Common/TxnToast';
-import toast from 'react-hot-toast';
 import useFarmerFertilizer from '~/hooks/redux/useFarmerFertilizer';
-import { BeanstalkReplanted } from '~/generated';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import useAccount from '~/hooks/ledger/useAccount';
@@ -131,7 +130,7 @@ const Rinse : React.FC<{}> = () => {
   const [refetchBalances]   = useFetchFarmerBalances();
   
   /// Contracts
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
 
   const initialValues : RinseFormValues = useMemo(() => ({
     destination: FarmToMode.INTERNAL,

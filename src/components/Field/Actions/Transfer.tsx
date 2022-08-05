@@ -9,7 +9,6 @@ import TransactionToast from '~/components/Common/TxnToast';
 import PlotInputField from '~/components/Common/Form/PlotInputField';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { useBeanstalkContract } from '~/hooks/useContract';
-import { BeanstalkReplanted } from '~/generated/index';
 import useAccount from '~/hooks/ledger/useAccount';
 import useFarmerPlots from '~/hooks/redux/useFarmerPlots';
 import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
@@ -114,7 +113,7 @@ const TransferForm: React.FC<
 const Transfer: React.FC<{}> = () => {
   const account = useAccount();
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
 
   // Form setup
   const initialValues: TransferFormValues = useMemo(() => ({

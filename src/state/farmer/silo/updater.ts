@@ -6,7 +6,7 @@ import { BEAN, SEEDS, STALK } from '~/constants/tokens';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useChainId from '~/hooks/useChain';
 import { bigNumberResult, tokenResult } from '~/util/index';
-import { BeanstalkReplanted } from '~/generated/index';
+import { Beanstalk } from '~/generated/index';
 import useBlocks from '~/hooks/useBlocks';
 import useAccount from '~/hooks/ledger/useAccount';
 import EventProcessor from '~/lib/Beanstalk/EventProcessor';
@@ -23,7 +23,7 @@ export const useFetchFarmerSilo = () => {
   const dispatch  = useDispatch();
 
   /// Contracts
-  const beanstalk = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract();
 
   /// Data
   const account   = useAccount();

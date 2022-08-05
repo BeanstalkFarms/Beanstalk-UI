@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { ClaimRewardsAction } from '~/lib/Beanstalk/Farm';
 import { useBeanstalkContract } from '~/hooks/useContract';
-import { BeanstalkReplanted } from '~/generated/index';
+import { Beanstalk } from '~/generated/index';
 import { parseError } from '~/util/index'; 
 import { UNRIPE_TOKENS } from '~/constants/tokens';
 import useTokenMap from '~/hooks/useTokenMap';
@@ -215,7 +215,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
   const getBDV = useBDV();
   
   /// Contracts
-  const beanstalk         = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk         = useBeanstalkContract(signer);
 
   /// Form
   const initialValues: ClaimRewardsFormValues = useMemo(() => ({

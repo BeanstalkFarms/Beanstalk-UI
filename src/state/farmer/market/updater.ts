@@ -8,7 +8,7 @@ import useAccount from '~/hooks/ledger/useAccount';
 import EventProcessor from '~/lib/Beanstalk/EventProcessor';
 import useWhitelist from '~/hooks/useWhitelist';
 import useSeason from '~/hooks/useSeason';
-import { BeanstalkReplanted } from '~/generated';
+import { Beanstalk } from '~/generated';
 import { EventCacheName } from '../events2';
 import useEvents, { GetQueryFilters } from '../events2/updater';
 import { resetFarmerMarket, updateFarmerMarket } from './actions';
@@ -18,7 +18,7 @@ export const useFetchFarmerMarket = () => {
   const dispatch  = useDispatch();
 
   /// Contracts
-  const beanstalk = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract();
 
   /// Data
   const account   = useAccount();

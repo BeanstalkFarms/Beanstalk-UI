@@ -13,7 +13,6 @@ import ListingDetails from '~/components/Market/Cards/ListingDetails';
 import PageHeaderSecondary from '~/components/Common/PageHeaderSecondary';
 import CancelListing from '~/components/Market/Actions/CancelListing';
 import GenericZero from '~/components/Common/ZeroState/GenericZero';
-import { BeanstalkReplanted } from '~/generated';
 import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
 import usePodListing from '~/hooks/usePodListing';
 import useAccount from '~/hooks/ledger/useAccount';
@@ -25,7 +24,7 @@ const ListingPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { data: _listing, source, loading, error } = usePodListing(id);
   const harvestableIndex = useHarvestableIndex();
-  const beanstalk = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract();
 
   const [listingValid, setListingValid] = useState<null | boolean>(null);
   useEffect(() => {

@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { Button } from '@mui/material';
 import CachedIcon from '@mui/icons-material/Cached';
 import { useAccount } from 'wagmi';
-import { BeanstalkReplanted } from '~/generated';
+import { Beanstalk } from '~/generated';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useTokenMap from '~/hooks/useTokenMap';
 import { getAccount } from '~/util/Account';
@@ -10,7 +10,7 @@ import { toTokenUnitsBN } from '~/util/Tokens';
 import { ERC20_TOKENS } from '~/constants/tokens';
 
 export default function DevButton(props: any) {
-  const b = (useBeanstalkContract() as unknown) as BeanstalkReplanted;
+  const b = (useBeanstalkContract() as unknown) as Beanstalk;
   const { data: account } = useAccount();
   const erc20Tokens = useTokenMap(ERC20_TOKENS);
   const tokenAddresses = Object.keys(erc20Tokens);

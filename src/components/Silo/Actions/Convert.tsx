@@ -3,6 +3,8 @@ import { Accordion, AccordionDetails, Alert, Box, Stack, Typography } from '@mui
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import { ethers } from 'ethers';
+import toast from 'react-hot-toast';
 import TokenOutputField from '~/components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
 import { FormState, SettingInput, SmartSubmitButton, TxnSettings } from '~/components/Common/Form';
@@ -13,12 +15,11 @@ import Pool from '~/classes/Pool';
 import TxnSeparator from '~/components/Common/Form/TxnSeparator';
 import PillRow from '~/components/Common/Form/PillRow';
 import TokenSelectDialog, { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
-import { ethers } from 'ethers';
 import { BEAN, BEAN_CRV3_LP, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
-import Beanstalk from '~/lib/Beanstalk';
+import BeanstalkSDK from '~/lib/Beanstalk';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import { displayFullBN, MaxBN, MinBN, toStringBaseUnitBN } from '~/util/Tokens';
-import { BeanstalkReplanted } from '~/generated/index';
+import { Beanstalk } from '~/generated/index';
 import { QuoteHandler } from '~/hooks/useQuote';
 import { ZERO_BN } from '~/constants/index';
 import Farm from '~/lib/Beanstalk/Farm';
@@ -32,7 +33,6 @@ import { FarmerSilo } from '~/state/farmer/silo';
 import useSeason from '~/hooks/useSeason';
 import { convert, Encoder as ConvertEncoder } from '~/lib/Beanstalk/Silo/Convert';
 import TransactionToast from '~/components/Common/TxnToast';
-import toast from 'react-hot-toast';
 import useBDV from '~/hooks/useBDV';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { useFetchPools } from '~/state/bean/pools/updater';
@@ -66,7 +66,7 @@ const ConvertForm : React.FC<
     tokenList: (ERC20Token | NativeToken)[];
     /** Farmer's silo balances */
     siloBalances: FarmerSilo['balances'];
-    beanstalk: BeanstalkReplanted;
+    beanstalk: Beanstalk;
     handleQuote: QuoteHandler;
     currentSeason: BigNumber;
   }
@@ -383,7 +383,7 @@ const Convert : React.FC<{
 
   /// Network
   const { data: signer }  = useSigner();
-  const beanstalk         = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk         = useBeanstalkContract(signer);
   // const provider          = useProvider();
   // const farm              = useMemo(() => new Farm(provider), [provider]);
 
@@ -440,7 +440,7 @@ const Convert : React.FC<{
       const depositedCrates = siloBalances[tokenIn.address]?.deposited?.crates;
       if (!depositedCrates) throw new Error('No deposited crates available.');
 
-      const conversion = Beanstalk.Silo.Convert.convert(
+      const conversion = BeanstalkSDK.Silo.Convert.convert(
         tokenIn,  // from
         tokenOut, // to
         amountIn,

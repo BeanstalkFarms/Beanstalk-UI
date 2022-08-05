@@ -22,7 +22,7 @@ import {
   SettingInput,
   SmartSubmitButton
 } from '~/components/Common/Form';
-import { BeanstalkReplanted } from '~/generated/index';
+import { Beanstalk } from '~/generated/index';
 import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import { ZERO_BN } from '~/constants/index';
 import { displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN, parseError } from '~/util/index';
@@ -271,7 +271,7 @@ const Claim : React.FC<{
   const farm = useMemo(() => new Farm(provider), [provider]);
 
   /// Contracts
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
 
   /// Data
   const [refetchFarmerSilo]     = useFetchFarmerSilo();
