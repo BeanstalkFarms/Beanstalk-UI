@@ -112,8 +112,6 @@
     "build-netlify": "VITE_NAME=$npm_package_name VITE_VERSION=$npm_package_version VITE_HOST='netlify' VITE_NETLIFY_CONTEXT=$CONTEXT VITE_NETLIFY_BUILD_ID=$BUILD_ID VITE_GIT_COMMIT_REF=$COMMIT_REF yarn build",
     "build-fleek": "VITE_NAME=$npm_package_name VITE_VERSION=$npm_package_version VITE_HOST='fleek' VITE_GIT_COMMIT_REF=$(git rev-parse HEAD) yarn build",
     "serve": "vite preview",
-    "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "test": "react-scripts test",
     "format": "prettier --write \"**/*.{ts,tsx,json,md,js}\"",
     "lint": "eslint \"src/**/**/*.ts{,x}\"",
     "storybook": "start-storybook -p 6006 -s public",
