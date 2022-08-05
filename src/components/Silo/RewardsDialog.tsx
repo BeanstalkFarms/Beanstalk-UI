@@ -25,6 +25,8 @@ import { AppState } from 'state';
 import TransactionToast from '../Common/TxnToast';
 import DescriptionButton from '../Common/DescriptionButton';
 import RewardsBar, { RewardsBarProps } from './RewardsBar';
+import { hoverMap } from '../../constants/silo';
+import { BeanstalkPalette } from '../App/muiTheme';
 
 export type SendFormValues = {
   to?: string;
@@ -56,13 +58,6 @@ const options = [
     value: ClaimRewardsAction.CLAIM_ALL,
   }
 ];
-
-const hoverMap = {
-  [ClaimRewardsAction.MOW]:             [ClaimRewardsAction.MOW],
-  [ClaimRewardsAction.PLANT_AND_MOW]:   [ClaimRewardsAction.MOW, ClaimRewardsAction.PLANT_AND_MOW],
-  [ClaimRewardsAction.ENROOT_AND_MOW]:  [ClaimRewardsAction.MOW, ClaimRewardsAction.ENROOT_AND_MOW],
-  [ClaimRewardsAction.CLAIM_ALL]:       [ClaimRewardsAction.MOW, ClaimRewardsAction.PLANT_AND_MOW, ClaimRewardsAction.ENROOT_AND_MOW, ClaimRewardsAction.CLAIM_ALL],
-};
 
 type ClaimCalls = {
   [key in ClaimRewardsAction] : { 
@@ -100,6 +95,7 @@ const ClaimRewardsForm : React.FC<
   /// Handlers
   const onMouseOver = useCallback((v: ClaimRewardsAction) => () => setHoveredAction(v), []);
   const onMouseOutContainer = useCallback(() => setHoveredAction(undefined), []);
+
   // Checks if the current hoverState includes a given ClaimRewardsAction
   const isHovering = (c: ClaimRewardsAction) => {
     if (selectedAction !== undefined) {
@@ -108,6 +104,14 @@ const ClaimRewardsForm : React.FC<
     return hoveredAction && hoverMap[hoveredAction].includes(c);
   };
 
+  /// Used to grey out text in rewards bar.
+  // Prioritizes selected action over hovered.
+  const action = selectedAction !== undefined
+    ? selectedAction
+    : hoveredAction !== undefined
+      ? hoveredAction
+      : undefined;
+
   return (
     <>
       <StyledDialogContent sx={{ pb: 0 }}>
@@ -115,6 +119,7 @@ const ClaimRewardsForm : React.FC<
           <Box px={1} py={0.5}>
             <RewardsBar
               compact
+              action={action}
               {...rewardsBarProps}
             />
           </Box>
@@ -131,8 +136,8 @@ const ClaimRewardsForm : React.FC<
               return (
                 <Stack gap={1}>
                   {options.map((option) => {
-                    const hovered = isHovering(option.value);
                     const disabled = !calls || calls[option.value].enabled === false;
+                    const hovered = isHovering(option.value) && !disabled;
                     return (
                       <Tooltip title={!disabled ? '' : 'Nothing to claim'}>
                         <div>
@@ -150,8 +155,8 @@ const ClaimRewardsForm : React.FC<
                             disabled={disabled}
                             sx={{
                               '&:disabled': {
-                                borderColor: 'gray'
-                              }
+                                borderColor: BeanstalkPalette.lightGrey,
+                              },
                             }}
                           />
                         </div>
