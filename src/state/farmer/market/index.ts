@@ -29,9 +29,6 @@ export const castPodListing = (listing: PodListingFragment) : PodListing => {
     start:                toTokenUnitsBN(listing.start, BEAN[1].decimals),
     status:               listing.status as 'active' | 'filled',
     mode:                 listing.mode.toString() as FarmToMode, // FIXME: use numbers instead?
-    // HACK: 'mode' is 'toWallet'
-    //  toWallet = true   ->  mode = FarmToMode.EXTERNAL
-    //  toWallet = false  ->  mode = FarmToMode.INTERNAL
   };
 };
 

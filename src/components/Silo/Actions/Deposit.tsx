@@ -214,7 +214,7 @@ const Deposit : React.FC<{
   ] : [
     BEAN,
     ETH,
-    WETH,
+    // WETH,
     whitelistedToken,
     CRV3,
     DAI,
