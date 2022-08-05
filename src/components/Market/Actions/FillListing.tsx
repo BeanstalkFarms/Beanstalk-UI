@@ -7,7 +7,7 @@ import {
   TokenSelectDialog, TxnPreview, TxnSeparator,
   TxnSettings
 } from 'components/Common/Form';
-import { SupportedChainId, ZERO_BN } from 'constants/index';
+import { ZERO_BN } from 'constants/index';
 import { BEAN, ETH, PODS, WETH } from 'constants/tokens';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useChainId from 'hooks/useChain';
@@ -79,7 +79,6 @@ const FillListingForm : React.FC<
   );
 
   /// Derived
-  const isMainnet = chainId === SupportedChainId.MAINNET;
   const tokenIn   = values.tokens[0].token;
   const amountIn  = values.tokens[0].amount;
   const tokenOut  = Bean;
