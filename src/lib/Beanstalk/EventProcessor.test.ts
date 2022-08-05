@@ -1,9 +1,9 @@
 import { BigNumber as EBN } from 'ethers';
 import { AddDepositEvent, AddWithdrawalEvent, PlotTransferEvent, RemoveDepositEvent, RemoveWithdrawalEvent, RemoveWithdrawalsEvent, SowEvent } from 'generated/Beanstalk/BeanstalkReplanted';
-import { BEAN, BEAN_CRV3_LP, SILO_WHITELIST } from 'constants/tokens';
 import BigNumber from 'bignumber.js';
 import { HarvestEvent } from 'generated/Beanstalk/Beanstalk';
-import { TokenMap } from 'constants/index';
+import { BEAN, BEAN_CRV3_LP, SILO_WHITELIST } from '~/constants/tokens';
+import { TokenMap } from '~/constants/index';
 import EventProcessor, { BN, EventProcessingParameters } from './EventProcessor';
 
 // ------------------------------------------

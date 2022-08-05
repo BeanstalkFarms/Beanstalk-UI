@@ -7,7 +7,7 @@ import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 // import { InjectedConnector } from 'wagmi/connectors/injected';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
-import { TESTNET_RPC_ADDRESSES, SupportedChainId } from 'constants/index';
+import { TESTNET_RPC_ADDRESSES, SupportedChainId } from '~/constants/index';
 
 // ------------------------------------------------------------
 

@@ -5,7 +5,7 @@ import { PodListing } from '~/state/farmer/market';
 import { displayBN } from 'util/index';
 import { IconSize } from 'components/App/muiTheme';
 import TokenIcon from 'components/Common/TokenIcon';
-import { BEAN, PODS } from 'constants/tokens';
+import { BEAN, PODS } from '~/constants/tokens';
 import podListingIcon from 'img/beanstalk/pod-listing-icon.svg';
 import FarmerChip from 'components/Common/FarmerChip';
 import StatHorizontal from 'components/Common/StatHorizontal';

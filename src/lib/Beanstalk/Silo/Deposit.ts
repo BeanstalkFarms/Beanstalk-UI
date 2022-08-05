@@ -1,8 +1,8 @@
 import { Token } from 'classes';
-import { ZERO_BN } from 'constants/index';
 import { FormState } from 'components/Common/Form';
 import { Action, ActionType } from 'util/Actions';
 import BigNumber from 'bignumber.js';
+import { ZERO_BN } from '~/constants/index';
 
 /**
  * Summarize the Actions that will occur when making a Deposit.

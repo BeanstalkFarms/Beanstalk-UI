@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
-import { BEAN_TO_SEEDS, BEAN_TO_STALK, ZERO_BN } from 'constants/index';
+import { BEAN_TO_SEEDS, BEAN_TO_STALK, ZERO_BN } from '~/constants/index';
 import { useDispatch } from 'react-redux';
-import { BEAN, SEEDS, STALK } from 'constants/tokens';
+import { BEAN, SEEDS, STALK } from '~/constants/tokens';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useChainId from 'hooks/useChain';
 import { bigNumberResult, tokenResult } from 'util/index';

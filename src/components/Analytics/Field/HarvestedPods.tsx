@@ -3,7 +3,7 @@ import SeasonPlot, { SeasonPlotBaseProps } from 'components/Common/Charts/Season
 import { SeasonalHarvestedPodsDocument, SeasonalHarvestedPodsQuery } from 'generated/graphql';
 import { SnapshotData } from 'hooks/useSeasons';
 import { toTokenUnitsBN } from 'util/index';
-import { BEAN } from 'constants/tokens';
+import { BEAN } from '~/constants/tokens';
 
 const getValue = (season: SnapshotData<SeasonalHarvestedPodsQuery>) => toTokenUnitsBN(season.totalHarvestedPods, BEAN[1].decimals).toNumber();
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;

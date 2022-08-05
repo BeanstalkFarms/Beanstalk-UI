@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import Token from 'classes/Token';
-import { ZERO_BN } from 'constants/index';
-import { BEAN } from 'constants/tokens';
+import { ZERO_BN } from '~/constants/index';
+import { BEAN } from '~/constants/tokens';
 import { AppState } from '~/state';
 import useBeansToUSD from './currency/useBeansToUSD';
 import useChainConstant from './useChainConstant';

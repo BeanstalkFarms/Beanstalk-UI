@@ -24,7 +24,7 @@ import {
 } from 'components/Common/Form';
 import { BeanstalkReplanted } from 'generated/index';
 import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
-import { ZERO_BN } from 'constants/index';
+import { ZERO_BN } from '~/constants/index';
 import { displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN, parseError } from 'util/index';
 import DestinationField from 'components/Common/Form/DestinationField';
 import TokenIcon from 'components/Common/TokenIcon';
@@ -38,8 +38,8 @@ import toast from 'react-hot-toast';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import useChainConstant from 'hooks/useChainConstant';
-import { BEAN_CRV3_LP } from 'constants/tokens';
-import copy from 'constants/copy';
+import { BEAN_CRV3_LP } from '~/constants/tokens';
+import copy from '~/constants/copy';
 
 // -----------------------------------------------------------------------
 

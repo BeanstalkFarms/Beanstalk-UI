@@ -8,8 +8,8 @@ import {
   TokenInputField,
   TxnPreview
 } from 'components/Common/Form';
-import { ONE_BN, ZERO_BN } from 'constants/index';
-import { BEAN, PODS } from 'constants/tokens';
+import { ONE_BN, ZERO_BN } from '~/constants/index';
+import { BEAN, PODS } from '~/constants/tokens';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import { toStringBaseUnitBN , parseError, displayTokenAmount, displayBN, displayFullBN } from 'util/index';

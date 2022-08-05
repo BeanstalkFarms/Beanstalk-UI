@@ -1,4 +1,3 @@
-import { SupportedChainId } from 'constants/chains';
 import {
   Beanstalk,
   BeaNFTGenesis,
@@ -7,18 +6,19 @@ import {
   BeanstalkPrice,
   ERC20,
 } from 'generated/index';
-import {
-  BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES,
-  BEANSTALK_ADDRESSES,
-  BEANSTALK_FERTILIZER_ADDRESSES,
-  BEANSTALK_PRICE_ADDRESSES,
-} from 'constants/addresses';
-import { ChainConstant } from 'constants/index';
 import { Contract, ContractInterface, ethers } from 'ethers';
 import { useCallback, useMemo } from 'react';
 import { useProvider, useContract as useWagmiContract } from 'wagmi';
 import { useSigner } from 'hooks/ledger/useSigner';
 import { getChainConstant } from 'util/Chain';
+import { ChainConstant } from '~/constants/index';
+import {
+  BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES,
+  BEANSTALK_ADDRESSES,
+  BEANSTALK_FERTILIZER_ADDRESSES,
+  BEANSTALK_PRICE_ADDRESSES,
+} from '~/constants/addresses';
+import { SupportedChainId } from '~/constants/chains';
 import useChainConstant from './useChainConstant';
 
 // -------------------------------------------------

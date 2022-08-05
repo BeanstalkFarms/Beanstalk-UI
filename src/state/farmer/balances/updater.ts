@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import flatMap from 'lodash/flatMap';
-import { ZERO_BN } from 'constants/index';
+import { ZERO_BN } from '~/constants/index';
 import { BeanstalkReplanted } from 'generated/index';
-import { BALANCE_TOKENS, ERC20_TOKENS, ETH } from 'constants/tokens';
+import { BALANCE_TOKENS, ERC20_TOKENS, ETH } from '~/constants/tokens';
 import useChainId from 'hooks/useChain';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useMigrateCall from 'hooks/useMigrateCall';

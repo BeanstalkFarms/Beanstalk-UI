@@ -3,9 +3,9 @@ import { useNetwork } from 'wagmi';
 import { Alert, Button, Dialog, Stack, Typography, useMediaQuery } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { useTheme } from '@mui/material/styles';
-import { SWITCH_NETWORK_ERRORS } from 'constants/wallets';
-import { SupportedChainId, TESTNET_RPC_ADDRESSES } from 'constants/index';
-import { ETH } from 'constants/tokens';
+import { SWITCH_NETWORK_ERRORS } from '~/constants/wallets';
+import { SupportedChainId, TESTNET_RPC_ADDRESSES } from '~/constants/index';
+import { ETH } from '~/constants/tokens';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 
 const NetworkDialog: React.FC<{

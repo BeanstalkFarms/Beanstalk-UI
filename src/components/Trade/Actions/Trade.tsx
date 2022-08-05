@@ -11,8 +11,8 @@ import {
 } from 'components/Common/Form';
 import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import { BeanstalkReplanted } from 'generated/index';
-import { ZERO_BN } from 'constants/index';
-import { BEAN, DAI, ETH, USDC, USDT, WETH } from 'constants/tokens';
+import { ZERO_BN } from '~/constants/index';
+import { BEAN, DAI, ETH, USDC, USDT, WETH } from '~/constants/tokens';
 import { Form, Formik, FormikProps } from 'formik';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useFarmerBalances from 'hooks/useFarmerBalances';

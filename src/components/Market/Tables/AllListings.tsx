@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import COLUMNS from 'components/Common/Table/cells';
 import { castPodListing, PodListing } from '~/state/farmer/market';
 import { toStringBaseUnitBN } from 'util/index';
-import { BEAN } from 'constants/tokens';
+import { BEAN } from '~/constants/tokens';
 import { useAllPodListingsQuery } from 'generated/graphql';
 import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
 import MarketBaseTable from './Base';

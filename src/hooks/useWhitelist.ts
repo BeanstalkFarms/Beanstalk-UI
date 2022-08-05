@@ -1,5 +1,5 @@
 import { ERC20Token } from 'classes/Token';
-import { GENERALIZED_SILO_WHITELIST, SILO_WHITELIST } from 'constants/tokens';
+import { GENERALIZED_SILO_WHITELIST, SILO_WHITELIST } from '~/constants/tokens';
 import useTokenMap from './useTokenMap';
 
 export default function useWhitelist() {

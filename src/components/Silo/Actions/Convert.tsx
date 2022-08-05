@@ -3,7 +3,7 @@ import { Accordion, AccordionDetails, Alert, Box, Stack, Typography } from '@mui
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-import { BEAN, BEAN_CRV3_LP, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from 'constants/tokens';
+import { BEAN, BEAN_CRV3_LP, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
 import TokenOutputField from 'components/Common/Form/TokenOutputField';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import { FormState, SettingInput, SmartSubmitButton, TxnSettings } from 'components/Common/Form';
@@ -14,7 +14,7 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import { displayFullBN, MaxBN, MinBN, toStringBaseUnitBN } from 'util/Tokens';
 import { BeanstalkReplanted } from 'generated/index';
 import { QuoteHandler } from 'hooks/useQuote';
-import { ZERO_BN } from 'constants/index';
+import { ZERO_BN } from '~/constants/index';
 import Token, { ERC20Token, NativeToken } from 'classes/Token';
 import Pool from 'classes/Pool';
 import Farm from 'lib/Beanstalk/Farm';

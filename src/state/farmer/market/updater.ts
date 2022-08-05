@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { REPLANTED_CHAINS } from 'constants/index';
+import { REPLANTED_CHAINS } from '~/constants/index';
 import { useDispatch } from 'react-redux';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useChainId from 'hooks/useChain';

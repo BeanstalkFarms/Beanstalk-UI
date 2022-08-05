@@ -11,9 +11,9 @@ import {
   RemoveWithdrawalsEvent,
   RemoveDepositsEvent,
   PodListingCancelledEvent, PodListingCreatedEvent, PodListingFilledEvent, PodOrderCancelledEvent, PodOrderCreatedEvent, PodOrderFilledEvent } from 'generated/Beanstalk/BeanstalkReplanted';
-import { BEAN, PODS } from 'constants/tokens';
 import Token from 'classes/Token';
-import { TokenMap } from 'constants/index';
+import { BEAN, PODS } from '~/constants/tokens';
+import { TokenMap } from '~/constants/index';
 import { PlotMap } from '~/state/farmer/field';
 import { FarmerSiloBalance, WithdrawalCrate } from '~/state/farmer/silo';
 import { PodListing, PodOrder } from '~/state/farmer/market';

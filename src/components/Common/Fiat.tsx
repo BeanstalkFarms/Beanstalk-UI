@@ -5,9 +5,9 @@ import useSiloTokenToFiat from 'hooks/currency/useSiloTokenToFiat';
 import useSetting from 'hooks/useSetting';
 import { displayBN, displayFullBN } from 'util/index';
 import { Stack } from '@mui/material';
-import { ZERO_BN } from 'constants/index';
 import logo from 'img/tokens/bean-logo.svg';
 import usePrice from 'hooks/usePrice';
+import { ZERO_BN } from '~/constants/index';
 
 const Fiat : React.FC<{
   /* usd value of `amount`. if defined, overrides siloTokenToFiat */

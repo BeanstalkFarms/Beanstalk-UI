@@ -6,7 +6,7 @@ import { BeanstalkReplanted } from 'generated/index';
 import useTokenMap from 'hooks/useTokenMap';
 import { tokenResult } from 'util/index';
 import BigNumber from 'bignumber.js';
-import { AddressMap } from 'constants/index';
+import { AddressMap } from '~/constants/index';
 import { resetUnripe, updateUnripe } from './actions';
 import { UNRIPE_TOKENS } from '../../../constants/tokens';
 

@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import groupBy from 'lodash/groupBy';
-import { BEAN, PODS, SEEDS, SPROUTS, STALK, USDC } from 'constants/tokens';
 import TokenIcon from 'components/Common/TokenIcon';
 import {
   Action,
@@ -16,8 +15,9 @@ import {
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import Token from 'classes/Token';
 import { FERTILIZER_ICONS } from 'components/Barn/FertilizerImage';
-import { SupportedChainId } from 'constants/chains';
 import siloIcon from 'img/beanstalk/silo-icon.svg';
+import { SupportedChainId } from '~/constants/chains';
+import { BEAN, PODS, SEEDS, SPROUTS, STALK, USDC } from '~/constants/tokens';
 
 // -----------------------------------------------------------------------
 

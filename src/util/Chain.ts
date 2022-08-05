@@ -1,4 +1,4 @@
-import { TESTNET_CHAINS, SupportedChainId } from 'constants/index';
+import { TESTNET_CHAINS, SupportedChainId } from '~/constants/index';
 
 export type ConstantByChain = { [key: number] : any };
 

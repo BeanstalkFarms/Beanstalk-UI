@@ -5,8 +5,8 @@ import {
   TokenOutputField, TxnPreview,
   TxnSeparator
 } from 'components/Common/Form';
-import { ZERO_BN } from 'constants/index';
-import { BEAN } from 'constants/tokens';
+import { ZERO_BN } from '~/constants/index';
+import { BEAN } from '~/constants/tokens';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import PlotInputField from 'components/Common/Form/PlotInputField';

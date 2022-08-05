@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import { SupportedChainId } from 'constants/chains';
-import { BEAN, BEAN_ETH_UNIV2_LP } from 'constants/tokens';
+import { SupportedChainId } from '~/constants/chains';
+import { BEAN, BEAN_ETH_UNIV2_LP } from '~/constants/tokens';
 import BigNumber from 'bignumber.js';
 import Whitelist from './Whitelist';
 

@@ -1,9 +1,9 @@
 import BigNumber from 'bignumber.js';
 import { FormTokenState } from 'components/Common/Form';
-import { USDC } from 'constants/tokens';
 import useChainConstant from 'hooks/useChainConstant';
 import useHumidity from 'hooks/useHumidity';
 import { Action, ActionType } from 'util/Actions';
+import { USDC } from '~/constants/tokens';
 
 /**
  * Summarize the Actions that will occur when making a Deposit.

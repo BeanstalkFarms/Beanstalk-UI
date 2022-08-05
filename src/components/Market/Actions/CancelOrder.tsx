@@ -5,7 +5,7 @@ import AddressIcon from 'components/Common/AddressIcon';
 import DescriptionButton from 'components/Common/DescriptionButton';
 import { StyledDialog, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
 import TransactionToast from 'components/Common/TxnToast';
-import { BEAN } from 'constants/tokens';
+import { BEAN } from '~/constants/tokens';
 import { BeanstalkReplanted } from 'generated';
 import useToggle from 'hooks/display/useToggle';
 import { useSigner } from 'hooks/ledger/useSigner';

@@ -19,7 +19,6 @@ import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 import { trimAddress } from 'util/index';
-import { CHAIN_INFO } from 'constants/chains';
 
 import useChainConstant from 'hooks/useChainConstant';
 
@@ -30,6 +29,7 @@ import disconnectIcon from 'img/nav-icons/disconnect.svg';
 import useAnchor from 'hooks/display/useAnchor';
 import useToggle from 'hooks/display/useToggle';
 import useAccount from 'hooks/ledger/useAccount';
+import { CHAIN_INFO } from '~/constants/chains';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import WalletDialog from './WalletDialog';
 import DropdownIcon from '../DropdownIcon';

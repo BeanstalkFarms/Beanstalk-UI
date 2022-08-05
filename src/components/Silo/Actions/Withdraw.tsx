@@ -3,7 +3,7 @@ import { Accordion, AccordionDetails, Alert, Box, Divider, Stack } from '@mui/ma
 import BigNumber from 'bignumber.js';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { Token } from 'classes';
-import { SEEDS, STALK } from 'constants/tokens';
+import { SEEDS, STALK } from '~/constants/tokens';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
 import {
   FormState,
@@ -27,7 +27,7 @@ import { BeanstalkReplanted } from 'generated/index';
 import { useSelector } from 'react-redux';
 import { AppState } from '~/state';
 import { ActionType } from 'util/Actions';
-import { ZERO_BN } from 'constants/index';
+import { ZERO_BN } from '~/constants/index';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import toast from 'react-hot-toast';
 import { useFetchSilo } from '~/state/beanstalk/silo/updater';

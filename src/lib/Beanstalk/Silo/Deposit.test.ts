@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
-import { ZERO_BN } from 'constants/index';
-import { BEAN } from 'constants/tokens';
+import { ZERO_BN } from '~/constants/index';
+import { BEAN } from '~/constants/tokens';
 import Beanstalk from '../index';
 
 it('has a bdv of 0 with no token state', () => {

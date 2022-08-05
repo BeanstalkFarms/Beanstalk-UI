@@ -2,8 +2,8 @@ import React, { useCallback, useMemo } from 'react';
 import { Box, Stack } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { useSigner } from 'hooks/ledger/useSigner';
-import { BEAN, SPROUTS } from 'constants/tokens';
-import { ZERO_BN } from 'constants/index';
+import { BEAN, SPROUTS } from '~/constants/tokens';
+import { ZERO_BN } from '~/constants/index';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { useBeanstalkContract } from 'hooks/useContract';
 import {
@@ -26,7 +26,7 @@ import toast from 'react-hot-toast';
 import useAccount from 'hooks/ledger/useAccount';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { ActionType } from 'util/Actions';
-import copy from 'constants/copy';
+import copy from '~/constants/copy';
 
 // ---------------------------------------------------
 

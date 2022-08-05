@@ -2,7 +2,7 @@ import React from 'react';
 import BigNumber from 'bignumber.js';
 import { Stack, Typography } from '@mui/material';
 import { displayBN } from 'util/index';
-import { SPROUTS, RINSABLE_SPROUTS } from 'constants/tokens';
+import { SPROUTS, RINSABLE_SPROUTS } from '~/constants/tokens';
 import TokenIcon from '../Common/TokenIcon';
 
 export type FertilizerTooltip = {

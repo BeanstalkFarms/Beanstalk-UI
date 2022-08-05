@@ -12,8 +12,6 @@ import {
 } from 'components/Common/Form';
 import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
 import { BeanstalkReplanted } from 'generated/index';
-import { NEW_BN, ZERO_BN } from 'constants/index';
-import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from 'constants/tokens';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import useToggle from 'hooks/display/useToggle';
 import { useBeanstalkContract } from 'hooks/useContract';
@@ -35,6 +33,8 @@ import useAccount from 'hooks/ledger/useAccount';
 import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
 import { optimizeFromMode } from 'util/Farm';
 import { useSelector } from 'react-redux';
+import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
+import { NEW_BN, ZERO_BN } from '~/constants/index';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { AppState } from '~/state';
 import useChopPenalty from '../../../hooks/useChopPenalty';

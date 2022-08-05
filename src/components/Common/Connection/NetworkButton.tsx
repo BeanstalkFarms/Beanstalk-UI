@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNetwork } from 'wagmi';
 import { Button, ButtonProps, Typography } from '@mui/material';
-import { SupportedChainId } from 'constants/chains';
-import { ETH } from 'constants/tokens';
 import useAnchor from 'hooks/display/useAnchor';
+import { SupportedChainId } from '~/constants/chains';
+import { ETH } from '~/constants/tokens';
 import TokenIcon from '../TokenIcon';
 import DropdownIcon from '../DropdownIcon';
 import NetworkDialog from './NetworkDialog';

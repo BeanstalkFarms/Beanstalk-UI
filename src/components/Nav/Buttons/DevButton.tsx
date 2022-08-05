@@ -5,9 +5,9 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import CachedIcon from '@mui/icons-material/Cached';
 import { getAccount } from 'util/Account';
 import { useAccount } from 'wagmi';
-import { ERC20_TOKENS } from 'constants/tokens';
 import useTokenMap from 'hooks/useTokenMap';
 import { toTokenUnitsBN } from 'util/Tokens';
+import { ERC20_TOKENS } from '~/constants/tokens';
 
 export default function DevButton(props: any) {
   const b = (useBeanstalkContract() as unknown) as BeanstalkReplanted;

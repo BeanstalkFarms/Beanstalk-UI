@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { AddressMap } from 'constants/index';
+import { AddressMap } from '~/constants/index';
 import { FarmerSiloRewards, FarmerSiloBalance } from '.';
 
 export type UpdateFarmerSiloBalancesPayload = AddressMap<Partial<FarmerSiloBalance>>

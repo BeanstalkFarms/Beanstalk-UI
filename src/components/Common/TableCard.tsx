@@ -8,7 +8,7 @@ import {
 } from '@mui/x-data-grid';
 import { displayBN } from 'util/index';
 import { tableStyle } from 'components/Common/Table/styles';
-import { ZERO_BN } from 'constants/index';
+import { ZERO_BN } from '~/constants/index';
 import { Token } from '../../classes';
 import AuthEmptyState from './ZeroState/AuthEmptyState';
 import TablePagination from './TablePagination';

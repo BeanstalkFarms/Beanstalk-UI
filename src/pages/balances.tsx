@@ -4,10 +4,10 @@ import { useSelector } from 'react-redux';
 import { displayFullBN } from 'util/index';
 import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import useFarmerTotalFertilizer from 'hooks/useFarmerTotalFertilizer';
-import { PODS, SEEDS, STALK, SPROUTS } from 'constants/tokens';
 import Stat from 'components/Common/Stat';
 import TotalBalanceCard from 'components/Balances/TotalBalancesCard';
 import TokenIcon from 'components/Common/TokenIcon';
+import { PODS, SEEDS, STALK, SPROUTS } from '~/constants/tokens';
 import { AppState } from '~/state';
 
 const BalancesPage: React.FC = () => {

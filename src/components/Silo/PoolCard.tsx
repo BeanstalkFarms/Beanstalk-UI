@@ -4,7 +4,7 @@ import { BeanPoolState } from '~/state/bean/pools';
 import { displayBN, displayFullBN } from 'util/index';
 import { Pool } from 'classes';
 import TokenIcon from 'components/Common/TokenIcon';
-import { ZERO_BN } from 'constants/index';
+import { ZERO_BN } from '~/constants/index';
 
 /**
  * Displays data about a Pool containing Beans and other assets.

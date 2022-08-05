@@ -4,9 +4,9 @@ import { SeriesPoint } from '@visx/shape/lib/types';
 import { GradientOrangeRed } from '@visx/gradient';
 import { scaleTime, scaleLinear } from '@visx/scale';
 import { timeParse } from 'd3-time-format';
-import ALL_POOLS from 'constants/pools';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { BeanstalkPalette } from 'components/App/muiTheme';
+import ALL_POOLS from '~/constants/pools';
 import { SupportedChainId, TokenMap } from '../../../constants';
 import { BeanstalkSiloBalance } from '../../../state/beanstalk/silo';
 

@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { BEAN } from 'constants/tokens';
+import { BEAN } from '~/constants/tokens';
 import { DepositCrate } from '~/state/farmer/silo';
 import Beanstalk from '../index';
 

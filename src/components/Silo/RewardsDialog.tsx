@@ -9,7 +9,7 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import { BeanstalkReplanted } from 'generated/index';
 import toast from 'react-hot-toast';
 import { parseError } from 'util/index'; 
-import { UNRIPE_TOKENS } from 'constants/tokens';
+import { UNRIPE_TOKENS } from '~/constants/tokens';
 import useTokenMap from 'hooks/useTokenMap';
 import { selectCratesForEnroot } from 'util/Crates';
 import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';

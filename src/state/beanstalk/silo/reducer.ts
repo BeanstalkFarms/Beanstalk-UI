@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { NEW_BN } from 'constants/index';
+import { NEW_BN } from '~/constants/index';
 import { BeanstalkSilo } from '.';
 import { resetBeanstalkSilo, updateBeanstalkSilo } from './actions';
 

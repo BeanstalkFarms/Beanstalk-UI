@@ -7,7 +7,7 @@ import useChainId from 'hooks/useChain';
 import { BeanstalkReplanted } from 'generated';
 import { toTokenUnitsBN } from 'util/index';
 import BigNumber from 'bignumber.js';
-import { ZERO_BN } from 'constants/index';
+import { ZERO_BN } from '~/constants/index';
 import useBlocks from 'hooks/useBlocks';
 import ERC1155EventProcessor from 'lib/ERC1155/ERC1155EventProcessor';
 import useAccount from 'hooks/ledger/useAccount';

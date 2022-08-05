@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
-import { AddressMap, ZERO_BN } from 'constants/index';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { AddressMap, ZERO_BN } from '~/constants/index';
 import { AppState } from '~/state';
 import useSiloTokenToFiat from './currency/useSiloTokenToFiat';
 import useWhitelist from './useWhitelist';

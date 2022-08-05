@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
-import { WINTER_NFT_SUBGRAPH_API_LINK } from 'constants/index';
+import { WINTER_NFT_SUBGRAPH_API_LINK } from '~/constants/index';
 
 const client = new ApolloClient({
   uri: WINTER_NFT_SUBGRAPH_API_LINK,

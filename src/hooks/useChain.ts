@@ -1,6 +1,6 @@
-import { SupportedChainId } from 'constants/chains';
 import { useMemo } from 'react';
 import { useNetwork } from 'wagmi';
+import { SupportedChainId } from '~/constants/chains';
 
 /**
  * Returns the current chainId, falling back to MAINNET
