@@ -565,6 +565,16 @@ let muiTheme = createTheme({
     MuiDialog: {
       defaultProps: {  
         transitionDuration: 0,
+        PaperProps: {
+          sx: {
+            minWidth: { xs: '95%', sm: '400px' }
+          }
+        }
+      },
+      styleOverrides: {
+        root: sx({
+
+        })
       }
     },
     MuiDialogContent: {
