@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Box,
+  Box, Button,
   Card,
   Container,
   Stack,
@@ -12,6 +12,7 @@ import useTabs from 'hooks/display/useTabs';
 import MyOrdersTable from 'components/Market/Tables/MyOrders';
 import AddressIcon from 'components/Common/AddressIcon';
 import MyListingsTable from 'components/Market/Tables/MyListings';
+import { Link } from 'react-router-dom';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 
 const SLUGS = ['orders', 'listings'];
@@ -32,7 +33,7 @@ const MarketAccountPage: React.FC = () => {
           )}
         />
         <Card>
-          <Box sx={{ pt: 2, px: 2, pb: 1.5 }}>
+          <Stack sx={{ pt: 2, px: 2, pb: 1.5 }} direction="row" justifyContent="space-between">
             <Tabs
               value={tab}
               onChange={handleChangeTab}
@@ -42,7 +43,17 @@ const MarketAccountPage: React.FC = () => {
               <Tab label="Orders" />
               <Tab label="Listings" />
             </Tabs>
-          </Box>
+            {tab === 0 && (
+              <Button component={Link} to="/market/create" color="primary" variant="text" sx={{ '&:hover': { backgroundColor: 'transparent' } }}>
+                Create Order
+              </Button>
+            )}
+            {tab === 1 && ( 
+            <Button component={Link} to="/market/create" color="primary" variant="text" sx={{ '&:hover': { backgroundColor: 'transparent' } }}>
+              Create Listing
+            </Button>
+             )} 
+          </Stack>
           <Box px={1}>
             {tab === 0 && <MyOrdersTable />}
             {tab === 1 && <MyListingsTable />}
