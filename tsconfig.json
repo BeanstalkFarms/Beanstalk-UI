@@ -23,6 +23,7 @@
     "src"
   ],
   "exclude": [
-    "src/generated/**/*"
+    "src/generated/**/*",
+    "node_modules/"
   ]
 }
