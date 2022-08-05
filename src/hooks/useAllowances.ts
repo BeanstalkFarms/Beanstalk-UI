@@ -2,10 +2,10 @@ import BigNumber from 'bignumber.js';
 import Token, { NativeToken } from 'classes/Token';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import { useFetchFarmerAllowances } from 'state/farmer/allowances/updater';
 import { MAX_UINT256 } from 'constants/index';
 import { useAccount } from 'wagmi';
+import { AppState } from '~/state';
+import { useFetchFarmerAllowances } from '~/state/farmer/allowances/updater';
 
 // ----------------------------------------
 

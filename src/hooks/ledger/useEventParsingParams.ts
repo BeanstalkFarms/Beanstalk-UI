@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 import useSeason from 'hooks/useSeason';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
+import { AppState } from '~/state';
 import useAccount from './useAccount';
 
 export type EventParsingParameters = {

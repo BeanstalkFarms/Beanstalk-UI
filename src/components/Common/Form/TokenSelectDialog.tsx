@@ -6,8 +6,8 @@ import { makeStyles } from '@mui/styles';
 import Token from 'classes/Token';
 import { displayBN } from 'util/index';
 import { ZERO_BN } from 'constants/index';
-import { FarmerBalances } from 'state/farmer/balances';
-import { FarmerSilo } from 'state/farmer/silo';
+import { FarmerBalances } from '~/state/farmer/balances';
+import { FarmerSilo } from '~/state/farmer/silo';
 import { BeanstalkPalette, FontSize } from '../../App/muiTheme';
 
 const useStyles = makeStyles(() => ({

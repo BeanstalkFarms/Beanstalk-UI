@@ -11,7 +11,7 @@ import { Field, FieldProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { displayBN, displayFullBN, displayTokenAmount } from 'util/index';
 import Token from 'classes/Token';
-import { FarmerBalances } from 'state/farmer/balances';
+import { FarmerBalances } from '~/state/farmer/balances';
 import NumberFormatInput from './NumberFormatInput';
 import FieldWrapper from './FieldWrapper';
 

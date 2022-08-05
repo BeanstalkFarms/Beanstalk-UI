@@ -7,7 +7,7 @@ import { useSigner } from 'hooks/ledger/useSigner';
 import TransactionToast from 'components/Common/TxnToast';
 import { LoadingButton } from '@mui/lab';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
+import { AppState } from '~/state';
 
 const SunriseButton : React.FC = () => {
   const { data: signer } = useSigner();

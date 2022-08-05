@@ -14,9 +14,9 @@ import { useBeanstalkContract } from 'hooks/useContract';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
 import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
-import { PodOrder } from 'state/farmer/market';
-import { useFetchFarmerMarket } from 'state/farmer/market/updater';
+import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
+import { PodOrder } from '~/state/farmer/market';
+import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
 
 const OPTIONS = [
   {

@@ -4,7 +4,7 @@ import { Box, Card, Stack, Typography, Tooltip } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { displayFullBN } from 'util/index';
 import useHumidity from 'hooks/useHumidity';
-import { AppState } from 'state';
+import { AppState } from '~/state';
 import SunriseCountdown from 'components/Sun/SunriseCountdown';
 import useSeason from 'hooks/useSeason';
 import FertilizerImage from './FertilizerImage';

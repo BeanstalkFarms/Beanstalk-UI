@@ -6,7 +6,7 @@ import { displayBN, displayFullBN, MaxBN } from 'util/index';
 import BigNumber from 'bignumber.js';
 import { BEAN, PODS } from 'constants/tokens';
 import { ZERO_BN } from 'constants/index';
-import { PodListing, PodOrder } from 'state/farmer/market';
+import { PodListing, PodOrder } from '~/state/farmer/market';
 import { BeanstalkPalette } from 'components/App/muiTheme';
 import TokenIcon from '../TokenIcon';
 import AddressIcon from '../AddressIcon';

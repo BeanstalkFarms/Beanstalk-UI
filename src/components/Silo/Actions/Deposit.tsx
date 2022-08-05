@@ -15,7 +15,7 @@ import TxnPreview from 'components/Common/Form/TxnPreview';
 import Beanstalk from 'lib/Beanstalk';
 import { useBeanstalkContract } from 'hooks/useContract';
 import useFarmerBalances from 'hooks/useFarmerBalances';
-import { Balance, FarmerBalances } from 'state/farmer/balances';
+import { Balance, FarmerBalances } from '~/state/farmer/balances';
 import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/Tokens';
 import TransactionToast from 'components/Common/TxnToast';
 import { BeanstalkReplanted } from 'generated/index';
@@ -32,14 +32,14 @@ import { combineBalances, optimizeFromMode } from 'util/Farm';
 import usePreferredToken from 'hooks/usePreferredToken';
 import useTokenMap from 'hooks/useTokenMap';
 import { useSigner } from 'hooks/ledger/useSigner';
-import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
+import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import { parseError } from 'util/index';
 import toast from 'react-hot-toast';
-import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
+import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import { useFetchPools } from 'state/bean/pools/updater';
-import { useFetchSilo } from 'state/beanstalk/silo/updater';
+import { AppState } from '~/state';
+import { useFetchPools } from '~/state/bean/pools/updater';
+import { useFetchSilo } from '~/state/beanstalk/silo/updater';
 
 // -----------------------------------------------------------------------
 

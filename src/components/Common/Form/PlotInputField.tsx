@@ -7,7 +7,7 @@ import { displayBN, MaxBN, MinBN } from 'util/index';
 import PlotSelectDialog from 'components/Field/PlotSelectDialog';
 import { PODS } from 'constants/tokens';
 import { Box, Grid, Stack, Typography } from '@mui/material';
-import { PlotMap } from 'state/farmer/field';
+import { PlotMap } from '~/state/farmer/field';
 import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
 import { PlotFragment, PlotSettingsFragment, TokenAdornment, TokenInputField } from '.';
 import AdvancedButton from './AdvancedButton';

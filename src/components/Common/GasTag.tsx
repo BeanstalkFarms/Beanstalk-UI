@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import useGasUSD from 'hooks/ledger/useGasUSD';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
+import { AppState } from '~/state';
 import { displayUSD } from 'util/index';
 import { DateTime } from 'luxon';
 

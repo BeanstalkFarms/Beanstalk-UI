@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { ZERO_BN } from 'constants/index';
 import { FarmFromMode } from 'lib/Beanstalk/Farm';
-import { Balance } from 'state/farmer/balances';
+import { Balance } from '~/state/farmer/balances';
 
 /**
  * Gas minimization strategy:

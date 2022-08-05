@@ -2,8 +2,8 @@ import BigNumber from 'bignumber.js';
 import Token from 'classes/Token';
 import { TokenMap } from 'constants/index';
 import { BeanstalkReplanted } from 'generated';
-import { SeasonMap } from 'state/farmer/field';
-import { Crate, DepositCrate, FarmerSiloBalance, WithdrawalCrate } from 'state/farmer/silo';
+import { SeasonMap } from '~/state/farmer/field';
+import { Crate, DepositCrate, FarmerSiloBalance, WithdrawalCrate } from '~/state/farmer/silo';
 
 export type Withdrawals = SeasonMap<BigNumber>;
 

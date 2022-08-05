@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import { SEEDS, STALK } from 'constants/tokens';
 import TokenIcon from 'components/Common/TokenIcon';
-import { AppState } from 'state';
+import { AppState } from '~/state';
 import { displayBN, displayFullBN } from 'util/index';
 import ResizablePieChart, { PieDataPoint } from 'components/Common/Charts/Pie';
 import StatCard from '../StatCard';

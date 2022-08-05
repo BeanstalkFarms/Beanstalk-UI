@@ -8,11 +8,11 @@ import {
 import { useTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 
-import { AppState } from 'state';
 import PageHeader from 'components/Common/PageHeader';
 import LiquidityOverTime from 'components/Forecast/LiquidityOverTime';
 import PodRate from 'components/Analytics/Field/PodRate';
 import Price from 'components/Analytics/Bean/Price';
+import { AppState } from '~/state';
 
 const ForecastPage: React.FC = () => {
   // Data

@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { Box, Button, Card, Container, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
 import Overview from 'components/Silo/Overview';
 import RewardsBar from 'components/Silo/RewardsBar';
 import Whitelist from 'components/Silo/Whitelist';
@@ -15,6 +14,7 @@ import useRevitalized from 'hooks/useRevitalized';
 import RewardsDialog from 'components/Silo/RewardsDialog';
 import DropdownIcon from 'components/Common/DropdownIcon';
 import useSeason from 'hooks/useSeason';
+import { AppState } from '~/state';
 
 const SiloPage : React.FC = () => {
   /// Chain Constants

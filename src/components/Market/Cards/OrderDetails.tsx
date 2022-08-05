@@ -3,7 +3,7 @@ import {
   Stack,
   Typography, Box, Divider, Tooltip,
 } from '@mui/material';
-import { PodOrder } from 'state/farmer/market';
+import { PodOrder } from '~/state/farmer/market';
 import TokenIcon from 'components/Common/TokenIcon';
 import { BEAN, PODS } from 'constants/tokens';
 import FarmerChip from 'components/Common/FarmerChip';

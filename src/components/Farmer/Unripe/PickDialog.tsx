@@ -31,7 +31,7 @@ import useGetChainToken from 'hooks/useGetChainToken';
 import { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
 import TransactionToast from 'components/Common/TxnToast';
 import useAccount from 'hooks/ledger/useAccount';
-import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
+import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import toast from 'react-hot-toast';
 import UnripeTokenRow from './UnripeTokenRow';
 

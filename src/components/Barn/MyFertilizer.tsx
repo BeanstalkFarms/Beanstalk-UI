@@ -13,7 +13,7 @@ import {
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { useHumidityAtId } from 'hooks/useHumidity';
-import { AppState } from 'state';
+import { AppState } from '~/state';
 import FertilizerItem from 'components/Barn/FertilizerItem';
 import { ZERO_BN } from 'constants/index';
 import { SPROUTS, RINSABLE_SPROUTS } from 'constants/tokens';

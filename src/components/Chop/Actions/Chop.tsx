@@ -32,11 +32,11 @@ import TransactionToast from 'components/Common/TxnToast';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
 import DestinationField from 'components/Common/Form/DestinationField';
 import useAccount from 'hooks/ledger/useAccount';
-import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
 import { optimizeFromMode } from 'util/Farm';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
+import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
+import { AppState } from '~/state';
 import useChopPenalty from '../../../hooks/useChopPenalty';
 
 type ChopFormValues = FormState & {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Stack, Typography, Box } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { PodListing } from 'state/farmer/market';
+import { PodListing } from '~/state/farmer/market';
 import { displayBN } from 'util/index';
 import { IconSize } from 'components/App/muiTheme';
 import TokenIcon from 'components/Common/TokenIcon';

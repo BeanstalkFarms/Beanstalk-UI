@@ -21,8 +21,8 @@ import {
   toStringBaseUnitBN
 } from 'util/index';
 import toast from 'react-hot-toast';
-import { useFetchFarmerField } from 'state/farmer/field/updater';
-import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
+import { useFetchFarmerField } from '~/state/farmer/field/updater';
+import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import useFarmerField from 'hooks/useFarmerField';
 import copy from 'constants/copy';
 import DestinationField from '../../Common/Form/DestinationField';

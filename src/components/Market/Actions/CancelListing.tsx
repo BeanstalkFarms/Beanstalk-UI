@@ -6,8 +6,8 @@ import { useSigner } from 'hooks/ledger/useSigner';
 import { useBeanstalkContract } from 'hooks/useContract';
 import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useFetchFarmerField } from 'state/farmer/field/updater';
-import { useFetchFarmerMarket } from 'state/farmer/market/updater';
+import { useFetchFarmerField } from '~/state/farmer/field/updater';
+import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
 
 const CancelListing : React.FC<{ id: string }> = ({ id }) => {
   /// Helpers

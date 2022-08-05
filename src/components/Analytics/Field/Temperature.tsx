@@ -3,8 +3,8 @@ import SeasonPlot, { SeasonPlotBaseProps } from 'components/Common/Charts/Season
 import { SeasonalWeatherDocument, SeasonalWeatherQuery } from 'generated/graphql';
 import useSeason from 'hooks/useSeason';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
 import { SnapshotData } from 'hooks/useSeasons';
+import { AppState } from '~/state';
 
 const getValue = (snapshot: SnapshotData<SeasonalWeatherQuery>) => snapshot.weather;
 const formatValue = (value: number) => `${value.toFixed(0)}%`;

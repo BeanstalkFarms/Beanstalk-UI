@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
     "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "types": ["vite/client"],
@@ -17,7 +18,10 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "downlevelIteration": true,
-    "incremental": true
+    "incremental": true,
+    "paths": {
+      "~/*": ["./src/*"]
+    }
   },
   "include": [
     "src"

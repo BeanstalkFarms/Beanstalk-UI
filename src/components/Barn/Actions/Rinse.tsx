@@ -15,7 +15,7 @@ import {
 } from 'components/Common/Form';
 import TxnPreview from 'components/Common/Form/TxnPreview';
 import TxnAccordion from 'components/Common/TxnAccordion';
-import { useFetchFarmerBarn } from 'state/farmer/barn/updater';
+import { useFetchFarmerBarn } from '~/state/farmer/barn/updater';
 import { displayFullBN, parseError } from 'util/index';
 import { BeanstalkReplanted } from 'generated';
 import { FarmToMode } from 'lib/Beanstalk/Farm';
@@ -24,7 +24,7 @@ import useFarmerFertilizer from 'hooks/redux/useFarmerFertilizer';
 import TransactionToast from 'components/Common/TxnToast';
 import toast from 'react-hot-toast';
 import useAccount from 'hooks/ledger/useAccount';
-import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
+import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { ActionType } from 'util/Actions';
 import copy from 'constants/copy';
 

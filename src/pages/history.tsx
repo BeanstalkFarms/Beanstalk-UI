@@ -1,11 +1,11 @@
 import { Container } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
 import { Card, Grid, Stack, Tab, Tabs } from '@mui/material';
 import EventItem from 'components/History/EventItem';
 import WalletButton from 'components/Common/Connection/WalletButton';
 import { Event } from 'lib/Beanstalk/EventProcessor';
+import { AppState } from '~/state';
 import useAccount from '../hooks/ledger/useAccount';
 import useChainId from '../hooks/useChain';
 import { getEventCacheId } from '../util/State';

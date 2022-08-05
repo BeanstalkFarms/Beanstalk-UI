@@ -6,12 +6,12 @@ import {
 } from '@mui/material';
 import PageHeader from 'components/Common/PageHeader';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
 import BigNumber from 'bignumber.js';
 import { DataGridProps } from '@mui/x-data-grid';
 import { displayBN, displayFullBN } from 'util/index';
 import FieldActions from 'components/Field/Actions';
 import TableCard from 'components/Common/TableCard';
+import { AppState } from '~/state';
 import FieldConditions from '../components/Field/FieldConditions';
 import { PODS } from '../constants/tokens';
 import useAccount from '../hooks/ledger/useAccount';

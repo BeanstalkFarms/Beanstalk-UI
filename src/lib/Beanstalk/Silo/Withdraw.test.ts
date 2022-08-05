@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { BEAN } from 'constants/tokens';
-import { DepositCrate } from 'state/farmer/silo';
+import { DepositCrate } from '~/state/farmer/silo';
 import Beanstalk from '../index';
 
 type WResult = ReturnType<typeof Beanstalk.Silo.Withdraw._selectCratesToWithdraw>;

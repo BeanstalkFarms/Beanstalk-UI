@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog, DialogProps } from '@mui/material';
-import { PlotMap } from 'state/farmer/field';
+import { PlotMap } from '~/state/farmer/field';
 import BigNumber from 'bignumber.js';
 import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
 import PlotSelect from '../Common/PlotSelect';

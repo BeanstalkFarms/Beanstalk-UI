@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
+import { AppState } from '~/state';
 import { Link, useNavigate } from 'react-router-dom';
 import COLUMNS from 'components/Common/Table/cells';
 import { Button } from '@mui/material';
