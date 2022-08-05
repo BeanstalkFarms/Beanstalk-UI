@@ -26,6 +26,7 @@ const AllListings : React.FC<{}> = () => {
     COLUMNS.maxPlaceInLine,
     COLUMNS.pricePerPod,
     COLUMNS.numPods,
+    COLUMNS.rightChevron
   ];
   
   return (

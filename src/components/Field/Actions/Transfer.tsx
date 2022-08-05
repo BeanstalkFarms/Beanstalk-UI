@@ -145,7 +145,7 @@ const Transfer: React.FC<{}> = () => {
     );
 
     const txToast = new TransactionToast({
-      loading: `Transferring ${displayFullBN(amount.abs(), PODS.decimals)} Pods to ${trimAddress(to)}.`,
+      loading: `Transferring ${displayFullBN(amount.abs(), PODS.decimals)} Pods to ${trimAddress(to, true)}.`,
       success: 'Plot Transferred.',
     });
 
