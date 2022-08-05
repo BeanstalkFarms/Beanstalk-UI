@@ -4,16 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import COLUMNS from 'components/Common/Table/cells';
 import { castPodOrder, PodOrder } from 'state/farmer/market';
 import { useAllPodOrdersQuery } from 'generated/graphql';
-import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
 import MarketBaseTable from './Base';
 
 const AllListings : React.FC<{}> = () => {
   /// Data
-  const harvestableIndex = useHarvestableIndex();
-  const { data, loading } = useAllPodOrdersQuery({
-    variables: { first: 1000, }
-  });
-  
+  const { data, loading } = useAllPodOrdersQuery({ variables: { first: 1000, } });
   const rows : PodOrder[] = useMemo(() => {
     if (loading || !data?.podOrders) return [];
     return data.podOrders.map<PodOrder>(castPodOrder);
