@@ -7,15 +7,15 @@ import {
   Box,
   Grid, Divider,
 } from '@mui/material';
-import useSeason from 'hooks/useSeason';
 import drySeasonIcon from 'img/beanstalk/sun/dry-season.svg';
 import rainySeasonIcon from 'img/beanstalk/sun/rainy-season.svg';
 import SunriseButton from 'components/Sun/SunriseButton';
 import BigNumber from 'bignumber.js';
-import usePrice from 'hooks/usePrice';
 import { useSelector } from 'react-redux';
 import { SunButtonQuery, useSunButtonQuery } from 'generated/graphql';
-import useChainId from 'hooks/useChain';
+import usePrice from '~/hooks/usePrice';
+import useSeason from '~/hooks/useSeason';
+import useChainId from '~/hooks/useChain';
 import { MaxBN, MinBN, toTokenUnitsBN } from '~/util/index';
 import { BEAN } from '~/constants/tokens';
 import { NEW_BN, SupportedChainId, ZERO_BN } from '~/constants/index';

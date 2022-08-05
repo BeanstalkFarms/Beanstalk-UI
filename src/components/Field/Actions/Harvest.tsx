@@ -3,9 +3,9 @@ import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useAccount, useProvider } from 'wagmi';
-import { useSigner } from 'hooks/ledger/useSigner';
+import { useSigner } from '~/hooks/ledger/useSigner';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import { useBeanstalkContract } from 'hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/useContract';
 import { ActionType } from '~/util/Actions';
 import {
   SmartSubmitButton, TokenInputField, TokenOutputField,
@@ -20,7 +20,7 @@ import {
   toStringBaseUnitBN
 } from '~/util/index';
 import toast from 'react-hot-toast';
-import useFarmerField from 'hooks/useFarmerField';
+import useFarmerField from '~/hooks/useFarmerField';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { BEAN, PODS } from '~/constants/tokens';

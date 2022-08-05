@@ -1,6 +1,6 @@
 import { Box, Divider, Tooltip, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import useGasUSD from 'hooks/ledger/useGasUSD';
+import useGasUSD from '~/hooks/ledger/useGasUSD';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { DateTime } from 'luxon';

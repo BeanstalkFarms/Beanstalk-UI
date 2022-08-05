@@ -1,6 +1,6 @@
 import { Box, Card, Stack, Tab, Tabs, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
+import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
 import React, { useCallback, useEffect, useState } from 'react';
 import { AppState } from '~/state';
 import { displayBN, displayUSD } from '~/util/index';
@@ -8,7 +8,7 @@ import { displayBN, displayUSD } from '~/util/index';
 import LineChart, { DataPoint } from 'components/Common/Charts/LineChart';
 
 import Stat from 'components/Common/Stat';
-import useTabs from 'hooks/display/useTabs';
+import useTabs from '~/hooks/display/useTabs';
 import { mockDepositData, mockOwnershipPctData } from 'components/Common/Charts/LineChart.mock';
 import BlurComponent from 'components/Common/ZeroState/BlurComponent';
 import WalletButton from '../Common/Connection/WalletButton';

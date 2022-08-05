@@ -1,6 +1,6 @@
 import { Box, Card, Stack, Tab, Tabs } from '@mui/material';
 import React from 'react';
-import useTabs from 'hooks/display/useTabs';
+import useTabs from '~/hooks/display/useTabs';
 import CreateOrder from './CreateOrder';
 import CreateListing from './CreateListing';
 

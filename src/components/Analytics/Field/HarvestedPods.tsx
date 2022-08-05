@@ -1,7 +1,7 @@
 import React from 'react';
 import SeasonPlot, { SeasonPlotBaseProps } from 'components/Common/Charts/SeasonPlot';
 import { SeasonalHarvestedPodsDocument, SeasonalHarvestedPodsQuery } from 'generated/graphql';
-import { SnapshotData } from 'hooks/useSeasons';
+import { SnapshotData } from '~/hooks/useSeasons';
 import { toTokenUnitsBN } from '~/util/index';
 import { BEAN } from '~/constants/tokens';
 

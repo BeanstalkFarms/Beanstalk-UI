@@ -1,6 +1,6 @@
-import useAccount from 'hooks/ledger/useAccount';
-import useChainId from 'hooks/useChain';
 import { useSelector } from 'react-redux';
+import useAccount from '~/hooks/ledger/useAccount';
+import useChainId from '~/hooks/useChain';
 import { getEventCacheId } from '~/util/State';
 import { AppState } from '~/state';
 import { EventCacheName } from '~/state/farmer/events2';

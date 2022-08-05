@@ -1,5 +1,5 @@
 import { Card, Stack, Tab, Tabs } from '@mui/material';
-import useTabs from 'hooks/display/useTabs';
+import useTabs from '~/hooks/display/useTabs';
 import React from 'react';
 import Soon from '../Soon';
 

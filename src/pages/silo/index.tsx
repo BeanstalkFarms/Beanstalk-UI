@@ -5,15 +5,15 @@ import Overview from 'components/Silo/Overview';
 import RewardsBar from 'components/Silo/RewardsBar';
 import Whitelist from 'components/Silo/Whitelist';
 import PageHeader from 'components/Common/PageHeader';
-import useWhitelist from 'hooks/useWhitelist';
-import usePools from 'hooks/usePools';
-import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
-import useChainId from 'hooks/useChain';
-import useToggle from 'hooks/display/useToggle';
-import useRevitalized from 'hooks/useRevitalized';
 import RewardsDialog from 'components/Silo/RewardsDialog';
 import DropdownIcon from 'components/Common/DropdownIcon';
-import useSeason from 'hooks/useSeason';
+import useWhitelist from '~/hooks/useWhitelist';
+import usePools from '~/hooks/usePools';
+import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
+import useChainId from '~/hooks/useChain';
+import useToggle from '~/hooks/display/useToggle';
+import useRevitalized from '~/hooks/useRevitalized';
+import useSeason from '~/hooks/useSeason';
 import { AppState } from '~/state';
 
 const SiloPage : React.FC = () => {

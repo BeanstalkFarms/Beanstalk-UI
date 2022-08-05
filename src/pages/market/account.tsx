@@ -8,11 +8,11 @@ import {
   Tabs,
   Typography,
 } from '@mui/material';
-import useTabs from 'hooks/display/useTabs';
 import MyOrdersTable from 'components/Market/Tables/MyOrders';
 import AddressIcon from 'components/Common/AddressIcon';
 import MyListingsTable from 'components/Market/Tables/MyListings';
 import { Link } from 'react-router-dom';
+import useTabs from '~/hooks/display/useTabs';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 
 const SLUGS = ['orders', 'listings'];

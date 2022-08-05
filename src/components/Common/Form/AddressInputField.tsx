@@ -14,8 +14,8 @@ import {
 import { Field, FieldProps } from 'formik';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import useChainId from 'hooks/useChain';
-import useAccount from 'hooks/ledger/useAccount';
+import useChainId from '~/hooks/useChain';
+import useAccount from '~/hooks/ledger/useAccount';
 import { useTheme } from '@mui/material/styles';
 import { CHAIN_INFO } from '~/constants/index';
 import OutputField from './OutputField';

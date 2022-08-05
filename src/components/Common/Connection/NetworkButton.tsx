@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNetwork } from 'wagmi';
 import { Button, ButtonProps, Typography } from '@mui/material';
-import useAnchor from 'hooks/display/useAnchor';
+import useAnchor from '~/hooks/display/useAnchor';
 import { SupportedChainId } from '~/constants/chains';
 import { ETH } from '~/constants/tokens';
 import TokenIcon from '../TokenIcon';

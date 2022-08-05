@@ -1,8 +1,8 @@
 import React from 'react';
 import SeasonPlot, { SeasonPlotBaseProps } from 'components/Common/Charts/SeasonPlot';
 import { SeasonalSownDocument, SeasonalSownQuery } from 'generated/graphql';
-import useSeason from 'hooks/useSeason';
-import { SnapshotData } from 'hooks/useSeasons';
+import useSeason from '~/hooks/useSeason';
+import { SnapshotData } from '~/hooks/useSeasons';
 import { toTokenUnitsBN } from '~/util/index';
 import { BEAN } from '~/constants/tokens';
 

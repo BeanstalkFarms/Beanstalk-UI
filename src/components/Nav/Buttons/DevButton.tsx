@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
 import { Button } from '@mui/material';
 import { BeanstalkReplanted } from 'generated';
-import { useBeanstalkContract } from 'hooks/useContract';
 import CachedIcon from '@mui/icons-material/Cached';
 import { useAccount } from 'wagmi';
-import useTokenMap from 'hooks/useTokenMap';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import useTokenMap from '~/hooks/useTokenMap';
 import { getAccount } from '~/util/Account';
 import { toTokenUnitsBN } from '~/util/Tokens';
 import { ERC20_TOKENS } from '~/constants/tokens';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { BoxProps } from '@mui/material';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
-import useAccount from 'hooks/ledger/useAccount';
+import useAccount from '~/hooks/ledger/useAccount';
 import { IconSize } from 'components/App/muiTheme';
 import { BEANSTALK_ADDRESSES } from '~/constants/index';
 

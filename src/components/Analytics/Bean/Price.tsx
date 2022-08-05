@@ -3,8 +3,8 @@ import SeasonPlot, {
   SeasonPlotBaseProps,
 } from 'components/Common/Charts/SeasonPlot';
 import { Season, SeasonalPriceDocument } from 'generated/graphql';
-import usePrice from 'hooks/usePrice';
-import useSeason from 'hooks/useSeason';
+import usePrice from '~/hooks/usePrice';
+import useSeason from '~/hooks/useSeason';
 
 const getValue = (season: Season) => parseFloat(season.price);
 const formatValue = (value: number) => `$${value.toFixed(4)}`;

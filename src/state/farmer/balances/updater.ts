@@ -4,13 +4,13 @@ import flatMap from 'lodash/flatMap';
 import { ZERO_BN } from '~/constants/index';
 import { BeanstalkReplanted } from 'generated/index';
 import { BALANCE_TOKENS, ERC20_TOKENS, ETH } from '~/constants/tokens';
-import useChainId from 'hooks/useChain';
-import { useBeanstalkContract } from 'hooks/useContract';
-import useMigrateCall from 'hooks/useMigrateCall';
-import useTokenMap from 'hooks/useTokenMap';
+import useChainId from '~/hooks/useChain';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import useMigrateCall from '~/hooks/useMigrateCall';
+import useTokenMap from '~/hooks/useTokenMap';
 import { tokenResult } from '~/util/index';
-import useChainConstant from 'hooks/useChainConstant';
-import useAccount from 'hooks/ledger/useAccount';
+import useChainConstant from '~/hooks/useChainConstant';
+import useAccount from '~/hooks/ledger/useAccount';
 import { clearBalances, updateBalances } from './actions';
 
 // -- Hooks

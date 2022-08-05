@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
-import useSeason from 'hooks/useSeason';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import useSeason from '~/hooks/useSeason';
 import { AppState } from '~/state';
 import useAccount from './useAccount';
 

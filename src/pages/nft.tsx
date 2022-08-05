@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Box, Card, Container, Link, Stack, Tab, Tabs, Typography, useMediaQuery, } from '@mui/material';
-import { useSigner } from 'hooks/ledger/useSigner';
 import fetch from 'node-fetch';
 import { useTheme } from '@mui/material/styles';
-import useTabs from 'hooks/display/useTabs';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import useTabs from '~/hooks/display/useTabs';
 import { getAccount } from '~/util/Account';
 import { ClaimStatus, loadNFTs, Nft } from '~/util/BeaNFTs';
 import NFTDialog from '../components/NFT/NFTDialog';

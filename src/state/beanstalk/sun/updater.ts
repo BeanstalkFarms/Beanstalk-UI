@@ -1,6 +1,6 @@
-import { useBeanstalkContract } from 'hooks/useContract';
-import useSeason from 'hooks/useSeason';
-import useTimedRefresh from 'hooks/useTimedRefresh';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import useSeason from '~/hooks/useSeason';
+import useTimedRefresh from '~/hooks/useTimedRefresh';
 import { DateTime } from 'luxon';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

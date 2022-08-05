@@ -2,13 +2,13 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import SiloActions from 'components/Silo/Actions';
-import useWhitelist from 'hooks/useWhitelist';
 import { Container, Stack } from '@mui/material';
-import usePools from 'hooks/usePools';
 import PoolCard from 'components/Silo/PoolCard';
 import { ERC20Token } from 'classes/Token';
 import PageHeaderSecondary from 'components/Common/PageHeaderSecondary';
 import TokenIcon from 'components/Common/TokenIcon';
+import usePools from '~/hooks/usePools';
+import useWhitelist from '~/hooks/useWhitelist';
 import { AppState } from '~/state';
 
 const TokenPage: React.FC<{}> = () => {

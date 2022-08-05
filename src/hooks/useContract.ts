@@ -9,7 +9,7 @@ import {
 import { Contract, ContractInterface, ethers } from 'ethers';
 import { useCallback, useMemo } from 'react';
 import { useProvider, useContract as useWagmiContract } from 'wagmi';
-import { useSigner } from 'hooks/ledger/useSigner';
+import { useSigner } from '~/hooks/ledger/useSigner';
 import { getChainConstant } from '~/util/Chain';
 import { ChainConstant } from '~/constants/index';
 import {

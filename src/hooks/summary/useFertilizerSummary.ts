@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { FormTokenState } from 'components/Common/Form';
-import useChainConstant from 'hooks/useChainConstant';
-import useHumidity from 'hooks/useHumidity';
+import useChainConstant from '~/hooks/useChainConstant';
+import useHumidity from '~/hooks/useHumidity';
 import { Action, ActionType } from '~/util/Actions';
 import { USDC } from '~/constants/tokens';
 

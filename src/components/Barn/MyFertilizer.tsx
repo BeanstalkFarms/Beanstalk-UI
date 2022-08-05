@@ -12,11 +12,11 @@ import {
 } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import { useHumidityAtId } from 'hooks/useHumidity';
+import { useHumidityAtId } from '~/hooks/useHumidity';
 import FertilizerItem from 'components/Barn/FertilizerItem';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { MY_FERTILIZER } from 'components/Barn/FertilizerItemTooltips';
-import useTabs from 'hooks/display/useTabs';
+import useTabs from '~/hooks/display/useTabs';
 import EmptyState from 'components/Common/ZeroState/EmptyState';
 import { displayFullBN, MaxBN } from '~/util/Tokens';
 import { SPROUTS, RINSABLE_SPROUTS } from '~/constants/tokens';

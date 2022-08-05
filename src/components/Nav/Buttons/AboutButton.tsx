@@ -14,9 +14,9 @@ import {
 import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import useChainConstant from 'hooks/useChainConstant';
-import useAnchor from 'hooks/display/useAnchor';
-import useToggle from 'hooks/display/useToggle';
+import useChainConstant from '~/hooks/useChainConstant';
+import useAnchor from '~/hooks/display/useAnchor';
+import useToggle from '~/hooks/display/useToggle';
 import { BEANSTALK_ADDRESSES, CHAIN_INFO } from '~/constants/index';
 import NavDrawer from '../NavDrawer';
 import ROUTES from '../routes';
