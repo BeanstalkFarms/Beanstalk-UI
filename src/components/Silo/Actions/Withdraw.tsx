@@ -23,7 +23,7 @@ import TransactionToast from 'components/Common/TxnToast';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import useFarmerSiloBalances from '~/hooks/useFarmerSiloBalances';
 import { ERC20Token } from 'classes/Token';
-import { BeanstalkReplanted } from 'generated/index';
+import { BeanstalkReplanted } from '~/generated/index';
 import { useSelector } from 'react-redux';
 import { AppState } from '~/state';
 import { ActionType } from '~/util/Actions';

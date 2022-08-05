@@ -5,7 +5,7 @@ import { bigNumberResult } from '~/util/Ledger';
 import { tokenResult, toStringBaseUnitBN } from '~/util/index';
 import { BEAN, SEEDS, STALK } from '~/constants/tokens';
 import { useBeanstalkContract } from '~/hooks/useContract';
-import { BeanstalkReplanted } from 'generated/index';
+import { BeanstalkReplanted } from '~/generated/index';
 import useWhitelist from '~/hooks/useWhitelist';
 import { useGetChainConstant } from '~/hooks/useChainConstant';
 import { resetBeanstalkSilo, updateBeanstalkSilo } from './actions';

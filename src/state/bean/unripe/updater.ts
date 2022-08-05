@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useChainId from '~/hooks/useChain';
-import { BeanstalkReplanted } from 'generated/index';
+import { BeanstalkReplanted } from '~/generated/index';
 import useTokenMap from '~/hooks/useTokenMap';
 import { tokenResult } from '~/util/index';
 import BigNumber from 'bignumber.js';

@@ -8,7 +8,7 @@ import useAccount from '~/hooks/ledger/useAccount';
 import EventProcessor from '~/lib/Beanstalk/EventProcessor';
 import useWhitelist from '~/hooks/useWhitelist';
 import useSeason from '~/hooks/useSeason';
-import { BeanstalkReplanted } from 'generated';
+import { BeanstalkReplanted } from '~/generated';
 import { EventCacheName } from '../events2';
 import useEvents, { GetQueryFilters } from '../events2/updater';
 import { resetFarmerMarket, updateFarmerMarket } from './actions';

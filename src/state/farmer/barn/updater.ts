@@ -1,12 +1,12 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import BigNumber from 'bignumber.js';
 import useChainConstant from '~/hooks/useChainConstant';
 import { useBeanstalkContract, useFertilizerContract } from '~/hooks/useContract';
 import { REPLANT_INITIAL_ID } from '~/hooks/useHumidity';
 import useChainId from '~/hooks/useChain';
-import { BeanstalkReplanted } from 'generated';
+import { BeanstalkReplanted } from '~/generated';
 import { toTokenUnitsBN } from '~/util/index';
-import BigNumber from 'bignumber.js';
 import { ZERO_BN } from '~/constants/index';
 import useBlocks from '~/hooks/useBlocks';
 import ERC1155EventProcessor from '~/lib/ERC1155/ERC1155EventProcessor';

@@ -18,7 +18,7 @@ import useFarmerBalances from '~/hooks/useFarmerBalances';
 import { Balance, FarmerBalances } from '~/state/farmer/balances';
 import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from '~/util/Tokens';
 import TransactionToast from 'components/Common/TxnToast';
-import { BeanstalkReplanted } from 'generated/index';
+import { BeanstalkReplanted } from '~/generated/index';
 import { QuoteHandler } from '~/hooks/useQuote';
 import { ZERO_BN } from '~/constants/index';
 import { ERC20Token, NativeToken } from 'classes/Token';

@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import sunIcon from 'img/beanstalk/sun/sun-icon.svg';
-import { useBeanstalkContract } from '~/hooks/useContract';
-import { BeanstalkReplanted } from 'generated/index';
-import { useSigner } from '~/hooks/ledger/useSigner';
 import TransactionToast from 'components/Common/TxnToast';
 import { LoadingButton } from '@mui/lab';
 import { useSelector } from 'react-redux';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import { BeanstalkReplanted } from '~/generated/index';
+import { useSigner } from '~/hooks/ledger/useSigner';
 import { AppState } from '~/state';
 
 const SunriseButton : React.FC = () => {

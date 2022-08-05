@@ -3,23 +3,23 @@ import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useAccount, useProvider } from 'wagmi';
-import { useSigner } from '~/hooks/ledger/useSigner';
 import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import { useBeanstalkContract } from '~/hooks/useContract';
-import { ActionType } from '~/util/Actions';
 import {
   SmartSubmitButton, TokenInputField, TokenOutputField,
   TxnPreview,
   TxnSeparator
 } from 'components/Common/Form';
-import { BeanstalkReplanted } from 'generated/index';
+import toast from 'react-hot-toast';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import { ActionType } from '~/util/Actions';
+import { BeanstalkReplanted } from '~/generated/index';
 import Farm, { FarmToMode } from '~/lib/Beanstalk/Farm';
 import {
   displayFullBN,
   parseError,
   toStringBaseUnitBN
 } from '~/util/index';
-import toast from 'react-hot-toast';
 import useFarmerField from '~/hooks/useFarmerField';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';

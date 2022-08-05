@@ -7,7 +7,7 @@ import { tokenResult, getChainConstant } from '~/util/index';
 import { BEAN } from '~/constants/tokens';
 import ALL_POOLS from '~/constants/pools';
 import { useProvider } from 'wagmi';
-import { ERC20__factory } from 'generated';
+import { ERC20__factory } from '~/generated';
 import { updateBeanPrice, updateBeanSupply } from '../token/actions';
 import { resetPools, updateBeanPools, UpdatePoolPayload } from './actions';
 

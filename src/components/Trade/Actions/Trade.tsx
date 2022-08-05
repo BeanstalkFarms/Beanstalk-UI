@@ -10,18 +10,18 @@ import {
   TxnSettings
 } from 'components/Common/Form';
 import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
-import { BeanstalkReplanted } from 'generated/index';
+import { Form, Formik, FormikProps } from 'formik';
+import React, { useCallback, useMemo, useState } from 'react';
+import TokenInputField from 'components/Common/Form/TokenInputField';
+import DestinationField from 'components/Common/Form/DestinationField';
+import { BeanstalkReplanted } from '~/generated/index';
 import { ZERO_BN } from '~/constants/index';
 import { BEAN, DAI, ETH, USDC, USDT, WETH } from '~/constants/tokens';
-import { Form, Formik, FormikProps } from 'formik';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useFarmerBalances from '~/hooks/useFarmerBalances';
 import useTokenMap from '~/hooks/useTokenMap';
-import React, { useCallback, useMemo, useState } from 'react';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import TokenInputField from 'components/Common/Form/TokenInputField';
 import { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
-import DestinationField from 'components/Common/Form/DestinationField';
 import useGetChainToken from '~/hooks/useGetChainToken';
 
 type TradeFormValues = {
