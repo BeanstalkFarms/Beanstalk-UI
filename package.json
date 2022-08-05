@@ -108,6 +108,7 @@
   },
   "scripts": {
     "start": "vite --port 3000",
+    "dev": "netlify dev --targetPort 4173",
     "serve": "vite preview",
     "build": "yarn generate && tsc && vite build",
     "build-netlify": "VITE_NAME=$npm_package_name VITE_VERSION=$npm_package_version VITE_HOST='netlify' VITE_NETLIFY_CONTEXT=$CONTEXT VITE_NETLIFY_BUILD_ID=$BUILD_ID VITE_GIT_COMMIT_REF=$COMMIT_REF yarn build",

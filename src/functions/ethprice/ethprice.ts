@@ -43,7 +43,7 @@ const REFRESH_MS = 10 * 1000;
 const FORCE_EXPIRY_MS = 120 * 1000;
 
 const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': import.meta.env.NODE_ENV === 'production' ? 'https://*.bean.money ' : '*',
+  'Access-Control-Allow-Origin': process.env.NODE_ENV === 'production' ? 'https://*.bean.money ' : '*',
   'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
 };
 
@@ -63,8 +63,8 @@ const handler: Handler = async (event) => {
   if (expired) {
     try {
       const [gasoracle, ethprice] = await Promise.all([
-        axios.get<{ result: EtherscanGasOracleResponse }>(`https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=${import.meta.env.ETHERSCAN_API_KEY}`).then((r) => r.data.result),
-        axios.get<{ result: EtherscanEthPriceResponse }>(`https://api.etherscan.io/api?module=stats&action=ethprice&apikey=${import.meta.env.ETHERSCAN_API_KEY}`).then((r) => r.data.result)
+        axios.get<{ result: EtherscanGasOracleResponse }>(`https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=${process.env.ETHERSCAN_API_KEY}`).then((r) => r.data.result),
+        axios.get<{ result: EtherscanEthPriceResponse }>(`https://api.etherscan.io/api?module=stats&action=ethprice&apikey=${process.env.ETHERSCAN_API_KEY}`).then((r) => r.data.result)
       ]);
       lastRefreshed = new Date().getTime();
       data = {
