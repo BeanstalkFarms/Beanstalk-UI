@@ -334,8 +334,8 @@ const FillListing : React.FC<{
     let txToast;
     try {
       const formData    = values.tokens[0];
-      const inputToken  = formData.token;
-      const amountBeans = inputToken === Bean ? formData.amount : formData.amountOut;
+      const tokenIn     = formData.token;
+      const amountBeans = tokenIn === Bean ? formData.amount : formData.amountOut;
       if (!podListing) throw new Error('No pod listing.');
       if (!signer) throw new Error('Connect a wallet that can sign transactions first.');
       if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
@@ -343,6 +343,7 @@ const FillListing : React.FC<{
       
       const data : string[] = [];
       const amountPods = amountBeans.div(podListing.pricePerPod);
+      let finalFromMode : FarmFromMode;
       
       txToast = new TransactionToast({
         loading: `Buying ${displayTokenAmount(amountPods, PODS)} for ${displayTokenAmount(amountBeans, Bean)}...`,
@@ -350,12 +351,14 @@ const FillListing : React.FC<{
       });
       
       /// Sow directly from BEAN
-      if (inputToken === Bean) {
-        // Nothing to do
+      if (tokenIn === Bean) {
+        // No swap occurs, so we know exactly how many beans are going in.
+        // We can select from INTERNAL, EXTERNAL, INTERNAL_EXTERNAL.
+        finalFromMode = optimizeFromMode(formData.amount, balances[Bean.address]);
       } 
       
       /// Swap to BEAN and buy
-      else {
+      else if (tokenIn === Eth || tokenIn === Weth) {
         // Require a quote
         if (!formData.steps || !formData.amountOut) throw new Error(`No quote available for ${formData.token.symbol}`);
 
@@ -364,7 +367,15 @@ const FillListing : React.FC<{
           values.settings.slippage / 100,
         );
         data.push(...encoded);
+
+        // At the end of the Swap step, the assets will be in our INTERNAL balance.
+        // The Swap decides where to route them from (see handleQuote).
+        finalFromMode = FarmFromMode.INTERNAL_TOLERANT;
+      } else {
+        throw new Error(`Filling a Listing via ${tokenIn.symbol} is not currently supported`);
       }
+
+      console.debug(`[FillListing] using FarmFromMode = ${finalFromMode}`);
       
       data.push(
         beanstalk.interface.encodeFunctionData('fillPodListing', [
@@ -378,7 +389,7 @@ const FillListing : React.FC<{
             mode:     podListing.mode,
           },
           Bean.stringify(amountBeans),
-          FarmFromMode.INTERNAL_EXTERNAL,
+          finalFromMode,
         ])
       );
 
@@ -412,7 +423,7 @@ const FillListing : React.FC<{
     } finally {
       formActions.setSubmitting(false);
     }
-  }, [Bean, beanstalk, podListing, signer, refetchFarmerBalances, refetchFarmerField]);
+  }, [Bean, podListing, signer, Eth, Weth, beanstalk, refetchFarmerField, refetchFarmerBalances, balances]);
 
   return (
     <Formik<FillListingFormValues>
