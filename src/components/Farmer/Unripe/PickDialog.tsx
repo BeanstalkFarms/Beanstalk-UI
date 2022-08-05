@@ -269,19 +269,6 @@ const PickBeansDialog: React.FC<{
       <StyledDialogContent>
         <Stack gap={2}>
           {/**
-            * Section 1: Deposited Balance
-            */}
-          {/* <Stack gap={0.25}>
-            <Stack direction="row" justifyContent="space-between">
-              <Typography>Deposited Assets</Typography>
-              <Typography>{displayUSD(breakdown.states.deposited.value)}</Typography>
-            </Stack>
-            <Typography sx={{ fontSize: '13px' }} color="text.secondary">
-              These assets do not need to be Picked and will be automatically Deposited in their Unripe state at Replant. Head to the Silo page to view your balances.
-            </Typography>
-          </Stack> */}
-          {/* <Divider /> */}
-          {/**
             * Section 2: Unripe Beans
             */}
           <Stack gap={1}>

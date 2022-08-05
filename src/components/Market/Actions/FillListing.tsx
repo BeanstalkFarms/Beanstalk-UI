@@ -32,7 +32,6 @@ import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary
 import BigNumber from 'bignumber.js';
 import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
 import TransactionToast from 'components/Common/TxnToast';
-import { useFetchBeanstalkField } from 'state/beanstalk/field/updater';
 import { useFetchFarmerField } from 'state/farmer/field/updater';
 import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import toast from 'react-hot-toast';
@@ -276,8 +275,8 @@ const FillListing : React.FC<{
   const farm      = useMemo(() => new Farm(provider), [provider]);
 
   /// Data
+  // const [refetchBeanstalkField] = useFetchBeanstalkField();
   const balances                = useFarmerBalances();
-  const [refetchBeanstalkField] = useFetchBeanstalkField();
   const [refetchFarmerField]    = useFetchFarmerField();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
 
@@ -370,13 +369,6 @@ const FillListing : React.FC<{
       data.push(
         beanstalk.interface.encodeFunctionData('fillPodListing', [
           {
-            // account: string;
-            // index: BigNumberish;
-            // start: BigNumberish;
-            // amount: BigNumberish;
-            // pricePerPod: BigNumberish;
-            // maxHarvestableIndex: BigNumberish;
-            // mode: BigNumberish;
             account:  podListing.account,
             index:    Bean.stringify(podListing.index),
             start:    Bean.stringify(podListing.start),
