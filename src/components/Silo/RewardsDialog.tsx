@@ -143,7 +143,7 @@ const ClaimRewardsForm : React.FC<
                     const disabled = !calls || calls[option.value].enabled === false;
                     const hovered = isHovering(option.value) && !disabled;
                     return (
-                      <Tooltip title={!disabled ? '' : 'Nothing to claim'}>
+                      <Tooltip title={!disabled || isMobile ? '' : 'Nothing to claim'}>
                         <div>
                           <DescriptionButton
                             key={option.value}
