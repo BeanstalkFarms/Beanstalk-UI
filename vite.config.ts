@@ -19,11 +19,7 @@ export default defineConfig({
       },
     ],
   },
-  // esbuild: {
-  //   drop: ['console', 'debugger']
-  // },
   build: {
-    // minify: 'esbuild',
     sourcemap: false,
     reportCompressedSize: true,
     rollupOptions: {
