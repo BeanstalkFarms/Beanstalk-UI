@@ -44,7 +44,7 @@ const options = [
   },
   {
     title: 'Plant',
-    description: 'Add Plantable Seeds to your Seed balance. Also Mows Grown Stalk, claims Earned Beans and claims Earned Stalk.',
+    description: 'Add Plantable Seeds to your Seed balance. Also Mows Grown Stalk, Deposits Earned Beans and claims Earned Stalk.',
     value: ClaimRewardsAction.PLANT_AND_MOW,
   },
   {
