@@ -31,7 +31,7 @@ export const ETHEREUM_ADDRESS_CHARS = /([0][x]?[a-fA-F0-9]{0,42})$/;
 const validateAddress = (account?: string) => (value: string) => {
   let error;
   if (account && value?.toLowerCase() === account.toLowerCase()) {
-    error = 'Cannot send a Plot to yourself';
+    error = 'Cannot Transfer to yourself';
   } else if (!ETHEREUM_ADDRESS_CHARS.test(value)) {
     error = 'Invalid address';
   }

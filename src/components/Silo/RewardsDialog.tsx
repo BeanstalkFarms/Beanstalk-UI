@@ -49,12 +49,12 @@ const options = [
   },
   {
     title: 'Enroot',
-    description: 'Add Revitalized Stalk and Seeds to your Stalk and Seed balances. Also Mows Grown Stalk.',
+    description: 'Add Revitalized Stalk and Seeds to your Stalk and Seed balances, respectively. Also Mows Grown Stalk.',
     value: ClaimRewardsAction.ENROOT_AND_MOW,
   },
   {
     title: 'Claim all Silo Rewards',
-    description: 'Add all Stalk and Seed rewards to your Stalk and Seed balances.',
+    description: 'Mow, Plant and Enroot.',
     value: ClaimRewardsAction.CLAIM_ALL,
   }
 ];

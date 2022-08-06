@@ -22,16 +22,18 @@ const LiquidityOverTime: React.FC<LiquidityOverviewProps & CardProps> = ({
   const liquidity = Object.values(beanPools).reduce((prev, curr) => prev.plus(curr.liquidity), ZERO_BN);
 
   return (
-    <Card sx={{ p: 2, width: '100%', ...sx }}>
-      <Stat
-        title="Total Liquidity"
-        amount={<Fiat value={liquidity} amount={liquidity} />}
-        amountIcon={undefined}
-        gap={0.25}
-        sx={{ ml: 0 }}
-      />
-      <Box sx={{ position: 'relative ' }}>
-        <BlurComponent blur={10} opacity={0.7}>
+    <Card sx={{ width: '100%', ...sx }}>
+      <Box sx={{ p: 2 }}>
+        <Stat
+          title="Total Liquidity"
+          amount={<Fiat value={liquidity} amount={liquidity} />}
+          amountIcon={undefined}
+          gap={0.25}
+          sx={{ ml: 0 }}
+        />
+      </Box>
+      <Box sx={{ position: 'relative' }}>
+        <BlurComponent blur={10} opacity={0.7} sx={{ borderRadius: 1 }}>
           <Typography variant="body1" color="gray">Historical liquidity will be available soon.</Typography>
         </BlurComponent>
         <LiquidityBalances

@@ -50,14 +50,14 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
       </Box>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
         {!account ? (
-          <BlurComponent>
+          <BlurComponent sx={{ borderRadius: 1 }}>
             <Stack justifyContent="center" alignItems="center" gap={1}>
               <Typography variant="body1" color="gray">Your Silo Deposits will appear here.</Typography>
               <WalletButton showFullText color="primary" sx={{ height: 45 }} />
             </Stack>
           </BlurComponent>
         ) : (
-          <BlurComponent blur={6}>
+          <BlurComponent blur={6} sx={{ borderRadius: 1 }}>
             <Typography variant="body1" color="gray">Historical Deposit value will be available soon.</Typography>
           </BlurComponent>
         )}
@@ -86,14 +86,14 @@ const StalkOwnershipTab: React.FC<TabData
 
   return (
     <>
-      <Stack direction="row" gap={4} sx={{ px: 2 }}>
+      <Stack direction="row" gap={{ xs: 0, md: 4 }} sx={{ px: 2 }}>
         <Stat
           title="Stalk Balance"
-          titleTooltip="This is your total Stalk Balance. Stalk are the governance token of the Beanstalk DAO. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
+          titleTooltip="Stalk is the governance token of the Beanstalk DAO. Stalk entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
           subtitle={`Season ${displayBN(season)}`}
           amount={displayBN(displayValue[0])}
           color="primary"
-          sx={{ minWidth: 180, ml: 0 }}
+          sx={{ minWidth: 150, ml: 0 }}
           amountIcon={undefined}
           gap={0.25}
         />
@@ -109,14 +109,14 @@ const StalkOwnershipTab: React.FC<TabData
       </Stack>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
         {!account ? (
-          <BlurComponent>
+          <BlurComponent sx={{ borderRadius: 1 }}>
             <Stack justifyContent="center" alignItems="center" gap={1}>
               <Typography variant="body1" color="gray">Your Stalk Ownership will appear here.</Typography>
               <WalletButton showFullText color="primary" sx={{ height: 45 }} />
             </Stack>
           </BlurComponent>
         ) : (
-          <BlurComponent blur={6}>
+          <BlurComponent blur={6} sx={{ borderRadius: 1 }}>
             <Typography variant="body1" color="gray">Historical Stalk balance and ownership will be available soon.</Typography>
           </BlurComponent>
         )}
@@ -148,7 +148,7 @@ const SeedsOwnershipTab: React.FC<TabData
       <Stack direction="row" gap={4} sx={{ px: 2 }}>
         <Stat
           title="Seed Balance"
-          titleTooltip="This is your total Seed Balance."
+          titleTooltip="Seeds are illiquid tokens that yield 1/10,000 Stalk each Season."
           subtitle={`Season ${displayBN(season)}`}
           amount={displayBN(displayValue[0])}
           color="primary"
@@ -159,14 +159,14 @@ const SeedsOwnershipTab: React.FC<TabData
       </Stack>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
         {!account ? (
-          <BlurComponent>
+          <BlurComponent sx={{ borderRadius: 1 }}>
             <Stack justifyContent="center" alignItems="center" gap={1}>
               <Typography variant="body1" color="gray">Your Seed Ownership will appear here.</Typography>
               <WalletButton showFullText color="primary" sx={{ height: 45 }} />
             </Stack>
           </BlurComponent>
         ) : (
-          <BlurComponent blur={6}>
+          <BlurComponent blur={6} sx={{ borderRadius: 1 }}>
             <Typography variant="body1" color="gray">Historical Seed balance will be available soon.</Typography>
           </BlurComponent>
         )}

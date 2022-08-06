@@ -292,7 +292,7 @@ const PickBeansDialog: React.FC<{
               */}
             <Stack direction="row" justifyContent="space-between" pl={1}>
               <Typography>
-                Unripe Beans that will be available to Pick at Replant
+                Unripe Beans available to Pick at Replant
               </Typography>
               <Stack direction="row" alignItems="center" gap={0.3}>
                 <img src={unripeBeanIcon} alt="Circulating Beans" width={13} />
@@ -344,7 +344,7 @@ const PickBeansDialog: React.FC<{
               */}
             <Stack direction="row" justifyContent="space-between" pl={1}>
               <Typography>
-                Unripe BEAN:3CRV LP that will be available to Pick at Replant
+                Unripe BEAN:3CRV LP available to Pick at Replant
               </Typography>
               <Stack direction="row" alignItems="center" gap={0.3}>
                 <img src={brownLPIcon} alt="Circulating Beans" width={13} />

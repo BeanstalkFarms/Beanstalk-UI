@@ -122,7 +122,7 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, twap, newBeans, newSoil
             {/* <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
               <Stack alignItems="flex-end" justifyContent="center">
                 <Typography variant="bodySmall">
-                  {displayBN(deltaDemand || ZERO_BN)}
+                  {displayBN(deltaDemand || ZERO_BN)}%
                 </Typography>
               </Stack>
             </Grid> */}

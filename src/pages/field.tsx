@@ -32,8 +32,8 @@ const columns: DataGridProps['columns'] = [
     headerName: 'Number of Pods',
     flex: 1,
     disableColumnMenu: true,
-    align: 'left',
-    headerAlign: 'left',
+    align: 'right',
+    headerAlign: 'right',
     valueFormatter: (params) =>
       `${displayFullBN(params.value as BigNumber, 2)}`,
     renderCell: (params) => (

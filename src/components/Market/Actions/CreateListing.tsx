@@ -112,7 +112,7 @@ const CreateListingForm: React.FC<
                 This Plot is already listed on the Market. Creating a new Listing will override the previous one.
               </Alert>
             ) : null}
-            <FieldWrapper label="Price per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
+            <FieldWrapper label="Price per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPodListing}>
               <TokenInputField
                 name="pricePerPod"
                 placeholder="0.0000"
@@ -131,7 +131,7 @@ const CreateListingForm: React.FC<
             <DestinationField
               name="destination"
               walletDesc="When Pods are sold, send Beans to your wallet."
-              farmDesc="When Pods are sold, send Beans to your Beanstalk farm balance."
+              farmDesc="When Pods are sold, send Beans to your internal Beanstalk balance."
               label="Send proceeds to"
             />
             {isReady && ( 
@@ -168,7 +168,7 @@ const CreateListingForm: React.FC<
           tokens={[]}
           mode="auto"
         >
-          {alreadyListed ? 'Update Listing' : 'List Pods'}
+          {alreadyListed ? 'Update Listing' : 'List'}
         </SmartSubmitButton>
       </Stack>
     </Form>

@@ -26,17 +26,17 @@ export const MY_FERTILIZER: FertilizerTooltip = {
   reward: (fertilized: BigNumber, unfertilized: BigNumber) => ((
     <Stack width={200}>
       <Stack direction="row" justifyContent="space-between">
-        <Typography>Rinsable Sprouts:</Typography>
-        <Stack direction="row" alignItems="center" gap={0.2}>
-          <TokenIcon token={RINSABLE_SPROUTS} style={{ width: '14px' }} />
-          <Typography>{displayBN(fertilized)}</Typography>
-        </Stack>
-      </Stack>
-      <Stack direction="row" justifyContent="space-between">
         <Typography>Sprouts:</Typography>
         <Stack direction="row" alignItems="center" gap={0.2}>
           <TokenIcon token={SPROUTS} style={{ width: '14px' }} />
           <Typography>{displayBN(unfertilized)}</Typography>
+        </Stack>
+      </Stack>
+      <Stack direction="row" justifyContent="space-between">
+        <Typography>Rinsable Sprouts:</Typography>
+        <Stack direction="row" alignItems="center" gap={0.2}>
+          <TokenIcon token={RINSABLE_SPROUTS} style={{ width: '14px' }} />
+          <Typography>{displayBN(fertilized)}</Typography>
         </Stack>
       </Stack>
     </Stack>

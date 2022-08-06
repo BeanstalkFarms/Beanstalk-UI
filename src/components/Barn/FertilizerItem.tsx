@@ -111,6 +111,6 @@ const FertilizerItem: React.FC<FertilizerData & {
       </Stack>
       )}
   </Stack>
-  );
+);
 
 export default FertilizerItem;
