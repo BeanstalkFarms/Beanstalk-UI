@@ -146,7 +146,7 @@ const CreateOrderForm : React.FC<
         mode={TokenSelectMode.SINGLE}
       />
       <Stack gap={1.5}>
-        <FieldWrapper label="Max Place in Line" tooltip="The maximum place in line where you're willing to buy Pods at this price.">
+        <FieldWrapper label="Max Place in Line" tooltip="The maximum Place in Line in which you are willing to buy Pods at the following price.">
           <Box px={1}>
             <SliderField
               min={0}
@@ -162,7 +162,7 @@ const CreateOrderForm : React.FC<
             InputProps={PlaceInLineInputProps}
           />
         </FieldWrapper>
-        <FieldWrapper label="Price per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
+        <FieldWrapper label="Price per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPodOrder}>
           <TokenInputField
             name="pricePerPod"
             placeholder="0.0000"
@@ -206,11 +206,11 @@ const CreateOrderForm : React.FC<
                     },
                     {
                       type: ActionType.CREATE_ORDER,
-                      message: `Create an Order to purchase up to ${displayTokenAmount(amountPods, PODS)} at ${displayFullBN(values.pricePerPod!, 4)} Beans per Pod. Any Pods before ${displayBN(values.placeInLine!)} in the Pod Line are eligible.`
+                      message: `Order ${displayTokenAmount(amountPods, PODS)} at ${displayFullBN(values.pricePerPod!, 4)} Beans per Pod. Any Pods before ${displayBN(values.placeInLine!)} in the Pod Line are eligible to Fill this Order.`
                     },
                     {
                       type: ActionType.BASE,
-                      message: `${displayTokenAmount(amountOut, tokenOut)} will be locked in the Pod Order to allow for instant settlement. You can reclaim these Beans by cancelling the Order.`
+                      message: `${displayTokenAmount(amountOut, tokenOut)} will be locked in the Pod Order to allow for instant settlement. You can reclaim these Beans by Cancelling the Order.`
                     }
                   ]}
                 />

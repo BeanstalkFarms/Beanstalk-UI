@@ -16,7 +16,6 @@ import useSeason from '~/hooks/useSeason';
 import usePrice from '~/hooks/usePrice';
 import { displayBN } from '~/util/Tokens';
 import { NEW_BN, ZERO_BN } from '~/constants';
-import { CHAIN_INFO } from '~/constants/chains';
 import { useFetchPools } from '~/state/bean/pools/updater';
 import { AppState } from '~/state';
 import FolderMenu from '../FolderMenu';
@@ -51,7 +50,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       pool={pool}
       poolState={beanPools[pool.address]}
       ButtonProps={{
-        href: `${CHAIN_INFO[chainId]?.explorer}/address/${pool.address}`,
+        href: 'https://curve.fi/factory/152',
         target: '_blank',
         rel: 'noreferrer',
       }}

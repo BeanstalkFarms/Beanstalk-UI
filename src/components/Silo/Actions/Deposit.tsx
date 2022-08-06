@@ -139,8 +139,8 @@ const DepositForm : React.FC<
                   amount={stalk}
                   amountTooltip={(
                     <>
-                      1 {whitelistedToken.symbol} &rarr; {displayFullBN(amountToBdv(new BigNumber(1)))} BDV<br />
-                      1 BDV = {whitelistedToken.getStalk().toString()} STALK
+                      1 {whitelistedToken.symbol} = {displayFullBN(amountToBdv(new BigNumber(1)))} BDV<br />
+                      1 BDV &rarr; {whitelistedToken.getStalk().toString()} STALK
                       {/* {displayFullBN(bdv, BEAN[1].displayDecimals)} BDV &rarr; {displayFullBN(stalk, STALK.displayDecimals)} STALK */}
                     </>
                   )}
@@ -152,8 +152,8 @@ const DepositForm : React.FC<
                   amount={seeds}
                   amountTooltip={(
                     <>
-                      1 {whitelistedToken.symbol} &rarr; {displayFullBN(amountToBdv(new BigNumber(1)))} BDV<br />
-                      1 BDV = {whitelistedToken.getSeeds().toString()} SEEDS
+                      1 {whitelistedToken.symbol} = {displayFullBN(amountToBdv(new BigNumber(1)))} BDV<br />
+                      1 BDV &rarr; {whitelistedToken.getSeeds().toString()} SEEDS
                       {/* {displayFullBN(bdv, BEAN[1].displayDecimals)} BDV &rarr; {displayFullBN(seeds, SEEDS.displayDecimals)} SEED */}
                     </>
                   )}
@@ -448,7 +448,7 @@ const Deposit : React.FC<{
       );
 
       txToast = new TransactionToast({
-        loading: `Depositing ${displayFullBN(amount.abs(), whitelistedToken.displayDecimals, whitelistedToken.displayDecimals)} ${whitelistedToken.name} into the Silo`,
+        loading: `Depositing ${displayFullBN(amount.abs(), whitelistedToken.displayDecimals, whitelistedToken.displayDecimals)} ${whitelistedToken.name} into the Silo...`,
         success: 'Deposit successful.',
       });
 

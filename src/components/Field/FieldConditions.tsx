@@ -70,7 +70,7 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
         </Grid>
         <Grid item xs={6} md={3}>
           <Stack gap={0.5}>
-            <Tooltip title="The number of Beans that Beanstalk has paid back to lenders." placement="top">
+            <Tooltip title="The number of Beans that Beanstalk has paid back to Sowers." placement="top">
               <Typography variant="body1">
                 Pods Harvested&nbsp;
                 <HelpOutlineIcon

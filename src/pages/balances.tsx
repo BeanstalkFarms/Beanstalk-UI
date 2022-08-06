@@ -34,7 +34,7 @@ const BalancesPage: React.FC = () => {
               <Grid item xs={6} md={3}>
                 <Stat
                   title="Stalk"
-                  titleTooltip="This is your total Stalk balance. Stalk is the ownership token of the Beanstalk DAO. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
+                  titleTooltip="This is your total Stalk balance. Stalk is the governance token of the Beanstalk DAO. Stalk entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
                   amountIcon={<TokenIcon token={STALK} />}
                   amount={displayFullBN(farmerSilo.stalk.total, STALK.displayDecimals)}
                   variant="h4"
@@ -44,7 +44,7 @@ const BalancesPage: React.FC = () => {
               <Grid item xs={6} md={3}>
                 <Stat
                   title="Seeds"
-                  titleTooltip="This is your total Seed balance. Each Seed yields 1/10000 Grown Stalk each Season. Grown Stalk must be claimed in order to be included in your Stalk balance and start earning interest."
+                  titleTooltip="This is your total Seed balance. Each Seed yields 1/10000 Grown Stalk each Season. Grown Stalk must be Mown to add it to your Stalk balance."
                   amountIcon={<TokenIcon token={SEEDS} />}
                   amount={displayFullBN(farmerSilo.seeds.total, SEEDS.displayDecimals)}
                   variant="h4"
@@ -71,7 +71,7 @@ const BalancesPage: React.FC = () => {
               <Grid item xs={6} md={3}>
                 <Stat
                   title="Sprouts"
-                  titleTooltip="This is your total Sprout balance. Sprouts represent how many Beans there are left to be earned from your Fertilizer. Sprouts become Fertilized pro rata as the Bean supply increases. For more information on your Fertilizer, head over to the Barn Raise page."
+                  titleTooltip="This is your total Sprout balance. The number of Beans left to be earned from your Fertilizer. Sprouts become Rinsable on a pari passu basis. For more information on your Sprouts, head over to the Barn page."
                   amountIcon={<TokenIcon token={SPROUTS} />}
                   amount={(
                     <>

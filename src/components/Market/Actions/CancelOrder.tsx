@@ -27,7 +27,7 @@ const OPTIONS = [
   },
   {
     title: 'Farm Balance',
-    description: 'Return Beans in this Order to your internal balance within Beanstalk  .',
+    description: 'Return Beans in this Order to your internal Beanstalk balance.',
     pill: <Typography variant="body1">🚜 Farm Balance</Typography>,
     icon: '🚜',
     value: FarmToMode.INTERNAL,

@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import { ethers } from 'ethers';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
+import { useTheme } from '@mui/material/styles';
 import GasTag from '~/components/Common/GasTag';
 import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
 import { useSigner } from '~/hooks/ledger/useSigner';
@@ -21,7 +22,6 @@ import useTimedRefresh from '~/hooks/useTimedRefresh';
 import useBDV from '~/hooks/useBDV';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import { AppState } from '~/state';
-import { useTheme } from '@mui/material/styles';
 import TransactionToast from '../Common/TxnToast';
 import DescriptionButton from '../Common/DescriptionButton';
 import RewardsBar, { RewardsBarProps } from './RewardsBar';
@@ -49,12 +49,12 @@ const options = [
   },
   {
     title: 'Enroot',
-    description: 'Add Revitalized Stalk and Seeds to your Stalk and Seed balances. Also Mows Grown Stalk.',
+    description: 'Add Revitalized Stalk and Seeds to your Stalk and Seed balances, respectively. Also Mows Grown Stalk.',
     value: ClaimRewardsAction.ENROOT_AND_MOW,
   },
   {
     title: 'Claim all Silo Rewards',
-    description: 'Add all Stalk and Seed rewards to your Stalk and Seed balances.',
+    description: 'Mow, Plant and Enroot.',
     value: ClaimRewardsAction.CLAIM_ALL,
   }
 ];
