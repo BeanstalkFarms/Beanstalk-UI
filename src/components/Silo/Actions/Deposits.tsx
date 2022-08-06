@@ -50,7 +50,7 @@ const Deposits : React.FC<{
       valueFormatter: (params) => displayFullBN(params.value, token.displayDecimals, token.displayDecimals),
       renderCell: (params) => (
         <Tooltip
-          placement="right"
+          placement="bottom"
           title={(
             <>
               <Typography>BDV at Deposit: {displayFullBN(params.row.bdv, token.displayDecimals)}</Typography>
@@ -78,7 +78,7 @@ const Deposits : React.FC<{
         const accruedStalk   = seedsPerSeason.times(currentSeason.minus(params.row.season));
         return (
           <Tooltip
-            placement="right"
+            placement="bottom"
             title={(
               <span>
                 <Typography>{displayBN(params.row.stalk)} Stalk at Deposit</Typography>

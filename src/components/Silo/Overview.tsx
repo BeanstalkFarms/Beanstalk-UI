@@ -86,14 +86,14 @@ const StalkOwnershipTab: React.FC<TabData
 
   return (
     <>
-      <Stack direction="row" gap={4} sx={{ px: 2 }}>
+      <Stack direction="row" gap={{ xs: 0, md: 4 }} sx={{ px: 2 }}>
         <Stat
           title="Stalk Balance"
           titleTooltip="This is your total Stalk Balance. Stalk are the governance token of the Beanstalk DAO. The Stalk token entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
           subtitle={`Season ${displayBN(season)}`}
           amount={displayBN(displayValue[0])}
           color="primary"
-          sx={{ minWidth: 180, ml: 0 }}
+          sx={{ minWidth: 150, ml: 0 }}
           amountIcon={undefined}
           gap={0.25}
         />

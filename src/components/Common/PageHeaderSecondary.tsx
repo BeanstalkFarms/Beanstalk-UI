@@ -23,7 +23,7 @@ const PageHeader : React.FC<{
   return (
     <Box>
       <Stack direction="row" alignItems="center" justifyContent="space-between" gap={0.5}>
-        <Box sx={{ width: 70 }}>
+        <Stack sx={{ width: 70, justifyContent: 'start' }}>
           <Button
             {...buttonProps}
             color="naked"
@@ -43,15 +43,22 @@ const PageHeader : React.FC<{
               <Typography variant="h4">Back</Typography>
             </Stack>
           </Button>
-        </Box>
-        {props.title && (
-          <Typography variant="h2">
-            <Stack direction="row" gap={0.5} alignItems="center">
-              {props.icon}
+        </Stack>
+        <Stack>
+          {props.title && (
+            <Typography
+              variant="h2"
+              textAlign="center"
+              // sx={{ whiteSpace: 'nowrap' }}
+            >
+              {props.icon}&nbsp;
               {props.title}
-            </Stack>
-          </Typography>
-        )}
+              {/* <Stack direction="row" gap={0.5} alignItems="center" sx={{ overflowY: 'visible' }}> */}
+              {/*  */}
+              {/* </Stack> */}
+            </Typography>
+          )}
+        </Stack>
         <Box sx={{ width: 70 }} />
       </Stack>
     </Box>
