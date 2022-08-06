@@ -48,7 +48,7 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
           sx={{ ml: 0 }}
         />
       </Box>
-      <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
+      <Box sx={{ width: '100%', height: '200px', position: 'relative', mb: 1 }}>
         {!account ? (
           <BlurComponent>
             <Stack justifyContent="center" alignItems="center" gap={1}>
@@ -57,7 +57,7 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
             </Stack>
           </BlurComponent>
         ) : (
-          <BlurComponent blur={6}>
+          <BlurComponent blur={6} sx={{ borderRadius: 1 }}>
             <Typography variant="body1" color="gray">Historical Deposit value will be available soon.</Typography>
           </BlurComponent>
         )}
@@ -107,7 +107,7 @@ const StalkOwnershipTab: React.FC<TabData
           sx={{ ml: 0 }}
         />
       </Stack>
-      <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
+      <Box sx={{ width: '100%', height: '200px', position: 'relative', mb: 1 }}>
         {!account ? (
           <BlurComponent>
             <Stack justifyContent="center" alignItems="center" gap={1}>
@@ -157,7 +157,7 @@ const SeedsOwnershipTab: React.FC<TabData
           gap={0.25}
         />
       </Stack>
-      <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
+      <Box sx={{ width: '100%', height: '200px', position: 'relative', mb: 1 }}>
         {!account ? (
           <BlurComponent>
             <Stack justifyContent="center" alignItems="center" gap={1}>
