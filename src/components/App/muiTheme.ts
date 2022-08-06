@@ -567,7 +567,7 @@ let muiTheme = createTheme({
         transitionDuration: 0,
         PaperProps: {
           sx: {
-            minWidth: { xs: '95%', sm: '400px' }
+            minWidth: { xs: '95%', sm: '400px' },
           }
         }
       },
