@@ -117,7 +117,6 @@ const temperature = (
  */
 const usePeg = () => {
   const season    = useSeason();
-  const awaiting  = useSelector<AppState, boolean>((state) => state._beanstalk.sun.sunrise.awaiting);
   const bean      = useSelector<AppState, AppState['_bean']['token']>((state) => state._bean.token);
   const field     = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
   const barn      = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
@@ -130,6 +129,9 @@ const usePeg = () => {
     nextSeasonRamp = currentSeasonRamp.plus(1);
   }
   const deltaBMultiplier = nextSeasonRamp.div(currentSeasonRamp);
+  let deltaBNext = bean.deltaB.multipliedBy(deltaBMultiplier);
+  if (deltaBNext.isNaN()) deltaBNext = ZERO_BN;
+  // END HOTFIX
 
   const [
     newBeans,
@@ -137,12 +139,10 @@ const usePeg = () => {
     newHarvestablePods,
   ] = beanSupply(
     ZERO_BN,              // assume a_t = 0
-    bean.deltaB.multipliedBy(deltaBMultiplier),          // current deltaB via beanastalk.totalDeltaB()
+    deltaBNext,           // current deltaB via beanastalk.totalDeltaB()
     barn.unfertilized,    // current unfertilized sprouts
     field.podLine         // current pod line
   );
-
-  const deltaBNext = bean.deltaB.multipliedBy(deltaBMultiplier);
 
   const soilStart = soilSupply(
     newHarvestablePods,   // estimated for next season
@@ -152,6 +152,7 @@ const usePeg = () => {
     podRate.div(100),     // current pod rate (unharvestable pods / bean supply)
     deltaBNext, // current deltaB via beanstalk.totalDeltaB()
   );
+
   /// TODO:
   // - Temperature case lookup
   // - Verify soil
@@ -184,12 +185,29 @@ const usePeg = () => {
   );
 
   console.log('usePeg', {
-    soilStart,
-    podRate: podRate.toString(),
-    deltaB: bean.deltaB,
-    deltaBMultiplier,
-    deltaBNext: deltaBNext,
-    deltaTemperature,
+    inputs: {
+      deltaB: bean.deltaB.toString(),
+      podRate: podRate.div(100).toString(),
+      unfertilized: barn.unfertilized.toString(),
+      unharvestable: field.podLine.toString(),
+      weather: {
+        nextSowTime: field.weather.nextSowTime.toString(),
+        lastSowTime: field.weather.lastSowTime.toString(),
+        startSoil: field.weather.startSoil.toString(),
+        soil: field.soil.toString(),
+        lastDSoil: field.weather.lastDSoil.toString(),
+        yield: field.weather.yield.toString(),
+      }
+    },
+    derived: {
+      deltaBMultiplier: deltaBMultiplier.toString(),
+      deltaBNext: deltaBNext.toString(),
+    },
+    outputs: {
+      newHarvestablePods: newHarvestablePods.toString(),
+      soilStart: soilStart.toString(),
+      deltaTemperature: deltaTemperature.toString()
+    },
   });
 
   return {
