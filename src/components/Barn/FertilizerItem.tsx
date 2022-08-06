@@ -86,7 +86,7 @@ const FertilizerItem: React.FC<FertilizerData & {
             <Typography sx={{ fontSize: '14px', opacity: 0.6 }} color="text.secondary">
               x{displayFullBN(amount, 0)}
             </Typography>
-            <Tooltip title={tooltip.humidity} placement="right">
+            <Tooltip title={tooltip.humidity} placement="top">
               <Stack direction="row" gap={0.2} alignItems="center">
                 <img alt="" src={humidityIcon} height="13px" />
                 <Typography sx={{ fontSize: '14px', opacity: 0.6 }} color="text.secondary">
@@ -97,7 +97,7 @@ const FertilizerItem: React.FC<FertilizerData & {
           </Stack>
           <Tooltip
             title={tooltip.name === 'my-fertilizer' ? tooltip.reward(fertilizedBeans, unfertilizedBeans) : tooltip.reward}
-            placement="right">
+            placement="top">
             <Stack direction="row" justifyContent="space-between">
               <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
                 Sprouts
