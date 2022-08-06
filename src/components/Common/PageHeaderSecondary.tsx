@@ -46,17 +46,21 @@ const PageHeader : React.FC<{
         </Stack>
         <Stack>
           {props.title && (
-            <Typography
-              variant="h2"
-              textAlign="center"
-              // sx={{ whiteSpace: 'nowrap' }}
-            >
-              {props.icon}&nbsp;
-              {props.title}
-              {/* <Stack direction="row" gap={0.5} alignItems="center" sx={{ overflowY: 'visible' }}> */}
-              {/*  */}
-              {/* </Stack> */}
-            </Typography>
+            <>
+              {typeof props.title === 'string' ? (
+                <Typography
+                  variant="h2"
+                  textAlign="center"
+                >
+                  {props.icon}&nbsp;
+                  {props.title}
+                </Typography>
+              ) : (
+                <>
+                  {props.title}
+                </>
+              )}
+            </>
           )}
         </Stack>
         <Box sx={{ width: 70 }} />
