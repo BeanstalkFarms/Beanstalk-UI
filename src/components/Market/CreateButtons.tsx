@@ -18,7 +18,7 @@ const CreateButtons: React.FC = () => {
       <Tooltip
         components={{ Tooltip: Card }}
         title={(
-          <MenuList>
+          <MenuList sx={{ zIndex: 3000 }}>
             {ROUTES.market.map((item) => {
               if (item.path !== ROUTES.market[0].path) {
                 return (<MenuItem key={item.path} item={item} onClick={hide} />);
@@ -29,10 +29,7 @@ const CreateButtons: React.FC = () => {
         )}
         onOpen={show}
         onClose={hide}
-        enterTouchDelay={0}
-        leaveTouchDelay={10000}
         disableFocusListener
-        disableTouchListener
         placement="bottom-start"
         sx={{ marginTop: 10 }}
         componentsProps={{
