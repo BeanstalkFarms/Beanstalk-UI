@@ -158,7 +158,7 @@ const ChopForm: React.FC<
                       },
                       {
                         type: ActionType.BASE,
-                        message: `Add ${displayBN(amountOut || ZERO_BN)} ${outputToken} TODO add destination balance @coolbean.`
+                        message: `Add ${displayBN(amountOut || ZERO_BN)} ${outputToken} to the balance selected in the Destination field.`
                       },
                     ]}
                   />
