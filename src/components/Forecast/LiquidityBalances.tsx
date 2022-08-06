@@ -63,8 +63,8 @@ const LiquidityBalances: React.FC<LiquidityBalancesProps> = ({ balances }) => {
       <Stack width={{ xs: '100%', md: '20%' }} direction="row" justifyContent="space-between" gap={1}>
         <Stack gap={0.5}>
           <Typography sx={{ ml: 2 }} color="text.secondary">Pool</Typography>
-          {reducedPoolData.map((pool: ReducedPoolData) => (
-            <Stack direction="row" alignItems="center" gap={1}>
+          {reducedPoolData.map((pool: ReducedPoolData, index) => (
+            <Stack direction="row" alignItems="center" gap={1} key={index}>
               <Box sx={{ width: '12px', height: '12px', backgroundColor: pool.color }} />
               <Typography color="text.secondary">{pool.symbol}</Typography>
             </Stack>
@@ -72,8 +72,9 @@ const LiquidityBalances: React.FC<LiquidityBalancesProps> = ({ balances }) => {
         </Stack>
         <Stack gap={0.5}>
           <Typography color="text.secondary">Liquidity</Typography>
-          {reducedPoolData.map((pool: ReducedPoolData) => (
+          {reducedPoolData.map((pool: ReducedPoolData, index) => (
             <Typography
+              key={index}
               color="text.secondary">{displayBN(pool.amount)}
             </Typography>
           ))}

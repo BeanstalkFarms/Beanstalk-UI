@@ -20,7 +20,8 @@ const AllListings : React.FC<{}> = () => {
     variables: {
       first: 1000,
       maxHarvestableIndex: toStringBaseUnitBN(harvestableIndex, BEAN[1].decimals),
-    }
+    },
+    fetchPolicy: 'cache-and-network',
   });
   const rows : PodListing[] = useMemo(() => {
     if (loading || !data?.podListings) return [];

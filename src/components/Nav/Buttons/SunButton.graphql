@@ -23,15 +23,4 @@ query SunButton {
 		weather
     podRate
   }
-  # fields(first: 24, orderBy: season, orderDirection: desc) {
-  #   id
-  #   season
-  #   totalSoil
-  #   weather
-  # }
-  # silos(first: 1) {
-  #   id
-  #   totalStalk
-  #   totalSeeds
-  # }
 }

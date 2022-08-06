@@ -61,7 +61,7 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, twap, newBeans, newSoil
             {/* Season */}
             <Grid item xs={1.5} md={1.25}>
               <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing="5px">
-                {(twap.lte(1)) ? (
+                {(newBeans.eq(0)) ? (
                   <img src={drySeasonIcon} height={IconSize.small} alt="" />
                 ) : (
                   <img src={rainySeasonIcon} height={IconSize.small} alt="" />
