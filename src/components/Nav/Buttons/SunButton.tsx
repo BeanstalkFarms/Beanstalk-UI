@@ -5,7 +5,8 @@ import {
   Typography,
   useMediaQuery,
   Box,
-  Grid, Divider,
+  Grid,
+  Divider,
 } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
@@ -18,7 +19,7 @@ import useSeason from '~/hooks/useSeason';
 import useChainId from '~/hooks/useChain';
 import { MaxBN, MinBN, toTokenUnitsBN } from '~/util';
 import { BEAN } from '~/constants/tokens';
-import { NEW_BN, SupportedChainId, ZERO_BN } from '~/constants';
+import { NEW_BN, ZERO_BN } from '~/constants';
 import { AppState } from '~/state';
 import FolderMenu from '../FolderMenu';
 import { BeanstalkPalette } from '../../App/muiTheme';
@@ -119,13 +120,14 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
 
   /// Table Content
   const tableContent = (
-    <Stack gap={1}>
+    <Box sx={{ overflow: 'hidden' }}>
       {/* Past Seasons */}
       <Stack
         gap={1}
         sx={{
           width: '100%',
-          pr: 1,
+          pt: 1,
+          px: 1,
           maxHeight: `${(37.5 + 10) * MAX_ITEMS - 10}px`,
           overflowY: 'auto',
         }}
@@ -224,9 +226,11 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           );
         })}
       </Stack>
-      <Divider />
-      {chainId === SupportedChainId.MAINNET ? null : <SunriseButton />}
-    </Stack>
+      <Divider sx={{ borderBottomWidth: 0 }} />
+      <Box sx={{ p: 1 }}>
+        <SunriseButton />
+      </Box>
+    </Box>
   );
 
   return (

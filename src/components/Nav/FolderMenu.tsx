@@ -33,16 +33,16 @@ const FolderMenu: React.FC<{
   onOpen?: () => void;
   hotkey: string;
 } & ButtonProps> = ({
-                      startIcon,
-                      buttonContent,
-                      popoverContent,
-                      drawerContent,
-                      hideTextOnMobile,
-                      popperWidth,
-                      hotkey,
-                      onOpen,
-                      ...buttonProps
-                    }) => {
+  startIcon,
+  buttonContent,
+  popoverContent,
+  drawerContent,
+  hideTextOnMobile,
+  popperWidth,
+  hotkey,
+  onOpen,
+  ...buttonProps
+}) => {
   // Theme
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
@@ -54,7 +54,6 @@ const FolderMenu: React.FC<{
 
   // Drawer
   const [drawerOpen, openDrawer, closeDrawer] = useToggle();
-
   const isOpen = Boolean(anchorEl || drawerOpen);
 
   const open = useCallback(() => {
@@ -143,8 +142,8 @@ const FolderMenu: React.FC<{
             borderColor: 'secondary.main',
             borderWidth: 1,
             borderStyle: 'solid',
-            px: 1,
-            py: 1,
+            // px: 1,
+            // py: 1, 
             boxShadow: _theme.shadows[0],
             // Should be below the zIndex of the Button.
             zIndex: 998,
