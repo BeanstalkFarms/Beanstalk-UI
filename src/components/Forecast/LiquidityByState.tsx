@@ -1,7 +1,6 @@
 import React from 'react';
 import { CardProps, Card } from '@mui/material';
 import { useSelector } from 'react-redux';
-import BigNumber from 'bignumber.js';
 import Stat from '../Common/Stat';
 import { displayUSD } from '../../util';
 import SiloBalances from '../Common/SiloBalances';
@@ -16,6 +15,7 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
   const whitelist = useWhitelist();
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
+  const beanstalkBarn = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
 
   /// Total Balances
   const STAT_ITEMS: StatItem[] = [
@@ -43,14 +43,14 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
       title: 'Sprouts',
       tooltip: 'This is the total Sprout supply. Sprouts are the number of Beans left to be earned from Active Fertilizer. Sprouts become Rinsable on a pari passu basis.',
       token: SPROUTS,
-      amount: new BigNumber(-1) // TODO: @silochad
+      amount: beanstalkBarn.unfertilized,
     }
   ];
 
   return (
     <Card sx={{ p: 2, width: '100%', ...sx }}>
       <Stat
-        title="Total Beanstalk Balances"
+        title="Beanstalk Assets"
         amount={displayUSD(breakdown.totalValue.abs())}
         amountIcon={undefined}
         gap={0.25}
@@ -59,6 +59,7 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
       <SiloBalances
         breakdown={breakdown}
         whitelist={whitelist}
+        assetLabel="Asset"
       />
       <StatsCard stats={STAT_ITEMS} />
     </Card>
