@@ -21,25 +21,25 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
   const STAT_ITEMS: StatItem[] = [
     {
       title: 'Stalk',
-      tooltip: 'This is Beanstalk\'s total Stalk balance. Stalk is the governance token of the Beanstalk DAO. Stalk entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs.',
+      tooltip: 'This is the total Stalk supply. Stalk is the governance token of the Beanstalk DAO. Stalk entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs.',
       token: STALK,
       amount: beanstalkSilo.stalk.total
     },
     {
       title: 'Seeds',
-      tooltip: 'This is Beanstalk\'s total Seed balance. Each Seed yields 1/10000 Grown Stalk each Season. Grown Stalk must be Mown to add it to your Stalk balance.',
+      tooltip: 'This is the total Seed supply. Each Seed yields 1/10000 Grown Stalk each Season.',
       token: SEEDS,
       amount: beanstalkSilo.seeds.total
     },
     {
       title: 'Pod Line',
-      tooltip: 'This is the total number of pods ever minted.',
+      tooltip: 'This is the total Pod supply. Pods become Harvestable on a FIFO basis.',
       token: PODS,
       amount: beanstalkField.podLine // FIXME: @silochad - is this what we want?
     },
     {
       title: 'Sprouts',
-      tooltip: 'This is Beanstalk\'s total Sprout balance. The number of Beans left to be earned from your Fertilizer. Sprouts become Rinsable on a pari passu basis.',
+      tooltip: 'This is the total Sprout supply. Sprouts are the number of Beans left to be earned from Active Fertilizer. Sprouts become Rinsable on a pari passu basis.',
       token: SPROUTS,
       amount: new BigNumber(-1) // TODO: @silochad
     }
