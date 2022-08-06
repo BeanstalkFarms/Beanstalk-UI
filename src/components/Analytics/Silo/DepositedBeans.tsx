@@ -19,7 +19,7 @@ const DepositedBeans: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ 
     getValue={getValue}
     formatValue={formatValue}
     StatProps={StatProps}
-    />
+  />
 );
 
 export default DepositedBeans;
