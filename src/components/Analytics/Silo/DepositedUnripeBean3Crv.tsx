@@ -1,7 +1,7 @@
 import React from 'react';
 import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
 import { SeasonalDepositedUnripeBean3CrvDocument, SeasonalDepositedUnripeBean3CrvQuery } from '~/generated/graphql';
-import { SnapshotData } from '~/hooks/useSeasons';
+import { SnapshotData } from '~/hooks/useSeasonsQuery';
 import { toTokenUnitsBN } from '../../../util';
 import { BEAN } from '../../../constants/tokens';
 

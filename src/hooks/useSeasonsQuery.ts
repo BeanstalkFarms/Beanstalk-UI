@@ -51,7 +51,7 @@ export type SnapshotData<T extends MinimumViableSnapshotQuery> = T['seasons'][nu
  * @param range 
  * @returns QueryDocument
  */
-const useSeasons = <T extends MinimumViableSnapshotQuery>(
+const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
   document: DocumentNode,
   range:    SeasonRange
 ) => {
@@ -146,4 +146,4 @@ const useSeasons = <T extends MinimumViableSnapshotQuery>(
   }; 
 };
 
-export default useSeasons;
+export default useSeasonsQuery;

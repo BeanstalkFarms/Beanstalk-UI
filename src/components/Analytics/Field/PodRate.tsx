@@ -3,7 +3,7 @@ import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/Seas
 import { SeasonalPodRateDocument, SeasonalPodRateQuery } from '~/generated/graphql';
 import useSeason from '~/hooks/useSeason';
 import usePodRate from '~/hooks/usePodRate';
-import { SnapshotData } from '~/hooks/useSeasons';
+import { SnapshotData } from '~/hooks/useSeasonsQuery';
 
 const getValue = (season: SnapshotData<SeasonalPodRateQuery>) => parseFloat(season.podRate);
 const formatValue = (value: number) => `${(value * 100).toFixed(2)}%`;

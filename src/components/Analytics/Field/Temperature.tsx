@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
 import { SeasonalWeatherDocument, SeasonalWeatherQuery } from '~/generated/graphql';
 import useSeason from '~/hooks/useSeason';
-import { SnapshotData } from '~/hooks/useSeasons';
+import { SnapshotData } from '~/hooks/useSeasonsQuery';
 import { AppState } from '~/state';
 
 const getValue = (snapshot: SnapshotData<SeasonalWeatherQuery>) => snapshot.weather;
