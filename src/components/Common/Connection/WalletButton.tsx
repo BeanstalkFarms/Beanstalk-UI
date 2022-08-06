@@ -158,7 +158,7 @@ const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
           }}
         >
           <Stack direction="row" alignItems="center">
-            <Typography variant="h4">Pick Unripe Beans</Typography>
+            <Typography variant="h4">Pick Unripe Assets</Typography>
           </Stack>
         </Button>
       </Box>
@@ -177,7 +177,7 @@ const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
           }}
         >
           <Stack direction="row" alignItems="center">
-            <Typography variant="h4">Chop Unripe Beans</Typography>
+            <Typography variant="h4">Chop Unripe Assets</Typography>
           </Stack>
         </Button>
       </Box>

@@ -144,8 +144,8 @@ const Transfer: React.FC<{}> = () => {
     );
 
     const txToast = new TransactionToast({
-      loading: `Transferring ${displayFullBN(amount.abs(), PODS.decimals)} Pods to ${trimAddress(to, true)}.`,
-      success: 'Plot Transferred.',
+      loading: `Transferring ${displayFullBN(amount.abs(), PODS.decimals)} Pods to ${trimAddress(to, true)}...`,
+      success: 'Plot Transfer successful.',
     });
 
     /// TODO: refresh field

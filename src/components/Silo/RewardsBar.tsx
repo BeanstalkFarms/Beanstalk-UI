@@ -77,7 +77,7 @@ const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
         />
         <RewardItem
           title="Grown Stalk"
-          tooltip="Stalk earned from Seeds. Grown Stalk does not contribute to Stalk ownership until it is Mown. Mow can be called on its own, and it is also called at the beginning of any Silo interaction."
+          tooltip="Stalk earned from Seeds. Grown Stalk does not contribute to Stalk ownership until it is Mown. Grown Stalk is Mown at the beginning of any Silo interaction."
           amount={stalk.grown}
           icon={stalkIcon}
           compact={compact}
@@ -91,7 +91,7 @@ const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
       <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
         <RewardItem
           title="Revitalized Stalk"
-          tooltip="Stalk that are minted for pre-exploit Silo Members as Fertilizer is sold. Revitalized Stalk must be Enrooted in order to contribute to Stalk ownership."
+          tooltip="Stalk that have vested for pre-exploit Silo Members. Revitalized Stalk are minted as the BDV of Unripe Deposits exceed their haircut BDV at the time of Deposit. Revitalized Stalk does not contribute to Stalk ownership until Enrooted."
           amount={revitalizedStalk}
           icon={stalkIcon}
           compact={compact}
@@ -99,7 +99,7 @@ const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
         />
         <RewardItem
           title="Revitalized Seeds"
-          tooltip="Seeds that are minted for pre-exploit Silo Members as Fertilizer is sold. Revitalized Seeds must be Enrooted in order grow Stalk."
+          tooltip="Seeds that have vested for pre-exploit Silo Members. Revitalized Seeds are minted as the BDV of Unripe Deposits exceed their haircut BDV at the time of Deposit. Revitalized Seeds do not generate Stalk until Enrooted."
           amount={revitalizedSeeds}
           icon={seedIcon}
           compact={compact}

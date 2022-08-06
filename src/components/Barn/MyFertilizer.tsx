@@ -64,7 +64,7 @@ const MyFertilizer: React.FC = () => {
             justifyContent="space-between"
           >
             <Tooltip
-              title="The number of Beans left to be earned from your Fertilizer."
+              title="The number of Beans left to be earned from your Fertilizer. Sprouts become Rinsable on a pari passu basis."
               placement="bottom"
             >
               <Typography variant="body1">

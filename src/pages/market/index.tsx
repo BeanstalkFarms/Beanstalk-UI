@@ -23,7 +23,7 @@ const PodMarketPage: React.FC = () => {
           <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
             <BlurComponent>
               <Stack justifyContent="center" alignItems="center" gap={1}>
-                <Typography variant="body1" color="gray">The pod market overview graph is in development.</Typography>
+                <Typography variant="body1" color="gray">The Pod Market overview graph is in development.</Typography>
               </Stack>
             </BlurComponent>
             <LineChart

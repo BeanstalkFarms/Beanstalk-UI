@@ -42,7 +42,7 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, twap, newBeans, newSoil
         >
           <Stack direction="row" alignItems="center" justifyContent="center" height="100%">
             <Typography pl={1} color="gray" fontSize={FontSize.sm} textAlign="left">
-              The forecast for Season {(season.plus(1)).toString()} is based on data in the current Season.
+              The forecast for Season {(season).toString()} is based on data in the current Season.
             </Typography>
           </Stack>
         </Box>
@@ -162,7 +162,7 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, twap, newBeans, newSoil
                     //   : BeanstalkPalette.washedRed,
                   }}
                 >
-                  {displayBN(deltaDemand || ZERO_BN)}
+                  {displayBN(deltaDemand || ZERO_BN)}%
                 </Typography>
               </Stack>
             </Grid>
