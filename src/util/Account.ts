@@ -2,8 +2,8 @@
 export let getAccount = (account: string) => account.toLowerCase();
 
 /// Override if env var is provided.
-const _account = import.meta.env.VITE_OVERRIDE_FARMER_ACCOUNT;
-if (import.meta.env.DEV && _account) {
-  console.warn(`Using overridden Farmer account: ${_account}`);
-  getAccount = () => ((_account as string).toLowerCase());
+export const IMPERSONATED_ACCOUNT = import.meta.env.VITE_OVERRIDE_FARMER_ACCOUNT;
+if (import.meta.env.DEV && IMPERSONATED_ACCOUNT) {
+  console.warn(`Using overridden Farmer account: ${IMPERSONATED_ACCOUNT}`);
+  getAccount = () => ((IMPERSONATED_ACCOUNT as string).toLowerCase());
 }
