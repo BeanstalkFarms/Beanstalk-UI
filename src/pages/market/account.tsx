@@ -11,6 +11,10 @@ import {
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
+import useTabs from '~/hooks/display/useTabs';
+import AddressIcon from '~/components/Common/AddressIcon';
+import MyOrdersTable from '~/components/Market/Tables/MyOrders';
+import MyListingsTable from '~/components/Market/Tables/MyListings';
 
 const SLUGS = ['orders', 'listings'];
 const MarketAccountPage: React.FC = () => {
