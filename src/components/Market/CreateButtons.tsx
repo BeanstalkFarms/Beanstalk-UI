@@ -29,9 +29,10 @@ const CreateButtons: React.FC = () => {
         )}
         onOpen={show}
         onClose={hide}
-        enterTouchDelay={50}
+        enterTouchDelay={0}
         leaveTouchDelay={10000}
         disableFocusListener
+        disableTouchListener
         placement="bottom-start"
         sx={{ marginTop: 10 }}
         componentsProps={{
