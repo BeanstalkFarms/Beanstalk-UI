@@ -4,9 +4,9 @@ import toast from 'react-hot-toast';
 import { Box, IconButton, Link, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { makeStyles } from '@mui/styles';
-import useChainConstant from 'hooks/useChainConstant';
-import { CHAIN_INFO } from 'constants/chains';
-import { parseError } from 'util/index';
+import useChainConstant from '~/hooks/useChainConstant';
+import { parseError } from '~/util';
+import { CHAIN_INFO } from '~/constants/chains';
 
 const useStyles = makeStyles({
   errorMessage: {

@@ -18,18 +18,18 @@ import {
 import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-import { trimAddress } from 'util/index';
-import { CHAIN_INFO } from 'constants/chains';
+import { trimAddress } from '~/util';
 
-import useChainConstant from 'hooks/useChainConstant';
+import useChainConstant from '~/hooks/useChainConstant';
 
-import balancesIcon from 'img/nav-icons/balances.svg';
-import historyIcon from 'img/nav-icons/history.svg';
-import etherscanIcon from 'img/nav-icons/etherscan.svg';
-import disconnectIcon from 'img/nav-icons/disconnect.svg';
-import useAnchor from 'hooks/display/useAnchor';
-import useToggle from 'hooks/display/useToggle';
-import useAccount from 'hooks/ledger/useAccount';
+import balancesIcon from '~/img/nav-icons/balances.svg';
+import historyIcon from '~/img/nav-icons/history.svg';
+import etherscanIcon from '~/img/nav-icons/etherscan.svg';
+import disconnectIcon from '~/img/nav-icons/disconnect.svg';
+import useAnchor from '~/hooks/display/useAnchor';
+import useToggle from '~/hooks/display/useToggle';
+import useAccount from '~/hooks/ledger/useAccount';
+import { CHAIN_INFO } from '~/constants/chains';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import WalletDialog from './WalletDialog';
 import DropdownIcon from '../DropdownIcon';
@@ -196,7 +196,7 @@ const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
         endIcon={<DropdownIcon open={menuVisible} />}
         {...props}
         onClick={toggleMenuAnchor}
-        sx={process.env.REACT_APP_OVERRIDE_FARMER_ACCOUNT ? {
+        sx={import.meta.env.VITE_OVERRIDE_FARMER_ACCOUNT ? {
           borderBottomColor: 'red',
           borderBottomWidth: 2,
           borderBottomStyle: 'solid',

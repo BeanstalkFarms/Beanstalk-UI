@@ -1,13 +1,13 @@
 import BigNumber from 'bignumber.js';
-import Token from 'classes/Token';
-import { ZERO_BN } from 'constants/index';
-import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from 'constants/tokens';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import { AppSettings } from 'state/app';
-import usePrice from 'hooks/usePrice';
-import useGetChainToken from 'hooks/useGetChainToken';
+import Token from '~/classes/Token';
+import usePrice from '~/hooks/usePrice';
+import useGetChainToken from '~/hooks/useGetChainToken';
+import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
+import { ZERO_BN } from '~/constants';
+import { AppState } from '~/state';
+import { AppSettings } from '~/state/app';
 
 /**
  * FIXME: this function is being called very frequently

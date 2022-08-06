@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { ZERO_BN } from 'constants/index';
+import { ZERO_BN } from '~/constants';
 import { AppState } from '../state';
 import { useHumidityFromId } from './useHumidity';
 

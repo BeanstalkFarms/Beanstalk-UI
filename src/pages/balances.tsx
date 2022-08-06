@@ -1,14 +1,14 @@
 import React from 'react';
 import { Card, Container, Grid, Stack, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import { displayFullBN } from 'util/index';
-import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
-import useFarmerTotalFertilizer from 'hooks/useFarmerTotalFertilizer';
-import { PODS, SEEDS, STALK, SPROUTS } from 'constants/tokens';
-import Stat from 'components/Common/Stat';
-import TotalBalanceCard from 'components/Balances/TotalBalancesCard';
-import TokenIcon from 'components/Common/TokenIcon';
+import Stat from '~/components/Common/Stat';
+import TotalBalanceCard from '~/components/Balances/TotalBalancesCard';
+import TokenIcon from '~/components/Common/TokenIcon';
+import useFarmerTotalFertilizer from '~/hooks/useFarmerTotalFertilizer';
+import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
+import { displayFullBN } from '~/util';
+import { PODS, SEEDS, STALK, SPROUTS } from '~/constants/tokens';
+import { AppState } from '~/state';
 
 const BalancesPage: React.FC = () => {
   /// State

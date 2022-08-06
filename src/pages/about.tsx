@@ -1,5 +1,5 @@
 // import { useEffect } from '@storybook/addons';
-// import { useBeanstalkContract } from 'hooks/useContract';
+// import { useBeanstalkContract } from '~/hooks/useContract';
 import React from 'react';
 
 const AboutPage : React.FC = () => 

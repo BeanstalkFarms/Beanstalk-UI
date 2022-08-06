@@ -1,16 +1,15 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import useChainConstant from 'hooks/useChainConstant';
-import { useBeanstalkContract, useFertilizerContract } from 'hooks/useContract';
-import { REPLANT_INITIAL_ID } from 'hooks/useHumidity';
-import useChainId from 'hooks/useChain';
-import { BeanstalkReplanted } from 'generated';
-import { toTokenUnitsBN } from 'util/index';
 import BigNumber from 'bignumber.js';
-import { ZERO_BN } from 'constants/index';
-import useBlocks from 'hooks/useBlocks';
-import ERC1155EventProcessor from 'lib/ERC1155/ERC1155EventProcessor';
-import useAccount from 'hooks/ledger/useAccount';
+import useChainConstant from '~/hooks/useChainConstant';
+import { useBeanstalkContract, useFertilizerContract } from '~/hooks/useContract';
+import { REPLANT_INITIAL_ID } from '~/hooks/useHumidity';
+import useChainId from '~/hooks/useChain';
+import { toTokenUnitsBN } from '~/util';
+import { ZERO_BN } from '~/constants';
+import useBlocks from '~/hooks/useBlocks';
+import ERC1155EventProcessor from '~/lib/ERC1155/ERC1155EventProcessor';
+import useAccount from '~/hooks/ledger/useAccount';
 import { resetFarmerBarn, updateFarmerBarn } from './actions';
 import useEvents, { GetQueryFilters } from '../events2/updater';
 import { EventCacheName } from '../events2';
@@ -83,7 +82,7 @@ export const useFetchFarmerBarn = () => {
 
   /// Contracts
   const fertContract = useFertilizerContract();
-  const beanstalk    = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const beanstalk    = useBeanstalkContract();
   const blocks       = useBlocks();
   const account      = useAccount();
 

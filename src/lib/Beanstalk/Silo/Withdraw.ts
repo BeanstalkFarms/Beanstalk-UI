@@ -1,8 +1,8 @@
-import { Token } from 'classes';
-import { FormState } from 'components/Common/Form';
-// import { Action, ActionType } from 'util/Actions';
-import { DepositCrate } from 'state/farmer/silo';
 import BigNumber from 'bignumber.js';
+import { Token } from '~/classes';
+import { FormState } from '~/components/Common/Form';
+// import { Action, ActionType } from '~/util/Actions';
+import { DepositCrate } from '~/state/farmer/silo';
 import { sortCratesBySeason } from './Utils';
 
 /**

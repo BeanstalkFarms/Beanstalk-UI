@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Box } from '@mui/material';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
-import { BeanstalkPalette, FontSize } from 'components/App/muiTheme';
+import { BeanstalkPalette, FontSize } from '~/components/App/muiTheme';
 import TablePagination from '../../Common/TablePagination';
 
 const marketplaceTableStyle = {

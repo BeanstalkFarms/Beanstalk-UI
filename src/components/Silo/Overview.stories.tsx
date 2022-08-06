@@ -1,9 +1,9 @@
 import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import { initialFarmerSilo } from 'state/farmer/silo/reducer';
-import { initialBeanstalkSilo } from 'state/beanstalk/silo/reducer';
-
 import BigNumber from 'bignumber.js';
+import { initialFarmerSilo } from '~/state/farmer/silo/reducer';
+import { initialBeanstalkSilo } from '~/state/beanstalk/silo/reducer';
+
 import Overview from './Overview';
 
 export default {

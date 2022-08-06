@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import { CONNECT_WALLET_ERRORS, CONNECTOR_LOGOS } from 'constants/wallets';
+import { CONNECT_WALLET_ERRORS, CONNECTOR_LOGOS } from '~/constants/wallets';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 
 // -----------------------------------------------------------------

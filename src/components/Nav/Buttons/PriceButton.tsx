@@ -8,17 +8,17 @@ import {
 import throttle from 'lodash/throttle';
 import { useTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import usePools from 'hooks/usePools';
-import { displayBN } from 'util/Tokens';
-import { CHAIN_INFO } from 'constants/chains';
-import useChainId from 'hooks/useChain';
-import PoolCard from 'components/Silo/PoolCard';
-import { NEW_BN, ZERO_BN } from 'constants/index';
-import BeanProgressIcon from 'components/Common/BeanProgressIcon';
-import useSeason from 'hooks/useSeason';
-import { useFetchPools } from 'state/bean/pools/updater';
-import usePrice from 'hooks/usePrice';
+import usePools from '~/hooks/usePools';
+import useChainId from '~/hooks/useChain';
+import PoolCard from '~/components/Silo/PoolCard';
+import BeanProgressIcon from '~/components/Common/BeanProgressIcon';
+import useSeason from '~/hooks/useSeason';
+import usePrice from '~/hooks/usePrice';
+import { displayBN } from '~/util/Tokens';
+import { NEW_BN, ZERO_BN } from '~/constants';
+import { CHAIN_INFO } from '~/constants/chains';
+import { useFetchPools } from '~/state/bean/pools/updater';
+import { AppState } from '~/state';
 import FolderMenu from '../FolderMenu';
 
 // ------------------------------------------------------------

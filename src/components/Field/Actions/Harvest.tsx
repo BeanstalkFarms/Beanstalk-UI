@@ -3,28 +3,27 @@ import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useAccount, useProvider } from 'wagmi';
-import { useSigner } from 'hooks/ledger/useSigner';
-import { BEAN, PODS } from 'constants/tokens';
-import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import { useBeanstalkContract } from 'hooks/useContract';
-import { ActionType } from 'util/Actions';
+import toast from 'react-hot-toast';
+import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
 import {
   SmartSubmitButton, TokenInputField, TokenOutputField,
   TxnPreview,
   TxnSeparator
-} from 'components/Common/Form';
-import { BeanstalkReplanted } from 'generated/index';
-import Farm, { FarmToMode } from 'lib/Beanstalk/Farm';
+} from '~/components/Common/Form';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import { ActionType } from '~/util/Actions';
+import Farm, { FarmToMode } from '~/lib/Beanstalk/Farm';
 import {
   displayFullBN,
   parseError,
   toStringBaseUnitBN
-} from 'util/index';
-import toast from 'react-hot-toast';
-import { useFetchFarmerField } from 'state/farmer/field/updater';
-import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
-import useFarmerField from 'hooks/useFarmerField';
-import copy from 'constants/copy';
+} from '~/util';
+import useFarmerField from '~/hooks/useFarmerField';
+import { useFetchFarmerField } from '~/state/farmer/field/updater';
+import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
+import { BEAN, PODS } from '~/constants/tokens';
+import copy from '~/constants/copy';
 import DestinationField from '../../Common/Form/DestinationField';
 import TransactionToast from '../../Common/TxnToast';
 import { ZERO_BN } from '../../../constants';
@@ -146,7 +145,7 @@ const Harvest: React.FC<{}> = () => {
   const { data: account } = useAccount();
   const provider = useProvider();
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
   const farm = useMemo(() => new Farm(provider), [provider]);
 
   ///

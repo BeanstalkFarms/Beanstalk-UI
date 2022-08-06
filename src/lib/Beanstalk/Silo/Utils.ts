@@ -1,4 +1,4 @@
-import { Crate, DepositCrate } from 'state/farmer/silo';
+import { Crate, DepositCrate } from '~/state/farmer/silo';
 
 /**
  * Order crates by Season.

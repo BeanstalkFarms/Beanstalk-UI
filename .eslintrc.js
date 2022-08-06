@@ -21,10 +21,6 @@ module.exports = {
     sourceType: 'module'
   },
   ignorePatterns: [
-    'src/components/v1/**/*',
-    'src/state/v1/**/*',
-    'src/util/v1/**/*',
-    'src/constants/v1/**/*',
     'src/constants/abi/**/*.json',
     'src/generated/**/*'
   ],

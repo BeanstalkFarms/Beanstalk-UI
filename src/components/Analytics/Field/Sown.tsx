@@ -1,10 +1,10 @@
 import React from 'react';
-import SeasonPlot, { SeasonPlotBaseProps } from 'components/Common/Charts/SeasonPlot';
-import { SeasonalSownDocument, SeasonalSownQuery } from 'generated/graphql';
-import useSeason from 'hooks/useSeason';
-import { SnapshotData } from 'hooks/useSeasons';
-import { BEAN } from 'constants/tokens';
-import { toTokenUnitsBN } from 'util/index';
+import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
+import { SeasonalSownDocument, SeasonalSownQuery } from '~/generated/graphql';
+import useSeason from '~/hooks/useSeason';
+import { SnapshotData } from '~/hooks/useSeasons';
+import { toTokenUnitsBN } from '~/util';
+import { BEAN } from '~/constants/tokens';
 
 const getValue = (season: SnapshotData<SeasonalSownQuery>) => toTokenUnitsBN(season.sownBeans, BEAN[1].decimals).toNumber();
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;

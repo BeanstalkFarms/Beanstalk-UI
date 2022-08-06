@@ -1,11 +1,11 @@
 import React from 'react';
 import { Box, Divider, Stack } from '@mui/material';
-import { FarmerSiloRewards } from 'state/farmer/silo';
 import BigNumber from 'bignumber.js';
-import beanIcon from 'img/tokens/bean-logo-circled.svg';
-import stalkIcon from 'img/beanstalk/stalk-icon.svg';
-import seedIcon from 'img/beanstalk/seed-icon.svg';
-import { NEW_BN } from 'constants/index';
+import beanIcon from '~/img/tokens/bean-logo-circled.svg';
+import stalkIcon from '~/img/beanstalk/stalk-icon.svg';
+import seedIcon from '~/img/beanstalk/seed-icon.svg';
+import { NEW_BN } from '~/constants';
+import { FarmerSiloRewards } from '~/state/farmer/silo';
 import RewardItem from './RewardItem';
 import { ClaimRewardsAction } from '../../lib/Beanstalk/Farm';
 import { hoverMap } from '../../constants/silo';

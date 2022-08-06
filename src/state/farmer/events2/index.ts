@@ -1,4 +1,4 @@
-import { Event } from 'lib/Beanstalk/EventProcessor';
+import { Event } from '~/lib/Beanstalk/EventProcessor';
 
 export enum EventCacheName {
   SILO = 'silo',

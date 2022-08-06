@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
-import { FarmToMode } from 'lib/Beanstalk/Farm';
-import { PodListing, PodOrder } from 'state/farmer/market';
+import { FarmToMode } from '~/lib/Beanstalk/Farm';
+import { PodListing, PodOrder } from '~/state/farmer/market';
 
 /**
  * Follows PodListing format at:
