@@ -9,7 +9,7 @@ import { Token } from '~/classes';
 export type StatItem = {
   title: string;
   tooltip: string;
-  token: Token;
+  token?: Token;
   amount: BigNumber;
   amountModifier?: BigNumber;
 }
@@ -24,14 +24,14 @@ const StatsCard: React.FC<{
           <Stat
             title={stat.title}
             titleTooltip={stat.tooltip}
-            amountIcon={<TokenIcon token={stat.token} />}
+            amountIcon={stat.token && <TokenIcon token={stat.token} />}
             amount={(
               <>
-                {displayFullBN(stat.amount, stat.token.displayDecimals)}
+                {displayFullBN(stat.amount, stat.token ? stat.token.displayDecimals : 2)}
                 {stat.amountModifier !== undefined && (
                   <Typography
                     color="primary"
-                    variant="h4">+ {displayFullBN(stat.amountModifier, stat.token.displayDecimals)}
+                    variant="h4">+ {displayFullBN(stat.amountModifier, stat.token ? stat.token.displayDecimals : 2)}
                   </Typography>
                 )}
               </>

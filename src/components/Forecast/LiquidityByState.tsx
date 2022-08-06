@@ -8,7 +8,7 @@ import SiloBalances from '../Common/SiloBalances';
 import useWhitelist from '../../hooks/useWhitelist';
 import useBeanstalkSiloBreakdown from '../../hooks/useBeanstalkSiloBreakdown';
 import StatsCard, { StatItem } from '~/components/Common/StatsCard';
-import { PODS, SEEDS, SPROUTS, STALK } from '~/constants/tokens';
+import { SEEDS, SPROUTS, STALK, PODS } from '~/constants/tokens';
 import { AppState } from '~/state';
 
 const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
@@ -35,6 +35,8 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
       title: 'Pod Line',
       tooltip: 'This is the total Pod supply. Pods become Harvestable on a FIFO basis.',
       token: PODS,
+      // tooltip: 'This is the total number of pods ever minted.',
+      // token: PODS,
       amount: beanstalkField.podLine // FIXME: @silochad - is this what we want?
     },
     {
