@@ -88,7 +88,7 @@ const FertilizerItem: React.FC<FertilizerData & {
             <Stack direction="row" gap={0.2} alignItems="center">
               <img alt="" src={humidityIcon} height="13px" />
               <Typography sx={{ fontSize: '14px', opacity: 0.6 }} color="text.secondary">
-                {humidity ? `${humidity.times(100).toFixed(1)}%` : '---'}
+                {humidity ? `${humidity.times(100).toNumber().toLocaleString('en-us', { maximumFractionDigits: 1 })}%` : '---'}
               </Typography>
             </Stack>
           </Tooltip>
