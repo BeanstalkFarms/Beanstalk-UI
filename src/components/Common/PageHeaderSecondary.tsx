@@ -49,13 +49,9 @@ const PageHeader : React.FC<{
             <Typography
               variant="h2"
               textAlign="center"
-              // sx={{ whiteSpace: 'nowrap' }}
             >
               {props.icon}&nbsp;
               {props.title}
-              {/* <Stack direction="row" gap={0.5} alignItems="center" sx={{ overflowY: 'visible' }}> */}
-              {/*  */}
-              {/* </Stack> */}
             </Typography>
           )}
         </Stack>
