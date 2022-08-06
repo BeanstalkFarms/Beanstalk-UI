@@ -1,14 +1,49 @@
 import React from 'react';
 import { CardProps, Card } from '@mui/material';
+import { useSelector } from 'react-redux';
+import BigNumber from 'bignumber.js';
 import Stat from '../Common/Stat';
 import { displayUSD } from '../../util';
 import SiloBalances from '../Common/SiloBalances';
 import useWhitelist from '../../hooks/useWhitelist';
 import useBeanstalkSiloBreakdown from '../../hooks/useBeanstalkSiloBreakdown';
+import StatsCard, { StatItem } from '~/components/Common/StatsCard';
+import { PODS, SEEDS, SPROUTS, STALK } from '~/constants/tokens';
+import { AppState } from '~/state';
 
 const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
   const breakdown = useBeanstalkSiloBreakdown();
   const whitelist = useWhitelist();
+  const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
+  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
+
+  /// Total Balances
+  const STAT_ITEMS: StatItem[] = [
+    {
+      title: 'Stalk',
+      tooltip: 'This is Beanstalk\'s total Stalk balance. Stalk is the governance token of the Beanstalk DAO. Stalk entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs.',
+      token: STALK,
+      amount: beanstalkSilo.stalk.total
+    },
+    {
+      title: 'Seeds',
+      tooltip: 'This is Beanstalk\'s total Seed balance. Each Seed yields 1/10000 Grown Stalk each Season. Grown Stalk must be Mown to add it to your Stalk balance.',
+      token: SEEDS,
+      amount: beanstalkSilo.seeds.total
+    },
+    {
+      title: 'Pods',
+      tooltip: 'This is the total number of pods ever minted.',
+      token: PODS,
+      amount: beanstalkField.podIndex // FIXME: @silochad - is this what we want?
+    },
+    {
+      title: 'Sprouts',
+      tooltip: 'This is Beanstalk\'s total Sprout balance. The number of Beans left to be earned from your Fertilizer. Sprouts become Rinsable on a pari passu basis.',
+      token: SPROUTS,
+      amount: new BigNumber(-1) // TODO: @silochad
+    }
+  ];
 
   return (
     <Card sx={{ p: 2, width: '100%', ...sx }}>
@@ -23,6 +58,7 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
         breakdown={breakdown}
         whitelist={whitelist}
       />
+      <StatsCard stats={STAT_ITEMS} />
     </Card>
   );
 };
