@@ -19,9 +19,6 @@ const useStatProps = () => {
     sx: { ml: 0 },
   };
 };
-const LineChartProps = {
-  isTWAP: true,
-};
 
 const Supply: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({
   height,
