@@ -26,8 +26,8 @@ const ActivityTable: React.FC<
       <Box pt={2} px={2} pb={1.5}>
         <Typography variant="h4" sx={{ pb: 1 }}>Marketplace Activity</Typography>
       </Box>
-      <Box sx={{ width: '100%', height: '450px', position: 'relative', mb: 1 }}>
-        <BlurComponent blur={10} opacity={0.7}>
+      <Box sx={{ width: '100%', height: '450px', position: 'relative' }}>
+        <BlurComponent blur={10} opacity={0.7} sx={{ borderRadius: 1 }}>
           <Typography variant="body1" color="gray">Marketplace activity will be available soon.</Typography>
         </BlurComponent>
         <Box display="flex" alignItems="center" justifyContent="center" sx={{ px: 1, pb: 1 }}>
