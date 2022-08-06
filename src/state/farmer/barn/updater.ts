@@ -10,8 +10,9 @@ import useAccount from '~/hooks/ledger/useAccount';
 import { resetFarmerBarn, updateFarmerBarn } from './actions';
 import useEvents, { GetQueryFilters } from '../events2/updater';
 import { EventCacheName } from '../events2';
-import { castFertilizerBalance, FertilizerResponse } from '~/state/farmer/barn';
+import { castFertilizerBalance } from '~/state/farmer/barn';
 import { SPROUTS } from '~/constants/tokens';
+import { useFertilizerBalancesLazyQuery } from '~/generated/graphql';
 
 const fetchGlobal = fetch;
 
@@ -82,6 +83,7 @@ export const useFetchFarmerBarn = () => {
   const replantId = useChainConstant(REPLANT_INITIAL_ID);
 
   /// Contracts
+  const [fetchFertBalances] = useFertilizerBalancesLazyQuery();
   const fertContract = useFertilizerContract();
   const beanstalk    = useBeanstalkContract();
   const blocks       = useBlocks();
@@ -160,27 +162,8 @@ export const useFetchFarmerBarn = () => {
       // const ids = Object.keys(tokens);
       // const idStrings = ids.map((id) => id.toString());
 
-      const balances = await fetchGlobal('https://api.thegraph.com/subgraphs/name/publiuss/fertilizer', {
-        method: 'POST',
-        body: JSON.stringify({
-          query: `{
-            fertilizerBalances(where: { farmer: "${account}" }) {
-              amount
-              fertilizerToken {
-                id
-                endBpf
-                season
-                humidity
-                startBpf
-              }
-            }
-          }`
-        })
-      })
-      .then((r) => r.json() as unknown as { data: FertilizerResponse })
-      .then(({ data }) => data.fertilizerBalances.map(castFertilizerBalance));
-
-      /// FIXME: inefficient reconversion to string
+      const query = await fetchFertBalances({ variables: { account }, fetchPolicy: 'network-only', });
+      const balances = query.data?.fertilizerBalances.map(castFertilizerBalance) || [];
       const idStrings = balances.map((bal) => bal.token.id.toString());
 
       const [
@@ -216,6 +199,7 @@ export const useFetchFarmerBarn = () => {
     replantId,
     initialized,
     account,
+    fetchFertBalances,
   ]); 
 
   const clear = useCallback(() => { 

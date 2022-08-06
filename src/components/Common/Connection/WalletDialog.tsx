@@ -69,7 +69,7 @@ const WalletDialog: React.FC<{
           ))}
           {error && (
             <Alert severity="error">
-              {CONNECT_WALLET_ERRORS[error.name || error.message](pendingConnector) || error.message}
+              {CONNECT_WALLET_ERRORS[error.name || error.message]?.(pendingConnector) || `Error: ${error.message}`}
             </Alert>
           )}
         </Stack>
