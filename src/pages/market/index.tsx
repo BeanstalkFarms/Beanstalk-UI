@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, Card, Container, Stack, Tab, Tabs, Typography } from '@mui/material';
-import PageHeader from 'components/Common/PageHeader';
-import useTabs from 'hooks/display/useTabs';
-import AllListings from 'components/Market/Tables/AllListings';
-import AllOrders from 'components/Market/Tables/AllOrders';
+import PageHeader from '~/components/Common/PageHeader';
+import useTabs from '~/hooks/display/useTabs';
+import AllListings from '~/components/Market/Tables/AllListings';
+import AllOrders from '~/components/Market/Tables/AllOrders';
 import CreateButtons from '../../components/Market/CreateButtons';
 import BlurComponent from '../../components/Common/ZeroState/BlurComponent';
 import LineChart from '../../components/Common/Charts/LineChart';
