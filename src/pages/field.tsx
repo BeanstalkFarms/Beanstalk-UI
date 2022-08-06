@@ -4,14 +4,14 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import PageHeader from 'components/Common/PageHeader';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
 import BigNumber from 'bignumber.js';
 import { DataGridProps } from '@mui/x-data-grid';
-import { displayBN, displayFullBN } from 'util/index';
-import FieldActions from 'components/Field/Actions';
-import TableCard from 'components/Common/TableCard';
+import PageHeader from '~/components/Common/PageHeader';
+import FieldActions from '~/components/Field/Actions';
+import TableCard from '~/components/Common/TableCard';
+import { displayBN, displayFullBN } from '~/util';
+import { AppState } from '~/state';
 import FieldConditions from '../components/Field/FieldConditions';
 import { PODS } from '../constants/tokens';
 import useAccount from '../hooks/ledger/useAccount';
@@ -32,8 +32,8 @@ const columns: DataGridProps['columns'] = [
     headerName: 'Number of Pods',
     flex: 1,
     disableColumnMenu: true,
-    align: 'left',
-    headerAlign: 'left',
+    align: 'right',
+    headerAlign: 'right',
     valueFormatter: (params) =>
       `${displayFullBN(params.value as BigNumber, 2)}`,
     renderCell: (params) => (
@@ -47,13 +47,10 @@ const columns: DataGridProps['columns'] = [
 const FieldPage: React.FC = () => {
   const account = useAccount();
   const authState = !account ? 'disconnected' : 'ready';
+  
   /// Data
-  const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
-    (state) => state._farmer.field
-  );
-  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
-    (state) => state._beanstalk.field
-  );
+  const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
+  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
   const harvestablePods = farmerField.harvestablePods;
 
   const rows: any[] = useMemo(() => {

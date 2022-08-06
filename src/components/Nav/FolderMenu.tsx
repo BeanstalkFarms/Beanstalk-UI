@@ -9,10 +9,10 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import DropdownIcon from 'components/Common/DropdownIcon';
-import useToggle from 'hooks/display/useToggle';
-import useAnchor from 'hooks/display/useAnchor';
 import { useHotkeys } from 'react-hotkeys-hook';
+import DropdownIcon from '~/components/Common/DropdownIcon';
+import useToggle from '~/hooks/display/useToggle';
+import useAnchor from '~/hooks/display/useAnchor';
 
 /**
  * Show a "Folder". A folder is a button that shows a popup;

@@ -1,4 +1,4 @@
-import ethereumLogoUrl from 'img/tokens/eth-logo.svg';
+import ethereumLogoUrl from '~/img/tokens/eth-logo.svg';
 
 /**
  * Guide to adding a new chain:

@@ -2,17 +2,18 @@ import { useCallback, useEffect, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import { useDispatch } from 'react-redux';
 import throttle from 'lodash/throttle';
-import { useBeanstalkPriceContract } from 'hooks/useContract';
-import { tokenResult, getChainConstant } from 'util/index';
-import { BEAN } from 'constants/tokens';
-import ALL_POOLS from 'constants/pools';
 import { useProvider } from 'wagmi';
-import { ERC20__factory } from 'generated';
-import { updateBeanPrice, updateBeanSupply } from '../token/actions';
+import { useBeanstalkContract, useBeanstalkPriceContract } from '~/hooks/useContract';
+import { tokenResult, getChainConstant } from '~/util';
+import { BEAN } from '~/constants/tokens';
+import ALL_POOLS from '~/constants/pools';
+import { ERC20__factory } from '~/generated';
+import { updatePrice, updateDeltaB, updateSupply } from '../token/actions';
 import { resetPools, updateBeanPools, UpdatePoolPayload } from './actions';
 
 export const useFetchPools = () => {
   const dispatch = useDispatch();
+  const beanstalk = useBeanstalkContract();
   const [beanstalkPriceContract, chainId] = useBeanstalkPriceContract();
   const provider = useProvider();
 
@@ -20,21 +21,30 @@ export const useFetchPools = () => {
   const _fetch = useCallback(
     async () => {
       try {
-        if (beanstalkPriceContract) {
+        if (beanstalk && beanstalkPriceContract) {
           console.debug('[bean/pools/useGetPools] FETCH', beanstalkPriceContract.address, chainId);
           const Pools = getChainConstant(ALL_POOLS, chainId);
           const Bean  = getChainConstant(BEAN, chainId);
           console.debug('Bean', Bean);
+
+          // FIXME: find regression with Bean.totalSupply()
+          const beanErc20 = ERC20__factory.connect(Bean.address, provider);
           const [
             priceResult,
-            beanSupply,
+            totalSupply,
+            totalDeltaB,
           ] = await Promise.all([
             beanstalkPriceContract.price(),
-            ERC20__factory.connect(Bean.address, provider).totalSupply(), // FIXME
+            // FIXME: these should probably reside in bean/token/updater,
+            // but the above beanstalkPriceContract call also grabs the 
+            // aggregate price, so for now we bundle them here.
+            beanErc20.totalSupply().then(tokenResult(Bean)),
+            beanstalk.totalDeltaB().then(tokenResult(Bean)),
           ]);
+
           if (!priceResult) return;
 
-          console.debug('[bean/pools/useGetPools] RESULT: price contract result =', priceResult, beanSupply.toString());
+          console.debug('[bean/pools/useGetPools] RESULT: price contract result =', priceResult, totalSupply.toString());
 
           // Step 2: Get LP token supply data and format as UpdatePoolPayload
           const dataWithSupplyResult : (Promise<UpdatePoolPayload>)[] = [
@@ -86,8 +96,9 @@ export const useFetchPools = () => {
           console.debug('[bean/pools/useGetPools] RESULT: dataWithSupply =', dataWithSupplyResult);
           
           dispatch(updateBeanPools(await Promise.all(dataWithSupplyResult)));
-          dispatch(updateBeanPrice(tokenResult(BEAN)(priceResult.price.toString())));
-          dispatch(updateBeanSupply(tokenResult(BEAN)(beanSupply.toString())));
+          dispatch(updatePrice(tokenResult(BEAN)(priceResult.price.toString())));
+          dispatch(updateSupply(totalSupply));
+          dispatch(updateDeltaB(totalDeltaB));
         }
       } catch (e) {
         console.debug('[bean/pools/useGetPools] FAILED', e);
@@ -97,6 +108,7 @@ export const useFetchPools = () => {
     [
       dispatch,
       beanstalkPriceContract,
+      beanstalk,
       chainId,
       provider
     ]

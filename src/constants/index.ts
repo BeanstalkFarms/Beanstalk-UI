@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 
-import Pool from 'classes/Pool';
-import Token from 'classes/Token';
+import Pool from '~/classes/Pool';
+import Token from '~/classes/Token';
 
 // --------------
 // Utilities

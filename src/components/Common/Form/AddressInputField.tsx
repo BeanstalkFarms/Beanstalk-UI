@@ -14,10 +14,10 @@ import {
 import { Field, FieldProps } from 'formik';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import useChainId from 'hooks/useChain';
-import { CHAIN_INFO } from 'constants/index';
-import useAccount from 'hooks/ledger/useAccount';
 import { useTheme } from '@mui/material/styles';
+import useChainId from '~/hooks/useChain';
+import useAccount from '~/hooks/ledger/useAccount';
+import { CHAIN_INFO } from '~/constants';
 import OutputField from './OutputField';
 import { trimAddress } from '../../../util';
 
@@ -31,7 +31,7 @@ export const ETHEREUM_ADDRESS_CHARS = /([0][x]?[a-fA-F0-9]{0,42})$/;
 const validateAddress = (account?: string) => (value: string) => {
   let error;
   if (account && value?.toLowerCase() === account.toLowerCase()) {
-    error = 'Cannot send a Plot to yourself';
+    error = 'Cannot Transfer to yourself';
   } else if (!ETHEREUM_ADDRESS_CHARS.test(value)) {
     error = 'Invalid address';
   }

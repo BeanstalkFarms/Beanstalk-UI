@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { EventCacheName, FarmerEvents } from 'state/farmer/events2';
+import { EventCacheName, FarmerEvents } from '~/state/farmer/events2';
 
 export const loadState = () => {
   try {

@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo } from 'react';
 import { CircularProgress, Stack, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
-import TokenInputField, { TokenInputProps } from 'components/Common/Form/TokenInputField';
-import TokenAdornment from 'components/Common/Form/TokenAdornment';
 import BigNumber from 'bignumber.js';
-import { displayFullBN } from 'util/Tokens';
-import useQuote, { QuoteHandler, QuoteSettings } from 'hooks/useQuote';
-import { ERC20Token, NativeToken } from 'classes/Token';
+import TokenInputField, { TokenInputProps } from '~/components/Common/Form/TokenInputField';
+import TokenAdornment from '~/components/Common/Form/TokenAdornment';
+import useQuote, { QuoteHandler, QuoteSettings } from '~/hooks/useQuote';
+import { ERC20Token, NativeToken } from '~/classes/Token';
+import { displayFullBN } from '~/util/Tokens';
 import { FormState, FormTokenState } from '.';
 
 type TokenQuoteProviderCustomProps = {

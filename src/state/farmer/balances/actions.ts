@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import Token from 'classes/Token';
+import Token from '~/classes/Token';
 import { Balance } from '.';
 
 export type UpdateBalancePayload = {

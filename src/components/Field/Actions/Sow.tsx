@@ -1,6 +1,14 @@
 import { Accordion, AccordionDetails, Alert, Box, Divider, Link, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import Token, { ERC20Token, NativeToken } from 'classes/Token';
+import { ethers } from 'ethers';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { useProvider } from 'wagmi';
+import toast from 'react-hot-toast';
+import TransactionToast from '~/components/Common/TxnToast';
+import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
 import {
   FormState,
   SettingInput,
@@ -12,36 +20,28 @@ import {
   TxnPreview,
   TxnSeparator,
   TxnSettings
-} from 'components/Common/Form';
-import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
-import TransactionToast from 'components/Common/TxnToast';
-import { BeanstalkReplanted } from 'generated/index';
-import { ZERO_BN } from 'constants/index';
-import { BEAN, ETH, PODS, WETH } from 'constants/tokens';
-import { ethers } from 'ethers';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import useToggle from 'hooks/display/useToggle';
-import { useBeanstalkContract } from 'hooks/useContract';
-import useFarmerBalances from 'hooks/useFarmerBalances';
-import useGetChainToken from 'hooks/useGetChainToken';
-import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
-import { QuoteHandler } from 'hooks/useQuote';
-import useTokenMap from 'hooks/useTokenMap';
-import Farm, { ChainableFunction, FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import { displayBN, displayFullBN, MinBN, parseError, toStringBaseUnitBN, toTokenUnitsBN } from 'util/index';
-import { useProvider } from 'wagmi';
-import { useSigner } from 'hooks/ledger/useSigner';
-import toast from 'react-hot-toast';
-import { useFetchFarmerField } from 'state/farmer/field/updater';
-import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
-import { useFetchBeanstalkField } from 'state/beanstalk/field/updater';
-import usePrice from 'hooks/usePrice';
-import { useFetchPools } from 'state/bean/pools/updater';
-import { optimizeFromMode } from 'util/Farm';
+} from '~/components/Common/Form';
+import Token, { ERC20Token, NativeToken } from '~/classes/Token';
+import { Beanstalk } from '~/generated/index';
+import useToggle from '~/hooks/display/useToggle';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import useFarmerBalances from '~/hooks/useFarmerBalances';
+import useGetChainToken from '~/hooks/useGetChainToken';
+import usePreferredToken, { PreferredToken } from '~/hooks/usePreferredToken';
+import { QuoteHandler } from '~/hooks/useQuote';
+import useTokenMap from '~/hooks/useTokenMap';
+import Farm, { ChainableFunction, FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
+import { displayBN, displayFullBN, MinBN, parseError, toStringBaseUnitBN, toTokenUnitsBN } from '~/util';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import usePrice from '~/hooks/usePrice';
+import { optimizeFromMode } from '~/util/Farm';
+import { useFetchFarmerField } from '~/state/farmer/field/updater';
+import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
+import { useFetchBeanstalkField } from '~/state/beanstalk/field/updater';
+import { useFetchPools } from '~/state/bean/pools/updater';
+import { AppState } from '~/state';
+import { BEAN, ETH, PODS, WETH } from '~/constants/tokens';
+import { ZERO_BN } from '~/constants';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
 import { IconSize } from '../../App/muiTheme';
@@ -58,7 +58,7 @@ const SowForm : React.FC<
   & {
     handleQuote: QuoteHandler;
     balances: ReturnType<typeof useFarmerBalances>;
-    beanstalk: BeanstalkReplanted;
+    beanstalk: Beanstalk;
     weather: BigNumber;
     soil: BigNumber;
     farm: Farm;
@@ -207,7 +207,7 @@ const SowForm : React.FC<
                     }}
                   />
                   <Typography variant="bodyMedium">
-                    {PODS.symbol} @ {displayBN(podLineLength)}
+                    <Typography display={{ xs: 'none', sm: 'inline' }} variant="bodyMedium">{PODS.symbol} </Typography>@ {displayBN(podLineLength)}
                   </Typography>
 
                 </Stack>
@@ -306,7 +306,7 @@ const Sow : React.FC<{}> = () => {
   /// Ledger
   const { data: signer } = useSigner();
   const provider  = useProvider();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
   const farm      = useMemo(() => new Farm(provider), [provider]);
 
   /// Data

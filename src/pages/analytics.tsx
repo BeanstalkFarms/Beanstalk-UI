@@ -1,10 +1,10 @@
 import { Container, Stack } from '@mui/material';
-import BeanAnalytics from 'components/Analytics/Bean';
-import FieldAnalytics from 'components/Analytics/Field';
-import SiloAnalytics from 'components/Analytics/Silo';
-
-import PageHeader from 'components/Common/PageHeader';
 import React from 'react';
+import BeanAnalytics from '~/components/Analytics/Bean';
+import FieldAnalytics from '~/components/Analytics/Field';
+import SiloAnalytics from '~/components/Analytics/Silo';
+
+import PageHeader from '~/components/Common/PageHeader';
 
 const AnalyticsPage: React.FC<{}> = () => (
   <Container maxWidth="lg">

@@ -1,4 +1,5 @@
 [build]
+  publish = "dist/"
   command = "yarn build-netlify"
 
 # These build env vars are specific only to Netlify.

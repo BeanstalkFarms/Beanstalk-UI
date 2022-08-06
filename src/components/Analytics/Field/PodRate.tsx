@@ -1,9 +1,9 @@
 import React from 'react';
-import SeasonPlot, { SeasonPlotBaseProps } from 'components/Common/Charts/SeasonPlot';
-import { SeasonalPodRateDocument, SeasonalPodRateQuery } from 'generated/graphql';
-import useSeason from 'hooks/useSeason';
-import usePodRate from 'hooks/usePodRate';
-import { SnapshotData } from 'hooks/useSeasons';
+import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
+import { SeasonalPodRateDocument, SeasonalPodRateQuery } from '~/generated/graphql';
+import useSeason from '~/hooks/useSeason';
+import usePodRate from '~/hooks/usePodRate';
+import { SnapshotData } from '~/hooks/useSeasonsQuery';
 
 const getValue = (season: SnapshotData<SeasonalPodRateQuery>) => parseFloat(season.podRate);
 const formatValue = (value: number) => `${(value * 100).toFixed(2)}%`;

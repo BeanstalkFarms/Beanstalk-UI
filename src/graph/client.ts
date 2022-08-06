@@ -1,6 +1,6 @@
 import { ApolloClient, FieldPolicy, InMemoryCache } from '@apollo/client';
 import { LocalStorageWrapper, persistCacheSync } from 'apollo3-cache-persist';
-import { SupportedChainId , BEANSTALK_SUBGRAPH_ADDRESSES } from 'constants/index';
+import { SupportedChainId , BEANSTALK_SUBGRAPH_ADDRESSES } from '~/constants';
 
 const mergeSeasons: FieldPolicy = {
   // Don't cache separate results based on

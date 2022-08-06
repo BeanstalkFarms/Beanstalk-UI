@@ -1,9 +1,9 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
-import Token from 'classes/Token';
-import { FarmToMode } from 'lib/Beanstalk/Farm';
-import { displayFullBN, displayTokenAmount } from 'util/Tokens';
-import copy from 'constants/copy';
+import Token from '~/classes/Token';
+import { FarmToMode } from '~/lib/Beanstalk/Farm';
+import { displayFullBN, displayTokenAmount } from '~/util/Tokens';
+import copy from '~/constants/copy';
 import { BEAN, PODS, SPROUTS } from '../constants/tokens';
 import { displayBN, trimAddress } from './index';
 
@@ -239,7 +239,7 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.CLAIM_WITHDRAWAL:
       return `Claim ${displayFullBN(a.amount, 2)} ${a.token.name}.`;
     case ActionType.TRANSFER:
-      return `Transfer ${displayFullBN(a.amount)} ${a.token.name} to ${trimAddress(a.to)}.`;
+      return `Transfer ${displayFullBN(a.amount)} ${a.token.name} to ${trimAddress(a.to, true)}.`;
 
     /// FIELD
     case ActionType.BUY_BEANS:

@@ -1,6 +1,15 @@
 import { Alert, Box, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import Token, { ERC20Token, NativeToken } from 'classes/Token';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import React, { useCallback, useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { ethers } from 'ethers';
+import { useProvider } from 'wagmi';
+import toast from 'react-hot-toast';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import TransactionToast from '~/components/Common/TxnToast';
+import TxnAccordion from '~/components/Common/TxnAccordion';
+import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
 import {
   FormTokenState,
   SettingInput, SmartSubmitButton, TokenAdornment, TokenInputField,
@@ -10,36 +19,27 @@ import {
   TxnPreview,
   TxnSeparator,
   TxnSettings
-} from 'components/Common/Form';
-import { ONE_BN, ZERO_BN } from 'constants/index';
-import { BEAN, ETH, PODS, WETH } from 'constants/tokens';
-import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import useChainId from 'hooks/useChain';
-import useChainConstant from 'hooks/useChainConstant';
-import useFarmerBalances from 'hooks/useFarmerBalances';
-import { QuoteHandler } from 'hooks/useQuote';
-import useTokenMap from 'hooks/useTokenMap';
-import React, { useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN, parseError, displayTokenAmount, displayBN } from 'util/index';
-import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
-import { ethers } from 'ethers';
-import useGetChainToken from 'hooks/useGetChainToken';
-import { optimizeFromMode } from 'util/Farm';
-import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
-import { useProvider } from 'wagmi';
-import useToggle from 'hooks/display/useToggle';
-import { BeanstalkReplanted } from 'generated';
-import { useBeanstalkContract } from 'hooks/useContract';
-import { useSigner } from 'hooks/ledger/useSigner';
-import TransactionToast from 'components/Common/TxnToast';
-import toast from 'react-hot-toast';
-import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
-import { useFetchFarmerMarket } from 'state/farmer/market/updater';
-import TxnAccordion from 'components/Common/TxnAccordion';
-import { ActionType } from 'util/Actions';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+} from '~/components/Common/Form';
+import Token, { ERC20Token, NativeToken } from '~/classes/Token';
+import useChainId from '~/hooks/useChain';
+import useChainConstant from '~/hooks/useChainConstant';
+import useFarmerBalances from '~/hooks/useFarmerBalances';
+import { QuoteHandler } from '~/hooks/useQuote';
+import useTokenMap from '~/hooks/useTokenMap';
+import useGetChainToken from '~/hooks/useGetChainToken';
+import useToggle from '~/hooks/display/useToggle';
+import { Beanstalk } from '~/generated';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
+import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
+import { ActionType } from '~/util/Actions';
+import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
+import { optimizeFromMode } from '~/util/Farm';
+import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN, parseError, displayTokenAmount, displayBN } from '~/util';
+import { AppState } from '~/state';
+import { BEAN, ETH, PODS, WETH } from '~/constants/tokens';
+import { ONE_BN, ZERO_BN } from '~/constants';
 import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
 import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
 import SliderField from '../../Common/Form/SliderField';
@@ -83,7 +83,7 @@ const CreateOrderForm : React.FC<
     podLine: BigNumber;
     handleQuote: QuoteHandler;
     tokenList: (ERC20Token | NativeToken)[];
-    contract: BeanstalkReplanted;
+    contract: Beanstalk;
   }
 > = ({
   values,
@@ -146,7 +146,7 @@ const CreateOrderForm : React.FC<
         mode={TokenSelectMode.SINGLE}
       />
       <Stack gap={1.5}>
-        <FieldWrapper label="Max Place in Line" tooltip="The maximum place in line where you're willing to buy Pods at this price.">
+        <FieldWrapper label="Max Place in Line" tooltip="The maximum Place in Line in which you are willing to buy Pods at the following price.">
           <Box px={1}>
             <SliderField
               min={0}
@@ -162,7 +162,7 @@ const CreateOrderForm : React.FC<
             InputProps={PlaceInLineInputProps}
           />
         </FieldWrapper>
-        <FieldWrapper label="Price per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPod}>
+        <FieldWrapper label="Price per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPodOrder}>
           <TokenInputField
             name="pricePerPod"
             placeholder="0.0000"
@@ -206,11 +206,11 @@ const CreateOrderForm : React.FC<
                     },
                     {
                       type: ActionType.CREATE_ORDER,
-                      message: `Create an Order to purchase up to ${displayTokenAmount(amountPods, PODS)} at ${displayFullBN(values.pricePerPod!, 4)} Beans per Pod. Any Pods before ${displayBN(values.placeInLine!)} in the Pod Line are eligible.`
+                      message: `Order ${displayTokenAmount(amountPods, PODS)} at ${displayFullBN(values.pricePerPod!, 4)} Beans per Pod. Any Pods before ${displayBN(values.placeInLine!)} in the Pod Line are eligible to Fill this Order.`
                     },
                     {
                       type: ActionType.BASE,
-                      message: `${displayTokenAmount(amountOut, tokenOut)} will be locked in the Pod Order to allow for instant settlement. You can reclaim these Beans by cancelling the Order.`
+                      message: `${displayTokenAmount(amountOut, tokenOut)} will be locked in the Pod Order to allow for instant settlement. You can reclaim these Beans by Cancelling the Order.`
                     }
                   ]}
                 />
@@ -249,7 +249,7 @@ const CreateOrder : React.FC<{}> = () => {
   ///
   const { data: signer } = useSigner();
   const provider  = useProvider();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
   const farm      = useMemo(() => new Farm(provider), [provider]);
 
   ///

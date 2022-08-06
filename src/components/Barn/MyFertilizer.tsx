@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Box,
   Card,
@@ -10,20 +10,19 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import { useHumidityAtId } from 'hooks/useHumidity';
-import { AppState } from 'state';
-import FertilizerItem from 'components/Barn/FertilizerItem';
-import { ZERO_BN } from 'constants/index';
-import { SPROUTS, RINSABLE_SPROUTS } from 'constants/tokens';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { displayFullBN, MaxBN } from 'util/Tokens';
-import { MY_FERTILIZER } from 'components/Barn/FertilizerItemTooltips';
-import useTabs from 'hooks/display/useTabs';
-import EmptyState from 'components/Common/ZeroState/EmptyState';
+import FertilizerItem from '~/components/Barn/FertilizerItem';
+import { MY_FERTILIZER } from '~/components/Barn/FertilizerItemTooltips';
+import useTabs from '~/hooks/display/useTabs';
+import EmptyState from '~/components/Common/ZeroState/EmptyState';
+import { displayFullBN, MaxBN, MinBN } from '~/util/Tokens';
+import { SPROUTS, RINSABLE_SPROUTS } from '~/constants/tokens';
+import { ONE_BN, ZERO_BN } from '~/constants';
+import { AppState } from '~/state';
 import TokenIcon from '../Common/TokenIcon';
 import { FontSize } from '../App/muiTheme';
+import { FertilizerBalance } from '~/state/farmer/barn';
 
 enum TabState {
   ACTIVE = 0,
@@ -32,25 +31,25 @@ enum TabState {
 
 const MyFertilizer: React.FC = () => {
   /// Data
-  const beanstalkBarn = useSelector<AppState, AppState['_beanstalk']['barn']>(
-    (state) => state._beanstalk.barn
-  );
-  const farmerBarn = useSelector<AppState, AppState['_farmer']['barn']>(
-    (state) => state._farmer.barn
-  );
+  const beanstalkBarn = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
+  const farmerBarn = useSelector<AppState, AppState['_farmer']['barn']>((state) => state._farmer.barn);
 
   /// Helpers
-  const humidityAt = useHumidityAtId();
   const [tab, handleChange] = useTabs();
+  const pctRepaid = useCallback((balance: FertilizerBalance) => (
+    MinBN(
+      (beanstalkBarn.currentBpf.minus(balance.token.startBpf))
+        .div(balance.token.id.minus(balance.token.startBpf)),
+      ONE_BN
+    )
+  ), [beanstalkBarn.currentBpf]);
 
-  /// Local data
-  const tokenIds = useMemo(
-    () =>
-      Object.keys(farmerBarn.fertilizer).filter(
-        () => tab === TabState.ACTIVE
-      ),
-    [farmerBarn.fertilizer, tab]
-  );
+  const filteredBalances = useMemo(() => farmerBarn.balances?.filter((balance) => {
+    const pct = pctRepaid(balance);
+    if (tab === TabState.ACTIVE && pct.gte(1)) return false;
+    if (tab === TabState.USED && pct.lt(1)) return false;
+    return true;
+  }) || [], [farmerBarn.balances, pctRepaid, tab]);
 
   return (
     <Card>
@@ -64,8 +63,8 @@ const MyFertilizer: React.FC = () => {
             justifyContent="space-between"
           >
             <Tooltip
-              title="The number of Beans left to be earned from your Fertilizer."
-              placement="right"
+              title="The number of Beans left to be earned from your Fertilizer. Sprouts become Rinsable on a pari passu basis."
+              placement="bottom"
             >
               <Typography variant="body1">
                 Sprouts&nbsp;
@@ -90,7 +89,7 @@ const MyFertilizer: React.FC = () => {
           >
             <Tooltip
               title="Sprouts that are redeemable for 1 Bean each. Rinsable Sprouts must be Rinsed in order to use them."
-              placement="right"
+              placement="bottom"
             >
               <Typography variant="body1">
                 Rinsable Sprouts&nbsp;
@@ -125,25 +124,26 @@ const MyFertilizer: React.FC = () => {
           </Tabs>
         </Stack>
         <Box>
-          {tokenIds.length > 0 ? (
+          {filteredBalances.length > 0 ? (
             <Grid container spacing={3}>
-              {tokenIds.map((_id) => {
-                const id = new BigNumber(_id);
-                const season = new BigNumber(6_074);
-                const amount = farmerBarn.fertilizer[_id];
-                const humidity = humidityAt(id);
-                const remaining = humidity ? amount.multipliedBy(humidity.plus(1)) : undefined;
+              {filteredBalances.map((balance) => {
+                const pct = pctRepaid(balance);
+                const status = pct.eq(1) ? 'used' : 'active';
+                const humidity = balance.token.humidity;
+                const debt = balance.amount.multipliedBy(humidity.div(100).plus(1));
+                const sprouts = debt.multipliedBy(ONE_BN.minus(pct));
+                const rinsableSprouts = debt.multipliedBy(pct);
                 return (
-                  <Grid key={_id} item xs={12} md={3}>
+                  <Grid key={balance.token.id.toString()} item xs={12} md={4}>
                     <FertilizerItem
-                      id={id}
-                      season={season}
-                      state="active"
-                      humidity={humidity}
-                      remaining={remaining}
-                      amount={amount}
-                      progress={beanstalkBarn.currentBpf.div(id).toNumber()}
-                      // season={season}
+                      id={balance.token.id}
+                      season={balance.token.season}
+                      state={status}
+                      humidity={humidity.div(100)}
+                      amount={balance.amount} // of FERT
+                      rinsableSprouts={rinsableSprouts} // rinsable sprouts
+                      sprouts={sprouts} // sprouts
+                      progress={pct.toNumber()}
                       tooltip={MY_FERTILIZER}
                     />
                   </Grid>

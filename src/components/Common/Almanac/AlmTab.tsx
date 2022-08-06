@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tab, TabProps } from '@mui/material';
-import useAppFlag from 'hooks/display/useAppFlag';
+import useAppFlag from '~/hooks/display/useAppFlag';
 
 const open = (url: string) => (e: any) => {
   e.preventDefault();

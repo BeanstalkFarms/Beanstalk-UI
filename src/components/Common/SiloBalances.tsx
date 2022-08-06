@@ -1,12 +1,12 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Stack, Typography, Grid, Box, Tooltip } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
-import useBeanstalkSiloBreakdown from 'hooks/useBeanstalkSiloBreakdown';
-import { displayFullBN, displayUSD } from 'util/index';
-import ResizablePieChart, { PieDataPoint } from 'components/Common/Charts/Pie';
-import { Token } from 'classes';
-import { BeanstalkPalette } from 'components/App/muiTheme';
+import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/Pie';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
+import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
+import useBeanstalkSiloBreakdown from '~/hooks/useBeanstalkSiloBreakdown';
+import { displayFullBN, displayUSD } from '~/util';
+import { Token } from '~/classes';
 import TokenIcon from './TokenIcon';
 import Fiat from './Fiat';
 
@@ -81,7 +81,7 @@ const TokenRow: React.FC<{
         {label}
       </Typography>
       {(assetStates) && (
-        <Tooltip title={tooltip || ''} placement="right">
+        <Tooltip title={tooltip || ''} placement="top">
           <HelpOutlineIcon
             sx={{ color: 'text.secondary', fontSize: '14px' }}
           />
@@ -110,9 +110,9 @@ const STATE_CONFIG: { [key: string]: [name: string, color: string, tooltip: stri
   // Silo
   deposited:    ['Deposited', BeanstalkPalette.logoGreen, 'Assets that are Deposited in the Silo.'],
   withdrawn:    ['Withdrawn', '#DFB385', 'Assets being Withdrawn from the Silo. At the end of the current Season, Withdrawn assets become Claimable.'],
-  claimable:    ['Claimable', '#ECBCB3', 'Assets that can be claimed to your wallet, Deposited in the Silo, etc.'],
+  claimable:    ['Claimable', '#ECBCB3', 'Assets that can be Claimed after a Withdrawal.'],
   // Farm
-  farm:         ['Farm', '#F2E797', 'Assets stored in Beanstalk but not Deposited.'],
+  farm:         ['Farm', '#F2E797', 'Assets stored in Beanstalk. Farm assets can be used in transactions on the Farm.'],
   circulating:  ['Circulating', BeanstalkPalette.lightBlue, 'Beanstalk assets in your wallet.'],
 };
 

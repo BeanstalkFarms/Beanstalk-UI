@@ -1,32 +1,32 @@
-import { Box, Dialog, Stack, Tooltip } from '@mui/material';
+import { Box, Dialog, Link, Stack, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import { Field, FieldProps, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useProvider } from 'wagmi';
-import { useSigner } from 'hooks/ledger/useSigner';
 import { LoadingButton } from '@mui/lab';
-import { ClaimRewardsAction } from 'lib/Beanstalk/Farm';
-import { useBeanstalkContract } from 'hooks/useContract';
-import { BeanstalkReplanted } from 'generated/index';
 import toast from 'react-hot-toast';
-import { parseError } from 'util/index'; 
-import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
-import { UNRIPE_TOKENS } from 'constants/tokens';
-import useTokenMap from 'hooks/useTokenMap';
-import { selectCratesForEnroot } from 'util/Crates';
-import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
-import useAccount from 'hooks/ledger/useAccount';
 import { ethers } from 'ethers';
 import BigNumber from 'bignumber.js';
-import useTimedRefresh from 'hooks/useTimedRefresh';
-import GasTag from 'components/Common/GasTag';
-import useBDV from 'hooks/useBDV';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
+import { useTheme } from '@mui/material/styles';
+import GasTag from '~/components/Common/GasTag';
+import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import { ClaimRewardsAction } from '~/lib/Beanstalk/Farm';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import { parseError } from '~/util'; 
+import { UNRIPE_TOKENS } from '~/constants/tokens';
+import useTokenMap from '~/hooks/useTokenMap';
+import { selectCratesForEnroot } from '~/util/Crates';
+import useAccount from '~/hooks/ledger/useAccount';
+import useTimedRefresh from '~/hooks/useTimedRefresh';
+import useBDV from '~/hooks/useBDV';
+import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
+import { AppState } from '~/state';
 import TransactionToast from '../Common/TxnToast';
 import DescriptionButton from '../Common/DescriptionButton';
 import RewardsBar, { RewardsBarProps } from './RewardsBar';
 import { hoverMap } from '../../constants/silo';
-import { BeanstalkPalette } from '../App/muiTheme';
+import { BeanstalkPalette, FontSize } from '../App/muiTheme';
 
 export type SendFormValues = {
   to?: string;
@@ -49,12 +49,12 @@ const options = [
   },
   {
     title: 'Enroot',
-    description: 'Add Revitalized Stalk and Seeds to your Stalk and Seed balances. Also Mows Grown Stalk.',
+    description: 'Add Revitalized Stalk and Seeds to your Stalk and Seed balances, respectively. Also Mows Grown Stalk.',
     value: ClaimRewardsAction.ENROOT_AND_MOW,
   },
   {
     title: 'Claim all Silo Rewards',
-    description: 'Add all Stalk and Seed rewards to your Stalk and Seed balances.',
+    description: 'Mow, Plant and Enroot.',
     value: ClaimRewardsAction.CLAIM_ALL,
   }
 ];
@@ -91,6 +91,9 @@ const ClaimRewardsForm : React.FC<
   const [hoveredAction, setHoveredAction] = useState<ClaimRewardsAction | undefined>(undefined);
   /** The currently selected action (after click). */
   const selectedAction = values.action;
+
+  const theme = useTheme();
+ const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   /// Handlers
   const onMouseOver = useCallback((v: ClaimRewardsAction) => () => setHoveredAction(v), []);
@@ -139,12 +142,13 @@ const ClaimRewardsForm : React.FC<
                     const disabled = !calls || calls[option.value].enabled === false;
                     const hovered = isHovering(option.value) && !disabled;
                     return (
-                      <Tooltip title={!disabled ? '' : 'Nothing to claim'}>
+                      <Tooltip title={!disabled || isMobile ? '' : 'Nothing to claim'}>
                         <div>
                           <DescriptionButton
                             key={option.value}
                             title={option.title}
-                            description={`${option.description}`}
+                            description={isMobile ? undefined : `${option.description}`}
+                            tooltipTitle={isMobile ? `${option.description}` : undefined}
                             tag={<GasTag gasLimit={gas?.[option.value] || null} />}
                             // Button
                             fullWidth
@@ -168,6 +172,9 @@ const ClaimRewardsForm : React.FC<
             }}
           </Field>
         </Stack>
+        <Typography ml={1} pt={0.5} textAlign="center" fontSize={FontSize.sm} color="gray">
+          <Link href="https://docs.bean.money/farm/silo#silo-rewards" target="_blank" rel="noreferrer" underline="none">Learn more about Silo Rewards &rarr;</Link>
+        </Typography>
       </StyledDialogContent>
       <StyledDialogActions>
         <LoadingButton
@@ -215,7 +222,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
   const getBDV = useBDV();
   
   /// Contracts
-  const beanstalk         = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk         = useBeanstalkContract(signer);
 
   /// Form
   const initialValues: ClaimRewardsFormValues = useMemo(() => ({

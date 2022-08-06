@@ -10,29 +10,28 @@ import {
   Link,
   CircularProgress
 } from '@mui/material';
-import unripeBeanIcon from 'img/tokens/unripe-bean-logo-circled.svg';
-import brownLPIcon from 'img/tokens/unripe-lp-logo-circled.svg';
 import { useTheme } from '@mui/material/styles';
-import { useSigner } from 'hooks/ledger/useSigner';
-import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from 'constants/tokens';
-import { BeanstalkPalette } from 'components/App/muiTheme';
-import { UNRIPE_ASSET_TOOLTIPS } from 'constants/tooltips';
-import { ZERO_BN } from 'constants/index';
-import Token from 'classes/Token';
-import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
-import { displayFullBN, toTokenUnitsBN, parseError } from 'util/index';
-import pickImage from 'img/pick.png';
-import DescriptionButton from 'components/Common/DescriptionButton';
-import { PickMerkleResponse } from 'functions/pick/pick';
 import { LoadingButton } from '@mui/lab';
-import { useBeanstalkContract } from 'hooks/useContract';
-import { BeanstalkReplanted } from 'generated';
-import useGetChainToken from 'hooks/useGetChainToken';
-import { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
-import TransactionToast from 'components/Common/TxnToast';
-import useAccount from 'hooks/ledger/useAccount';
-import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
 import toast from 'react-hot-toast';
+import unripeBeanIcon from '~/img/tokens/unripe-bean-logo-circled.svg';
+import brownLPIcon from '~/img/tokens/unripe-lp-logo-circled.svg';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
+import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
+import pickImage from '~/img/pick.png';
+import DescriptionButton from '~/components/Common/DescriptionButton';
+import type { PickMerkleResponse } from '~/functions/pick/pick';
+import TransactionToast from '~/components/Common/TxnToast';
+import Token from '~/classes/Token';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
+import { UNRIPE_ASSET_TOOLTIPS } from '~/constants/tooltips';
+import { ZERO_BN } from '~/constants';
+import { displayFullBN, toTokenUnitsBN, parseError } from '~/util';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import useGetChainToken from '~/hooks/useGetChainToken';
+import { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
+import useAccount from '~/hooks/ledger/useAccount';
+import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import UnripeTokenRow from './UnripeTokenRow';
 
 // ----------------------------------------------------
@@ -123,7 +122,7 @@ const PickBeansDialog: React.FC<{
   /// Contracts
   const account          = useAccount();
   const { data: signer } = useSigner();
-  const beanstalk        = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk        = useBeanstalkContract(signer);
   
   /// Local data
   const [unripe, setUnripe]         = useState<GetUnripeResponse | null>(null);
@@ -293,7 +292,7 @@ const PickBeansDialog: React.FC<{
               */}
             <Stack direction="row" justifyContent="space-between" pl={1}>
               <Typography>
-                Unripe Beans that will be available to Pick at Replant
+                Unripe Beans available to Pick at Replant
               </Typography>
               <Stack direction="row" alignItems="center" gap={0.3}>
                 <img src={unripeBeanIcon} alt="Circulating Beans" width={13} />
@@ -345,7 +344,7 @@ const PickBeansDialog: React.FC<{
               */}
             <Stack direction="row" justifyContent="space-between" pl={1}>
               <Typography>
-                Unripe BEAN:3CRV LP that will be available to Pick at Replant
+                Unripe BEAN:3CRV LP available to Pick at Replant
               </Typography>
               <Stack direction="row" alignItems="center" gap={0.3}>
                 <img src={brownLPIcon} alt="Circulating Beans" width={13} />

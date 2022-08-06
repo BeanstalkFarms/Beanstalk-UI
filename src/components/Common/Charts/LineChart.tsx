@@ -15,7 +15,7 @@ import {
 } from '@visx/curve';
 import { Axis, Orientation } from '@visx/axis';
 import { CurveFactory } from 'd3-shape';
-import { BeanstalkPalette } from 'components/App/muiTheme';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const CURVES = {
   linear: curveLinear,

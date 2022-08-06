@@ -1,10 +1,11 @@
+import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
+import { AppState } from '~/state';
 
 const usePodRate = () => {
-  const { podLine } = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
-  const { supply: totalBeanSupply } = useSelector<AppState, AppState['_bean']['token']>((state) => state._bean.token);
-  return podLine.dividedBy(totalBeanSupply).multipliedBy(100);
+  const podLine = useSelector<AppState, BigNumber>((state) => state._beanstalk.field.podLine);
+  const supply  = useSelector<AppState, BigNumber>((state) => state._bean.token.supply);
+  return podLine.dividedBy(supply).multipliedBy(100);
 };
 
 export default usePodRate;

@@ -7,13 +7,12 @@ import {
   Stack, Typography,
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import usePodOrder from 'hooks/usePodOrder';
-import { bigNumberResult, Source } from 'util/index';
-import useAccount from 'hooks/ledger/useAccount';
-import CancelOrder from 'components/Market/Actions/CancelOrder';
-import GenericZero from 'components/Common/ZeroState/GenericZero';
-import { useBeanstalkContract } from 'hooks/useContract';
-import { BeanstalkReplanted } from 'generated';
+import CancelOrder from '~/components/Market/Actions/CancelOrder';
+import GenericZero from '~/components/Common/ZeroState/GenericZero';
+import usePodOrder from '~/hooks/usePodOrder';
+import useAccount from '~/hooks/ledger/useAccount';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import { bigNumberResult, Source } from '~/util';
 import FillOrder from '../../components/Market/Actions/FillOrder';
 import OrderDetails from '../../components/Market/Cards/OrderDetails';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
@@ -22,7 +21,7 @@ const OrderPage: React.FC = () => {
   const account = useAccount();
   const { id } = useParams<{ id: string }>();
   const { data: _order, source, loading, error } = usePodOrder(id);
-  const beanstalk = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract();
 
   const [orderValid, setOrderValid] = useState<null | boolean>(null);
   useEffect(() => {

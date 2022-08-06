@@ -6,8 +6,8 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { BeanstalkPalette, IconSize } from 'components/App/muiTheme';
-import beanstalkLogo from 'img/tokens/bean-logo-circled.svg';
+import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
+import beanstalkLogo from '~/img/tokens/bean-logo-circled.svg';
 import ROUTES from './routes';
 import MenuItemMobile from './MenuItemMobile';
 import DropdownIcon from '../Common/DropdownIcon';

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Typography } from '@mui/material';
-import { FarmToMode } from 'lib/Beanstalk/Farm';
-import copy from 'constants/copy';
+import { FarmToMode } from '~/lib/Beanstalk/Farm';
+import copy from '~/constants/copy';
 import AddressIcon from '../AddressIcon';
 import PillSelectField, { PillSelectFieldProps } from './PillSelectField';
 import { IconSize } from '../../App/muiTheme';

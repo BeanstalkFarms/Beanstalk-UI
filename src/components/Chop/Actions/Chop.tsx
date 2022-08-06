@@ -1,6 +1,9 @@
 import { Accordion, AccordionDetails, Box, CircularProgress, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import Token, { ERC20Token, NativeToken } from 'classes/Token';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import React, { useCallback, useMemo } from 'react';
+import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 import {
   FormState,
   SmartSubmitButton,
@@ -9,35 +12,32 @@ import {
   TokenSelectDialog,
   TxnPreview,
   TxnSeparator
-} from 'components/Common/Form';
-import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
-import { BeanstalkReplanted } from 'generated/index';
-import { NEW_BN, ZERO_BN } from 'constants/index';
-import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from 'constants/tokens';
-import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import useToggle from 'hooks/display/useToggle';
-import { useBeanstalkContract } from 'hooks/useContract';
-import useFarmerBalances from 'hooks/useFarmerBalances';
-import useTokenMap from 'hooks/useTokenMap';
-import React, { useCallback, useMemo } from 'react';
-import { displayBN, displayFullBN, getChainConstant, parseError, toStringBaseUnitBN } from 'util/index';
-import { useSigner } from 'hooks/ledger/useSigner';
-import toast from 'react-hot-toast';
-import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import { ActionType } from 'util/Actions';
-import TokenInputField from 'components/Common/Form/TokenInputField';
-import { BeanstalkPalette } from 'components/App/muiTheme';
-import useChainId from 'hooks/useChain';
-import TransactionToast from 'components/Common/TxnToast';
-import { FarmToMode } from 'lib/Beanstalk/Farm';
-import DestinationField from 'components/Common/Form/DestinationField';
-import useAccount from 'hooks/ledger/useAccount';
-import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
-import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
-import { optimizeFromMode } from 'util/Farm';
-import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import useChopPenalty from '../../../hooks/useChopPenalty';
+} from '~/components/Common/Form';
+import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
+import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
+import TokenInputField from '~/components/Common/Form/TokenInputField';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
+import TransactionToast from '~/components/Common/TxnToast';
+import DestinationField from '~/components/Common/Form/DestinationField';
+import Token, { ERC20Token, NativeToken } from '~/classes/Token';
+import { Beanstalk } from '~/generated/index';
+import useToggle from '~/hooks/display/useToggle';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import useFarmerBalances from '~/hooks/useFarmerBalances';
+import useTokenMap from '~/hooks/useTokenMap';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import useChainId from '~/hooks/useChain';
+import useAccount from '~/hooks/ledger/useAccount';
+import usePreferredToken, { PreferredToken } from '~/hooks/usePreferredToken';
+import { optimizeFromMode } from '~/util/Farm';
+import { FarmToMode } from '~/lib/Beanstalk/Farm';
+import { ActionType } from '~/util/Actions';
+import { displayBN, displayFullBN, getChainConstant, parseError, toStringBaseUnitBN } from '~/util';
+import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
+import { NEW_BN, ZERO_BN } from '~/constants';
+import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
+import { AppState } from '~/state';
+import useChopPenalty from '~/hooks/useChopPenalty';
 
 type ChopFormValues = FormState & {
   destination: FarmToMode;
@@ -46,7 +46,7 @@ type ChopFormValues = FormState & {
 const ChopForm: React.FC<
   FormikProps<ChopFormValues> & {
     balances: ReturnType<typeof useFarmerBalances>;
-    beanstalk: BeanstalkReplanted;
+    beanstalk: Beanstalk;
   }
 > = ({
   values,
@@ -158,7 +158,7 @@ const ChopForm: React.FC<
                       },
                       {
                         type: ActionType.BASE,
-                        message: `Add ${displayBN(amountOut || ZERO_BN)} ${outputToken} TODO add destination balance @coolbean.`
+                        message: `Add ${displayBN(amountOut || ZERO_BN)} ${outputToken} to the balance selected in the Destination field.`
                       },
                     ]}
                   />
@@ -201,7 +201,7 @@ const Chop: React.FC<{}> = () => {
   ///
   const account           = useAccount();
   const { data: signer }  = useSigner();
-  const beanstalk         = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk         = useBeanstalkContract(signer);
 
   ///
   const baseToken         = usePreferredToken(PREFERRED_TOKENS, 'use-best');

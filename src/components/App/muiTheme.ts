@@ -364,7 +364,8 @@ let muiTheme = createTheme({
     },
     MuiTooltip: {
       defaultProps: {
-        enterTouchDelay: 0
+        enterTouchDelay: 0,
+        leaveTouchDelay: 1000000,
       },
       styleOverrides: {
         tooltip: sx({
@@ -564,6 +565,16 @@ let muiTheme = createTheme({
     MuiDialog: {
       defaultProps: {  
         transitionDuration: 0,
+        PaperProps: {
+          sx: {
+            minWidth: { xs: '95%', sm: '400px' }
+          }
+        }
+      },
+      styleOverrides: {
+        root: sx({
+
+        })
       }
     },
     MuiDialogContent: {

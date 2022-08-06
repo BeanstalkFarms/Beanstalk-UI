@@ -2,15 +2,15 @@ import React from 'react';
 import { Card, Container, Grid, Stack, Tab, Tabs } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import Stat from 'components/Common/Stat';
-import { BeanstalkPalette } from 'components/App/muiTheme';
-import AmountRaisedCard from 'components/Analytics/Barnraise/AmountRaisedCard';
-import ComingSoonCard from 'components/Common/ZeroState/ComingSoonCard';
-import { AppState } from 'state';
-import { displayBN } from 'util/index';
-import useChainId from 'hooks/useChain';
-import { SupportedChainId } from 'constants/index';
-import useTabs from 'hooks/display/useTabs';
+import Stat from '~/components/Common/Stat';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
+import AmountRaisedCard from '~/components/Analytics/Barnraise/AmountRaisedCard';
+import ComingSoonCard from '~/components/Common/ZeroState/ComingSoonCard';
+import useChainId from '~/hooks/useChain';
+import useTabs from '~/hooks/display/useTabs';
+import { displayBN } from '~/util';
+import { SupportedChainId } from '~/constants';
+import { AppState } from '~/state';
 
 const BarnraiseAnalytics: React.FC<{}> = () => {
   const fertilizer = useSelector<

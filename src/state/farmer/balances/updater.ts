@@ -1,16 +1,15 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import flatMap from 'lodash/flatMap';
-import { ZERO_BN } from 'constants/index';
-import { BeanstalkReplanted } from 'generated/index';
-import { BALANCE_TOKENS, ERC20_TOKENS, ETH } from 'constants/tokens';
-import useChainId from 'hooks/useChain';
-import { useBeanstalkContract } from 'hooks/useContract';
-import useMigrateCall from 'hooks/useMigrateCall';
-import useTokenMap from 'hooks/useTokenMap';
-import { tokenResult } from 'util/index';
-import useChainConstant from 'hooks/useChainConstant';
-import useAccount from 'hooks/ledger/useAccount';
+import { ZERO_BN } from '~/constants';
+import { BALANCE_TOKENS, ERC20_TOKENS, ETH } from '~/constants/tokens';
+import useChainId from '~/hooks/useChain';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import useMigrateCall from '~/hooks/useMigrateCall';
+import useTokenMap from '~/hooks/useTokenMap';
+import { tokenResult } from '~/util';
+import useChainConstant from '~/hooks/useChainConstant';
+import useAccount from '~/hooks/ledger/useAccount';
 import { clearBalances, updateBalances } from './actions';
 
 // -- Hooks
@@ -26,7 +25,7 @@ export const useFetchFarmerBalances = () => {
   const erc20TokenMap = useTokenMap(ERC20_TOKENS);
 
   // Contracts
-  const beanstalk = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract();
   const migrate   = useMigrateCall();
 
   // Handlers

@@ -4,8 +4,8 @@
 // import BigNumber from 'bignumber.js';
 // import { useSelector } from 'react-redux';
 // import { useNavigate } from 'react-router-dom';
-// // import buyNowIcon from 'img/interface/buy-pods.svg';
-// // import sellNowIcon from 'img/interface/sell-pods.svg';
+// // import buyNowIcon from '~/img/interface/buy-pods.svg';
+// // import sellNowIcon from '~/img/interface/sell-pods.svg';
 // import MarketBaseTable from './Tables/MarketBaseTable';
 // import { mockPodListingData, mockPodOrderData } from './Plots.mock';
 // import { displayBN, displayFullBN } from '../../util';

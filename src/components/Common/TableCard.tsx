@@ -6,9 +6,9 @@ import {
   GridColumns,
   GridSortItem
 } from '@mui/x-data-grid';
-import { displayBN } from 'util/index';
-import { tableStyle } from 'components/Common/Table/styles';
-import { ZERO_BN } from 'constants/index';
+import { tableStyle } from '~/components/Common/Table/styles';
+import { displayBN } from '~/util';
+import { ZERO_BN } from '~/constants';
 import { Token } from '../../classes';
 import AuthEmptyState from './ZeroState/AuthEmptyState';
 import TablePagination from './TablePagination';

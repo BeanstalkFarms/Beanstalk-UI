@@ -1,19 +1,18 @@
 import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
-import AddressInputField from 'components/Common/Form/AddressInputField';
-import FieldWrapper from 'components/Common/Form/FieldWrapper';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
-import { PlotFragment, PlotSettingsFragment, SmartSubmitButton, TokenOutputField, TxnPreview, TxnSeparator } from 'components/Common/Form';
-import { PODS } from 'constants/tokens';
-import { useSigner } from 'hooks/ledger/useSigner';
-import { useBeanstalkContract } from 'hooks/useContract';
-import { BeanstalkReplanted } from 'generated/index';
-import TransactionToast from 'components/Common/TxnToast';
-import useAccount from 'hooks/ledger/useAccount';
-import PlotInputField from 'components/Common/Form/PlotInputField';
-import useFarmerPlots from 'hooks/redux/useFarmerPlots';
-import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
 import BigNumber from 'bignumber.js';
+import AddressInputField from '~/components/Common/Form/AddressInputField';
+import FieldWrapper from '~/components/Common/Form/FieldWrapper';
+import { PlotFragment, PlotSettingsFragment, SmartSubmitButton, TokenOutputField, TxnPreview, TxnSeparator } from '~/components/Common/Form';
+import TransactionToast from '~/components/Common/TxnToast';
+import PlotInputField from '~/components/Common/Form/PlotInputField';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import useAccount from '~/hooks/ledger/useAccount';
+import useFarmerPlots from '~/hooks/redux/useFarmerPlots';
+import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
+import { PODS } from '~/constants/tokens';
 import { ZERO_BN } from '../../../constants';
 import { displayFullBN, toStringBaseUnitBN, trimAddress } from '../../../util';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
@@ -114,7 +113,7 @@ const TransferForm: React.FC<
 const Transfer: React.FC<{}> = () => {
   const account = useAccount();
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
 
   // Form setup
   const initialValues: TransferFormValues = useMemo(() => ({
@@ -145,8 +144,8 @@ const Transfer: React.FC<{}> = () => {
     );
 
     const txToast = new TransactionToast({
-      loading: `Transferring ${displayFullBN(amount.abs(), PODS.decimals)} Pods to ${trimAddress(to)}.`,
-      success: 'Plot Transferred.',
+      loading: `Transferring ${displayFullBN(amount.abs(), PODS.decimals)} Pods to ${trimAddress(to, true)}...`,
+      success: 'Plot Transfer successful.',
     });
 
     /// TODO: refresh field

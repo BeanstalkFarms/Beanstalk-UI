@@ -1,19 +1,19 @@
 import React, { useMemo } from 'react';
-import { Token } from 'classes';
 import BigNumber from 'bignumber.js';
 import { useAccount } from 'wagmi';
 import { Tooltip, Typography } from '@mui/material';
 import { GridColumns } from '@mui/x-data-grid';
-import { FarmerSiloBalance } from 'state/farmer/silo';
-import type { DepositCrate } from 'state/farmer/silo';
-import { displayBN, displayFullBN } from 'util/index';
-import useSeason from 'hooks/useSeason';
-import { BEAN, STALK } from 'constants/tokens';
-import { ZERO_BN } from 'constants/index';
-import useSiloTokenToFiat from 'hooks/currency/useSiloTokenToFiat';
-import useChainConstant from 'hooks/useChainConstant';
-import COLUMNS from 'components/Common/Table/cells';
-import Fiat from 'components/Common/Fiat';
+import { Token } from '~/classes';
+import { FarmerSiloBalance } from '~/state/farmer/silo';
+import type { DepositCrate } from '~/state/farmer/silo';
+import { displayBN, displayFullBN } from '~/util';
+import useSeason from '~/hooks/useSeason';
+import { BEAN, STALK } from '~/constants/tokens';
+import { ZERO_BN } from '~/constants';
+import useSiloTokenToFiat from '~/hooks/currency/useSiloTokenToFiat';
+import useChainConstant from '~/hooks/useChainConstant';
+import COLUMNS from '~/components/Common/Table/cells';
+import Fiat from '~/components/Common/Fiat';
 import TableCard from '../../Common/TableCard';
 
 /**
@@ -50,7 +50,7 @@ const Deposits : React.FC<{
       valueFormatter: (params) => displayFullBN(params.value, token.displayDecimals, token.displayDecimals),
       renderCell: (params) => (
         <Tooltip
-          placement="right"
+          placement="bottom"
           title={(
             <>
               <Typography>BDV at Deposit: {displayFullBN(params.row.bdv, token.displayDecimals)}</Typography>
@@ -78,7 +78,7 @@ const Deposits : React.FC<{
         const accruedStalk   = seedsPerSeason.times(currentSeason.minus(params.row.season));
         return (
           <Tooltip
-            placement="right"
+            placement="bottom"
             title={(
               <span>
                 <Typography>{displayBN(params.row.stalk)} Stalk at Deposit</Typography>
