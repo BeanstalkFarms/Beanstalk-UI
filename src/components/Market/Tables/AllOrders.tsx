@@ -12,7 +12,10 @@ const AllListings : React.FC<{}> = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   /// Data
-  const { data, loading } = useAllPodOrdersQuery({ variables: { first: 1000, } });
+  const { data, loading } = useAllPodOrdersQuery({
+    variables: { first: 1000, },
+    fetchPolicy: 'cache-and-network',
+  });
   const rows : PodOrder[] = useMemo(() => {
     if (loading || !data?.podOrders) return [];
     return data.podOrders.map<PodOrder>(castPodOrder);

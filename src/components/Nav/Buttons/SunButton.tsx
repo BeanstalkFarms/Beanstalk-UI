@@ -58,7 +58,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   const price     = usePrice();
   const deltaB    = useSelector<AppState, BigNumber>((state) => state._bean.token.deltaB);
   const awaiting  = useSelector<AppState, boolean>((state) => state._beanstalk.sun.sunrise.awaiting);
-  const { data }  = useSunButtonQuery();
+  const { data }  = useSunButtonQuery({ fetchPolicy: 'cache-and-network' });
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
 
   const peg = usePeg();
