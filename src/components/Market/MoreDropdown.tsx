@@ -43,14 +43,9 @@ const MoreDropdown: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
         endIcon={<DropdownIcon open={menuVisible} />}
         {...props}
         onClick={toggleMenuAnchor}
-        sx={import.meta.env.VITE_OVERRIDE_FARMER_ACCOUNT ? {
-          borderBottomColor: 'red',
-          borderBottomWidth: 2,
-          borderBottomStyle: 'solid',
-          ...props.sx,
-        } : props.sx}
+        sx={props.sx}
       >
-        <Typography variant="bodyMedium">
+        <Typography variant="h4">
           More
         </Typography>
       </Button>
