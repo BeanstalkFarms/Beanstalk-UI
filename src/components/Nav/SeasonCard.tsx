@@ -14,7 +14,7 @@ export interface SeasonCardProps {
   temperature:  BigNumber;
   deltaTemperature: BigNumber;
   podRate:      BigNumber;
-  deltaDemand:  BigNumber;
+  deltaDemand:  BigNumber | undefined;
   isNew?: boolean;
 }
 
@@ -57,7 +57,7 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, twap, newBeans, newSoil
         }}
       >
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Grid container columns={10}>
+          <Grid container>
             {/* Season */}
             <Grid item xs={1.5} md={1.25}>
               <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing="5px">
@@ -119,13 +119,17 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, twap, newBeans, newSoil
               </Stack>
             </Grid>
             {/* Delta Demand */}
-            {/* <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
+            <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
               <Stack alignItems="flex-end" justifyContent="center">
                 <Typography variant="bodySmall">
-                  {displayBN(deltaDemand || ZERO_BN)}%
+                  {deltaDemand 
+                    ? (deltaDemand.lt(-10_000 / 100) || deltaDemand.gt(10_000 / 100)) 
+                      ? `${deltaDemand.lt(0) ? '-' : ''}∞`
+                      : `${displayBN(deltaDemand.div(100), true)}%`
+                    : '-'}
                 </Typography>
               </Stack>
-            </Grid> */}
+            </Grid>
           </Grid>
         </Stack>
       </Box>

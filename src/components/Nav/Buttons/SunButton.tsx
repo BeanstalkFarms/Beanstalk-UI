@@ -115,7 +115,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   /// 6074 = 0%
   /// 6075 = 0%
   /// 6076 = 1%
-  const ramp = MinBN(MaxBN(season.minus(6075), ZERO_BN), new BigNumber(100));
+  const nextSeasonRamp = MinBN(MaxBN(season.minus(6075).plus(1), ZERO_BN), new BigNumber(100));
 
   /// Table Content
   const tableContent = (
@@ -130,14 +130,10 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           overflowY: 'auto',
         }}
       >
-        {/* <pre>{JSON.stringify(peg, null, 2)}</pre> */}
         <Stack>
-          {/* <Typography color="text.primary" variant="h4"> */}
-          {/*  42m to next season */}
-          {/* </Typography> */}
           <Typography color="gray" variant="bodySmall" textAlign="center">
-            Beanstalk is currently minting{' '}
-            <span style={{ color: BeanstalkPalette.black }}>{ramp.toFixed(0)}%</span> of deltaB.
+            Next Sunrise, Beanstalk will mint{' '}
+            <span style={{ color: BeanstalkPalette.black }}>{nextSeasonRamp.toFixed(0)}%</span> of deltaB.
             It will mint{' '}
             <span style={{ color: BeanstalkPalette.black }}>1%</span> more of deltaB every
             Season until{' '}
@@ -151,7 +147,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
             px: 1, // 1 + 2 from Table Body
           }}
         >
-          <Grid container columns={10}>
+          <Grid container>
             <Grid item xs={1.5} md={1.25}>
               <Stack alignItems="flex-start">
                 <Typography color="text.primary" variant="bodySmall">
@@ -187,13 +183,13 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
                 </Typography>
               </Stack>
             </Grid>
-            {/* <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
+            <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
               <Stack alignItems="flex-end">
                 <Typography color="text.primary" variant="bodySmall">
                   Delta Demand
                 </Typography>
               </Stack>
-            </Grid> */}
+            </Grid>
           </Grid>
         </Box>
         <SeasonCard
@@ -202,9 +198,9 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           newBeans={deltaB}
           newSoil={peg.soilStart}
           podRate={NEW_BN}
-          temperature={beanstalkField.weather.yield} // FIXME expected
-          deltaDemand={NEW_BN}
-          deltaTemperature={ZERO_BN}
+          temperature={beanstalkField.weather.yield.plus(peg.deltaTemperature)} // FIXME expected
+          deltaDemand={peg.deltaPodDemand}
+          deltaTemperature={peg.deltaTemperature}
           isNew
         />
         {bySeason.map((s, i) => {
@@ -221,7 +217,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
               // Field
               temperature={s.temperature}
               deltaTemperature={deltaWeather}
-              deltaDemand={new BigNumber(-1)}
+              deltaDemand={undefined}
               newSoil={s.newSoil}
               podRate={s.podRate}
             />
