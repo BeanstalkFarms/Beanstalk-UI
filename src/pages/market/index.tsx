@@ -18,19 +18,19 @@ const PodMarketPage: React.FC = () => {
     <>
       {/** Graph */}
       <Card>
-        <Box height={250} sx={{ px: 2, pt: 2, pb: 1.5 }}>
+        <Box sx={{ px: 2, pt: 2, pb: 1.5 }}>
           <Typography variant="h4">Overview</Typography>
-          <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
-            <BlurComponent>
-              <Stack justifyContent="center" alignItems="center" gap={1}>
-                <Typography variant="body1" color="gray">The Pod Market overview graph is in development.</Typography>
-              </Stack>
-            </BlurComponent>
-            <LineChart
-              series={[mockDepositData]}
-              onCursor={handleCursor}
-            />
-          </Box>
+        </Box>
+        <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
+          <BlurComponent sx={{ borderRadius: 1 }}>
+            <Stack justifyContent="center" alignItems="center" gap={1}>
+              <Typography variant="body1" color="gray">The Pod Market overview graph is in development.</Typography>
+            </Stack>
+          </BlurComponent>
+          <LineChart
+            series={[mockDepositData]}
+            onCursor={handleCursor}
+          />
         </Box>
       </Card>
       {/** Buy Now and Sell Now */}

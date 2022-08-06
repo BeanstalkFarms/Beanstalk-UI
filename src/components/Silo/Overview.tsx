@@ -50,14 +50,14 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
       </Box>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
         {!account ? (
-          <BlurComponent>
+          <BlurComponent sx={{ borderRadius: 1 }}>
             <Stack justifyContent="center" alignItems="center" gap={1}>
               <Typography variant="body1" color="gray">Your Silo Deposits will appear here.</Typography>
               <WalletButton showFullText color="primary" sx={{ height: 45 }} />
             </Stack>
           </BlurComponent>
         ) : (
-          <BlurComponent blur={6}>
+          <BlurComponent blur={6} sx={{ borderRadius: 1 }}>
             <Typography variant="body1" color="gray">Historical Deposit value will be available soon.</Typography>
           </BlurComponent>
         )}
@@ -109,14 +109,14 @@ const StalkOwnershipTab: React.FC<TabData
       </Stack>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
         {!account ? (
-          <BlurComponent>
+          <BlurComponent sx={{ borderRadius: 1 }}>
             <Stack justifyContent="center" alignItems="center" gap={1}>
               <Typography variant="body1" color="gray">Your Stalk Ownership will appear here.</Typography>
               <WalletButton showFullText color="primary" sx={{ height: 45 }} />
             </Stack>
           </BlurComponent>
         ) : (
-          <BlurComponent blur={6}>
+          <BlurComponent blur={6} sx={{ borderRadius: 1 }}>
             <Typography variant="body1" color="gray">Historical Stalk balance and ownership will be available soon.</Typography>
           </BlurComponent>
         )}
@@ -159,14 +159,14 @@ const SeedsOwnershipTab: React.FC<TabData
       </Stack>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
         {!account ? (
-          <BlurComponent>
+          <BlurComponent sx={{ borderRadius: 1 }}>
             <Stack justifyContent="center" alignItems="center" gap={1}>
               <Typography variant="body1" color="gray">Your Seed Ownership will appear here.</Typography>
               <WalletButton showFullText color="primary" sx={{ height: 45 }} />
             </Stack>
           </BlurComponent>
         ) : (
-          <BlurComponent blur={6}>
+          <BlurComponent blur={6} sx={{ borderRadius: 1 }}>
             <Typography variant="body1" color="gray">Historical Seed balance will be available soon.</Typography>
           </BlurComponent>
         )}
