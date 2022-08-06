@@ -3,7 +3,6 @@ import { Stack, Typography, Box, Grid } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import rainySeasonIcon from '~/img/beanstalk/sun/rainy-season.svg';
 import drySeasonIcon from '~/img/beanstalk/sun/dry-season.svg';
-import { ZERO_BN } from '~/constants';
 import { displayBN } from '../../util';
 import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
 
@@ -16,13 +15,13 @@ export interface SeasonCardProps {
   deltaTemperature: BigNumber;
   podRate:      BigNumber;
   deltaDemand:  BigNumber;
-  pulse?: boolean;
+  isNew?: boolean;
 }
 
-const SeasonCard: React.FC<SeasonCardProps> = ({ season, twap, newBeans, newSoil, podRate, temperature, deltaDemand, deltaTemperature: deltaWeather, pulse }) => (
+const SeasonCard: React.FC<SeasonCardProps> = ({ season, twap, newBeans, newSoil, podRate, temperature, deltaDemand, deltaTemperature: deltaWeather, isNew }) => (
   <div>
     <Box sx={{ '&:hover > .test': { display: 'block' }, overflow: 'hidden', position: 'relative' }}>
-      {pulse && (
+      {isNew && (
         <Box
           className="test"
           sx={{ 
@@ -42,7 +41,7 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, twap, newBeans, newSoil
         >
           <Stack direction="row" alignItems="center" justifyContent="center" height="100%">
             <Typography pl={1} color="gray" fontSize={FontSize.sm} textAlign="left">
-              The forecast for Season {(season.plus(1)).toString()} is based on data in the current Season.
+              The forecast for Season {season.toString()} is based on data in the current Season.
             </Typography>
           </Stack>
         </Box>
@@ -53,12 +52,12 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, twap, newBeans, newSoil
           borderColor: BeanstalkPalette.blue,
           p: 0.75,
           borderRadius: '8px',
-          animation: pulse ? 'pulse 1s ease-in-out' : undefined,
+          animation: isNew ? 'pulse 1s ease-in-out' : undefined,
           animationIterationCount: 'infinite',
         }}
       >
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Grid container>
+          <Grid container columns={10}>
             {/* Season */}
             <Grid item xs={1.5} md={1.25}>
               <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing="5px">
@@ -83,19 +82,10 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, twap, newBeans, newSoil
             {/* New Soil */}
             <Grid item xs={3} md={2}>
               <Stack direction="row" justifyContent="flex-end" alignItems="center">
-                {/* {newSoil?.gt(0) ? (
-                  <ArrowUpwardIcon
-                    sx={{
-                      width: '14px',
-                      height: '14px',
-                      color: BeanstalkPalette.logoGreen,
-                    }}
-                  />
-                ) : null} */}
                 <Typography
                   variant="bodySmall"
                 >
-                  + {displayBN(newSoil)}
+                  {!isNew && '+'} {displayBN(newSoil)}
                 </Typography>
               </Stack>
             </Grid>
@@ -113,33 +103,10 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, twap, newBeans, newSoil
                   justifyContent="end"
                   sx={{
                     color: 'gray',
-                    // color: deltaWeather.gt(0)
-                    //   ? BeanstalkPalette.logoGreen
-                    //   : BeanstalkPalette.lightishGrey,
                     whiteSpace: 'nowrap',
                   }}
                 >
-                  (&nbsp;
-                  {/* {deltaWeather.gt(0) ? (
-                    '+'
-                    // <ArrowUpwardIcon
-                    //   sx={{
-                    //     width: '14px',
-                    //     height: '14px',
-                    //     color: BeanstalkPalette.logoGreen,
-                    //   }}
-                    // />
-                  ) : (
-                    '-'
-                    // <ArrowDownwardIcon
-                    //   sx={{
-                    //     width: '14px',
-                    //     height: '14px',
-                    //     color: BeanstalkPalette.lightishGrey,
-                    //   }}
-                    // />
-                  )} */}
-                  {deltaWeather.toString()}%&nbsp;)
+                  (&nbsp;{deltaWeather.toString()}%&nbsp;)
                 </Typography>
               </Stack>
             </Grid>
@@ -147,32 +114,20 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, twap, newBeans, newSoil
             <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
               <Stack alignItems="flex-end" justifyContent="center">
                 <Typography color="text.primary" variant="bodySmall">
-                  {displayBN(podRate?.times(100))}%
+                  {podRate?.gt(0) ? `${displayBN(podRate.times(100))}%` : '-'}
                 </Typography>
               </Stack>
             </Grid>
             {/* Delta Demand */}
-            <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
+            {/* <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
               <Stack alignItems="flex-end" justifyContent="center">
-                <Typography
-                  variant="bodySmall"
-                  sx={{
-                    // color: deltaDemand?.gte(new BigNumber(100))
-                    //   ? BeanstalkPalette.logoGreen
-                    //   : BeanstalkPalette.washedRed,
-                  }}
-                >
+                <Typography variant="bodySmall">
                   {displayBN(deltaDemand || ZERO_BN)}
                 </Typography>
               </Stack>
-            </Grid>
+            </Grid> */}
           </Grid>
         </Stack>
-        {/* {pulse && (
-          <Typography color="gray" mt={0.5} fontSize={FontSize.sm} textAlign="center">
-            The forecast for Season {(season.plus(1)).toString()} is based on data in the current Season.
-          </Typography>
-        )} */}
       </Box>
     </Box>
   </div>

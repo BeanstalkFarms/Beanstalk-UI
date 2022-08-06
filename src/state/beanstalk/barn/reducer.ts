@@ -9,6 +9,7 @@ const initialState : Barn = {
   humidity:     NEW_BN,
   currentBpf:   NEW_BN,
   endBpf:       NEW_BN,
+  unfertilized: NEW_BN,
 };
 
 export default createReducer(initialState, (builder) =>
@@ -20,6 +21,7 @@ export default createReducer(initialState, (builder) =>
       state.totalRaised = payload.totalRaised;
       state.currentBpf  = payload.currentBpf;
       state.endBpf      = payload.endBpf;
+      state.unfertilized = payload.unfertilized;
     })
     .addCase(setRemaining, (state, { payload }) => {
       state.remaining = payload;

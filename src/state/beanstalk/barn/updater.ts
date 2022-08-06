@@ -23,11 +23,12 @@ export const useBarn = () => {
     if (fertContract && usdcContract && custodian) {
       console.debug('[beanstalk/fertilizer/updater] FETCH');
       const [
-        remaining,
+        remainingRecapitalization,
         totalRaised,
         humidity,
         currentBpf,
         endBpf,
+        unfertilized,
       ] = await Promise.all([
         beanstalk.remainingRecapitalization().then(tokenResult(BEAN)),
         await fetchGlobal('https://api.thegraph.com/subgraphs/name/publiuss/fertilizer', {
@@ -45,14 +46,16 @@ export const useBarn = () => {
         beanstalk.getCurrentHumidity().then(bigNumberResult),
         beanstalk.beansPerFertilizer().then(bigNumberResult),
         beanstalk.getEndBpf().then(bigNumberResult),
+        beanstalk.totalUnfertilizedBeans().then(tokenResult(BEAN)),
       ] as const);
-      console.debug(`[beanstalk/fertilizer/updater] RESULT: remaining = ${remaining.toFixed(2)}`);
+      console.debug(`[beanstalk/fertilizer/updater] RESULT: remaining = ${remainingRecapitalization.toFixed(2)}`);
       dispatch(updateBarn({
-        remaining,
+        remaining: remainingRecapitalization, // FIXME rename
         totalRaised,
         humidity,
         currentBpf,
-        endBpf
+        endBpf,
+        unfertilized
       }));
     }
   }, [

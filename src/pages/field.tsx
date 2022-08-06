@@ -47,13 +47,10 @@ const columns: DataGridProps['columns'] = [
 const FieldPage: React.FC = () => {
   const account = useAccount();
   const authState = !account ? 'disconnected' : 'ready';
+  
   /// Data
-  const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
-    (state) => state._farmer.field
-  );
-  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
-    (state) => state._beanstalk.field
-  );
+  const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
+  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
   const harvestablePods = farmerField.harvestablePods;
 
   const rows: any[] = useMemo(() => {

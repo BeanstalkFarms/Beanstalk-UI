@@ -23,6 +23,7 @@ import { AppState } from '~/state';
 import FolderMenu from '../FolderMenu';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import SeasonCard from '../SeasonCard';
+import usePeg from '~/hooks/usePeg';
 
 const mockSunData = new Array(20).fill(null).map(() => ({
   season: new BigNumber(5000 * Math.random()),
@@ -49,12 +50,18 @@ const castSeason = (data: SunButtonQuery['seasons'][number]) => ({
 const MAX_ITEMS = 8;
 
 const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
+  ///
+  const chainId   = useChainId();
+  
   /// DATA
   const season    = useSeason();
-  const beanPrice = usePrice();
-  const chainId   = useChainId();
+  const price     = usePrice();
+  const deltaB    = useSelector<AppState, BigNumber>((state) => state._bean.token.deltaB);
   const awaiting  = useSelector<AppState, boolean>((state) => state._beanstalk.sun.sunrise.awaiting);
-  const { data, loading } = useSunButtonQuery();
+  const { data }  = useSunButtonQuery();
+  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
+
+  const peg = usePeg();
 
   const bySeason = useMemo(() => {
     if (data?.fields && data?.seasons) {
@@ -94,7 +101,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   const isLoading = season.eq(NEW_BN);
   const startIcon = isTiny ? undefined : (
     <img
-      src={beanPrice.lte(1) || awaiting ? drySeasonIcon : rainySeasonIcon}
+      src={price.lte(1) || awaiting ? drySeasonIcon : rainySeasonIcon}
       style={{
         width: 25,
         height: 25,
@@ -123,6 +130,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           overflowY: 'auto',
         }}
       >
+        {/* <pre>{JSON.stringify(peg, null, 2)}</pre> */}
         <Stack>
           {/* <Typography color="text.primary" variant="h4"> */}
           {/*  42m to next season */}
@@ -143,7 +151,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
             px: 1, // 1 + 2 from Table Body
           }}
         >
-          <Grid container>
+          <Grid container columns={10}>
             <Grid item xs={1.5} md={1.25}>
               <Stack alignItems="flex-start">
                 <Typography color="text.primary" variant="bodySmall">
@@ -179,25 +187,25 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
                 </Typography>
               </Stack>
             </Grid>
-            <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
+            {/* <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
               <Stack alignItems="flex-end">
                 <Typography color="text.primary" variant="bodySmall">
                   Delta Demand
                 </Typography>
               </Stack>
-            </Grid>
+            </Grid> */}
           </Grid>
         </Box>
         <SeasonCard
           season={season.plus(1)}
-          twap={new BigNumber(1)}
-          newBeans={new BigNumber(0)}
-          newSoil={new BigNumber(0)}
-          podRate={new BigNumber(5000)}
-          temperature={new BigNumber(5000)}
-          deltaDemand={new BigNumber(100)}
-          deltaTemperature={new BigNumber(100)}
-          pulse
+          twap={price}
+          newBeans={deltaB}
+          newSoil={peg.soilStart}
+          podRate={NEW_BN}
+          temperature={beanstalkField.weather.yield} // FIXME expected
+          deltaDemand={NEW_BN}
+          deltaTemperature={ZERO_BN}
+          isNew
         />
         {bySeason.map((s, i) => {
           const deltaWeather = bySeason[i + 1] 
