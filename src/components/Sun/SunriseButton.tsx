@@ -7,6 +7,7 @@ import TransactionToast from '~/components/Common/TxnToast';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { AppState } from '~/state';
+import SunriseCountdown from '~/components/Sun/SunriseCountdown';
 
 const SunriseButton : React.FC = () => {
   const { data: signer } = useSigner();
@@ -67,7 +68,7 @@ const SunriseButton : React.FC = () => {
                   Sunrise
                 </>
               ) : (
-                <>Sunrise Not Available</>
+                <>Sunrise available&nbsp;<span style={{ display: 'inline' }}><SunriseCountdown /></span></>
               )}
             </LoadingButton>
           </Form>

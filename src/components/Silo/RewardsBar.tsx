@@ -91,7 +91,7 @@ const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
       <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
         <RewardItem
           title="Revitalized Stalk"
-          tooltip="Stalk that have vested for pre-exploit Silo Members. Revitalized Stalk are minted as the BDV of Unripe Deposits exceed their haircut BDV at the time of Deposit. Revitalized Stalk does not contribute to Stalk ownership until Enrooted."
+          tooltip="Stalk that have vested for pre-exploit Silo Members. Revitalized Stalk are minted as the percentage of Fertilizer sold increases. Revitalized Stalk does not contribute to Stalk ownership until Enrooted."
           amount={revitalizedStalk}
           icon={stalkIcon}
           compact={compact}
@@ -99,7 +99,7 @@ const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
         />
         <RewardItem
           title="Revitalized Seeds"
-          tooltip="Seeds that have vested for pre-exploit Silo Members. Revitalized Seeds are minted as the BDV of Unripe Deposits exceed their haircut BDV at the time of Deposit. Revitalized Seeds do not generate Stalk until Enrooted."
+          tooltip="Seeds that have vested for pre-exploit Silo Members. Revitalized Seeds are minted as the percentage of Fertilizer sold increases. Revitalized Seeds do not generate Stalk until Enrooted."
           amount={revitalizedSeeds}
           icon={seedIcon}
           compact={compact}

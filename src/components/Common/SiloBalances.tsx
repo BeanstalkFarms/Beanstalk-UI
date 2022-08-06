@@ -126,10 +126,13 @@ const SiloBalances: React.FC<{
     ReturnType<typeof useFarmerSiloBreakdown>
     | ReturnType<typeof useBeanstalkSiloBreakdown>
   );
+  /* */
+  assetLabel?: 'Balance' | 'Asset';
   whitelist: any;
 }> = ({
   breakdown,
-  whitelist
+  whitelist,
+  assetLabel = 'Balance'
 }) => {
   // Drilldown against a State of Token (DEPOSITED, WITHDRAWN, etc.)
   const [hoverState, setHoverState] = useState<StateID | null>(null);
@@ -196,7 +199,7 @@ const SiloBalances: React.FC<{
             {availableStates.map((id) => (
               <TokenRow
                 key={id}
-                label={`${STATE_CONFIG[id][0]} Balance`}
+                label={`${STATE_CONFIG[id][0]} ${assetLabel}s`}
                 value={
                   <Fiat
                     value={breakdown.states[id as keyof typeof breakdown.states].value}
@@ -221,7 +224,7 @@ const SiloBalances: React.FC<{
         <Grid item xs={12} md={4}>
           <Box display="flex" justifyContent="center" sx={{ height: 235, py: { xs: 1, md: 0 }, px: 1 }}>
             <ResizablePieChart
-              title={hoverState ? STATE_CONFIG[hoverState][0] : 'All Balances'}
+              title={hoverState ? STATE_CONFIG[hoverState][0] : `All ${assetLabel}s`}
               data={breakdown.totalValue.gt(0) ? pieChartData : undefined}
             />
           </Box>
@@ -242,7 +245,7 @@ const SiloBalances: React.FC<{
           ) : (
             <Stack gap={1}>
               <Typography variant="h4" sx={{ display: { xs: 'none', md: 'block' }, mx: 0.75 }}>
-                {STATE_CONFIG[hoverState][0]} Balance
+                {STATE_CONFIG[hoverState][0]} {assetLabel}s
               </Typography>
               <Box>
                 {pieChartData.map((dp) => {
