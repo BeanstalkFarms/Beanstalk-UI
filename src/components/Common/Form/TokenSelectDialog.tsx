@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
 import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Typography, Link } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import Token from 'classes/Token';
-import { displayBN } from 'util/index';
-import { ZERO_BN } from 'constants/index';
-import { FarmerBalances } from 'state/farmer/balances';
-import { FarmerSilo } from 'state/farmer/silo';
+import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
+import Token from '~/classes/Token';
+import { displayBN } from '~/util';
+import { ZERO_BN } from '~/constants';
+import { FarmerBalances } from '~/state/farmer/balances';
+import { FarmerSilo } from '~/state/farmer/silo';
 import { BeanstalkPalette, FontSize } from '../../App/muiTheme';
 
 const useStyles = makeStyles(() => ({
@@ -131,11 +131,6 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
       onClose={handleClose}
       aria-labelledby="customized-dialog-title"
       open={open}
-      PaperProps={{
-        sx: {
-          minWidth: '400px'
-        }
-      }}
       transitionDuration={0}
       TransitionProps={{}}
     >

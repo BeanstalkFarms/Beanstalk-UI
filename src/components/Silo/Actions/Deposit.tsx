@@ -1,47 +1,45 @@
 import React, { useCallback, useMemo } from 'react';
 import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
-import { Token } from 'classes';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useProvider } from 'wagmi';
 import { ethers } from 'ethers';
-import { BEAN, CRV3, DAI, ETH, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3, USDC, USDT, WETH } from 'constants/tokens';
-import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
-import TokenOutputField from 'components/Common/Form/TokenOutputField';
-import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import { FormState, SettingInput, TxnSettings } from 'components/Common/Form';
-import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
-import TxnPreview from 'components/Common/Form/TxnPreview';
-import useChainId from 'hooks/useChain';
-import { SupportedChainId } from 'constants/chains';
-import Beanstalk from 'lib/Beanstalk';
-import { useBeanstalkContract } from 'hooks/useContract';
-import useFarmerBalances from 'hooks/useFarmerBalances';
-import { Balance, FarmerBalances } from 'state/farmer/balances';
-import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from 'util/Tokens';
-import TransactionToast from 'components/Common/TxnToast';
-import { BeanstalkReplanted } from 'generated/index';
-import { QuoteHandler } from 'hooks/useQuote';
-import { ZERO_BN } from 'constants/index';
-import { ERC20Token, NativeToken } from 'classes/Token';
-import Pool from 'classes/Pool';
-import SmartSubmitButton from 'components/Common/Form/SmartSubmitButton';
-import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
-import useGetChainToken from 'hooks/useGetChainToken';
-import TxnSeparator from 'components/Common/Form/TxnSeparator';
-import useToggle from 'hooks/display/useToggle';
-import { combineBalances, optimizeFromMode } from 'util/Farm';
-import usePreferredToken from 'hooks/usePreferredToken';
-import useTokenMap from 'hooks/useTokenMap';
-import { useSigner } from 'hooks/ledger/useSigner';
-import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
-import { parseError } from 'util/index';
 import toast from 'react-hot-toast';
-import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import { useFetchPools } from 'state/bean/pools/updater';
-import { useFetchSilo } from 'state/beanstalk/silo/updater';
+import { Token } from '~/classes';
+import { BEAN, CRV3, DAI, ETH, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3, USDC, USDT, WETH } from '~/constants/tokens';
+import TokenSelectDialog, { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
+import TokenOutputField from '~/components/Common/Form/TokenOutputField';
+import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
+import { FormState, SettingInput, TxnSettings } from '~/components/Common/Form';
+import TokenQuoteProvider from '~/components/Common/Form/TokenQuoteProvider';
+import TxnPreview from '~/components/Common/Form/TxnPreview';
+import BeanstalkSDK from '~/lib/Beanstalk';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import useFarmerBalances from '~/hooks/useFarmerBalances';
+import { Balance, FarmerBalances } from '~/state/farmer/balances';
+import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from '~/util/Tokens';
+import TransactionToast from '~/components/Common/TxnToast';
+import { Beanstalk } from '~/generated/index';
+import { QuoteHandler } from '~/hooks/useQuote';
+import { ZERO_BN } from '~/constants';
+import { ERC20Token, NativeToken } from '~/classes/Token';
+import Pool from '~/classes/Pool';
+import SmartSubmitButton from '~/components/Common/Form/SmartSubmitButton';
+import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
+import useGetChainToken from '~/hooks/useGetChainToken';
+import TxnSeparator from '~/components/Common/Form/TxnSeparator';
+import useToggle from '~/hooks/display/useToggle';
+import { combineBalances, optimizeFromMode } from '~/util/Farm';
+import usePreferredToken from '~/hooks/usePreferredToken';
+import useTokenMap from '~/hooks/useTokenMap';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
+import { parseError } from '~/util';
+import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
+import { AppState } from '~/state';
+import { useFetchPools } from '~/state/bean/pools/updater';
+import { useFetchSilo } from '~/state/beanstalk/silo/updater';
 
 // -----------------------------------------------------------------------
 
@@ -75,20 +73,17 @@ const DepositForm : React.FC<
   isSubmitting,
   setFieldValue,
 }) => {
-  const chainId = useChainId();
-  // TODO: constrain this when siloToken = Unripe
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
-
-  //
-  const { amount, bdv, stalk, seeds, actions } = Beanstalk.Silo.Deposit.deposit(
+  const { amount, bdv, stalk, seeds, actions } = BeanstalkSDK.Silo.Deposit.deposit(
     whitelistedToken,
     values.tokens,
     amountToBdv,
   );
-  const isMainnet = chainId === SupportedChainId.MAINNET;
+
+  /// Derived
   const isReady   = bdv.gt(0);
 
-  //
+  ///
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
     // If the user has typed some existing values in,
     // save them. Add new tokens to the end of the list.
@@ -127,8 +122,6 @@ const DepositForm : React.FC<
             balance={balances[tokenState.token.address] || ZERO_BN}
             state={tokenState}
             showTokenSelect={showTokenSelect}
-            disabled={isMainnet}
-            disableTokenSelect={isMainnet}
             handleQuote={handleQuote}
           />
         ))}
@@ -221,7 +214,7 @@ const Deposit : React.FC<{
   ] : [
     BEAN,
     ETH,
-    WETH,
+    // WETH,
     whitelistedToken,
     CRV3,
     DAI,
@@ -448,7 +441,7 @@ const Deposit : React.FC<{
       if (!formData?.amount || formData.amount.eq(0)) throw new Error('No amount set');
 
       // FIXME: getting BDV per amount here
-      const { amount } = Beanstalk.Silo.Deposit.deposit(
+      const { amount } = BeanstalkSDK.Silo.Deposit.deposit(
         whitelistedToken,
         values.tokens,
         amountToBdv,
@@ -459,8 +452,8 @@ const Deposit : React.FC<{
         success: 'Deposit successful.',
       });
 
-      // TEMP: recast as BeanstalkReplanted 
-      const b = ((beanstalk as unknown) as BeanstalkReplanted);
+      // TEMP: recast as Beanstalk 
+      const b = ((beanstalk as unknown) as Beanstalk);
       const data : string[] = [];
       const inputToken = formData.token;
       let value = ZERO_BN;

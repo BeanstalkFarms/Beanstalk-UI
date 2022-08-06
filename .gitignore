@@ -2,8 +2,10 @@
 .DS_Store
 
 # Build files
+tsconfig.tsbuildinfo
 src/generated
 build
+dist
 
 # Environment
 .env

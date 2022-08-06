@@ -1,4 +1,4 @@
-import { EthPriceResponse } from 'functions/ethprice/ethprice';
+import type { EthPriceResponse } from '~/functions/ethprice/ethprice';
 
 export type AppSettings = {
   denomination: 'usd' | 'bdv';

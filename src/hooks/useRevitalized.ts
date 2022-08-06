@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { BEAN_TO_STALK, BEAN_TO_SEEDS, ZERO_BN, LP_TO_SEEDS } from 'constants/index';
-import { UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from 'constants/tokens';
-import { AppState } from 'state';
-import { MaxBN } from 'util/index';
+import { MaxBN } from '~/util';
+import { BEAN_TO_STALK, BEAN_TO_SEEDS, ZERO_BN, LP_TO_SEEDS } from '~/constants';
+import { UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
+import { AppState } from '~/state';
 import useFarmerSiloBalances from './useFarmerSiloBalances';
 import useGetChainToken from './useGetChainToken';
 

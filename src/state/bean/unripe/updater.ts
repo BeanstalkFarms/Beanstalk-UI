@@ -1,19 +1,18 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useBeanstalkContract } from 'hooks/useContract';
-import useChainId from 'hooks/useChain';
-import { BeanstalkReplanted } from 'generated/index';
-import useTokenMap from 'hooks/useTokenMap';
-import { tokenResult } from 'util/index';
 import BigNumber from 'bignumber.js';
-import { AddressMap } from 'constants/index';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import useChainId from '~/hooks/useChain';
+import useTokenMap from '~/hooks/useTokenMap';
+import { tokenResult } from '~/util';
+import { AddressMap } from '~/constants';
 import { resetUnripe, updateUnripe } from './actions';
 import { UNRIPE_TOKENS } from '../../../constants/tokens';
 
 // Hook
 export const useUnripe = () => {
   const dispatch = useDispatch();
-  const beanstalk = useBeanstalkContract() as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract();
   const unripeTokens = useTokenMap(UNRIPE_TOKENS);
 
   const fetch = useCallback(async () => {

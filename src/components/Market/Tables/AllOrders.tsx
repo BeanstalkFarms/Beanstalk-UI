@@ -1,19 +1,18 @@
 import React, { useCallback, useMemo } from 'react';
 import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
-import COLUMNS from 'components/Common/Table/cells';
-import { castPodOrder, PodOrder } from 'state/farmer/market';
-import { useAllPodOrdersQuery } from 'generated/graphql';
-import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
+import { useTheme } from '@mui/material/styles';
+import { useMediaQuery } from '@mui/material';
+import COLUMNS from '~/components/Common/Table/cells';
+import { castPodOrder, PodOrder } from '~/state/farmer/market';
+import { useAllPodOrdersQuery } from '~/generated/graphql';
 import MarketBaseTable from './Base';
 
 const AllListings : React.FC<{}> = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   /// Data
-  const harvestableIndex = useHarvestableIndex();
-  const { data, loading } = useAllPodOrdersQuery({
-    variables: { first: 1000, }
-  });
-  
+  const { data, loading } = useAllPodOrdersQuery({ variables: { first: 1000, } });
   const rows : PodOrder[] = useMemo(() => {
     if (loading || !data?.podOrders) return [];
     return data.podOrders.map<PodOrder>(castPodOrder);
@@ -26,12 +25,20 @@ const AllListings : React.FC<{}> = () => {
   }, [navigate]);
 
   /// Data Grid setup
-  const columns: DataGridProps['columns'] = [
-    COLUMNS.orderId,
-    COLUMNS.maxPlaceInLine,
-    COLUMNS.pricePerPod,
-    COLUMNS.numPods,
-  ];
+  const columns: DataGridProps['columns'] = !isMobile
+    ? [
+      COLUMNS.orderId(1),
+      COLUMNS.maxPlaceInLine(1),
+      COLUMNS.pricePerPod(1),
+      COLUMNS.numPods(1),
+      COLUMNS.rightChevron
+    ]
+    : [
+      COLUMNS.orderId(0.75),
+      COLUMNS.maxPlaceInLine(1.8),
+      COLUMNS.pricePerPod(1.5),
+      COLUMNS.numPods(1.5),
+    ];
   
   return (
     <MarketBaseTable

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Box, Card, CardProps } from '@mui/material';
+import { Box, Card, CardProps, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import Fiat from 'components/Common/Fiat';
-import BlurComponent from 'components/Common/ZeroState/BlurComponent';
+import { AppState } from '~/state';
+import Fiat from '~/components/Common/Fiat';
+import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
 import Stat from '../Common/Stat';
 import { TokenMap, ZERO_BN } from '../../constants';
 import { BeanstalkSiloBalance } from '../../state/beanstalk/silo';
@@ -31,7 +31,9 @@ const LiquidityOverTime: React.FC<LiquidityOverviewProps & CardProps> = ({
         sx={{ ml: 0 }}
       />
       <Box sx={{ position: 'relative ' }}>
-        <BlurComponent>Historical liquidity will be available soon.</BlurComponent>
+        <BlurComponent blur={10} opacity={0.7}>
+          <Typography variant="body1" color="gray">Historical liquidity will be available soon.</Typography>
+        </BlurComponent>
         <LiquidityBalances
           balances={balances}
         />

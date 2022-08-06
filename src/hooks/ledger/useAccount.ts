@@ -1,5 +1,5 @@
 import { useAccount as useWagmiAccount } from 'wagmi';
-import { getAccount } from 'util/index';
+import { getAccount } from '~/util';
 
 export default function useAccount() {
   const { data: account } = useWagmiAccount();

@@ -12,16 +12,16 @@ import {
 } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import { useHumidityAtId } from 'hooks/useHumidity';
-import { AppState } from 'state';
-import FertilizerItem from 'components/Barn/FertilizerItem';
-import { ZERO_BN } from 'constants/index';
-import { SPROUTS, RINSABLE_SPROUTS } from 'constants/tokens';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { displayFullBN, MaxBN } from 'util/Tokens';
-import { MY_FERTILIZER } from 'components/Barn/FertilizerItemTooltips';
-import useTabs from 'hooks/display/useTabs';
-import EmptyState from 'components/Common/ZeroState/EmptyState';
+import { useHumidityAtId } from '~/hooks/useHumidity';
+import FertilizerItem from '~/components/Barn/FertilizerItem';
+import { MY_FERTILIZER } from '~/components/Barn/FertilizerItemTooltips';
+import useTabs from '~/hooks/display/useTabs';
+import EmptyState from '~/components/Common/ZeroState/EmptyState';
+import { displayFullBN, MaxBN } from '~/util/Tokens';
+import { SPROUTS, RINSABLE_SPROUTS } from '~/constants/tokens';
+import { ZERO_BN } from '~/constants';
+import { AppState } from '~/state';
 import TokenIcon from '../Common/TokenIcon';
 import { FontSize } from '../App/muiTheme';
 
@@ -65,7 +65,7 @@ const MyFertilizer: React.FC = () => {
           >
             <Tooltip
               title="The number of Beans left to be earned from your Fertilizer."
-              placement="right"
+              placement="bottom"
             >
               <Typography variant="body1">
                 Sprouts&nbsp;
@@ -90,7 +90,7 @@ const MyFertilizer: React.FC = () => {
           >
             <Tooltip
               title="Sprouts that are redeemable for 1 Bean each. Rinsable Sprouts must be Rinsed in order to use them."
-              placement="right"
+              placement="bottom"
             >
               <Typography variant="body1">
                 Rinsable Sprouts&nbsp;

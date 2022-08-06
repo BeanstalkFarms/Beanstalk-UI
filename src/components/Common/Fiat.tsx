@@ -1,13 +1,13 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
-import { Token } from 'classes';
-import useSiloTokenToFiat from 'hooks/currency/useSiloTokenToFiat';
-import useSetting from 'hooks/useSetting';
-import { displayBN, displayFullBN } from 'util/index';
 import { Stack } from '@mui/material';
-import { ZERO_BN } from 'constants/index';
-import logo from 'img/tokens/bean-logo.svg';
-import usePrice from 'hooks/usePrice';
+import logo from '~/img/tokens/bean-logo.svg';
+import { Token } from '~/classes';
+import useSiloTokenToFiat from '~/hooks/currency/useSiloTokenToFiat';
+import useSetting from '~/hooks/useSetting';
+import usePrice from '~/hooks/usePrice';
+import { displayBN, displayFullBN } from '~/util';
+import { ZERO_BN } from '~/constants';
 
 const Fiat : React.FC<{
   /* usd value of `amount`. if defined, overrides siloTokenToFiat */
@@ -46,10 +46,14 @@ const Fiat : React.FC<{
     ? displayBN(value, allowNegative)
     : displayFullBN(value, 2, 2);
   return (
-    <Stack display="inline-flex" direction="row" alignItems="center" gap={0.25}>
+    <Stack display="inline-flex" direction="row" alignItems="center" sx={{ verticalAlign: 'top', position: 'relative', }}>
       {denomination === 'bdv' ? (
         <>
-          <img src={logo} alt="BEAN" style={{ height: 14 }} />
+          <img
+            src={logo}
+            alt="BEAN"
+            style={{ height: '1em', marginRight: '0.25em', display: 'inline', position: 'relative', top: 0, left: 0 }}
+          />
           <span>
             {displayValue}
           </span>

@@ -8,11 +8,12 @@ import {
 import { useTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 
-import { AppState } from 'state';
-import PageHeader from 'components/Common/PageHeader';
-import LiquidityOverTime from 'components/Forecast/LiquidityOverTime';
-import PodRate from 'components/Analytics/Field/PodRate';
-import TWAP from 'components/Analytics/Bean/TWAP';
+import PageHeader from '~/components/Common/PageHeader';
+import LiquidityOverTime from '~/components/Forecast/LiquidityOverTime';
+import PodRate from '~/components/Analytics/Field/PodRate';
+import Price from '~/components/Analytics/Bean/Price';
+import { AppState } from '~/state';
+import LiquidityByState from '~/components/Forecast/LiquidityByState';
 
 const ForecastPage: React.FC = () => {
   // Data
@@ -26,7 +27,7 @@ const ForecastPage: React.FC = () => {
     <>
       <Stack direction={isMobile ? 'column' : 'row'} gap={2}>
         <Card sx={{ flex: 1, pt: 1.5 }}>
-          <TWAP />
+          <Price />
         </Card>
         <Card sx={{ flex: 1, pt: 1.5 }}>
           <PodRate />
@@ -35,7 +36,7 @@ const ForecastPage: React.FC = () => {
       <LiquidityOverTime
         balances={balances}
       />
-      {/* <LiquidityByState /> */}
+      <LiquidityByState />
     </>
   );
 

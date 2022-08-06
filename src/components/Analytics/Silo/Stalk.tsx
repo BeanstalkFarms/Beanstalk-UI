@@ -1,7 +1,7 @@
 import React from 'react';
-import SeasonPlot, { SeasonPlotBaseProps } from 'components/Common/Charts/SeasonPlot';
-import { SeasonalStalkDocument, SeasonalStalkQuery } from 'generated/graphql';
-import { SnapshotData } from 'hooks/useSeasons';
+import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
+import { SeasonalStalkDocument, SeasonalStalkQuery } from '~/generated/graphql';
+import { SnapshotData } from '~/hooks/useSeasons';
 import { toTokenUnitsBN } from '../../../util';
 import { STALK } from '../../../constants/tokens';
 

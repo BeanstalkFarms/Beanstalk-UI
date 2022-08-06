@@ -1,22 +1,21 @@
 import { LoadingButton } from '@mui/lab';
 import { Stack, Typography } from '@mui/material';
-import { IconSize } from 'components/App/muiTheme';
-import AddressIcon from 'components/Common/AddressIcon';
-import DescriptionButton from 'components/Common/DescriptionButton';
-import { StyledDialog, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
-import TransactionToast from 'components/Common/TxnToast';
-import { BEAN } from 'constants/tokens';
-import { BeanstalkReplanted } from 'generated';
-import useToggle from 'hooks/display/useToggle';
-import { useSigner } from 'hooks/ledger/useSigner';
-import useChainConstant from 'hooks/useChainConstant';
-import { useBeanstalkContract } from 'hooks/useContract';
-import { FarmToMode } from 'lib/Beanstalk/Farm';
 import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
-import { PodOrder } from 'state/farmer/market';
-import { useFetchFarmerMarket } from 'state/farmer/market/updater';
+import { IconSize } from '~/components/App/muiTheme';
+import AddressIcon from '~/components/Common/AddressIcon';
+import DescriptionButton from '~/components/Common/DescriptionButton';
+import { StyledDialog, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
+import TransactionToast from '~/components/Common/TxnToast';
+import { BEAN } from '~/constants/tokens';
+import useToggle from '~/hooks/display/useToggle';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import useChainConstant from '~/hooks/useChainConstant';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import { FarmToMode } from '~/lib/Beanstalk/Farm';
+import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
+import { PodOrder } from '~/state/farmer/market';
+import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
 
 const OPTIONS = [
   {
@@ -51,7 +50,7 @@ const CancelOrder : React.FC<{
   
   /// Contracts
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
   
   /// Refetch
   const [refetchFarmerBalances]  = useFetchFarmerBalances();

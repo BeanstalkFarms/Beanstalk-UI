@@ -1,14 +1,14 @@
 import React from 'react';
 import { Stack, Typography, Box } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { PodListing } from 'state/farmer/market';
-import { displayBN } from 'util/index';
-import { IconSize } from 'components/App/muiTheme';
-import TokenIcon from 'components/Common/TokenIcon';
-import { BEAN, PODS } from 'constants/tokens';
-import podListingIcon from 'img/beanstalk/pod-listing-icon.svg';
-import FarmerChip from 'components/Common/FarmerChip';
-import StatHorizontal from 'components/Common/StatHorizontal';
+import { IconSize } from '~/components/App/muiTheme';
+import TokenIcon from '~/components/Common/TokenIcon';
+import podListingIcon from '~/img/beanstalk/pod-listing-icon.svg';
+import FarmerChip from '~/components/Common/FarmerChip';
+import StatHorizontal from '~/components/Common/StatHorizontal';
+import { BEAN, PODS } from '~/constants/tokens';
+import { displayBN } from '~/util';
+import { PodListing } from '~/state/farmer/market';
 
 const ListingDetails: React.FC<{
   podListing: PodListing;

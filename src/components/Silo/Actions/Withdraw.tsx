@@ -2,11 +2,12 @@ import React, { useCallback, useMemo } from 'react';
 import { Accordion, AccordionDetails, Alert, Box, Divider, Stack } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import { Token } from 'classes';
-import { SEEDS, STALK } from 'constants/tokens';
-import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import useChainId from 'hooks/useChain';
-import { SupportedChainId } from 'constants/chains';
+import { useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import { Token } from '~/classes';
+import { SEEDS, STALK } from '~/constants/tokens';
+import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
 import {
   FormState,
   TxnPreview,
@@ -15,26 +16,21 @@ import {
   TokenAdornment,
   TxnSeparator,
   SmartSubmitButton
-} from 'components/Common/Form';
-import Beanstalk from 'lib/Beanstalk';
-import useSeason from 'hooks/useSeason';
-import { FarmerSilo } from 'state/farmer/silo';
-import { useBeanstalkContract } from 'hooks/useContract';
-import { displayFullBN, parseError, toStringBaseUnitBN } from 'util/index';
-import TransactionToast from 'components/Common/TxnToast';
-import { useSigner } from 'hooks/ledger/useSigner';
-import useFarmerSiloBalances from 'hooks/useFarmerSiloBalances';
-import { ERC20Token } from 'classes/Token';
-import { BeanstalkReplanted } from 'generated/index';
-import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import useSiloTokenToFiat from 'hooks/currency/useSiloTokenToFiat';
-import { ActionType } from 'util/Actions';
-import { ZERO_BN } from 'constants/index';
-import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
-import toast from 'react-hot-toast';
-import { useFetchSilo } from 'state/beanstalk/silo/updater';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+} from '~/components/Common/Form';
+import BeanstalkSDK from '~/lib/Beanstalk';
+import useSeason from '~/hooks/useSeason';
+import { FarmerSilo } from '~/state/farmer/silo';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import { displayFullBN, parseError, toStringBaseUnitBN } from '~/util';
+import TransactionToast from '~/components/Common/TxnToast';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import useFarmerSiloBalances from '~/hooks/useFarmerSiloBalances';
+import { ERC20Token } from '~/classes/Token';
+import { AppState } from '~/state';
+import { ActionType } from '~/util/Actions';
+import { ZERO_BN } from '~/constants';
+import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
+import { useFetchSilo } from '~/state/beanstalk/silo/updater';
 import IconWrapper from '../../Common/IconWrapper';
 import { IconSize } from '../../App/muiTheme';
 
@@ -62,10 +58,6 @@ const WithdrawForm : React.FC<
   withdrawSeasons,
   season,
 }) => {
-  const chainId = useChainId();
-  const getUSD = useSiloTokenToFiat();
-  const isMainnet = chainId === SupportedChainId.MAINNET;
-
   // Input props
   const InputProps = useMemo(() => ({
     endAdornment: (
@@ -98,7 +90,7 @@ const WithdrawForm : React.FC<
   // }, [onClose, submitForm]);
 
   // Results
-  const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
+  const withdrawResult = BeanstalkSDK.Silo.Withdraw.withdraw(
     whitelistedToken,
     values.tokens,
     siloBalances[whitelistedToken.address]?.deposited.crates || [], // fallback
@@ -142,12 +134,11 @@ const WithdrawForm : React.FC<
       >
         You can Claim your Withdrawn assets at the start of the next Season.
       </Alert>
-
     </>
   ) : null;
 
   return (
-    <Form noValidate>
+    <Form autoComplete="off" noValidate>
       {/* Confirmation Dialog */}
       {/* <StyledDialog open={confirming} onClose={onClose}>
         <StyledDialogTitle onClose={onClose}>Confirm Silo Withdrawal</StyledDialogTitle>
@@ -249,7 +240,7 @@ const WithdrawForm : React.FC<
 const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
   ///
   const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
   
   ///
   const season = useSeason();
@@ -275,7 +266,7 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
   const onSubmit = useCallback(async (values: WithdrawFormValues, formActions: FormikHelpers<WithdrawFormValues>) => {
     let txToast;
     try {
-      const withdrawResult = Beanstalk.Silo.Withdraw.withdraw(
+      const withdrawResult = BeanstalkSDK.Silo.Withdraw.withdraw(
         token,
         values.tokens,
         siloBalances[token.address]?.deposited.crates,

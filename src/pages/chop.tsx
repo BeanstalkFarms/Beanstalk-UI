@@ -3,8 +3,8 @@ import {
   Container,
   Stack,
 } from '@mui/material';
-import PageHeader from 'components/Common/PageHeader';
-import ChopActions from 'components/Chop/Actions';
+import PageHeader from '~/components/Common/PageHeader';
+import ChopActions from '~/components/Chop/Actions';
 import ChopConditions from '../components/Chop/ChopConditions';
 
 const ChopPage: React.FC = () => (

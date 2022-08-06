@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CircularProgress, Grid, Stack } from '@mui/material';
-import { Nft } from 'util/BeaNFTs';
+import { Nft } from '~/util/BeaNFTs';
 import NFTDetails from './NFTDetails';
 import { BeanstalkPalette } from '../App/muiTheme';
 import EmptyState from '../Common/ZeroState/EmptyState';

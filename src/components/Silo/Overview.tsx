@@ -1,16 +1,16 @@
 import { Box, Card, Stack, Tab, Tabs, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
 import React, { useCallback, useEffect, useState } from 'react';
-import { AppState } from 'state';
-import { displayBN, displayUSD } from 'util/index';
+import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
+import { AppState } from '~/state';
+import { displayBN, displayUSD } from '~/util';
 
-import LineChart, { DataPoint } from 'components/Common/Charts/LineChart';
+import LineChart, { DataPoint } from '~/components/Common/Charts/LineChart';
 
-import Stat from 'components/Common/Stat';
-import useTabs from 'hooks/display/useTabs';
-import { mockDepositData, mockOwnershipPctData } from 'components/Common/Charts/LineChart.mock';
-import BlurComponent from 'components/Common/ZeroState/BlurComponent';
+import Stat from '~/components/Common/Stat';
+import useTabs from '~/hooks/display/useTabs';
+import { mockDepositData, mockOwnershipPctData } from '~/components/Common/Charts/LineChart.mock';
+import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
 import WalletButton from '../Common/Connection/WalletButton';
 import useAccount from '../../hooks/ledger/useAccount';
 
@@ -29,7 +29,7 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
   const [displayValue, setDisplayValue] = useState(current);
   const handleCursor = useCallback(
     (ds?: DataPoint[]) => {
-      setDisplayValue(ds ? ds.map((d) => new BigNumber(d.value)) : current);
+      setDisplayValue(ds ? ds.map((d) => new BigNumber(d?.value)) : current);
     },
     [current]
   );
@@ -57,7 +57,9 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
             </Stack>
           </BlurComponent>
         ) : (
-          <BlurComponent blur={6}>Historical Deposit value will be available soon.</BlurComponent>
+          <BlurComponent blur={6}>
+            <Typography variant="body1" color="gray">Historical Deposit value will be available soon.</Typography>
+          </BlurComponent>
         )}
         <LineChart
           series={series}
@@ -114,7 +116,9 @@ const StalkOwnershipTab: React.FC<TabData
             </Stack>
           </BlurComponent>
         ) : (
-          <BlurComponent blur={6}>Historical Stalk balance and ownership will be available soon.</BlurComponent>
+          <BlurComponent blur={6}>
+            <Typography variant="body1" color="gray">Historical Stalk balance and ownership will be available soon.</Typography>
+          </BlurComponent>
         )}
         <LineChart
           series={series}
@@ -162,7 +166,9 @@ const SeedsOwnershipTab: React.FC<TabData
             </Stack>
           </BlurComponent>
         ) : (
-          <BlurComponent blur={6}>Historical Seed balance will be available soon.</BlurComponent>
+          <BlurComponent blur={6}>
+            <Typography variant="body1" color="gray">Historical Seed balance will be available soon.</Typography>
+          </BlurComponent>
         )}
         <LineChart
           series={series}

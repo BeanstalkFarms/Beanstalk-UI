@@ -15,7 +15,7 @@ import {
 } from '@visx/curve';
 import { Axis, Orientation } from '@visx/axis';
 import { CurveFactory } from 'd3-shape';
-import { BeanstalkPalette } from 'components/App/muiTheme';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const CURVES = {
   linear: curveLinear,
@@ -62,8 +62,8 @@ export type DataPoint = {
 };
 
 // data accessors
-const getX = (d: DataPoint) => d.season;
-const getY = (d: DataPoint) => d.value;
+const getX = (d: DataPoint) => d?.season;
+const getY = (d: DataPoint) => d?.value;
 const bisectSeason = bisector<DataPoint, number>(
   (d) => d.season
 ).left;

@@ -1,15 +1,19 @@
 import React, { useCallback, useMemo } from 'react';
 import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
-import COLUMNS from 'components/Common/Table/cells';
-import { castPodListing, PodListing } from 'state/farmer/market';
-import { toStringBaseUnitBN } from 'util/index';
-import { BEAN } from 'constants/tokens';
-import { useAllPodListingsQuery } from 'generated/graphql';
-import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
+import { useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import COLUMNS from '~/components/Common/Table/cells';
+import { castPodListing, PodListing } from '~/state/farmer/market';
+import { toStringBaseUnitBN } from '~/util/index';
+import { BEAN } from '~/constants/tokens';
+import { useAllPodListingsQuery } from '~/generated/graphql';
+import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
 import MarketBaseTable from './Base';
 
 const AllListings : React.FC<{}> = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   /// Data
   const harvestableIndex  = useHarvestableIndex();
   const { data, loading } = useAllPodListingsQuery({
@@ -30,19 +34,29 @@ const AllListings : React.FC<{}> = () => {
   }, [navigate]);
 
   /// Data Grid setup
-  const columns: DataGridProps['columns'] = [
-    COLUMNS.listingId,
-    // index
-    COLUMNS.plotIndex(harvestableIndex),
-    // pricePerPod
-    COLUMNS.pricePerPod,
-    // amount
-    COLUMNS.numPodsActive,
-    // maxHarvestableIndex
-    COLUMNS.expiry(harvestableIndex),
-    // other
-    COLUMNS.rightChevron
-  ];
+  const columns: DataGridProps['columns'] = !isMobile
+    ? [
+      COLUMNS.listingId(1.3),
+      // index
+      COLUMNS.plotIndex(harvestableIndex, 1),
+      // pricePerPod
+      COLUMNS.pricePerPod(1),
+      // amount
+      COLUMNS.numPodsActive(1),
+      // maxHarvestableIndex
+      COLUMNS.expiry(harvestableIndex, 1),
+      // other
+      COLUMNS.rightChevron
+    ]
+    : [
+      COLUMNS.listingId(0.7),
+      // index
+      COLUMNS.plotIndex(harvestableIndex, 1),
+      // pricePerPod
+      COLUMNS.pricePerPod(1),
+      // amount
+      COLUMNS.numPodsActive(1),
+    ];
   
   return (
     <MarketBaseTable

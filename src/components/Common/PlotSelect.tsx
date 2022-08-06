@@ -1,9 +1,20 @@
 import React, { useMemo } from 'react';
-import { Stack, Typography, ListItem, ListItemButton, ListItemIcon, ListItemText, List, Box } from '@mui/material';
+import {
+  Stack,
+  Typography,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  List,
+  Box,
+  useMediaQuery
+} from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { makeStyles } from '@mui/styles';
-import { BEAN, PODS } from 'constants/tokens';
-import useFarmerListings from 'hooks/redux/useFarmerListings';
+import { useTheme } from '@mui/material/styles';
+import { BEAN, PODS } from '~/constants/tokens';
+import useFarmerListings from '~/hooks/redux/useFarmerListings';
 import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
 import { displayBN, displayFullBN, toStringBaseUnitBN } from '../../util';
 import podIcon from '../../img/beanstalk/pod-icon.svg';
@@ -44,6 +55,9 @@ const PlotSelect: React.FC<PlotSelectProps> = ({
   selected
 }) => {
   const classes = useStyles();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   const farmerListings = useFarmerListings();
   const orderedPlotKeys = useMemo(() => {
     if (!plots) return null;
@@ -89,7 +103,7 @@ const PlotSelect: React.FC<PlotSelectProps> = ({
                 primary="PODS"
                 secondary={(
                   <>
-                    Place in Line: {displayBN(new BigNumber(index).minus(harvestableIndex))}{listing ? <>&nbsp;&middot; Currently listed</> : null}
+                    {isMobile ? '@' : 'Place in Line:'} {displayBN(new BigNumber(index).minus(harvestableIndex))}{listing ? <>&nbsp;&middot; Currently listed</> : null}
                   </>
                 )}
                 secondaryTypographyProps={{

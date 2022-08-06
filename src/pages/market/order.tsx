@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Card,
@@ -7,10 +7,12 @@ import {
   Stack, Typography,
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import usePodOrder from 'hooks/usePodOrder';
-import { Source } from 'util/index';
-import useAccount from 'hooks/ledger/useAccount';
-import CancelOrder from 'components/Market/Actions/CancelOrder';
+import CancelOrder from '~/components/Market/Actions/CancelOrder';
+import GenericZero from '~/components/Common/ZeroState/GenericZero';
+import usePodOrder from '~/hooks/usePodOrder';
+import useAccount from '~/hooks/ledger/useAccount';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import { bigNumberResult, Source } from '~/util';
 import FillOrder from '../../components/Market/Actions/FillOrder';
 import OrderDetails from '../../components/Market/Cards/OrderDetails';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
@@ -19,22 +21,42 @@ const OrderPage: React.FC = () => {
   const account = useAccount();
   const { id } = useParams<{ id: string }>();
   const { data: _order, source, loading, error } = usePodOrder(id);
+  const beanstalk = useBeanstalkContract();
 
-  if (loading) return <div>Loading</div>;
-  if (error) return <div>{error}</div>;
-  if (!_order) return <div>Not found</div>;
-
-  /// TEMP: override order for testing
-  // const order : PodOrder = {
-  //   id: '0x61f2026bb26606482187137f1c06fc85b999036e0b1641cb1a84e02a1e785cd3',
-  //   account: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
-  //   maxPlaceInLine: new BigNumber('600000000'),
-  //   totalAmount: new BigNumber('19982.345012'),
-  //   pricePerPod: new BigNumber('0.5'),
-  //   remainingAmount: new BigNumber('19982.345012'),
-  //   filledAmount: new BigNumber('0'),
-  //   status: 'active'
-  // };
+  const [orderValid, setOrderValid] = useState<null | boolean>(null);
+  useEffect(() => {
+    if (id) {
+      (async () => {
+        try {
+          const order = await beanstalk.podOrderById(id.toString()).then(bigNumberResult);
+          console.debug('[pages/order] order = ', order);
+          setOrderValid(order?.gt(0));
+        } catch (e) {
+          console.error(e);
+          setOrderValid(false);
+        }
+      })();
+    }
+  }, [beanstalk, id]);
+  if (loading) {
+    return (
+      <GenericZero loading />
+    );
+  }
+  if (error) {
+    return (
+      <GenericZero title="Error">
+        <Typography>{error.message.toString()}</Typography>
+      </GenericZero>
+    );
+  }
+  if (!_order || !orderValid) {
+    return (
+      <GenericZero title="Not found">
+        <Typography>Order not found.</Typography>
+      </GenericZero>
+    );
+  }
   const order = _order;
 
   return (

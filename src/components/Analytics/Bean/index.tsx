@@ -1,10 +1,10 @@
 import React from 'react';
 import { Card, Stack, Tab, Tabs } from '@mui/material';
 
-import useTabs from 'hooks/display/useTabs';
-import TWAP from './TWAP';
-import Supply from './Supply';
+import useTabs from '~/hooks/display/useTabs';
+import Price from './Price';
 import Soon from '../Soon';
+import Supply from '~/components/Analytics/Bean/Supply';
 
 const SLUGS = ['price', 'volume', 'liquidity', 'mktcap', 'supply', 'crosses'];
 const BeanAnalytics: React.FC<{}> = () => {
@@ -21,7 +21,7 @@ const BeanAnalytics: React.FC<{}> = () => {
           <Tab label="Supply" />
           <Tab label="Crosses" />
         </Tabs>
-        {tab === 0 && <TWAP height={300} />}
+        {tab === 0 && <Price height={300} />}
         {tab === 1 && <Soon height={300} />}
         {tab === 2 && <Soon height={300} />}
         {tab === 3 && <Soon height={300} />}

@@ -1,5 +1,4 @@
 import { Card, Stack, Tab, Tabs } from '@mui/material';
-import useTabs from 'hooks/display/useTabs';
 import React from 'react';
 import DepositedBeans from './DepositedBeans';
 import DepositedBean3CRV from './DepositedBean3Crv';
@@ -7,6 +6,7 @@ import DepositedUnripeBeans from './DepositedUnripeBeans';
 import DepositedUnripeBean3CRV from './DepositedUnripeBean3Crv';
 import Stalk from './Stalk';
 import Seeds from './Seeds';
+import useTabs from '~/hooks/display/useTabs';
 
 const SLUGS = [
   'deposited_bean',

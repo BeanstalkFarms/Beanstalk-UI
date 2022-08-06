@@ -1,14 +1,14 @@
 import React from 'react';
 import { Card, Container, Grid, Stack, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import { displayFullBN } from 'util/index';
-import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
-import useFarmerTotalFertilizer from 'hooks/useFarmerTotalFertilizer';
-import { PODS, SEEDS, STALK, SPROUTS } from 'constants/tokens';
-import Stat from 'components/Common/Stat';
-import TotalBalanceCard from 'components/Balances/TotalBalancesCard';
-import TokenIcon from 'components/Common/TokenIcon';
+import Stat from '~/components/Common/Stat';
+import TotalBalanceCard from '~/components/Balances/TotalBalancesCard';
+import TokenIcon from '~/components/Common/TokenIcon';
+import useFarmerTotalFertilizer from '~/hooks/useFarmerTotalFertilizer';
+import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
+import { displayFullBN } from '~/util';
+import { PODS, SEEDS, STALK, SPROUTS } from '~/constants/tokens';
+import { AppState } from '~/state';
 
 const BalancesPage: React.FC = () => {
   /// State
@@ -56,7 +56,14 @@ const BalancesPage: React.FC = () => {
                   title="Pods"
                   titleTooltip="This is your total Pod Balance. Pods become Harvestable on a FIFO basis. For more information on your place in the Pod Line, head over to the Field page."
                   amountIcon={<TokenIcon token={PODS} />}
-                  amount={displayFullBN(farmerField.pods, PODS.displayDecimals)}
+                  amount={(
+                    <>
+                      {displayFullBN(farmerField.pods, PODS.displayDecimals)}
+                      {farmerField.harvestablePods?.gt(0) && (
+                        <Typography color="primary" variant="h4">+ {displayFullBN(farmerField.harvestablePods, PODS.displayDecimals)}</Typography>
+                      )}
+                    </>
+                  )}
                   variant="h4"
                   gap={0}
                 />
@@ -69,7 +76,9 @@ const BalancesPage: React.FC = () => {
                   amount={(
                     <>
                       {displayFullBN(farmerBarn.unfertilizedSprouts, SPROUTS.displayDecimals)}
-                      <Typography color="primary">+ {displayFullBN(farmerBarn.fertilizedSprouts.plus(9999999), SPROUTS.displayDecimals)}</Typography>
+                      {farmerBarn.fertilizedSprouts?.gt(0) && (
+                        <Typography color="primary" variant="h4">+ {displayFullBN(farmerBarn.fertilizedSprouts, SPROUTS.displayDecimals)}</Typography>
+                      )}
                     </>
                   )}
                   variant="h4"

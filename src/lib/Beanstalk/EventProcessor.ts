@@ -1,5 +1,6 @@
 import { BigNumber as EBN, ethers } from 'ethers';
 import BigNumber from 'bignumber.js';
+import Token from '~/classes/Token';
 import {
   SowEvent,
   HarvestEvent,
@@ -10,18 +11,17 @@ import {
   RemoveDepositEvent,
   RemoveWithdrawalsEvent,
   RemoveDepositsEvent,
-  PodListingCancelledEvent, PodListingCreatedEvent, PodListingFilledEvent, PodOrderCancelledEvent, PodOrderCreatedEvent, PodOrderFilledEvent } from 'generated/Beanstalk/BeanstalkReplanted';
-import { BEAN, PODS } from 'constants/tokens';
-import Token from 'classes/Token';
-import { TokenMap } from 'constants/index';
-import { PlotMap } from 'state/farmer/field';
-import { FarmerSiloBalance, WithdrawalCrate } from 'state/farmer/silo';
-import { PodListing, PodOrder } from 'state/farmer/market';
+  PodListingCancelledEvent, PodListingCreatedEvent, PodListingFilledEvent, PodOrderCancelledEvent, PodOrderCreatedEvent, PodOrderFilledEvent } from '~/generated/Beanstalk/Beanstalk';
+import { BEAN, PODS } from '~/constants/tokens';
+import { TokenMap } from '~/constants';
+import { PlotMap } from '~/state/farmer/field';
+import { FarmerSiloBalance, WithdrawalCrate } from '~/state/farmer/silo';
+import { PodListing, PodOrder } from '~/state/farmer/market';
 import { FarmToMode } from './Farm';
 
 // ----------------------------------------
 
-// : Readonly<(keyof BeanstalkReplanted['filters'])[]>
+// : Readonly<(keyof Beanstalk['filters'])[]>
 const SupportedEvents  = [
   // Field
   'Sow',

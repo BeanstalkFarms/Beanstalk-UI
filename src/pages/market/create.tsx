@@ -3,7 +3,7 @@ import {
   Container,
   Stack,
 } from '@mui/material';
-import PageHeader from 'components/Common/PageHeader';
+import PageHeader from '~/components/Common/PageHeader';
 import MarketActions from '../../components/Market/Actions';
 
 const CreatePage: React.FC = () => (

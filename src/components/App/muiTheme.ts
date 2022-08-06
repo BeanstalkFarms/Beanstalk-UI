@@ -95,6 +95,7 @@ export const BeanstalkPalette = {
   white: '#fff',
   black: '#333',
   gray: '#657265',
+  lightGrey: '#DDDDDD',
   lightishGrey: '#9E9E9E',
   // Reds
   washedRed: '#c35f42',
@@ -362,6 +363,10 @@ let muiTheme = createTheme({
       }
     },
     MuiTooltip: {
+      defaultProps: {
+        enterTouchDelay: 0,
+        leaveTouchDelay: 1000000,
+      },
       styleOverrides: {
         tooltip: sx({
           typography: 'body1',
@@ -373,7 +378,6 @@ let muiTheme = createTheme({
           p: 1,
           px: 1.25,
         }),
-        
       }
     },
     MuiAccordion: {
@@ -561,6 +565,16 @@ let muiTheme = createTheme({
     MuiDialog: {
       defaultProps: {  
         transitionDuration: 0,
+        PaperProps: {
+          sx: {
+            minWidth: { xs: '95%', sm: '400px' }
+          }
+        }
+      },
+      styleOverrides: {
+        root: sx({
+
+        })
       }
     },
     MuiDialogContent: {

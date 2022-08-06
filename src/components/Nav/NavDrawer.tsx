@@ -1,14 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
-  Box, Button, Divider,
+  Box, Button,
   Drawer,
-  IconButton, Link,
-  List, ListItemText, Stack, Typography
+  IconButton, Link, List, ListItemText, Stack, Typography
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { BeanstalkPalette, IconSize } from 'components/App/muiTheme';
-import beanstalkLogo from 'img/tokens/bean-logo-circled.svg';
+import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
+import beanstalkLogo from '~/img/tokens/bean-logo-circled.svg';
 import ROUTES from './routes';
 import MenuItemMobile from './MenuItemMobile';
 import DropdownIcon from '../Common/DropdownIcon';
@@ -27,6 +26,12 @@ const NavDrawer: React.FC<{
     // Constants
     const chainInfo = useChainConstant(CHAIN_INFO);
     const beanstalkAddress = useChainConstant(BEANSTALK_ADDRESSES);
+
+    /// closes more dropdown when drawer closes
+    useEffect(() => {
+      if (!open) hideMore();
+    }, [open, hideMore]);
+
     return (
       <Drawer
         anchor="bottom"
@@ -35,7 +40,7 @@ const NavDrawer: React.FC<{
         sx={{ height: '100vh' }}
         transitionDuration={0}
       >
-        <Box sx={{ backgroundColor: '#f7fafe', width: '100%', height: '100vh', position: 'relative' }}>
+        <Box position="fixed" sx={{ backgroundColor: '#f7fafe', width: '100%', height: '100%', top: 0, overflowY: 'scroll' }}>
           {/* Beanstalk Logo & Close Button */}
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 1.5 }}>
             <Box>
@@ -48,31 +53,26 @@ const NavDrawer: React.FC<{
             </IconButton>
           </Stack>
           {/* Items */}
-          <List style={{ fontSize: 22 }}>
+          <List sx={{ mt: 1, fontSize: 22 }}>
+            {/* Individual Items */}
             {ROUTES.top.map((item) => (
-              <>
+              <Box key={item.path} sx={{ borderBottom: 2, borderColor: BeanstalkPalette.lightBlue }}>
                 <MenuItemMobile
-                  key={item.path}
                   item={item}
                   onClick={hideDrawer}
                 />
-                <Divider />
-              </>
+              </Box>
             ))}
-            <Stack onClick={openMore ? hideMore : showMore} sx={{ pb: 1 }}>
-              <Stack
-                direction="row"
-                alignItems="center"
-                justifyContent="space-between"
-                sx={{ px: 1.6, py: 0.6, cursor: 'pointer', height: 48 }}
-              >
-                <Typography sx={{ fontSize: '25px' }} variant="body1" color="text.secondary">
-                  More
-                </Typography>
-                <DropdownIcon open={openMore} sx={{ color: 'text.secondary' }} />
-              </Stack>
+            {/* More Dropdown */}
+            <Box key="more" sx={{ borderBottom: 2, borderColor: BeanstalkPalette.lightBlue }}>
+              <MenuItemMobile
+                item={{ title: 'More', path: '#' }}
+                onClick={openMore ? hideMore : showMore}
+                endAdornment={<DropdownIcon open={openMore} sx={{ color: 'text.secondary', height: IconSize.small }} />}
+              />
+              {/* Only show dropdown if openMore === true */}
               <Stack display={openMore ? 'block' : 'none'}>
-                <Box sx={{ pl: 0.5, pt: 1 }}>
+                <Box sx={{ pl: 0.5 }}>
                   {ROUTES.more.map((item) => (
                     <MenuItemMobile
                       key={item.path}
@@ -89,7 +89,7 @@ const NavDrawer: React.FC<{
                     rel="noreferrer"
                     variant="contained"
                     color="secondary"
-                    sx={{ py: 0.9 }}
+                    sx={{ py: 0.9, zIndex: 3000 }}
                   >
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <ListItemText>
@@ -106,8 +106,7 @@ const NavDrawer: React.FC<{
                   </Button>
                 </Box>
               </Stack>
-            </Stack>
-            <Divider />
+            </Box>
           </List>
         </Box>
       </Drawer>

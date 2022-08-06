@@ -1,12 +1,11 @@
 import { Box, Divider, Tooltip, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import useGasUSD from 'hooks/ledger/useGasUSD';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import { displayUSD } from 'util/index';
 import { DateTime } from 'luxon';
-import { BeanstalkPalette } from 'components/App/muiTheme';
+import useGasUSD from '~/hooks/ledger/useGasUSD';
+import { AppState } from '~/state';
+import { displayUSD } from '~/util';
 
 const GasTag : React.FC<{
   gasLimit: BigNumber | null;
@@ -32,8 +31,8 @@ const GasTag : React.FC<{
         )}
       </>
     )}>
-      <Box sx={{ backgroundColor: BeanstalkPalette.lightGreen, borderRadius: 1, px: 1, py: 0.5 }}>
-        ⛽️ {gasUSD ? displayUSD(gasUSD) : '$-.--'}
+      <Box sx={{ px: 1, py: 0.5 }}>
+        ⛽&nbsp;{gasUSD ? displayUSD(gasUSD) : '$-.--'}
       </Box>
     </Tooltip>
   );

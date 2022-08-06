@@ -1,7 +1,7 @@
-import { Token } from 'classes';
-import { DepositCrate } from 'state/farmer/silo';
 import BigNumber from 'bignumber.js';
 import { defaultAbiCoder } from 'ethers/lib/utils';
+import { Token } from '~/classes';
+import { DepositCrate } from '~/state/farmer/silo';
 import { sortCratesByBDVRatio, sortCratesBySeason } from './Utils';
 
 export enum ConvertKind {

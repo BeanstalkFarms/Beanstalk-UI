@@ -10,31 +10,28 @@ import {
   Link,
   CircularProgress
 } from '@mui/material';
-import unripeBeanIcon from 'img/tokens/unripe-bean-logo-circled.svg';
-import brownLPIcon from 'img/tokens/unripe-lp-logo-circled.svg';
 import { useTheme } from '@mui/material/styles';
-import { useSigner } from 'hooks/ledger/useSigner';
-import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from 'constants/tokens';
-import { BeanstalkPalette } from 'components/App/muiTheme';
-import { UNRIPE_ASSET_TOOLTIPS } from 'constants/tooltips';
-import { SupportedChainId, ZERO_BN } from 'constants/index';
-import Token from 'classes/Token';
-import useFarmerSiloBreakdown from 'hooks/useFarmerSiloBreakdown';
-import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from 'components/Common/Dialog';
-import { displayFullBN, toTokenUnitsBN, parseError } from 'util/index';
-import useChainId from 'hooks/useChain';
-import pickImage from 'img/pick.png';
-import DescriptionButton from 'components/Common/DescriptionButton';
-import { PickMerkleResponse } from 'functions/pick/pick';
 import { LoadingButton } from '@mui/lab';
-import { useBeanstalkContract } from 'hooks/useContract';
-import { BeanstalkReplanted } from 'generated';
-import useGetChainToken from 'hooks/useGetChainToken';
-import { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
-import TransactionToast from 'components/Common/TxnToast';
-import useAccount from 'hooks/ledger/useAccount';
-import { useFetchFarmerSilo } from 'state/farmer/silo/updater';
 import toast from 'react-hot-toast';
+import unripeBeanIcon from '~/img/tokens/unripe-bean-logo-circled.svg';
+import brownLPIcon from '~/img/tokens/unripe-lp-logo-circled.svg';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
+import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
+import pickImage from '~/img/pick.png';
+import DescriptionButton from '~/components/Common/DescriptionButton';
+import type { PickMerkleResponse } from '~/functions/pick/pick';
+import TransactionToast from '~/components/Common/TxnToast';
+import Token from '~/classes/Token';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
+import { UNRIPE_ASSET_TOOLTIPS } from '~/constants/tooltips';
+import { ZERO_BN } from '~/constants';
+import { displayFullBN, toTokenUnitsBN, parseError } from '~/util';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import useGetChainToken from '~/hooks/useGetChainToken';
+import { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
+import useAccount from '~/hooks/ledger/useAccount';
+import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import UnripeTokenRow from './UnripeTokenRow';
 
 // ----------------------------------------------------
@@ -115,19 +112,17 @@ const PickBeansDialog: React.FC<{
   const [tab, setTab] = useState(0);
 
   /// Chain
-  const chainId       = useChainId();
   const getChainToken = useGetChainToken();
   const urBean        = getChainToken(UNRIPE_BEAN);
   const urBeanCRV3    = getChainToken(UNRIPE_BEAN_CRV3);
   
   /// Farmer data
-  const breakdown           = useFarmerSiloBreakdown();
   const [refetchFarmerSilo] = useFetchFarmerSilo();
 
   /// Contracts
   const account          = useAccount();
   const { data: signer } = useSigner();
-  const beanstalk        = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk        = useBeanstalkContract(signer);
   
   /// Local data
   const [unripe, setUnripe]         = useState<GetUnripeResponse | null>(null);
@@ -152,6 +147,7 @@ const PickBeansDialog: React.FC<{
               beanstalk.picked(account, urBeanCRV3.address),
             ]),
           ]);
+          console.debug('[PickDialog] loaded states', { _unripe, _merkles, _picked });
           setUnripe(_unripe);
           setMerkles(_merkles);
           setPicked(_picked);
@@ -240,7 +236,7 @@ const PickBeansDialog: React.FC<{
   }, [merkles, picked, beanstalk, urBean.address, urBeanCRV3.address, refetchFarmerSilo]);
 
   /// Tab: Pick Overview
-  const alreadyPicked = picked[0] === true && picked[1] === true;
+  const alreadyPicked = picked[0] === true || picked[1] === true;
   const buttonLoading = !merkles;
   let buttonText      = 'Nothing to Pick';
   let buttonDisabled  = true;
@@ -271,19 +267,6 @@ const PickBeansDialog: React.FC<{
       <Divider />
       <StyledDialogContent>
         <Stack gap={2}>
-          {/**
-            * Section 1: Deposited Balance
-            */}
-          {/* <Stack gap={0.25}>
-            <Stack direction="row" justifyContent="space-between">
-              <Typography>Deposited Assets</Typography>
-              <Typography>{displayUSD(breakdown.states.deposited.value)}</Typography>
-            </Stack>
-            <Typography sx={{ fontSize: '13px' }} color="text.secondary">
-              These assets do not need to be Picked and will be automatically Deposited in their Unripe state at Replant. Head to the Silo page to view your balances.
-            </Typography>
-          </Stack> */}
-          {/* <Divider /> */}
           {/**
             * Section 2: Unripe Beans
             */}
@@ -377,7 +360,7 @@ const PickBeansDialog: React.FC<{
         <Box width="100%">
           <LoadingButton
             loading={buttonLoading}
-            disabled={chainId === SupportedChainId.MAINNET || buttonDisabled}
+            disabled={buttonDisabled}
             onClick={handleNextTab}
             fullWidth
             // Below two params are required for the disabled

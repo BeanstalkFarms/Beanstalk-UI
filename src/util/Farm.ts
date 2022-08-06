@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
-import { ZERO_BN } from 'constants/index';
-import { FarmFromMode } from 'lib/Beanstalk/Farm';
-import { Balance } from 'state/farmer/balances';
+import { ZERO_BN } from '~/constants';
+import { FarmFromMode } from '~/lib/Beanstalk/Farm';
+import { Balance } from '~/state/farmer/balances';
 
 /**
  * Gas minimization strategy:
@@ -29,7 +29,7 @@ export const optimizeFromMode = (
 };
 
 // export const optimizeFarmCall = (
-//   contract: BeanstalkReplanted,
+//   contract: Beanstalk,
 //   encodedFunctionData: string[],
 //   overrides: any
 // ) => {

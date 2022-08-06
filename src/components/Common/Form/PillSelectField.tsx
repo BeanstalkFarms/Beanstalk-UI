@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { Stack } from '@mui/material';
 import { Field, FieldProps } from 'formik';
-import useToggle from 'hooks/display/useToggle';
+import useToggle from '~/hooks/display/useToggle';
 import DescriptionButton from '../DescriptionButton';
 import PillDialogField from './PillDialogField';
 
@@ -47,7 +47,7 @@ const PillSelectField : React.FC<PillSelectFieldProps> = ({
             pl={0.5}
           >
             {/* Dialog contents */}
-            <Stack gap={1} sx={{ minWidth: 400 }}>
+            <Stack gap={1}>
               {options.map((option, index) => (
                 <DescriptionButton
                   key={index}

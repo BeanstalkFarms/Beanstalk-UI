@@ -1,4 +1,4 @@
-import { BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES } from 'constants/index';
+import { BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES } from '~/constants';
 
 export enum ClaimStatus {
   CLAIMED = 0,

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { Box, IconButton, Menu, Stack, Typography } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { BeanstalkPalette } from 'components/App/muiTheme';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const PLACEMENTS = {
   'form-top-right': {

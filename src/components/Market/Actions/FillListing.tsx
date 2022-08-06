@@ -1,43 +1,44 @@
 import { Accordion, AccordionDetails, Box, Stack, Typography } from '@mui/material';
-import Token, { ERC20Token, NativeToken } from 'classes/Token';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { ethers } from 'ethers';
+import { useProvider } from 'wagmi';
+import BigNumber from 'bignumber.js';
+import toast from 'react-hot-toast';
+import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
+import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
+import TransactionToast from '~/components/Common/TxnToast';
 import {
   FormState,
   SettingInput, SlippageSettingsFragment, SmartSubmitButton, TokenOutputField,
   TokenQuoteProvider,
   TokenSelectDialog, TxnPreview, TxnSeparator,
   TxnSettings
-} from 'components/Common/Form';
-import { SupportedChainId, ZERO_BN } from 'constants/index';
-import { BEAN, ETH, PODS, WETH } from 'constants/tokens';
-import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import useChainId from 'hooks/useChain';
-import useFarmerBalances from 'hooks/useFarmerBalances';
-import { QuoteHandler } from 'hooks/useQuote';
-import useTokenMap from 'hooks/useTokenMap';
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { AppState } from 'state';
-import { displayBN, displayTokenAmount, MinBN, toStringBaseUnitBN, parseError, toTokenUnitsBN } from 'util/index';
-import useToggle from 'hooks/display/useToggle';
-import useGetChainToken from 'hooks/useGetChainToken';
-import { ethers } from 'ethers';
-import Farm, { ChainableFunction, FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
-import { useSigner } from 'hooks/ledger/useSigner';
-import { useProvider } from 'wagmi';
-import { useBeanstalkContract } from 'hooks/useContract';
-import { BeanstalkReplanted } from 'generated';
-import { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
-import { ActionType } from 'util/Actions';
-import StyledAccordionSummary from 'components/Common/Accordion/AccordionSummary';
-import BigNumber from 'bignumber.js';
-import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
-import TransactionToast from 'components/Common/TxnToast';
-import { useFetchBeanstalkField } from 'state/beanstalk/field/updater';
-import { useFetchFarmerField } from 'state/farmer/field/updater';
-import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
-import toast from 'react-hot-toast';
-import { PodListing } from 'state/farmer/market';
-import { optimizeFromMode } from 'util/Farm';
+} from '~/components/Common/Form';
+import Token, { ERC20Token, NativeToken } from '~/classes/Token';
+import useChainId from '~/hooks/useChain';
+import useFarmerBalances from '~/hooks/useFarmerBalances';
+import { QuoteHandler } from '~/hooks/useQuote';
+import useTokenMap from '~/hooks/useTokenMap';
+import useToggle from '~/hooks/display/useToggle';
+import useGetChainToken from '~/hooks/useGetChainToken';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import { Beanstalk } from '~/generated';
+import usePreferredToken, { PreferredToken } from '~/hooks/usePreferredToken';
+import { useFetchFarmerField } from '~/state/farmer/field/updater';
+import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
+import { ActionType } from '~/util/Actions';
+import Farm, { ChainableFunction, FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
+import { displayBN, displayTokenAmount, MinBN, toStringBaseUnitBN, parseError, toTokenUnitsBN } from '~/util';
+import { AppState } from '~/state';
+import { BEAN, ETH, PODS, WETH } from '~/constants/tokens';
+import { ZERO_BN } from '~/constants';
+import { PodListing } from '~/state/farmer/market';
+import { optimizeFromMode } from '~/util/Farm';
+import TokenIcon from '../../Common/TokenIcon';
+import { IconSize } from '../../App/muiTheme';
 
 export type FillListingFormValues = FormState & {
   settings: SlippageSettingsFragment;
@@ -48,7 +49,7 @@ const FillListingForm : React.FC<
   FormikProps<FillListingFormValues>
   & {
     podListing: PodListing;
-    contract: BeanstalkReplanted;
+    contract: Beanstalk;
     handleQuote: QuoteHandler;
     farm: Farm;
   }
@@ -79,7 +80,6 @@ const FillListingForm : React.FC<
   );
 
   /// Derived
-  const isMainnet = chainId === SupportedChainId.MAINNET;
   const tokenIn   = values.tokens[0].token;
   const amountIn  = values.tokens[0].amount;
   const tokenOut  = Bean;
@@ -178,15 +178,6 @@ const FillListingForm : React.FC<
         {isReady ? (
           <>
             <TxnSeparator mt={0} />
-            {/* Place in Line */}
-            <Stack direction="row" justifyContent="space-between" sx={{ px: 1 }}>
-              <Typography variant="body1" color="text.secondary">
-                Place in Pod Line
-              </Typography>
-              <Typography variant="body1">
-                {displayBN(placeInLine)}
-              </Typography>
-            </Stack>
             {/* Pods Output */}
             <TokenOutputField
               token={PODS}
@@ -195,6 +186,20 @@ const FillListingForm : React.FC<
                 <>
                   {displayTokenAmount(amountOut!, Bean)} / {displayBN(podListing.pricePerPod)} Beans per Pod<br />= {displayTokenAmount(podsPurchased, PODS)}
                 </>
+              )}
+              override={(
+                <Stack direction="row" alignItems="center" gap={0.5}>
+                  <TokenIcon
+                    token={PODS}
+                    style={{
+                      height: IconSize.small,
+                    }}
+                  />
+                  <Typography variant="bodyMedium">
+                    {PODS.symbol} @ {displayBN(placeInLine)}
+                  </Typography>
+
+                </Stack>
               )}
             />
             <Box>
@@ -212,8 +217,10 @@ const FillListingForm : React.FC<
                         amountOut:  amountOut!,
                       },
                       {
-                        type: ActionType.BASE,
-                        message: `Buy ${displayTokenAmount(podsPurchased, PODS)} at ${displayBN(placeInLine)} in the Pod Line for ${displayBN(podListing.pricePerPod)} Beans per Pod.`
+                        type: ActionType.BUY_PODS,
+                        podAmount: podsPurchased,
+                        pricePerPod: podListing.pricePerPod,
+                        placeInLine: placeInLine
                       },
                     ]}
                   />
@@ -273,12 +280,12 @@ const FillListing : React.FC<{
   /// Ledger
   const { data: signer } = useSigner();
   const provider  = useProvider();
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
   const farm      = useMemo(() => new Farm(provider), [provider]);
 
   /// Data
+  // const [refetchBeanstalkField] = useFetchBeanstalkField();
   const balances                = useFarmerBalances();
-  const [refetchBeanstalkField] = useFetchBeanstalkField();
   const [refetchFarmerField]    = useFetchFarmerField();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
 
@@ -304,12 +311,13 @@ const FillListing : React.FC<{
 
       if (_tokenIn === Eth) {
         steps.push(...[
-          farm.wrapEth(FarmToMode.INTERNAL),                // wrap ETH to WETH (internal)
-          ...farm.buyBeans(FarmFromMode.INTERNAL_TOLERANT)  // buy Beans using internal WETH
+          farm.wrapEth(FarmToMode.INTERNAL),       // wrap ETH to WETH (internal)
+          ...farm.buyBeans(FarmFromMode.INTERNAL)  // buy Beans using internal WETH (exact)
         ]);
       } else if (_tokenIn === Weth) {
         steps.push(
           ...farm.buyBeans(
+            /// Use INTERNAL, EXTERNAL, or INTERNAL_EXTERNAL to initiate the swap.
             optimizeFromMode(_amountIn, balances[Weth.address]),
           )
         );
@@ -336,8 +344,8 @@ const FillListing : React.FC<{
     let txToast;
     try {
       const formData    = values.tokens[0];
-      const inputToken  = formData.token;
-      const amountBeans = inputToken === Bean ? formData.amount : formData.amountOut;
+      const tokenIn     = formData.token;
+      const amountBeans = tokenIn === Bean ? formData.amount : formData.amountOut;
       if (!podListing) throw new Error('No pod listing.');
       if (!signer) throw new Error('Connect a wallet that can sign transactions first.');
       if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
@@ -345,19 +353,22 @@ const FillListing : React.FC<{
       
       const data : string[] = [];
       const amountPods = amountBeans.div(podListing.pricePerPod);
+      let finalFromMode : FarmFromMode;
       
       txToast = new TransactionToast({
         loading: `Buying ${displayTokenAmount(amountPods, PODS)} for ${displayTokenAmount(amountBeans, Bean)}...`,
         success: 'Fill successful.',
       });
       
-      /// Sow directly from BEAN
-      if (inputToken === Bean) {
-        // Nothing to do
+      /// Fill Listing directly from BEAN
+      if (tokenIn === Bean) {
+        // No swap occurs, so we know exactly how many beans are going in.
+        // We can select from INTERNAL, EXTERNAL, INTERNAL_EXTERNAL.
+        finalFromMode = optimizeFromMode(amountBeans, balances[Bean.address]);
       } 
       
       /// Swap to BEAN and buy
-      else {
+      else if (tokenIn === Eth || tokenIn === Weth) {
         // Require a quote
         if (!formData.steps || !formData.amountOut) throw new Error(`No quote available for ${formData.token.symbol}`);
 
@@ -366,18 +377,19 @@ const FillListing : React.FC<{
           values.settings.slippage / 100,
         );
         data.push(...encoded);
+
+        // At the end of the Swap step, the assets will be in our INTERNAL balance.
+        // The Swap decides where to route them from (see handleQuote).
+        finalFromMode = FarmFromMode.INTERNAL_TOLERANT;
+      } else {
+        throw new Error(`Filling a Listing via ${tokenIn.symbol} is not currently supported`);
       }
+
+      console.debug(`[FillListing] using FarmFromMode = ${finalFromMode}`, podListing);
       
       data.push(
         beanstalk.interface.encodeFunctionData('fillPodListing', [
           {
-            // account: string;
-            // index: BigNumberish;
-            // start: BigNumberish;
-            // amount: BigNumberish;
-            // pricePerPod: BigNumberish;
-            // maxHarvestableIndex: BigNumberish;
-            // mode: BigNumberish;
             account:  podListing.account,
             index:    Bean.stringify(podListing.index),
             start:    Bean.stringify(podListing.start),
@@ -387,7 +399,7 @@ const FillListing : React.FC<{
             mode:     podListing.mode,
           },
           Bean.stringify(amountBeans),
-          FarmFromMode.INTERNAL_EXTERNAL,
+          finalFromMode,
         ])
       );
 
@@ -421,7 +433,7 @@ const FillListing : React.FC<{
     } finally {
       formActions.setSubmitting(false);
     }
-  }, [Bean, beanstalk, podListing, signer, refetchFarmerBalances, refetchFarmerField]);
+  }, [Bean, podListing, signer, Eth, Weth, beanstalk, refetchFarmerField, refetchFarmerBalances, balances]);
 
   return (
     <Formik<FillListingFormValues>

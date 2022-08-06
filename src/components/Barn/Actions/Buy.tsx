@@ -5,40 +5,39 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import toast from 'react-hot-toast';
 import { ethers } from 'ethers';
 import { useAccount, useProvider } from 'wagmi';
-import { useSigner } from 'hooks/ledger/useSigner';
-import { Token } from 'classes';
-import { ERC20Token, NativeToken } from 'classes/Token';
-import { BEAN, ETH, USDC, USDT, WETH } from 'constants/tokens';
-import { ZERO_BN } from 'constants/index';
-import { FarmerBalances } from 'state/farmer/balances';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import usePreferredToken, { PreferredToken } from 'hooks/usePreferredToken';
-import useFarmerBalances from 'hooks/useFarmerBalances';
-import useTokenMap from 'hooks/useTokenMap';
-import { useBeanstalkContract, useFertilizerContract } from 'hooks/useContract';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-import useFertilizerSummary from 'hooks/summary/useFertilizerSummary';
-import TokenSelectDialog, { TokenSelectMode } from 'components/Common/Form/TokenSelectDialog';
-import TokenQuoteProvider from 'components/Common/Form/TokenQuoteProvider';
-import { FormState } from 'components/Common/Form';
-import TxnPreview from 'components/Common/Form/TxnPreview';
-import TxnAccordion from 'components/Common/TxnAccordion';
-import { useFetchFarmerBarn } from 'state/farmer/barn/updater';
-import { useFetchFarmerBalances } from 'state/farmer/balances/updater';
-import { useFetchFarmerAllowances } from 'state/farmer/allowances/updater';
-import useChainId from 'hooks/useChain';
-import { REPLANTED_CHAINS } from 'constants/chains';
-import { BUY_FERTILIZER } from 'components/Barn/FertilizerItemTooltips';
-import { QuoteHandler } from 'hooks/useQuote';
-import SmartSubmitButton from 'components/Common/Form/SmartSubmitButton';
-import TransactionToast from 'components/Common/TxnToast';
-import { displayFullBN, tokenResult, toStringBaseUnitBN, toTokenUnitsBN, parseError, getChainConstant } from 'util/index';
-import { BeanstalkReplanted } from 'generated';
-import Farm, { FarmFromMode, FarmToMode } from 'lib/Beanstalk/Farm';
-import useToggle from 'hooks/display/useToggle';
-import IconWrapper from 'components/Common/IconWrapper';
-import { IconSize } from 'components/App/muiTheme';
-import TokenIcon from 'components/Common/TokenIcon';
+import TokenSelectDialog, { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
+import TokenQuoteProvider from '~/components/Common/Form/TokenQuoteProvider';
+import { FormState } from '~/components/Common/Form';
+import TxnPreview from '~/components/Common/Form/TxnPreview';
+import TxnAccordion from '~/components/Common/TxnAccordion';
+import { BUY_FERTILIZER } from '~/components/Barn/FertilizerItemTooltips';
+import SmartSubmitButton from '~/components/Common/Form/SmartSubmitButton';
+import TransactionToast from '~/components/Common/TxnToast';
+import IconWrapper from '~/components/Common/IconWrapper';
+import { IconSize } from '~/components/App/muiTheme';
+import TokenIcon from '~/components/Common/TokenIcon';
+import { ERC20Token, NativeToken } from '~/classes/Token';
+import { Token } from '~/classes';
+import useToggle from '~/hooks/display/useToggle';
+import { QuoteHandler } from '~/hooks/useQuote';
+import useChainId from '~/hooks/useChain';
+import useFertilizerSummary from '~/hooks/summary/useFertilizerSummary';
+import { useBeanstalkContract, useFertilizerContract } from '~/hooks/useContract';
+import useTokenMap from '~/hooks/useTokenMap';
+import useFarmerBalances from '~/hooks/useFarmerBalances';
+import usePreferredToken, { PreferredToken } from '~/hooks/usePreferredToken';
+import { useSigner } from '~/hooks/ledger/useSigner';
+import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
+import { displayFullBN, tokenResult, toStringBaseUnitBN, toTokenUnitsBN, parseError, getChainConstant } from '~/util';
+import { REPLANTED_CHAINS } from '~/constants/chains';
+import { useFetchFarmerAllowances } from '~/state/farmer/allowances/updater';
+import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
+import { useFetchFarmerBarn } from '~/state/farmer/barn/updater';
+import { FarmerBalances } from '~/state/farmer/balances';
+import { ZERO_BN } from '~/constants';
+import { BEAN, ETH, USDC, USDT, WETH } from '~/constants/tokens';
 import FertilizerItem from '../FertilizerItem';
 
 // ---------------------------------------------------
@@ -97,7 +96,7 @@ const BuyForm : React.FC<
   }, [setFieldValue]);
 
   return (
-    <Form noValidate>
+    <Form autoComplete="off" noValidate>
       <Stack gap={1}>
         <TokenSelectDialog
           open={showTokenSelect}
@@ -196,7 +195,7 @@ const Buy : React.FC<{}> = () => {
   
   // Contracts
   const fertContract = useFertilizerContract(signer);
-  const beanstalk = useBeanstalkContract(signer) as unknown as BeanstalkReplanted;
+  const beanstalk = useBeanstalkContract(signer);
   const farm = useMemo(() => new Farm(provider), [provider]);
 
   // Constants
@@ -424,34 +423,3 @@ const Buy : React.FC<{}> = () => {
 };
 
 export default Buy;
-
-// ---------------------------------------------------
-
-// const launch = 1654531200 * 1000; // June 6th, 2022 12pm EST
-// const getDiff = () => (launch - new Date().getTime()) / 1000;
-
-// export default () => {
-//   const chainId = useChainId();
-//   const [timeStr, setTimeStr] = useState('Loading...');
-//   const [isLaunched, setIsLaunched] = useState(chainId !== SupportedChainId.MAINNET); 
-//   useEffect(() => {
-//     if (!isLaunched && chainId === SupportedChainId.MAINNET) {
-//       const interval = setInterval(() => {
-//         const diff = getDiff();
-//         if (Math.floor(diff) <= 0) {
-//           setIsLaunched(true);
-//         }
-//         setTimeStr(timeToStringDetailed(diff));
-//       }, 1000);
-//       return () => clearInterval(interval);
-//     }
-//   }, [isLaunched, chainId]);
-
-//   if (isLaunched) return <SetupForm />;
-//   return (
-//     <Card component={Stack} gap={0.5} alignItems="center" sx={{ p: 2 }}>
-//       <Typography color="text.secondary">The Barn Raise begins in</Typography>
-//       <Typography variant="h2">{timeStr}</Typography>
-//     </Card>
-//   );
-// };

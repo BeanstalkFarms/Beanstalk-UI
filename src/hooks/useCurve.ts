@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import curve, { initCurve } from 'util/Curve';
+import curve, { initCurve } from '~/util/Curve';
 import useChainId from './useChain';
 
 // class DebugProvider extends ethers.providers.ExternalProvider {

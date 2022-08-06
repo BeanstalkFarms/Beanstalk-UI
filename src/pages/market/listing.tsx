@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Card,
@@ -8,39 +8,60 @@ import {
   Typography,
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { Source } from 'util/index';
-import FillListing from 'components/Market/Actions/FillListing';
-import ListingDetails from 'components/Market/Cards/ListingDetails';
-import PageHeaderSecondary from 'components/Common/PageHeaderSecondary';
-import useHarvestableIndex from 'hooks/redux/useHarvestableIndex';
-import usePodListing from 'hooks/usePodListing';
-import useAccount from 'hooks/ledger/useAccount';
-import CancelListing from 'components/Market/Actions/CancelListing';
+import FillListing from '~/components/Market/Actions/FillListing';
+import ListingDetails from '~/components/Market/Cards/ListingDetails';
+import PageHeaderSecondary from '~/components/Common/PageHeaderSecondary';
+import CancelListing from '~/components/Market/Actions/CancelListing';
+import GenericZero from '~/components/Common/ZeroState/GenericZero';
+import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
+import usePodListing from '~/hooks/usePodListing';
+import useAccount from '~/hooks/ledger/useAccount';
+import { useBeanstalkContract } from '~/hooks/useContract';
+import { bigNumberResult, Source } from '~/util';
 
 const ListingPage: React.FC = () => {
   const account = useAccount();
   const { id } = useParams<{ id: string }>();
   const { data: _listing, source, loading, error } = usePodListing(id);
   const harvestableIndex = useHarvestableIndex();
+  const beanstalk = useBeanstalkContract();
 
-  if (loading) return <div>Loading</div>;
-  if (error) return <div>{error}</div>;
-  if (!_listing) return <div>Not found</div>;
+  const [listingValid, setListingValid] = useState<null | boolean>(null);
+  useEffect(() => {
+    if (id) {
+      (async () => {
+        try {
+          const listing = await beanstalk.podListing(id.toString()).then(bigNumberResult);
+          console.debug('[pages/listing] listing = ', listing);
+          setListingValid(listing?.gt(0));
+        } catch (e) {
+          console.error(e);
+          setListingValid(false);
+        }
+      })();
+    }
+  }, [beanstalk, id]);
 
-  /// TEMP: override order for testing
-  // const testListing : PodListing = {
-  //   id: '',          // index with no decimals
-  //   index: '',       // index with decimals
-  //   account: '',
-  //   maxHarvestableIndex: new BigNumber(''),
-  //   pricePerPod:     new BigNumber(''),
-  //   amount:          new BigNumber(''),
-  //   totalAmount:     new BigNumber(''),
-  //   remainingAmount: new BigNumber(''),
-  //   filledAmount: new BigNumber('0'),
-  //   mode: FarmToMode.EXTERNAL,
-  //   status: 'active'
-  // };
+  if (loading) {
+    return (
+      <GenericZero loading />
+    );
+  }
+  if (error) {
+    return (
+      <GenericZero title="Error">
+        <Typography>{error.message.toString()}</Typography>
+      </GenericZero>
+    );
+  }
+  if (!_listing || !listingValid) {
+    return (
+      <GenericZero title="Not found">
+        <Typography>Listing not found.</Typography>
+      </GenericZero>
+    );
+  }
+  
   const listing = _listing;
 
   return (

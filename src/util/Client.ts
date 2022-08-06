@@ -7,7 +7,7 @@ import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 // import { InjectedConnector } from 'wagmi/connectors/injected';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
-import { TESTNET_RPC_ADDRESSES, SupportedChainId } from 'constants/index';
+import { TESTNET_RPC_ADDRESSES, SupportedChainId } from '~/constants';
 
 // ------------------------------------------------------------
 
@@ -79,7 +79,7 @@ const baseChains = [
   chain.mainnet,
 ];
 
-if (Boolean(process.env.REACT_APP_SHOW_DEV_CHAINS) === true) {
+if (Boolean(import.meta.env.VITE_SHOW_DEV_CHAINS) === true) {
   baseChains.push(makeTestnet(SupportedChainId.CUJO, 'Cujo'));
   baseChains.push(chain.localhost);
 }
@@ -88,7 +88,7 @@ const { chains, provider } = configureChains(
   baseChains, 
   [
     alchemyProvider({
-      alchemyId: process.env.REACT_APP_ALCHEMY_API_KEY,
+      alchemyId: import.meta.env.VITE_ALCHEMY_API_KEY,
       priority: 0,
     }),
     jsonRpcBatchProvider({
@@ -98,14 +98,6 @@ const { chains, provider } = configureChains(
         return { http: TESTNET_RPC_ADDRESSES[_chain.id] };
       },
     }),
-    // jsonRpcProvider({
-    //   priority: 1,
-    //   rpc: (_chain) => {
-    //     if (!TESTNET_RPC_ADDRESSES[_chain.id]) return null;
-    //     return { http: TESTNET_RPC_ADDRESSES[_chain.id] };
-    //   },
-    //   static: false,
-    // }),
     publicProvider({
       priority: 2,
     }),

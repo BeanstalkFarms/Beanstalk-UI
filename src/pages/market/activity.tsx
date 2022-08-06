@@ -1,5 +1,7 @@
 import React from 'react';
 import {
+  Box,
+  Card,
   Container,
   Link,
   Stack,
@@ -7,9 +9,9 @@ import {
 } from '@mui/material';
 import { DataGridProps } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
-import podIcon from 'img/beanstalk/pod-icon.svg';
-import beanIcon from 'img/tokens/bean-logo-circled.svg';
-import ActivityTable from 'components/Market/Tables/Activity';
+import podIcon from '~/img/beanstalk/pod-icon.svg';
+import beanIcon from '~/img/tokens/bean-logo-circled.svg';
+import ActivityTable from '~/components/Market/Tables/Activity';
 import { displayBN, displayFullBN } from '../../util';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 
@@ -95,6 +97,7 @@ const rows = new Array(20).fill(null).map((_, i) => (
 
 const MarketActivityPage: React.FC = () => {
   const content = (<ActivityTable columns={columns} rows={rows} />);
+  // const content = <Card sx={{ height: '300px' }}><Soon /></Card>
 
   return (
     <Container maxWidth="lg">
@@ -102,7 +105,11 @@ const MarketActivityPage: React.FC = () => {
         <PageHeaderSecondary
           title="Marketplace Activity"
         />
-        {content}
+        <Card>
+          <Box sx={{ position: 'relative ' }}>
+            {content}
+          </Box>
+        </Card>
       </Stack>
     </Container>
   );
