@@ -49,6 +49,36 @@ const soilSupply = (
   return SStart_t;
 };
 
+const temperature = (
+  podRate: BigNumber,
+  price: BigNumber,
+  deltaDemand: BigNumber,
+) => {
+  // let caseId = 0;
+  // if (podRate.isGreaterThanOrEqualTo(POD_RATE_UPPER_BOUND)) caseId = 24;
+  // else if (podRate.isGreaterThanOrEqualTo(OPTIMAL_POD_RATE)) caseId = 16;
+  // else if (podRate.isGreaterThanOrEqualTo(POD_RATE_LOWER_BOUND)) caseId = 8;
+
+  // if (
+  //   price.isGreaterThan(1) ||
+  //   (price.isEqualTo(1) && podRate.isLessThanOrEqualTo(OPTIMAL_POD_RATE))
+  // ) {
+  //   caseId += 4;
+  // }
+
+  // if (deltaDemand.isGreaterThanOrEqualTo(DELTA_POD_DEMAND_UPPER_BOUND)) {
+  //   caseId += 2;
+  // } else if (deltaDemand.isGreaterThanOrEqualTo(DELTA_POD_DEMAND_LOWER_BOUND)) {
+  //   if (lastSowTime.isEqualTo(MAX_UINT32) || !didSowBelowMin) caseId += 1;
+  //   else if (didSowFaster) caseId += 2;
+  // }
+
+  // let deltaWeather = new BigNumber(PEG_WEATHER_CASES[caseId]);
+  // if (weather.plus(deltaWeather).isLessThanOrEqualTo(0)) {
+  //   deltaWeather = weather.minus(1);
+  // }
+};
+
 /**
  * 
  */
