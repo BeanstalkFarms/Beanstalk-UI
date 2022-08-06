@@ -3,7 +3,6 @@ import { Form, Formik, FormikProps } from 'formik';
 import { LoadingButton } from '@mui/lab';
 import { useSelector } from 'react-redux';
 import { Box, Dialog, Divider, Link, Stack, Typography } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { AppState } from '~/state';
 import SunriseCountdown from '~/components/Sun/SunriseCountdown';
@@ -15,7 +14,6 @@ import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
 import sunIcon from '~/img/beanstalk/sun/sun-icon.svg';
 
 const SunriseButton : React.FC = () => {
-  const theme = useTheme();
   /// Ledger
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
