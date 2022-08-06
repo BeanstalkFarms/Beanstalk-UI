@@ -1,183 +1,50 @@
-import { Box, Card, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Card, Chip, Stack, styled, Tab, TabProps, Tabs } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
+import { Token } from 'graphql';
 import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
 import { AppState } from '~/state';
-import { displayBN, displayUSD } from '~/util';
 
-import LineChart, { DataPoint } from '~/components/Common/Charts/LineChart';
-
-import Stat from '~/components/Common/Stat';
 import useTabs from '~/hooks/display/useTabs';
 import { mockDepositData, mockOwnershipPctData } from '~/components/Common/Charts/LineChart.mock';
-import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
-import WalletButton from '../Common/Connection/WalletButton';
-import useAccount from '../../hooks/ledger/useAccount';
+import SeedsView from '~/components/Silo/Views/SeedsView';
+import StalkView from '~/components/Silo/Views/StalkView';
+import DepositsView from '~/components/Silo/Views/DepositsView';
+import TokenIcon from '~/components/Common/TokenIcon';
+import { SEEDS, STALK } from '~/constants/tokens';
+import Fiat from '~/components/Common/Fiat';
+import { displayBN } from '~/util';
 
-// ------------------------------------------------
+const Label : React.FC<{ name: string; token?: Token }> = ({ name, token, children }) => (
+  <Stack direction="row" alignItems="center" gap={0.2}>
+    {name}&nbsp;
+    {/* <Typography variant="h4">{children}</Typography> */}
+    <Chip label={children} size="small" />
+  </Stack>
+); 
 
-type TabData = {
-  season: BigNumber;
-  current: BigNumber[];
-  series: DataPoint[][];
-};
-
-// ------------------------------------------------
-
-const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
-  const account = useAccount();
-  const [displayValue, setDisplayValue] = useState(current);
-  const handleCursor = useCallback(
-    (ds?: DataPoint[]) => {
-      setDisplayValue(ds ? ds.map((d) => new BigNumber(d?.value)) : current);
-    },
-    [current]
-  );
-  useEffect(() => setDisplayValue(current), [current]);
-
-  return (
-    <>
-      <Box sx={{ px: 2 }}>
-        <Stat
-          title="Total Silo Deposits"
-          subtitle={`Season ${displayBN(season)}`}
-          amount={displayUSD(displayValue[0])}
-          color="primary"
-          amountIcon={undefined}
-          gap={0.25}
-          sx={{ ml: 0 }}
-        />
-      </Box>
-      <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
-        {!account ? (
-          <BlurComponent sx={{ borderRadius: 1 }}>
-            <Stack justifyContent="center" alignItems="center" gap={1}>
-              <Typography variant="body1" color="gray">Your Silo Deposits will appear here.</Typography>
-              <WalletButton showFullText color="primary" sx={{ height: 45 }} />
-            </Stack>
-          </BlurComponent>
-        ) : (
-          <BlurComponent blur={6} sx={{ borderRadius: 1 }}>
-            <Typography variant="body1" color="gray">Historical Deposit value will be available soon.</Typography>
-          </BlurComponent>
-        )}
-        <LineChart
-          series={series}
-          onCursor={handleCursor}
-        />
-      </Box>
-    </>
-  );
-};
-
-const StalkOwnershipTab: React.FC<TabData
-  // & { beanstalkSilo: AppState['_beanstalk']['silo']; }
-> = ({ current, series, season }) => {
-  // Display value is an array [stalk, pct]
-  const account = useAccount();
-  const [displayValue, setDisplayValue] = useState(current);
-  const handleCursor = useCallback(
-    (dps?: DataPoint[]) => {
-      setDisplayValue(dps ? dps.map((dp) => new BigNumber(dp.value)) : current);
-    },
-    [current]
-  );
-  useEffect(() => setDisplayValue(current), [current]);
-
-  return (
-    <>
-      <Stack direction="row" gap={{ xs: 0, md: 4 }} sx={{ px: 2 }}>
-        <Stat
-          title="Stalk Balance"
-          titleTooltip="Stalk is the governance token of the Beanstalk DAO. Stalk entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
-          subtitle={`Season ${displayBN(season)}`}
-          amount={displayBN(displayValue[0])}
-          color="primary"
-          sx={{ minWidth: 150, ml: 0 }}
-          amountIcon={undefined}
-          gap={0.25}
-        />
-        <Stat
-          title="Stalk Ownership"
-          titleTooltip="Your current ownership of Beanstalk is displayed as a percentage. Ownership is determined by your proportional ownership of the total Stalk supply."
-          amount={`${displayValue[1].multipliedBy(100).toFixed(3)}%`}
-          color="secondary.dark"
-          amountIcon={undefined}
-          gap={0.25}
-          sx={{ ml: 0 }}
-        />
-      </Stack>
-      <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
-        {!account ? (
-          <BlurComponent sx={{ borderRadius: 1 }}>
-            <Stack justifyContent="center" alignItems="center" gap={1}>
-              <Typography variant="body1" color="gray">Your Stalk Ownership will appear here.</Typography>
-              <WalletButton showFullText color="primary" sx={{ height: 45 }} />
-            </Stack>
-          </BlurComponent>
-        ) : (
-          <BlurComponent blur={6} sx={{ borderRadius: 1 }}>
-            <Typography variant="body1" color="gray">Historical Stalk balance and ownership will be available soon.</Typography>
-          </BlurComponent>
-        )}
-        <LineChart
-          series={series}
-          onCursor={handleCursor}
-        />
-      </Box>
-    </>
-  );
-};
-
-const SeedsOwnershipTab: React.FC<TabData
-  // & { beanstalkSilo: AppState['_beanstalk']['silo']; }
-> = ({ current, series, season }) => {
-  // Display value is an array [stalk, pct]
-  const account = useAccount();
-  const [displayValue, setDisplayValue] = useState(current);
-  const handleCursor = useCallback(
-    (dps?: DataPoint[]) => {
-      setDisplayValue(dps ? dps.map((dp) => new BigNumber(dp.value)) : current);
-    },
-    [current]
-  );
-  useEffect(() => setDisplayValue(current), [current]);
-
-  return (
-    <>
-      <Stack direction="row" gap={4} sx={{ px: 2 }}>
-        <Stat
-          title="Seed Balance"
-          titleTooltip="Seeds are illiquid tokens that yield 1/10,000 Stalk each Season."
-          subtitle={`Season ${displayBN(season)}`}
-          amount={displayBN(displayValue[0])}
-          color="primary"
-          sx={{ minWidth: 180, ml: 0 }}
-          amountIcon={undefined}
-          gap={0.25}
-        />
-      </Stack>
-      <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
-        {!account ? (
-          <BlurComponent sx={{ borderRadius: 1 }}>
-            <Stack justifyContent="center" alignItems="center" gap={1}>
-              <Typography variant="body1" color="gray">Your Seed Ownership will appear here.</Typography>
-              <WalletButton showFullText color="primary" sx={{ height: 45 }} />
-            </Stack>
-          </BlurComponent>
-        ) : (
-          <BlurComponent blur={6} sx={{ borderRadius: 1 }}>
-            <Typography variant="body1" color="gray">Historical Seed balance will be available soon.</Typography>
-          </BlurComponent>
-        )}
-        <LineChart
-          series={series}
-          onCursor={handleCursor}
-        />
-      </Box>
-    </>
-  );
-};
+const StyledTab = styled((props: TabProps) => (
+  <Tab disableRipple {...props} />
+))(({ theme }) => ({
+  root: {
+    opacity: 1,
+  },
+  '&:hover': {
+    cursor: 'pointer'
+  },
+  '& .MuiChip-label': {
+    opacity: 0.7
+  },
+  '&.Mui-selected .MuiChip-root': {
+    // backgroundColor: BeanstalkPalette.lightGrey
+  },
+  '&:hover .MuiChip-label, &.Mui-selected .MuiChip-label': {
+    opacity: 1,
+  },
+  '& .MuiChip-root:hover': {
+    cursor: 'pointer'
+  }
+}));
 
 // ------------------------------------------------
 
@@ -204,9 +71,21 @@ const Overview: React.FC<{
       >
         {/* Tabs */}
         <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0 }}>
-          <Tab label="Deposits" />
-          <Tab label="Stalk" />
-          <Tab label="Seeds" />
+          <StyledTab label={
+            <Label name="Deposits">
+              <Fiat value={breakdown.states.deposited.value} amount={breakdown.states.deposited.value} truncate />
+            </Label>
+          } />
+          <StyledTab label={
+            <Label name="Stalk">
+              <Stack direction="row" alignItems="center"><TokenIcon token={STALK} /> {displayBN(farmerSilo.stalk.active)}</Stack>
+            </Label>
+          } />
+          <StyledTab label={
+            <Label name="Seeds">
+              <Stack direction="row" alignItems="center"><TokenIcon token={SEEDS} /> {displayBN(farmerSilo.seeds.active)}</Stack>
+            </Label>
+          } />
         </Tabs>
         {/* "Windows" (time range selector) */}
         <Box sx={{ display: 'none' }}>
@@ -214,7 +93,7 @@ const Overview: React.FC<{
         </Box>
       </Stack>
       <Box sx={{ display: tab === 0 ? 'block' : 'none' }}>
-        <DepositsTab
+        <DepositsView
           current={[
             breakdown.states.deposited.value
           ]}
@@ -225,7 +104,7 @@ const Overview: React.FC<{
         />
       </Box>
       <Box sx={{ display: tab === 1 ? 'block' : 'none' }}>
-        <StalkOwnershipTab
+        <StalkView
           current={[
             farmerSilo.stalk.active,
             farmerSilo.stalk.active.div(beanstalkSilo.stalk.total),
@@ -238,7 +117,7 @@ const Overview: React.FC<{
         />
       </Box>
       <Box sx={{ display: tab === 2 ? 'block' : 'none' }}>
-        <SeedsOwnershipTab
+        <SeedsView
           current={[
             farmerSilo.seeds.active,
           ]}
