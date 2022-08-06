@@ -18,8 +18,9 @@ import { displayBN } from '~/util';
 const SLUGS = ['deposits', 'stalk', 'seeds'];
 
 const Label : React.FC<{ name: string; token?: Token }> = ({ name, token, children }) => (
-  <Stack direction="row" alignItems="center" gap={0.5}>
+  <Stack direction="row" alignItems="center" gap={0.2}>
     {name}&nbsp;
+    {/* <Typography variant="h4">{children}</Typography> */}
     <Chip label={children} size="small" />
   </Stack>
 ); 
@@ -70,12 +71,12 @@ const Overview: React.FC<{
         <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0 }}>
           <StyledTab label={
             <Label name="Deposits">
-              <Fiat value={breakdown.states.deposited.value} amount={breakdown.states.deposited.value} />
+              <Fiat value={breakdown.states.deposited.value} amount={breakdown.states.deposited.value} truncate />
             </Label>
           } />
           <StyledTab label={
             <Label name="Stalk">
-              <Stack direction="row" alignItems="center"><TokenIcon token={STALK} style={{ marginTop: -3 }} /> {displayBN(farmerSilo.stalk.active)}</Stack>
+              <Stack direction="row" alignItems="center"><TokenIcon token={STALK} /> {displayBN(farmerSilo.stalk.active)}</Stack>
             </Label>
           } />
           <StyledTab label={
