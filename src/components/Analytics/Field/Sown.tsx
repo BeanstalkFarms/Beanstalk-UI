@@ -2,7 +2,7 @@ import React from 'react';
 import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
 import { SeasonalSownDocument, SeasonalSownQuery } from '~/generated/graphql';
 import useSeason from '~/hooks/useSeason';
-import { SnapshotData } from '~/hooks/useSeasons';
+import { SnapshotData } from '~/hooks/useSeasonsQuery';
 import { toTokenUnitsBN } from '~/util';
 import { BEAN } from '~/constants/tokens';
 

@@ -125,8 +125,8 @@ const Rinse : React.FC<{}> = () => {
   const { data: signer } = useSigner();
   
   /// Farmer data
-  const farmerFertilizer    = useFarmerFertilizer();
-  const [refetchFertilizer] = useFetchFarmerBarn();
+  const farmerBarn          = useFarmerFertilizer();
+  const [refetchFarmerBarn] = useFetchFarmerBarn();
   const [refetchBalances]   = useFetchFarmerBalances();
   
   /// Contracts
@@ -134,30 +134,30 @@ const Rinse : React.FC<{}> = () => {
 
   const initialValues : RinseFormValues = useMemo(() => ({
     destination: FarmToMode.INTERNAL,
-    amount: farmerFertilizer.fertilizedSprouts,
-  }), [farmerFertilizer.fertilizedSprouts]);
+    amount: farmerBarn.fertilizedSprouts,
+  }), [farmerBarn.fertilizedSprouts]);
 
   const onSubmit = useCallback(async (values: RinseFormValues, formActions: FormikHelpers<RinseFormValues>) => {
     let txToast;
     try {
-      if (!farmerFertilizer.fertilizedSprouts) throw new Error('No Sprouts to Rinse.');
+      if (!farmerBarn.fertilizedSprouts) throw new Error('No Sprouts to Rinse.');
       if (!values.destination) throw new Error('No destination set.');
       if (!account) throw new Error('Connect a wallet first.');
 
       txToast = new TransactionToast({
-        loading: `Rinsing ${displayFullBN(farmerFertilizer.fertilizedSprouts, SPROUTS.displayDecimals)} Sprouts...`,
-        success: `Rinse successful. Added ${displayFullBN(farmerFertilizer.fertilizedSprouts, SPROUTS.displayDecimals)} Beans to your ${copy.TO_MODE[values.destination]}.`,
+        loading: `Rinsing ${displayFullBN(farmerBarn.fertilizedSprouts, SPROUTS.displayDecimals)} Sprouts...`,
+        success: `Rinse successful. Added ${displayFullBN(farmerBarn.fertilizedSprouts, SPROUTS.displayDecimals)} Beans to your ${copy.TO_MODE[values.destination]}.`,
       });
 
       const txn = await beanstalk.claimFertilized(
-        Object.keys(farmerFertilizer.fertilizer),
+        farmerBarn.balances.map((bal) => bal.token.id.toString()),
         values.destination
       );
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
       await Promise.all([
-        refetchFertilizer(),
+        refetchFarmerBarn(),
         refetchBalances()
       ]);
       txToast.success(receipt);
@@ -173,9 +173,9 @@ const Rinse : React.FC<{}> = () => {
   }, [
     beanstalk,
     account,
-    farmerFertilizer?.fertilizer,
-    farmerFertilizer?.fertilizedSprouts,
-    refetchFertilizer,
+    farmerBarn?.balances,
+    farmerBarn?.fertilizedSprouts,
+    refetchFarmerBarn,
     refetchBalances,
   ]);
 

@@ -4,7 +4,7 @@ import { Line } from '@visx/shape';
 import { DocumentNode } from 'graphql';
 import Stat, { StatProps } from '~/components/Common/Stat';
 import LineChart, { DataPoint, LineChartProps } from '~/components/Common/Charts/LineChart';
-import useSeasons, { MinimumViableSnapshotQuery, SeasonAggregation, SeasonRange } from '~/hooks/useSeasons';
+import useSeasonsQuery, { MinimumViableSnapshotQuery, SeasonAggregation, SeasonRange } from '~/hooks/useSeasonsQuery';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import TimeTabs, { TimeTabState }  from './TimeTabs';
 
@@ -64,7 +64,7 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
 }: SeasonPlotFinalProps<T>) {
   /// Selected state
   const [tabState, setTimeTab] = useState<TimeTabState>([SeasonAggregation.HOUR, SeasonRange.WEEK]);
-  const { loading, data } = useSeasons<T>(document, tabState[1]);
+  const { loading, data } = useSeasonsQuery<T>(document, tabState[1]);
 
   /// Display values
   const [displayValue,  setDisplayValue]  = useState<number | undefined>(undefined);

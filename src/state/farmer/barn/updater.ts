@@ -1,18 +1,19 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import BigNumber from 'bignumber.js';
 import useChainConstant from '~/hooks/useChainConstant';
 import { useBeanstalkContract, useFertilizerContract } from '~/hooks/useContract';
 import { REPLANT_INITIAL_ID } from '~/hooks/useHumidity';
 import useChainId from '~/hooks/useChain';
-import { toTokenUnitsBN } from '~/util';
-import { ZERO_BN } from '~/constants';
+import { tokenResult } from '~/util';
 import useBlocks from '~/hooks/useBlocks';
-import ERC1155EventProcessor from '~/lib/ERC1155/ERC1155EventProcessor';
 import useAccount from '~/hooks/ledger/useAccount';
 import { resetFarmerBarn, updateFarmerBarn } from './actions';
 import useEvents, { GetQueryFilters } from '../events2/updater';
 import { EventCacheName } from '../events2';
+import { castFertilizerBalance, FertilizerResponse } from '~/state/farmer/barn';
+import { SPROUTS } from '~/constants/tokens';
+
+const fetchGlobal = fetch;
 
 /**
  * Try to call a subgraph -> formulate data
@@ -154,39 +155,59 @@ export const useFetchFarmerBarn = () => {
       console.debug('[farmer/fertilizer/updater] FETCH: ', replantId.toString());
 
       /// Fetch new events and re-run the processor.
-      const allEvents = await fetchEvents();
-      const { tokens } = new ERC1155EventProcessor(account, 0).ingestAll(allEvents || []);
-      const ids = Object.keys(tokens);
-      const idStrings = ids.map((id) => id.toString());
+      // const allEvents = await fetchEvents();
+      // const { tokens } = new ERC1155EventProcessor(account, 0).ingestAll(allEvents || []);
+      // const ids = Object.keys(tokens);
+      // const idStrings = ids.map((id) => id.toString());
+
+      const balances = await fetchGlobal('https://api.thegraph.com/subgraphs/name/publiuss/fertilizer', {
+        method: 'POST',
+        body: JSON.stringify({
+          query: `{
+            fertilizerBalances(where: { farmer: "${account}" }) {
+              amount
+              fertilizerToken {
+                id
+                endBpf
+                season
+                humidity
+                startBpf
+              }
+            }
+          }`
+        })
+      })
+      .then((r) => r.json() as unknown as { data: FertilizerResponse })
+      .then(({ data }) => data.fertilizerBalances.map(castFertilizerBalance));
+
+      /// FIXME: inefficient reconversion to string
+      const idStrings = balances.map((bal) => bal.token.id.toString());
 
       const [
-        balances,
         unfertilized,
         fertilized,
       ] = await Promise.all([
-        beanstalk.balanceOfBatchFertilizer(ids.map(() => account), idStrings),
         /// How much of each ID is Unfertilized (aka a Sprout)
-        beanstalk.balanceOfUnfertilized(account, idStrings),
+        beanstalk.balanceOfUnfertilized(account, idStrings).then(tokenResult(SPROUTS)),
         /// How much of each ID is Fertilized   (aka a Fertilized Sprout)
-        beanstalk.balanceOfFertilized(account, idStrings),
+        beanstalk.balanceOfFertilized(account, idStrings).then(tokenResult(SPROUTS)),
       ] as const);
 
       console.debug('[farmer/fertilizer/updater] RESULT: balances =', balances, unfertilized.toString(), fertilized.toString());
       
       /// Key the amount of fertilizer by ID.
-      let sum = ZERO_BN;
-      const fertById = balances.reduce((prev, curr, index) => {
-        sum = sum.plus(new BigNumber(curr.amount.toString()));
-        prev[ids[index]] = toTokenUnitsBN(curr.amount.toString(), 0);
-        return prev;
-      }, {} as { [key: string] : BigNumber });
-
-      console.debug('[farmer/fertilizer/updater] fertById =', fertById, sum.toString());
+      // let sum = ZERO_BN;
+      // const fertById = balances.reduce((prev, curr, index) => {
+      //   sum = sum.plus(new BigNumber(curr.amount.toString()));
+      //   prev[ids[index]] = toTokenUnitsBN(curr.amount.toString(), 0);
+      //   return prev;
+      // }, {} as { [key: string] : BigNumber });
+      // console.debug('[farmer/fertilizer/updater] fertById =', fertById, sum.toString());
 
       dispatch(updateFarmerBarn({
-        fertilizer: fertById,
-        unfertilizedSprouts: toTokenUnitsBN(unfertilized.toString(), 6),
-        fertilizedSprouts:   toTokenUnitsBN(fertilized.toString(), 6),
+        balances,
+        unfertilizedSprouts: unfertilized,
+        fertilizedSprouts:   fertilized,
       }));
     }
   }, [
@@ -195,7 +216,6 @@ export const useFetchFarmerBarn = () => {
     replantId,
     initialized,
     account,
-    fetchEvents,
   ]); 
 
   const clear = useCallback(() => { 

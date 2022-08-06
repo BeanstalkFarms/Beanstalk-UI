@@ -83,7 +83,7 @@ const DepositForm : React.FC<
   /// Derived
   const isReady   = bdv.gt(0);
 
-  // /
+  ///
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
     // If the user has typed some existing values in,
     // save them. Add new tokens to the end of the list.
