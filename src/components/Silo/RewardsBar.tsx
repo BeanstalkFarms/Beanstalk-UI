@@ -46,7 +46,7 @@ const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
       <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
         <RewardItem
           title="Earned Beans"
-          tooltip="The number of Beans earned since your last Plant. Earned Beans are already Deposited in the Silo."
+          tooltip="The number of Beans earned since your last Plant. Upon Plant, Earned Beans are Deposited in the current Season."
           amount={beans.earned}
           icon={beanIcon}
           compact={compact}
