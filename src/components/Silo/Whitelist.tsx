@@ -184,16 +184,16 @@ const Whitelist : React.FC<{
                               </Typography> Earned BEAN<br />
                               <Divider sx={{ my: 0.5, opacity: 0.7, borderBottomWidth: 0, }} />
                               = {displayFullBN(farmerSilo.beans.earned.plus(deposited?.amount || ZERO_BN), token.displayDecimals)} BEAN<br />
-                            </>
+                            </> 
                           )}>
                             <span>
                               {displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)}
-                              {farmerSilo.beans.earned.gt(0) ? (
+                              {/* {farmerSilo.beans.earned.gt(0) ? (
                                 <Typography component="span" color="primary.main">
                                   {' + '}
                                   {displayFullBN(farmerSilo.beans.earned, token.displayDecimals)}
                                 </Typography>
-                              ) : null}
+                              ) : null} */}
                             </span>
                           </Tooltip>
                         )
