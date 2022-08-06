@@ -261,7 +261,7 @@ const Transfer: React.FC<{ token: ERC20Token; }> = ({ token }) => {
       }
 
       txToast = new TransactionToast({
-        loading: `Transferring ${displayFullBN(withdrawResult.amount.abs(), token.displayDecimals, token.displayDecimals)} ${token.name} to ${trimAddress(values.to)}.`,
+        loading: `Transferring ${displayFullBN(withdrawResult.amount.abs(), token.displayDecimals, token.displayDecimals)} ${token.name} to ${trimAddress(values.to, true)}.`,
         success: 'Transfer successful.',
       });
 

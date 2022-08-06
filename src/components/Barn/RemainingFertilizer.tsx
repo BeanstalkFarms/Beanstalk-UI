@@ -40,7 +40,7 @@ const RemainingFertilizer: React.FC = () => {
             <Stack gap={0.5}>
               <Tooltip
                 title="Once bought, Available Fertilizer becomes Active. Active Fertilizer comes with Sprouts, the number of Beans to be earned from Active Fertilizer. One-third of Bean mints go towards Fertilizing Sprouts when there is Active Fertilizer."
-                placement="top-start"
+                placement="bottom"
               >
                 <Typography variant="body1">
                   Available Fertilizer&nbsp;
@@ -72,7 +72,7 @@ const RemainingFertilizer: React.FC = () => {
             <Stack gap={0.5}>
               <Tooltip
                 title="The interest rate on Fertilizer. The Humidity will decrease to 250% once Beanstalk is Replanted, and decrease 0.5% every Season until 20% Humidity is reached. The Humidity determines how many Sprouts come with Fertilizer."
-                placement="top-start"
+                placement="bottom"
               >
                 <Typography>
                   Humidity&nbsp;

@@ -2,9 +2,9 @@ import React, { useCallback, useMemo } from 'react';
 import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@mui/material';
-import { AppState } from '~/state';
-import COLUMNS from '~/components/Common/Table/cells';
+import COLUMNS from 'components/Common/Table/cells';
+import { Button, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import MarketBaseTable from './Base';
 import AuthEmptyState from '../../Common/ZeroState/AuthEmptyState';
 import TablePagination from '../../Common/TablePagination';
@@ -23,6 +23,8 @@ const components = {
 };
 
 const MyListingsTable : React.FC<{}> = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   /// Data
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
   const listings       = useSelector<AppState, AppState['_farmer']['market']['listings']>((state) => state._farmer.market.listings);
@@ -35,15 +37,22 @@ const MyListingsTable : React.FC<{}> = () => {
   }, [navigate]);
 
   /// Data Grid setup
-  const columns: DataGridProps['columns'] = [
-    COLUMNS.listingId,
-    COLUMNS.plotIndex(beanstalkField.harvestableIndex),
-    COLUMNS.pricePerPod,
-    COLUMNS.numPodsActive,
-    COLUMNS.expiry(beanstalkField.harvestableIndex),
-    COLUMNS.progress,
-    COLUMNS.rightChevron,
-  ];
+  const columns: DataGridProps['columns'] = !isMobile
+    ? [
+      COLUMNS.listingId(1),
+      COLUMNS.plotIndex(beanstalkField.harvestableIndex, 1),
+      COLUMNS.pricePerPod(1),
+      COLUMNS.numPodsActive(1),
+      COLUMNS.expiry(beanstalkField.harvestableIndex, 1),
+      COLUMNS.progress,
+      COLUMNS.rightChevron,
+    ]
+    : [
+      COLUMNS.listingId(0.7),
+      COLUMNS.plotIndex(beanstalkField.harvestableIndex, 1),
+      COLUMNS.pricePerPod(1),
+      COLUMNS.numPodsActive(1),
+    ];
   
   return (
     <MarketBaseTable

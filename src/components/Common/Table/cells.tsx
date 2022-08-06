@@ -50,15 +50,14 @@ const COLUMNS = {
   ///
   /// Market
   ///
-  numPods: {
+  numPods: (flex: number) => ({
     field: 'totalAmount',
     headerName: 'Amount',
     type: 'number',
-    flex: 1,
+    flex: flex,
     // disableColumnMenu: true,
-
-    align: 'left',
-    headerAlign: 'left',
+    align: 'right',
+    headerAlign: 'right',
     renderCell: (params: GridRenderCellParams) => (
       <Tooltip
         placement="right"
@@ -75,12 +74,18 @@ const COLUMNS = {
         </Stack>
       </Tooltip>
     ),
-  } as GridColumns[number],
+  }) as GridColumns[number],
 
-  listingId: {
+  listingId: (flex: number) => ({
     field: 'id',
-    headerName: 'Pod Listing',
-    flex: 1,
+    headerName: 'Listing',
+    // renderHeader: (params: GridColumnHeaderParams) => (
+    //   <Box>
+    //     <Typography display={{ xs: 'none', md: 'block' }}>Pod Listing</Typography>
+    //     <Typography display={{ xs: 'block', md: 'none' }}>Listing</Typography>
+    //   </Box>
+    // ),
+    flex: flex,
     disableColumnMenu: true,
     align: 'left',
     headerAlign: 'left',
@@ -102,18 +107,24 @@ const COLUMNS = {
             }}>
             <TokenIcon token={PODS} />
           </Stack>
-          <Typography>
+          <Typography display={{ xs: 'none', md: 'block' }}>
             #{params.row.id}
           </Typography>
         </Stack>
       </Tooltip>
     )
-  } as GridColumns[number],
+  }) as GridColumns[number],
 
-  orderId: {
+  orderId: (flex: number) => ({
     field: 'id',
-    headerName: 'Pod Order',
-    flex: 1,
+    headerName: 'Order',
+    // renderHeader: (params: GridColumnHeaderParams) => (
+    //   <>
+    //     <Typography display={{ xs: 'none', md: 'block' }}>Pod Order</Typography>
+    //     <Typography display={{ xs: 'block', md: 'none' }}>Order</Typography>
+    //   </>
+    // ),
+    flex: flex,
     disableColumnMenu: true,
     align: 'left',
     headerAlign: 'left',
@@ -136,23 +147,23 @@ const COLUMNS = {
             }}>
             <TokenIcon token={PODS} />
           </Stack>
-          <Typography>
+          <Typography display={{ xs: 'none', md: 'block' }}>
             {params.row.id.substring(0, 8)}
           </Typography>
         </Stack>
       </Tooltip>
     )
-  } as GridColumns[number],
+  }) as GridColumns[number],
 
   ///
-  numPodsActive: {
+  numPodsActive: (flex: number) => ({
     field: 'remainingAmount',
     headerName: 'Amount',
-    flex: 1,
+    flex: flex,
     type: 'number',
     // disableColumnMenu: true,
-    align: 'left',
-    headerAlign: 'left',
+    align: 'right',
+    headerAlign: 'right',
     renderCell: (params: GridRenderCellParams<any, PodListing>) => (
       <Tooltip
         placement="right"
@@ -170,7 +181,7 @@ const COLUMNS = {
       </Tooltip>
 
     )
-  } as GridColumns[number],
+  }) as GridColumns[number],
   progress: {
     field: 'progress',
     headerName: 'Progress',
@@ -195,13 +206,13 @@ const COLUMNS = {
       );
     },
   } as GridColumns[number],
-  pricePerPod: {
+  pricePerPod: (flex: number) => ({
     field: 'pricePerPod',
     headerName: 'Price per Pod',
     type: 'number',
     align: 'left',
     headerAlign: 'left',
-    flex: 1,
+    flex: flex,
     renderCell: (params: GridRenderCellParams<any, PodListing | PodOrder>) => (
       <Stack direction="row" gap={0.3} alignItems="center">
         <TokenIcon token={BEAN[1]} />
@@ -210,7 +221,7 @@ const COLUMNS = {
         </Typography>
       </Stack>
     ),
-  } as GridColumns[number],
+  }) as GridColumns[number],
 
   fromAccount: {
     field: 'account',
@@ -224,10 +235,10 @@ const COLUMNS = {
   } as GridColumns[number],
 
   // https://mui.com/x/react-data-grid/column-definition/#converting-types
-  plotIndex: (harvestableIndex: BigNumber) => ({
+  plotIndex: (harvestableIndex: BigNumber, flex: number) => ({
     field: 'index',
     headerName: 'Place in Line',
-    flex: 1,
+    flex: flex,
     type: 'number',
     align: 'left',
     headerAlign: 'left',
@@ -235,34 +246,47 @@ const COLUMNS = {
       params.value - harvestableIndex.toNumber()
     ),
     renderCell: (params: GridRenderCellParams) => (
-      <Typography>
-        {displayFullBN(new BigNumber(params.value), 0)}
-      </Typography>
+      <>
+        <Typography display={{ xs: 'none', md: 'block' }}>
+          {displayFullBN(new BigNumber(params.value), 0)}
+        </Typography>
+        <Typography display={{ xs: 'block', md: 'none' }}>
+          {displayBN(new BigNumber(params.value))}
+        </Typography>
+      </>
     ),
   } as GridColumns[number]),
-  maxPlaceInLine: {
+  maxPlaceInLine: (flex: number) => ({
     field: 'maxPlaceInLine',
     headerName: 'Place in Line',
     type: 'number',
-    flex: 1,
+    flex: flex,
     align: 'left',
     headerAlign: 'left',
     valueGetter: (params: GridRenderCellParams) => (
       (params.value as BigNumber).toNumber()
     ),
     renderCell: (params: GridRenderCellParams) => (
-      <Typography>
-        0 - {displayFullBN(new BigNumber(params.value), 0)}
-      </Typography>
+      <>
+        <Typography display={{ xs: 'none', md: 'block' }}>
+          0 - {displayFullBN(new BigNumber(params.value), 0)}
+        </Typography>
+        <Typography display={{ xs: 'block', md: 'none' }}>
+          0 - {displayBN(new BigNumber(params.value))}
+        </Typography>
+      </>
     ),
-  } as GridColumns[number],
+  }) as GridColumns[number],
   expiry: (
-    harvestableIndex: BigNumber
+    harvestableIndex: BigNumber,
+    flex: number
   ) => ({
     field: 'maxHarvestableIndex',
     headerName: 'Expires in',
-    flex: 1,
+    flex: flex,
     value: 'number',
+    align: 'right',
+    headerAlign: 'right',
     filterable: false, // TODO: make this filterable
     renderCell: (params: GridRenderCellParams) => {
       const expiresIn = MaxBN((params.value as BigNumber).minus(harvestableIndex), ZERO_BN);

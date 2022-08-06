@@ -47,7 +47,7 @@ const PillSelectField : React.FC<PillSelectFieldProps> = ({
             pl={0.5}
           >
             {/* Dialog contents */}
-            <Stack gap={1} sx={{ minWidth: 400 }}>
+            <Stack gap={1}>
               {options.map((option, index) => (
                 <DescriptionButton
                   key={index}

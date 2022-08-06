@@ -112,7 +112,7 @@ const SmartSubmitButton : React.FC<{
         success: `Success. ${
           CONTRACT_NAMES[contract.address]
             ? `The ${CONTRACT_NAMES[contract.address]} contract`
-            : `Contract ${trimAddress(contract.address)}`
+            : `Contract ${trimAddress(contract.address, true)}`
         } can now transact with your ${nextApprovalToken.name}.`,
       });
       setFieldValue('approving', {

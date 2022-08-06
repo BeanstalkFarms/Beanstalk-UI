@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Card, CardProps } from '@mui/material';
+import { Box, Card, CardProps, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { AppState } from '~/state';
 import Fiat from '~/components/Common/Fiat';
@@ -32,7 +32,7 @@ const LiquidityOverTime: React.FC<LiquidityOverviewProps & CardProps> = ({
       />
       <Box sx={{ position: 'relative ' }}>
         <BlurComponent blur={10} opacity={0.7}>
-          Historical liquidity will be available soon.
+          <Typography variant="body1" color="gray">Historical liquidity will be available soon.</Typography>
         </BlurComponent>
         <LiquidityBalances
           balances={balances}

@@ -14,7 +14,6 @@ import beanIcon from '~/img/tokens/bean-logo-circled.svg';
 import ActivityTable from '~/components/Market/Tables/Activity';
 import { displayBN, displayFullBN } from '../../util';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
-import BlurComponent from '../../components/Common/ZeroState/BlurComponent';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -108,9 +107,6 @@ const MarketActivityPage: React.FC = () => {
         />
         <Card>
           <Box sx={{ position: 'relative ' }}>
-            <BlurComponent blur={10} opacity={0.7}>
-              Marketplace activity will be available soon.
-            </BlurComponent>
             {content}
           </Box>
         </Card>

@@ -57,7 +57,9 @@ const DepositsTab: React.FC<TabData> = ({ season, current, series }) => {
             </Stack>
           </BlurComponent>
         ) : (
-          <BlurComponent blur={6}>Historical Deposit value will be available soon.</BlurComponent>
+          <BlurComponent blur={6}>
+            <Typography variant="body1" color="gray">Historical Deposit value will be available soon.</Typography>
+          </BlurComponent>
         )}
         <LineChart
           series={series}
@@ -114,7 +116,9 @@ const StalkOwnershipTab: React.FC<TabData
             </Stack>
           </BlurComponent>
         ) : (
-          <BlurComponent blur={6}>Historical Stalk balance and ownership will be available soon.</BlurComponent>
+          <BlurComponent blur={6}>
+            <Typography variant="body1" color="gray">Historical Stalk balance and ownership will be available soon.</Typography>
+          </BlurComponent>
         )}
         <LineChart
           series={series}
@@ -162,7 +166,9 @@ const SeedsOwnershipTab: React.FC<TabData
             </Stack>
           </BlurComponent>
         ) : (
-          <BlurComponent blur={6}>Historical Seed balance will be available soon.</BlurComponent>
+          <BlurComponent blur={6}>
+            <Typography variant="body1" color="gray">Historical Seed balance will be available soon.</Typography>
+          </BlurComponent>
         )}
         <LineChart
           series={series}

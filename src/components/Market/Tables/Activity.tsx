@@ -3,6 +3,7 @@ import { Box, BoxProps, Card, Typography } from '@mui/material';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { tableStyle } from '../../Common/Table/styles';
 import TablePagination from '../../Common/TablePagination';
+import BlurComponent from '../../Common/ZeroState/BlurComponent';
 
 const MAX_ROWS = 10;
 
@@ -25,32 +26,37 @@ const ActivityTable: React.FC<
       <Box pt={2} px={2} pb={1.5}>
         <Typography variant="h4" sx={{ pb: 1 }}>Marketplace Activity</Typography>
       </Box>
-
-      <Box display="flex" alignItems="center" justifyContent="center" sx={{ px: 1, pb: 1 }}>
-        <Box
-          sx={{
-            height: tableHeight,
-            width: '100%',
-            ...tableStyle
-          }}
-        >
-          <DataGrid
-            columns={columns}
-            rows={rows}
-            pageSize={MAX_ROWS}
-            disableSelectionOnClick
-            density="compact"
-            initialState={{
-              sorting: {
-                sortModel: [{ field: 'placeInLine', sort: 'asc' }],
-              }
+      <Box sx={{ width: '100%', height: '450px', position: 'relative' }}>
+        <BlurComponent blur={10} opacity={0.7}>
+          <Typography variant="body1" color="gray">Marketplace activity will be available soon.</Typography>
+        </BlurComponent>
+        <Box display="flex" alignItems="center" justifyContent="center" sx={{ px: 1, pb: 1 }}>
+          <Box
+            sx={{
+              height: tableHeight,
+              width: '100%',
+              ...tableStyle
             }}
-            components={{
-              Pagination: TablePagination
-            }}
-          />
+          >
+            <DataGrid
+              columns={columns}
+              rows={rows}
+              pageSize={MAX_ROWS}
+              disableSelectionOnClick
+              density="compact"
+              initialState={{
+                sorting: {
+                  sortModel: [{ field: 'placeInLine', sort: 'asc' }],
+                }
+              }}
+              components={{
+                Pagination: TablePagination
+              }}
+            />
+          </Box>
         </Box>
       </Box>
+
     </Card>
   );
 };

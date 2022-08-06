@@ -204,7 +204,7 @@ const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
         } : props.sx}
       >
         <Typography variant="bodyMedium" display={{ xs: 'none', sm: 'block' }}>
-          {trimAddress(account, false)}
+          {trimAddress(account, true)}
           {/* {trimAddress(getAccount(account.address), !isMedium)} */}
         </Typography>
       </Button>
