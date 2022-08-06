@@ -32,10 +32,10 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
       amount: beanstalkSilo.seeds.total
     },
     {
-      title: 'Pods',
+      title: 'Pod Line',
       tooltip: 'This is the total number of pods ever minted.',
       token: PODS,
-      amount: beanstalkField.podIndex // FIXME: @silochad - is this what we want?
+      amount: beanstalkField.podLine // FIXME: @silochad - is this what we want?
     },
     {
       title: 'Sprouts',
