@@ -128,7 +128,7 @@ const BuyForm : React.FC<
                 <FertilizerItem
                   isNew
                   amount={fert}
-                  remaining={fert.multipliedBy(humidity.plus(1))}
+                  sprouts={fert.multipliedBy(humidity.plus(1))}
                   humidity={humidity}
                   state="active"
                   tooltip={BUY_FERTILIZER}

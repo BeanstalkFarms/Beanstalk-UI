@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Box,
   Card,
@@ -43,6 +43,13 @@ const MyFertilizer: React.FC = () => {
       ONE_BN
     )
   ), [beanstalkBarn.currentBpf]);
+
+  const filteredBalances = useMemo(() => farmerBarn.balances?.filter((balance) => {
+    const pct = pctRepaid(balance);
+    if (tab === TabState.ACTIVE && pct.gte(1)) return false;
+    if (tab === TabState.USED && pct.lt(1)) return false;
+    return true;
+  }) || [], [farmerBarn.balances, pctRepaid, tab]);
 
   return (
     <Card>
@@ -117,19 +124,15 @@ const MyFertilizer: React.FC = () => {
           </Tabs>
         </Stack>
         <Box>
-          {farmerBarn.balances?.length > 0 ? (
+          {filteredBalances.length > 0 ? (
             <Grid container spacing={3}>
-              {farmerBarn.balances.map((balance) => {
-                // const id = new BigNumber(balance);
-                // const season = new BigNumber(6_074);
-                // const amount = farmerBarn.fertilizer[balance];
-                // const humidity = humidityAt(id);
-                // const remaining = humidity ? amount.multipliedBy(humidity.plus(1)) : undefined;
+              {filteredBalances.map((balance) => {
                 const pct = pctRepaid(balance);
-                const humidity = balance.token.humidity;
                 const status = pct.eq(1) ? 'used' : 'active';
+                const humidity = balance.token.humidity;
                 const debt = balance.amount.multipliedBy(humidity.div(100).plus(1));
-                const remaining = debt.multipliedBy(ONE_BN.minus(pct));
+                const sprouts = debt.multipliedBy(ONE_BN.minus(pct));
+                const rinsableSprouts = debt.multipliedBy(pct);
                 return (
                   <Grid key={balance.token.id.toString()} item xs={12} md={4}>
                     <FertilizerItem
@@ -137,8 +140,9 @@ const MyFertilizer: React.FC = () => {
                       season={balance.token.season}
                       state={status}
                       humidity={humidity.div(100)}
-                      remaining={remaining}
-                      amount={balance.amount}
+                      amount={balance.amount} // of FERT
+                      rinsableSprouts={rinsableSprouts} // rinsable sprouts
+                      sprouts={sprouts} // sprouts
                       progress={pct.toNumber()}
                       tooltip={MY_FERTILIZER}
                     />
