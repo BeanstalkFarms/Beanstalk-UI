@@ -2,12 +2,13 @@ import React, { useCallback, useMemo } from 'react';
 import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import COLUMNS from 'components/Common/Table/cells';
 import { Button, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import COLUMNS from '~/components/Common/Table/cells';
 import MarketBaseTable from './Base';
 import AuthEmptyState from '../../Common/ZeroState/AuthEmptyState';
 import TablePagination from '../../Common/TablePagination';
+import { AppState } from '~/state';
 
 const components = {
   NoRowsOverlay() {

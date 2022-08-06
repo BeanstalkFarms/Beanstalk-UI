@@ -12,9 +12,9 @@ import {
 } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { makeStyles } from '@mui/styles';
-import { BEAN, PODS } from 'constants/tokens';
-import useFarmerListings from 'hooks/redux/useFarmerListings';
 import { useTheme } from '@mui/material/styles';
+import { BEAN, PODS } from '~/constants/tokens';
+import useFarmerListings from '~/hooks/redux/useFarmerListings';
 import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
 import { displayBN, displayFullBN, toStringBaseUnitBN } from '../../util';
 import podIcon from '../../img/beanstalk/pod-icon.svg';
