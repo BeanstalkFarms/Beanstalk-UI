@@ -46,13 +46,21 @@ const PageHeader : React.FC<{
         </Stack>
         <Stack>
           {props.title && (
-            <Typography
-              variant="h2"
-              textAlign="center"
-            >
-              {props.icon}&nbsp;
-              {props.title}
-            </Typography>
+            <>
+              {typeof props.title === 'string' ? (
+                <Typography
+                  variant="h2"
+                  textAlign="center"
+                >
+                  {props.icon}&nbsp;
+                  {props.title}
+                </Typography>
+              ) : (
+                <>
+                  {props.title}
+                </>
+              )}
+            </>
           )}
         </Stack>
         <Box sx={{ width: 70 }} />
