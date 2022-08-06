@@ -1,14 +1,43 @@
 import BigNumber from 'bignumber.js';
 
+/// TEMP: SUBGRAPH RESPONSE
+// https://api.thegraph.com/subgraphs/name/publiuss/fertilizer/graphql
+
+export type FertilizerResponse = {
+  fertilizerBalances: ({
+    amount: string;
+    fertilizerToken: {
+      id: string;
+      endBpf: string;
+      season: number;
+      humidity: string;
+      startBpf: string;
+    };
+  })[];
+};
+
+export const castFertilizerBalance = (balance: FertilizerResponse['fertilizerBalances'][number]) => ({
+  amount: new BigNumber(balance.amount),
+  token: {
+    id:     new BigNumber(balance.fertilizerToken.id),
+    endBpf: new BigNumber(balance.fertilizerToken.endBpf),
+    season: new BigNumber(balance.fertilizerToken.season),
+    humidity: new BigNumber(balance.fertilizerToken.humidity),
+    startBpf: new BigNumber(balance.fertilizerToken.startBpf),
+  }
+});
+
+export type FertilizerBalance = ReturnType<typeof castFertilizerBalance>;
+
 export type FarmerBarn = {
   /** 
    * Fertilizer ERC1155 tokens. The key is a token ID,
    * value is the amount of that ID owned by the Farmer.
    * In Beanstlak this is referred to as "Fertilized".
    */
-  fertilizer: {
-    [id: string]: BigNumber;
-  };
+  // fertilizer: {
+  //   [id: string]: BigNumber;
+  // };
 
   /**
    * The total number of [Unfertilized] Sprouts held by the Farmer.
@@ -21,4 +50,9 @@ export type FarmerBarn = {
    * When the Farmer calls `rinse()` this is reset to 0.
    */
   fertilizedSprouts: BigNumber;
+
+  /**
+   * 
+   */
+  balances: FertilizerBalance[]
 }

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback } from 'react';
 import {
   Box,
   Card,
@@ -10,20 +10,19 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { useHumidityAtId } from '~/hooks/useHumidity';
 import FertilizerItem from '~/components/Barn/FertilizerItem';
 import { MY_FERTILIZER } from '~/components/Barn/FertilizerItemTooltips';
 import useTabs from '~/hooks/display/useTabs';
 import EmptyState from '~/components/Common/ZeroState/EmptyState';
-import { displayFullBN, MaxBN } from '~/util/Tokens';
+import { displayFullBN, MaxBN, MinBN } from '~/util/Tokens';
 import { SPROUTS, RINSABLE_SPROUTS } from '~/constants/tokens';
-import { ZERO_BN } from '~/constants';
+import { ONE_BN, ZERO_BN } from '~/constants';
 import { AppState } from '~/state';
 import TokenIcon from '../Common/TokenIcon';
 import { FontSize } from '../App/muiTheme';
+import { FertilizerBalance } from '~/state/farmer/barn';
 
 enum TabState {
   ACTIVE = 0,
@@ -32,25 +31,18 @@ enum TabState {
 
 const MyFertilizer: React.FC = () => {
   /// Data
-  const beanstalkBarn = useSelector<AppState, AppState['_beanstalk']['barn']>(
-    (state) => state._beanstalk.barn
-  );
-  const farmerBarn = useSelector<AppState, AppState['_farmer']['barn']>(
-    (state) => state._farmer.barn
-  );
+  const beanstalkBarn = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
+  const farmerBarn = useSelector<AppState, AppState['_farmer']['barn']>((state) => state._farmer.barn);
 
   /// Helpers
-  const humidityAt = useHumidityAtId();
   const [tab, handleChange] = useTabs();
-
-  /// Local data
-  const tokenIds = useMemo(
-    () =>
-      Object.keys(farmerBarn.fertilizer).filter(
-        () => tab === TabState.ACTIVE
-      ),
-    [farmerBarn.fertilizer, tab]
-  );
+  const pctRepaid = useCallback((balance: FertilizerBalance) => (
+    MinBN(
+      (beanstalkBarn.currentBpf.minus(balance.token.startBpf))
+        .div(balance.token.id.minus(balance.token.startBpf)),
+      ONE_BN
+    )
+  ), [beanstalkBarn.currentBpf]);
 
   return (
     <Card>
@@ -125,25 +117,29 @@ const MyFertilizer: React.FC = () => {
           </Tabs>
         </Stack>
         <Box>
-          {tokenIds.length > 0 ? (
+          {farmerBarn.balances?.length > 0 ? (
             <Grid container spacing={3}>
-              {tokenIds.map((_id) => {
-                const id = new BigNumber(_id);
-                const season = new BigNumber(6_074);
-                const amount = farmerBarn.fertilizer[_id];
-                const humidity = humidityAt(id);
-                const remaining = humidity ? amount.multipliedBy(humidity.plus(1)) : undefined;
+              {farmerBarn.balances.map((balance) => {
+                // const id = new BigNumber(balance);
+                // const season = new BigNumber(6_074);
+                // const amount = farmerBarn.fertilizer[balance];
+                // const humidity = humidityAt(id);
+                // const remaining = humidity ? amount.multipliedBy(humidity.plus(1)) : undefined;
+                const pct = pctRepaid(balance);
+                const humidity = balance.token.humidity;
+                const status = pct.eq(1) ? 'used' : 'active';
+                const debt = balance.amount.multipliedBy(humidity.div(100).plus(1));
+                const remaining = debt.multipliedBy(ONE_BN.minus(pct));
                 return (
-                  <Grid key={_id} item xs={12} md={3}>
+                  <Grid key={balance.token.id.toString()} item xs={12} md={4}>
                     <FertilizerItem
-                      id={id}
-                      season={season}
-                      state="active"
-                      humidity={humidity}
+                      id={balance.token.id}
+                      season={balance.token.season}
+                      state={status}
+                      humidity={humidity.div(100)}
                       remaining={remaining}
-                      amount={amount}
-                      progress={beanstalkBarn.currentBpf.div(id).toNumber()}
-                      // season={season}
+                      amount={balance.amount}
+                      progress={pct.toNumber()}
                       tooltip={MY_FERTILIZER}
                     />
                   </Grid>
