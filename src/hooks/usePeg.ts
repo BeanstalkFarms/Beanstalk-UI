@@ -184,31 +184,31 @@ const usePeg = () => {
     deltaPodDemand,
   );
 
-  console.log('usePeg', {
-    inputs: {
-      deltaB: bean.deltaB.toString(),
-      podRate: podRate.div(100).toString(),
-      unfertilized: barn.unfertilized.toString(),
-      unharvestable: field.podLine.toString(),
-      weather: {
-        nextSowTime: field.weather.nextSowTime.toString(),
-        lastSowTime: field.weather.lastSowTime.toString(),
-        startSoil: field.weather.startSoil.toString(),
-        soil: field.soil.toString(),
-        lastDSoil: field.weather.lastDSoil.toString(),
-        yield: field.weather.yield.toString(),
-      }
-    },
-    derived: {
-      deltaBMultiplier: deltaBMultiplier.toString(),
-      deltaBNext: deltaBNext.toString(),
-    },
-    outputs: {
-      newHarvestablePods: newHarvestablePods.toString(),
-      soilStart: soilStart.toString(),
-      deltaTemperature: deltaTemperature.toString()
-    },
-  });
+  // console.log('usePeg', {
+  //   inputs: {
+  //     deltaB: bean.deltaB.toString(),
+  //     podRate: podRate.div(100).toString(),
+  //     unfertilized: barn.unfertilized.toString(),
+  //     unharvestable: field.podLine.toString(),
+  //     weather: {
+  //       nextSowTime: field.weather.nextSowTime.toString(),
+  //       lastSowTime: field.weather.lastSowTime.toString(),
+  //       startSoil: field.weather.startSoil.toString(),
+  //       soil: field.soil.toString(),
+  //       lastDSoil: field.weather.lastDSoil.toString(),
+  //       yield: field.weather.yield.toString(),
+  //     }
+  //   },
+  //   derived: {
+  //     deltaBMultiplier: deltaBMultiplier.toString(),
+  //     deltaBNext: deltaBNext.toString(),
+  //   },
+  //   outputs: {
+  //     newHarvestablePods: newHarvestablePods.toString(),
+  //     soilStart: soilStart.toString(),
+  //     deltaTemperature: deltaTemperature.toString()
+  //   },
+  // });
 
   return {
     rewardBeans: deltaBNext,

@@ -30,7 +30,7 @@ import { ActionType } from '../../../util/Actions';
 
 export type FillOrderFormValues = {
   plot: PlotFragment;
-  destination: FarmToMode;
+  destination: FarmToMode | undefined;
   settings: PlotSettingsFragment & {};
 }
 
@@ -42,18 +42,14 @@ const FillOrderForm: React.FC<
     harvestableIndex: BigNumber;
   }
 > = ({
-  //
   values,
   isSubmitting,
-  //
   podOrder,
   plots: allPlots,  // rename to prevent collision
   harvestableIndex,
 }) => {
   /// Derived
   const plot = values.plot;
-
-  /// Calculations
   const [eligiblePlots, numEligiblePlots] = useMemo(() => 
     Object.keys(allPlots).reduce<[PlotMap<BigNumber>, number]>(
       (prev, curr) => {
@@ -101,7 +97,6 @@ const FillOrderForm: React.FC<
                     actions={[
                       {
                         type: ActionType.SELL_PODS,
-                        // message: `Sell ${displayTokenAmount(plot.amount!, PODS)} from your Plot at ${displayBN(placeInLine!)} in the Pod Line.`
                         podAmount: plot.amount ? plot.amount : ZERO_BN,
                         placeInLine: placeInLine !== undefined ? placeInLine : ZERO_BN
                       },
@@ -157,7 +152,7 @@ const FillOrder: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
       end:    null,
       amount: null,
     },
-    destination: FarmToMode.INTERNAL,
+    destination: undefined,
     settings: {
       showRangeSelect: false,
     }
@@ -175,6 +170,7 @@ const FillOrder: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
       const numPods = allPlots[index];
       if (!numPods) throw new Error('Plot not recognized.');
       if (!start || !amount) throw new Error('Malformatted plot data.');
+      if (!values.destination) throw new Error('No destination selected.');
 
       console.debug('[FillOrder]', {
         numPods: numPods.toString(),
@@ -191,7 +187,7 @@ const FillOrder: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
           Bean.stringify(index),
           Bean.stringify(start),
           Bean.stringify(amount),
-          FarmToMode.EXTERNAL,
+          values.destination,
         ]
       });
 
@@ -210,7 +206,7 @@ const FillOrder: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
         Bean.stringify(index),    // index of plot to sell
         Bean.stringify(start),    // start index within plot
         Bean.stringify(amount),   // amount of pods to sell
-        FarmToMode.EXTERNAL,
+        values.destination,
       );
       txToast.confirming(txn);
 

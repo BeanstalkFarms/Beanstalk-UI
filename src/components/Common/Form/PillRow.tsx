@@ -34,10 +34,16 @@ const PillRow : React.FC<{
       </Typography>
     </Tooltip>
     <Button
-      variant="contained"
+      variant="outlined"
       onClick={onClick}
-      color="light"
-      sx={{ px: 0.5, height: 'auto' }}
+      color="dark"
+      sx={{
+        px: 0.75,
+        py: 0.5,
+        my: 0.5,
+        transition: 'none',
+        height: 'auto'
+      }}
     >
       <Stack direction="row" gap={0.5} alignItems="center">
         {children}
