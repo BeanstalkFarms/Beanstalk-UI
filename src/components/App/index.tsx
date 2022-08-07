@@ -110,8 +110,6 @@ export default function App() {
        * Farmer Updaters
        * ----------------------- */}
       <FarmerFieldUpdater />
-      {/* <FarmerEventsUpdater /> */}
-      {/* <FarmerEventsProcessor /> */}
       <FarmerBalancesUpdater />
       <FarmerBarnUpdater />
       <FarmerMarketUpdater />
@@ -149,7 +147,6 @@ export default function App() {
         <Routes>
           <Route path="/" element={<ForecastPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
-          {/* <Route path="/analytics/barnraise" element={<BarnraiseAnalytics />} /> */}
           <Route path="/balances" element={<BalancesPage />} />
           <Route path="/barn" element={<Barn />} />
           <Route path="/chop" element={<ChopPage />} />
