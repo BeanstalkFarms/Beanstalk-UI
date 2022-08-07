@@ -98,7 +98,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         animation: awaiting ? 'rotate linear 2000ms' : 'none',
         animationIterationCount: 'infinite',
       }}
-      alt="Dry Season"
+      alt=""
     />
   );
 
