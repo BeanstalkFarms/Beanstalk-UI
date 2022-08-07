@@ -97,7 +97,7 @@ const SunriseButton : React.FC = () => {
                           </Stack>
                         ) : (
                           <Stack direction="row" justifyContent="center">
-                            <Typography variant="body1">Sunrise has already been called this Season.</Typography>
+                            <Typography textAlign="center" variant="body1">Sunrise available&nbsp;<span style={{ display: 'inline' }}><SunriseCountdown /></span>.</Typography>
                           </Stack>
                         )}
                         <Stack direction="row" justifyContent="center">
@@ -109,14 +109,14 @@ const SunriseButton : React.FC = () => {
                     <Typography sx={{ mx: 0 }} textAlign="center" variant="body1" color={BeanstalkPalette.washedRed}>Calling this function from the app is strongly discouraged because there is a high likelihood that your transaction will get front-run by bots.</Typography>
                     <LoadingButton
                       type="submit"
+                      variant="contained"
                       onClick={onSubmit}
                       loading={formikProps.isSubmitting}
                       disabled={disabled}
-                      color="light"
                       sx={{
                         backgroundColor: BeanstalkPalette.washedRed,
                         height: { xs: '60px', md: '45px' },
-                        color: BeanstalkPalette.white,
+                        color:  BeanstalkPalette.white,
                         '&:hover': {
                           backgroundColor: `${BeanstalkPalette.washedRed} !important`,
                           opacity: 0.9
@@ -130,7 +130,7 @@ const SunriseButton : React.FC = () => {
               </Dialog>
               <LoadingButton
                 loading={formikProps.isSubmitting}
-                disabled={disabled}
+                // disabled={disabled}
                 variant="contained"
                 onClick={show}
                 sx={{
@@ -147,7 +147,7 @@ const SunriseButton : React.FC = () => {
               >
                 {!disabled ? (
                   <>
-                    <img src={sunIcon} alt="Sunrise" style={{ height: 28 }} />&nbsp;
+                    <img src={sunIcon} alt="" style={{ height: 28 }} />&nbsp;
                     Sunrise
                   </>
                 ) : (
