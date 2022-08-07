@@ -2,6 +2,7 @@ import { DateTime } from 'luxon';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
+import toast from 'react-hot-toast';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useSeason from '~/hooks/useSeason';
 import { AppState } from '~/state';
@@ -81,7 +82,8 @@ const SunUpdater = () => {
   }, [dispatch, awaiting, next, fetch]);
   
   useEffect(() => {
-    if (season.eq(seasonTime)) {
+    if (season.eq(seasonTime) && season.gt(-1)) {
+      toast.success(`The Sun has risen. It is now Season ${season.toString()}.`);
       dispatch(setAwaitingSunrise(false));
       dispatch(setRemainingUntilSunrise(getNextExpectedSunrise().diffNow()));
     }
