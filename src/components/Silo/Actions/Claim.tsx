@@ -305,6 +305,7 @@ const Claim : React.FC<{
       const crates = siloBalance?.claimable?.crates;
       if (!crates || crates.length === 0) throw new Error('No claimable crates.');
       if (!values.destination) throw new Error('No destination selected.');
+      if (!values.tokenOut) throw new Error('No output token selected.');
 
       txToast = new TransactionToast({
         loading: `Claiming ${displayTokenAmount(claimableBalance, token)} from the Silo...`,
