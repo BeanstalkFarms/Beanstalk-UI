@@ -16,7 +16,6 @@ import SunriseButton from '~/components/Sun/SunriseButton';
 import { SunButtonQuery, useSunButtonQuery } from '~/generated/graphql';
 import usePrice from '~/hooks/usePrice';
 import useSeason from '~/hooks/useSeason';
-import useChainId from '~/hooks/useChain';
 import { MaxBN, MinBN, toTokenUnitsBN } from '~/util';
 import { BEAN } from '~/constants/tokens';
 import { NEW_BN, ZERO_BN } from '~/constants';
@@ -26,16 +25,6 @@ import { BeanstalkPalette } from '../../App/muiTheme';
 import SeasonCard from '../SeasonCard';
 import usePeg from '~/hooks/usePeg';
 
-const mockSunData = new Array(20).fill(null).map(() => ({
-  season: new BigNumber(5000 * Math.random()),
-  newBeans: new BigNumber(100000 * Math.random()),
-  newSoil: new BigNumber(100000 * Math.random()),
-  temperature: new BigNumber(5000 * Math.random()),
-  podRate: new BigNumber(100 * Math.random()),
-  deltaWeather: new BigNumber(1000 * Math.random()),
-  deltaDemand: new BigNumber(150 * Math.random()),
-}));
-
 const castField = (data: SunButtonQuery['fields'][number]) => ({
   season:   new BigNumber(data.season),
   newSoil:  toTokenUnitsBN(data.newSoil, BEAN[1].decimals),
@@ -43,17 +32,19 @@ const castField = (data: SunButtonQuery['fields'][number]) => ({
   podRate:  new BigNumber(data.podRate),
 });
 const castSeason = (data: SunButtonQuery['seasons'][number]) => ({
-  season:     new BigNumber(data.season),
-  twap:       new BigNumber(data.price),
-  deltaBeans: toTokenUnitsBN(data.deltaBeans, BEAN[1].decimals),
+  season:      new BigNumber(data.season),
+  price:       new BigNumber(data.price),
+  rewardBeans: toTokenUnitsBN(
+    data.season <= 6074
+      ? data.deltaBeans
+      : data.rewardBeans,
+    BEAN[1].decimals
+  ),
 });
 
 const MAX_ITEMS = 8;
 
 const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
-  ///
-  const chainId   = useChainId();
-  
   /// DATA
   const season    = useSeason();
   const price     = usePrice();
@@ -61,7 +52,6 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   const awaiting  = useSelector<AppState, boolean>((state) => state._beanstalk.sun.sunrise.awaiting);
   const { data }  = useSunButtonQuery({ fetchPolicy: 'cache-and-network' });
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
-
   const peg = usePeg();
 
   const bySeason = useMemo(() => {
@@ -196,8 +186,8 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         </Box>
         <SeasonCard
           season={season.plus(1)}
-          twap={price}
-          newBeans={deltaB}
+          price={price}
+          rewardBeans={deltaB}
           newSoil={peg.soilStart}
           podRate={NEW_BN}
           temperature={beanstalkField.weather.yield.plus(peg.deltaTemperature)} // FIXME expected
@@ -206,7 +196,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           isNew
         />
         {bySeason.map((s, i) => {
-          const deltaWeather = bySeason[i + 1] 
+          const deltaTemperature = bySeason[i + 1] 
             ? s.temperature?.minus(bySeason[i + 1].temperature)
             : ZERO_BN;
           return (
@@ -214,11 +204,11 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
               key={s.season.toString()}
               season={s.season}
               // Season
-              twap={s.twap}
-              newBeans={s.deltaBeans}
+              price={s.price}
+              rewardBeans={s.rewardBeans}
               // Field
               temperature={s.temperature}
-              deltaTemperature={deltaWeather}
+              deltaTemperature={deltaTemperature}
               deltaDemand={undefined}
               newSoil={s.newSoil}
               podRate={s.podRate}

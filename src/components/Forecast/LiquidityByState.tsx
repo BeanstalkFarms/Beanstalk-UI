@@ -32,7 +32,7 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
       amount: beanstalkSilo.seeds.total
     },
     {
-      title: 'Pod Line',
+      title: 'Pods',
       tooltip: 'This is the total Pod supply. Pods become Harvestable on a FIFO basis.',
       token: PODS,
       // tooltip: 'This is the total number of pods ever minted.',

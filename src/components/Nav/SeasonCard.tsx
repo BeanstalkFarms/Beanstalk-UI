@@ -8,8 +8,8 @@ import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
 
 export interface SeasonCardProps {
   season:       BigNumber;
-  twap:         BigNumber;
-  newBeans:     BigNumber;
+  price:         BigNumber;
+  rewardBeans:     BigNumber;
   newSoil:      BigNumber;
   temperature:  BigNumber;
   deltaTemperature: BigNumber;
@@ -18,7 +18,7 @@ export interface SeasonCardProps {
   isNew?: boolean;
 }
 
-const SeasonCard: React.FC<SeasonCardProps> = ({ season, twap, newBeans, newSoil, podRate, temperature, deltaDemand, deltaTemperature: deltaWeather, isNew }) => (
+const SeasonCard: React.FC<SeasonCardProps> = ({ season, price: twap, rewardBeans: newBeans, newSoil, podRate, temperature, deltaDemand, deltaTemperature: deltaWeather, isNew }) => (
   <div>
     <Box sx={{ '&:hover > .test': { display: 'block' }, overflow: 'hidden', position: 'relative' }}>
       {isNew && (
