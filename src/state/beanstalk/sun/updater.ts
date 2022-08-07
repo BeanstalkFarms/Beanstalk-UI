@@ -7,7 +7,14 @@ import useTimedRefresh from '~/hooks/useTimedRefresh';
 import { AppState } from '~/state';
 import { bigNumberResult } from '~/util/Ledger';
 import { getNextExpectedSunrise } from '.';
-import { resetSun, setAwaitingSunrise, setNextSunrise, setRemainingUntilSunrise, updateSeason } from './actions';
+import {
+  resetSun,
+  setAwaitingSunrise,
+  setNextSunrise,
+  setRemainingUntilSunrise,
+  updateSeason,
+  updateSeasonTime
+} from './actions';
 
 export const useSun = () => {
   const dispatch = useDispatch();
@@ -25,6 +32,14 @@ export const useSun = () => {
         ] as const);
         console.debug(`[beanstalk/sun/useSun] RESULT: season = ${season}`);
         dispatch(updateSeason(season));
+
+        const [
+          seasonTime
+        ] = await Promise.all([
+          beanstalk.seasonTime().then(bigNumberResult),
+        ] as const);
+        console.debug(`[beanstalk/sun/useSun] RESULT: seasonTime = ${seasonTime}`);
+        dispatch(updateSeasonTime(seasonTime));
       }
     } catch (e) {
       console.debug('[beanstalk/sun/useSun] FAILED', e);

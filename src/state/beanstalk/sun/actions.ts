@@ -6,6 +6,10 @@ export const updateSeason = createAction<BigNumber>(
   'beanstalk/sun/updateSeason'
 );
 
+export const updateSeasonTime = createAction<BigNumber>(
+  'beanstalk/sun/updateSeasonTime'
+);
+
 export const setNextSunrise = createAction<Sun['sunrise']['next']>(
   'beanstalk/sun/setNextSunrise'
 );
