@@ -1,14 +1,13 @@
 import { Stack } from '@mui/material';
 import { Form, Formik, FormikProps } from 'formik';
 import React, { useCallback, useMemo, useState } from 'react';
+import { ethers } from 'ethers';
 import {
   FormApprovingState, FormTokenState,
-  SettingInput,
   SmartSubmitButton,
   TokenAdornment,
   TokenSelectDialog,
-  TxnSeparator,
-  TxnSettings
+  TxnSeparator
 } from '~/components/Common/Form';
 import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
 import TokenInputField from '~/components/Common/Form/TokenInputField';
@@ -21,8 +20,12 @@ import { useBeanstalkContract } from '~/hooks/useContract';
 import useFarmerBalances from '~/hooks/useFarmerBalances';
 import useTokenMap from '~/hooks/useTokenMap';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
+import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import useGetChainToken from '~/hooks/useGetChainToken';
+import { QuoteHandler } from '~/hooks/useQuote';
+import useFarm from '~/hooks/useFarm';
+import useAccount from '~/hooks/ledger/useAccount';
+import { toStringBaseUnitBN } from '~/util';
 
 type TradeFormValues = {
   tokensIn:   FormTokenState[];
@@ -55,7 +58,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   // Outputs
   const stateOut   = values.tokensOut[0];
   const tokenOut   = stateOut.token;
-  const balanceOut = balances[tokenOut.address];
+  // const balanceOut = balances[tokenOut.address];
 
   ///
   const handleClose = useCallback(() => setTokenSelect(null), []);
@@ -116,7 +119,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
           <Stack gap={0.5}>
             <DestinationField
               name="modeIn"
-              label="From"
+              label="Source"
             />
           </Stack>
         </>
@@ -125,7 +128,6 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
         <>
           <TokenInputField
             token={tokenOut}
-            balance={balanceOut || ZERO_BN}
             name="tokensOut.0.amount"
             // MUI
             fullWidth
@@ -140,7 +142,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
           />
           <DestinationField
             name="modeOut"
-            label="to"
+            label="Destination"
           />
         </>
         {/* <Box>
@@ -246,6 +248,7 @@ const Trade: React.FC<{}> = () => {
   ///
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
+  const account = useAccount();
 
   ///
   const getChainToken = useGetChainToken();
@@ -253,6 +256,7 @@ const Trade: React.FC<{}> = () => {
   const Bean          = getChainToken(BEAN);
   const tokenMap      = useTokenMap<ERC20Token | NativeToken>(SUPPORTED_TOKENS);
   const tokenList     = useMemo(() => Object.values(tokenMap), [tokenMap]);
+  const farm          = useFarm();
   
   ///
   const farmerBalances = useFarmerBalances();
@@ -275,7 +279,39 @@ const Trade: React.FC<{}> = () => {
     modeOut: FarmToMode.EXTERNAL,
   }), [Bean, Eth]);
 
-  const onSubmit = useCallback(async () => {
+  const handleQuote = useCallback<QuoteHandler>(
+    async (_tokenIn, _amountIn, _tokenOut) => {
+      if (!account) throw new Error('Connect a wallet first.');
+      
+      const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, _tokenIn.decimals));
+      let estimate;
+
+      ///
+      if (_tokenIn === _tokenOut) {
+        estimate = await Farm.estimate([
+          farm.transferToken(
+            _tokenIn.address,
+            account,
+            FarmFromMode.INTERNAL,
+            FarmToMode.EXTERNAL,
+          )
+        ], [amountIn]);
+      } else {
+        throw new Error('Unknown Swap mode.');
+      }
+
+      return {
+        amountOut: estimate.amountOut,
+        steps: estimate.steps,
+        // amountOut: toTokenUnitsBN(estimate.amountOut.toString(), tokenOut.decimals),
+        // steps: estimate.steps,
+      };
+    },
+    [account, farm]
+  );
+
+  const onSubmit = useCallback(
+    async () => {
       console.log('SUBMIT');
     },
     []
@@ -289,9 +325,9 @@ const Trade: React.FC<{}> = () => {
     >
       {(formikProps: FormikProps<TradeFormValues>) => (
         <>
-          <TxnSettings placement="form-top-right">
+          {/* <TxnSettings placement="form-top-right">
             <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
-          </TxnSettings>
+          </TxnSettings> */}
           <TradeForm
             balances={farmerBalances}
             beanstalk={beanstalk}

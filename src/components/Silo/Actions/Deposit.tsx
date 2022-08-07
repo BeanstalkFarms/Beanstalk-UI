@@ -2,7 +2,6 @@ import React, { useCallback, useMemo } from 'react';
 import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
-import { useProvider } from 'wagmi';
 import { ethers } from 'ethers';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
@@ -40,6 +39,7 @@ import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { AppState } from '~/state';
 import { useFetchPools } from '~/state/bean/pools/updater';
 import { useFetchSilo } from '~/state/beanstalk/silo/updater';
+import useFarm from '~/hooks/useFarm';
 
 // -----------------------------------------------------------------------
 
@@ -266,12 +266,11 @@ const Deposit : React.FC<{
   const [refetchSilo]           = useFetchSilo();
 
   /// Network
-  const provider = useProvider();
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
 
   /// Farm
-  const farm = useMemo(() => new Farm(provider), [provider]);
+  const farm = useFarm();
 
   /// Form setup
   const initialValues : DepositFormValues = useMemo(() => ({

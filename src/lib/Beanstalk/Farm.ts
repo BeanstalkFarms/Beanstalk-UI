@@ -284,6 +284,33 @@ export default class Farm {
     };
   };
 
+  transferToken = (
+    _tokenIn : string,
+    _recipient : string,
+    _fromMode : FarmFromMode = FarmFromMode.INTERNAL_TOLERANT,
+    _toMode : FarmToMode  = FarmToMode.INTERNAL,
+  ) : ChainableFunction => async (_amountInStep: ethers.BigNumber) => {
+    console.debug('[step@transferToken] run', {
+      _fromMode,
+      _toMode,
+      _amountInStep,
+    });
+    return {
+      name: 'transferToken',
+      amountOut: _amountInStep, // transfer exact amount
+      encode: (_: ethers.BigNumber) => (
+        this.contracts.beanstalk.interface.encodeFunctionData('transferToken', [
+          _tokenIn,      //
+          _recipient,    //
+          _amountInStep, // ignore minAmountOut since there is no slippage
+          _fromMode,     //
+          _toMode,       //
+        ])
+      ),
+      decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('transferToken', data),
+    };
+  };
+
   // ------------------------------------------
 
   /**
