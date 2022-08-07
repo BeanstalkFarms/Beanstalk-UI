@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-const useTimedRefresh = (handler: () => any, intervalMs : number, enabled : boolean = true) => {
+const useTimedRefresh = (
+  handler: () => any,
+  intervalMs : number,
+  enabled : boolean = true,
+  enabledBackground: boolean = false,
+) => {
   const interval = useRef<ReturnType<typeof setInterval>>();
 
   /// Start running the handler every `intervalMs` millis
@@ -17,8 +22,8 @@ const useTimedRefresh = (handler: () => any, intervalMs : number, enabled : bool
     if (enabled) start();
   }, [enabled, start]);
   const onBlur = useCallback(() => {
-    if (interval.current) clearInterval(interval.current);
-  }, [interval]);
+    if (interval.current && enabledBackground === false) clearInterval(interval.current);
+  }, [interval, enabledBackground]);
 
   /// Setup interval on initial load or params change
   useEffect(() => {
@@ -37,7 +42,7 @@ const useTimedRefresh = (handler: () => any, intervalMs : number, enabled : bool
       window.removeEventListener('focus', onFocus);
       window.removeEventListener('blur', onBlur);
     };
-  });
+  }, [onBlur, onFocus]);
 };
 
 export default useTimedRefresh;

@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Stack } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { Field, FieldProps } from 'formik';
 import useToggle from '~/hooks/display/useToggle';
 import DescriptionButton from '../DescriptionButton';
@@ -31,7 +31,7 @@ const PillSelectField : React.FC<PillSelectFieldProps> = ({
   return (
     <Field name={name}>
       {(fieldProps: FieldProps<any>) => {
-        const pill = options.find((x) => x.value === fieldProps.field.value)?.pill; // FIXME: inefficient
+        const pill = options.find((x) => x.value === fieldProps.field.value)?.pill || <Typography variant="body1">Select {label}</Typography>; // FIXME: inefficient
         const set = (v: any) => () => {
           fieldProps.form.setFieldValue(name, v);
           hide();

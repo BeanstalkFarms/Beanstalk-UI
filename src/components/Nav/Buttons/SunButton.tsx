@@ -48,7 +48,6 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   /// DATA
   const season    = useSeason();
   const price     = usePrice();
-  const deltaB    = useSelector<AppState, BigNumber>((state) => state._bean.token.deltaB);
   const awaiting  = useSelector<AppState, boolean>((state) => state._beanstalk.sun.sunrise.awaiting);
   const { data }  = useSunButtonQuery({ fetchPolicy: 'cache-and-network' });
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
@@ -99,7 +98,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         animation: awaiting ? 'rotate linear 2000ms' : 'none',
         animationIterationCount: 'infinite',
       }}
-      alt="Dry Season"
+      alt=""
     />
   );
 
@@ -187,7 +186,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         <SeasonCard
           season={season.plus(1)}
           price={price}
-          rewardBeans={deltaB}
+          rewardBeans={peg.rewardBeans}
           newSoil={peg.soilStart}
           podRate={NEW_BN}
           temperature={beanstalkField.weather.yield.plus(peg.deltaTemperature)} // FIXME expected
@@ -232,6 +231,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       hideTextOnMobile
       popperWidth="700px"
       hotkey="opt+2, alt+2"
+      zIndex={997}
       {...props}
     />
   );
