@@ -7,6 +7,7 @@ import { displayBN, displayFullBN } from '~/util';
 import { SPROUTS } from '~/constants/tokens';
 import FertilizerImage, { FertilizerState } from './FertilizerImage';
 import { FertilizerTooltip } from './FertilizerItemTooltips';
+import { ZERO_BN } from '~/constants';
 
 export type FertilizerData = {
   /**
@@ -62,8 +63,8 @@ const FertilizerItem: React.FC<FertilizerData & {
   id,
   amount,
   humidity,
-  rinsableSprouts: fertilized,
-  sprouts: unfertilized,
+  rinsableSprouts,
+  sprouts,
   progress,
   tooltip,
   state,
@@ -94,7 +95,7 @@ const FertilizerItem: React.FC<FertilizerData & {
           </Tooltip>
         </Stack>
         <Tooltip
-          title={tooltip.name === 'my-fertilizer' ? tooltip.reward(fertilized, unfertilized) : tooltip.reward}
+          title={tooltip.name === 'my-fertilizer' ? tooltip.reward(rinsableSprouts, sprouts.minus(rinsableSprouts || ZERO_BN)) : tooltip.reward}
           placement="right">
           <Stack direction="row" justifyContent="space-between">
             <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
@@ -103,7 +104,7 @@ const FertilizerItem: React.FC<FertilizerData & {
             <Stack direction="row" alignItems="center" gap={0.2}>
               <TokenIcon token={SPROUTS} style={{ width: '14px' }} />
               <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
-                {unfertilized ? displayBN(unfertilized) : '?'}
+                {sprouts ? displayBN(sprouts) : '?'}
               </Typography>
             </Stack>
           </Stack>
