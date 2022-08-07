@@ -30,7 +30,7 @@ import copy from '~/constants/copy';
 // ---------------------------------------------------
 
 type RinseFormValues = {
-  destination: FarmToMode;
+  destination: FarmToMode | undefined;
   amount: BigNumber;
 };
 
@@ -44,7 +44,10 @@ const RinseForm : React.FC<
 }) => {
   /// Extract
   const amountSprouts = values.amount;
-  const isValid = amountSprouts?.gt(0);
+  const isSubmittable = (
+    amountSprouts?.gt(0)
+    && values.destination !== undefined
+  );
 
   return (
     <Form autoComplete="off" noValidate>
@@ -102,7 +105,7 @@ const RinseForm : React.FC<
         {/* Submit */}
         <SmartSubmitButton
           loading={isSubmitting}
-          disabled={!isValid}
+          disabled={!isSubmittable}
           type="submit"
           variant="contained"
           color="primary"
@@ -133,7 +136,7 @@ const Rinse : React.FC<{}> = () => {
   const beanstalk = useBeanstalkContract(signer);
 
   const initialValues : RinseFormValues = useMemo(() => ({
-    destination: FarmToMode.INTERNAL,
+    destination: undefined,
     amount: farmerBarn.fertilizedSprouts,
   }), [farmerBarn.fertilizedSprouts]);
 
