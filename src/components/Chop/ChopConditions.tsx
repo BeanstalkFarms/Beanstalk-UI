@@ -1,16 +1,19 @@
 import React from 'react';
 import { Card, CircularProgress, Grid, Stack, Tooltip, Typography } from '@mui/material';
-import BigNumber from 'bignumber.js';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { useSelector } from 'react-redux';
 import { displayBN, displayFullBN } from '../../util';
 import useChopPenalty from '../../hooks/useChopPenalty';
 import { NEW_BN } from '../../constants';
 import { BeanstalkPalette, FontSize } from '../App/muiTheme';
 import useFertilizerProgress from '../../hooks/useFertilizerProgress';
+import { AppState } from '~/state';
 
 const ChopConditions: React.FC<{}> = () => {
   const chopPenalty     = useChopPenalty();
   const fertilizerSold  = useFertilizerProgress();
+  const barn = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
+  const pctDebtRepaid = barn.fertilized.div(barn.fertilized.plus(barn.unfertilized));
   return (
     <Card sx={{ p: 2 }}>
       <Stack gap={1}>
@@ -64,8 +67,7 @@ const ChopConditions: React.FC<{}> = () => {
                 </Typography>
               </Tooltip>
               <Typography variant="bodyLarge" fontWeight="400">
-                {/* TODO / FIXME: CALCULATE THIS */}
-                {displayBN(new BigNumber(-1))}%
+                {pctDebtRepaid.times(100).toFixed(4)}%
               </Typography>
             </Stack>
           </Grid>

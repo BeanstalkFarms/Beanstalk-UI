@@ -36,7 +36,7 @@ export type CreateListingFormValues = {
   plot:        PlotFragment
   pricePerPod: BigNumber | null;
   expiresAt:   BigNumber | null;
-  destination: FarmToMode;
+  destination: FarmToMode | null;
   settings:    PlotSettingsFragment & {};
 }
 
@@ -63,7 +63,8 @@ const REQUIRED_KEYS = [
   'start',
   'end',
   'pricePerPod',
-  'expiresAt'
+  'expiresAt',
+  'destination'
 ] as (keyof CreateListingFormValues)[];
 
 const CreateListingForm: React.FC<
@@ -72,10 +73,8 @@ const CreateListingForm: React.FC<
     harvestableIndex: BigNumber;
   }
 > = ({
-  //
   values,
   isSubmitting,
-  //
   plots,
   harvestableIndex,
 }) => {
@@ -92,10 +91,10 @@ const CreateListingForm: React.FC<
   );
   
   /// Calculations
-  const alreadyListed = (plot?.index)
+  const alreadyListed = plot?.index
     ? existingListings[toStringBaseUnitBN(plot.index, BEAN[1].decimals)]
     : false;
-  const isReady = (
+  const isSubmittable = (
     !REQUIRED_KEYS.some((k) => values[k] === null)
   );
 
@@ -134,7 +133,7 @@ const CreateListingForm: React.FC<
               farmDesc="When Pods are sold, send Beans to your internal Beanstalk balance."
               label="Send proceeds to"
             />
-            {isReady && ( 
+            {isSubmittable && ( 
               <Box>
                 <TxnAccordion>
                   <TxnPreview
@@ -160,7 +159,7 @@ const CreateListingForm: React.FC<
         )}
         <SmartSubmitButton
           loading={isSubmitting}
-          disabled={!isReady || isSubmitting}
+          disabled={!isSubmittable || isSubmitting}
           type="submit"
           variant="contained"
           color="primary"
@@ -214,8 +213,8 @@ const CreateListing: React.FC<{}> = () => {
     let txToast;
     try {
       // if (REQUIRED_KEYS.some((k) => values[k] === null)) throw new Error('Missing data');
-      const { plot: { index, start, end, amount, }, pricePerPod, expiresAt } = values;
-      if (!index || !start || !end || !amount || !pricePerPod || !expiresAt) throw new Error('Missing data');
+      const { plot: { index, start, end, amount }, pricePerPod, expiresAt, destination } = values;
+      if (!index || !start || !end || !amount || !pricePerPod || !expiresAt || !destination) throw new Error('Missing data');
 
       const plotIndexBN = new BigNumber(index);
       const numPods     = plots[index];
@@ -240,7 +239,7 @@ const CreateListing: React.FC<{}> = () => {
         toStringBaseUnitBN(amount,      Bean.decimals),   // relative amount
         toStringBaseUnitBN(pricePerPod, Bean.decimals),   // price per pod
         toStringBaseUnitBN(maxHarvestableIndex, Bean.decimals),   // absolute index of expiry
-        values.destination,
+        destination,
       );
       txToast.confirming(txn);
 

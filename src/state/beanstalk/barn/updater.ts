@@ -29,6 +29,7 @@ export const useBarn = () => {
         currentBpf,
         endBpf,
         unfertilized,
+        fertilized
       ] = await Promise.all([
         beanstalk.remainingRecapitalization().then(tokenResult(BEAN)),
         await fetchGlobal('https://api.thegraph.com/subgraphs/name/publiuss/fertilizer', {
@@ -47,15 +48,17 @@ export const useBarn = () => {
         beanstalk.beansPerFertilizer().then(bigNumberResult),
         beanstalk.getEndBpf().then(bigNumberResult),
         beanstalk.totalUnfertilizedBeans().then(tokenResult(BEAN)),
+        beanstalk.totalFertilizedBeans().then(tokenResult(BEAN)),
       ] as const);
       console.debug(`[beanstalk/fertilizer/updater] RESULT: remaining = ${remainingRecapitalization.toFixed(2)}`);
       dispatch(updateBarn({
         remaining: remainingRecapitalization, // FIXME rename
-        totalRaised,
-        humidity,
-        currentBpf,
-        endBpf,
-        unfertilized
+        totalRaised,  //
+        humidity,     //
+        currentBpf,   //
+        endBpf,       //
+        unfertilized,  //
+        fertilized,
       }));
     }
   }, [
