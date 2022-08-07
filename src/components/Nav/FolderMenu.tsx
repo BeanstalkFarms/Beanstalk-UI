@@ -32,6 +32,7 @@ const FolderMenu: React.FC<{
   popperWidth?: string;
   onOpen?: () => void;
   hotkey: string;
+  zIndex?: number;
 } & ButtonProps> = ({
   startIcon,
   buttonContent,
@@ -41,6 +42,8 @@ const FolderMenu: React.FC<{
   popperWidth,
   hotkey,
   onOpen,
+  /** fix: overlapping price and sun folders */
+  zIndex = 998,
   ...buttonProps
 }) => {
   // Theme
@@ -131,6 +134,9 @@ const FolderMenu: React.FC<{
         anchorEl={anchorEl}
         placement="bottom-start"
         disablePortal
+        sx={{
+          zIndex,
+        }}
       >
         <Box
           sx={(_theme) => ({
@@ -146,7 +152,7 @@ const FolderMenu: React.FC<{
             // py: 1, 
             boxShadow: _theme.shadows[0],
             // Should be below the zIndex of the Button.
-            zIndex: 998,
+            zIndex,
             mt: '-1px',
           })}
         >
