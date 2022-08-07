@@ -10,6 +10,7 @@ import ALL_POOLS from '~/constants/pools';
 import { ERC20__factory } from '~/generated';
 import { updatePrice, updateDeltaB, updateSupply } from '../token/actions';
 import { resetPools, updateBeanPools, UpdatePoolPayload } from './actions';
+import useTimedRefresh from '~/hooks/useTimedRefresh';
 
 export const useFetchPools = () => {
   const dispatch = useDispatch();
@@ -95,10 +96,15 @@ export const useFetchPools = () => {
 
           console.debug('[bean/pools/useGetPools] RESULT: dataWithSupply =', dataWithSupplyResult);
           
+          const price = tokenResult(BEAN)(priceResult.price.toString());
           dispatch(updateBeanPools(await Promise.all(dataWithSupplyResult)));
-          dispatch(updatePrice(tokenResult(BEAN)(priceResult.price.toString())));
+          dispatch(updatePrice(price));
           dispatch(updateSupply(totalSupply));
           dispatch(updateDeltaB(totalDeltaB));
+
+          if (price) {
+            document.title = `$${price.toNumber().toFixed(4)} · Beanstalk App`;
+          }
         }
       } catch (e) {
         console.debug('[bean/pools/useGetPools] FAILED', e);
@@ -135,7 +141,7 @@ const PoolsUpdater = () => {
     clear
   ]);
   
-  // useTimedRefresh(fetch, 10000);
+  useTimedRefresh(fetch, 15_000, true, true);
 
   return null;
 };

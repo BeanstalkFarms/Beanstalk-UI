@@ -18,7 +18,16 @@ export interface SeasonCardProps {
   isNew?: boolean;
 }
 
-const SeasonCard: React.FC<SeasonCardProps> = ({ season, price: twap, rewardBeans: newBeans, newSoil, podRate, temperature, deltaDemand, deltaTemperature: deltaWeather, isNew }) => (
+const SeasonCard: React.FC<SeasonCardProps> = ({ 
+  season,
+  rewardBeans,
+  newSoil,
+  podRate,
+  temperature,
+  deltaDemand,
+  deltaTemperature,
+  isNew
+}) => (
   <div>
     <Box sx={{ '&:hover > .test': { display: 'block' }, overflow: 'hidden', position: 'relative' }}>
       {isNew && (
@@ -61,7 +70,7 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, price: twap, rewardBean
             {/* Season */}
             <Grid item xs={1.5} md={1.25}>
               <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing="5px">
-                {(newBeans.eq(0)) ? (
+                {(rewardBeans.eq(0)) ? (
                   <img src={drySeasonIcon} height={IconSize.small} alt="" />
                 ) : (
                   <img src={rainySeasonIcon} height={IconSize.small} alt="" />
@@ -75,7 +84,7 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, price: twap, rewardBean
             <Grid item xs={3} md={2}>
               <Stack alignItems="flex-end" justifyContent="center">
                 <Typography variant="bodySmall">
-                  {newBeans ? `+ ${displayBN(newBeans)}` : '?'}
+                  {rewardBeans ? `+ ${displayBN(rewardBeans)}` : '?'}
                 </Typography>
               </Stack>
             </Grid>
@@ -106,7 +115,7 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season, price: twap, rewardBean
                     whiteSpace: 'nowrap',
                   }}
                 >
-                  (&nbsp;{deltaWeather.toString()}%&nbsp;)
+                  (&nbsp;{deltaTemperature.toString()}%&nbsp;)
                 </Typography>
               </Stack>
             </Grid>

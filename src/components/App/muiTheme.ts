@@ -300,15 +300,17 @@ let muiTheme = createTheme({
       },
     },
     MuiButton: {
-      // variants: [
-      //   {
-      //     props: { color: 'light' },
-      //     style: sx({
-      //       borderWidth: 1,
-      //       borderColor: 'red',
-      //     }),
-      //   }
-      // ],
+      variants: [
+        {
+          props: {
+            variant: 'outlined',
+            color: 'dark',
+          },
+          style: {
+            borderColor: 'rgba(0, 0, 0, 0.26)'
+          }
+        }
+      ],
       defaultProps: {
         disableElevation: true,
         variant: 'contained',
@@ -567,7 +569,7 @@ let muiTheme = createTheme({
         transitionDuration: 0,
         PaperProps: {
           sx: {
-            minWidth: { xs: '95%', sm: '400px' }
+            minWidth: { xs: '95%', sm: '400px' },
           }
         }
       },

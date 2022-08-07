@@ -1,6 +1,6 @@
 {
   "name": "beanstalk-ui",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "private": true,
   "homepage": "https://app.bean.money",
   "dependencies": {

@@ -10,6 +10,7 @@ const initialState : Barn = {
   currentBpf:   NEW_BN,
   endBpf:       NEW_BN,
   unfertilized: NEW_BN,
+  fertilized:   NEW_BN,
 };
 
 export default createReducer(initialState, (builder) =>
@@ -22,6 +23,7 @@ export default createReducer(initialState, (builder) =>
       state.currentBpf  = payload.currentBpf;
       state.endBpf      = payload.endBpf;
       state.unfertilized = payload.unfertilized;
+      state.fertilized  = payload.fertilized;
     })
     .addCase(setRemaining, (state, { payload }) => {
       state.remaining = payload;

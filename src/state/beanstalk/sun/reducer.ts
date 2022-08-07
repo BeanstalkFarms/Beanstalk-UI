@@ -6,6 +6,7 @@ import {
   setRemainingUntilSunrise,
   setAwaitingSunrise,
   updateSeason,
+  updateSeasonTime,
   resetSun
 } from './actions';
 
@@ -15,6 +16,7 @@ const getInitialState = () => {
   const nextSunrise = getNextExpectedSunrise(false);
   return {
     season: NEG1,
+    seasonTime: NEG1,
     sunrise: {
       awaiting: false,
       next: nextSunrise,
@@ -29,6 +31,9 @@ export default createReducer(initialState, (builder) =>
   builder
     .addCase(updateSeason, (state, { payload }) => {
       state.season = payload;
+    })
+    .addCase(updateSeasonTime, (state, { payload }) => {
+      state.seasonTime = payload;
     })
     .addCase(setAwaitingSunrise, (state, { payload }) => {
       state.sunrise.awaiting = payload;

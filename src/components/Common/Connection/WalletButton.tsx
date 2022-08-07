@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { useDisconnect, useNetwork } from 'wagmi';
+import { useDisconnect, useNetwork , useAccount as useWagmiAccount } from 'wagmi';
 import {
   Box,
   Button,
@@ -18,10 +18,8 @@ import {
 import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-import { trimAddress } from '~/util';
-
+import { IMPERSONATED_ACCOUNT, trimAddress } from '~/util';
 import useChainConstant from '~/hooks/useChainConstant';
-
 import balancesIcon from '~/img/nav-icons/balances.svg';
 import historyIcon from '~/img/nav-icons/history.svg';
 import etherscanIcon from '~/img/nav-icons/etherscan.svg';
@@ -40,6 +38,7 @@ import AddressIcon from '../AddressIcon';
 
 const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props }) => {
   const account = useAccount();
+  const { data: account2 } = useWagmiAccount();
   const { activeChain } = useNetwork();
   const { disconnect } = useDisconnect();
   const chain = useChainConstant(CHAIN_INFO);
@@ -204,8 +203,7 @@ const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
         } : props.sx}
       >
         <Typography variant="bodyMedium" display={{ xs: 'none', sm: 'block' }}>
-          {trimAddress(account, true)}
-          {/* {trimAddress(getAccount(account.address), !isMedium)} */}
+          {trimAddress(IMPERSONATED_ACCOUNT || account2?.address)}
         </Typography>
       </Button>
       {/* Mobile: Drawer */}

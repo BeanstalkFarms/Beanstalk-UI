@@ -3,11 +3,11 @@ import { Box, Card, CardProps, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { AppState } from '~/state';
 import Fiat from '~/components/Common/Fiat';
-import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
 import Stat from '../Common/Stat';
 import { TokenMap, ZERO_BN } from '../../constants';
 import { BeanstalkSiloBalance } from '../../state/beanstalk/silo';
 import LiquidityBalances from './LiquidityBalances';
+import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
 
 export type LiquidityOverviewProps = {
   balances: TokenMap<BeanstalkSiloBalance>;

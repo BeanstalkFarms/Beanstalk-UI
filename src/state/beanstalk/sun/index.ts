@@ -3,6 +3,7 @@ import { DateTime, Duration } from 'luxon';
 
 export type Sun = {
   season: BigNumber;
+  seasonTime: BigNumber;
   sunrise: {
     /** Whether we're waiting for the sunrise() function to be called. */
     awaiting: boolean;

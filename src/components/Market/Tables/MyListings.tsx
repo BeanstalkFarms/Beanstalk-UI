@@ -26,10 +26,11 @@ const components = {
 const MyListingsTable : React.FC<{}> = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   /// Data
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
   const listings       = useSelector<AppState, AppState['_farmer']['market']['listings']>((state) => state._farmer.market.listings);
-  const rows           = useMemo(() => Object.values(listings),   [listings]);
+  const rows           = useMemo(() => Object.values(listings), [listings]);
 
   /// Navigation
   const navigate = useNavigate();
