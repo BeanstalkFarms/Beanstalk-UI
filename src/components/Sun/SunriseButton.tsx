@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Form, Formik, FormikProps } from 'formik';
 import { LoadingButton } from '@mui/lab';
-import { useSelector } from 'react-redux';
 import { Box, Dialog, Divider, Link, Stack, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import BigNumber from 'bignumber.js';
+import { useSelector } from 'react-redux';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import { AppState } from '~/state';
 import SunriseCountdown from '~/components/Sun/SunriseCountdown';
 import useToggle from '~/hooks/display/useToggle';
 import { useBeanstalkContract } from '~/hooks/useContract';
@@ -18,6 +17,11 @@ import { ZERO_BN } from '~/constants';
 import { displayBN } from '~/util';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN } from '~/constants/tokens';
+import { AppState } from '~/state';
+
+function getSunriseReward(now: DateTime) {
+  return new BigNumber(100 * (1.01 ** (Math.min((now.minute * 60) + now.second, 300))));
+}
 
 const SunriseButton : React.FC = () => {
   /// Ledger
@@ -29,14 +33,19 @@ const SunriseButton : React.FC = () => {
   const [now, setNow] = useState(DateTime.now());
   const [reward, setReward] = useState(ZERO_BN);
   const awaiting = useSelector<AppState, AppState['_beanstalk']['sun']['sunrise']['awaiting']>((state) => state._beanstalk.sun.sunrise.awaiting);
-
-  /// Calculate Sunrise Reward
-  const sunriseReward = useCallback(() => new BigNumber(100 * (1.01 ** (Math.min((now.minute * 60) + now.second, 300)))), [now.minute, now.second]);
-
+  
   useEffect(() => {
-    setNow(DateTime.now());
-    setReward(sunriseReward());
-  }, [now, sunriseReward]);
+    if (awaiting) {
+      const i = setInterval(() => {
+        const _now = DateTime.now();
+        setNow(_now);
+        setReward(getSunriseReward(_now));
+      }, 1000);
+      return () => {
+        clearInterval(i);
+      };
+    }
+  }, [awaiting]);
 
   const onSubmit = useCallback(() => {
     const txToast = new TransactionToast({
@@ -61,8 +70,7 @@ const SunriseButton : React.FC = () => {
     <>
       <Formik initialValues={{}} onSubmit={onSubmit}>
         {(formikProps: FormikProps<{}>) => {
-          const disabled = formikProps.isSubmitting || awaiting;
-          // const disabled = false;
+          const disabled = formikProps.isSubmitting || !awaiting;
           return (
             <Form autoComplete="off">
               <Dialog
