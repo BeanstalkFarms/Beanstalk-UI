@@ -52,8 +52,8 @@ type ClaimFormValues = {
    * for converting LP into `tokenOut`.
    */
   token: FormTokenState;
-  destination: FarmToMode;
-  tokenOut: ERC20Token;
+  destination: FarmToMode | undefined;
+  tokenOut: ERC20Token | undefined;
 } & {
   settings: {
     slippage: number;
@@ -95,6 +95,7 @@ const ClaimForm : React.FC<
     amount
     && amount.gt(0)
     && values.destination !== undefined
+    && values.tokenOut !== undefined
   );
 
   //
@@ -152,11 +153,9 @@ const ClaimForm : React.FC<
   return (
     <Form autoComplete="off" noValidate>
       <Stack gap={1}>
-        {/* Claimable Token */}
-        {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
         <TokenQuoteProvider
           name="token"
-          tokenOut={values.tokenOut}
+          tokenOut={values.tokenOut || (token as ERC20Token)}
           state={values.token}
           // This input is always disabled but we use
           // the underlying handleQuote functionality
@@ -177,35 +176,43 @@ const ClaimForm : React.FC<
           handleQuote={handleQuote}
           hideQuote
         />
-        {/* Setting: Destination */}
-        <DestinationField
-          name="destination"
-        />
-        {/* Setting: Claim LP */}
-        {token.isLP ? (
-          <PillRow
-            isOpen={isTokenSelectVisible}
-            label="Claim LP as"
-            onClick={showTokenSelect}> 
-            <TokenIcon token={values.tokenOut} />
-            <Typography variant="body1">{values.tokenOut.symbol}</Typography>
-          </PillRow>
-        ) : null}
-        <TokenSelectDialog
-          open={isTokenSelectVisible}
-          handleClose={hideTokenSelect}
-          handleSubmit={handleSelectTokens}
-          selected={[values.tokenOut]}
-          balances={undefined} // hide balances from right side of selector
-          tokenList={claimableTokens}
-          mode={TokenSelectMode.SINGLE}
-        />
+        <Stack gap={0}>
+          {/* Setting: Destination */}
+          <DestinationField
+            name="destination"
+          />
+          {/* Setting: Claim LP */}
+          <>
+            {token.isLP ? (
+              <PillRow
+                isOpen={isTokenSelectVisible}
+                label="Claim LP as"
+                onClick={showTokenSelect}> 
+                {values.tokenOut && <TokenIcon token={values.tokenOut} />}
+                <Typography variant="body1">
+                  {values.tokenOut ? values.tokenOut.symbol : (
+                    <>Select Output</>
+                  )}
+                </Typography>
+              </PillRow>
+            ) : null}
+            <TokenSelectDialog
+              open={isTokenSelectVisible}
+              handleClose={hideTokenSelect}
+              handleSubmit={handleSelectTokens}
+              selected={values.tokenOut ? [values.tokenOut] : []}
+              balances={undefined} // hide balances from right side of selector
+              tokenList={claimableTokens}
+              mode={TokenSelectMode.SINGLE}
+            />
+          </>
+        </Stack>
         {/* Transaction Details */}
         {isSubmittable ? (
           <>
             <TxnSeparator />
             <TokenOutputField
-              token={values.tokenOut}
+              token={values.tokenOut!}
               amount={values.token.amountOut || ZERO_BN}
               isLoading={values.token.quoting}
             />
@@ -223,11 +230,11 @@ const ClaimForm : React.FC<
                       },
                       token === BeanCrv3 && values.tokenOut !== token ? {
                         type: ActionType.BASE,
-                        message: `Unpack ${displayTokenAmount(amount, token)} into ${displayTokenAmount(values.token.amountOut || ZERO_BN, values.tokenOut)}.`
+                        message: `Unpack ${displayTokenAmount(amount, token)} into ${displayTokenAmount(values.token.amountOut || ZERO_BN, values.tokenOut!)}.`
                       } : undefined,
                       {
                         type: ActionType.RECEIVE_TOKEN,
-                        token: values.tokenOut,
+                        token: values.tokenOut!,
                         amount: values.token.amountOut || ZERO_BN,
                         destination: values.destination,
                       }
@@ -279,23 +286,25 @@ const Claim : React.FC<{
 
   // Form
   const initialValues : ClaimFormValues = useMemo(() => ({
-    settings: {
-      slippage: 0.1,
-    },
-    destination: FarmToMode.INTERNAL,
-    tokenOut: token,
+    // Input token values
     token: {
       token: token,
       amount: claimableBalance,
       amountOut: claimableBalance
-    }
+    },
+    destination: undefined,
+    tokenOut: undefined,
+    settings: {
+      slippage: 0.1,
+    },
   }), [token, claimableBalance]);
 
   const onSubmit = useCallback(async (values: ClaimFormValues, formActions: FormikHelpers<ClaimFormValues>) => {
     let txToast;
     try {
       const crates = siloBalance?.claimable?.crates;
-      if (!crates || crates.length === 0) throw new Error('No claimable crates');
+      if (!crates || crates.length === 0) throw new Error('No claimable crates.');
+      if (!values.destination) throw new Error('No destination selected.');
 
       txToast = new TransactionToast({
         loading: `Claiming ${displayTokenAmount(claimableBalance, token)} from the Silo...`,
@@ -366,9 +375,6 @@ const Claim : React.FC<{
     token,
     refetchFarmerSilo,
     refetchFarmerBalances,
-    // Bean,
-    // beanstalk,
-    // token
   ]);
 
   return (

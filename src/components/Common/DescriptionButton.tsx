@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, ButtonProps, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Button, ButtonProps, Stack, Tooltip, Typography } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { FontSize } from '../App/muiTheme';
 
@@ -56,38 +56,36 @@ const DescriptionButton : React.FC<ButtonProps & {
   >
     <Stack direction="row" gap={0.5} justifyContent="space-between" alignItems="center">
       {/* Icon + Title */}
-      <div>
-        <Stack direction="row" gap={1} alignItems="center">
-          <Tooltip title={tooltipTitle !== undefined ? tooltipTitle : ''} placement="top" sx={{ pointerEvents: 'all' }}>
-            <Typography variant="bodyMedium" display="flex" alignItems="center">
-              {icon && (
+      <Stack gap={0.5}>
+        <Tooltip title={tooltipTitle || ''} placement="top" sx={{ pointerEvents: 'all' }}>
+          <Stack direction="row" gap={0.25} alignItems="center">
+            {icon && (
+              <>
+                {icon}&nbsp;
+              </>
+            )}
+            <Typography variant="bodyMedium">
+              {title}
+              {tooltipTitle && (
                 <>
-                  {icon}&nbsp;
+                  &nbsp;
+                  <HelpOutlineIcon
+                    sx={{ color: 'text.secondary', fontSize: FontSize.sm, display: 'inline' }}
+                  />
                 </>
               )}
-              <Typography variant="bodyMedium">
-                {title}
-                {tooltipTitle && (
-                  <>
-                    &nbsp;
-                    <HelpOutlineIcon
-                      sx={{ color: 'text.secondary', fontSize: FontSize.sm, display: 'inline' }}
-                    />
-                  </>
-                )}
-              </Typography>
             </Typography>
-          </Tooltip>
-        </Stack>
+          </Stack>
+        </Tooltip>
         {/* Description */}
-        <Typography variant="bodySmall">
+        <Typography>
           {description}
         </Typography>
-      </div>
+      </Stack>
       {tag && (
-        <div>
+        <Box sx={{ flexWrap: 'nowrap' }}>
           {tag}
-        </div>
+        </Box>
       )}
     </Stack>
   </Button>
