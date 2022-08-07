@@ -211,7 +211,7 @@ const usePeg = () => {
   });
 
   return {
-    newBeans,
+    rewardBeans: deltaBNext,
     newRinsableSprouts,
     newHarvestablePods,
     soilStart,

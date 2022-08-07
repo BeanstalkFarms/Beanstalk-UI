@@ -187,7 +187,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         <SeasonCard
           season={season.plus(1)}
           price={price}
-          rewardBeans={deltaB}
+          rewardBeans={peg.rewardBeans}
           newSoil={peg.soilStart}
           podRate={NEW_BN}
           temperature={beanstalkField.weather.yield.plus(peg.deltaTemperature)} // FIXME expected
