@@ -1,8 +1,10 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Form, Formik, FormikProps } from 'formik';
 import { LoadingButton } from '@mui/lab';
 import { useSelector } from 'react-redux';
 import { Box, Dialog, Divider, Link, Stack, Typography } from '@mui/material';
+import { DateTime } from 'luxon';
+import BigNumber from 'bignumber.js';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { AppState } from '~/state';
 import SunriseCountdown from '~/components/Sun/SunriseCountdown';
@@ -12,33 +14,29 @@ import TransactionToast from '~/components/Common/TxnToast';
 import { StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
 import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
 import sunIcon from '~/img/beanstalk/sun/sun-icon.svg';
+import { ZERO_BN } from '~/constants';
+import { displayBN } from '~/util';
+import TokenIcon from '~/components/Common/TokenIcon';
+import { BEAN } from '~/constants/tokens';
 
 const SunriseButton : React.FC = () => {
   /// Ledger
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
 
+  /// State
   const [open, show, hide] = useToggle();
+  const [now, setNow] = useState(DateTime.now());
+  const [reward, setReward] = useState(ZERO_BN);
   const awaiting = useSelector<AppState, AppState['_beanstalk']['sun']['sunrise']['awaiting']>((state) => state._beanstalk.sun.sunrise.awaiting);
 
-  // const onSubmit = useCallback(async (_, formActions: FormikHelpers<{}>) => {
-  //   const txToast = new TransactionToast({
-  //     loading: 'Calling Sunrise...',
-  //     success: 'The Sun has risen.',
-  //   });
-  //   beanstalk.sunrise()
-  //     .then((txn) => {
-  //       txToast.confirming(txn);
-  //       return txn.wait();
-  //     })
-  //     .then((receipt) => {
-  //       txToast.success(receipt);
-  //       formActions.resetForm();
-  //     })
-  //     .catch((err) => {
-  //       console.error(txToast.error(err.error || err));
-  //     });
-  // }, [beanstalk]);
+  /// Calculate Sunrise Reward
+  const sunriseReward = useCallback(() => new BigNumber(100 * (1.01 ** (Math.min((now.minute * 60) + now.second, 300)))), [now.minute, now.second]);
+
+  useEffect(() => {
+    setNow(DateTime.now());
+    setReward(sunriseReward());
+  }, [now, sunriseReward]);
 
   const onSubmit = useCallback(() => {
     const txToast = new TransactionToast({
@@ -84,11 +82,17 @@ const SunriseButton : React.FC = () => {
                     <Stack justifyContent="center" gap={2} py={2}>
                       <img src={sunIcon} alt="Sunrise" style={{ height: IconSize.large }} />
                       <Stack gap={1}>
+                        {awaiting ? (
+                          <Stack direction="row" justifyContent="center">
+                            <Typography variant="body1">Sunrise has been available for: {now.minute < 10 ? `0${now.minute}` : now.minute}:{now.second < 10 ? `0${now.second}` : now.second}</Typography>
+                          </Stack>
+                        ) : (
+                          <Stack direction="row" justifyContent="center">
+                            <Typography variant="body1">Sunrise has already been called this Season.</Typography>
+                          </Stack>
+                        )}
                         <Stack direction="row" justifyContent="center">
-                          <Typography variant="body1">Sunrise has been available for: </Typography>
-                        </Stack>
-                        <Stack direction="row" justifyContent="center">
-                          <Typography variant="body1">Bean reward for calling <Box display="inline" sx={{ backgroundColor: BeanstalkPalette.lightYellow, borderRadius: 0.4, px: 0.4 }}><strong><Link color="text.primary" underline="none" href="https://docs.bean.money/additional-resources/glossary#sunrise">sunrise()</Link></strong></Box>:</Typography>
+                          <Typography variant="body1">Bean reward for calling <Box display="inline" sx={{ backgroundColor: BeanstalkPalette.lightYellow, borderRadius: 0.4, px: 0.4 }}><strong><Link color="text.primary" underline="none" href="https://docs.bean.money/additional-resources/glossary#sunrise">sunrise()</Link></strong></Box>: <TokenIcon token={BEAN[1]} />&nbsp;{displayBN(reward)}</Typography>
                         </Stack>
                       </Stack>
                     </Stack>
