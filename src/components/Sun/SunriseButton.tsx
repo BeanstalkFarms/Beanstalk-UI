@@ -130,7 +130,7 @@ const SunriseButton : React.FC = () => {
               </Dialog>
               <LoadingButton
                 loading={formikProps.isSubmitting}
-                // disabled={disabled}
+                disabled={disabled}
                 variant="contained"
                 onClick={show}
                 sx={{
