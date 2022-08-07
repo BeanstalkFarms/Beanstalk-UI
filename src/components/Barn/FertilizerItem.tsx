@@ -95,7 +95,10 @@ const FertilizerItem: React.FC<FertilizerData & {
           </Tooltip>
         </Stack>
         <Tooltip
-          title={tooltip.name === 'my-fertilizer' ? tooltip.reward(rinsableSprouts, sprouts.minus(rinsableSprouts || ZERO_BN)) : tooltip.reward}
+          title={
+            tooltip.name === 'my-fertilizer'
+              ? tooltip.reward(rinsableSprouts, (sprouts || ZERO_BN).minus(rinsableSprouts || ZERO_BN))
+              : tooltip.reward}
           placement="right">
           <Stack direction="row" justifyContent="space-between">
             <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
