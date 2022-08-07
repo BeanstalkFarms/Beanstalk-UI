@@ -25,15 +25,15 @@ function getSunriseReward(now: DateTime) {
 
 const SunriseButton : React.FC = () => {
   /// Ledger
-  const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer);
+  const { data: signer }  = useSigner();
+  const beanstalk         = useBeanstalkContract(signer);
 
   /// State
-  const [open, show, hide] = useToggle();
-  const [now, setNow] = useState(DateTime.now());
+  const [open, show, hide]  = useToggle();
+  const [now, setNow]       = useState(DateTime.now());
   const [reward, setReward] = useState(ZERO_BN);
   const awaiting = useSelector<AppState, AppState['_beanstalk']['sun']['sunrise']['awaiting']>((state) => state._beanstalk.sun.sunrise.awaiting);
-  
+
   useEffect(() => {
     if (awaiting) {
       const i = setInterval(() => {
@@ -47,6 +47,7 @@ const SunriseButton : React.FC = () => {
     }
   }, [awaiting]);
 
+  /// Handlers
   const onSubmit = useCallback(() => {
     const txToast = new TransactionToast({
       loading: 'Calling Sunrise...',
@@ -85,7 +86,7 @@ const SunriseButton : React.FC = () => {
                 <StyledDialogTitle onClose={hide}>
                   Confirm Sunrise
                 </StyledDialogTitle>
-                <StyledDialogContent sx={{ p: 2 }}>
+                <StyledDialogContent sx={{ p: 1 }}>
                   <Stack gap={2}>
                     <Stack justifyContent="center" gap={2} py={2}>
                       <img src={sunIcon} alt="Sunrise" style={{ height: IconSize.large }} />
@@ -100,7 +101,7 @@ const SunriseButton : React.FC = () => {
                           </Stack>
                         )}
                         <Stack direction="row" justifyContent="center">
-                          <Typography variant="body1">Bean reward for calling <Box display="inline" sx={{ backgroundColor: BeanstalkPalette.lightYellow, borderRadius: 0.4, px: 0.4 }}><strong><Link color="text.primary" underline="none" href="https://docs.bean.money/additional-resources/glossary#sunrise">sunrise()</Link></strong></Box>: <TokenIcon token={BEAN[1]} />&nbsp;{displayBN(reward)}</Typography>
+                          <Typography variant="body1">Reward for calling <Box display="inline" sx={{ backgroundColor: BeanstalkPalette.lightYellow, borderRadius: 0.4, px: 0.4 }}><strong><Link color="text.primary" underline="none" href="https://docs.bean.money/additional-resources/glossary#sunrise">sunrise()</Link></strong></Box>: <TokenIcon token={BEAN[1]} />&nbsp;{displayBN(reward)}</Typography>
                         </Stack>
                       </Stack>
                     </Stack>
@@ -114,10 +115,7 @@ const SunriseButton : React.FC = () => {
                       color="light"
                       sx={{
                         backgroundColor: BeanstalkPalette.washedRed,
-                        // borderColor: '#F7CF2D',
                         height: { xs: '60px', md: '45px' },
-                        // borderWidth: 1,
-                        // borderStyle: 'solid',
                         color: BeanstalkPalette.white,
                         '&:hover': {
                           backgroundColor: `${BeanstalkPalette.washedRed} !important`,
@@ -139,8 +137,6 @@ const SunriseButton : React.FC = () => {
                   backgroundColor: '#FBF2B9',
                   borderColor: '#F7CF2D',
                   height: { xs: '60px', md: '45px' },
-                  // borderWidth: 1,
-                  // borderStyle: 'solid',
                   color: 'text.primary',
                   '&:hover': {
                     backgroundColor: '#FBF2B9 !important',
@@ -149,11 +145,6 @@ const SunriseButton : React.FC = () => {
                 }}
                 fullWidth
               >
-                {/* {awaiting ? ( */}
-                {/*  'Awaiting Sunrise...' */}
-                {/* ) : ( */}
-                {/*  <>Sunrise available&nbsp;<span style={{ display: 'inline' }}><SunriseCountdown /></span></> */}
-                {/* )} */}
                 {!disabled ? (
                   <>
                     <img src={sunIcon} alt="Sunrise" style={{ height: 28 }} />&nbsp;
