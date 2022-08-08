@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js';
 import React from 'react';
 import SeasonPlot, {
   SeasonPlotBaseProps,
@@ -28,7 +29,7 @@ const Price: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({
     <SeasonPlot
       document={SeasonalPriceDocument}
       height={height}
-      defaultValue={price?.gt(0) ? price.toNumber() : 0}
+      defaultValue={price?.gt(0) ? price.dp(4, BigNumber.ROUND_FLOOR).toNumber() : 0} // FIXME: partial dup of `displayBeanPrice`
       defaultSeason={season?.gt(0) ? season.toNumber() : 0}
       getValue={getValue}
       formatValue={formatValue}

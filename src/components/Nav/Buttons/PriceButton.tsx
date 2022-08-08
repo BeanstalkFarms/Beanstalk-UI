@@ -8,13 +8,12 @@ import {
 import throttle from 'lodash/throttle';
 import { useTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
-import BigNumber from 'bignumber.js';
 import usePools from '~/hooks/usePools';
 import PoolCard from '~/components/Silo/PoolCard';
 import BeanProgressIcon from '~/components/Common/BeanProgressIcon';
 import useSeason from '~/hooks/useSeason';
 import usePrice from '~/hooks/usePrice';
-import { displayBN } from '~/util/Tokens';
+import { displayBeanPrice, displayBN } from '~/util/Tokens';
 import { NEW_BN, ZERO_BN } from '~/constants';
 import { useFetchPools } from '~/state/bean/pools/updater';
 import { AppState } from '~/state';
@@ -56,13 +55,12 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
     />
   ));
 
-  // isLoading ? ZERO_BN : beanPrice
   return (
     <FolderMenu
       onOpen={refetchPools}
       startIcon={startIcon}
       buttonContent={
-        <>${(new BigNumber(0.99995)).dp(isMobile ? 2 : 4, BigNumber.ROUND_FLOOR).toFixed(isMobile ? 2 : 4)}</>
+        <>${displayBeanPrice(beanPrice, isMobile ? 2 : 4)}</>
       }
       drawerContent={
         <Stack sx={{ p: 2 }} gap={1}>
