@@ -32,8 +32,7 @@ export const useSun = () => {
           beanstalk.season().then(bigNumberResult),
           beanstalk.seasonTime().then(bigNumberResult),
         ] as const);
-        console.debug(`[beanstalk/sun/useSun] RESULT: season = ${season}`);
-        console.debug(`[beanstalk/sun/useSun] RESULT: seasonTime = ${seasonTime}`);
+        console.debug(`[beanstalk/sun/useSun] RESULT: season = ${season}, seasonTime = ${seasonTime}`);
         dispatch(updateSeason(season));
         dispatch(updateSeasonTime(seasonTime));
       }
@@ -68,6 +67,7 @@ const SunUpdater = () => {
     if (awaiting === false) {
       const i = setInterval(() => {
         const _remaining = next.diffNow();
+        console.debug('remaining', _remaining.as('seconds'));
         if (_remaining.as('seconds') <= 0) {
           dispatch(setAwaitingSunrise(true));
         } else {
@@ -81,15 +81,19 @@ const SunUpdater = () => {
     }, 3000);
     return () => clearInterval(i);
   }, [dispatch, awaiting, next, fetch]);
-  
+
+  /// For each new season...
   useEffect(() => {
     if (awaiting && season.eq(seasonTime) && season.gt(-1)) {
+      const _next = getNextExpectedSunrise();
       dispatch(setAwaitingSunrise(false));
-      dispatch(setRemainingUntilSunrise(getNextExpectedSunrise().diffNow()));
+      dispatch(setNextSunrise(_next));
+      dispatch(_next.diffNow());
       toast.success(`The Sun has risen. It is now Season ${season.toString()}.`);
     }
+    // toast
   }, [dispatch, awaiting, season, seasonTime]);
-
+  
   // Fetch when chain changes
   useEffect(() => {
     clear();
@@ -98,13 +102,6 @@ const SunUpdater = () => {
     fetch,
     clear
   ]);
-  
-  /// For each new season...
-  useEffect(() => {
-    dispatch(setAwaitingSunrise(false));
-    dispatch(setNextSunrise(getNextExpectedSunrise(true)));
-    // toast
-  }, [dispatch, season]);
 
   return null;
 };
