@@ -83,13 +83,9 @@ export const BeanstalkPalette = {
   supportGreen: '#19873B',
   // Blues
   blue: '#C1DEF2',
-  babyBlue: '#E2F2FE',
-  lightBlue: '#DBEDFD',
-  lighterBlue: '#daf2ff', // see `bodyBackground`
+  lightBlue: '#DAEBF7',
   lightestBlue: '#F6FAFE',
   darkBlue: '#1F78B4',
-  darkNavyBlue: '#3c76af',
-  hoverBlue: '#f9fcff',
   // Other
   white: '#fff',
   black: '#333',
@@ -170,7 +166,6 @@ let muiTheme = createTheme({
     },
     secondary: {
       main: BeanstalkPalette.blue,
-      light: BeanstalkPalette.lighterBlue,
       dark: BeanstalkPalette.darkBlue,
       contrastText: '#000000',
     },
