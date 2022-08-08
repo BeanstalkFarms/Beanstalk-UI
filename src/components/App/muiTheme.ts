@@ -80,7 +80,6 @@ export const BeanstalkPalette = {
   logoGreen: '#46B955',
   mediumGreen: lighten('#46B955', 0.7),
   lightGreen: '#E1F8E6',
-  washedGreen: '#E1F8E6',
   supportGreen: '#19873B',
   // Blues
   blue: '#C1DEF2',
@@ -449,7 +448,7 @@ let muiTheme = createTheme({
       styleOverrides: {
         root: sx({
           '&.Mui-selected': {
-            backgroundColor: BeanstalkPalette.washedGreen,
+            backgroundColor: BeanstalkPalette.lightGreen,
             borderRadius: 1,
           },
         })
