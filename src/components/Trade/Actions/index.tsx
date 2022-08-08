@@ -1,6 +1,6 @@
 import { Box, Card, Link, Stack, Typography } from '@mui/material';
 import React from 'react';
-import Soon from '~/components/Analytics/Soon';
+import Soon from '~/components/Common/ZeroState/Soon';
 
 const TradeActions : React.FC<{}> = () => (
   <Card sx={{ position: 'relative' }}>

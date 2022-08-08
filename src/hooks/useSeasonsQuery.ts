@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { DocumentNode, useLazyQuery } from '@apollo/client';
+import { DocumentNode, QueryOptions, useLazyQuery } from '@apollo/client';
 import { apolloClient } from '~/graph/client';
 
 const PAGE_SIZE = 1000;
@@ -53,7 +53,8 @@ export type SnapshotData<T extends MinimumViableSnapshotQuery> = T['seasons'][nu
  */
 const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
   document: DocumentNode,
-  range:    SeasonRange
+  range:    SeasonRange,
+  config?: Partial<QueryOptions>,
 ) => {
   /// Custom loading prop
   const [loading, setLoading] = useState(false);
@@ -67,6 +68,7 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
         if (range !== SeasonRange.ALL) {
           // data.seasons is sorted by season, descending.
           await get({
+            ...config,
             variables: { 
               first: SEASON_RANGE_TO_COUNT[range], 
               season_lte: 999999999
@@ -77,6 +79,7 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
           // Initialize Season data with a call to the first 
           // set of Seasons.
           const init = await get({
+            ...config,
             variables: { 
               first: undefined, 
               season_lte: 999999999
@@ -117,6 +120,7 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
             console.debug(`[useRecentSeasonsData] get: ${season} -> ${Math.max(season - 1000, 2)}`);
             promises.push(
               apolloClient.query({
+                ...config,
                 query: document,
                 variables: {
                   first: season < 1000 ? (season - 1) : 1000,
@@ -138,7 +142,7 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
         console.error(e);
       }
     })();
-  }, [range, get, document]);
+  }, [range, get, config, document]);
 
   return {
     ...query,

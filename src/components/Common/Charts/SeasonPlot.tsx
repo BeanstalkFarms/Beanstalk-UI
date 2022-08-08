@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Stack, Box, CircularProgress } from '@mui/material';
+import { Stack, Box, CircularProgress, Typography } from '@mui/material';
 import { Line } from '@visx/shape';
 import { DocumentNode } from 'graphql';
 import Stat, { StatProps } from '~/components/Common/Stat';
@@ -44,6 +44,10 @@ type SeasonPlotFinalProps<T extends MinimumViableSnapshotQuery> = (
      * Format the value from number -> string
      */
     formatValue?: (value: number) => string,
+    /**
+     * 
+     */
+    context?: any;
   } 
   & { StatProps: Omit<StatProps, 'amount' | 'subtitle'> }
   & { LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP'> }
@@ -61,16 +65,18 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
   height = '175px',
   StatProps: statProps,           // renamed to prevent type collision
   LineChartProps: lineChartProps, // renamed to prevent type collision
+  context,
 }: SeasonPlotFinalProps<T>) {
   /// Selected state
   const [tabState, setTimeTab] = useState<TimeTabState>([SeasonAggregation.HOUR, SeasonRange.WEEK]);
-  const { loading, data } = useSeasonsQuery<T>(document, tabState[1]);
-
+  
   /// Display values
   const [displayValue,  setDisplayValue]  = useState<number | undefined>(undefined);
   const [displaySeason, setDisplaySeason] = useState<number | undefined>(undefined);
-
+  
   ///
+  const config = useMemo(() => ({ context }), [context]);
+  const { loading, error, data } = useSeasonsQuery<T>(document, tabState[1], config);
   const series = useMemo(() => {
     console.debug(`[TWAPCard] Building series with ${data?.seasons.length || 0} data points`);
     if (data) {
@@ -150,8 +156,12 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
       {/* Chart Container */}
       <Box sx={{ width: '100%', height, position: 'relative' }}>
         {(loading || series.length === 0) ? (
-          <Stack width="100%" height="100%" alignItems="center" justifyContent="center">
-            <CircularProgress variant="indeterminate" />
+          <Stack height="100%" alignItems="center" justifyContent="center">
+            {error ? (
+              <Typography>An error occurred while loading this data.</Typography>
+            ) : (
+              <CircularProgress variant="indeterminate" />
+            )}
           </Stack>
         ) : (
           <LineChart

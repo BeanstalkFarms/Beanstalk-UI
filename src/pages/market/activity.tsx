@@ -12,8 +12,8 @@ import BigNumber from 'bignumber.js';
 import podIcon from '~/img/beanstalk/pod-icon.svg';
 import beanIcon from '~/img/tokens/bean-logo-circled.svg';
 import ActivityTable from '~/components/Market/Tables/Activity';
-import { displayBN, displayFullBN } from '../../util';
-import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
+import { displayBN, displayFullBN } from '~/util';
+import PageHeaderSecondary from '~/components/Common/PageHeaderSecondary';
 
 const columns: DataGridProps['columns'] = [
   {
