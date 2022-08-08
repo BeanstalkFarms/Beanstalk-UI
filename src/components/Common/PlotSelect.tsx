@@ -32,8 +32,8 @@ const useStyles = makeStyles(() => ({
     fontSize: '20px'
   },
   tokenLogo: {
-    width: IconSize.large,
-    height: IconSize.large,
+    width: IconSize.tokenSelect,
+    height: IconSize.tokenSelect,
   }
 }));
 

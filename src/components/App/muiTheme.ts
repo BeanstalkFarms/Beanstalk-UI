@@ -116,6 +116,7 @@ export const IconSize = {
   small: 20,
   medium: 25,
   large: 50,
+  tokenSelect: 44,
 };
 
 export const FontSize = {
