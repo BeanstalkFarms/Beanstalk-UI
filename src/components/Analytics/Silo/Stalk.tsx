@@ -11,6 +11,11 @@ const StatProps = {
   title: 'Stalk',
   gap: 0.5,
 };
+const queryConfig = {
+  variables: {
+    season_gt: 6073,
+  }
+};
 
 const Stalk: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => (
   <SeasonPlot<SeasonalStalkQuery>
@@ -19,6 +24,7 @@ const Stalk: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height })
     getValue={getValue}
     formatValue={formatValue}
     StatProps={StatProps}
+    queryConfig={queryConfig}
   />
 );
 

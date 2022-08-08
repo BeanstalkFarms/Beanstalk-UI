@@ -11,6 +11,11 @@ const StatProps = {
   title: 'Seeds',
   gap: 0.5,
 };
+const queryConfig = {
+  variables: {
+    season_gt: 6073,
+  }
+};
 
 const Seeds: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => (
   <SeasonPlot<SeasonalSeedsQuery>
@@ -19,6 +24,7 @@ const Seeds: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height })
     getValue={getValue}
     formatValue={formatValue}
     StatProps={StatProps}
+    queryConfig={queryConfig}
   />
 );
 
