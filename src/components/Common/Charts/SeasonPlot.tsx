@@ -84,6 +84,7 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
       const lastIndex = data.seasons.length - 1;
       const baseData  = data.seasons.reduce<SeasonDataPoint[]>(
         (prev, curr, index) => {
+          // FIXME: use different query for day aggregation
           const useThisDataPoint = tabState[0] === SeasonAggregation.DAY ? (
             index === 0              // first in the series
             || index === lastIndex   // last in the series
@@ -93,7 +94,7 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
           if (useThisDataPoint && curr !== null) {
             prev.push({
               season: curr.season as number,
-              date:   new Date(parseInt(`${curr.timestamp}000`, 10)),
+              date:   new Date(parseInt(`${curr.timestamp}000`, 10)), // FIXME: inefficient
               value:  getValue(curr),
             });
           }
@@ -102,7 +103,7 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
         []
       );
       
-      return baseData.sort(sortSeasons);
+      return baseData.sort(sortSeasons); // FIXME: mapsort
     }
     return [];
   }, [
@@ -120,7 +121,8 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
   );
   const handleCursor = useCallback(
     (dps?: SeasonDataPoint[]) => {
-      setDisplayValue(dps  ? dps[0].value  : undefined);
+      console.debug('handleCursor', dps);
+      setDisplayValue(dps ? dps[0].value  : undefined);
       setDisplaySeason(dps ? dps[0].season : undefined);
     },
     []
@@ -144,8 +146,8 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
       <Stack direction="row" justifyContent="space-between" sx={{ px: 2 }}>
         <Stat
           {...statProps}
-          amount={formatValue(displayValue || defaultValue)}
-          subtitle={`Season ${(displaySeason || defaultSeason).toFixed()}`}
+          amount={formatValue(displayValue !== undefined ? displayValue : defaultValue)}
+          subtitle={`Season ${(displaySeason !== undefined ? displaySeason : defaultSeason).toFixed()}`}
         />
         <Stack alignItems="right">
           <TimeTabs

@@ -5,11 +5,11 @@ import { SnapshotData } from '~/hooks/useSeasonsQuery';
 import { toTokenUnitsBN } from '../../../util';
 import { STALK } from '../../../constants/tokens';
 
-const getValue = (season: SnapshotData<SeasonalStalkQuery>) => toTokenUnitsBN(season.hourlyStalkDelta, STALK.decimals).toNumber();
+const getValue = (season: SnapshotData<SeasonalStalkQuery>) => toTokenUnitsBN(season.totalStalk, STALK.decimals).toNumber();
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const StatProps = {
-    title: 'Stalk Changes',
-    gap: 0.5,
+  title: 'Total Stalk',
+  gap: 0.5,
 };
 
 const Stalk: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => (
@@ -19,7 +19,7 @@ const Stalk: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height })
     getValue={getValue}
     formatValue={formatValue}
     StatProps={StatProps}
-    />
+  />
 );
 
 export default Stalk;
