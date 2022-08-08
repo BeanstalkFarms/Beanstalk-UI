@@ -10,7 +10,11 @@ import ChopConditions from '../components/Chop/ChopConditions';
 const ChopPage: React.FC = () => (
   <Container maxWidth="sm">
     <Stack spacing={2}>
-      <PageHeader title="Chop" description="Burn your Unripe assets for the underlying Ripe assets" />
+      <PageHeader 
+        title="Chop" 
+        description="Burn your Unripe assets for the underlying Ripe assets" 
+        href="https://docs.bean.money/farm/barn#chopping"
+      />
       <ChopConditions />
       <ChopActions />
     </Stack>
