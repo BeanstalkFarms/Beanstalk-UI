@@ -1,4 +1,4 @@
-import { Card, Stack, Tab, Tabs } from '@mui/material';
+import { Card, Tab, Tabs } from '@mui/material';
 import React from 'react';
 import DepositedBeans from './DepositedBeans';
 import DepositedBean3CRV from './DepositedBean3Crv';
@@ -23,32 +23,20 @@ const SiloAnalytics: React.FC<{}> = () => {
   const [tab, handleChangeTab] = useTabs(SLUGS, 'silo');
   return (
     <Card>
-      <Stack gap={2}>
-        <Tabs value={tab} onChange={handleChangeTab} sx={{ px: 2, pt: 2, pb: 1.5 }}>
-          <Tab label="Deposited BEAN" />
-          <Tab label="Deposited BEAN:3CRV" />
-          <Tab label="Deposited urBEAN" />
-          <Tab label="Deposited urBEAN3CRV" />
-          <Tab label="Stalk" />
-          <Tab label="Seeds" />
-        </Tabs>
-        {tab === 0 && <DepositedBeans height={300} />}
-        {tab === 1 && <DepositedBean3CRV height={300} />}
-        {tab === 2 && <DepositedUnripeBeans height={300} />}
-        {tab === 3 && <DepositedUnripeBean3CRV height={300} />}
-        {tab === 4 && <Stalk height={300} />}
-        {tab === 5 && <Seeds height={300} />}
-        {/* {tab === 6 && <Soon height={300} />} */}
-        {/* {tab === 7 && <Soon height={300} />} */}
-        {/* {tab === 0 && <DepositedBeans season={season} beanPrice={beanPrice} />}
-        {tab === 1 && <WithdrawnBeans season={season} beanPrice={beanPrice} />}
-        {tab === 2 && <DepositedLP season={season} beanPrice={beanPrice} />}
-        {tab === 3 && <WithdrawnLP season={season} beanPrice={beanPrice} />}
-        {tab === 4 && (<DepositedUnripeBeans season={season} beanPrice={beanPrice} />)}
-        {tab === 5 && <DepositedUnripeLP season={season} beanPrice={beanPrice} />}
-        {tab === 6 && <Stalk season={season} beanPrice={beanPrice} />}
-        {tab === 7 && <Seeds season={season} beanPrice={beanPrice} />} */}
-      </Stack>
+      <Tabs value={tab} onChange={handleChangeTab} sx={{ px: 2, pt: 2, pb: 1.5 }}>
+        <Tab label="Deposited BEAN" />
+        <Tab label="Deposited BEAN:3CRV" />
+        <Tab label="Deposited urBEAN" />
+        <Tab label="Deposited urBEAN3CRV" />
+        <Tab label="Stalk" />
+        <Tab label="Seeds" />
+      </Tabs>
+      {tab === 0 && <DepositedBeans height={300} />}
+      {tab === 1 && <DepositedBean3CRV height={300} />}
+      {tab === 2 && <DepositedUnripeBeans height={300} />}
+      {tab === 3 && <DepositedUnripeBean3CRV height={300} />}
+      {tab === 4 && <Stalk height={300} />}
+      {tab === 5 && <Seeds height={300} />}
     </Card>
   );
 };
