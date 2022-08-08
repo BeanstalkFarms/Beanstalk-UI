@@ -11,6 +11,6 @@ query SeasonalDepositedUnripeBean3CRV($season_lte: Int, $first: Int) {
     id
     season
     timestamp
-    hourlyDepositedAmount
+    totalDepositedAmount
   }
 }

@@ -54,10 +54,11 @@ export type SnapshotData<T extends MinimumViableSnapshotQuery> = T['seasons'][nu
 const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
   document: DocumentNode,
   range:    SeasonRange,
-  config?: Partial<QueryOptions>,
+  config?:  Partial<QueryOptions>,
 ) => {
   /// Custom loading prop
   const [loading, setLoading] = useState(false);
+  
   /// Execute generic lazy query
   const [get, query] = useLazyQuery<T>(document, { variables: {} });
 
@@ -69,7 +70,8 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
           // data.seasons is sorted by season, descending.
           await get({
             ...config,
-            variables: { 
+            variables: {
+              ...config?.variables,
               first: SEASON_RANGE_TO_COUNT[range], 
               season_lte: 999999999
             },
@@ -81,6 +83,7 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
           const init = await get({
             ...config,
             variables: { 
+              ...config?.variables,
               first: undefined, 
               season_lte: 999999999
             },
@@ -123,6 +126,7 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
                 ...config,
                 query: document,
                 variables: {
+                  ...config?.variables,
                   first: season < 1000 ? (season - 1) : 1000,
                   season_lte: season,
                 },

@@ -5,7 +5,7 @@ import { SnapshotData } from '~/hooks/useSeasonsQuery';
 import { toTokenUnitsBN } from '~/util';
 import { BEAN_CRV3_LP } from '~/constants/tokens';
 
-const getValue = (season: SnapshotData<SeasonalDepositedBean3CrvQuery>) => toTokenUnitsBN(season.hourlyDepositedAmount, BEAN_CRV3_LP[1].decimals).toNumber();
+const getValue = (season: SnapshotData<SeasonalDepositedBean3CrvQuery>) => toTokenUnitsBN(season.totalDepositedAmount, BEAN_CRV3_LP[1].decimals).toNumber();
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const StatProps = {
   title: 'Deposited BEAN:3CRV',

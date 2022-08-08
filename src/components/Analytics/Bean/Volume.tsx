@@ -12,6 +12,8 @@ const useStatProps = () => ({
   sx: { ml: 0 },
 });
 
+const queryConfig = { context: { subgraph: 'bean' } };
+
 const Volume: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => {
   const season = useSeason();
   const StatProps = useStatProps();
@@ -23,7 +25,7 @@ const Volume: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }
       getValue={getValue}
       formatValue={formatValue}
       StatProps={StatProps}
-      context={{ subgraph: 'bean' }}
+      queryConfig={queryConfig}
     />
   );
 };

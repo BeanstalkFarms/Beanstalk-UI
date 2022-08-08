@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Stack, Box, CircularProgress, Typography } from '@mui/material';
 import { Line } from '@visx/shape';
 import { DocumentNode } from 'graphql';
+import { QueryOptions } from '@apollo/client';
 import Stat, { StatProps } from '~/components/Common/Stat';
 import LineChart, { DataPoint, LineChartProps } from '~/components/Common/Charts/LineChart';
 import useSeasonsQuery, { MinimumViableSnapshotQuery, SeasonAggregation, SeasonRange } from '~/hooks/useSeasonsQuery';
@@ -48,7 +49,7 @@ type SeasonPlotFinalProps<T extends MinimumViableSnapshotQuery> = (
     /**
      * 
      */
-    context?: any;
+    queryConfig?: Partial<QueryOptions>
   } 
   & { StatProps: Omit<StatProps, 'amount' | 'subtitle'> }
   & { LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP'> }
@@ -66,7 +67,7 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
   height = '175px',
   StatProps: statProps,           // renamed to prevent type collision
   LineChartProps: lineChartProps, // renamed to prevent type collision
-  context,
+  queryConfig,
 }: SeasonPlotFinalProps<T>) {
   /// Selected state
   const [tabState, setTimeTab] = useState<TimeTabState>([SeasonAggregation.HOUR, SeasonRange.WEEK]);
@@ -76,8 +77,7 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
   const [displaySeason, setDisplaySeason] = useState<number | undefined>(undefined);
   
   ///
-  const config = useMemo(() => ({ context }), [context]);
-  const { loading, error, data } = useSeasonsQuery<T>(document, tabState[1], config);
+  const { loading, error, data } = useSeasonsQuery<T>(document, tabState[1], queryConfig);
   const series = useMemo(() => {
     console.debug(`[TWAPCard] Building series with ${data?.seasons.length || 0} data points`);
     if (data) {

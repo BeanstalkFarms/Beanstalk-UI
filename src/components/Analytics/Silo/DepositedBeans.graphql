@@ -11,6 +11,6 @@ query SeasonalDepositedBeans($season_lte: Int, $first: Int) {
     id
     season
     timestamp
-    hourlyDepositedAmount
+    totalDepositedAmount
   }
 }
