@@ -3,7 +3,7 @@ import { Card, Stack, Tab, Tabs } from '@mui/material';
 
 import useTabs from '~/hooks/display/useTabs';
 import Price from './Price';
-import Soon from '../Soon';
+import Soon from '../../Common/ZeroState/Soon';
 import Supply from '~/components/Analytics/Bean/Supply';
 import MarketCap from '~/components/Analytics/Bean/MarketCap';
 
