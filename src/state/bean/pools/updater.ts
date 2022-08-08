@@ -10,7 +10,6 @@ import ALL_POOLS from '~/constants/pools';
 import { ERC20__factory } from '~/generated';
 import { updatePrice, updateDeltaB, updateSupply } from '../token/actions';
 import { resetPools, updateBeanPools, UpdatePoolPayload } from './actions';
-import useTimedRefresh from '~/hooks/useTimedRefresh';
 
 export const useFetchPools = () => {
   const dispatch = useDispatch();
@@ -141,7 +140,7 @@ const PoolsUpdater = () => {
     clear
   ]);
   
-  useTimedRefresh(fetch, 15_000, true, true);
+  // useTimedRefresh(fetch, 15_000, true, true);
 
   return null;
 };
