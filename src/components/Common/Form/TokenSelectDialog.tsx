@@ -17,10 +17,6 @@ const useStyles = makeStyles(() => ({
     height: '18px',
     marginRight: '5px'
   },
-  tokenName: {
-    color: '#3B3B3B',
-    fontSize: '20px'
-  },
   tokenLogo: {
     width: 44,
     height: 44,
