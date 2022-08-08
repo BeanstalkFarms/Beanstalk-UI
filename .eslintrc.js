@@ -22,7 +22,8 @@ module.exports = {
   },
   ignorePatterns: [
     'src/constants/abi/**/*.json',
-    'src/generated/**/*'
+    'src/generated/**/*',
+    'src/graph/graphql.schema.json',
   ],
   plugins: [
     'react',

@@ -28,6 +28,7 @@
   ],
   "exclude": [
     "./src/generated/**/*",
+    "./src/graph/graphql.schema.json",
     "./node_modules"
   ]
 }
