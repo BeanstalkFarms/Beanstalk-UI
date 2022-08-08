@@ -159,7 +159,7 @@ const ClaimRewardsForm : React.FC<
                             disabled={disabled}
                             sx={{
                               '&:disabled': {
-                                borderColor: BeanstalkPalette.lightGrey,
+                                borderColor: BeanstalkPalette.lightestGrey,
                               },
                             }}
                           />
