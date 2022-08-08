@@ -25,7 +25,7 @@ const FieldAnalytics: React.FC<{}> = () => {
           <Tab label="Harvested" />
           <Tab label="Total Sowers" />
         </Tabs>
-        {tab === 0 && <RRoR />}
+        {tab === 0 && <RRoR height={300} />}
         {tab === 1 && <Temperature height={300} />}
         {tab === 2 && <Pods height={300} />}
         {tab === 3 && <PodRate height={300} />}
