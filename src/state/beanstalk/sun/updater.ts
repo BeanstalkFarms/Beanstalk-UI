@@ -83,14 +83,12 @@ const SunUpdater = () => {
   }, [dispatch, awaiting, next, fetch]);
   
   useEffect(() => {
-    if (season.eq(seasonTime) && season.gt(-1)) {
+    if (awaiting && season.eq(seasonTime) && season.gt(-1)) {
       dispatch(setAwaitingSunrise(false));
-      if (remaining.as('seconds') === 0) {
-        toast.success(`The Sun has risen. It is now Season ${season.toString()}.`);
-      }
       dispatch(setRemainingUntilSunrise(getNextExpectedSunrise().diffNow()));
+      toast.success(`The Sun has risen. It is now Season ${season.toString()}.`);
     }
-  }, [dispatch, remaining, season, seasonTime]);
+  }, [dispatch, awaiting, season, seasonTime]);
 
   // Fetch when chain changes
   useEffect(() => {
