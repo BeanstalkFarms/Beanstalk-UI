@@ -159,7 +159,7 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
                 '& .MuiListItemText-secondary': {
                   fontSize: FontSize.base,
                   lineHeight: '1.25rem',
-                  color: BeanstalkPalette.lightishGrey
+                  color: BeanstalkPalette.lightGrey
                 },
               }}
             >

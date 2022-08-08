@@ -87,11 +87,11 @@ export const BeanstalkPalette = {
   lightestBlue: '#F6FAFE',
   darkBlue: '#1F78B4',
   // Other
+  grey: '#657265',
+  lightGrey: '#9E9E9E',
+  lightestGrey: '#DDDDDD',
   white: '#fff',
   black: '#333',
-  gray: '#657265',
-  lightGrey: '#DDDDDD',
-  lightishGrey: '#9E9E9E',
   // Reds
   washedRed: '#c35f42',
   mediumRed: lighten('#c35f42', 0.55),
@@ -315,8 +315,13 @@ let muiTheme = createTheme({
         root: sx({
           textTransform: 'none',
           // fontWeight: 'bold',
+          '&.MuiButton-root:hover': {
+            // backgroundColor: BeanstalkPalette.supportGreen,
+            backgroundColor: '',
+            opacity: 0.9
+          },
           '&.MuiLoadingButton-root:hover': {
-            backgroundColor: BeanstalkPalette.supportGreen,
+            // backgroundColor: BeanstalkPalette.supportGreen,
           },
           fontWeight: 700,
           fontSize: '1rem',

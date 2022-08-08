@@ -79,7 +79,7 @@ const PlotSelect: React.FC<PlotSelectProps> = ({
           '& .MuiListItemText-secondary': {
             fontSize: FontSize.base,
             lineHeight: '1.25rem',
-            color: BeanstalkPalette.lightishGrey
+            color: BeanstalkPalette.lightGrey
           },
         }}
       >
