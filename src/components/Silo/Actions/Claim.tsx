@@ -95,8 +95,9 @@ const ClaimForm : React.FC<
     amount
     && amount.gt(0)
     && values.destination !== undefined
-    && values.tokenOut !== undefined
+    && (token.isLP ? values.tokenOut !== undefined : true)
   );
+  const tokenOut = values.tokenOut || (token as ERC20Token);
 
   //
   const handleQuote = useCallback<QuoteHandler>(
@@ -155,7 +156,7 @@ const ClaimForm : React.FC<
       <Stack gap={1}>
         <TokenQuoteProvider
           name="token"
-          tokenOut={values.tokenOut || (token as ERC20Token)}
+          tokenOut={tokenOut}
           state={values.token}
           // This input is always disabled but we use
           // the underlying handleQuote functionality
@@ -212,7 +213,7 @@ const ClaimForm : React.FC<
           <>
             <TxnSeparator />
             <TokenOutputField
-              token={values.tokenOut!}
+              token={tokenOut}
               amount={values.token.amountOut || ZERO_BN}
               isLoading={values.token.quoting}
             />
@@ -230,11 +231,11 @@ const ClaimForm : React.FC<
                       },
                       token === BeanCrv3 && values.tokenOut !== token ? {
                         type: ActionType.BASE,
-                        message: `Unpack ${displayTokenAmount(amount, token)} into ${displayTokenAmount(values.token.amountOut || ZERO_BN, values.tokenOut!)}.`
+                        message: `Unpack ${displayTokenAmount(amount, token)} into ${displayTokenAmount(values.token.amountOut || ZERO_BN, tokenOut)}.`
                       } : undefined,
                       {
                         type: ActionType.RECEIVE_TOKEN,
-                        token: values.tokenOut!,
+                        token: tokenOut,
                         amount: values.token.amountOut || ZERO_BN,
                         destination: values.destination,
                       }
@@ -305,17 +306,18 @@ const Claim : React.FC<{
       const crates = siloBalance?.claimable?.crates;
       if (!crates || crates.length === 0) throw new Error('No claimable crates.');
       if (!values.destination) throw new Error('No destination selected.');
-      if (!values.tokenOut) throw new Error('No output token selected.');
+      const tokenOut = (values.tokenOut || token);
+      if (!tokenOut) throw new Error('No output token selected.');
 
       txToast = new TransactionToast({
         loading: `Claiming ${displayTokenAmount(claimableBalance, token)} from the Silo...`,
-        success: `Claim successful. Added ${displayTokenAmount(values.token.amountOut || ZERO_BN, values.tokenOut)} to your ${copy.TO_MODE[values.destination]}.`,
+        success: `Claim successful. Added ${displayTokenAmount(values.token.amountOut || ZERO_BN, tokenOut)} to your ${copy.TO_MODE[values.destination]}.`,
       });
       
       // If the user wants to swap their LP token for something else,
       // we send their Claimable `token` to their internal balance for
       // ease of interaction and gas efficiency.
-      const removeLiquidity  = (values.tokenOut !== token);
+      const removeLiquidity  = (tokenOut !== token);
       const claimDestination = token.isLP && removeLiquidity
         ? FarmToMode.INTERNAL
         : values.destination;
