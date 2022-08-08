@@ -1,11 +1,13 @@
 import React from 'react';
-import { Card, Stack, Tab, Tabs } from '@mui/material';
+import { Card, Tab, Tabs } from '@mui/material';
 
 import useTabs from '~/hooks/display/useTabs';
 import Price from './Price';
-import Soon from '../Soon';
+import Soon from '~/components/Common/ZeroState/Soon';
 import Supply from '~/components/Analytics/Bean/Supply';
 import MarketCap from '~/components/Analytics/Bean/MarketCap';
+import Volume from '~/components/Analytics/Bean/Volume';
+import Liquidity from '~/components/Analytics/Bean/Liquidity';
 
 const SLUGS = ['price', 'volume', 'liquidity', 'mktcap', 'supply', 'crosses'];
 const BeanAnalytics: React.FC<{}> = () => {
@@ -13,22 +15,20 @@ const BeanAnalytics: React.FC<{}> = () => {
 
   return (
     <Card>
-      <Stack>
-        <Tabs value={tab} onChange={handleChangeTab} sx={{ px: 2, pt: 2, pb: 1.5 }}>
-          <Tab label="Bean Price" />
-          <Tab label="Volume" />
-          <Tab label="Liquidity" />
-          <Tab label="Market Cap" />
-          <Tab label="Supply" />
-          <Tab label="Crosses" />
-        </Tabs>
-        {tab === 0 && <Price height={300} />}
-        {tab === 1 && <Soon height={300} />}
-        {tab === 2 && <Soon height={300} />}
-        {tab === 3 && <MarketCap height={300} />}
-        {tab === 4 && <Supply height={300} />}
-        {tab === 5 && <Soon height={300} />}
-      </Stack>
+      <Tabs value={tab} onChange={handleChangeTab} sx={{ px: 2, pt: 2, pb: 1.5 }}>
+        <Tab label="Bean Price" />
+        <Tab label="Volume" />
+        <Tab label="Liquidity" />
+        <Tab label="Market Cap" />
+        <Tab label="Supply" />
+        <Tab label="Crosses" />
+      </Tabs>
+      {tab === 0 && <Price height={300} />}
+      {tab === 1 && <Volume height={300} />}
+      {tab === 2 && <Liquidity height={300} />}
+      {tab === 3 && <MarketCap height={300} />}
+      {tab === 4 && <Supply height={300} />}
+      {tab === 5 && <Soon height={300} />}
     </Card>
   );
 };

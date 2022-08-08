@@ -1,4 +1,5 @@
-import { defineConfig, splitVendorChunkPlugin } from 'vite';
+import { splitVendorChunkPlugin } from 'vite';
+import { defineConfig } from 'vitest/config';
 import path from 'path';
 import react from '@vitejs/plugin-react';
 import strip from '@rollup/plugin-strip';
@@ -6,6 +7,9 @@ import analyze from 'rollup-plugin-analyzer';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  test: {
+    globals: true,
+  },
   server: {
     hmr: {
       overlay: true

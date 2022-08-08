@@ -114,21 +114,7 @@ const tickLabelProps = () => ({
   fontSize: 12,
   fontFamily: 'Futura PT',
   textAnchor: 'middle',
-  // backgroundColor: 'white',
 } as const);
-const tickProps = () => ({
-
-});
-
-// const labelProps = {
-//   fill: labelColor,
-//   fontSize: 18,
-//   strokeWidth: 0,
-//   stroke: '#333',
-//   paintOrder: 'stroke',
-//   fontFamily: 'Futura PT',
-//   textAnchor: 'start',
-// } as const;
 
 // ------------------------
 //      Graph (Inner)

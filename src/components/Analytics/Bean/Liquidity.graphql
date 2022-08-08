@@ -1,4 +1,4 @@
-query SeasonalVolume($season_lte: Int, $first: Int) {
+query SeasonalLiquidity($season_lte: Int, $first: Int) {
   seasons: beanHourlySnapshots(
     first: $first
     where: { season_lte: $season_lte }
@@ -8,6 +8,6 @@ query SeasonalVolume($season_lte: Int, $first: Int) {
     id
     season
     timestamp
-    hourlyVolumeUSD
+    totalLiquidityUSD
   }
 }

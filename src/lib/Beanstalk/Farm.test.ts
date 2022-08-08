@@ -5,7 +5,7 @@ import Farm from './Farm';
 
 // ----------------------------------------------------------------------
 
-const ETH_PRICE = 1000; // 1000 BEAN / ETH
+const ETH_PRICE = 1700; // 1000 BEAN / ETH
 const withinPriceRange = (
   value:    ethers.BigNumber,
   expected: [
@@ -13,10 +13,10 @@ const withinPriceRange = (
     decimals: number,
   ],
   range:    number = 0.1
-) => {
-  const low  = (expected[0] * (1 - range)).toString();
-  const high = (expected[0] * (1 + range)).toString();
+  ) => {
   const dec  = expected[1];
+  const low  = (expected[0] * (1 - range)).toFixed(dec);
+  const high = (expected[0] * (1 + range)).toFixed(dec);
   const tru  = (
     value.gte(ethers.utils.parseUnits(low,  dec)) &&
     value.lte(ethers.utils.parseUnits(high, dec))
@@ -93,7 +93,7 @@ describe('estimation', () => {
   it('estimates: X ETH <- 1000 BEAN', async () => {
     const result = await Farm.estimate(farm.buyBeans(), [ethers.utils.parseUnits('1000', 6)], false); //
     console.log(`X ETH <- 1000 BEAN: ${ethers.utils.formatUnits(result.amountOut, 18)}`); // 997470693756958276
-    expect(withinPriceRange(result.amountOut, [ETH_PRICE / 1000, 18], 0.1)).toBe(true); // 10% of ETH_PRICE/1000
+    expect(withinPriceRange(result.amountOut, [1000 / ETH_PRICE, 18], 0.1)).toBe(true); // 10% of ETH_PRICE/1000
     expect(result.steps.length).toBe(2);  /// only when hardcoded thru tricrypto2
   });
 });
