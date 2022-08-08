@@ -84,12 +84,12 @@ export const BeanstalkPalette = {
   supportGreen: '#19873B',
   // Blues
   blue: '#C1DEF2',
-  babyBlue: '#E2F2FE',
+  babyBlue: '#E2F2FE', // not used
   lightBlue: '#DBEDFD',
   lighterBlue: '#daf2ff', // see `bodyBackground`
   lightestBlue: '#F6FAFE',
   darkBlue: '#1F78B4',
-  darkNavyBlue: '#3c76af',
+  darkNavyBlue: '#3c76af', // not used
   hoverBlue: '#f9fcff',
   // Other
   white: '#fff',
@@ -103,9 +103,9 @@ export const BeanstalkPalette = {
   hoverRed: '#fef9f8',
   trueRed: '#AE2D20',
   // Yellow
-  yellow: '#f0df6a',
+  yellow: '#f0df6a', // not used
   lightYellow: '#FDF4E7',
-  warningYellow: '#F2A64A',
+  warningYellow: '#F2A64A', // not used
   // Brown
   brown: 'rgba(121,87,57,1)',
   lightBrown: 'rgba(121,87,57,0.2)',

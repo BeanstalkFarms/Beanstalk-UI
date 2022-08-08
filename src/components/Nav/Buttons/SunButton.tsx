@@ -107,6 +107,9 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   /// 6076 = 1%
   const nextSeasonRamp = MinBN(MaxBN(season.minus(6075).plus(1), ZERO_BN), new BigNumber(100));
 
+  console.log('BS YIELD', beanstalkField.weather.yield.toString());
+  console.log('BY SSN', bySeason[0].temperature.toString());
+
   /// Table Content
   const tableContent = (
     <Box sx={{ overflow: 'hidden' }}>
@@ -190,12 +193,13 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           newSoil={peg.soilStart}
           podRate={NEW_BN}
           temperature={beanstalkField.weather.yield.plus(peg.deltaTemperature)} // FIXME expected
+          // temperature={bySeason[0].temperature.plus(peg.deltaTemperature)}
           deltaDemand={peg.deltaPodDemand}
           deltaTemperature={peg.deltaTemperature}
           isNew
         />
         {bySeason.map((s, i) => {
-          const deltaTemperature = bySeason[i + 1] 
+          const deltaTemperature = bySeason[i + 1]
             ? s.temperature?.minus(bySeason[i + 1].temperature)
             : ZERO_BN;
           return (

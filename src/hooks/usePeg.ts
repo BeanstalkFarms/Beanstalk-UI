@@ -94,7 +94,7 @@ const temperature = (
 ) => {
   let caseId: number = 0; 
 
-  // Evlauate Pod rate
+  // Evaluate Pod rate
   if (podRate.gte(RDUpper)) caseId = 24;
   else if (podRate.gte(RDOptimal)) caseId = 16;
   else if (podRate.gte(RDLower)) caseId = 8;
