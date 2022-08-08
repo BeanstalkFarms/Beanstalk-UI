@@ -11,12 +11,6 @@ import { FarmerSilo } from '~/state/farmer/silo';
 import { BeanstalkPalette, FontSize, IconSize } from '../../App/muiTheme';
 
 const useStyles = makeStyles(() => ({
-  tokenIcon: {
-    minWidth: '18px',
-    width: '18px',
-    height: '18px',
-    marginRight: '5px'
-  },
   tokenLogo: {
     width: IconSize.tokenSelect,
     height: IconSize.tokenSelect,
