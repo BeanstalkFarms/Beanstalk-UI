@@ -43,7 +43,7 @@ const ChopConditions: React.FC<{}> = () => {
           </Grid>
           <Grid item xs={6} md={3.7}>
             <Stack gap={0.5}>
-              <Tooltip title="As the percentage of Fertilizer sold increases, the Chop Penalty decreases." placement="top">
+              <Tooltip title="The percentage of Fertilizer sold out of the total Available Fertilizer." placement="top">
                 <Typography variant="body1">
                   Fertilizer Sold&nbsp;
                   <HelpOutlineIcon
@@ -58,7 +58,7 @@ const ChopConditions: React.FC<{}> = () => {
           </Grid>
           <Grid item xs={6} md={4.6}>
             <Stack gap={0.5}>
-              <Tooltip title="In Beanstalk terms, this is the percentage of Sprouts that have become Rinsable." placement="top">
+              <Tooltip title="The percentage of Sprouts that have become Rinsable." placement="top">
                 <Typography variant="body1">
                   Debt Repaid to Fertilizer&nbsp;
                   <HelpOutlineIcon
