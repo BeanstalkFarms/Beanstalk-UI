@@ -8,8 +8,13 @@ import { BEAN } from '../../../constants/tokens';
 const getValue = (season: SnapshotData<SeasonalDepositedUnripeBean3CrvQuery>) => toTokenUnitsBN(season.totalDepositedAmount, BEAN[1].decimals).toNumber();
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const StatProps = {
-    title: 'Deposited Unripe BEAN:3CRV',
-    gap: 0.5,
+  title: 'Deposited Unripe BEAN:3CRV',
+  gap: 0.5,
+};
+const queryConfig = {
+  variables: {
+    season_gt: 6073,
+  }
 };
 
 const DepositedUnripeBean3CRV: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => (
@@ -19,7 +24,8 @@ const DepositedUnripeBean3CRV: React.FC<{ height?: SeasonPlotBaseProps['height']
     getValue={getValue}
     formatValue={formatValue}
     StatProps={StatProps}
-    />
+    queryConfig={queryConfig}
+  />
 );
 
 export default DepositedUnripeBean3CRV;
