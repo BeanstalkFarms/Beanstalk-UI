@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { DateTime, Duration } from 'luxon';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
@@ -61,6 +61,7 @@ const SunUpdater = () => {
   const next      = useSelector<AppState, DateTime>((state) => state._beanstalk.sun.sunrise.next);
   const awaiting  = useSelector<AppState, boolean>((state) => state._beanstalk.sun.sunrise.awaiting);
   const seasonTime  = useSelector<AppState, BigNumber>((state) => state._beanstalk.sun.seasonTime);
+  const remaining  = useSelector<AppState, Duration>((state) => state._beanstalk.sun.sunrise.remaining);
 
   // Update sunrise timer
   useEffect(() => {
@@ -83,11 +84,13 @@ const SunUpdater = () => {
   
   useEffect(() => {
     if (season.eq(seasonTime) && season.gt(-1)) {
-      toast.success(`The Sun has risen. It is now Season ${season.toString()}.`);
       dispatch(setAwaitingSunrise(false));
       dispatch(setRemainingUntilSunrise(getNextExpectedSunrise().diffNow()));
+      if (remaining.as('seconds') === 0) {
+        toast.success(`The Sun has risen. It is now Season ${season.toString()}.`);
+      }
     }
-  }, [dispatch, season, seasonTime]);
+  }, [dispatch, remaining, season, seasonTime]);
 
   // Fetch when chain changes
   useEffect(() => {
