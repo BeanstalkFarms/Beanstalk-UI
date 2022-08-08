@@ -7,8 +7,9 @@ import LineChart, { DataPoint, LineChartProps } from '~/components/Common/Charts
 import useSeasonsQuery, { MinimumViableSnapshotQuery, SeasonAggregation, SeasonRange } from '~/hooks/useSeasonsQuery';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import TimeTabs, { TimeTabState }  from './TimeTabs';
+import { sortSeasons } from '~/util/Season';
 
-type SeasonDataPoint = DataPoint & { season: number; };
+export type SeasonDataPoint = DataPoint & { season: number; };
 
 const defaultValueFormatter = (value: number) => value.toFixed(4);
 
@@ -101,7 +102,7 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
         []
       );
       
-      return baseData.sort((a, b) => a.season - b.season);
+      return baseData.sort(sortSeasons);
     }
     return [];
   }, [
