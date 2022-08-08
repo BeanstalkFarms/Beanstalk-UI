@@ -8,7 +8,7 @@ import { STALK } from '../../../constants/tokens';
 const getValue = (season: SnapshotData<SeasonalStalkQuery>) => toTokenUnitsBN(season.totalStalk, STALK.decimals).toNumber();
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const StatProps = {
-  title: 'Total Stalk',
+  title: 'Stalk',
   gap: 0.5,
 };
 

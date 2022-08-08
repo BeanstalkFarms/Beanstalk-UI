@@ -121,7 +121,6 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
   );
   const handleCursor = useCallback(
     (dps?: SeasonDataPoint[]) => {
-      console.debug('handleCursor', dps);
       setDisplayValue(dps ? dps[0].value  : undefined);
       setDisplaySeason(dps ? dps[0].season : undefined);
     },
@@ -170,6 +169,7 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
           <LineChart
             series={seriesInput}
             onCursor={handleCursor as any} // FIXME
+            curve="linear"
             {...lineChartProps}
           >
             {(props) => {
