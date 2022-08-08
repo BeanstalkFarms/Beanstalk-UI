@@ -317,8 +317,6 @@ let muiTheme = createTheme({
           // fontWeight: 'bold',
           '&.MuiButton-root:hover': {
             // backgroundColor: BeanstalkPalette.supportGreen,
-            backgroundColor: '',
-            opacity: 0.9
           },
           '&.MuiLoadingButton-root:hover': {
             // backgroundColor: BeanstalkPalette.supportGreen,

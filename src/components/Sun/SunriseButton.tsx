@@ -71,8 +71,7 @@ const SunriseButton : React.FC = () => {
     <>
       <Formik initialValues={{}} onSubmit={onSubmit}>
         {(formikProps: FormikProps<{}>) => {
-          // const disabled = formikProps.isSubmitting || !awaiting;
-          const disabled = false;
+          const disabled = formikProps.isSubmitting || !awaiting;
           return (
             <Form autoComplete="off">
               <Dialog
@@ -140,8 +139,8 @@ const SunriseButton : React.FC = () => {
                   height: { xs: '60px', md: '45px' },
                   color: 'text.primary',
                   '&:hover': {
-                    // backgroundColor: '#FBF2B9 !important',
-                    // opacity: 0.9
+                    backgroundColor: '#FBF2B9 !important',
+                    opacity: 0.9
                   }
                 }}
                 fullWidth
