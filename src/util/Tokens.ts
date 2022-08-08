@@ -35,6 +35,7 @@ export function MaxBN(bn1: BigNumber, bn2: BigNumber): BigNumber {
 
 /**
  * Trim a BigNumber to a set number of decimals.
+ * FIXME: legacy code, seems very inefficient
  */
 export function TrimBN(
   bn: BigNumber,
@@ -157,6 +158,15 @@ export function displayUSD(
 ) {
   const v = allowNegative === false ? MaxBN(ZERO_BN, bn).abs() : bn;
   return `$${displayFullBN(v, 2, 2)}`;
+}
+
+export function displayBeanPrice(
+  bn: BigNumber,
+  decimals: number,
+) {
+  // 0.99995 => "0.9999"
+  // 1.00006 => "1.0000"
+  return bn.dp(decimals, BigNumber.ROUND_FLOOR).toFixed(decimals);
 }
 
 // -------------------------
