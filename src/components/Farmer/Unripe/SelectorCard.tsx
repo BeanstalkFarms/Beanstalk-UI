@@ -20,7 +20,7 @@ const SelectorCard: React.FC<SelectorCardProps> = ({
         p: 2.5,
         cursor: 'pointer',
         '&:hover': {
-          backgroundColor: BeanstalkPalette.hoverBlue
+          backgroundColor: BeanstalkPalette.lightestBlue
         }
       }}
     onClick={handleClick}

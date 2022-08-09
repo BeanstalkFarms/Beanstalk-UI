@@ -80,23 +80,18 @@ export const BeanstalkPalette = {
   logoGreen: '#46B955',
   mediumGreen: lighten('#46B955', 0.7),
   lightGreen: '#E1F8E6',
-  washedGreen: '#E1F8E6',
   supportGreen: '#19873B',
   // Blues
   blue: '#C1DEF2',
-  babyBlue: '#E2F2FE',
-  lightBlue: '#DBEDFD',
-  lighterBlue: '#daf2ff', // see `bodyBackground`
+  lightBlue: '#DAEBF7',
   lightestBlue: '#F6FAFE',
   darkBlue: '#1F78B4',
-  darkNavyBlue: '#3c76af',
-  hoverBlue: '#f9fcff',
   // Other
+  grey: '#657265',
+  lightGrey: '#9E9E9E',
+  lightestGrey: '#DDDDDD',
   white: '#fff',
   black: '#333',
-  gray: '#657265',
-  lightGrey: '#DDDDDD',
-  lightishGrey: '#9E9E9E',
   // Reds
   washedRed: '#c35f42',
   mediumRed: lighten('#c35f42', 0.55),
@@ -116,6 +111,7 @@ export const IconSize = {
   small: 20,
   medium: 25,
   large: 50,
+  tokenSelect: 44,
 };
 
 export const FontSize = {
@@ -170,7 +166,6 @@ let muiTheme = createTheme({
     },
     secondary: {
       main: BeanstalkPalette.blue,
-      light: BeanstalkPalette.lighterBlue,
       dark: BeanstalkPalette.darkBlue,
       contrastText: '#000000',
     },
@@ -320,8 +315,11 @@ let muiTheme = createTheme({
         root: sx({
           textTransform: 'none',
           // fontWeight: 'bold',
+          '&.MuiButton-root:hover': {
+            // backgroundColor: BeanstalkPalette.supportGreen,
+          },
           '&.MuiLoadingButton-root:hover': {
-            backgroundColor: BeanstalkPalette.supportGreen,
+            // backgroundColor: BeanstalkPalette.supportGreen,
           },
           fontWeight: 700,
           fontSize: '1rem',
@@ -448,7 +446,7 @@ let muiTheme = createTheme({
       styleOverrides: {
         root: sx({
           '&.Mui-selected': {
-            backgroundColor: BeanstalkPalette.washedGreen,
+            backgroundColor: BeanstalkPalette.lightGreen,
             borderRadius: 1,
           },
         })

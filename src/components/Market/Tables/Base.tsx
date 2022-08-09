@@ -49,7 +49,7 @@ const marketplaceTableStyle = {
       cursor: 'pointer',
       width: 'calc(100% - 2.5px)',
       '&:hover': {
-        background: BeanstalkPalette.hoverBlue
+        background: BeanstalkPalette.lightestBlue
       }
     },
     '& .MuiDataGrid-footerContainer': {

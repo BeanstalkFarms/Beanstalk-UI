@@ -51,12 +51,12 @@ const LiquidityBalances: React.FC<LiquidityBalancesProps> = ({ balances }) => {
           <SimpleStackedAreaChart />
         </Box>
         <Stack direction="row" justifyContent="space-between" sx={{ pt: 0.75, pr: 2, pl: 2, pb: 0 }}>
-          <Typography color={BeanstalkPalette.lightishGrey}>2/21</Typography>
-          <Typography color={BeanstalkPalette.lightishGrey}>3/21</Typography>
-          <Typography color={BeanstalkPalette.lightishGrey}>4/21</Typography>
-          <Typography color={BeanstalkPalette.lightishGrey}>5/21</Typography>
-          <Typography color={BeanstalkPalette.lightishGrey}>6/21</Typography>
-          <Typography color={BeanstalkPalette.lightishGrey}>7/21</Typography>
+          <Typography color={BeanstalkPalette.lightGrey}>2/21</Typography>
+          <Typography color={BeanstalkPalette.lightGrey}>3/21</Typography>
+          <Typography color={BeanstalkPalette.lightGrey}>4/21</Typography>
+          <Typography color={BeanstalkPalette.lightGrey}>5/21</Typography>
+          <Typography color={BeanstalkPalette.lightGrey}>6/21</Typography>
+          <Typography color={BeanstalkPalette.lightGrey}>7/21</Typography>
         </Stack>
       </Stack>
       {/* Table */}

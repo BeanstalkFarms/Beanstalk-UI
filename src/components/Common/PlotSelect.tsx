@@ -21,19 +21,9 @@ import podIcon from '../../img/beanstalk/pod-icon.svg';
 import { PlotMap } from '../../state/farmer/field';
 
 const useStyles = makeStyles(() => ({
-  tokenIcon: {
-    minWidth: '18px',
-    width: '18px',
-    height: '18px',
-    marginRight: '5px'
-  },
-  tokenName: {
-    color: '#3B3B3B',
-    fontSize: '20px'
-  },
   tokenLogo: {
-    width: IconSize.large,
-    height: IconSize.large,
+    width: IconSize.tokenSelect,
+    height: IconSize.tokenSelect,
   }
 }));
 
@@ -89,7 +79,7 @@ const PlotSelect: React.FC<PlotSelectProps> = ({
           '& .MuiListItemText-secondary': {
             fontSize: FontSize.base,
             lineHeight: '1.25rem',
-            color: BeanstalkPalette.lightishGrey
+            color: BeanstalkPalette.lightGrey
           },
         }}
       >

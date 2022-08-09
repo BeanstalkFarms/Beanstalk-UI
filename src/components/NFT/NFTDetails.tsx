@@ -23,7 +23,7 @@ const NFTDetails: React.FC<NFTContentProps> = ({ nft, collection }) => (
         color={
           nft.claimed === ClaimStatus.UNCLAIMED
             ? BeanstalkPalette.logoGreen
-            : BeanstalkPalette.lightishGrey}
+            : BeanstalkPalette.lightGrey}
         >
         {nft.claimed === ClaimStatus.UNCLAIMED
           ? 'Ready to mint'

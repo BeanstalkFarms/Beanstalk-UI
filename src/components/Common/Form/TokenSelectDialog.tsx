@@ -8,22 +8,12 @@ import { displayBN } from '~/util';
 import { ZERO_BN } from '~/constants';
 import { FarmerBalances } from '~/state/farmer/balances';
 import { FarmerSilo } from '~/state/farmer/silo';
-import { BeanstalkPalette, FontSize } from '../../App/muiTheme';
+import { BeanstalkPalette, FontSize, IconSize } from '../../App/muiTheme';
 
 const useStyles = makeStyles(() => ({
-  tokenIcon: {
-    minWidth: '18px',
-    width: '18px',
-    height: '18px',
-    marginRight: '5px'
-  },
-  tokenName: {
-    color: '#3B3B3B',
-    fontSize: '20px'
-  },
   tokenLogo: {
-    width: 44,
-    height: 44,
+    width: IconSize.tokenSelect,
+    height: IconSize.tokenSelect,
   }
 }));
 
@@ -169,7 +159,7 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
                 '& .MuiListItemText-secondary': {
                   fontSize: FontSize.base,
                   lineHeight: '1.25rem',
-                  color: BeanstalkPalette.lightishGrey
+                  color: BeanstalkPalette.lightGrey
                 },
               }}
             >

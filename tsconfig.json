@@ -3,7 +3,7 @@
     "baseUrl": "./",
     "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "types": ["vite/client"],
+    "types": ["vite/client", "vitest/globals"],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -28,6 +28,7 @@
   ],
   "exclude": [
     "./src/generated/**/*",
+    "./src/graph/graphql.schema.json",
     "./node_modules"
   ]
 }

@@ -502,11 +502,14 @@ const Convert : React.FC<{
       });
 
       ///
-      const txn = await beanstalk.convert(
-        convertData,
-        crates,
-        amounts,
-      );
+      const txn = await beanstalk.farm([
+        beanstalk.interface.encodeFunctionData('plant'),
+        beanstalk.interface.encodeFunctionData('convert', [
+          convertData,
+          crates,
+          amounts
+        ])
+      ]);
       txToast.confirming(txn);
 
       const receipt = await txn.wait();

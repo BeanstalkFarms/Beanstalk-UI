@@ -48,7 +48,7 @@ const TokenPage: React.FC<{}> = () => {
       <Stack gap={2}>
         <PageHeaderSecondary
           title={whitelistedToken.name}
-          icon={<TokenIcon token={whitelistedToken} />}
+          icon={<TokenIcon style={{ marginTop: 3 }} token={whitelistedToken} />}
           returnPath="/silo"
         />
         {whitelistedToken.isLP && (

@@ -25,14 +25,14 @@ const UnripeTokenRow: React.FC<{
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const primaryColor = amount.eq(0) ? BeanstalkPalette.lightishGrey : null;
+  const primaryColor = amount.eq(0) ? BeanstalkPalette.lightGrey : null;
   return (
     <Stack direction="row" justifyContent="space-between" alignItems="start">
       <Stack direction="row" alignItems="center" gap={0.4}>
         {amount.gt(0) ? (
           <CheckIcon sx={{ fontSize: 16, color: BeanstalkPalette.logoGreen }} />
         ) : (
-          <CloseIcon sx={{ fontSize: 16, color: BeanstalkPalette.lightishGrey }} />
+          <CloseIcon sx={{ fontSize: 16, color: BeanstalkPalette.lightGrey }} />
         )}
         <Typography
           sx={{
@@ -45,7 +45,7 @@ const UnripeTokenRow: React.FC<{
         {!isMobile && (
           <Tooltip placement="right" title={tooltip}>
             <HelpOutlineIcon
-              sx={{ color: BeanstalkPalette.lightishGrey, fontSize: '13px' }}
+              sx={{ color: BeanstalkPalette.lightGrey, fontSize: '13px' }}
             />
           </Tooltip>
         )}
@@ -77,7 +77,7 @@ const UnripeTokenRow: React.FC<{
             <img src={greenBeanIcon} alt="Circulating Beans" width={13} />
             <Typography sx={{
               fontSize: '16px',
-              color: amount.eq(0) ? BeanstalkPalette.lightishGrey : null
+              color: amount.eq(0) ? BeanstalkPalette.lightGrey : null
             }}>
               {displayFullBN(amount)}
             </Typography>

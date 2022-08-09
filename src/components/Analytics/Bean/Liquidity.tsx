@@ -1,12 +1,12 @@
 import React from 'react';
 import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
-import { SeasonalVolumeDocument, SeasonalVolumeQuery } from '~/generated/graphql';
+import { SeasonalLiquidityDocument, SeasonalLiquidityQuery } from '~/generated/graphql';
 import useSeason from '~/hooks/useSeason';
 
-const getValue = (season: SeasonalVolumeQuery['seasons'][number]) => parseFloat(season.hourlyVolumeUSD);
+const getValue = (season: SeasonalLiquidityQuery['seasons'][number]) => parseFloat(season.totalLiquidityUSD);
 const formatValue = (value: number) => `$${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const useStatProps = () => ({
-  title: 'Volume',
+  title: 'Liquidity',
   gap: 0.25,
   color: 'primary',
   sx: { ml: 0 },
@@ -14,12 +14,12 @@ const useStatProps = () => ({
 
 const queryConfig = { context: { subgraph: 'bean' } };
 
-const Volume: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => {
+const Liquidity: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => {
   const season = useSeason();
   const StatProps = useStatProps();
   return (
     <SeasonPlot
-      document={SeasonalVolumeDocument}
+      document={SeasonalLiquidityDocument}
       height={height}
       defaultSeason={season?.gt(0) ? season.toNumber() : 0}
       getValue={getValue}
@@ -30,4 +30,4 @@ const Volume: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }
   );
 };
 
-export default Volume;
+export default Liquidity;
