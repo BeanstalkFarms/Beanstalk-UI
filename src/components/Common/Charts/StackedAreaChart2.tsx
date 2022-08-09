@@ -218,14 +218,12 @@ const Graph: React.FC<GraphProps> = (props) => {
   // use this dataset to decide where it goes. (There is one
   // circle but potentially multiple series).
   const data = series[0];
-  console.log('gqlDATA: ', data);
   let maxVal = 0;
   const stackedData: TotalLiquidityData[] = data.reduce((prev, curr, index) => {
     const date = new Date(data[index].date);
     if (data[index].value > maxVal) {
       maxVal = data[index].value;
     }
-    console.log('DATEE', date.toISOString(),);
     if (data[index].season !== 6074) {
       prev.push({
         // formats date to: '2022 Aug 01'
@@ -237,8 +235,6 @@ const Graph: React.FC<GraphProps> = (props) => {
     }
     return prev;
   }, [] as TotalLiquidityData[]);
-
-  console.log('STACK ASS', stackedData);
 
   // ['totalLiquidityUSD']
   const keys = Object.keys(stackedData[0]).filter((k) => k !== 'date') as any[];

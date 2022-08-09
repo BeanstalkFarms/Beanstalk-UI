@@ -86,6 +86,8 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
     return [];
   }, [data]);
 
+  console.log('BY SEASON', bySeason);
+
   /// Theme
   const isTiny = useMediaQuery('(max-width:350px)');
 
