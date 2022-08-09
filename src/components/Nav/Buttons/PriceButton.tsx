@@ -48,7 +48,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       pool={pool}
       poolState={beanPools[pool.address]}
       ButtonProps={{
-        href: 'https://curve.fi/factory/152',
+        href: `https://etherscan.io/address/${pool.address}`,
         target: '_blank',
         rel: 'noreferrer',
       }}
