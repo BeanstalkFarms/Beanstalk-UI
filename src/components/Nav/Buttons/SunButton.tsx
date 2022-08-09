@@ -53,6 +53,8 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
   const peg = usePeg();
 
+  console.log('DATA', data);
+
   const bySeason = useMemo(() => {
     if (data?.fields && data?.seasons) {
       type MergedSeason = (
@@ -83,6 +85,11 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
     }
     return [];
   }, [data]);
+
+  bySeason.map((s) => {
+    console.log(`${s.season.toNumber()}: ${s.temperature.toNumber()}`);
+    return null;
+  });
 
   /// Theme
   const isTiny = useMediaQuery('(max-width:350px)');
