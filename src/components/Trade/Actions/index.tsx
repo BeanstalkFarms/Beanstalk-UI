@@ -11,8 +11,8 @@ const TradeActions : React.FC<{}> = () => (
       <Box sx={{ px: 1, pb: 1, position: 'relative' }}>
         {/* <Trade /> */}
         <Soon>
-          This module is under development. 
-          <Alert>There is a reported DNS attack on the curve.fi website. Do NOT trade Beans via the Curve website.</Alert>
+          This module is under development.
+          <Alert severity="warning" sx={{ mt: 1 }}>There is a reported DNS attack on the curve.fi website. Do NOT trade Beans via the Curve website.</Alert>
           {/* Trade Beans directly via the Curve website: <strong><Link href="https://curve.fi/factory/152" target="_blank" rel="noreferrer">https://curve.fi/factory/152</Link></strong> */}
         </Soon>
       </Box>
