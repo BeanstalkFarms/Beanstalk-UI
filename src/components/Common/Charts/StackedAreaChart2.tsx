@@ -15,7 +15,7 @@ import {
 } from '@visx/curve';
 import { Axis, Orientation } from '@visx/axis';
 import { CurveFactory } from 'd3-shape';
-import { GradientOrangeRed } from '@visx/gradient';
+import { LinearGradient } from '@visx/gradient';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { timeParse } from 'd3-time-format';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
@@ -115,7 +115,7 @@ const parseDate = timeParse('%Y-%m-%dT%H:%M:%S.%LZ');
 // };
 const getDate = (d: TotalLiquidityData) => (parseDate(d.date) as Date).valueOf();
 // console.log('DATEEE', (parseDate(d.date) as Date).valueOf());
-const getY0 = (d: SeriesPoint<TotalLiquidityData>, maxVal: number) => d[0] / (maxVal + (maxVal * 0.03)); // 3% padding on top
+const getY0 = (d: SeriesPoint<TotalLiquidityData>, maxVal: number) => (d[0] + 2000000) / (maxVal + (maxVal * 0.03)); // 3% padding on top
 const getY1 = (d: SeriesPoint<TotalLiquidityData>, maxVal: number) => d[1] / (maxVal + (maxVal * 0.03));
 
 // ------------------------
@@ -386,7 +386,8 @@ const Graph: React.FC<GraphProps> = (props) => {
          */}
         <Group width={width} height={dataRegion.yBottom - dataRegion.yTop}>
           {/* {children && children({ scales, dataRegion, ...props })} */}
-          <GradientOrangeRed id="stacked-area-orangered" />
+          {/* <GradientOrangeRed id="stacked-area-orangered" /> */}
+          <LinearGradient from={BeanstalkPalette.lightGreen} to={BeanstalkPalette.lightGreen} id="stacked-area-orangered" />
           <rect x={0} y={0} width={width} height={height} fill={background} rx={14} />
           <AreaStack<TotalLiquidityData>
             top={margin.top}
@@ -404,8 +405,9 @@ const Graph: React.FC<GraphProps> = (props) => {
                   <path
                     key={`stack-${stack.key}`}
                     d={path(stack) || ''}
-                    stroke="transparent"
-                    fill={BeanstalkPalette.logoGreen}
+                    stroke={BeanstalkPalette.logoGreen}
+                    // fill={BeanstalkPalette.logoGreen}
+                    fill="url(#stacked-area-orangered)"
                     onClick={() => {}}
                   />
                 </>
