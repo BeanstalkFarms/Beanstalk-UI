@@ -88,7 +88,7 @@ const SunUpdater = () => {
       const _next = getNextExpectedSunrise();
       dispatch(setAwaitingSunrise(false));
       dispatch(setNextSunrise(_next));
-      dispatch(_next.diffNow());
+      dispatch(setRemainingUntilSunrise(_next.diffNow()));
       toast.success(`The Sun has risen. It is now Season ${season.toString()}.`);
     }
     // toast

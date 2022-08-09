@@ -9,7 +9,6 @@ import throttle from 'lodash/throttle';
 import { useTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 import usePools from '~/hooks/usePools';
-import useChainId from '~/hooks/useChain';
 import PoolCard from '~/components/Silo/PoolCard';
 import BeanProgressIcon from '~/components/Common/BeanProgressIcon';
 import useSeason from '~/hooks/useSeason';
@@ -25,7 +24,6 @@ import FolderMenu from '../FolderMenu';
 const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   // Data
   const pools     = usePools();
-  const chainId   = useChainId();
   const season    = useSeason();
   const beanPrice = usePrice();
   const beanPools = useSelector<AppState, AppState['_bean']['pools']>(
