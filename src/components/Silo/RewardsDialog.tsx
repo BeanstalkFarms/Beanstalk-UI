@@ -18,7 +18,6 @@ import { UNRIPE_TOKENS } from '~/constants/tokens';
 import useTokenMap from '~/hooks/useTokenMap';
 import { selectCratesForEnroot } from '~/util/Crates';
 import useAccount from '~/hooks/ledger/useAccount';
-import useTimedRefresh from '~/hooks/useTimedRefresh';
 import useBDV from '~/hooks/useBDV';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import { AppState } from '~/state';
@@ -27,6 +26,7 @@ import DescriptionButton from '../Common/DescriptionButton';
 import RewardsBar, { RewardsBarProps } from './RewardsBar';
 import { hoverMap } from '../../constants/silo';
 import { BeanstalkPalette, FontSize } from '../App/muiTheme';
+import useTimedRefresh from '~/hooks/useTimedRefresh';
 
 export type SendFormValues = {
   to?: string;
@@ -93,7 +93,7 @@ const ClaimRewardsForm : React.FC<
   const selectedAction = values.action;
 
   const theme = useTheme();
- const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   /// Handlers
   const onMouseOver = useCallback((v: ClaimRewardsAction) => () => setHoveredAction(v), []);
@@ -222,7 +222,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
   const getBDV = useBDV();
   
   /// Contracts
-  const beanstalk         = useBeanstalkContract(signer);
+  const beanstalk = useBeanstalkContract(signer);
 
   /// Form
   const initialValues: ClaimRewardsFormValues = useMemo(() => ({
@@ -237,59 +237,82 @@ const RewardsDialog: React.FC<RewardsBarProps & {
     if (!signer) throw new Error('No signer');
 
     const selectedCratesByToken  = selectCratesForEnroot(beanstalk, unripeTokens, siloBalances, getBDV);
-    const encodedData = Object.keys(selectedCratesByToken).map((key) => selectedCratesByToken[key].encoded);
+    const enrootData = Object.keys(selectedCratesByToken).map((key) => selectedCratesByToken[key].encoded);
 
-    console.debug('[RewardsDialog] Selected crates: ', selectedCratesByToken);
+    console.debug('[RewardsDialog] Selected crates: ', selectedCratesByToken, enrootData);
 
     const _calls : ClaimCalls = {
       [ClaimRewardsAction.MOW]: {
         estimateGas: () => beanstalk.estimateGas.update(account),
-        execute: () => beanstalk.update(account),
-        enabled: farmerSilo.stalk.grown.gt(0),
+        execute:     () => beanstalk.update(account),
+        enabled:     farmerSilo.stalk.grown.gt(0),
       },
       [ClaimRewardsAction.PLANT_AND_MOW]: {
         estimateGas: () => beanstalk.estimateGas.plant(),
-        execute: () => beanstalk.plant(),
-        enabled: farmerSilo.seeds.plantable.gt(0),
+        execute:     () => beanstalk.plant(),
+        enabled:     farmerSilo.seeds.plantable.gt(0),
       },
-      [ClaimRewardsAction.ENROOT_AND_MOW]: (
-        encodedData.length > 1
-          ? {
-            estimateGas: () => beanstalk.estimateGas.farm(encodedData),
-            execute: () => beanstalk.farm(encodedData),
-            enabled: true,
-          }
-          : {
-            estimateGas: () => provider.estimateGas(
-              signer.checkTransaction({
-                to: beanstalk.address,
-                data: encodedData[0],
-              })
-            ),
-            execute: () => signer.sendTransaction({
-              to: beanstalk.address,
-              data: encodedData[0],
-            }),
-            enabled: encodedData.length > 0,
-          }
-      ),
-      [ClaimRewardsAction.CLAIM_ALL]: {
+      [ClaimRewardsAction.ENROOT_AND_MOW]: {
         estimateGas: () => beanstalk.estimateGas.farm([
           // PLANT_AND_MOW
           beanstalk.interface.encodeFunctionData('plant', undefined),
           // ENROOT_AND_MOW
-          ...encodedData,
+          ...enrootData,
         ]),
         execute: () => beanstalk.farm([
           // PLANT_AND_MOW
           beanstalk.interface.encodeFunctionData('plant', undefined),
           // ENROOT_AND_MOW
-          ...encodedData,
+          ...enrootData,
         ]),
         enabled: (
           farmerSilo.stalk.grown.gt(0)
           || farmerSilo.seeds.plantable.gt(0)
-          || encodedData.length > 0
+          || enrootData.length > 0
+        ),
+      },
+      /* (
+        enrootData.length > 1
+          /// use `farm()` if multiple crates
+          ? {
+            estimateGas: () => beanstalk.estimateGas.farm(enrootData),
+            execute:     () => beanstalk.farm(enrootData),
+            enabled:     true,
+          }
+          /// send raw transaction if single crate
+          /// we use this method because `selectCratesForEnroot`
+          /// returns encoded function data
+          : {
+            estimateGas: () => provider.estimateGas(
+              signer.checkTransaction({
+                to: beanstalk.address,
+                data: enrootData[0],
+              })
+            ),
+            execute: () => signer.sendTransaction({
+              to: beanstalk.address,
+              data: enrootData[0],
+            }),
+            enabled: enrootData.length > 0,
+          }
+      ), */
+      [ClaimRewardsAction.CLAIM_ALL]: {
+        estimateGas: () => beanstalk.estimateGas.farm([
+          // PLANT_AND_MOW
+          beanstalk.interface.encodeFunctionData('plant', undefined),
+          // ENROOT_AND_MOW
+          ...enrootData,
+        ]),
+        execute: () => beanstalk.farm([
+          // PLANT_AND_MOW
+          beanstalk.interface.encodeFunctionData('plant', undefined),
+          // ENROOT_AND_MOW
+          ...enrootData,
+        ]),
+        enabled: (
+          farmerSilo.stalk.grown.gt(0)
+          || farmerSilo.seeds.plantable.gt(0)
+          || enrootData.length > 0
         ),
       },
     };
@@ -310,7 +333,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
       {}
     ));
     setGas(_gas);
-  }, [account, beanstalk, farmerSilo.seeds.plantable, farmerSilo.stalk.grown, getBDV, provider, signer, siloBalances, unripeTokens]);
+  }, [account, beanstalk, farmerSilo.seeds.plantable, farmerSilo.stalk.grown, getBDV, signer, siloBalances, unripeTokens]);
 
   useTimedRefresh(estimateGas, 20 * 1000, open);
 
