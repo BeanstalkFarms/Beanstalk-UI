@@ -485,24 +485,28 @@ const Convert : React.FC<{
 
       const crates  = conversion.deltaCrates.map((crate) => crate.season.toString());
       const amounts = conversion.deltaCrates.map((crate) => tokenIn.stringify(crate.amount.abs()));
-      const data : string[] = [];
 
       /// HOTFIX:
       /// If farmer has > 0 Earned beans, add a plant() call before
       /// convert. Fixes edge case bug where converting all of your
       /// silo assets causes loss of Earned Beans.
+      let call;
       if (farmerSilo.beans.earned.gt(0)) {
-        data.push(
-          beanstalk.interface.encodeFunctionData('plant')
-        );
-      }
-      data.push(
-        beanstalk.interface.encodeFunctionData('convert', [
+        call = beanstalk.farm([
+          beanstalk.interface.encodeFunctionData('plant'),
+          beanstalk.interface.encodeFunctionData('convert', [
+            convertData,
+            crates,
+            amounts
+          ])
+        ]);
+      } else {
+        call = beanstalk.convert(
           convertData,
           crates,
           amounts
-        ])
-      );
+        );
+      }
       
       console.debug('[Convert] executing', {
         tokenIn,
@@ -516,11 +520,10 @@ const Convert : React.FC<{
         convertData,
         crates,
         amounts,
-        data
       });
 
       ///
-      const txn = await beanstalk.farm(data);
+      const txn = await call;
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
