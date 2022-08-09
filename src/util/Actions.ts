@@ -235,7 +235,12 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.IN_TRANSIT:
       return `Receive ${displayTokenAmount(a.amount.abs(), a.token, { modifier: 'Claimable', showName: true })} at the start of the next Season.`;
     case ActionType.UPDATE_SILO_REWARDS: // FIXME: don't like "update" here
-      return `${a.stalk.lt(0) ? 'Burn' : 'Receive'} ${displayFullBN(a.stalk.abs(), 2)} Stalk and ${displayFullBN(a.seeds.abs(), 2)} Seeds.`;
+      return `${a.stalk.lt(0) ? 'Burn' : 'Receive'} ${displayFullBN(a.stalk.abs(), 2)} Stalk and ${
+        a.seeds.lt(0) 
+          ? a.stalk.gt(0)
+            ? 'burn ' 
+            : ''
+          : ''}${displayFullBN(a.seeds.abs(), 2)} Seeds.`;
     case ActionType.CLAIM_WITHDRAWAL:
       return `Claim ${displayFullBN(a.amount, 2)} ${a.token.name}.`;
     case ActionType.TRANSFER:
