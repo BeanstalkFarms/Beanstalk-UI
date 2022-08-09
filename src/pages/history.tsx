@@ -30,7 +30,6 @@ const TransactionHistoryPage: React.FC = () => {
   useEffect(() => {
     function filterEventsByFacet() {
       if (account) {
-        console.log('EVENTS', events);
         if (tab === 0) {
           // ALL EVENTS
           const allEvents = Object.keys(events).reduce<Event[]>((prev, curr) => {
