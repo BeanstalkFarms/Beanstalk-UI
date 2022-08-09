@@ -1,4 +1,4 @@
-import { Box, Card, Link, Stack, Typography } from '@mui/material';
+import { Alert, Box, Card, Stack, Typography } from '@mui/material';
 import React from 'react';
 import Soon from '~/components/Common/ZeroState/Soon';
 
@@ -11,7 +11,9 @@ const TradeActions : React.FC<{}> = () => (
       <Box sx={{ px: 1, pb: 1, position: 'relative' }}>
         {/* <Trade /> */}
         <Soon>
-          This module is under development. Trade Beans directly via the Curve website: <strong><Link href="https://curve.fi/factory/152" target="_blank" rel="noreferrer">https://curve.fi/factory/152</Link></strong>
+          This module is under development.
+          <Alert severity="warning" sx={{ mt: 1 }}>There is a reported DNS attack on the curve.fi website. Do NOT trade Beans via the Curve website.</Alert>
+          {/* Trade Beans directly via the Curve website: <strong><Link href="https://curve.fi/factory/152" target="_blank" rel="noreferrer">https://curve.fi/factory/152</Link></strong> */}
         </Soon>
       </Box>
     </Stack>
