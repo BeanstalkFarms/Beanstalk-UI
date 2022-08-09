@@ -55,7 +55,7 @@ const LiquidityOverTime: React.FC<LiquidityOverviewProps & CardProps> = ({
         
         <SeasonPlot
           document={SeasonalLiquidityDocument}
-          height={300}
+          height={250}
           defaultSeason={season?.gt(0) ? season.toNumber() : 0}
           defaultValue={liquidity.toNumber()}
           getValue={getValue}
