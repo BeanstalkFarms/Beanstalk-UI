@@ -102,6 +102,7 @@ const StackedAreaChart: React.FC<StackedAreasProps> = ({
             (
               <>
                 {/* --- example of how to debug this: --- */}
+                {console.log('STACK', stack)}
                 {/* {console.log('STACK KEY', stack.key)} */}
                 {/* {console.log('POOL COLOR', ALL_POOLS[SupportedChainId.MAINNET][`${stack.key}`.toLowerCase()]?.color)} */}
                 <path
