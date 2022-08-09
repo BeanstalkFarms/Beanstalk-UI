@@ -5,8 +5,9 @@ export type AppSettings = {
 };
 
 export type AppFlags = {
-  almanacView: boolean;
+  /** ETH price data */
   ethPrices: null | EthPriceResponse;
+  /** User settings */
   settings: AppSettings;
 }
 

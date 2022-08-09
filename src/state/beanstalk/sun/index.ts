@@ -14,8 +14,7 @@ export type Sun = {
   }
 }
 
-export const getNextExpectedSunrise = (real: boolean = false) => {
+export const getNextExpectedSunrise = () => {
   const now = DateTime.now();
-  if (real) return now.set({ minute: 0, second: 0, millisecond: 0 }).plus({ hour: 1 });
-  return now.plus({ seconds: 10 });
+  return now.set({ minute: 0, second: 0, millisecond: 0 }).plus({ hour: 1 });
 };

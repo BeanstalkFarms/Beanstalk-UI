@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   Box,
   Button,
@@ -14,6 +14,7 @@ import {
 import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { useHotkeys } from 'react-hotkeys-hook';
 import useChainConstant from '~/hooks/useChainConstant';
 import useAnchor from '~/hooks/display/useAnchor';
 import useToggle from '~/hooks/display/useToggle';
@@ -21,28 +22,43 @@ import { BEANSTALK_ADDRESSES, CHAIN_INFO } from '~/constants';
 import NavDrawer from '../NavDrawer';
 import ROUTES from '../routes';
 import MenuItem from '../MenuItem';
+import SettingsDialog from '~/components/Nav/SettingsDialog';
 
 const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
-  // Theme
+  /// Theme
   const theme = useTheme();
   const isMedium = useMediaQuery(theme.breakpoints.down('lg')); // trim additional account text at medium
 
-  // Constants
+  /// Constants
   const chainInfo = useChainConstant(CHAIN_INFO);
   const beanstalkAddress = useChainConstant(BEANSTALK_ADDRESSES);
 
-  // Menu
+  /// Menu
   const [anchorEl, toggleAnchor] = useAnchor();
 
-  // Drawer
-  const [drawerOpen, showDrawer, hideDrawer] = useToggle(
-    toggleAnchor,
-    toggleAnchor
-  );
+  /// Drawer
+  const [open, show, hide] = useToggle(toggleAnchor, toggleAnchor);
 
+  /// Settings
+  const [settingsOpen, showSettings, hideSettings] = useToggle();
+  const onOpenSettings = useCallback((e: any) => {
+    e.preventDefault();
+    hide();
+    showSettings(true);
+  }, [showSettings, hide]);
+  useHotkeys('cmd+,', (e) => {
+    e.preventDefault();
+    settingsOpen ? hideSettings() : showSettings();
+  }, {}, [settingsOpen]);
+
+  /// Content
   const menuContent = (
     <MenuList component={Card}>
       {/* Menu Items */}
+      {/* <MenuItem
+        item={{ title: 'Settings', path: '/settings' }}
+        onClick={onOpenSettings}
+      /> */}
       {ROUTES.additional.map((item) => (
         <MenuItem key={item.path} item={item} onClick={toggleAnchor} />
       ))}
@@ -71,33 +87,24 @@ const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
           </Stack>
         </Button>
       </Box>
-      {/* Build Information */}
-      <Box sx={{ px: 1, pt: 0.75, opacity: 0.7 }}>
-        <Typography color="text.secondary" fontSize={12} textAlign="center">
-          {import.meta.env.VITE_NAME || 'beanstalk-ui'} v
-          {import.meta.env.VITE_VERSION || '0.0.0'}@
-          {import.meta.env.VITE_GIT_COMMIT_REF?.slice(0, 6) || 'HEAD'}
-          {' · '}
-          hosted on {import.meta.env.VITE_HOST || 'unknown'}
-        </Typography>
-      </Box>
     </MenuList>
   );
 
   return (
     <>
+      <SettingsDialog open={settingsOpen} onClose={hideSettings} />
       {/**
        * Nav Drawer
        * ----------
        * Contains all nav items in one fullscreen drawer.
        * Triggered by AboutButton on mobile.
        */}
-      <NavDrawer open={drawerOpen && isMedium} hideDrawer={hideDrawer} />
+      <NavDrawer open={open && isMedium} hideDrawer={hide} />
       <Button
         color="light"
         variant="contained"
         aria-label="open drawer"
-        onClick={showDrawer}
+        onClick={show}
         sx={{
           height: 44,
           display: { xs: 'block' },
@@ -112,14 +119,15 @@ const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
       <Menu
         elevation={0}
         anchorEl={anchorEl}
-        open={drawerOpen && !isMedium}
-        onClose={hideDrawer}
+        open={open && !isMedium}
+        onClose={hide}
         MenuListProps={{
           sx: {
             py: 0,
             mt: 0,
           },
         }}
+        transitionDuration={{ appear: 200, enter: 200, exit: 0 }}
         disablePortal
         disableScrollLock
         // Align the menu to the bottom-right side of the anchor button.

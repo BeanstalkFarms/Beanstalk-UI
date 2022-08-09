@@ -1,12 +1,11 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHotkeys } from 'react-hotkeys-hook';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import useAppFlag from '~/hooks/display/useAppFlag';
 import useTimedRefresh from '~/hooks/useTimedRefresh';
 import useSetting from '~/hooks/useSetting';
-import { setAlmanacView, setEthPrices, updateSetting } from './actions';
+import { setEthPrices, updateSetting } from './actions';
 
 export const useEthPrices = () => {
   const dispatch = useDispatch();
@@ -30,18 +29,17 @@ export const useEthPrices = () => {
 
 export default function AppUpdater() {
   const dispatch = useDispatch();
-  const pressed  = useAppFlag('almanacView');
   const [denomination] = useSetting('denomination');
   const navigate = useNavigate();
   
   useEthPrices();
 
-  useEffect(() => {
-    window.addEventListener('blur', () => {
-      dispatch(setAlmanacView(false));
-    });
-  }, [dispatch]);
-  
+  // const pressed  = useAppFlag('almanacView');
+  // useEffect(() => {
+  //   window.addEventListener('blur', () => {
+  //     dispatch(setAlmanacView(false));
+  //   });
+  // }, [dispatch]);
   // useHotkeys('opt+q, alt+q', (/* event, handler */) => {
   //   if (!pressed) {
   //     dispatch(setAlmanacView(true));

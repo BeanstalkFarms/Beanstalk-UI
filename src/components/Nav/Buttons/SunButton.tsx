@@ -22,7 +22,7 @@ import { NEW_BN, ZERO_BN } from '~/constants';
 import { AppState } from '~/state';
 import FolderMenu from '../FolderMenu';
 import { BeanstalkPalette } from '../../App/muiTheme';
-import SeasonCard from '../SeasonCard';
+import SeasonCard from '../../Sun/SeasonCard';
 import usePeg from '~/hooks/usePeg';
 
 const castField = (data: SunButtonQuery['fields'][number]) => ({
@@ -95,8 +95,10 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       style={{
         width: 25,
         height: 25,
-        animation: awaiting ? 'rotate linear 2000ms' : 'none',
-        animationIterationCount: 'infinite',
+        animationName: awaiting ? 'rotate' : 'none',
+        animationTimingFunction: 'linear',
+        animationDuration: '3000ms',
+        animationIterationCount: 'infinite'
       }}
       alt=""
     />

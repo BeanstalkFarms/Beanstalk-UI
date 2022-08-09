@@ -1,11 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { App } from '.';
-import {
-  setAlmanacView, setEthPrices, updateSetting,
+import { setEthPrices, updateSetting,
 } from './actions';
 
 export const initialState: App = {
-  almanacView: false,
+  // almanacView: false,
   ethPrices: null,
   settings: {
     denomination: 'usd',
@@ -14,9 +13,9 @@ export const initialState: App = {
 
 export default createReducer(initialState, (builder) =>
   builder
-    .addCase(setAlmanacView, (state, { payload }) => {
-      state.almanacView = payload;
-    })
+    // .addCase(setAlmanacView, (state, { payload }) => {
+    //   state.almanacView = payload;
+    // })
     .addCase(setEthPrices, (state, { payload }) => {
       state.ethPrices = payload;
     })
