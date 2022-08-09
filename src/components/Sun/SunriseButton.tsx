@@ -84,7 +84,7 @@ const SunriseButton : React.FC = () => {
                 }}
               >
                 <StyledDialogTitle onClose={hide}>
-                  Confirm Sunrise
+                  Call Sunrise
                 </StyledDialogTitle>
                 <StyledDialogContent sx={{ p: 1 }}>
                   <Stack gap={2}>
@@ -101,7 +101,7 @@ const SunriseButton : React.FC = () => {
                           </Stack>
                         )}
                         <Stack direction="row" justifyContent="center">
-                          <Typography variant="body1">Reward for calling <Box display="inline" sx={{ backgroundColor: BeanstalkPalette.lightYellow, borderRadius: 0.4, px: 0.4 }}><strong><Link color="text.primary" underline="none" href="https://docs.bean.money/additional-resources/glossary#sunrise">sunrise()</Link></strong></Box>: <TokenIcon token={BEAN[1]} />&nbsp;{displayBN(reward)}</Typography>
+                          <Typography variant="body1">Reward for calling <Box display="inline" sx={{ backgroundColor: BeanstalkPalette.lightYellow, borderRadius: 0.4, px: 0.4 }}><strong><Link color="text.primary" underline="none" href="https://docs.bean.money/additional-resources/glossary#sunrise" target="_blank" rel="noreferrer">sunrise()</Link></strong></Box>: <TokenIcon token={BEAN[1]} />&nbsp;{displayBN(reward)}</Typography>
                         </Stack>
                       </Stack>
                     </Stack>

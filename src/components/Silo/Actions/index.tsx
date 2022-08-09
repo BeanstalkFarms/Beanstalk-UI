@@ -5,7 +5,6 @@ import { ERC20Token } from '~/classes/Token';
 import { FarmerSiloBalance } from '~/state/farmer/silo';
 import useTabs from '~/hooks/display/useTabs';
 import BadgeTab from '~/components/Common/BadgeTab';
-import AlmTab from '~/components/Common/Almanac/AlmTab';
 import Deposit from './Deposit';
 import Withdraw from './Withdraw';
 import Claim from './Claim';
@@ -51,7 +50,7 @@ const SiloActions : React.FC<{
             onChange={handleChange}
             sx={{ minHeight: 0 }}
           >
-            <AlmTab label="Deposit" almHref="https://docs.bean.money/farm/silo#withdraw" />
+            <Tab label="Deposit" />
             <Tab label="Convert" />
             <Tab label="Transfer" />
             <Tab label="Withdraw" />

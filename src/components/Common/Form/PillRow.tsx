@@ -6,15 +6,17 @@ import { IconSize } from '../../App/muiTheme';
 const PillRow : React.FC<{
   label: string;
   tooltip?: string;
-  isOpen: boolean;
+  isOpen?: boolean;
   onClick: () => void;
+  isDropdown?: boolean;
 } & StackProps> = ({
   label,
   tooltip = '',
-  isOpen,
   onClick,
   children,
   sx,
+  isDropdown = true,
+  isOpen = false,
   ...props
 }) => (
   <Stack
@@ -48,7 +50,7 @@ const PillRow : React.FC<{
       <Stack direction="row" gap={0.5} alignItems="center">
         {children}
       </Stack>
-      <DropdownIcon sx={{ height: IconSize.xs }} open={isOpen} />
+      {isDropdown && <DropdownIcon sx={{ height: IconSize.xs }} open={isOpen} />}
     </Button>
   </Stack>
 );
