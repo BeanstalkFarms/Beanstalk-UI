@@ -55,10 +55,10 @@ const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
   const menuContent = (
     <MenuList component={Card}>
       {/* Menu Items */}
-      <MenuItem
+      {/* <MenuItem
         item={{ title: 'Settings', path: '/settings' }}
         onClick={onOpenSettings}
-      />
+      /> */}
       {ROUTES.additional.map((item) => (
         <MenuItem key={item.path} item={item} onClick={toggleAnchor} />
       ))}

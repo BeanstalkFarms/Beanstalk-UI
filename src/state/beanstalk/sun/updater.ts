@@ -29,16 +29,19 @@ export const useSun = () => {
         const [
           season, seasonTime
         ] = await Promise.all([
-          beanstalk.season().then(bigNumberResult),
-          beanstalk.seasonTime().then(bigNumberResult),
+          beanstalk.season().then(bigNumberResult),       /// the current season  
+          beanstalk.seasonTime().then(bigNumberResult),   /// the season that it could be if sunrise was called
         ] as const);
         console.debug(`[beanstalk/sun/useSun] RESULT: season = ${season}, seasonTime = ${seasonTime}`);
         dispatch(updateSeason(season));
         dispatch(updateSeasonTime(seasonTime));
+        return [season, seasonTime] as const;
       }
+      return [undefined, undefined] as const;
     } catch (e) {
       console.debug('[beanstalk/sun/useSun] FAILED', e);
       console.error(e);
+      return [undefined, undefined] as const;
     }
   }, [
     dispatch,
@@ -61,13 +64,14 @@ const SunUpdater = () => {
   const awaiting  = useSelector<AppState, boolean>((state) => state._beanstalk.sun.sunrise.awaiting);
   const seasonTime  = useSelector<AppState, BigNumber>((state) => state._beanstalk.sun.seasonTime);
   const remaining  = useSelector<AppState, Duration>((state) => state._beanstalk.sun.sunrise.remaining);
-
-  // Update sunrise timer
+  
   useEffect(() => {
     if (awaiting === false) {
+      /// Setup timer. Count down from now until the start
+      /// of the next hour; when the timer is zero, set
+      /// `awaiting = true`.
       const i = setInterval(() => {
         const _remaining = next.diffNow();
-        console.debug('remaining', _remaining.as('seconds'));
         if (_remaining.as('seconds') <= 0) {
           dispatch(setAwaitingSunrise(true));
         } else {
@@ -76,24 +80,23 @@ const SunUpdater = () => {
       }, 1000);
       return () => clearInterval(i);
     } 
+    /// When awaiting sunrise, check every 3 seconds to see
+    /// if the season has incremented bumped.
     const i = setInterval(() => {
-      fetch();
+      (async () => {
+        const [newSeason] = await fetch();
+        if (newSeason?.gt(season)) {
+          const _next = getNextExpectedSunrise();
+          dispatch(setAwaitingSunrise(false));
+          dispatch(setNextSunrise(_next));
+          dispatch(setRemainingUntilSunrise(_next.diffNow()));
+          toast.success(`The Sun has risen. It is now Season ${newSeason.toString()}.`);
+        }
+      })();
     }, 3000);
     return () => clearInterval(i);
-  }, [dispatch, awaiting, next, fetch]);
+  }, [dispatch, awaiting, season, next, fetch]);
 
-  /// For each new season...
-  useEffect(() => {
-    if (awaiting && season.eq(seasonTime) && season.gt(-1)) {
-      const _next = getNextExpectedSunrise();
-      dispatch(setAwaitingSunrise(false));
-      dispatch(setNextSunrise(_next));
-      dispatch(setRemainingUntilSunrise(_next.diffNow()));
-      toast.success(`The Sun has risen. It is now Season ${season.toString()}.`);
-    }
-    // toast
-  }, [dispatch, awaiting, season, seasonTime]);
-  
   // Fetch when chain changes
   useEffect(() => {
     clear();

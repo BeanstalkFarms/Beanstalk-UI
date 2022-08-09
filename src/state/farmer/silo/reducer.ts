@@ -28,10 +28,7 @@ export const initialFarmerSilo : FarmerSilo = {
 
 export default createReducer(initialFarmerSilo, (builder) =>
   builder
-    .addCase(resetFarmerSilo, () => {
-      console.debug('[farmer/silo/reducer] reset');
-      return initialFarmerSilo;
-    })
+    .addCase(resetFarmerSilo, () => initialFarmerSilo)
     .addCase(updateFarmerSiloBalances, (state, { payload }) => {
       const addresses = Object.keys(payload);
       addresses.forEach((address) => {

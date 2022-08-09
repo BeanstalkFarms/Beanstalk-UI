@@ -95,8 +95,10 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       style={{
         width: 25,
         height: 25,
-        animation: awaiting ? 'rotate linear 2000ms' : 'none',
-        animationIterationCount: 'infinite',
+        animationName: awaiting ? 'rotate' : 'none',
+        animationTimingFunction: 'linear',
+        animationDuration: '3000ms',
+        animationIterationCount: 'infinite'
       }}
       alt=""
     />
