@@ -20,7 +20,7 @@ const StatsCard: React.FC<{
   <Card sx={{ p: 1 }} {...props}>
     <Grid container spacing={1} rowSpacing={3}>
       {stats.map((stat) => (
-        <Grid item xs={6} md={3}>
+        <Grid item xs={12} md={3}>
           <Stat
             title={stat.title}
             titleTooltip={stat.tooltip}
