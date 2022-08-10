@@ -38,7 +38,7 @@ const SiloPage : React.FC = () => {
   const season        = useSeason();
   const { revitalizedStalk, revitalizedSeeds } = useRevitalized();
 
-  /// balances
+  /// Calculate Unripe Silo Balance
   const urBean      = getChainToken(UNRIPE_BEAN);
   const urBeanCrv3  = getChainToken(UNRIPE_BEAN_CRV3);
   const unripeDepositedBalance = balances[urBean.address]?.deposited.amount
@@ -105,7 +105,6 @@ const SiloPage : React.FC = () => {
               </Box>
             </Stack>
           </Box>
-
         </Card>
         <Whitelist
           config={config}

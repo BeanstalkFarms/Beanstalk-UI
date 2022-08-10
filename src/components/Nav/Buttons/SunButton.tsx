@@ -86,12 +86,6 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
     return [];
   }, [data]);
 
-  // Debugging Season : Temps
-  // bySeason.map((s) => {
-  //   console.log(`${s.season.toNumber()}: ${s.temperature.toNumber()}`);
-  //   return null;
-  // });
-
   /// Theme
   const isTiny = useMediaQuery('(max-width:350px)');
 

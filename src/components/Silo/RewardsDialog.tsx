@@ -95,13 +95,15 @@ const ClaimRewardsForm : React.FC<
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const getChainToken = useGetChainToken();
 
+  /// State
+  const balances = useFarmerSiloBalances();
+
   /// The currently hovered action.
   const [hoveredAction, setHoveredAction] = useState<ClaimRewardsAction | undefined>(undefined);
   /// The currently selected action (after click).
   const selectedAction = values.action;
 
-  /// balances
-  const balances    = useFarmerSiloBalances();
+  /// Calculate Unripe Silo Balance
   const urBean      = getChainToken(UNRIPE_BEAN);
   const urBeanCrv3  = getChainToken(UNRIPE_BEAN_CRV3);
   const unripeDepositedBalance = balances[urBean.address]?.deposited.amount
@@ -111,14 +113,6 @@ const ClaimRewardsForm : React.FC<
   const onMouseOver = useCallback((v: ClaimRewardsAction) => () => setHoveredAction(v), []);
   const onMouseOutContainer = useCallback(() => setHoveredAction(undefined), []);
 
-  // Checks if the current hoverState includes a given ClaimRewardsAction
-  const isHovering = (c: ClaimRewardsAction) => {
-    if (selectedAction !== undefined) {
-      return hoverMap[selectedAction].includes(c);
-    }
-    return hoveredAction && hoverMap[hoveredAction].includes(c);
-  };
-
   /// Used to grey out text in rewards bar.
   // Prioritizes selected action over hovered.
   const action = selectedAction !== undefined
@@ -126,6 +120,14 @@ const ClaimRewardsForm : React.FC<
     : hoveredAction !== undefined
       ? hoveredAction
       : undefined;
+
+  // Checks if the current hoverState includes a given ClaimRewardsAction
+  const isHovering = (c: ClaimRewardsAction) => {
+    if (selectedAction !== undefined) {
+      return hoverMap[selectedAction].includes(c);
+    }
+    return hoveredAction && hoverMap[hoveredAction].includes(c);
+  };
 
   return (
     <>
