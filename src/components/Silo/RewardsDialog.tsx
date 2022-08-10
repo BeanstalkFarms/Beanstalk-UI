@@ -1,7 +1,6 @@
-import { Box, Dialog, Link, Stack, Tooltip, Typography, useMediaQuery } from '@mui/material';
+import { Box, Dialog, Stack, Tooltip, useMediaQuery } from '@mui/material';
 import { Field, FieldProps, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo, useState } from 'react';
-import { useProvider } from 'wagmi';
 import { LoadingButton } from '@mui/lab';
 import toast from 'react-hot-toast';
 import { ethers } from 'ethers';
@@ -14,7 +13,7 @@ import { useSigner } from '~/hooks/ledger/useSigner';
 import { ClaimRewardsAction } from '~/lib/Beanstalk/Farm';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import { parseError } from '~/util'; 
-import { UNRIPE_TOKENS } from '~/constants/tokens';
+import { UNRIPE_BEAN, UNRIPE_BEAN_CRV3, UNRIPE_TOKENS } from '~/constants/tokens';
 import useTokenMap from '~/hooks/useTokenMap';
 import { selectCratesForEnroot } from '~/util/Crates';
 import useAccount from '~/hooks/ledger/useAccount';
@@ -25,8 +24,10 @@ import TransactionToast from '../Common/TxnToast';
 import DescriptionButton from '../Common/DescriptionButton';
 import RewardsBar, { RewardsBarProps } from './RewardsBar';
 import { hoverMap } from '../../constants/silo';
-import { BeanstalkPalette, FontSize } from '../App/muiTheme';
+import { BeanstalkPalette } from '../App/muiTheme';
 import useTimedRefresh from '~/hooks/useTimedRefresh';
+import useFarmerSiloBalances from '~/hooks/useFarmerSiloBalances';
+import useGetChainToken from '~/hooks/useGetChainToken';
 
 export type SendFormValues = {
   to?: string;
@@ -51,11 +52,13 @@ const options = [
     title: 'Enroot',
     description: 'Add Revitalized Stalk and Seeds to your Stalk and Seed balances, respectively. Also Mows Grown Stalk.',
     value: ClaimRewardsAction.ENROOT_AND_MOW,
+    hideIfNoUnripe: true
   },
   {
     title: 'Claim all Silo Rewards',
     description: 'Mow, Plant and Enroot.',
     value: ClaimRewardsAction.CLAIM_ALL,
+    hideIfNoUnripe: true
   }
 ];
 
@@ -87,13 +90,22 @@ const ClaimRewardsForm : React.FC<
   calls,
   ...rewardsBarProps
 }) => {
-  /** The currently hovered action. */
-  const [hoveredAction, setHoveredAction] = useState<ClaimRewardsAction | undefined>(undefined);
-  /** The currently selected action (after click). */
-  const selectedAction = values.action;
-
+  /// Helpers
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const getChainToken = useGetChainToken();
+
+  /// The currently hovered action.
+  const [hoveredAction, setHoveredAction] = useState<ClaimRewardsAction | undefined>(undefined);
+  /// The currently selected action (after click).
+  const selectedAction = values.action;
+
+  /// balances
+  const balances    = useFarmerSiloBalances();
+  const urBean      = getChainToken(UNRIPE_BEAN);
+  const urBeanCrv3  = getChainToken(UNRIPE_BEAN_CRV3);
+  const unripeDepositedBalance = balances[urBean.address]?.deposited.amount
+    .plus(balances[urBeanCrv3.address]?.deposited.amount);
 
   /// Handlers
   const onMouseOver = useCallback((v: ClaimRewardsAction) => () => setHoveredAction(v), []);
@@ -123,6 +135,7 @@ const ClaimRewardsForm : React.FC<
             <RewardsBar
               compact
               action={action}
+              hideRevitalized={unripeDepositedBalance.eq(0)}
               {...rewardsBarProps}
             />
           </Box>
@@ -141,6 +154,8 @@ const ClaimRewardsForm : React.FC<
                   {options.map((option) => {
                     const disabled = !calls || calls[option.value].enabled === false;
                     const hovered = isHovering(option.value) && !disabled;
+                    /// hide this option if user has no deposited unripe assets
+                    if (unripeDepositedBalance?.eq(0) && option.hideIfNoUnripe) return null;
                     return (
                       <Tooltip title={!disabled || isMobile ? '' : 'Nothing to claim'}>
                         <div>
@@ -172,9 +187,6 @@ const ClaimRewardsForm : React.FC<
             }}
           </Field>
         </Stack>
-        <Typography ml={1} pt={0.5} textAlign="center" fontSize={FontSize.sm} color="gray">
-          <Link href="https://docs.bean.money/farm/silo#silo-rewards" target="_blank" rel="noreferrer" underline="none">Learn more about Silo Rewards &rarr;</Link>
-        </Typography>
       </StyledDialogContent>
       <StyledDialogActions>
         <LoadingButton
@@ -208,8 +220,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
   /// Wallet
   const account           = useAccount();
   const { data: signer }  = useSigner();
-  const provider          = useProvider();
-  
+
   /// Helpers
   const unripeTokens      = useTokenMap(UNRIPE_TOKENS);
   
@@ -373,6 +384,11 @@ const RewardsDialog: React.FC<RewardsBarProps & {
       open={open}
       fullWidth
       maxWidth="md"
+      // PaperProps={{
+      //   sx: {
+      //     width: '550px'
+      //   }
+      // }}
     >
       <StyledDialogTitle onClose={handleClose}>Claim Rewards</StyledDialogTitle>
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
