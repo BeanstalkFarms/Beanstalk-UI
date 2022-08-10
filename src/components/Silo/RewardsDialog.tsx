@@ -154,10 +154,10 @@ const ClaimRewardsForm : React.FC<
               return (
                 <Stack gap={1}>
                   {options.map((option) => {
-                    const disabled = !calls || calls[option.value].enabled === false;
-                    const hovered = isHovering(option.value) && !disabled;
                     /// hide this option if user has no deposited unripe assets
                     if (unripeDepositedBalance?.eq(0) && option.hideIfNoUnripe) return null;
+                    const disabled = !calls || calls[option.value].enabled === false;
+                    const hovered = isHovering(option.value) && !disabled;
                     return (
                       <Tooltip title={!disabled || isMobile ? '' : 'Nothing to claim'}>
                         <div>
