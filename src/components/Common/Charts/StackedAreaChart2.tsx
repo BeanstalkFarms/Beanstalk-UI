@@ -99,10 +99,6 @@ const tickLabelProps = () => ({
   textAnchor: 'middle',
 } as const);
 
-// ------------------------
-//      Graph (Inner)
-// ------------------------        "date": "2022-08-06T17:00:14.000Z"
-
 const Graph: React.FC<GraphProps> = (props) => {
   const {
     // Chart sizing
@@ -166,7 +162,7 @@ const Graph: React.FC<GraphProps> = (props) => {
     //   console.log('strokeBuffer', strokeBuffer);
     // }
     xScale.range([0, width]);
-    
+
     yScale.range([
       height - axisHeight - margin.bottom - strokeBuffer, // bottom edge
       margin.top,

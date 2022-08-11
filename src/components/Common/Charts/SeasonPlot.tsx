@@ -209,7 +209,6 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>(
                   }}
                 </LineChart>
               </>
-
             )}
           </>
         )}
