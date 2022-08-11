@@ -138,7 +138,6 @@ const Graph: React.FC<GraphProps> = (props) => {
     const xScale = scaleLinear<number>({
       domain: extent(_data, getX) as [number, number],
     });
-    console.log('HEIGHT', height);
 
     let yScale;
     
@@ -171,8 +170,8 @@ const Graph: React.FC<GraphProps> = (props) => {
     return { xScale, yScale };
   }), [series, height, isTWAP, width]);
 
-  console.log('xscale', scales, scales[0].xScale.domain(), scales[0].xScale.range());
-  console.log('yscale', scales, scales[0].yScale.domain(), scales[0].yScale.range());
+  // console.log('xscale', scales, scales[0].xScale.domain(), scales[0].xScale.range());
+  // console.log('yscale', scales, scales[0].yScale.domain(), scales[0].yScale.range());
 
   const handleTooltip = useCallback(
     (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
