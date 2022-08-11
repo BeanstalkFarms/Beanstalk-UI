@@ -174,8 +174,6 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>(
           <>
             {stackedArea ? (
               <>
-                {console.log('SERIES INPUT')}
-                {console.log(seriesInput)}
                 {/* <SimpleStackedAreaChart /> */}
                 <SimpleStackedAreaChart2
                   series={seriesInput}
@@ -186,8 +184,6 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>(
 
             ) : (
               <>
-                {console.log('SERIES INPUT')}
-                {console.log(seriesInput)}
                 <LineChart
                   series={seriesInput}
                   onCursor={handleCursor as any} // FIXME
