@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Card,
   Container,
   Stack,
   useMediaQuery
@@ -10,10 +9,7 @@ import { useSelector } from 'react-redux';
 
 import PageHeader from '~/components/Common/PageHeader';
 import LiquidityOverTime from '~/components/Forecast/LiquidityOverTime';
-import PodRate from '~/components/Analytics/Field/PodRate';
-import Price from '~/components/Analytics/Bean/Price';
 import { AppState } from '~/state';
-import LiquidityByState from '~/components/Forecast/LiquidityByState';
 
 const ForecastPage: React.FC = () => {
   // Data
@@ -26,17 +22,17 @@ const ForecastPage: React.FC = () => {
   const content = (
     <>
       <Stack direction={isMobile ? 'column' : 'row'} gap={2}>
-        <Card sx={{ flex: 1, pt: 2 }}>
-          <Price />
-        </Card>
-        <Card sx={{ flex: 1, pt: 2 }}>
-          <PodRate />
-        </Card>
+        {/* <Card sx={{ flex: 1, pt: 2 }}> */}
+        {/*  <Price /> */}
+        {/* </Card> */}
+        {/* <Card sx={{ flex: 1, pt: 2 }}> */}
+        {/*  <PodRate /> */}
+        {/* </Card> */}
       </Stack>
       <LiquidityOverTime
         balances={balances}
       />
-      <LiquidityByState />
+      {/* <LiquidityByState /> */}
     </>
   );
 

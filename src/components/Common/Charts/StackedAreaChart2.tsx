@@ -3,7 +3,7 @@ import { bisector, extent, max, min } from 'd3-array';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { AreaStack, Bar, Line } from '@visx/shape';
 import { Group } from '@visx/group';
-import { scaleLinear, scaleTime } from '@visx/scale';
+import { scaleLinear } from '@visx/scale';
 import { localPoint } from '@visx/event';
 import { useTooltip } from '@visx/tooltip';
 import {
@@ -16,8 +16,6 @@ import {
 import { Axis, Orientation } from '@visx/axis';
 import { CurveFactory } from 'd3-shape';
 import { LinearGradient } from '@visx/gradient';
-import { SeriesPoint } from '@visx/shape/lib/types';
-import { timeParse } from 'd3-time-format';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { background } from '~/components/Common/Charts/StackedAreaChart';
 
@@ -43,6 +41,7 @@ export type LineChartProps = {
   series: (DataPoint[])[];
   onCursor: (ds?: DataPoint[]) => void;
   curve?: CurveFactory | (keyof typeof CURVES);
+  isTWAP?: boolean;
   children?: (props: GraphProps & {
     scales: Scale[];
     dataRegion: DataRegion;
@@ -64,59 +63,12 @@ export type DataPoint = {
   date: Date;
 };
 
-export interface MockPastSiloData {
-  date: string;
-  // pools -> must be sorted smallest -> largest
-  '0x87898263B6C5BABe34b4ec53F22d98430b91e371': string; // UNISWAP
-  '0xD652c40fBb3f06d6B58Cb9aa9CFF063eE63d465D': string; // LUSD
-  '0x3a70DfA7d2262988064A2D051dd47521E43c9BdD': string; // 3CRV
-}
-
-const mockSiloData: MockPastSiloData[] = [
-  {
-    date: '2022 Jun 16',
-    '0x87898263B6C5BABe34b4ec53F22d98430b91e371': '1',
-    '0xD652c40fBb3f06d6B58Cb9aa9CFF063eE63d465D': '1',
-    '0x3a70DfA7d2262988064A2D051dd47521E43c9BdD': '10',
-  },
-  {
-    date: '2022 Jun 17',
-    '0x87898263B6C5BABe34b4ec53F22d98430b91e371': '1',
-    '0xD652c40fBb3f06d6B58Cb9aa9CFF063eE63d465D': '5',
-    '0x3a70DfA7d2262988064A2D051dd47521E43c9BdD': '20',
-  },
-  {
-    date: '2022 Jun 18',
-    '0x87898263B6C5BABe34b4ec53F22d98430b91e371': '5',
-    '0xD652c40fBb3f06d6B58Cb9aa9CFF063eE63d465D': '10',
-    '0x3a70DfA7d2262988064A2D051dd47521E43c9BdD': '35',
-  },
-  {
-    date: '2022 Jun 19',
-    '0x87898263B6C5BABe34b4ec53F22d98430b91e371': '10',
-    '0xD652c40fBb3f06d6B58Cb9aa9CFF063eE63d465D': '15',
-    '0x3a70DfA7d2262988064A2D051dd47521E43c9BdD': '50'
-  }
-];
-
 // data accessors
 const getX = (d: DataPoint) => d?.season;
 const getY = (d: DataPoint) => d?.value;
 const bisectSeason = bisector<DataPoint, number>(
   (d) => d.season
 ).left;
-
-// const parseDate = timeParse('%Y %b %d');
-const parseDate = timeParse('%Y-%m-%dT%H:%M:%S.%LZ');
-// const getDate = (d: TotalLiquidityData) => {
-//   const date = new Date(d.date);
-//   console.log('DATEEE', (parseDate(`${date.getFullYear()} ${date.toLocaleString('default', { month: 'short' })} ${date.getDay()}`) as Date).valueOf());
-//   return (parseDate(`${date.getFullYear()} ${date.toLocaleString('default', { month: 'short' })} ${date.getDay()}`) as Date).valueOf();
-// };
-const getDate = (d: TotalLiquidityData) => (parseDate(d.date) as Date).valueOf();
-// console.log('DATEEE', (parseDate(d.date) as Date).valueOf());
-const getY0 = (d: SeriesPoint<TotalLiquidityData>, maxVal: number) => (d[0] + 2000000) / (maxVal + (maxVal * 0.03)); // 3% padding on top
-const getY1 = (d: SeriesPoint<TotalLiquidityData>, maxVal: number) => d[1] / (maxVal + (maxVal * 0.03));
 
 // ------------------------
 //        Plot Sizing
@@ -147,62 +99,9 @@ const tickLabelProps = () => ({
   textAnchor: 'middle',
 } as const);
 
-export interface TotalLiquidityData {
-  date: string;
-  totalLiquidityUSD: string;
-}
-
-// const mockStackedData: TotalLiquidityData[] = [
-//   {
-//     // date: 'Mon Aug  01 2022',
-//     date: '2022 Aug 01',
-//     totalLiquidityUSD: '12539293'
-//   },
-//   {
-//     // date: 'Tue Aug 02 2022',
-//     date: '2022 Aug 02',
-//     totalLiquidityUSD: '17539293'
-//   },
-//   {
-//     // date: 'Wed Aug 03  2022',
-//     date: '2022 Aug 03',
-//     totalLiquidityUSD: '19539293'
-//   },
-//   {
-//     // date: 'Thu Aug 0 4 2022',
-//     date: '2022 Aug 04',
-//     totalLiquidityUSD: '26841293'
-//   },
-//   {
-//     // date: 'Fri Aug 0 5 2022',
-//     date: '2022 Aug 05',
-//     totalLiquidityUSD: '24241293'
-//   },
-//   {
-//     // date: 'Sat Aug 06  2022',
-//     date: '2022 Aug 06',
-//     totalLiquidityUSD: '28315494'
-//   },
-//   {
-//     // date: 'Sun Aug 07  2022',
-//     date: '2022 Aug 07',
-//     totalLiquidityUSD: '23905494'
-//   },
-//   {
-//     // date: 'Mon Aug 08  2022',
-//     date: '2022 Aug 08',
-//     totalLiquidityUSD: '29905494'
-//   },
-//   {
-//     // date: 'Mon Aug 09 20 22',
-//     date: '2022 Aug 09',
-//     totalLiquidityUSD: '31905494'
-//   },
-// ];
-
 // ------------------------
 //      Graph (Inner)
-// ------------------------
+// ------------------------        "date": "2022-08-06T17:00:14.000Z"
 
 const Graph: React.FC<GraphProps> = (props) => {
   const {
@@ -213,31 +112,14 @@ const Graph: React.FC<GraphProps> = (props) => {
     series,
     onCursor,
     children,
+    isTWAP,
   } = props;
   // When positioning the circle that accompanies the cursor,
   // use this dataset to decide where it goes. (There is one
   // circle but potentially multiple series).
   const data = series[0];
-  let maxVal = 0;
-  const stackedData: TotalLiquidityData[] = data.reduce((prev, curr, index) => {
-    const date = new Date(data[index].date);
-    if (data[index].value > maxVal) {
-      maxVal = data[index].value;
-    }
-    if (data[index].season !== 6074) {
-      prev.push({
-        // formats date to: '2022 Aug 01'
-        // date: `${date.getFullYear()} ${date.toLocaleString('default', { month: 'short' })} ${date.toLocaleString('default', { day: 'numeric' })}`,
-        totalLiquidityUSD: data[index].value.toString(),
-        date: date.toISOString(),
-        // date: data[index].date.toDateString(),
-      });
-    }
-    return prev;
-  }, [] as TotalLiquidityData[]);
 
-  // ['totalLiquidityUSD']
-  const keys = Object.keys(stackedData[0]).filter((k) => k !== 'date') as any[];
+  const keys = ['value'];
 
   /**
    *
@@ -260,28 +142,50 @@ const Graph: React.FC<GraphProps> = (props) => {
     const xScale = scaleLinear<number>({
       domain: extent(_data, getX) as [number, number],
     });
+    console.log('HEIGHT', height);
 
-    const yScale = scaleLinear<number>({
-      domain: [min(_data, getY) as number, max(_data, getY) as number],
-    });
+    let yScale;
+    
+    if (isTWAP) {
+      const yMin = min(_data, getY);
+      const yMax = max(_data, getY);
+      const biggestDifference = Math.max(Math.abs(1 - (yMin as number)), Math.abs(1 - (yMax as number)));
+      yScale = scaleLinear<number>({
+        domain: [1 - biggestDifference, 1 + biggestDifference],
+      });
+    } else {
+      yScale = scaleLinear<number>({
+        domain: [min(_data, getY) as number, max(_data, getY) as number],
+      });
+    }
 
+    // if (height - axisHeight - margin.bottom - strokeBuffer === -32) {
+    //   console.log('HEIGHT', height);
+    //   console.log('axisHeight', axisHeight);
+    //   console.log('margin.bottom', margin.bottom);
+    //   console.log('strokeBuffer', strokeBuffer);
+    // }
     xScale.range([0, width]);
+    
     yScale.range([
       height - axisHeight - margin.bottom - strokeBuffer, // bottom edge
       margin.top,
     ]);
 
     return { xScale, yScale };
-  }), [width, height, series]);
+  }), [series, height, isTWAP, width]);
+
+  console.log('xscale', scales, scales[0].xScale.domain(), scales[0].xScale.range());
+  console.log('yscale', scales, scales[0].yScale.domain(), scales[0].yScale.range());
 
   const handleTooltip = useCallback(
     (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
-      const { x } = localPoint(event) || { x: 0 };
+      const { x } = localPoint(event) || { x: 0 }; // x0 + x1 + ... + xn = width of chart (~ 1123 px on my screen) ||| ex 956
 
       // for each series
       const ds = scales.map((scale, i) => {
-        const x0 = scale.xScale.invert(x);   // get Date corresponding to pixel coordinate x
-        const index = bisectSeason(data, x0, 1);  // find the closest index of x0 within data
+        const x0 = scale.xScale.invert(x);   // get Date (season) corresponding to pixel coordinate x ||| ex: 6145.742342789
+        const index = bisectSeason(series[i], x0, 1);  // find the closest index of x0 within data
 
         const d0 = series[i][index - 1];  // value at x0 - 1
         const d1 = series[i][index];      // value at x0
@@ -303,13 +207,13 @@ const Graph: React.FC<GraphProps> = (props) => {
       showTooltip({
         tooltipData: ds,
         tooltipLeft: x, // in pixels
-        // scales[0].xScale(getX(ds[0]))
+        // scales[0].xScale(getX(ds[0])),
         // cursorLeft:  x,
         tooltipTop: scales[0].yScale(getY(ds[0])), // in pixels
       });
       onCursor(ds);
     },
-    [showTooltip, onCursor, data, scales, series],
+    [showTooltip, onCursor, scales, series],
   );
 
   const handleMouseLeave = useCallback(() => {
@@ -361,19 +265,6 @@ const Graph: React.FC<GraphProps> = (props) => {
       - margin.bottom  // chart edge to data region first pixel
   };
 
-  // bounds
-  const yMax = height - margin.top - margin.bottom;
-  const xMax = width - margin.left - margin.right;
-  // scales
-  const xScale = scaleTime<number>({
-    range: [0, xMax],
-    domain: [Math.min(...stackedData.map(getDate)), Math.max(...stackedData.map(getDate))],
-  });
-
-  const yScale = scaleLinear<number>({
-    range: [yMax, 0],
-  });
-
   return (
     <>
       <svg width={width} height={height}>
@@ -385,14 +276,14 @@ const Graph: React.FC<GraphProps> = (props) => {
           {/* <GradientOrangeRed id="stacked-area-orangered" /> */}
           <LinearGradient from={BeanstalkPalette.lightGreen} to={BeanstalkPalette.lightGreen} id="stacked-area-orangered" />
           <rect x={0} y={0} width={width} height={height} fill={background} rx={14} />
-          <AreaStack<TotalLiquidityData>
+          <AreaStack
             top={margin.top}
             left={margin.left}
             keys={keys}
-            data={stackedData}
-            x={(d) => xScale(getDate(d.data)) ?? 0}
-            y0={(d) => yScale(getY0(d, maxVal)) ?? 0}
-            y1={(d) => yScale(getY1(d, maxVal)) ?? 0}
+            data={data}
+            x={(d) => scales[0].xScale(getX(d.data)) ?? 0}
+            y0={(d) => scales[0].yScale(d[0]) ?? 0}
+            y1={(d) => scales[0].yScale(d[1]) ?? 0}
           >
             {({ stacks, path }) =>
               stacks.map((stack) => (

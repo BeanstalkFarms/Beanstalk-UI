@@ -173,32 +173,43 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>(
         ) : (
           <>
             {stackedArea ? (
-              // <SimpleStackedAreaChart />
-              <SimpleStackedAreaChart2
-                series={seriesInput}
-                onCursor={handleCursor as any} // FIXME
-              />
+              <>
+                {console.log('SERIES INPUT')}
+                {console.log(seriesInput)}
+                {/* <SimpleStackedAreaChart /> */}
+                <SimpleStackedAreaChart2
+                  series={seriesInput}
+                  onCursor={handleCursor as any} // FIXME
+                  {...lineChartProps}
+                />
+              </>
+
             ) : (
-              <LineChart
-                series={seriesInput}
-                onCursor={handleCursor as any} // FIXME
-                curve="linear"
-                {...lineChartProps}
-              >
-                {(props) => {
-                  const x = props.scales[0].xScale(6074) as number;
-                  return x ? (
-                    <Line
-                      from={{ x, y: props.dataRegion.yTop }}
-                      to={{ x, y: props.dataRegion.yBottom }}
-                      stroke={BeanstalkPalette.logoGreen}
-                      strokeDasharray={4}
-                      strokeDashoffset={2}
-                      strokeWidth={1}
-                    />
-                  ) : null;
-                }}
-              </LineChart>
+              <>
+                {console.log('SERIES INPUT')}
+                {console.log(seriesInput)}
+                <LineChart
+                  series={seriesInput}
+                  onCursor={handleCursor as any} // FIXME
+                  curve="linear"
+                  {...lineChartProps}
+                >
+                  {(props) => {
+                    const x = props.scales[0].xScale(6074) as number;
+                    return x ? (
+                      <Line
+                        from={{ x, y: props.dataRegion.yTop }}
+                        to={{ x, y: props.dataRegion.yBottom }}
+                        stroke={BeanstalkPalette.logoGreen}
+                        strokeDasharray={4}
+                        strokeDashoffset={2}
+                        strokeWidth={1}
+                      />
+                    ) : null;
+                  }}
+                </LineChart>
+              </>
+
             )}
           </>
         )}
