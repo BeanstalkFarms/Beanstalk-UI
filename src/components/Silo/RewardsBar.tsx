@@ -21,24 +21,31 @@ export type RewardsBarProps = {
    * Either the selected or hovered action.
    * If present, grey out the non-included
    * rewards.
-  */
+   */
   action?: ClaimRewardsAction | undefined;
+  /**
+   * Revitalized rewards are hidden if a wallet
+   * does not have deposited unripe assets.
+   */
+  hideRevitalized?: boolean;
 };
 
-const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
-  beans,
-  stalk,
-  seeds,
-  revitalizedStalk = NEW_BN,
-  revitalizedSeeds = NEW_BN,
-  action,
-  compact = false,
-}) => {
+const RewardsBar: React.FC<RewardsBarProps & { compact?: boolean }> = (
+  {
+    beans,
+    stalk,
+    seeds,
+    revitalizedStalk = NEW_BN,
+    revitalizedSeeds = NEW_BN,
+    action,
+    hideRevitalized,
+    compact = false,
+  }) => {
   const GAP_LG = compact ? 2 : 3.5;
   const GAP_MD = compact ? 1 : 2;
   const GAP_XS = compact ? 0.5 : 1;
 
-  const isHovering = (c: ClaimRewardsAction) => action && hoverMap[action].includes(c);
+  const selectedActionIncludes = (c: ClaimRewardsAction) => action && hoverMap[action].includes(c);
 
   return (
     <Stack direction={{ lg: 'row', xs: 'column' }} columnGap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }} rowGap={1.5}>
@@ -50,7 +57,7 @@ const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
           amount={beans.earned}
           icon={beanIcon}
           compact={compact}
-          isClaimable={isHovering(ClaimRewardsAction.MOW)}
+          isClaimable={action !== ClaimRewardsAction.MOW}
         />
         <RewardItem
           title="Earned Stalk"
@@ -58,7 +65,7 @@ const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
           amount={stalk.earned}
           icon={stalkIcon}
           compact={compact}
-          isClaimable={isHovering(ClaimRewardsAction.MOW)}
+          isClaimable={action !== ClaimRewardsAction.MOW}
         />
       </Stack>
       {/* Divider */}
@@ -73,7 +80,7 @@ const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
           amount={seeds.plantable}
           icon={seedIcon}
           compact={compact}
-          isClaimable={isHovering(ClaimRewardsAction.PLANT_AND_MOW)}
+          isClaimable={selectedActionIncludes(ClaimRewardsAction.PLANT_AND_MOW)}
         />
         <RewardItem
           title="Grown Stalk"
@@ -81,7 +88,7 @@ const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
           amount={stalk.grown}
           icon={stalkIcon}
           compact={compact}
-          isClaimable={isHovering(ClaimRewardsAction.MOW)}
+          isClaimable={selectedActionIncludes(ClaimRewardsAction.MOW)}
         />
       </Stack>
       <Box display={{ xs: 'block', lg: compact ? 'none' : 'block' }}>
@@ -95,7 +102,7 @@ const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
           amount={revitalizedStalk}
           icon={stalkIcon}
           compact={compact}
-          isClaimable={isHovering(ClaimRewardsAction.ENROOT_AND_MOW)}
+          isClaimable={hideRevitalized ? false : selectedActionIncludes(ClaimRewardsAction.ENROOT_AND_MOW)}
         />
         <RewardItem
           title="Revitalized Seeds"
@@ -103,7 +110,7 @@ const RewardsBar : React.FC<RewardsBarProps & { compact?: boolean }> = ({
           amount={revitalizedSeeds}
           icon={seedIcon}
           compact={compact}
-          isClaimable={isHovering(ClaimRewardsAction.ENROOT_AND_MOW)}
+          isClaimable={hideRevitalized ? false : selectedActionIncludes(ClaimRewardsAction.ENROOT_AND_MOW)}
         />
       </Stack>
     </Stack>
