@@ -1,9 +1,10 @@
-import { DateTime } from 'luxon';
+import { DateTime, Duration } from 'luxon';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import BigNumber from 'bignumber.js';
+import toast from 'react-hot-toast';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useSeason from '~/hooks/useSeason';
-import useTimedRefresh from '~/hooks/useTimedRefresh';
 import { AppState } from '~/state';
 import { bigNumberResult } from '~/util/Ledger';
 import { getNextExpectedSunrise } from '.';
@@ -26,24 +27,21 @@ export const useSun = () => {
       if (beanstalk) {
         console.debug(`[beanstalk/sun/useSun] FETCH (contract = ${beanstalk.address})`);
         const [
-          season
+          season, seasonTime
         ] = await Promise.all([
-          beanstalk.season().then(bigNumberResult),
+          beanstalk.season().then(bigNumberResult),       /// the current season  
+          beanstalk.seasonTime().then(bigNumberResult),   /// the season that it could be if sunrise was called
         ] as const);
-        console.debug(`[beanstalk/sun/useSun] RESULT: season = ${season}`);
+        console.debug(`[beanstalk/sun/useSun] RESULT: season = ${season}, seasonTime = ${seasonTime}`);
         dispatch(updateSeason(season));
-
-        const [
-          seasonTime
-        ] = await Promise.all([
-          beanstalk.seasonTime().then(bigNumberResult),
-        ] as const);
-        console.debug(`[beanstalk/sun/useSun] RESULT: seasonTime = ${seasonTime}`);
         dispatch(updateSeasonTime(seasonTime));
+        return [season, seasonTime] as const;
       }
+      return [undefined, undefined] as const;
     } catch (e) {
       console.debug('[beanstalk/sun/useSun] FAILED', e);
       console.error(e);
+      return [undefined, undefined] as const;
     }
   }, [
     dispatch,
@@ -64,23 +62,40 @@ const SunUpdater = () => {
   const season    = useSeason();
   const next      = useSelector<AppState, DateTime>((state) => state._beanstalk.sun.sunrise.next);
   const awaiting  = useSelector<AppState, boolean>((state) => state._beanstalk.sun.sunrise.awaiting);
-
-  // Update sunrise timer
+  const seasonTime  = useSelector<AppState, BigNumber>((state) => state._beanstalk.sun.seasonTime);
+  const remaining  = useSelector<AppState, Duration>((state) => state._beanstalk.sun.sunrise.remaining);
+  
   useEffect(() => {
     if (awaiting === false) {
+      /// Setup timer. Count down from now until the start
+      /// of the next hour; when the timer is zero, set
+      /// `awaiting = true`.
       const i = setInterval(() => {
         const _remaining = next.diffNow();
-        if (_remaining.as('seconds') <= 0 && awaiting === false) {
+        if (_remaining.as('seconds') <= 0) {
           dispatch(setAwaitingSunrise(true));
         } else {
           dispatch(setRemainingUntilSunrise(_remaining));
         }
       }, 1000);
       return () => clearInterval(i);
-    }
-  }, [dispatch, awaiting, next]);
-
-  useTimedRefresh(fetch, 2500, awaiting === true);
+    } 
+    /// When awaiting sunrise, check every 3 seconds to see
+    /// if the season has incremented bumped.
+    const i = setInterval(() => {
+      (async () => {
+        const [newSeason] = await fetch();
+        if (newSeason?.gt(season)) {
+          const _next = getNextExpectedSunrise();
+          dispatch(setAwaitingSunrise(false));
+          dispatch(setNextSunrise(_next));
+          dispatch(setRemainingUntilSunrise(_next.diffNow()));
+          toast.success(`The Sun has risen. It is now Season ${newSeason.toString()}.`);
+        }
+      })();
+    }, 3000);
+    return () => clearInterval(i);
+  }, [dispatch, awaiting, season, next, fetch]);
 
   // Fetch when chain changes
   useEffect(() => {
@@ -90,13 +105,6 @@ const SunUpdater = () => {
     fetch,
     clear
   ]);
-  
-  /// For each new season...
-  useEffect(() => {
-    dispatch(setAwaitingSunrise(false));
-    dispatch(setNextSunrise(getNextExpectedSunrise(true)));
-    // toast
-  }, [dispatch, season]);
 
   return null;
 };

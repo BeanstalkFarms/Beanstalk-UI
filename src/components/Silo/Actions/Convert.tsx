@@ -28,7 +28,6 @@ import useToggle from '~/hooks/display/useToggle';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import { tokenResult, parseError } from '~/util';
-import useFarmerSiloBalances from '~/hooks/useFarmerSiloBalances';
 import { FarmerSilo } from '~/state/farmer/silo';
 import useSeason from '~/hooks/useSeason';
 import { convert, Encoder as ConvertEncoder } from '~/lib/Beanstalk/Silo/Convert';
@@ -39,6 +38,7 @@ import { useFetchPools } from '~/state/bean/pools/updater';
 import { ActionType } from '~/util/Actions';
 import { IconSize } from '../../App/muiTheme';
 import IconWrapper from '../../Common/IconWrapper';
+import useFarmerSilo from '~/hooks/useFarmerSilo';
 
 // -----------------------------------------------------------------------
 
@@ -377,15 +377,14 @@ const Convert : React.FC<{
   const season = useSeason();
 
   /// Farmer
-  const siloBalances            = useFarmerSiloBalances();
+  const farmerSilo              = useFarmerSilo();
+  const farmerSiloBalances      = farmerSilo.balances;
   const [refetchFarmerSilo]     = useFetchFarmerSilo();
   const [refetchPools]          = useFetchPools();
 
   /// Network
   const { data: signer }  = useSigner();
   const beanstalk         = useBeanstalkContract(signer);
-  // const provider          = useProvider();
-  // const farm              = useMemo(() => new Farm(provider), [provider]);
 
   /// Form setup
   const initialValues : ConvertFormValues = useMemo(() => ({
@@ -437,7 +436,7 @@ const Convert : React.FC<{
         values.settings.slippage / 100
       ).toString();
       
-      const depositedCrates = siloBalances[tokenIn.address]?.deposited?.crates;
+      const depositedCrates = farmerSiloBalances[tokenIn.address]?.deposited?.crates;
       if (!depositedCrates) throw new Error('No deposited crates available.');
 
       const conversion = BeanstalkSDK.Silo.Convert.convert(
@@ -487,6 +486,28 @@ const Convert : React.FC<{
       const crates  = conversion.deltaCrates.map((crate) => crate.season.toString());
       const amounts = conversion.deltaCrates.map((crate) => tokenIn.stringify(crate.amount.abs()));
 
+      /// HOTFIX:
+      /// If farmer has > 0 Earned beans, add a plant() call before
+      /// convert. Fixes edge case bug where converting all of your
+      /// silo assets causes loss of Earned Beans.
+      let call;
+      if (farmerSilo.beans.earned.gt(0)) {
+        call = beanstalk.farm([
+          beanstalk.interface.encodeFunctionData('plant'),
+          beanstalk.interface.encodeFunctionData('convert', [
+            convertData,
+            crates,
+            amounts
+          ])
+        ]);
+      } else {
+        call = beanstalk.convert(
+          convertData,
+          crates,
+          amounts
+        );
+      }
+      
       console.debug('[Convert] executing', {
         tokenIn,
         amountIn,
@@ -498,15 +519,11 @@ const Convert : React.FC<{
         conversion,
         convertData,
         crates,
-        amounts
+        amounts,
       });
 
       ///
-      const txn = await beanstalk.convert(
-        convertData,
-        crates,
-        amounts,
-      );
+      const txn = await call;
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
@@ -526,7 +543,7 @@ const Convert : React.FC<{
       txToast ? txToast.error(err) : toast.error(parseError(err));
       formActions.setSubmitting(false);
     }
-  }, [siloBalances, season, urBean, urBeanCrv3, Bean, BeanCrv3, beanstalk, refetchFarmerSilo, refetchPools, initialValues]);
+  }, [farmerSiloBalances, farmerSilo.beans.earned, season, urBean, urBeanCrv3, Bean, BeanCrv3, beanstalk, refetchFarmerSilo, refetchPools, initialValues]);
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
@@ -538,7 +555,7 @@ const Convert : React.FC<{
           <ConvertForm
             handleQuote={handleQuote}
             tokenList={tokenList as (ERC20Token | NativeToken)[]}
-            siloBalances={siloBalances}
+            siloBalances={farmerSiloBalances}
             beanstalk={beanstalk}
             currentSeason={season}
             {...formikProps}

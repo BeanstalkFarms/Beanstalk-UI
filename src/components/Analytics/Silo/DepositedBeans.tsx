@@ -5,11 +5,16 @@ import { SnapshotData } from '~/hooks/useSeasonsQuery';
 import { toTokenUnitsBN } from '../../../util';
 import { BEAN } from '../../../constants/tokens';
 
-const getValue = (season: SnapshotData<SeasonalDepositedBeansQuery>) => toTokenUnitsBN(season.hourlyDepositedAmount, BEAN[1].decimals).toNumber();
+const getValue = (season: SnapshotData<SeasonalDepositedBeansQuery>) => toTokenUnitsBN(season.totalDepositedAmount, BEAN[1].decimals).toNumber();
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const StatProps = {
-    title: 'Deposited Beans',
-    gap: 0.5,
+  title: 'Deposited Beans',
+  gap: 0.5,
+};
+const queryConfig = {
+  variables: {
+    season_gt: 6073,
+  }
 };
 
 const DepositedBeans: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => (
@@ -19,6 +24,7 @@ const DepositedBeans: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ 
     getValue={getValue}
     formatValue={formatValue}
     StatProps={StatProps}
+    queryConfig={queryConfig}
   />
 );
 

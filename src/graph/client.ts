@@ -1,8 +1,10 @@
-import { ApolloClient, FieldPolicy, InMemoryCache } from '@apollo/client';
+import { ApolloClient, ApolloLink, FieldPolicy, HttpLink, InMemoryCache } from '@apollo/client';
 import { LocalStorageWrapper, persistCacheSync } from 'apollo3-cache-persist';
-import { SupportedChainId , BEANSTALK_SUBGRAPH_ADDRESSES } from '~/constants';
+import { SupportedChainId , BEANSTALK_SUBGRAPH_ADDRESSES, BEAN_SUBGRAPH_ADDRESSES } from '~/constants';
 
-const mergeSeasons: FieldPolicy = {
+/// ///////////////////////// Field policies ////////////////////////////
+
+const mergeUsingSeasons: FieldPolicy = {
   // Don't cache separate results based on
   // any of this field's arguments.
   keyArgs: false,
@@ -99,12 +101,17 @@ const mergeSeasons: FieldPolicy = {
   },
 };
 
+/// ///////////////////////// Cache Persistence ////////////////////////////
+
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
-        seasons: mergeSeasons,
-        fieldHourlySnapshots: mergeSeasons,
+        seasons: mergeUsingSeasons,
+        fieldHourlySnapshots: mergeUsingSeasons,
+        beanHourlySnapshots: mergeUsingSeasons,
+        siloAssetHourlySnapshots: mergeUsingSeasons,
+        siloHourlySnapshots: mergeUsingSeasons,
       }
     }
   }
@@ -119,7 +126,28 @@ try {
   console.error('Failed to persist cache, skipping.');
 }
 
-export const apolloClient = new ApolloClient({
+/// ///////////////////////// Links ////////////////////////////
+
+const beanstalkLink = new HttpLink({
   uri: BEANSTALK_SUBGRAPH_ADDRESSES[SupportedChainId.MAINNET],
+});
+
+const beanLink = new HttpLink({
+  uri: BEAN_SUBGRAPH_ADDRESSES[SupportedChainId.MAINNET],
+});
+
+// const beanV1Link = new HttpLink({
+//   //    https://thegraph.com/explorer/subgraph?id=CsmWTbztr1EQcRYmgqUYpSaVc8exTnVmhUxsaswvkbjG&view=Overview
+//   uri: 'https://gateway.thegraph.com/api/fe672ef9fcdfb617c4d7755f36a31131/subgraphs/id/CsmWTbztr1EQcRYmgqUYpSaVc8exTnVmhUxsaswvkbjG'
+// });
+
+/// ///////////////////////// Client ////////////////////////////
+
+export const apolloClient = new ApolloClient({
+  link: ApolloLink.split(
+    (operation) => operation.getContext().subgraph === 'bean',
+    beanLink, // true
+    beanstalkLink, // false
+  ),
   cache,
 });

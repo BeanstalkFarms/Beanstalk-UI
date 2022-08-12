@@ -36,12 +36,14 @@ const TransactionHistoryPage: React.FC = () => {
             const eventsByCacheId = events[curr].events;
             return prev.concat(eventsByCacheId);
           }, []);
-          allEvents.sort((a, b) => a.blockNumber - b.blockNumber);
+          allEvents.sort((a, b) => b.blockNumber - a.blockNumber);
           setWalletEvents(allEvents);
         } else if (facetByTab[tab]) {
           // SILO, FIELD, etc
           const cacheId = getEventCacheId(chainId, account, facetByTab[tab]);
-          setWalletEvents(events[cacheId].events);
+          const facetEvents = [...events[cacheId].events];
+          facetEvents.sort((a, b) => b.blockNumber - a.blockNumber);
+          setWalletEvents(facetEvents);
         } else {
           setWalletEvents([]);
         }

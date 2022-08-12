@@ -1,7 +1,12 @@
-query SeasonalDepositedBeans($season_lte: Int, $first: Int) {
+query SeasonalDepositedBeans(
+  $season_lte: Int,
+  $season_gt: Int,
+  $first: Int
+) {
   seasons: siloAssetHourlySnapshots(
     where: {
       season_lte: $season_lte,
+      season_gt:  $season_gt,
       siloAsset: "0xc1e088fc1323b20bcbee9bd1b9fc9546db5624c5-0xbea0000029ad1c77d3d5d23ba2d8893db9d1efab"
     }
     first: $first
@@ -11,6 +16,6 @@ query SeasonalDepositedBeans($season_lte: Int, $first: Int) {
     id
     season
     timestamp
-    hourlyDepositedAmount
+    totalDepositedAmount
   }
 }

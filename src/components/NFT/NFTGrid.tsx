@@ -37,7 +37,7 @@ const NFTGrid: React.FC<NFTGridProps> = ({
                     p: 1,
                     cursor: 'pointer',
                     '&:hover': {
-                      backgroundColor: BeanstalkPalette.hoverBlue,
+                      backgroundColor: BeanstalkPalette.lightestBlue,
                       opacity: 0.95
                     }
                   }}>

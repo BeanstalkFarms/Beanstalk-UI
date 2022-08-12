@@ -19,8 +19,8 @@ const StatsCard: React.FC<{
 } & CardProps> = ({ stats }, props) => (
   <Card sx={{ p: 1 }} {...props}>
     <Grid container spacing={1} rowSpacing={3}>
-      {stats.map((stat) => (
-        <Grid item xs={6} md={3}>
+      {stats.map((stat, index) => (
+        <Grid item xs={12} md={3} key={index}>
           <Stat
             title={stat.title}
             titleTooltip={stat.tooltip}

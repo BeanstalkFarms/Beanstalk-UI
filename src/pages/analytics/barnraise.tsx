@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import Stat from '~/components/Common/Stat';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import AmountRaisedCard from '~/components/Analytics/Barnraise/AmountRaisedCard';
+import AmountRaisedCard from '~/components/Analytics/Barn/AmountRaisedCard';
 import ComingSoonCard from '~/components/Common/ZeroState/ComingSoonCard';
 import useChainId from '~/hooks/useChain';
 import useTabs from '~/hooks/display/useTabs';

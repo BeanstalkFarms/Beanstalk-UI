@@ -199,11 +199,12 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
             {/* Timestamps */}
             <Stack direction="row">
               <Link color="text.secondary" sx={{ textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }} href={`https://etherscan.io/tx/${event.transactionHash}`} target="_blank" rel="noreferrer">
-                {event?.args?.season ? (
-                  <Typography color="text.secondary">Season {event.args?.season.toString()}</Typography>
-                ) : (
-                  <Typography color="text.secondary">{`Block ${event.blockNumber}`}</Typography>
-                )}
+                {/* {event?.args?.season ? ( */}
+                {/*  <Typography color="text.secondary">Season {event.args?.season.toString()}</Typography> */}
+                {/* ) : ( */}
+                {/*  <Typography color="text.secondary">{`Block ${event.blockNumber}`}</Typography> */}
+                {/* )} */}
+                <Typography color="text.secondary">{`Block ${event.blockNumber}`}</Typography>
               </Link>
             </Stack>
           </Stack>

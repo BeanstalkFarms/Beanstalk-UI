@@ -3,7 +3,7 @@ import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/Seas
 import { SeasonalRRoRDocument, SeasonalRRoRQuery } from '~/generated/graphql';
 import { SnapshotData } from '~/hooks/useSeasonsQuery';
 
-const getValue = (season: SnapshotData<SeasonalRRoRQuery>) => parseInt(season.realRateOfReturn, 10) * 100;
+const getValue = (season: SnapshotData<SeasonalRRoRQuery>) => parseFloat(season.realRateOfReturn) * 100;
 const formatValue = (value: number) => `${value.toFixed(2)}%`;
 const StatProps = {
   title: 'Real Rate of Return',

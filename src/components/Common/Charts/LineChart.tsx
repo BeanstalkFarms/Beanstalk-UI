@@ -99,7 +99,7 @@ const strokes = [
     strokeWidth: 2,
   },
   {
-    stroke: BeanstalkPalette.lightishGrey,
+    stroke: BeanstalkPalette.lightGrey,
     strokeWidth: 0.5,
   },
 ];
@@ -107,28 +107,14 @@ const strokes = [
 // AXIS
 export const backgroundColor = '#da7cff';
 export const labelColor = '#340098';
-const axisColor      = BeanstalkPalette.lightishGrey;
-const tickLabelColor = BeanstalkPalette.lightishGrey;
+const axisColor      = BeanstalkPalette.lightGrey;
+const tickLabelColor = BeanstalkPalette.lightGrey;
 const tickLabelProps = () => ({
   fill: tickLabelColor,
   fontSize: 12,
   fontFamily: 'Futura PT',
   textAnchor: 'middle',
-  // backgroundColor: 'white',
 } as const);
-const tickProps = () => ({
-
-});
-
-// const labelProps = {
-//   fill: labelColor,
-//   fontSize: 18,
-//   strokeWidth: 0,
-//   stroke: '#333',
-//   paintOrder: 'stroke',
-//   fontFamily: 'Futura PT',
-//   textAnchor: 'start',
-// } as const;
 
 // ------------------------
 //      Graph (Inner)
@@ -340,7 +326,7 @@ const Graph: React.FC<GraphProps> = (props) => {
             <Line
               from={{ x: tooltipLeft, y: dataRegion.yTop }}
               to={{   x: tooltipLeft, y: dataRegion.yBottom }}
-              stroke={BeanstalkPalette.lightishGrey}
+              stroke={BeanstalkPalette.lightGrey}
               strokeWidth={1}
               pointerEvents="none"
             />

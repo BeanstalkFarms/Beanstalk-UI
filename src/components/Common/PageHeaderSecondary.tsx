@@ -44,26 +44,27 @@ const PageHeader : React.FC<{
             </Stack>
           </Button>
         </Stack>
-        <Stack>
-          {props.title && (
-            <>
-              {typeof props.title === 'string' ? (
-                <Typography
-                  variant="h2"
-                  textAlign="center"
-                >
-                  {props.icon}&nbsp;
-                  {props.title}
-                </Typography>
-              ) : (
-                <>
-                  {props.title}
-                </>
-              )}
-            </>
-          )}
-        </Stack>
-        <Box sx={{ width: 70 }} />
+        {props.title && (
+          <>
+            {typeof props.title === 'string' ? (
+              <Typography
+                variant="h2"
+                textAlign="center"
+                sx={{ verticalAlign: 'middle' }}
+              >
+                {props.icon}&nbsp;
+                {props.title}
+              </Typography>
+            ) : (
+              <>
+                {props.title}
+              </>
+            )}
+          </>
+        )}
+        <Box sx={{ width: 70 }} display="flex" justifyContent="end">
+          {props.control ? (props.control) : null}
+        </Box>
       </Stack>
     </Box>
   );

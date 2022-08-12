@@ -1,10 +1,12 @@
 query SeasonalVolume($season_lte: Int, $first: Int) {
   seasons: beanHourlySnapshots(
     first: $first
-    orderBy: timestamp
+    where: { season_lte: $season_lte }
+    orderBy: season
     orderDirection: desc
   ) {
     id
+    season
     timestamp
     hourlyVolumeUSD
   }

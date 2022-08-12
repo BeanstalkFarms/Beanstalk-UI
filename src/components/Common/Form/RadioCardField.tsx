@@ -33,7 +33,7 @@ const RadioCardField: React.FC<(
       <Grid container direction={direction} spacing={spacing}>
         {options.map((opt, index) => {
             const selected = fieldProps.field.value === opt.value;
-            const color    = selected ? BeanstalkPalette.logoGreen : BeanstalkPalette.lightishGrey;
+            const color    = selected ? BeanstalkPalette.logoGreen : BeanstalkPalette.lightGrey;
             return (
               <Grid key={index} item xs={xs} md={md}>
                 <Button

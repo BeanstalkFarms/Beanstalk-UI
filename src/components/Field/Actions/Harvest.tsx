@@ -33,7 +33,7 @@ import TokenAdornment from '../../Common/Form/TokenAdornment';
 
 type HarvestFormValues = {
   amount: BigNumber;
-  destination: FarmToMode;
+  destination: FarmToMode | undefined;
 }
 
 // -----------------------------------------------------------------------
@@ -158,7 +158,7 @@ const Harvest: React.FC<{}> = () => {
   /// Form
   const initialValues: HarvestFormValues = useMemo(() => ({
     amount: farmerField.harvestablePods || null,
-    destination: FarmToMode.INTERNAL,
+    destination: undefined,
   }), [farmerField.harvestablePods]);
 
   const onSubmit = useCallback(
@@ -171,6 +171,7 @@ const Harvest: React.FC<{}> = () => {
         if (!farmerField.harvestablePods.gt(0)) throw new Error('No Harvestable Pods.');
         if (!farmerField.harvestablePlots) throw new Error('No Harvestable Plots.');
         if (!account?.address) throw new Error('Connect a wallet first.');
+        if (!values.destination) throw new Error('No destination set.');
 
         txToast = new TransactionToast({
           loading: `Harvesting ${displayFullBN(farmerField.harvestablePods, PODS.displayDecimals)} Pods.`,

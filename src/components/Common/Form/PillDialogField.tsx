@@ -15,7 +15,7 @@ const PillDialogField : React.FC<{
   show,
   hide,
   label,
-  pill: selected,
+  pill,
   tooltip,
   children,
 }) => (
@@ -34,7 +34,7 @@ const PillDialogField : React.FC<{
       isOpen={isOpen}
       onClick={show}
     >
-      {selected}
+      {pill}
     </PillRow>
   </>
 );

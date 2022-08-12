@@ -4,13 +4,12 @@ import { useDispatch } from 'react-redux';
 import throttle from 'lodash/throttle';
 import { useProvider } from 'wagmi';
 import { useBeanstalkContract, useBeanstalkPriceContract } from '~/hooks/useContract';
-import { tokenResult, getChainConstant } from '~/util';
+import { tokenResult, getChainConstant, displayBeanPrice } from '~/util';
 import { BEAN } from '~/constants/tokens';
 import ALL_POOLS from '~/constants/pools';
 import { ERC20__factory } from '~/generated';
 import { updatePrice, updateDeltaB, updateSupply } from '../token/actions';
 import { resetPools, updateBeanPools, UpdatePoolPayload } from './actions';
-import useTimedRefresh from '~/hooks/useTimedRefresh';
 
 export const useFetchPools = () => {
   const dispatch = useDispatch();
@@ -103,7 +102,7 @@ export const useFetchPools = () => {
           dispatch(updateDeltaB(totalDeltaB));
 
           if (price) {
-            document.title = `$${price.toNumber().toFixed(4)} · Beanstalk App`;
+            document.title = `$${displayBeanPrice(price, 4)} · Beanstalk App`;
           }
         }
       } catch (e) {
@@ -141,7 +140,7 @@ const PoolsUpdater = () => {
     clear
   ]);
   
-  useTimedRefresh(fetch, 15_000, true, true);
+  // useTimedRefresh(fetch, 15_000, true, true);
 
   return null;
 };

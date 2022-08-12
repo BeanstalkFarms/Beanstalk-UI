@@ -8,22 +8,12 @@ import { displayBN } from '~/util';
 import { ZERO_BN } from '~/constants';
 import { FarmerBalances } from '~/state/farmer/balances';
 import { FarmerSilo } from '~/state/farmer/silo';
-import { BeanstalkPalette, FontSize } from '../../App/muiTheme';
+import { BeanstalkPalette, FontSize, IconSize } from '../../App/muiTheme';
 
 const useStyles = makeStyles(() => ({
-  tokenIcon: {
-    minWidth: '18px',
-    width: '18px',
-    height: '18px',
-    marginRight: '5px'
-  },
-  tokenName: {
-    color: '#3B3B3B',
-    fontSize: '20px'
-  },
   tokenLogo: {
-    width: 44,
-    height: 44,
+    width: IconSize.tokenSelect,
+    height: IconSize.tokenSelect,
   }
 }));
 
@@ -43,6 +33,12 @@ export type TokenSelectDialogProps<K extends keyof TokenBalanceMode> = {
   selected: ({ token: Token } & any)[];
   /** Called when the user "submits" their changes to selected tokens. */
   handleSubmit: (s: Set<Token>) => void;
+
+  /** Override the dialog title */
+  title?: string | JSX.Element;
+  /** */
+  description?: string | JSX.Element;
+
   /**
    * 
    */
@@ -56,22 +52,24 @@ export type TokenSelectDialogProps<K extends keyof TokenBalanceMode> = {
   tokenList: Token[];
   /** Single or multi-select */
   mode?: TokenSelectMode;
-  /** Override the dialog title */
-  title?: string | JSX.Element;
 }
 
 type TokenSelectDialogC = React.FC<TokenSelectDialogProps<keyof TokenBalanceMode>>;
 
 const TokenSelectDialog : TokenSelectDialogC = React.memo(({
- open,
- handleClose,
- selected,
- handleSubmit,
- balancesType = 'farm',
- balances: _balances,
- tokenList,
- mode = TokenSelectMode.MULTI,
- title,
+  // Dialog
+  open,
+  handleClose,
+  selected,
+  handleSubmit,
+  title,
+  description,
+  // Balances
+  balancesType = 'farm',
+  balances: _balances,
+  // Tokens
+  tokenList,
+  mode = TokenSelectMode.MULTI,
 }) => {
   const classes = useStyles();
   /** keep an internal copy of selected tokens */
@@ -135,62 +133,71 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
       TransitionProps={{}}
     >
       <StyledDialogTitle id="customized-dialog-title" onClose={handleClose} sx={{ pb: 0.5 }}>
-        {title || mode === TokenSelectMode.MULTI ? 'Select Tokens' : 'Select Token'}
+        {title || mode === TokenSelectMode.MULTI 
+          ? 'Select Tokens'
+          : 'Select Token'}
       </StyledDialogTitle>
       <StyledDialogContent sx={{ pb: mode === TokenSelectMode.MULTI ? 0 : 1, pt: 0 }}>
+        {/**
+          * Tokens
+          */}
         <List sx={{ p: 0 }}>
-          <Stack>
-            {tokenList ? tokenList.map((_token) => (
-              <ListItem
-                key={_token.address}
-                color="primary"
-                selected={selectedInternal.has(_token)}
-                disablePadding
-                onClick={onClickItem(_token)}
-                sx={{
-                  // ListItem is used elsewhere so we define here
-                  // instead of in muiTheme.ts
-                  '& .MuiListItemText-primary': {
-                    fontSize: FontSize['1xl'],
-                    lineHeight: '1.875rem'
-                  },
-                  '& .MuiListItemText-secondary': {
-                    fontSize: FontSize.base,
-                    lineHeight: '1.25rem',
-                    color: BeanstalkPalette.lightishGrey
-                  },
-                }}
-              >
-                <ListItemButton disableRipple>
-                  {/* Top-level button stack */}
-                  <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }}>
-                    {/* Icon & text left side */}
-                    <Stack direction="row" justifyContent="center" alignItems="center" gap={0}>
-                      <ListItemIcon>
-                        <img src={_token.logo} alt="" className={classes.tokenLogo} />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={_token.symbol}
-                        secondary={_token.name}
-                        sx={{ my: 0 }}
-                      />
-                    </Stack>
-                    {/* Balances right side */}
-                    {_balances ? (
-                      <Typography variant="bodyLarge">
-                        {displayBN(getBalance(_token.address))}
-                      </Typography>
-                    ) : null}
+          {tokenList ? tokenList.map((_token) => (
+            <ListItem
+              key={_token.address}
+              color="primary"
+              selected={selectedInternal.has(_token)}
+              disablePadding
+              onClick={onClickItem(_token)}
+              sx={{
+                // ListItem is used elsewhere so we define here
+                // instead of in muiTheme.ts
+                '& .MuiListItemText-primary': {
+                  fontSize: FontSize['1xl'],
+                  lineHeight: '1.875rem'
+                },
+                '& .MuiListItemText-secondary': {
+                  fontSize: FontSize.base,
+                  lineHeight: '1.25rem',
+                  color: BeanstalkPalette.lightGrey
+                },
+              }}
+            >
+              <ListItemButton disableRipple>
+                {/* Top-level button stack */}
+                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }}>
+                  {/* Icon & text left side */}
+                  <Stack direction="row" justifyContent="center" alignItems="center" gap={0}>
+                    <ListItemIcon>
+                      <img src={_token.logo} alt="" className={classes.tokenLogo} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={_token.symbol}
+                      secondary={_token.name}
+                      sx={{ my: 0 }}
+                    />
                   </Stack>
-                </ListItemButton>
-              </ListItem>
-            )) : null}
-            {_balances ? (
-              <Typography ml={1} pt={0.5} textAlign="center" fontSize={FontSize.sm} color="gray">
-                Displaying total Farm and Circulating balances. <Link href="https://docs.bean.money/additional-resources/asset-states" target="_blank" rel="noreferrer" underline="none">Learn more &rarr;</Link>
-              </Typography>
-            ) : null}
-          </Stack>
+                  {/* Balances right side */}
+                  {_balances ? (
+                    <Typography variant="bodyLarge">
+                      {displayBN(getBalance(_token.address))}
+                    </Typography>
+                  ) : null}
+                </Stack>
+              </ListItemButton>
+            </ListItem>
+          )) : null}
+          {/**
+            * Farm + Circulating Balances notification
+            */}
+          {_balances ? (
+            <Typography ml={1} pt={0.5} textAlign="center" fontSize={FontSize.sm} color="gray">
+              Displaying total Farm and Circulating balances.&nbsp;
+              <Link href="https://docs.bean.money/additional-resources/asset-states" target="_blank" rel="noreferrer" underline="none">
+                Learn more &rarr;
+              </Link>
+            </Typography>
+          ) : null}
         </List>
       </StyledDialogContent>
       {mode === TokenSelectMode.MULTI && (

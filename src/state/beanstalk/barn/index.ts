@@ -6,8 +6,15 @@ export type Barn = {
   humidity: BigNumber;
   currentBpf: BigNumber;
   endBpf: BigNumber;
+
   /**
    * The total number of Unfertilized Sprouts remaining.
    */
   unfertilized: BigNumber;
+
+  /**
+   * The total number of Fertilized Sprouts. This is the amount
+   * of Fertilizer debt that has been repaid.
+   */
+  fertilized: BigNumber;
 }

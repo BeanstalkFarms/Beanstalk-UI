@@ -14,7 +14,7 @@ export async function initCurve(chainId : SupportedChainId = 1) {
     console.debug('[curve/init] using Alchemy');
     await curve.init(
       'Alchemy',
-      { apiKey: 'f06l9TnsZyxvF0JaPzjoWQ_6baS5hEQs' },
+      { apiKey: import.meta.env.VITE_ALCHEMY_API_KEY },
       { chainId }
     );
   }

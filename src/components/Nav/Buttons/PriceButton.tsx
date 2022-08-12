@@ -9,12 +9,11 @@ import throttle from 'lodash/throttle';
 import { useTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 import usePools from '~/hooks/usePools';
-import useChainId from '~/hooks/useChain';
 import PoolCard from '~/components/Silo/PoolCard';
 import BeanProgressIcon from '~/components/Common/BeanProgressIcon';
 import useSeason from '~/hooks/useSeason';
 import usePrice from '~/hooks/usePrice';
-import { displayBN } from '~/util/Tokens';
+import { displayBeanPrice, displayBN } from '~/util/Tokens';
 import { NEW_BN, ZERO_BN } from '~/constants';
 import { useFetchPools } from '~/state/bean/pools/updater';
 import { AppState } from '~/state';
@@ -25,7 +24,6 @@ import FolderMenu from '../FolderMenu';
 const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   // Data
   const pools     = usePools();
-  const chainId   = useChainId();
   const season    = useSeason();
   const beanPrice = usePrice();
   const beanPools = useSelector<AppState, AppState['_bean']['pools']>(
@@ -50,7 +48,9 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       pool={pool}
       poolState={beanPools[pool.address]}
       ButtonProps={{
+        // FIXME: change link when more pools are added
         href: 'https://curve.fi/factory/152',
+        // href: `https://etherscan.io/address/${pool.address}`,
         target: '_blank',
         rel: 'noreferrer',
       }}
@@ -62,7 +62,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       onOpen={refetchPools}
       startIcon={startIcon}
       buttonContent={
-        <>${(isLoading ? 0.0 : beanPrice).toFixed(isMobile ? 2 : 4)}</>
+        <>${displayBeanPrice(beanPrice, isMobile ? 2 : 4)}</>
       }
       drawerContent={
         <Stack sx={{ p: 2 }} gap={1}>

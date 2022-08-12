@@ -3,18 +3,19 @@ import { Stack, Typography, Box, Grid } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import rainySeasonIcon from '~/img/beanstalk/sun/rainy-season.svg';
 import drySeasonIcon from '~/img/beanstalk/sun/dry-season.svg';
-import { displayBN } from '../../util';
+import { displayBN, displayFullBN } from '../../util';
 import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
+import { BEAN } from '~/constants/tokens';
 
 export interface SeasonCardProps {
-  season:       BigNumber;
-  price:         BigNumber;
-  rewardBeans:     BigNumber;
-  newSoil:      BigNumber;
-  temperature:  BigNumber;
+  season: BigNumber;
+  price: BigNumber;
+  rewardBeans: BigNumber;
+  newSoil: BigNumber;
+  temperature: BigNumber;
   deltaTemperature: BigNumber;
-  podRate:      BigNumber;
-  deltaDemand:  BigNumber | undefined;
+  podRate: BigNumber;
+  deltaDemand: BigNumber | undefined;
   isNew?: boolean;
 }
 
@@ -24,8 +25,8 @@ const SeasonCard: React.FC<SeasonCardProps> = ({
   newSoil,
   podRate,
   temperature,
-  deltaDemand,
   deltaTemperature,
+  deltaDemand,
   isNew
 }) => (
   <div>
@@ -70,7 +71,7 @@ const SeasonCard: React.FC<SeasonCardProps> = ({
             {/* Season */}
             <Grid item xs={1.5} md={1.25}>
               <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing="5px">
-                {(rewardBeans.eq(0)) ? (
+                {(rewardBeans.lte(0)) ? (
                   <img src={drySeasonIcon} height={IconSize.small} alt="" />
                 ) : (
                   <img src={rainySeasonIcon} height={IconSize.small} alt="" />
@@ -88,13 +89,13 @@ const SeasonCard: React.FC<SeasonCardProps> = ({
                 </Typography>
               </Stack>
             </Grid>
-            {/* New Soil */}
+            {/* Soil */}
             <Grid item xs={3} md={2}>
               <Stack direction="row" justifyContent="flex-end" alignItems="center">
                 <Typography
                   variant="bodySmall"
                 >
-                  {!isNew && '+'} {displayBN(newSoil)}
+                  {!isNew} {displayFullBN(newSoil, BEAN[1].displayDecimals, BEAN[1].displayDecimals)}
                 </Typography>
               </Stack>
             </Grid>
@@ -115,7 +116,7 @@ const SeasonCard: React.FC<SeasonCardProps> = ({
                     whiteSpace: 'nowrap',
                   }}
                 >
-                  (&nbsp;{deltaTemperature.toString()}%&nbsp;)
+                  (&nbsp;{deltaTemperature.lt(0) ? '-' : '+'}{deltaTemperature.abs().toString()}%&nbsp;)
                 </Typography>
               </Stack>
             </Grid>

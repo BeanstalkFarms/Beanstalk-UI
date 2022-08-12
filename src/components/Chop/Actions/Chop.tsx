@@ -40,7 +40,7 @@ import { AppState } from '~/state';
 import useChopPenalty from '~/hooks/useChopPenalty';
 
 type ChopFormValues = FormState & {
-  destination: FarmToMode;
+  destination: FarmToMode | undefined;
 };
 
 const ChopForm: React.FC<
@@ -70,8 +70,7 @@ const ChopForm: React.FC<
   const tokenBalance   = balances[inputToken.address];
   const outputToken    = tokenOutputMap[inputToken.address];
 
-  /// Chop Penalty  = 99%
-  /// Chop Rate     = 0.01
+  /// Chop Penalty  = 99% <-> Chop Rate     = 0.01
   const chopPenalty = useChopPenalty(inputToken.address);
   const chopRates   = useSelector<AppState, AppState['_bean']['unripe']['chopRates']>((_state) => _state._bean.unripe.chopRates);
   const amountOut   = state.amount?.multipliedBy(chopRates[inputToken.address] || ZERO_BN);
@@ -95,8 +94,9 @@ const ChopForm: React.FC<
     ]);
   }, [values.tokens, setFieldValue]);
 
-  const isValid = (
+  const isSubmittable = (
     amountOut?.gt(0)
+    && values.destination
   );
 
   return (
@@ -139,7 +139,7 @@ const ChopForm: React.FC<
             )}
           </Stack>
         </Stack>
-        {isValid ? (
+        {isSubmittable ? (
           <>
             <TxnSeparator />
             <TokenOutputField
@@ -172,7 +172,7 @@ const ChopForm: React.FC<
           variant="contained"
           color="primary"
           size="large"
-          disabled={!isValid}
+          disabled={!isSubmittable}
           contract={beanstalk}
           tokens={values.tokens}
           mode="auto"
@@ -227,8 +227,9 @@ const Chop: React.FC<{}> = () => {
       let txToast;
       try {
         if (!account) throw new Error('Connect a wallet first.');
+        if (!values.destination) throw new Error('No destination selected.');
         const state = values.tokens[0];
-        if (!state.amount?.gt(0)) { throw new Error('No Unfertilized token to Chop.'); }
+        if (!state.amount?.gt(0)) throw new Error('No Unfertilized token to Chop.');
 
         txToast = new TransactionToast({
           loading: `Chopping ${displayFullBN(state.amount)} ${state.token.symbol}...`,
@@ -267,13 +268,11 @@ const Chop: React.FC<{}> = () => {
       onSubmit={onSubmit}
     >
       {(formikProps: FormikProps<ChopFormValues>) => (
-        <>
-          <ChopForm
-            balances={farmerBalances}
-            beanstalk={beanstalk}
-            {...formikProps}
-          />
-        </>
+        <ChopForm
+          balances={farmerBalances}
+          beanstalk={beanstalk}
+          {...formikProps}
+        />
       )}
     </Formik>
   );

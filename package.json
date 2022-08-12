@@ -1,6 +1,6 @@
 {
   "name": "beanstalk-ui",
-  "version": "2.0.4",
+  "version": "2.0.7",
   "private": true,
   "homepage": "https://app.bean.money",
   "dependencies": {
@@ -97,6 +97,7 @@
     "rollup-plugin-analyzer": "^4.0.0",
     "typechain": "^8.0.0",
     "vite": "^3.0.4",
+    "vitest": "^0.21.0",
     "webpack-cli": "^4.9.2"
   },
   "resolutions": {
@@ -116,7 +117,6 @@
     "generate": "yarn clean && yarn generate:typechain && yarn generate:graphql && echo \"Done generating files.\"",
     "generate:typechain": "echo \"Generating: typechain ethers-v5\" && typechain --target=ethers-v5 --ts-nocheck --out-dir=./src/generated './src/constants/abi/**/*.json'",
     "generate:graphql": "echo \"Generating: graphql-codegen\" && graphql-codegen --config codegen.yml",
-    "download:graphql-schema": "yarn dlx gql-sdl https://api.thegraph.com/subgraphs/name/cujowolf/beanstalk --json --output graphql.schema.json && echo \"Downloaded schema to graphql.schema.json.\" && yarn generate",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
     "postpack": "yarn generate",

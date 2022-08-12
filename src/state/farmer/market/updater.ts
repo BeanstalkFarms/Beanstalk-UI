@@ -1,6 +1,5 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { REPLANTED_CHAINS } from '~/constants';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useChainId from '~/hooks/useChain';
 import useBlocks from '~/hooks/useBlocks';
@@ -21,7 +20,6 @@ export const useFetchFarmerMarket = () => {
 
   /// Data
   const account   = useAccount();
-  const chainId   = useChainId();
   const blocks    = useBlocks();
   const whitelist = useWhitelist();
   const season    = useSeason();
@@ -80,20 +78,16 @@ export const useFetchFarmerMarket = () => {
     if (initialized) {
       const allEvents = await fetchMarketEvents();
       if (!allEvents) return;
-      if (REPLANTED_CHAINS.has(chainId)) {
-        const p = new EventProcessor(account, { season, whitelist });
-        p.ingestAll(allEvents);
+      const p = new EventProcessor(account, { season, whitelist });
+      p.ingestAll(allEvents);
 
-        // Update Field
-        dispatch(updateFarmerMarket({
-          listings: p.listings,
-          orders: p.orders,
-        }));
-      } else {
-        ///
-      }
+      // Update Field
+      dispatch(updateFarmerMarket({
+        listings: p.listings,
+        orders: p.orders,
+      }));
     }
-  }, [dispatch, fetchMarketEvents, initialized, season, whitelist, account, chainId]);
+  }, [dispatch, fetchMarketEvents, initialized, season, whitelist, account]);
   
   const clear = useCallback(() => {
     console.debug('[farmer/silo/useFarmerSilo] CLEAR');

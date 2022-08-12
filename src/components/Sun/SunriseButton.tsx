@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Form, Formik, FormikProps } from 'formik';
 import { LoadingButton } from '@mui/lab';
-import { useSelector } from 'react-redux';
 import { Box, Dialog, Divider, Link, Stack, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import BigNumber from 'bignumber.js';
+import { useSelector } from 'react-redux';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import { AppState } from '~/state';
 import SunriseCountdown from '~/components/Sun/SunriseCountdown';
 import useToggle from '~/hooks/display/useToggle';
 import { useBeanstalkContract } from '~/hooks/useContract';
@@ -18,6 +17,11 @@ import { ZERO_BN } from '~/constants';
 import { displayBN } from '~/util';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN } from '~/constants/tokens';
+import { AppState } from '~/state';
+
+function getSunriseReward(now: DateTime) {
+  return new BigNumber(100 * (1.01 ** (Math.min((now.minute * 60) + now.second, 300))));
+}
 
 const SunriseButton : React.FC = () => {
   /// Ledger
@@ -28,18 +32,20 @@ const SunriseButton : React.FC = () => {
   const [open, show, hide]  = useToggle();
   const [now, setNow]       = useState(DateTime.now());
   const [reward, setReward] = useState(ZERO_BN);
-  const awaiting = useSelector<AppState, boolean>((state) => state._beanstalk.sun.sunrise.awaiting);
-
-  /// Calculate Sunrise Reward
-  const sunriseReward = useCallback(() => 
-    new BigNumber(100 * (1.01 ** (Math.min((now.minute * 60) + now.second, 300)))),
-    [now.minute, now.second]
-  );
+  const awaiting = useSelector<AppState, AppState['_beanstalk']['sun']['sunrise']['awaiting']>((state) => state._beanstalk.sun.sunrise.awaiting);
 
   useEffect(() => {
-    setNow(DateTime.now());
-    setReward(sunriseReward());
-  }, [now, sunriseReward]);
+    if (awaiting) {
+      const i = setInterval(() => {
+        const _now = DateTime.now();
+        setNow(_now);
+        setReward(getSunriseReward(_now));
+      }, 1000);
+      return () => {
+        clearInterval(i);
+      };
+    }
+  }, [awaiting]);
 
   /// Handlers
   const onSubmit = useCallback(() => {
@@ -65,7 +71,7 @@ const SunriseButton : React.FC = () => {
     <>
       <Formik initialValues={{}} onSubmit={onSubmit}>
         {(formikProps: FormikProps<{}>) => {
-          const disabled = formikProps.isSubmitting || awaiting;
+          const disabled = formikProps.isSubmitting || !awaiting;
           return (
             <Form autoComplete="off">
               <Dialog
@@ -78,7 +84,7 @@ const SunriseButton : React.FC = () => {
                 }}
               >
                 <StyledDialogTitle onClose={hide}>
-                  Confirm Sunrise
+                  Call Sunrise
                 </StyledDialogTitle>
                 <StyledDialogContent sx={{ p: 1 }}>
                   <Stack gap={2}>
@@ -91,11 +97,11 @@ const SunriseButton : React.FC = () => {
                           </Stack>
                         ) : (
                           <Stack direction="row" justifyContent="center">
-                            <Typography variant="body1">Sunrise has already been called this Season.</Typography>
+                            <Typography textAlign="center" variant="body1">Sunrise available&nbsp;<span style={{ display: 'inline' }}><SunriseCountdown /></span>.</Typography>
                           </Stack>
                         )}
                         <Stack direction="row" justifyContent="center">
-                          <Typography variant="body1">Reward for calling <Box display="inline" sx={{ backgroundColor: BeanstalkPalette.lightYellow, borderRadius: 0.4, px: 0.4 }}><strong><Link color="text.primary" underline="none" href="https://docs.bean.money/additional-resources/glossary#sunrise">sunrise()</Link></strong></Box>: <TokenIcon token={BEAN[1]} />&nbsp;{displayBN(reward)}</Typography>
+                          <Typography variant="body1">Reward for calling <Box display="inline" sx={{ backgroundColor: BeanstalkPalette.lightYellow, borderRadius: 0.4, px: 0.4 }}><strong><Link color="text.primary" underline="none" href="https://docs.bean.money/additional-resources/glossary#sunrise" target="_blank" rel="noreferrer">sunrise()</Link></strong></Box>: <TokenIcon token={BEAN[1]} />&nbsp;{displayBN(reward)}</Typography>
                         </Stack>
                       </Stack>
                     </Stack>
@@ -103,14 +109,14 @@ const SunriseButton : React.FC = () => {
                     <Typography sx={{ mx: 0 }} textAlign="center" variant="body1" color={BeanstalkPalette.washedRed}>Calling this function from the app is strongly discouraged because there is a high likelihood that your transaction will get front-run by bots.</Typography>
                     <LoadingButton
                       type="submit"
+                      variant="contained"
                       onClick={onSubmit}
                       loading={formikProps.isSubmitting}
                       disabled={disabled}
-                      color="light"
                       sx={{
                         backgroundColor: BeanstalkPalette.washedRed,
                         height: { xs: '60px', md: '45px' },
-                        color: BeanstalkPalette.white,
+                        color:  BeanstalkPalette.white,
                         '&:hover': {
                           backgroundColor: `${BeanstalkPalette.washedRed} !important`,
                           opacity: 0.9
@@ -141,7 +147,7 @@ const SunriseButton : React.FC = () => {
               >
                 {!disabled ? (
                   <>
-                    <img src={sunIcon} alt="Sunrise" style={{ height: 28 }} />&nbsp;
+                    <img src={sunIcon} alt="" style={{ height: 28 }} />&nbsp;
                     Sunrise
                   </>
                 ) : (
