@@ -11,8 +11,7 @@ import usePools from '~/hooks/usePools';
 import useWhitelist from '~/hooks/useWhitelist';
 import { AppState } from '~/state';
 import GuideButton from '~/components/Common/Guide/GuideButton';
-import {
-  CLAIM_SILO_REWARDS, HOW_TO_CLAIM_WITHDRAWALS,
+import { HOW_TO_CLAIM_WITHDRAWALS,
   HOW_TO_CONVERT_DEPOSITS,
   HOW_TO_DEPOSIT_IN_THE_SILO, HOW_TO_TRANSFER_DEPOSITS,
   HOW_TO_WITHDRAW_FROM_THE_SILO
@@ -61,12 +60,11 @@ const TokenPage: React.FC<{}> = () => {
             <GuideButton
               title="The Farmers' Almanac: Silo Guides"
               guides={[
-                CLAIM_SILO_REWARDS,
                 HOW_TO_DEPOSIT_IN_THE_SILO,
                 HOW_TO_CONVERT_DEPOSITS,
+                HOW_TO_TRANSFER_DEPOSITS,
                 HOW_TO_WITHDRAW_FROM_THE_SILO,
                 HOW_TO_CLAIM_WITHDRAWALS,
-                HOW_TO_TRANSFER_DEPOSITS
               ]}
             />
           }

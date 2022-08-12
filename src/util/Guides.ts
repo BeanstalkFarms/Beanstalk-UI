@@ -19,11 +19,11 @@ export const HOW_TO_HARVEST_PODS: Guide = {
 
 /// SILO
 export const CLAIM_SILO_REWARDS: Guide = {
-  title: 'Claim Silo Rewards',
+  title: 'How to Claim Silo Rewards',
   url: 'https://docs.bean.money/guides/silo/claim-rewards'
 };
 export const HOW_TO_DEPOSIT_IN_THE_SILO: Guide = {
-  title: 'How to Deposit In the Silo',
+  title: 'How to Deposit in the Silo',
   url: 'https://docs.bean.money/guides/silo/deposit'
 };
 export const HOW_TO_CONVERT_DEPOSITS: Guide = {
@@ -31,7 +31,7 @@ export const HOW_TO_CONVERT_DEPOSITS: Guide = {
   url: 'https://docs.bean.money/guides/silo/convert'
 };
 export const HOW_TO_WITHDRAW_FROM_THE_SILO: Guide = {
-  title: 'How to Withdraw From the Silo',
+  title: 'How to Withdraw from the Silo',
   url: 'https://docs.bean.money/guides/silo/withdraw'
 };
 export const HOW_TO_CLAIM_WITHDRAWALS: Guide = {
