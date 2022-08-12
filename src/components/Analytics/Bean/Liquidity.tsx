@@ -11,7 +11,6 @@ const useStatProps = () => ({
   color: 'primary',
   sx: { ml: 0 },
 });
-
 const queryConfig = { context: { subgraph: 'bean' } };
 
 const Liquidity: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => {

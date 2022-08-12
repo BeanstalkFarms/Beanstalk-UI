@@ -11,9 +11,9 @@ import TimeTabs, { TimeTabState } from './TimeTabs';
 import { sortSeasons } from '~/util/Season';
 import StackedAreaChart from '~/components/Common/Charts/StackedAreaChart';
 
-export type SeasonDataPoint = DataPoint & { season: number; };
-
 const defaultValueFormatter = (value: number) => value.toFixed(4);
+
+export type SeasonDataPoint = DataPoint & { season: number; };
 
 export type SeasonPlotBaseProps = {
   /** */

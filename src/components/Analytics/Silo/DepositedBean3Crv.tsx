@@ -11,6 +11,11 @@ const StatProps = {
   title: 'Deposited BEAN:3CRV',
   gap: 0.5,
 };
+const queryConfig = {
+  variables: {
+    season_gt: 6073,
+  }
+};
 
 const DepositedBean3CRV: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => (
   <SeasonPlot<SeasonalDepositedBean3CrvQuery>
@@ -19,6 +24,7 @@ const DepositedBean3CRV: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = 
     getValue={getValue}
     formatValue={formatValue}
     StatProps={StatProps}
+    queryConfig={queryConfig}
   />
 );
 

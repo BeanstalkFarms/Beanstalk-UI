@@ -21,7 +21,7 @@ const StatProps = {
   sx: { ml: 0 },
 };
 const queryConfig = { 
-  variables: { season_gt: 6074 },
+  variables: { season_gt: 6073 },
   context: { subgraph: 'bean' }
 };
 
