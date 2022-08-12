@@ -5,18 +5,17 @@ import useSeason from '~/hooks/useSeason';
 
 const getValue = (season: SeasonalVolumeQuery['seasons'][number]) => parseFloat(season.hourlyVolumeUSD);
 const formatValue = (value: number) => `$${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
-const useStatProps = () => ({
+const StatProps = {
   title: 'Volume',
   gap: 0.25,
   color: 'primary',
   sx: { ml: 0 },
-});
+};
 
 const queryConfig = { context: { subgraph: 'bean' } };
 
 const Volume: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => {
   const season = useSeason();
-  const StatProps = useStatProps();
   return (
     <SeasonPlot
       document={SeasonalVolumeDocument}

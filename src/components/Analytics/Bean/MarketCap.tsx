@@ -5,16 +5,15 @@ import useSeason from '~/hooks/useSeason';
 
 const getValue = (season: Season) => parseFloat(season.marketCap);
 const formatValue = (value: number) => `$${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
-const useStatProps = () => ({
+const StatProps = {
   title: 'Market Cap',
   gap: 0.25,
   color: 'primary',
   sx: { ml: 0 },
-});
+};
 
 const MarketCap: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => {
   const season = useSeason();
-  const StatProps = useStatProps();
   return (
     <SeasonPlot
       document={SeasonalMarketCapDocument}

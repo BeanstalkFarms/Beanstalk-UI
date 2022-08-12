@@ -5,17 +5,19 @@ import useSeason from '~/hooks/useSeason';
 
 const getValue = (season: SeasonalLiquidityQuery['seasons'][number]) => parseFloat(season.totalLiquidityUSD);
 const formatValue = (value: number) => `$${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
-const useStatProps = () => ({
+const StatProps = {
   title: 'Liquidity',
   gap: 0.25,
   color: 'primary',
   sx: { ml: 0 },
-});
-const queryConfig = { context: { subgraph: 'bean' } };
+};
+const queryConfig = {
+  variables: { season_gt: 6073 },
+  context: { subgraph: 'bean' }
+};
 
 const Liquidity: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => {
   const season = useSeason();
-  const StatProps = useStatProps();
   return (
     <SeasonPlot
       document={SeasonalLiquidityDocument}
