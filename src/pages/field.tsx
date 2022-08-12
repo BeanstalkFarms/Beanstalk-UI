@@ -15,6 +15,8 @@ import { AppState } from '~/state';
 import FieldConditions from '../components/Field/FieldConditions';
 import { PODS } from '../constants/tokens';
 import useAccount from '../hooks/ledger/useAccount';
+import GuideButton from '~/components/Common/Guide/GuideButton';
+import { HOW_TO_HARVEST_PODS, HOW_TO_SOW_BEANS, HOW_TO_TRANSFER_PODS } from '~/util/Guides';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -81,6 +83,17 @@ const FieldPage: React.FC = () => {
           title="The Field"
           description="Earn yield by lending Beans to Beanstalk"
           href="https://docs.bean.money/farm/field"
+          OuterStackProps={{ direction: 'row' }}
+          control={
+            <GuideButton
+              title="The Farmers' Almanac: Field Guides"
+              guides={[
+                HOW_TO_SOW_BEANS,
+                HOW_TO_TRANSFER_PODS,
+                HOW_TO_HARVEST_PODS
+              ]}
+            />
+          }
         />
         <FieldConditions
           beanstalkField={beanstalkField}

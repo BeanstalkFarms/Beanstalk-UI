@@ -4,6 +4,8 @@ import PageHeader from '~/components/Common/PageHeader';
 import RemainingFertilizer from '~/components/Barn/RemainingFertilizer';
 import MyFertilizer from '~/components/Barn/MyFertilizer';
 import BarnActions from '~/components/Barn/Actions';
+import GuideButton from '~/components/Common/Guide/GuideButton';
+import { HOW_TO_BUY_FERTILIZER, HOW_TO_RINSE_SPROUTS } from '~/util/Guides';
 
 const Barn: React.FC = () => (
   <Container maxWidth="sm">
@@ -12,6 +14,16 @@ const Barn: React.FC = () => (
         title="The Barn"
         description="Earn yield and recapitalize Beanstalk by buying Fertilizer"
         href="https://docs.bean.money/farm/barn"
+        OuterStackProps={{ direction: 'row' }}
+        control={
+          <GuideButton
+            title="The Farmers' Almanac: Silo Guides"
+            guides={[
+              HOW_TO_BUY_FERTILIZER,
+              HOW_TO_RINSE_SPROUTS
+            ]}
+          />
+        }
       />
       {/* Section 1: Fertilizer Remaining */}
       <RemainingFertilizer />

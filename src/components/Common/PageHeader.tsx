@@ -1,5 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Box, Button, Link, LinkProps, Stack, Typography } from '@mui/material';
+import { Box, Button, Link, LinkProps, Stack, Typography, StackProps as MuiStackProps } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import React from 'react';
 import EastIcon from '@mui/icons-material/East';
@@ -14,8 +14,10 @@ const PageHeader : React.FC<{
   returnPath?: string;
   /**  */
   control?: React.ReactElement;
+  /** */
+  OuterStackProps?: MuiStackProps;
 } & Omit<LinkProps, 'title'>> = (props) => (
-  <Stack direction={{ md: 'row', xs: 'column' }} justifyContent="space-between" gap={1}>
+  <Stack direction={{ md: 'row', xs: 'column' }} justifyContent="space-between" gap={1} {...props.OuterStackProps}>
     <Stack direction="row" alignItems="center" gap={1.5}>
       {/* Back button */}
       {props.returnPath && (

@@ -62,7 +62,9 @@ const PageHeader : React.FC<{
             )}
           </>
         )}
-        <Box sx={{ width: 70 }} />
+        <Box sx={{ width: 70 }} display="flex" justifyContent="end">
+          {props.control ? (props.control) : null}
+        </Box>
       </Stack>
     </Box>
   );

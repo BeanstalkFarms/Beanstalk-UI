@@ -6,6 +6,8 @@ import {
 import PageHeader from '~/components/Common/PageHeader';
 import ChopActions from '~/components/Chop/Actions';
 import ChopConditions from '../components/Chop/ChopConditions';
+import GuideButton from '~/components/Common/Guide/GuideButton';
+import { HOW_TO_CHOP_UNRIPE_BEANS } from '~/util/Guides';
 
 const ChopPage: React.FC = () => (
   <Container maxWidth="sm">
@@ -14,6 +16,15 @@ const ChopPage: React.FC = () => (
         title="Chop" 
         description="Burn your Unripe assets for the underlying Ripe assets" 
         href="https://docs.bean.money/farm/barn#chopping"
+        OuterStackProps={{ direction: 'row' }}
+        control={
+          <GuideButton
+            title="The Farmers' Almanac: Silo Guides"
+            guides={[
+              HOW_TO_CHOP_UNRIPE_BEANS
+            ]}
+          />
+        }
       />
       <ChopConditions />
       <ChopActions />
