@@ -133,7 +133,7 @@ const TransferForm: React.FC<FormikProps<TransferFormValues> & {
                   color="warning"
                   icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
                 >
-                  More recent Deposits are Transferred first to minimize the loss of Stalk and Seeds.
+                  More recent Deposits are Transferred first.
                 </Alert>
                 <Box>
                   <Accordion defaultExpanded variant="outlined">

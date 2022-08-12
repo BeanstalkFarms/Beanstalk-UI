@@ -89,13 +89,13 @@ const SeasonCard: React.FC<SeasonCardProps> = ({
                 </Typography>
               </Stack>
             </Grid>
-            {/* New Soil */}
+            {/* Soil */}
             <Grid item xs={3} md={2}>
               <Stack direction="row" justifyContent="flex-end" alignItems="center">
                 <Typography
                   variant="bodySmall"
                 >
-                  {!isNew && '+'} {displayFullBN(newSoil, BEAN[1].displayDecimals, BEAN[1].displayDecimals)}
+                  {!isNew} {displayFullBN(newSoil, BEAN[1].displayDecimals, BEAN[1].displayDecimals)}
                 </Typography>
               </Stack>
             </Grid>
