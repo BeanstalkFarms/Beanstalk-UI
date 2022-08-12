@@ -9,7 +9,7 @@ import useSeasonsQuery, { MinimumViableSnapshotQuery, SeasonAggregation, SeasonR
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import TimeTabs, { TimeTabState } from './TimeTabs';
 import { sortSeasons } from '~/util/Season';
-import SimpleStackedAreaChart2 from '~/components/Common/Charts/StackedAreaChart2';
+import StackedAreaChart from '~/components/Common/Charts/StackedAreaChart';
 
 export type SeasonDataPoint = DataPoint & { season: number; };
 
@@ -41,39 +41,38 @@ export type SeasonPlotBaseProps = {
 type SeasonPlotFinalProps<T extends MinimumViableSnapshotQuery> = (
   SeasonPlotBaseProps
   & {
-  /**
-   * Which value to display from the Season object
-   */
-  getValue: (snapshot: T['seasons'][number]) => number,
-  /**
-   * Format the value from number -> string
-   */
-  formatValue?: (value: number) => string | JSX.Element,
-  /**
-   *
-   */
-  queryConfig?: Partial<QueryOptions>
-}
+    /**
+     * Which value to display from the Season object
+     */
+    getValue: (snapshot: T['seasons'][number]) => number,
+    /**
+     * Format the value from number -> string
+     */
+    formatValue?: (value: number) => string | JSX.Element,
+    /**
+     *
+     */
+    queryConfig?: Partial<QueryOptions>
+  }
   & { StatProps: Omit<StatProps, 'amount' | 'subtitle'> }
   & { LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP'> }
-  )
+)
 
 /**
  *
  */
-function SeasonPlot<T extends MinimumViableSnapshotQuery>(
-  {
-    document,
-    defaultValue: _defaultValue,
-    defaultSeason: _defaultSeason,
-    getValue,
-    formatValue = defaultValueFormatter,
-    height = '175px',
-    StatProps: statProps,           // renamed to prevent type collision
-    LineChartProps: lineChartProps, // renamed to prevent type collision
-    queryConfig,
-    stackedArea,
-  }: SeasonPlotFinalProps<T>) {
+function SeasonPlot<T extends MinimumViableSnapshotQuery>({
+  document,
+  defaultValue: _defaultValue,
+  defaultSeason: _defaultSeason,
+  getValue,
+  formatValue = defaultValueFormatter,
+  height = '175px',
+  StatProps: statProps,           // renamed to prevent type collision
+  LineChartProps: lineChartProps, // renamed to prevent type collision
+  queryConfig,
+  stackedArea,
+}: SeasonPlotFinalProps<T>) {
   /// Selected state
   const [tabState, setTimeTab] = useState<TimeTabState>([SeasonAggregation.HOUR, SeasonRange.WEEK]);
 
@@ -84,10 +83,10 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>(
   ///
   const { loading, error, data } = useSeasonsQuery<T>(document, tabState[1], queryConfig);
   const series = useMemo(() => {
-    console.debug(`[TWAPCard] Building series with ${data?.seasons.length || 0} data points`);
+    console.debug(`[SeasonPlot] Building series with ${data?.seasons.length || 0} data points`);
     if (data) {
       const lastIndex = data.seasons.length - 1;
-      const baseData = data.seasons.reduce<SeasonDataPoint[]>(
+      const baseData  = data.seasons.reduce<SeasonDataPoint[]>(
         (prev, curr, index) => {
           // FIXME: use different query for day aggregation
           const useThisDataPoint = tabState[0] === SeasonAggregation.DAY ? (
@@ -173,38 +172,32 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>(
         ) : (
           <>
             {stackedArea ? (
-              <>
-                {/* <SimpleStackedAreaChart /> */}
-                <SimpleStackedAreaChart2
-                  series={seriesInput}
-                  onCursor={handleCursor as any} // FIXME
-                  {...lineChartProps}
-                />
-              </>
-
+              <StackedAreaChart
+                series={seriesInput}
+                onCursor={handleCursor as any} // FIXME
+                {...lineChartProps}
+              />
             ) : (
-              <>
-                <LineChart
-                  series={seriesInput}
-                  onCursor={handleCursor as any} // FIXME
-                  curve="linear"
-                  {...lineChartProps}
-                >
-                  {(props) => {
-                    const x = props.scales[0].xScale(6074) as number;
-                    return x ? (
-                      <Line
-                        from={{ x, y: props.dataRegion.yTop }}
-                        to={{ x, y: props.dataRegion.yBottom }}
-                        stroke={BeanstalkPalette.logoGreen}
-                        strokeDasharray={4}
-                        strokeDashoffset={2}
-                        strokeWidth={1}
-                      />
-                    ) : null;
-                  }}
-                </LineChart>
-              </>
+              <LineChart
+                series={seriesInput}
+                onCursor={handleCursor as any} // FIXME
+                curve="linear"
+                {...lineChartProps}
+              >
+                {(props) => {
+                  const x = props.scales[0].xScale(6074) as number;
+                  return x ? (
+                    <Line
+                      from={{ x, y: props.dataRegion.yTop }}
+                      to={{ x, y: props.dataRegion.yBottom }}
+                      stroke={BeanstalkPalette.logoGreen}
+                      strokeDasharray={4}
+                      strokeDashoffset={2}
+                      strokeWidth={1}
+                    />
+                  ) : null;
+                }}
+              </LineChart>
             )}
           </>
         )}

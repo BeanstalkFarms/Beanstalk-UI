@@ -2,30 +2,23 @@ import React from 'react';
 import {
   Card,
   Container,
-  Stack,
-  useMediaQuery
+  Stack
 } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import { useSelector } from 'react-redux';
 
 import PageHeader from '~/components/Common/PageHeader';
 import LiquidityOverTime from '~/components/Forecast/LiquidityOverTime';
-import { AppState } from '~/state';
 import Price from '~/components/Analytics/Bean/Price';
 import PodRate from '~/components/Analytics/Field/PodRate';
 import LiquidityByState from '~/components/Forecast/LiquidityByState';
 
-const ForecastPage: React.FC = () => {
-  // Data
-  const balances = useSelector<AppState, AppState['_beanstalk']['silo']['balances']>((state) => state._beanstalk.silo.balances);
-
-  // Theme
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
-  const content = (
-    <>
-      <Stack direction={isMobile ? 'column' : 'row'} gap={2}>
+const ForecastPage: React.FC = () => (
+  <Container maxWidth="lg">
+    <Stack gap={2}>
+      <PageHeader
+        title="Forecast"
+        description="View conditions on the Farm"
+      />
+      <Stack direction={{ md: 'row', xs: 'column' }} gap={2}>
         <Card sx={{ flex: 1, pt: 2 }}> 
           <Price /> 
         </Card> 
@@ -33,24 +26,10 @@ const ForecastPage: React.FC = () => {
           <PodRate /> 
         </Card> 
       </Stack>
-      <LiquidityOverTime
-        balances={balances}
-      />
+      <LiquidityOverTime />
       <LiquidityByState /> 
-    </>
-  );
-
-  return (
-    <Container maxWidth="lg">
-      <Stack gap={2}>
-        <PageHeader
-          title="Forecast"
-          description="View conditions on the Farm"
-        />
-        {content}
-      </Stack>
-    </Container>
-  );
-};
+    </Stack>
+  </Container>
+);
 
 export default ForecastPage;

@@ -4,7 +4,7 @@ import { SupportedChainId , BEANSTALK_SUBGRAPH_ADDRESSES, BEAN_SUBGRAPH_ADDRESSE
 
 /// ///////////////////////// Field policies ////////////////////////////
 
-const mergeSeasons: FieldPolicy = {
+const mergeUsingSeasons: FieldPolicy = {
   // Don't cache separate results based on
   // any of this field's arguments.
   keyArgs: false,
@@ -107,8 +107,11 @@ const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
-        seasons: mergeSeasons,
-        fieldHourlySnapshots: mergeSeasons,
+        seasons: mergeUsingSeasons,
+        fieldHourlySnapshots: mergeUsingSeasons,
+        beanHourlySnapshots: mergeUsingSeasons,
+        siloAssetHourlySnapshots: mergeUsingSeasons,
+        siloHourlySnapshots: mergeUsingSeasons,
       }
     }
   }
@@ -133,10 +136,10 @@ const beanLink = new HttpLink({
   uri: BEAN_SUBGRAPH_ADDRESSES[SupportedChainId.MAINNET],
 });
 
-const beanV1Link = new HttpLink({
-  //    https://thegraph.com/explorer/subgraph?id=CsmWTbztr1EQcRYmgqUYpSaVc8exTnVmhUxsaswvkbjG&view=Overview
-  uri: 'https://gateway.thegraph.com/api/fe672ef9fcdfb617c4d7755f36a31131/subgraphs/id/CsmWTbztr1EQcRYmgqUYpSaVc8exTnVmhUxsaswvkbjG'
-});
+// const beanV1Link = new HttpLink({
+//   //    https://thegraph.com/explorer/subgraph?id=CsmWTbztr1EQcRYmgqUYpSaVc8exTnVmhUxsaswvkbjG&view=Overview
+//   uri: 'https://gateway.thegraph.com/api/fe672ef9fcdfb617c4d7755f36a31131/subgraphs/id/CsmWTbztr1EQcRYmgqUYpSaVc8exTnVmhUxsaswvkbjG'
+// });
 
 /// ///////////////////////// Client ////////////////////////////
 
