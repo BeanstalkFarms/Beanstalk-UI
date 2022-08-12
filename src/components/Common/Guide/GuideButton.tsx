@@ -16,7 +16,7 @@ const GuideButton: React.FC<{ title: string; guides: Guide[] }> = (props) => {
   const [isOpen, show, hide] = useToggle();
   return (
     <>
-      <Box display="flex" height="100%" alignItems="end">
+      <Box display="flex" height="100%" alignItems={{ xs: 'start', sm: 'end' }}>
         <Button
           onClick={show}
           variant="contained"
