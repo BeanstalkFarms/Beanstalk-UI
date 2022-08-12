@@ -150,6 +150,7 @@ const Graph: React.FC<GraphProps> = (props) => {
       });
     } else {
       yScale = scaleLinear<number>({
+        // domain: [0, max(_data, getY) as number],
         domain: [min(_data, getY) as number, max(_data, getY) as number],
         clamp: true
       });
@@ -251,6 +252,7 @@ const Graph: React.FC<GraphProps> = (props) => {
       height // chart edge to data region first pixel
       - axisHeight // chart edge to data region first pixel
       - margin.bottom  // chart edge to data region first pixel
+      - strokeBuffer
   };
 
   return (
