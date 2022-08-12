@@ -10,8 +10,9 @@ import { Guide } from '~/util/Guides';
 
 export type GuideProps = {
   title: string;
-  guides: Guide[]
+  guides: Guide[];
 }
+
 const GuideButton: React.FC<{ title: string; guides: Guide[] }> = (props) => {
   const [isOpen, show, hide] = useToggle();
   return (
