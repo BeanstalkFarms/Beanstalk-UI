@@ -17,7 +17,7 @@ const Barn: React.FC = () => (
         OuterStackProps={{ direction: 'row' }}
         control={
           <GuideButton
-            title="The Farmers' Almanac: Silo Guides"
+            title="The Farmers' Almanac: Barn Guides"
             guides={[
               HOW_TO_BUY_FERTILIZER,
               HOW_TO_RINSE_SPROUTS

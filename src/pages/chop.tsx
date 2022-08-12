@@ -19,7 +19,7 @@ const ChopPage: React.FC = () => (
         OuterStackProps={{ direction: 'row' }}
         control={
           <GuideButton
-            title="The Farmers' Almanac: Silo Guides"
+            title="The Farmers' Almanac: Chop Guides"
             guides={[
               HOW_TO_CHOP_UNRIPE_BEANS
             ]}
