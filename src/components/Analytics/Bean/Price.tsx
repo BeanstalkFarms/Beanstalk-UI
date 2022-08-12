@@ -9,12 +9,12 @@ import useSeason from '~/hooks/useSeason';
 
 const getValue = (season: Season) => parseFloat(season.price);
 const formatValue = (value: number) => `$${value.toFixed(4)}`;
-const useStatProps = () => ({
+const StatProps = {
   title: 'Bean Price',
   gap: 0.25,
   color: 'primary',
   sx: { ml: 0 },
-});
+};
 const LineChartProps = {
   isTWAP: true,
 };
@@ -24,7 +24,6 @@ const Price: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({
 }) => {
   const price = usePrice();
   const season = useSeason();
-  const StatProps = useStatProps();
   return (
     <SeasonPlot
       document={SeasonalPriceDocument}

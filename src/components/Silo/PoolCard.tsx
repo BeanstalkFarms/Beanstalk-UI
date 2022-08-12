@@ -38,25 +38,23 @@ const PoolCard: React.FC<{
         <Stack justifyContent="end" direction="row" gap={0.6}>
           <Typography
             color="text.secondary"
-            sx={{ fontSize: ButtonProps ? '13px' : null }}>
+            variant="bodySmall"
+          >
             liquidity:
           </Typography>
-          <Typography
-            sx={{ fontSize: ButtonProps ? '13px' : null }}
-          >
+          <Typography variant="bodySmall">
             ${displayBN(poolState?.liquidity || ZERO_BN)}
           </Typography>
         </Stack>
         <Stack justifyContent="end" direction="row" gap={0.6}>
           <Typography
             color="text.secondary"
-            sx={{ fontSize: ButtonProps ? '13px' : null }}>
+            variant="bodySmall"
+          >
             deltaB:
           </Typography>
           <Stack direction="row" gap={0.25}>
-            <Typography
-              sx={{ fontSize: ButtonProps ? '13px' : null }}
-            >
+            <Typography variant="bodySmall">
               {poolState?.deltaB?.gte(0) ? '+' : ''}
               {displayBN(poolState?.deltaB || ZERO_BN, true)}
             </Typography>

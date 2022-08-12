@@ -16,12 +16,11 @@ import SunriseButton from '~/components/Sun/SunriseButton';
 import { SunButtonQuery, useSunButtonQuery } from '~/generated/graphql';
 import usePrice from '~/hooks/usePrice';
 import useSeason from '~/hooks/useSeason';
-import { MaxBN, MinBN, toTokenUnitsBN } from '~/util';
+import { toTokenUnitsBN } from '~/util';
 import { BEAN } from '~/constants/tokens';
 import { NEW_BN, ZERO_BN } from '~/constants';
 import { AppState } from '~/state';
 import FolderMenu from '../FolderMenu';
-import { BeanstalkPalette } from '../../App/muiTheme';
 import SeasonCard from '../../Sun/SeasonCard';
 import usePeg from '~/hooks/usePeg';
 
@@ -104,11 +103,6 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
     />
   );
 
-  /// 6074 = 0%
-  /// 6075 = 0%
-  /// 6076 = 1%
-  const nextSeasonRamp = MinBN(MaxBN(season.minus(6075).plus(1), ZERO_BN), new BigNumber(100));
-
   /// Table Content
   const tableContent = (
     <Box sx={{ overflow: 'hidden' }}>
@@ -123,16 +117,6 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           overflowY: 'auto',
         }}
       >
-        <Stack>
-          <Typography color="gray" variant="bodySmall" textAlign="center">
-            Next Sunrise, Beanstalk will mint{' '}
-            <span style={{ color: BeanstalkPalette.black }}>{nextSeasonRamp.toFixed(0)}%</span> of deltaB.
-            It will mint{' '}
-            <span style={{ color: BeanstalkPalette.black }}>1%</span> more of deltaB every
-            Season until{' '}
-            <span style={{ color: BeanstalkPalette.black }}>100%</span>.
-          </Typography>
-        </Stack>
         {/* table header */}
         <Box
           display="flex"
@@ -158,7 +142,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
             <Grid item xs={3} md={2}>
               <Stack alignItems="flex-end">
                 <Typography color="text.primary" variant="bodySmall">
-                  New Soil
+                  Soil
                 </Typography>
               </Stack>
             </Grid>

@@ -2,9 +2,10 @@ import React from 'react';
 import {
   AppBar,
   Box,
+  Link,
   Stack,
 } from '@mui/material';
-import { BeanstalkPalette } from '~/components/App/muiTheme';
+import { BeanstalkPalette, FontSize } from '~/components/App/muiTheme';
 import WalletButton from '~/components/Common/Connection/WalletButton';
 import NetworkButton from '~/components/Common/Connection/NetworkButton';
 import PriceButton from './Buttons/PriceButton';
@@ -13,6 +14,7 @@ import LinkButton from './Buttons/LinkButton';
 import AboutButton from './Buttons/AboutButton';
 import ROUTES from './routes';
 import HoverMenu from './HoverMenu';
+import snapshotLogo from '~/img/ecosystem/snapshot-logo.svg';
 
 const NavBar: React.FC<{}> = () => (
   <AppBar
@@ -26,6 +28,12 @@ const NavBar: React.FC<{}> = () => (
       borderBottom: `1px solid ${BeanstalkPalette.blue}`,
     }}
   >
+    <Link href="https://snapshot.org/#/beanstalkdao.eth/" target="_blank" rel="noreferrer" underline="none" sx={{ color: '#333', fontSize: FontSize.sm }}>
+      <Box sx={{ backgroundColor: 'white', textAlign: 'center', px: 2, py: 0.75 }}>
+        <img src={snapshotLogo} alt="Snapshot" style={{ height: 14, marginBottom: -2 }} />&nbsp;
+        BIP-22 and BIP-23, the Q3 budget proposals for Beanstalk Farms and Bean Sprout respectively, are live on Snapshot. <strong>Vote now &rarr;</strong>
+      </Box>
+    </Link>
     <Stack
       direction="row"
       alignItems="center"
@@ -33,7 +41,7 @@ const NavBar: React.FC<{}> = () => (
       height="64px"
       px={1}
       gap={1}
-      >
+    >
       {/* Desktop: Left Side */}
       <Stack direction="row" alignItems="center" sx={{ flex: 1 }} height="100%" gap={1}>
         <PriceButton sx={{ height: 45 }} />

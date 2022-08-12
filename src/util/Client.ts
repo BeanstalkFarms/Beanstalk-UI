@@ -79,7 +79,7 @@ const baseChains = [
   chain.mainnet,
 ];
 
-if (Boolean(import.meta.env.VITE_SHOW_DEV_CHAINS) === true) {
+if (import.meta.env.VITE_SHOW_DEV_CHAINS) {
   baseChains.push(makeTestnet(SupportedChainId.CUJO, 'Cujo'));
   baseChains.push(chain.localhost);
 }
