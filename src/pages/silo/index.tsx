@@ -20,6 +20,11 @@ import useGetChainToken from '~/hooks/useGetChainToken';
 import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
 import useAccount from '~/hooks/ledger/useAccount';
 import TokenIcon from '~/components/Common/TokenIcon';
+import GuideButton from '~/components/Common/Guide/GuideButton';
+import {
+  CLAIM_SILO_REWARDS, HOW_TO_CLAIM_WITHDRAWALS, HOW_TO_CONVERT_DEPOSITS,
+  HOW_TO_DEPOSIT_IN_THE_SILO, HOW_TO_TRANSFER_DEPOSITS, HOW_TO_WITHDRAW_FROM_THE_SILO
+} from '~/util/Guides';
 
 const SiloPage : React.FC = () => {
   /// Helpers
@@ -58,6 +63,21 @@ const SiloPage : React.FC = () => {
           title="The Silo"
           description="Earn yield and participate in Beanstalk governance by depositing whitelisted assets"
           href="https://docs.bean.money/farm/silo"
+          // makes guide display to the right of the title on mobile
+          OuterStackProps={{ direction: 'row' }}
+          control={
+            <GuideButton
+              title="The Farmers' Almanac: Silo Guides"
+              guides={[
+                CLAIM_SILO_REWARDS,
+                HOW_TO_DEPOSIT_IN_THE_SILO,
+                HOW_TO_CONVERT_DEPOSITS,
+                HOW_TO_WITHDRAW_FROM_THE_SILO,
+                HOW_TO_CLAIM_WITHDRAWALS,
+                HOW_TO_TRANSFER_DEPOSITS
+              ]}
+            />
+          }
         />
         <Overview
           farmerSilo={farmerSilo}
