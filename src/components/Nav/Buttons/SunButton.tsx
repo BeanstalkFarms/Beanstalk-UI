@@ -16,7 +16,7 @@ import SunriseButton from '~/components/Sun/SunriseButton';
 import { SunButtonQuery, useSunButtonQuery } from '~/generated/graphql';
 import usePrice from '~/hooks/usePrice';
 import useSeason from '~/hooks/useSeason';
-import { MaxBN, MinBN, toTokenUnitsBN } from '~/util';
+import { toTokenUnitsBN } from '~/util';
 import { BEAN } from '~/constants/tokens';
 import { NEW_BN, ZERO_BN } from '~/constants';
 import { AppState } from '~/state';
@@ -102,11 +102,6 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       alt=""
     />
   );
-
-  /// 6074 = 0%
-  /// 6075 = 0%
-  /// 6076 = 1%
-  const nextSeasonRamp = MinBN(MaxBN(season.minus(6075).plus(1), ZERO_BN), new BigNumber(100));
 
   /// Table Content
   const tableContent = (

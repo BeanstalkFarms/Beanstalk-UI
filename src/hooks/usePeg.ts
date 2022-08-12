@@ -122,15 +122,6 @@ const usePeg = () => {
   const barn      = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
   const podRate   = usePodRate();
   
-  // HOTFIX: account for rampup
-  const currentSeasonRamp = MinBN(MaxBN(season.minus(6075), ZERO_BN), new BigNumber(100));
-  let nextSeasonRamp = currentSeasonRamp;
-  if (currentSeasonRamp.lt(100)) {
-    nextSeasonRamp = currentSeasonRamp.plus(1);
-  }
-  const deltaBMultiplier = nextSeasonRamp.div(currentSeasonRamp);
-  let deltaBNext = bean.deltaB.multipliedBy(deltaBMultiplier);
-  if (deltaBNext.isNaN()) deltaBNext = ZERO_BN;
   // END HOTFIX
 
   const [
@@ -139,7 +130,7 @@ const usePeg = () => {
     newHarvestablePods,
   ] = beanSupply(
     ZERO_BN,              // assume a_t = 0
-    deltaBNext,           // current deltaB via beanastalk.totalDeltaB()
+    bean.deltaB,           // current deltaB via beanastalk.totalDeltaB()
     barn.unfertilized,    // current unfertilized sprouts
     field.podLine         // current pod line
   );
@@ -150,7 +141,7 @@ const usePeg = () => {
     // POD RATE AS DECIMAL
     // 100% = 1
     podRate.div(100),     // current pod rate (unharvestable pods / bean supply)
-    deltaBNext, // current deltaB via beanstalk.totalDeltaB()
+    bean.deltaB, // current deltaB via beanstalk.totalDeltaB()
   );
 
   /// TODO:
@@ -180,7 +171,7 @@ const usePeg = () => {
   const [caseId, deltaTemperature] = temperature(
     // POD RATE AS DECIMAL
     podRate.div(100),
-    deltaBNext,
+    bean.deltaB,
     deltaPodDemand,
   );
 
@@ -201,7 +192,7 @@ const usePeg = () => {
   //   },
   //   derived: {
   //     deltaBMultiplier: deltaBMultiplier.toString(),
-  //     deltaBNext: deltaBNext.toString(),
+  //     bean.deltaB: bean.deltaB.toString(),
   //   },
   //   outputs: {
   //     newHarvestablePods: newHarvestablePods.toString(),
@@ -211,7 +202,7 @@ const usePeg = () => {
   // });
 
   return {
-    rewardBeans: deltaBNext,
+    rewardBeans: bean.deltaB,
     newRinsableSprouts,
     newHarvestablePods,
     soilStart,
