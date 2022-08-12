@@ -151,15 +151,10 @@ const Graph: React.FC<GraphProps> = (props) => {
     } else {
       yScale = scaleLinear<number>({
         domain: [min(_data, getY) as number, max(_data, getY) as number],
+        clamp: true
       });
     }
 
-    // if (height - axisHeight - margin.bottom - strokeBuffer === -32) {
-    //   console.log('HEIGHT', height);
-    //   console.log('axisHeight', axisHeight);
-    //   console.log('margin.bottom', margin.bottom);
-    //   console.log('strokeBuffer', strokeBuffer);
-    // }
     xScale.range([0, width]);
 
     yScale.range([
@@ -202,8 +197,6 @@ const Graph: React.FC<GraphProps> = (props) => {
       showTooltip({
         tooltipData: ds,
         tooltipLeft: x, // in pixels
-        // scales[0].xScale(getX(ds[0])),
-        // cursorLeft:  x,
         tooltipTop: scales[0].yScale(getY(ds[0])), // in pixels
       });
       onCursor(ds);
@@ -268,14 +261,14 @@ const Graph: React.FC<GraphProps> = (props) => {
          */}
         <Group width={width} height={dataRegion.yBottom - dataRegion.yTop}>
           {/* {children && children({ scales, dataRegion, ...props })} */}
-          {/* <GradientOrangeRed id="stacked-area-orangered" /> */}
           <LinearGradient from={BeanstalkPalette.lightGreen} to={BeanstalkPalette.lightGreen} id="stacked-area-orangered" />
           <rect x={0} y={0} width={width} height={height} fill={background} rx={14} />
-          <AreaStack
+          <AreaStack<DataPoint>
             top={margin.top}
             left={margin.left}
             keys={keys}
             data={data}
+            height={height}
             x={(d) => scales[0].xScale(getX(d.data)) ?? 0}
             y0={(d) => scales[0].yScale(d[0]) ?? 0}
             y1={(d) => scales[0].yScale(d[1]) ?? 0}
@@ -283,7 +276,6 @@ const Graph: React.FC<GraphProps> = (props) => {
             {({ stacks, path }) =>
               stacks.map((stack) => (
                 <>
-                  {/* {console.log('StACK', stack.key)} */}
                   <path
                     key={`stack-${stack.key}`}
                     d={path(stack) || ''}
