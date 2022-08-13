@@ -1,0 +1,35 @@
+query Proposals {
+  proposals (
+    where: {
+      space_in: ["beanstalkdao.eth", "beanstalkfarms.eth", "wearebeansprout.eth"],
+    },
+    orderBy: "created",
+    orderDirection: desc
+  ) {
+    id
+    author
+    body
+    choices
+    created
+    end
+    link
+    network
+    quorum
+    scores
+    scores_by_strategy
+    scores_state
+    scores_total
+    scores_updated
+    snapshot
+    start
+    state
+    space {
+      id
+      name
+    }
+    symbol
+    title
+    type
+    votes
+  }
+}
