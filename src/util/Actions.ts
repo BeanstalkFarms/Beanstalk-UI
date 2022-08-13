@@ -98,6 +98,8 @@ export type SiloClaimAction = SiloAction & {
 
 export type SiloTransferAction = SiloAction & {
   type: ActionType.TRANSFER;
+  stalk: BigNumber;
+  seeds: BigNumber;
   to: string;
 }
 
@@ -244,7 +246,7 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.CLAIM_WITHDRAWAL:
       return `Claim ${displayFullBN(a.amount, 2)} ${a.token.name}.`;
     case ActionType.TRANSFER:
-      return `Transfer ${displayFullBN(a.amount)} ${a.token.name} to ${trimAddress(a.to, true)}.`;
+      return `Transfer ${displayFullBN(a.amount)} ${a.token.name}, ${displayFullBN(a.stalk)} Stalk, and ${displayFullBN(a.seeds)} Seeds to ${trimAddress(a.to, true)}.`;
 
     /// FIELD
     case ActionType.BUY_BEANS:

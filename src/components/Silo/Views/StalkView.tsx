@@ -8,10 +8,17 @@ import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
 import WalletButton from '~/components/Common/Connection/WalletButton';
 import useAccount from '~/hooks/ledger/useAccount';
 import { TabData } from '~/components/Silo/Views';
+import TokenIcon from '~/components/Common/TokenIcon';
+import { SEEDS, STALK } from '~/constants/tokens';
+import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
 
 const StalkView: React.FC<TabData> = ({ current, series, season }) => {
   // Display value is an array [stalk, pct]
   const account = useAccount();
+
+  // state
+  const breakdown     = useFarmerSiloBreakdown();
+
   const [displayValue, setDisplayValue] = useState(current);
   const handleCursor = useCallback(
     (dps?: DataPoint[]) => {
@@ -53,7 +60,15 @@ const StalkView: React.FC<TabData> = ({ current, series, season }) => {
             </Stack>
           </BlurComponent>
         ) : (
-          <BlurComponent blur={6}>Historical Stalk balance and ownership will be available soon.</BlurComponent>
+          (breakdown.totalValue?.eq(0)) ? (
+            <BlurComponent>
+              <Stack justifyContent="center" alignItems="center" gap={1} px={1}>
+                <Typography variant="body1" color="gray">Receive <TokenIcon token={STALK} />Stalk and <TokenIcon token={SEEDS} />Seeds for Depositing whitelisted assets in the Silo. Stalkholders earn a portion of new Bean mints. Seeds grow into Stalk every season.</Typography>
+              </Stack>
+            </BlurComponent>
+          ) : (
+            <BlurComponent blur={6}>Historical Stalk balance and ownership will be available soon.</BlurComponent>
+          )
         )}
         <LineChart
           series={series}

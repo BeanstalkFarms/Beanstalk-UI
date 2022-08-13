@@ -145,6 +145,8 @@ const TransferForm: React.FC<FormikProps<TransferFormValues> & {
                             type: ActionType.TRANSFER,
                             amount: withdrawResult ? withdrawResult.amount.abs() : ZERO_BN,
                             token: whitelistedToken,
+                            stalk: withdrawResult ? withdrawResult.stalk.abs() : ZERO_BN,
+                            seeds: withdrawResult ? withdrawResult?.seeds.abs() : ZERO_BN,
                             to: values.to
                           },
                           {
