@@ -40,6 +40,7 @@ import EditListingPage from '../../pages/market/edit-listing';
 import EditOrderPage from '../../pages/market/edit-order';
 import TradePage from '../../pages/trade';
 import AnalyticsPage from '../../pages/analytics';
+import GovernancePage from '~/pages/governance';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -151,6 +152,7 @@ export default function App() {
           <Route path="/barn" element={<Barn />} />
           <Route path="/chop" element={<ChopPage />} />
           <Route path="/field" element={<FieldPage />} />
+          <Route path="/governance" element={<GovernancePage />} />
           <Route path="/history" element={<TransactionHistoryPage />} />
           <Route path="/market" element={<PodMarketPage />} />
           <Route path="/market/account" element={<MarketAccountPage />} />
