@@ -1,6 +1,6 @@
-import { Stack } from '@mui/material';
+import { CircularProgress, Stack } from '@mui/material';
 import { Form, Formik, FormikProps } from 'formik';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ethers } from 'ethers';
 import {
   FormApprovingState, FormTokenState,
@@ -22,55 +22,120 @@ import useTokenMap from '~/hooks/useTokenMap';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import useGetChainToken from '~/hooks/useGetChainToken';
-import { QuoteHandler } from '~/hooks/useQuote';
+import useQuote, { QuoteHandler } from '~/hooks/useQuote';
 import useFarm from '~/hooks/useFarm';
 import useAccount from '~/hooks/ledger/useAccount';
-import { toStringBaseUnitBN } from '~/util';
+import { toStringBaseUnitBN, toTokenUnitsBN } from '~/util';
 
 type TradeFormValues = {
+  /** Multiple tokens can (eventually) be swapped into tokenOut */
   tokensIn:   FormTokenState[];
   modeIn:     FarmFromMode;
-  tokensOut:  FormTokenState[];
+  /** One output token can be selected */
+  tokenOut:   FormTokenState;
   modeOut:    FarmToMode;
   approving?: FormApprovingState;
+};
+
+type DirectionalQuoteHandler = (direction: 'forward' | 'backward') => QuoteHandler;
+
+const Quoting = <CircularProgress variant="indeterminate" size="small" sx={{ width: 14, height: 14 }} />;
+
+const QUOTE_SETTINGS = {
+  ignoreSameToken: false
 };
 
 const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   balances: ReturnType<typeof useFarmerBalances>;
   beanstalk: Beanstalk;
-  tokenList: (ERC20Token | NativeToken)[]
+  handleQuote: DirectionalQuoteHandler;
+  tokenList: (ERC20Token | NativeToken)[];
 }> = ({
   //
   values,
   setFieldValue,
+  handleQuote,
   //
   balances,
   beanstalk,
   tokenList,
 }) => {
-  const [tokenSelect, setTokenSelect] =  useState<null | 'tokensIn' | 'tokensOut'>(null);
+  const [tokenSelect, setTokenSelect] =  useState<null | 'tokensIn' | 'tokenOut'>(null);
 
   /// Derived values
   // Inputs
   const stateIn   = values.tokensIn[0];
   const tokenIn   = stateIn.token;
+  const amountIn  = values.tokensIn[0].amount;
   const balanceIn = balances[tokenIn.address];
   // Outputs
-  const stateOut   = values.tokensOut[0];
-  const tokenOut   = stateOut.token;
-  // const balanceOut = balances[tokenOut.address];
+  const stateOut  = values.tokenOut;
+  const tokenOut  = stateOut.token;
+  const amountOut = stateOut.amount;
+  const balanceOut = balances[tokenOut.address];
+  const tokensMatch = tokenIn === tokenOut;
+
+  // Memoize to prevent infinite loop on useQuote
+  const handleBackward = useMemo(() => handleQuote('backward'), [handleQuote]);
+  const handleForward  = useMemo(() => handleQuote('forward'),  [handleQuote]);
+
+  /**
+   * Get amountIn.
+   * 
+   */
+  const [resultIn,  quotingIn,  getMinAmountIn] = useQuote(tokenIn, handleBackward, QUOTE_SETTINGS);
+  const [resultOut, quotingOut, getAmountOut]   = useQuote(tokenOut, handleForward, QUOTE_SETTINGS);
+
+  useEffect(() => {
+    console.debug('[TokenInput] got new resultIn', resultIn);
+    setFieldValue('tokensIn.0.amount', resultIn?.amountOut);
+  }, [setFieldValue, resultIn]);
+  useEffect(() => {
+    console.debug('[TokenInput] got new resultOut', resultOut);
+    setFieldValue('tokenOut.amount', resultOut?.amountOut);
+  }, [setFieldValue, resultOut]);
+  
+  /// When amountIn changes, refresh amountOut
+  /// Only refresh if amountIn was changed by user input,
+  /// i.e. not by another hook
+  const handleChangeAmountIn = useCallback((_amountInClamped) => {
+    console.debug('[TokenInput] handleChangeAmountIn', _amountInClamped);
+    if (_amountInClamped) {
+      getAmountOut(tokenIn, _amountInClamped);
+    } else {
+      setFieldValue('tokenOut.amount', undefined);
+    }
+  }, [tokenIn, getAmountOut, setFieldValue]);
+  const handleChangeAmountOut = useCallback((_amountOutClamped) => {
+    console.debug('[TokenInput] handleChangeAmountOut', _amountOutClamped);
+    if (_amountOutClamped) {
+      console.debug('[TokenInput] getMinAmountIn', [tokenOut, _amountOutClamped]);
+      getMinAmountIn(tokenOut, _amountOutClamped);
+    } else {
+      setFieldValue('tokensIn.0.amount', undefined);
+    }
+  }, [tokenOut, getMinAmountIn, setFieldValue]);
 
   ///
+  const selectedTokens = (
+    tokenSelect === 'tokenOut' 
+      ? [tokenOut] 
+      : tokenSelect === 'tokensIn'
+      ? values.tokensIn.map((x) => x.token)
+      : []
+  );
   const handleClose = useCallback(() => setTokenSelect(null), []);
-  const handleShow  = useCallback((which: 'tokensIn' | 'tokensOut') => () => setTokenSelect(which), []);
+  const handleShow  = useCallback((which: 'tokensIn' | 'tokenOut') => () => setTokenSelect(which), []);
   const handleSubmit = useCallback((_tokens: Set<Token>) => {
-    if (tokenSelect !== null) {
+    if (tokenSelect === 'tokenOut') {
+      setFieldValue('tokenOut', Array.from(_tokens)[0]);
+    } else if (tokenSelect === 'tokensIn') {
       const copy = new Set(_tokens);
-      const newValue = values[tokenSelect].filter((x) => {
+      const newValue = values.tokensIn.filter((x) => {
         copy.delete(x.token);
         return _tokens.has(x.token);
       });
-      setFieldValue(tokenSelect, [
+      setFieldValue('tokensIn', [
         ...newValue,
         ...Array.from(copy).map((_token) => ({
           token: _token,
@@ -93,7 +158,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
         open={tokenSelect !== null}   // 'tokensIn' | 'tokensOut'
         handleClose={handleClose}     //
         handleSubmit={handleSubmit}   //
-        selected={tokenSelect !== null ? values[tokenSelect] : []}
+        selected={selectedTokens}
         balances={balances}
         tokenList={tokenList}
         mode={TokenSelectMode.SINGLE}
@@ -115,30 +180,38 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
                 />
               )
             }}
+            disabled={quotingIn}
+            quote={quotingOut ? Quoting : undefined}
+            handleChange={handleChangeAmountIn}
           />
-          <Stack gap={0.5}>
-            <DestinationField
-              name="modeIn"
-              label="Source"
-            />
-          </Stack>
+          {tokensMatch ? (
+            <Stack gap={0.5}>
+              <DestinationField
+                name="modeIn"
+                label="Source"
+              />
+            </Stack>
+          ) : null}
         </>
         <TxnSeparator />
         {/* Output */}
         <>
           <TokenInputField
             token={tokenOut}
-            name="tokensOut.0.amount"
+            name="tokenOut.amount"
             // MUI
             fullWidth
             InputProps={{
               endAdornment: (
                 <TokenAdornment
                   token={tokenOut}
-                  onClick={handleShow('tokensOut')}
+                  onClick={handleShow('tokenOut')}
                 />
               )
             }}
+            disabled={quotingOut}
+            quote={quotingIn ? Quoting : undefined}
+            handleChange={handleChangeAmountOut}
           />
           <DestinationField
             name="modeOut"
@@ -167,7 +240,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
           size="large"
           disabled={!isValid}
           contract={beanstalk}
-          tokens={values.tokensOut.concat(values.tokensIn)}
+          tokens={values.tokensIn}
           mode="auto"
         >
           Trade
@@ -244,6 +317,11 @@ const SUPPORTED_TOKENS = [
  * ...etc
  */
 
+const isPair = (_tokenIn : Token, _tokenOut : Token, _pair : [Token, Token]) => {
+  const s = new Set(_pair);
+  return s.has(_tokenIn) && s.has(_tokenOut);
+};
+
 const Trade: React.FC<{}> = () => {
   ///
   const { data: signer } = useSigner();
@@ -270,17 +348,21 @@ const Trade: React.FC<{}> = () => {
       }
     ],
     modeIn: FarmFromMode.EXTERNAL,
-    tokensOut: [
-      {
-        token: Bean,
-        amount: undefined,
-      }
-    ],
+    tokenOut: {
+      token: Bean,
+      amount: undefined
+    },
     modeOut: FarmToMode.EXTERNAL,
   }), [Bean, Eth]);
 
-  const handleQuote = useCallback<QuoteHandler>(
-    async (_tokenIn, _amountIn, _tokenOut) => {
+  const handleQuote = useCallback<DirectionalQuoteHandler>(
+    (direction) => async (_tokenIn, _amountIn, _tokenOut) => {
+      console.debug('[handleQuote] ', {
+        direction,
+        _tokenIn,
+        _amountIn,
+        _tokenOut
+      }); 
       if (!account) throw new Error('Connect a wallet first.');
       
       const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, _tokenIn.decimals));
@@ -288,26 +370,40 @@ const Trade: React.FC<{}> = () => {
 
       ///
       if (_tokenIn === _tokenOut) {
-        estimate = await Farm.estimate([
-          farm.transferToken(
-            _tokenIn.address,
-            account,
-            FarmFromMode.INTERNAL,
-            FarmToMode.EXTERNAL,
-          )
-        ], [amountIn]);
+        estimate = await Farm.estimate(
+          [
+            farm.transferToken(
+              _tokenIn.address,
+              account,
+              FarmFromMode.INTERNAL,
+              FarmToMode.EXTERNAL,
+            )
+          ],
+          [amountIn],
+          direction === 'forward'
+        );
+      } else if (isPair(_tokenIn, _tokenOut, [Bean, Eth])) {
+        estimate = await Farm.estimate(
+          [
+            farm.wrapEth(),
+            ...farm.pair.WETH_BEAN('WETH') // _tokenIn === Eth ? 'WETH' : 'BEAN'
+          ],
+          [amountIn],
+          direction === 'forward'
+        );
       } else {
         throw new Error('Unknown Swap mode.');
       }
 
       return {
-        amountOut: estimate.amountOut,
+        amountOut: toTokenUnitsBN(
+          estimate.amountOut.toString(),
+          _tokenOut.decimals
+        ),
         steps: estimate.steps,
-        // amountOut: toTokenUnitsBN(estimate.amountOut.toString(), tokenOut.decimals),
-        // steps: estimate.steps,
       };
     },
-    [account, farm]
+    [Bean, Eth, account, farm]
   );
 
   const onSubmit = useCallback(
@@ -332,6 +428,7 @@ const Trade: React.FC<{}> = () => {
             balances={farmerBalances}
             beanstalk={beanstalk}
             tokenList={tokenList}
+            handleQuote={handleQuote}
             {...formikProps}
           />
         </>

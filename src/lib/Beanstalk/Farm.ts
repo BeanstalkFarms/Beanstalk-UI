@@ -261,6 +261,48 @@ export default class Farm {
     ),
   ]
 
+  pair = {
+    WETH_BEAN: (
+      _tokenIn : 'WETH' | 'BEAN',
+      _fromMode? : FarmFromMode
+    ) => {
+      // default: WETH -> BEAN; flip if input is BEAN
+      const Weth = getChainConstant(WETH, this.provider.network.chainId).address;
+      const Usdt = getChainConstant(USDT, this.provider.network.chainId).address;
+      const Bean = getChainConstant(BEAN, this.provider.network.chainId).address;
+      
+      return _tokenIn === 'WETH'
+        ? [
+          this.exchange(
+            this.contracts.curve.pools.tricrypto2.address,
+            this.contracts.curve.registries.cryptoFactory.address,
+            Weth,
+            Usdt,
+            _fromMode
+          ),
+          this.exchangeUnderlying(
+            this.contracts.curve.pools.beanCrv3.address,
+            Usdt,
+            Bean,
+          ),
+        ]
+        : [
+          this.exchangeUnderlying(
+            this.contracts.curve.pools.beanCrv3.address,
+            Bean,
+            Usdt,
+            _fromMode
+          ),
+          this.exchange(
+            this.contracts.curve.pools.tricrypto2.address,
+            this.contracts.curve.registries.cryptoFactory.address,
+            Usdt,
+            Weth,
+          ),
+        ];
+    }
+  };
+
   // ------------------------------------------
 
   wrapEth = (
