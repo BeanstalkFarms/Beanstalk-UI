@@ -31,7 +31,7 @@ const NavBar: React.FC<{}> = () => (
     <Link href="https://snapshot.org/#/beanstalkdao.eth/" target="_blank" rel="noreferrer" underline="none" sx={{ color: '#333', fontSize: FontSize.sm }}>
       <Box sx={{ backgroundColor: 'white', textAlign: 'center', px: 2, py: 0.75 }}>
         <img src={snapshotLogo} alt="Snapshot" style={{ height: 14, marginBottom: -2 }} />&nbsp;
-        BIP-22 and BIP-23, the Q3 budget proposals for Beanstalk Farms and Bean Sprout respectively, are live on Snapshot. <strong>Vote now &rarr;</strong>
+        BIP-22 and BIP-23, the Q3 budget proposals for Beanstalk Farms and Bean Sprout, respectively, are live on Snapshot. <strong>Vote now &rarr;</strong>
       </Box>
     </Link>
     <Stack
