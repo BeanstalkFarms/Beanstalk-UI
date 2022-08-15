@@ -17,7 +17,7 @@ import DestinationField from '~/components/Common/Form/DestinationField';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import { Beanstalk } from '~/generated/index';
 import { ZERO_BN } from '~/constants';
-import { BEAN, CRV3_UNDERLYING, DAI, ETH, USDC, USDT, WETH } from '~/constants/tokens';
+import { BEAN, CRV3, CRV3_UNDERLYING, DAI, ETH, USDC, USDT, WETH } from '~/constants/tokens';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useFarmerBalances from '~/hooks/useFarmerBalances';
 import useTokenMap from '~/hooks/useTokenMap';
@@ -52,6 +52,7 @@ type DirectionalQuoteHandler = (
 enum Pathway {
   TRANSFER,
   ETH_WETH,
+  BEAN_CRV3,
   BEAN_ETH,
   BEAN_WETH, // make this BEAN_TRICRYPTO_UNDERLYING
   BEAN_CRV3_UNDERLYING,
@@ -204,6 +205,11 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   const amountsCheck = (
     amountIn?.gt(0)
     && amountOut?.gt(0)
+  );
+  const diffDestinations = (
+    tokensMatch
+      ? modeIn !== modeOut
+      : true
   );
   const isValid = (
     pathwayCheck
@@ -361,6 +367,7 @@ const SUPPORTED_TOKENS = [
   BEAN,
   ETH,
   WETH,
+  CRV3,
   DAI,
   USDC,
   USDT,
@@ -415,6 +422,7 @@ const Trade: React.FC<{}> = () => {
   const Eth           = getChainToken(ETH);
   const Weth          = getChainToken(WETH);
   const Bean          = getChainToken(BEAN);
+  const Crv3          = getChainToken(CRV3);
   const crv3Underlying = useMemo(() => new Set(CRV3_UNDERLYING.map(getChainToken)), [getChainToken]);
   const tokenMap      = useTokenMap<ERC20Token | NativeToken>(SUPPORTED_TOKENS);
   const tokenList     = useMemo(() => Object.values(tokenMap), [tokenMap]);
@@ -449,6 +457,7 @@ const Trade: React.FC<{}> = () => {
   ) => {
     if (_tokenIn === _tokenOut) return Pathway.TRANSFER;
     if (isPair(_tokenIn, _tokenOut, [Eth, Weth])) return Pathway.ETH_WETH;
+    if (isPair(_tokenIn, _tokenOut, [Bean, Crv3])) return Pathway.BEAN_CRV3;
     if (isPair(_tokenIn, _tokenOut, [Bean, Eth])) return Pathway.BEAN_ETH;
     if (isPair(_tokenIn, _tokenOut, [Bean, Weth])) return Pathway.BEAN_WETH;
     if (
@@ -456,7 +465,7 @@ const Trade: React.FC<{}> = () => {
       || (_tokenOut === Bean && crv3Underlying.has(_tokenIn as any))
     ) return Pathway.BEAN_CRV3_UNDERLYING;
     return false;
-  }, [Bean, Eth, Weth, crv3Underlying]);
+  }, [Bean, Crv3, Eth, Weth, crv3Underlying]);
 
   const handleEstimate = useCallback(async (
     forward : boolean,
@@ -526,6 +535,23 @@ const Trade: React.FC<{}> = () => {
         forward,
       );
     } 
+
+    if (pathway === Pathway.BEAN_CRV3) {
+      return Farm.estimate(
+        [
+          farm.exchange(
+            farm.contracts.curve.pools.beanCrv3.address,
+            farm.contracts.curve.registries.metaFactory.address,
+            _tokenIn.address,
+            _tokenOut.address,
+            _fromMode,
+            _toMode
+          )
+        ],
+        [amountIn],
+        forward,
+      );
+    }
 
     /// BEAN <-> ETH
     if (pathway === Pathway.BEAN_ETH) {
