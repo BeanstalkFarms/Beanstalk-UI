@@ -17,7 +17,7 @@ const Proposals: React.FC<{}> = () => {
   /// Query all proposals
   const { loading, error, data } = useGovernanceQuery(ProposalsDocument, queryConfig);
 
-  // filter proposals by type
+  // filter proposals by type (eg: BIP, BOP, ...)
   const filteredProposals = useMemo(() => {
     if (!loading && data !== undefined) {
       return data.proposals.filter((p: any) => p.title.split('-')[0] === SLUGS[tab]);
