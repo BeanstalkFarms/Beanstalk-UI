@@ -1,34 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, Card, Stack, Tabs } from '@mui/material';
 import useTabs from '~/hooks/display/useTabs';
 import BadgeTab from '~/components/Common/BadgeTab';
 import BIP from '~/components/Governance/Proposals/BIP';
-import { apolloSnapshotClient } from '~/graph/client';
 import { ProposalsDocument } from '~/generated/graphql';
+import useGovernanceQuery from '~/hooks/useGovernanceQuery';
 
 export const ProposalAddress = {
   BeanstalkDAO: 'beanstalkdao.eth',
 };
 
-const SLUGS = ['sow', 'transfer', 'harvest'];
+const queryConfig = {
+  // variables: { space_in: ['beanstalkdao.eth', 'beanstalkfarms.eth', 'wearebeansprout.eth'] },
+  variables: { space_in: ['beanstalkdao.eth', 'beanstalkfarms.eth'] },
+};
+
+const SLUGS = ['bip', 'bop', 'BFCP', 'BSP', 'BFBP'];
 const Proposals: React.FC<{}> = () => {
-  const [tab, handleChange] = useTabs(SLUGS, 'action');
-  const [proposals, setProposals] = useState(null);
+  const [tab, handleChange] = useTabs(SLUGS, 'type');
 
-  /// Query all proposals
-  apolloSnapshotClient.query({
-    // ...config,
-    query: ProposalsDocument,
-    // variables,
-    notifyOnNetworkStatusChange: true,
-  }).then((r) => {
-    setProposals(r.data);
-  });
-
-  if (proposals !== null) {
-    console.log('PROPOSALS', proposals);
-  }
-
+  /// Query all proposals=
+  const { loading, error, data } = useGovernanceQuery(ProposalsDocument, queryConfig);
+  console.log('DATA', data);
+  
   return (
     <Card sx={{ position: 'relative' }}>
       <Stack gap={1.5}>

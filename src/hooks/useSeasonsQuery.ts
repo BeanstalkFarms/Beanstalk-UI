@@ -72,32 +72,32 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
             ...config,
             variables: {
               ...config?.variables,
-              first: SEASON_RANGE_TO_COUNT[range], 
+              first: SEASON_RANGE_TO_COUNT[range],
               season_lte: 999999999
             },
             fetchPolicy: 'cache-first',
-          }); 
+          });
         } else {
-          // Initialize Season data with a call to the first 
+          // Initialize Season data with a call to the first
           // set of Seasons.
           const init = await get({
             ...config,
-            variables: { 
+            variables: {
               ...config?.variables,
-              first: undefined, 
+              first: undefined,
               season_lte: 999999999
             },
-          }); 
+          });
 
           console.debug('[useSeasonsQuery] init: data = ', init.data);
-          
+
           if (!init.data) {
             console.error(init);
             throw new Error('missing data');
           }
-          
+
           /**
-           * the newest season indexed by the subgraph 
+           * the newest season indexed by the subgraph
            * data is returned sorted from oldest to newest
            * so season 0 is the oldest season and length-1 is newest.
            */
@@ -113,7 +113,7 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
            */
           const numQueries = Math.ceil(
             /// If `season_gt` is provided, we only query back to that season.
-            (latestSubgraphSeason - (config?.variables?.season_gt || 0)) 
+            (latestSubgraphSeason - (config?.variables?.season_gt || 0))
             / PAGE_SIZE
           );
           const promises = [];

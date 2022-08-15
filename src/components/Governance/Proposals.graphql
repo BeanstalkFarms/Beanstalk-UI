@@ -1,7 +1,8 @@
-query Proposals {
+query Proposals($space_in: [String],) {
   proposals (
     where: {
-      space_in: ["beanstalkdao.eth", "beanstalkfarms.eth", "wearebeansprout.eth"],
+#      space_in: ["beanstalkdao.eth", "beanstalkfarms.eth", "wearebeansprout.eth"],
+      space_in: $space_in,
     },
     orderBy: "created",
     orderDirection: desc
