@@ -22,7 +22,7 @@ const Proposals: React.FC<{}> = () => {
   /// Query all proposals=
   const { loading, error, data } = useGovernanceQuery(ProposalsDocument, queryConfig);
   console.log('DATA', data);
-  
+
   return (
     <Card sx={{ position: 'relative' }}>
       <Stack gap={1.5}>
