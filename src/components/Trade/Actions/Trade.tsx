@@ -1,4 +1,4 @@
-import { CircularProgress, Stack } from '@mui/material';
+import { Alert, CircularProgress, IconButton, Link, Stack } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ethers } from 'ethers';
@@ -31,6 +31,7 @@ import { toStringBaseUnitBN, toTokenUnitsBN, parseError } from '~/util';
 import { IconSize } from '~/components/App/muiTheme';
 import TransactionToast from '~/components/Common/TxnToast';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
+import useChainConstant from '~/hooks/useChainConstant';
 
 type TradeFormValues = {
   /** Multiple tokens can (eventually) be swapped into tokenOut */
@@ -69,27 +70,33 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   beanstalk,
   tokenList,
 }) => {
-  const [tokenSelect, setTokenSelect] =  useState<null | 'tokensIn' | 'tokenOut'>(null);
-
+  /// Tokens
+  const Eth = useChainConstant(ETH);
+  
   /// Derived values
   // Inputs
   const stateIn   = values.tokensIn[0];
   const tokenIn   = stateIn.token;
-  const amountIn  = values.tokensIn[0].amount;
+  const modeIn    = values.modeIn;
+  const amountIn  = stateIn.amount;
   const balanceIn = balances[tokenIn.address];
   // Outputs
   const stateOut  = values.tokenOut;
   const tokenOut  = stateOut.token;
+  const modeOut   = values.modeOut;
   const amountOut = stateOut.amount;
-  const balanceOut = balances[tokenOut.address];
+  // const balanceOut = balances[tokenOut.address];
+  // Other
   const tokensMatch = tokenIn === tokenOut;
 
-  // Memoize to prevent infinite loop on useQuote
+  /// Memoize to prevent infinite loop on useQuote
   const handleBackward = useMemo(() => handleQuote('backward'), [handleQuote]);
   const handleForward  = useMemo(() => handleQuote('forward'),  [handleQuote]);
   const [resultIn,  quotingIn,  getMinAmountIn] = useQuote(tokenIn, handleBackward, QUOTE_SETTINGS);
   const [resultOut, quotingOut, getAmountOut]   = useQuote(tokenOut, handleForward, QUOTE_SETTINGS);
 
+  /// When receiving new results from quote handlers, update
+  /// the respective form fields.
   useEffect(() => {
     console.debug('[TokenInput] got new resultIn', resultIn);
     setFieldValue('tokensIn.0.amount', resultIn?.amountOut);
@@ -120,7 +127,8 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
     }
   }, [tokenOut, getMinAmountIn, setFieldValue]);
 
-  ///
+  /// Token Select
+  const [tokenSelect, setTokenSelect] =  useState<null | 'tokensIn' | 'tokenOut'>(null);
   const selectedTokens = (
     tokenSelect === 'tokenOut' 
       ? [tokenOut] 
@@ -128,8 +136,9 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
       ? values.tokensIn.map((x) => x.token)
       : []
   );
-  const handleClose = useCallback(() => setTokenSelect(null), []);
-  const handleShow  = useCallback((which: 'tokensIn' | 'tokenOut') => () => setTokenSelect(which), []);
+  const handleCloseTokenSelect = useCallback(() => setTokenSelect(null), []);
+  const handleShowTokenSelect  = useCallback((which: 'tokensIn' | 'tokenOut') => () => setTokenSelect(which), []);
+  
   const handleSubmit = useCallback((_tokens: Set<Token>) => {
     if (tokenSelect === 'tokenOut') {
       setFieldValue('tokenOut', {
@@ -154,7 +163,37 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
     }
   }, [setFieldValue, tokenSelect, values]);
 
-  const isValid = true;
+  const handleReverse = useCallback(() => {
+    if (tokensMatch) {
+      /// Flip destinations.
+      setFieldValue('modeIn', modeOut);
+      setFieldValue('modeOut', modeIn);
+    } else {
+      setFieldValue('tokensIn.0', {
+        token: tokenOut,
+        amount: undefined,
+      } as TradeFormValues['tokensIn'][number]);
+      setFieldValue('tokenOut', {
+        token: tokenIn,
+        amount: undefined,
+      });
+    }
+  }, [modeIn, modeOut, setFieldValue, tokenIn, tokenOut, tokensMatch]);
+  
+  /// If ETH is selected as an output, the only possible destination is EXTERNAL.
+  const ethModeCheck = (
+    tokenOut === Eth
+      ? (modeOut === FarmToMode.EXTERNAL)
+      : true
+  );
+  const amountsCheck = (
+    amountIn?.gt(0)
+    && amountOut?.gt(0)
+  );
+  const isValid = (
+    ethModeCheck
+    && amountsCheck
+  );
 
   return (
     <Form autoComplete="off">
@@ -165,7 +204,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
             : 'Select Output Token'
         )}
         open={tokenSelect !== null}   // 'tokensIn' | 'tokensOut'
-        handleClose={handleClose}     //
+        handleClose={handleCloseTokenSelect}     //
         handleSubmit={handleSubmit}   //
         selected={selectedTokens}
         balances={balances}
@@ -185,12 +224,18 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
               endAdornment: (
                 <TokenAdornment
                   token={tokenIn}
-                  onClick={handleShow('tokensIn')}
+                  onClick={handleShowTokenSelect('tokensIn')}
                 />
               )
             }}
-            disabled={quotingIn}
-            quote={quotingOut ? Quoting : undefined}
+            disabled={
+              quotingIn
+            }
+            quote={
+              quotingOut
+                ? Quoting 
+                : undefined
+            }
             handleChange={handleChangeAmountIn}
           />
           {tokensMatch ? (
@@ -202,8 +247,10 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
             </Stack>
           ) : null}
         </>
-        <Stack direction="row" justifyContent="center">
-          <ExpandMoreIcon color="secondary" width={IconSize.xs} />
+        <Stack direction="row" justifyContent="center" mt={-1}>
+          <IconButton onClick={handleReverse} size="small">
+            <ExpandMoreIcon color="secondary" width={IconSize.xs} />
+          </IconButton>
         </Stack>
         {/* Output */}
         <>
@@ -216,12 +263,22 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
               endAdornment: (
                 <TokenAdornment
                   token={tokenOut}
-                  onClick={handleShow('tokenOut')}
+                  onClick={handleShowTokenSelect('tokenOut')}
                 />
               )
             }}
-            disabled={quotingOut}
-            quote={quotingIn ? Quoting : undefined}
+            disabled={
+              /// Disable while quoting an `amount` for the output.
+              quotingOut
+              /// Can't type into the output field if
+              /// user has no balance of the input.
+              || !(balanceIn?.total.gt(0))
+            }
+            quote={
+              quotingIn
+                ? Quoting 
+                : undefined
+            }
             handleChange={handleChangeAmountOut}
           />
           <DestinationField
@@ -229,6 +286,21 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
             label="Destination"
           />
         </>
+        {/* Warnings */}
+        {ethModeCheck === false ? (
+          <Alert variant="standard" color="warning">
+            ETH can only be delivered to your Circulating Balance.&nbsp;
+            <Link
+              onClick={() => {
+                setFieldValue('modeOut', FarmToMode.EXTERNAL);
+              }}
+              sx={{ cursor: 'pointer' }}
+              underline="hover"
+            >
+              Switch &rarr;
+            </Link>
+          </Alert>
+        ) : null}
         {/* <Box>
           <Accordion variant="outlined">
             <StyledAccordionSummary title="Transaction Details" />
@@ -309,8 +381,6 @@ const isPair = (_tokenIn : Token, _tokenOut : Token, _pair : [Token, Token]) => 
   const s = new Set(_pair);
   return s.has(_tokenIn) && s.has(_tokenOut);
 };
-
-// const isCombination = (_tokenIn : Token, _tokenOut : Token, _)
 
 const Trade: React.FC<{}> = () => {
   ///
@@ -403,25 +473,38 @@ const Trade: React.FC<{}> = () => {
         forward
       );
     } else if (isPair(_tokenIn, _tokenOut, [Eth, Weth])) {
-      const method = startToken === Eth ? 'wrapEth' : 'unwrapEth';
-      console.debug(`[handleEstimate] estimating: ${method}`);
+      console.debug(`[handleEstimate] estimating: ${startToken === Eth ? 'wrap' : 'unwrap'}`);
       estimate = await Farm.estimate(
-        [farm[method](_toMode)],
+        [
+          startToken === Eth
+            ? farm.wrapEth(_toMode)
+            : farm.unwrapEth(_fromMode)
+        ],
         [amountIn],
         forward,
       );
     } else if (isPair(_tokenIn, _tokenOut, [Bean, Eth])) {
-      const method = startToken === Eth ? 'WETH' : 'BEAN';
-      console.debug(`[handleEstimate] estimating: WETH_BEAN via ${method}`);
+      console.debug(`[handleEstimate] estimating: WETH_BEAN via ${startToken.symbol}`);
       estimate = await Farm.estimate(
-        [
-          farm.wrapEth(),
-          ...farm.pair.WETH_BEAN(
-            method,
-            _fromMode,
-            _toMode,
-          ),
-        ],
+         startToken === Eth
+          ? [
+            farm.wrapEth(), // amountOut is exact
+            ...farm.pair.WETH_BEAN(
+              'WETH',
+              _fromMode,
+              _toMode,
+            ),
+          ]
+          : [
+            ...farm.pair.WETH_BEAN(
+              'BEAN',
+              _fromMode,
+              FarmToMode.INTERNAL, // send WETH to INTERNAL
+            ), // amountOut is not exact
+            farm.unwrapEth(
+              FarmFromMode.INTERNAL_TOLERANT  // unwrap WETH from INTERNAL
+            ), // always goes to EXTERNAL because ETH is not ERC20 and therefore not circ. bal. compatible
+          ],
         [amountIn],
         forward,
       );
