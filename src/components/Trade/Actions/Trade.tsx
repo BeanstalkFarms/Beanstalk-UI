@@ -17,7 +17,7 @@ import DestinationField from '~/components/Common/Form/DestinationField';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import { Beanstalk } from '~/generated/index';
 import { ZERO_BN } from '~/constants';
-import { BEAN, DAI, ETH, USDC, USDT, WETH } from '~/constants/tokens';
+import { BEAN, CRV3_UNDERLYING, DAI, ETH, USDC, USDT, WETH } from '~/constants/tokens';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useFarmerBalances from '~/hooks/useFarmerBalances';
 import useTokenMap from '~/hooks/useTokenMap';
@@ -30,6 +30,7 @@ import useAccount from '~/hooks/ledger/useAccount';
 import { toStringBaseUnitBN, toTokenUnitsBN, parseError } from '~/util';
 import { IconSize } from '~/components/App/muiTheme';
 import TransactionToast from '~/components/Common/TxnToast';
+import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 
 type TradeFormValues = {
   /** Multiple tokens can (eventually) be swapped into tokenOut */
@@ -301,10 +302,15 @@ const SUPPORTED_TOKENS = [
  * ...etc
  */
 
+/**
+ * Ensure that both `_tokenIn` and `_tokenOut` are in `_pair`, regardless of order.
+ */
 const isPair = (_tokenIn : Token, _tokenOut : Token, _pair : [Token, Token]) => {
   const s = new Set(_pair);
   return s.has(_tokenIn) && s.has(_tokenOut);
 };
+
+// const isCombination = (_tokenIn : Token, _tokenOut : Token, _)
 
 const Trade: React.FC<{}> = () => {
   ///
@@ -316,12 +322,14 @@ const Trade: React.FC<{}> = () => {
   const getChainToken = useGetChainToken();
   const Eth           = getChainToken(ETH);
   const Bean          = getChainToken(BEAN);
+  const crv3Underlying = useMemo(() => new Set(CRV3_UNDERLYING.map(getChainToken)), [getChainToken]);
   const tokenMap      = useTokenMap<ERC20Token | NativeToken>(SUPPORTED_TOKENS);
   const tokenList     = useMemo(() => Object.values(tokenMap), [tokenMap]);
   const farm          = useFarm();
   
   ///
   const farmerBalances = useFarmerBalances();
+  const [refetchFarmerBalances] = useFetchFarmerBalances();
 
   // Form setup
   const initialValues: TradeFormValues = useMemo(() => ({
@@ -373,9 +381,15 @@ const Trade: React.FC<{}> = () => {
     /// 
     /// In this instance, `_tokenIn` is BEAN and `_tokenOut` is ETH,
     /// since we are quoting from BEAN to ETH.
+    /// 
+    /// If forward-quoting, then the user's selected input token (the
+    /// first one that appears in the form) is the same as _tokenIn.
+    /// If backward-quoting, then we flip things.
     const startToken = forward ? _tokenIn : _tokenOut;
+    const Weth = getChainToken(WETH);
 
     if (_tokenIn === _tokenOut) {
+      console.debug('[handleEstimate] estimating: transferToken');
       estimate = await Farm.estimate(
         [
           farm.transferToken(
@@ -388,13 +402,43 @@ const Trade: React.FC<{}> = () => {
         [amountIn],
         forward
       );
+    } else if (isPair(_tokenIn, _tokenOut, [Eth, Weth])) {
+      const method = startToken === Eth ? 'wrapEth' : 'unwrapEth';
+      console.debug(`[handleEstimate] estimating: ${method}`);
+      estimate = await Farm.estimate(
+        [farm[method](_toMode)],
+        [amountIn],
+        forward,
+      );
     } else if (isPair(_tokenIn, _tokenOut, [Bean, Eth])) {
+      const method = startToken === Eth ? 'WETH' : 'BEAN';
+      console.debug(`[handleEstimate] estimating: WETH_BEAN via ${method}`);
       estimate = await Farm.estimate(
         [
           farm.wrapEth(),
           ...farm.pair.WETH_BEAN(
-            'WETH'
-          ) // _tokenIn === Eth ? 'WETH' : 'BEAN'
+            method,
+            _fromMode,
+            _toMode,
+          ),
+        ],
+        [amountIn],
+        forward,
+      );
+    } else if (
+      (_tokenIn === Bean && crv3Underlying.has(_tokenOut as any))
+      || (_tokenOut === Bean && crv3Underlying.has(_tokenIn as any))
+    ) {
+      console.debug('[handleEstimate] estimating: BEAN <-> 3CRV Underlying');
+      estimate = await Farm.estimate(
+        [
+          farm.exchangeUnderlying(
+            farm.contracts.curve.pools.beanCrv3.address,
+            _tokenIn.address,
+            _tokenOut.address,
+            _fromMode,
+            _toMode
+          )
         ],
         [amountIn],
         forward,
@@ -403,7 +447,7 @@ const Trade: React.FC<{}> = () => {
       throw new Error('Unknown Swap mode.');
     }
     return estimate;
-  }, [Bean, Eth, farm]);
+  }, [Bean, Eth, crv3Underlying, farm, getChainToken]);
 
   const handleQuote = useCallback<DirectionalQuoteHandler>(
     (direction) => async (_tokenIn, _amountIn, _tokenOut) => {
@@ -422,6 +466,8 @@ const Trade: React.FC<{}> = () => {
         account,
         _tokenIn,
         _tokenOut,
+        FarmFromMode.INTERNAL_EXTERNAL,
+        FarmToMode.EXTERNAL,
       );
 
       return {
@@ -443,8 +489,10 @@ const Trade: React.FC<{}> = () => {
         const tokenIn = stateIn.token;
         const stateOut = values.tokenOut;
         const tokenOut = stateOut.token;
+        const modeOut  = values.modeOut;
         if (!stateIn.amount) throw new Error('No input amount set.');
         if (!account) throw new Error('Connect a wallet first.');
+        if (!modeOut) throw new Error('No destination selected.');
         const amountIn = ethers.BigNumber.from(
           stateIn.token.stringify(stateIn.amount)
         );
@@ -454,6 +502,9 @@ const Trade: React.FC<{}> = () => {
           account,
           tokenIn,
           tokenOut,
+          FarmFromMode.INTERNAL_EXTERNAL,
+          /// FIXME: no such thing as "internal ETH"
+          modeOut, 
         );
 
         txToast = new TransactionToast({
@@ -470,7 +521,9 @@ const Trade: React.FC<{}> = () => {
         txToast.confirming(txn);
 
         const receipt = await txn.wait();
-        // await Promise.all([refetchFarmerSilo(), refetchFarmerBalances()]);
+        await Promise.all([
+          refetchFarmerBalances()
+        ]);
         txToast.success(receipt);
         formActions.resetForm();
       } catch (err) {
@@ -478,7 +531,7 @@ const Trade: React.FC<{}> = () => {
         formActions.setSubmitting(false);
       }
     },
-    [account, beanstalk, handleEstimate]
+    [account, beanstalk, handleEstimate, refetchFarmerBalances]
   );
 
   return (

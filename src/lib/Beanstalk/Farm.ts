@@ -331,6 +331,26 @@ export default class Farm {
     };
   };
 
+  unwrapEth = (
+    _toMode : FarmToMode  = FarmToMode.INTERNAL,
+  ) : ChainableFunction => async (_amountInStep: ethers.BigNumber) => {
+    console.debug('[step@wrapEth] run', {
+      _toMode,
+      _amountInStep
+    });
+    return {
+      name: 'unwrapEth',
+      amountOut: _amountInStep, // amountInStep should be an amount of ETH.
+      encode: (_: ethers.BigNumber) => (
+        this.contracts.beanstalk.interface.encodeFunctionData('unwrapEth', [
+          _amountInStep,        // ignore minAmountOut since there is no slippage
+          _toMode,              //
+        ])
+      ),
+      decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('unwrapEth', data),
+    };
+  };
+
   transferToken = (
     _tokenIn : string,
     _recipient : string,
