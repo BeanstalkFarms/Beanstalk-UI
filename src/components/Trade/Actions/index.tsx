@@ -6,7 +6,7 @@ const TradeActions : React.FC<{}> = () => (
   <Card sx={{ position: 'relative' }}>
     <Stack gap={1.5}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>
-        <Typography variant="h4">Trade</Typography>
+        <Typography variant="h4">Swap</Typography>
       </Stack>
       <Box sx={{ px: 1, pb: 1, position: 'relative' }}>
         <Trade />

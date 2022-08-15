@@ -49,6 +49,14 @@ type DirectionalQuoteHandler = (
   direction: 'forward' | 'backward',
 ) => QuoteHandler;
 
+enum Pathway {
+  TRANSFER,
+  ETH_WETH,
+  BEAN_ETH,
+  BEAN_WETH, // make this BEAN_TRICRYPTO_UNDERLYING
+  BEAN_CRV3_UNDERLYING,
+}
+
 const Quoting = <CircularProgress variant="indeterminate" size="small" sx={{ width: 14, height: 14 }} />;
 
 const QUOTE_SETTINGS = {
@@ -60,15 +68,18 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   beanstalk: Beanstalk;
   handleQuote: DirectionalQuoteHandler;
   tokenList: (ERC20Token | NativeToken)[];
+  getPathway: (tokenIn: Token, tokenOut: Token) => Pathway | false;
 }> = ({
   //
   values,
   setFieldValue,
   handleQuote,
+  isSubmitting,
   //
   balances,
   beanstalk,
   tokenList,
+  getPathway
 }) => {
   /// Tokens
   const Eth = useChainConstant(ETH);
@@ -88,6 +99,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   // const balanceOut = balances[tokenOut.address];
   // Other
   const tokensMatch = tokenIn === tokenOut;
+  const noBalance = !(balanceIn?.total.gt(0));
 
   /// Memoize to prevent infinite loop on useQuote
   const handleBackward = useMemo(() => handleQuote('backward'), [handleQuote]);
@@ -180,6 +192,9 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
     }
   }, [modeIn, modeOut, setFieldValue, tokenIn, tokenOut, tokensMatch]);
   
+  const pathwayCheck = (
+    getPathway(tokenIn, tokenOut) !== false
+  );
   /// If ETH is selected as an output, the only possible destination is EXTERNAL.
   const ethModeCheck = (
     tokenOut === Eth
@@ -191,7 +206,8 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
     && amountOut?.gt(0)
   );
   const isValid = (
-    ethModeCheck
+    pathwayCheck
+    && ethModeCheck
     && amountsCheck
   );
 
@@ -272,7 +288,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
               quotingOut
               /// Can't type into the output field if
               /// user has no balance of the input.
-              || !(balanceIn?.total.gt(0))
+              || noBalance
             }
             quote={
               quotingIn
@@ -301,6 +317,11 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
             </Link>
           </Alert>
         ) : null}
+        {pathwayCheck === false ? (
+          <Alert variant="standard" color="warning">
+            Swapping from {tokenIn.symbol} to {tokenOut.symbol} is currently unsupported.
+          </Alert>
+        ) : null}
         {/* <Box>
           <Accordion variant="outlined">
             <StyledAccordionSummary title="Transaction Details" />
@@ -321,12 +342,13 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
           variant="contained"
           color="primary"
           size="large"
-          disabled={!isValid}
+          loading={isSubmitting}
+          disabled={!isValid || isSubmitting}
           contract={beanstalk}
           tokens={values.tokensIn}
           mode="auto"
         >
-          Trade
+          {noBalance ? 'Nothing to swap' : 'Swap'}
         </SmartSubmitButton>
       </Stack>
     </Form>
@@ -391,6 +413,7 @@ const Trade: React.FC<{}> = () => {
   ///
   const getChainToken = useGetChainToken();
   const Eth           = getChainToken(ETH);
+  const Weth          = getChainToken(WETH);
   const Bean          = getChainToken(BEAN);
   const crv3Underlying = useMemo(() => new Set(CRV3_UNDERLYING.map(getChainToken)), [getChainToken]);
   const tokenMap      = useTokenMap<ERC20Token | NativeToken>(SUPPORTED_TOKENS);
@@ -420,6 +443,21 @@ const Trade: React.FC<{}> = () => {
     }
   }), [Bean, Eth]);
 
+  const getPathway = useCallback((
+    _tokenIn: Token,
+    _tokenOut: Token,
+  ) => {
+    if (_tokenIn === _tokenOut) return Pathway.TRANSFER;
+    if (isPair(_tokenIn, _tokenOut, [Eth, Weth])) return Pathway.ETH_WETH;
+    if (isPair(_tokenIn, _tokenOut, [Bean, Eth])) return Pathway.BEAN_ETH;
+    if (isPair(_tokenIn, _tokenOut, [Bean, Weth])) return Pathway.BEAN_WETH;
+    if (
+      (_tokenIn === Bean && crv3Underlying.has(_tokenOut as any))
+      || (_tokenOut === Bean && crv3Underlying.has(_tokenIn as any))
+    ) return Pathway.BEAN_CRV3_UNDERLYING;
+    return false;
+  }, [Bean, Eth, Weth, crv3Underlying]);
+
   const handleEstimate = useCallback(async (
     forward : boolean,
     amountIn : ethers.BigNumber,
@@ -429,7 +467,6 @@ const Trade: React.FC<{}> = () => {
     _fromMode : FarmFromMode,
     _toMode : FarmToMode,
   ) => {
-    let estimate;
     console.debug('[handleEstimate]', {
       forward,
       amountIn,
@@ -439,6 +476,8 @@ const Trade: React.FC<{}> = () => {
       _fromMode,
       _toMode,
     });
+
+    const pathway = getPathway(_tokenIn, _tokenOut);
 
     /// Say I want to buy 1000 BEAN and I have ETH.
     /// I select ETH as the input token, BEAN as the output token.
@@ -456,11 +495,11 @@ const Trade: React.FC<{}> = () => {
     /// first one that appears in the form) is the same as _tokenIn.
     /// If backward-quoting, then we flip things.
     const startToken = forward ? _tokenIn : _tokenOut;
-    const Weth = getChainToken(WETH);
 
-    if (_tokenIn === _tokenOut) {
+    /// Token <-> Token
+    if (pathway === Pathway.TRANSFER) {
       console.debug('[handleEstimate] estimating: transferToken');
-      estimate = await Farm.estimate(
+      return Farm.estimate(
         [
           farm.transferToken(
             _tokenIn.address,
@@ -472,9 +511,12 @@ const Trade: React.FC<{}> = () => {
         [amountIn],
         forward
       );
-    } else if (isPair(_tokenIn, _tokenOut, [Eth, Weth])) {
+    } 
+
+    /// ETH <-> WETH
+    if (pathway === Pathway.ETH_WETH) {
       console.debug(`[handleEstimate] estimating: ${startToken === Eth ? 'wrap' : 'unwrap'}`);
-      estimate = await Farm.estimate(
+      return Farm.estimate(
         [
           startToken === Eth
             ? farm.wrapEth(_toMode)
@@ -483,37 +525,58 @@ const Trade: React.FC<{}> = () => {
         [amountIn],
         forward,
       );
-    } else if (isPair(_tokenIn, _tokenOut, [Bean, Eth])) {
-      console.debug(`[handleEstimate] estimating: WETH_BEAN via ${startToken.symbol}`);
-      estimate = await Farm.estimate(
-         startToken === Eth
-          ? [
-            farm.wrapEth(), // amountOut is exact
-            ...farm.pair.WETH_BEAN(
-              'WETH',
-              _fromMode,
-              _toMode,
-            ),
-          ]
-          : [
-            ...farm.pair.WETH_BEAN(
-              'BEAN',
-              _fromMode,
-              FarmToMode.INTERNAL, // send WETH to INTERNAL
-            ), // amountOut is not exact
-            farm.unwrapEth(
-              FarmFromMode.INTERNAL_TOLERANT  // unwrap WETH from INTERNAL
-            ), // always goes to EXTERNAL because ETH is not ERC20 and therefore not circ. bal. compatible
-          ],
-        [amountIn],
-        forward,
-      );
-    } else if (
-      (_tokenIn === Bean && crv3Underlying.has(_tokenOut as any))
-      || (_tokenOut === Bean && crv3Underlying.has(_tokenIn as any))
-    ) {
+    } 
+
+    /// BEAN <-> ETH
+    if (pathway === Pathway.BEAN_ETH) {
+      return Farm.estimate(
+        startToken === Eth
+         ? [
+           farm.wrapEth(), // amountOut is exact
+           ...farm.pair.WETH_BEAN(
+             'WETH',
+             _fromMode,
+             _toMode,
+           ),
+         ]
+         : [
+           ...farm.pair.WETH_BEAN(
+             'BEAN',
+             _fromMode,
+             FarmToMode.INTERNAL, // send WETH to INTERNAL
+           ), // amountOut is not exact
+           farm.unwrapEth(
+             FarmFromMode.INTERNAL_TOLERANT  // unwrap WETH from INTERNAL
+           ), // always goes to EXTERNAL because ETH is not ERC20 and therefore not circ. bal. compatible
+         ],
+       [amountIn],
+       forward,
+     );
+    }
+
+    /// BEAN <-> WETH
+    if (pathway === Pathway.BEAN_WETH) {
+      return Farm.estimate(
+        startToken === Weth
+          ? farm.pair.WETH_BEAN(
+            'WETH',
+            _fromMode,
+            _toMode,
+          )
+          : farm.pair.WETH_BEAN(
+            'BEAN',
+            _fromMode,
+            _toMode,
+          ),
+       [amountIn],
+       forward,
+     );
+    } 
+
+    /// BEAN <-> CRV3 Underlying
+    if (pathway === Pathway.BEAN_CRV3_UNDERLYING) {
       console.debug('[handleEstimate] estimating: BEAN <-> 3CRV Underlying');
-      estimate = await Farm.estimate(
+      return Farm.estimate(
         [
           farm.exchangeUnderlying(
             farm.contracts.curve.pools.beanCrv3.address,
@@ -526,11 +589,10 @@ const Trade: React.FC<{}> = () => {
         [amountIn],
         forward,
       );
-    } else {
-      throw new Error('Unknown Swap mode.');
     }
-    return estimate;
-  }, [Bean, Eth, crv3Underlying, farm, getChainToken]);
+
+    throw new Error('Unsupported swap mode.');
+  }, [Eth, Weth, farm, getPathway]);
 
   const handleQuote = useCallback<DirectionalQuoteHandler>(
     (direction) => async (_tokenIn, _amountIn, _tokenOut) => {
@@ -633,6 +695,7 @@ const Trade: React.FC<{}> = () => {
             beanstalk={beanstalk}
             tokenList={tokenList}
             handleQuote={handleQuote}
+            getPathway={getPathway}
             {...formikProps}
           />
         </>
