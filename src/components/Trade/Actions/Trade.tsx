@@ -27,11 +27,12 @@ import useGetChainToken from '~/hooks/useGetChainToken';
 import useQuote, { QuoteHandler } from '~/hooks/useQuote';
 import useFarm from '~/hooks/useFarm';
 import useAccount from '~/hooks/ledger/useAccount';
-import { toStringBaseUnitBN, toTokenUnitsBN, parseError } from '~/util';
+import { toStringBaseUnitBN, toTokenUnitsBN, parseError, MinBN } from '~/util';
 import { IconSize } from '~/components/App/muiTheme';
 import TransactionToast from '~/components/Common/TxnToast';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import useChainConstant from '~/hooks/useChainConstant';
+import { optimizeFromMode } from '~/util/Farm';
 
 type TradeFormValues = {
   /** Multiple tokens can (eventually) be swapped into tokenOut */
@@ -101,6 +102,14 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   // Other
   const tokensMatch = tokenIn === tokenOut;
   const noBalance = !(balanceIn?.total.gt(0));
+  const expectedFromMode = balanceIn
+    ? optimizeFromMode(
+      /// Manually set a maximum of `total` to prevent
+      /// throwing INTERNAL_EXTERNAL_TOLERANT error.
+      MinBN(amountIn || ZERO_BN, balanceIn.total),
+      balanceIn
+    )
+    : FarmFromMode.INTERNAL;
 
   /// Memoize to prevent infinite loop on useQuote
   const handleBackward = useMemo(() => handleQuote('backward'), [handleQuote]);
@@ -157,13 +166,13 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
     /// or if they have no balance at all, always show INTERNAL->EXTERNAL.
     /// Otherwise show the reverse.
     const [newModeIn, newModeOut] = (
-      balanceIn.internal.gt(0) || balanceIn.total.eq(0)
+      !balanceIn || balanceIn.internal.gt(0) || balanceIn.total.eq(0)
         ? [FarmFromMode.INTERNAL, FarmToMode.EXTERNAL]
         : [FarmFromMode.EXTERNAL, FarmToMode.INTERNAL]
     );
     setFieldValue('modeIn', newModeIn);
     setFieldValue('modeOut', newModeOut);
-  }, [balanceIn.internal, balanceIn.total, setFieldValue]);
+  }, [balanceIn, setFieldValue]);
   
   const handleSubmit = useCallback((_tokens: Set<Token>) => {
     if (tokenSelect === 'tokenOut') {
@@ -338,6 +347,11 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
             Swapping from {tokenIn.symbol} to {tokenOut.symbol} is currently unsupported.
           </Alert>
         ) : null}
+        {diffDestinations === false ? (
+          <Alert variant="standard" color="warning">
+            Please choose a different source or destination.
+          </Alert>
+        ) : null}
         {/* <Box>
           <Accordion variant="outlined">
             <StyledAccordionSummary title="Transaction Details" />
@@ -361,7 +375,13 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
           loading={isSubmitting}
           disabled={!isValid || isSubmitting}
           contract={beanstalk}
-          tokens={values.tokensIn}
+          tokens={
+            /// FIXME: when optimizeFromMode is not INTERNAL
+            (expectedFromMode === FarmFromMode.EXTERNAL
+            || expectedFromMode === FarmFromMode.INTERNAL_EXTERNAL)
+              ? values.tokensIn
+              : []
+          }
           mode="auto"
         >
           {noBalance ? 'Nothing to swap' : 'Swap'}
