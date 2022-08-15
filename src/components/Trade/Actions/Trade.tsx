@@ -13,7 +13,7 @@ import {
 } from '~/components/Common/Form';
 import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
 import TokenInputField from '~/components/Common/Form/TokenInputField';
-import DestinationField from '~/components/Common/Form/DestinationField';
+import FarmModeField from '~/components/Common/Form/FarmModeField';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import { Beanstalk } from '~/generated/index';
 import { ZERO_BN } from '~/constants';
@@ -151,30 +151,39 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   );
   const handleCloseTokenSelect = useCallback(() => setTokenSelect(null), []);
   const handleShowTokenSelect  = useCallback((which: 'tokensIn' | 'tokenOut') => () => setTokenSelect(which), []);
+
+  const setInitialModes = useCallback(() => {
+    /// If user has an INTERNAL balance of the selected token,
+    /// or if they have no balance at all, always show INTERNAL->EXTERNAL.
+    /// Otherwise show the reverse.
+    const [newModeIn, newModeOut] = (
+      balanceIn.internal.gt(0) || balanceIn.total.eq(0)
+        ? [FarmFromMode.INTERNAL, FarmToMode.EXTERNAL]
+        : [FarmFromMode.EXTERNAL, FarmToMode.INTERNAL]
+    );
+    setFieldValue('modeIn', newModeIn);
+    setFieldValue('modeOut', newModeOut);
+  }, [balanceIn.internal, balanceIn.total, setFieldValue]);
   
   const handleSubmit = useCallback((_tokens: Set<Token>) => {
     if (tokenSelect === 'tokenOut') {
+      const newTokenOut = Array.from(_tokens)[0];
       setFieldValue('tokenOut', {
-        token: Array.from(_tokens)[0],
+        token: newTokenOut,
         amount: undefined,
       });
       setFieldValue('tokensIn.0.amount', undefined);
+      if (tokenIn === newTokenOut) setInitialModes();
     } else if (tokenSelect === 'tokensIn') {
-      const copy = new Set(_tokens);
-      const newValue = values.tokensIn.filter((x) => {
-        copy.delete(x.token);
-        return _tokens.has(x.token);
+      const newTokenIn = Array.from(_tokens)[0];
+      setFieldValue('tokensIn.0', {
+        token: newTokenIn,
+        amount: undefined
       });
-      setFieldValue('tokensIn', [
-        ...newValue,
-        ...Array.from(copy).map((_token) => ({
-          token: _token,
-          amount: undefined
-        })),
-      ]);
       setFieldValue('tokenOut.amount', undefined);
+      if (newTokenIn === tokenOut) setInitialModes();
     }
-  }, [setFieldValue, tokenSelect, values]);
+  }, [setFieldValue, setInitialModes, tokenIn, tokenOut, tokenSelect]);
 
   const handleReverse = useCallback(() => {
     if (tokensMatch) {
@@ -208,13 +217,14 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   );
   const diffDestinations = (
     tokensMatch
-      ? modeIn !== modeOut
+      ? modeIn.valueOf() !== modeOut.valueOf() // compare string enum vals
       : true
   );
   const isValid = (
     pathwayCheck
     && ethModeCheck
     && amountsCheck
+    && diffDestinations
   );
 
   return (
@@ -261,12 +271,11 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
             handleChange={handleChangeAmountIn}
           />
           {tokensMatch ? (
-            <Stack gap={0.5}>
-              <DestinationField
-                name="modeIn"
-                label="Source"
-              />
-            </Stack>
+            <FarmModeField
+              name="modeIn"
+              label="Source"
+              baseMode={FarmFromMode}
+            />
           ) : null}
         </>
         <Stack direction="row" justifyContent="center" mt={-1}>
@@ -303,9 +312,10 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
             }
             handleChange={handleChangeAmountOut}
           />
-          <DestinationField
+          <FarmModeField
             name="modeOut"
             label="Destination"
+            baseMode={FarmToMode}
           />
         </>
         {/* Warnings */}

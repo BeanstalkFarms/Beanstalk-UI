@@ -11,7 +11,7 @@ import {
   TokenOutputField, TxnPreview,
   TxnSeparator
 } from '~/components/Common/Form';
-import DestinationField from '~/components/Common/Form/DestinationField';
+import FarmModeField from '~/components/Common/Form/FarmModeField';
 import useFarmerPlots from '~/hooks/redux/useFarmerPlots';
 import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
 import { useBeanstalkContract } from '~/hooks/useContract';
@@ -80,7 +80,7 @@ const FillOrderForm: React.FC<
           max={podOrder.remainingAmount}
           disabledAdvanced
         />
-        <DestinationField name="destination" />
+        <FarmModeField name="destination" />
         {isReady && (
           <>
             <TxnSeparator mt={0} />

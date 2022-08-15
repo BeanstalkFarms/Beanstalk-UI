@@ -221,7 +221,7 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.RECEIVE_TOKEN:
       return `Add ${displayFullBN(a.amount, a.token.displayDecimals)} ${a.token.name}${
         a.destination
-          ? ` to your ${copy.TO_MODE[a.destination]}`
+          ? ` to your ${copy.MODES[a.destination]}`
           : ''
       }.`;
     case ActionType.END_TOKEN:
@@ -260,7 +260,7 @@ export const parseActionMessage = (a: Action) => {
     case ActionType.RECEIVE_BEANS:
       return `Add ${displayFullBN(a.amount, BEAN[1].displayDecimals)} Beans${
         a.destination
-          ? ` to your ${copy.TO_MODE[a.destination]}`
+          ? ` to your ${copy.MODES[a.destination]}`
           : ''
       }.`;
     case ActionType.TRANSFER_PODS:
