@@ -15,6 +15,7 @@ const Proposals: React.FC<{}> = () => {
   const [tab, handleChange] = useTabs(SLUGS, 'action');
   const [proposals, setProposals] = useState(null);
 
+  /// Query all proposals
   apolloSnapshotClient.query({
     // ...config,
     query: ProposalsDocument,
