@@ -264,7 +264,8 @@ export default class Farm {
   pair = {
     WETH_BEAN: (
       _tokenIn : 'WETH' | 'BEAN',
-      _fromMode? : FarmFromMode
+      _fromMode? : FarmFromMode,
+      _toMode?: FarmToMode,
     ) => {
       // default: WETH -> BEAN; flip if input is BEAN
       const Weth = getChainConstant(WETH, this.provider.network.chainId).address;
@@ -284,6 +285,8 @@ export default class Farm {
             this.contracts.curve.pools.beanCrv3.address,
             Usdt,
             Bean,
+            undefined, // default from mode
+            _toMode
           ),
         ]
         : [
@@ -298,6 +301,8 @@ export default class Farm {
             this.contracts.curve.registries.cryptoFactory.address,
             Usdt,
             Weth,
+            undefined, // default from mode
+            _toMode
           ),
         ];
     }
@@ -481,7 +486,7 @@ export default class Farm {
     _fromMode : FarmFromMode = FarmFromMode.INTERNAL_TOLERANT,
     _toMode   : FarmToMode   = FarmToMode.INTERNAL,
   ) : ChainableFunction => async (_amountInStep: ethers.BigNumber, _forward : boolean = true) => {
-    /// exchanges can be run in reverse
+    /// exchangeUnderlying can be estimated in reverse
     const [tokenIn, tokenOut] = Farm.direction(_tokenIn, _tokenOut, _forward);
 
     console.debug(`[step@exchangeUnderlying] run [${_forward ? 'forward' : 'backward'}]`, {
@@ -505,8 +510,8 @@ export default class Farm {
     // Only MetaPools have the ability to exchange_underlying
     // FIXME: 3pool also has a single get_dy_underlying method, will we ever use this?
     const amountOut = await CurveMetaPool__factory.connect(_pool, this.provider).callStatic['get_dy_underlying(int128,int128,uint256)'](
-      i, // 3,  // i = USDT = coins[3] ([0=BEAN, 1=CRV3] => [0=BEAN, 1=DAI, 2=USDC, 3=USDT])
-      j, // 0,  // j = BEAN = coins[0]
+      i, // i = USDT = coins[3] ([0=BEAN, 1=CRV3] => [0=BEAN, 1=DAI, 2=USDC, 3=USDT])
+      j, // j = BEAN = coins[0]
       _amountInStep,
       { gasLimit: 10000000 }
     );
@@ -525,8 +530,8 @@ export default class Farm {
       encode: (minAmountOut: ethers.BigNumber) => (
         this.contracts.beanstalk.interface.encodeFunctionData('exchangeUnderlying', [
           _pool,
-          tokenIn,
-          tokenOut,
+          tokenIn, // fixme
+          tokenOut, // fixme
           _amountInStep,
           minAmountOut,
           _fromMode,

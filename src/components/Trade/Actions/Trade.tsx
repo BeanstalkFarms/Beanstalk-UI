@@ -1,13 +1,15 @@
 import { CircularProgress, Stack } from '@mui/material';
-import { Form, Formik, FormikProps } from 'formik';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ethers } from 'ethers';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import toast from 'react-hot-toast';
 import {
   FormApprovingState, FormTokenState,
+  SlippageSettingsFragment,
   SmartSubmitButton,
   TokenAdornment,
   TokenSelectDialog,
-  TxnSeparator
 } from '~/components/Common/Form';
 import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
 import TokenInputField from '~/components/Common/Form/TokenInputField';
@@ -25,7 +27,9 @@ import useGetChainToken from '~/hooks/useGetChainToken';
 import useQuote, { QuoteHandler } from '~/hooks/useQuote';
 import useFarm from '~/hooks/useFarm';
 import useAccount from '~/hooks/ledger/useAccount';
-import { toStringBaseUnitBN, toTokenUnitsBN } from '~/util';
+import { toStringBaseUnitBN, toTokenUnitsBN, parseError } from '~/util';
+import { IconSize } from '~/components/App/muiTheme';
+import TransactionToast from '~/components/Common/TxnToast';
 
 type TradeFormValues = {
   /** Multiple tokens can (eventually) be swapped into tokenOut */
@@ -35,9 +39,13 @@ type TradeFormValues = {
   tokenOut:   FormTokenState;
   modeOut:    FarmToMode;
   approving?: FormApprovingState;
+  /** */
+  settings:   SlippageSettingsFragment;
 };
 
-type DirectionalQuoteHandler = (direction: 'forward' | 'backward') => QuoteHandler;
+type DirectionalQuoteHandler = (
+  direction: 'forward' | 'backward',
+) => QuoteHandler;
 
 const Quoting = <CircularProgress variant="indeterminate" size="small" sx={{ width: 14, height: 14 }} />;
 
@@ -78,11 +86,6 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   // Memoize to prevent infinite loop on useQuote
   const handleBackward = useMemo(() => handleQuote('backward'), [handleQuote]);
   const handleForward  = useMemo(() => handleQuote('forward'),  [handleQuote]);
-
-  /**
-   * Get amountIn.
-   * 
-   */
   const [resultIn,  quotingIn,  getMinAmountIn] = useQuote(tokenIn, handleBackward, QUOTE_SETTINGS);
   const [resultOut, quotingOut, getAmountOut]   = useQuote(tokenOut, handleForward, QUOTE_SETTINGS);
 
@@ -128,7 +131,11 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   const handleShow  = useCallback((which: 'tokensIn' | 'tokenOut') => () => setTokenSelect(which), []);
   const handleSubmit = useCallback((_tokens: Set<Token>) => {
     if (tokenSelect === 'tokenOut') {
-      setFieldValue('tokenOut', Array.from(_tokens)[0]);
+      setFieldValue('tokenOut', {
+        token: Array.from(_tokens)[0],
+        amount: undefined,
+      });
+      setFieldValue('tokensIn.0.amount', undefined);
     } else if (tokenSelect === 'tokensIn') {
       const copy = new Set(_tokens);
       const newValue = values.tokensIn.filter((x) => {
@@ -142,6 +149,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
           amount: undefined
         })),
       ]);
+      setFieldValue('tokenOut.amount', undefined);
     }
   }, [setFieldValue, tokenSelect, values]);
 
@@ -193,7 +201,9 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
             </Stack>
           ) : null}
         </>
-        <TxnSeparator />
+        <Stack direction="row" justifyContent="center">
+          <ExpandMoreIcon color="secondary" width={IconSize.xs} />
+        </Stack>
         {/* Output */}
         <>
           <TokenInputField
@@ -261,32 +271,6 @@ const SUPPORTED_TOKENS = [
   USDT,
 ];
 
-// const x = (farm: Farm) => ({
-//   [BEAN[1].address]: {
-//     [ETH[1].address]: [
-//       // WETH -> USDT via tricrypto2 exchange
-//       farm.exchange(
-//         farm.contracts.curve.pools.tricrypto2.address,
-//         farm.contracts.curve.registries.cryptoFactory.address,
-//         getChainConstant(WETH, farm.provider.network.chainId).address,
-//         getChainConstant(USDT, farm.provider.network.chainId).address,
-//         _initialFromMode
-//       ),
-//       // USDT -> BEAN via bean3crv exchange_underlying
-//       farm.exchangeUnderlying(
-//         farm.contracts.curve.pools.beanCrv3.address,
-//         getChainConstant(USDT, farm.provider.network.chainId).address,
-//         getChainConstant(BEAN, farm.provider.network.chainId).address,
-//       ),
-//       ]
-//   },
-//   [ETH[1].address]: {
-//     [BEAN[1].address]: [
-
-//     ]
-//   }
-// });
-
 /**
  * BEAN + ETH
  * ---------------
@@ -353,7 +337,73 @@ const Trade: React.FC<{}> = () => {
       amount: undefined
     },
     modeOut: FarmToMode.EXTERNAL,
+    settings: {
+      slippage: 0.1,
+    }
   }), [Bean, Eth]);
+
+  const handleEstimate = useCallback(async (
+    forward : boolean,
+    amountIn : ethers.BigNumber,
+    _account : string,
+    _tokenIn : Token,
+    _tokenOut : Token,
+    _fromMode : FarmFromMode,
+    _toMode : FarmToMode,
+  ) => {
+    let estimate;
+    console.debug('[handleEstimate]', {
+      forward,
+      amountIn,
+      _account,
+      _tokenIn,
+      _tokenOut,
+      _fromMode,
+      _toMode,
+    });
+
+    /// Say I want to buy 1000 BEAN and I have ETH.
+    /// I select ETH as the input token, BEAN as the output token.
+    /// Then I type 1000 into the BEAN input.
+    ///
+    /// When this happens, `handleEstimate` is called
+    /// with `forward = false` (since we are finding the amount of
+    /// ETH needed to buy 1,000 BEAN, rather than the amount of BEAN
+    /// received for a set amount of ETH). 
+    /// 
+    /// In this instance, `_tokenIn` is BEAN and `_tokenOut` is ETH,
+    /// since we are quoting from BEAN to ETH.
+    const startToken = forward ? _tokenIn : _tokenOut;
+
+    if (_tokenIn === _tokenOut) {
+      estimate = await Farm.estimate(
+        [
+          farm.transferToken(
+            _tokenIn.address,
+            _account,
+            _fromMode,
+            _toMode,
+          )
+        ],
+        [amountIn],
+        forward
+      );
+    } else if (isPair(_tokenIn, _tokenOut, [Bean, Eth])) {
+      estimate = await Farm.estimate(
+        [
+          farm.wrapEth(),
+          ...farm.pair.WETH_BEAN(
+            'WETH'
+          ) // _tokenIn === Eth ? 'WETH' : 'BEAN'
+        ],
+        [amountIn],
+        forward,
+      );
+    } else {
+      throw new Error('Unknown Swap mode.');
+    }
+    return estimate;
+  }, [Bean, Eth, farm]);
 
   const handleQuote = useCallback<DirectionalQuoteHandler>(
     (direction) => async (_tokenIn, _amountIn, _tokenOut) => {
@@ -366,34 +416,13 @@ const Trade: React.FC<{}> = () => {
       if (!account) throw new Error('Connect a wallet first.');
       
       const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, _tokenIn.decimals));
-      let estimate;
-
-      ///
-      if (_tokenIn === _tokenOut) {
-        estimate = await Farm.estimate(
-          [
-            farm.transferToken(
-              _tokenIn.address,
-              account,
-              FarmFromMode.INTERNAL,
-              FarmToMode.EXTERNAL,
-            )
-          ],
-          [amountIn],
-          direction === 'forward'
-        );
-      } else if (isPair(_tokenIn, _tokenOut, [Bean, Eth])) {
-        estimate = await Farm.estimate(
-          [
-            farm.wrapEth(),
-            ...farm.pair.WETH_BEAN('WETH') // _tokenIn === Eth ? 'WETH' : 'BEAN'
-          ],
-          [amountIn],
-          direction === 'forward'
-        );
-      } else {
-        throw new Error('Unknown Swap mode.');
-      }
+      const estimate = await handleEstimate(
+        direction === 'forward',
+        amountIn,
+        account,
+        _tokenIn,
+        _tokenOut,
+      );
 
       return {
         amountOut: toTokenUnitsBN(
@@ -403,14 +432,53 @@ const Trade: React.FC<{}> = () => {
         steps: estimate.steps,
       };
     },
-    [Bean, Eth, account, farm]
+    [account, handleEstimate]
   );
 
   const onSubmit = useCallback(
-    async () => {
-      console.log('SUBMIT');
+    async (values: TradeFormValues, formActions: FormikHelpers<TradeFormValues>) => {
+      let txToast;
+      try {
+        const stateIn = values.tokensIn[0];
+        const tokenIn = stateIn.token;
+        const stateOut = values.tokenOut;
+        const tokenOut = stateOut.token;
+        if (!stateIn.amount) throw new Error('No input amount set.');
+        if (!account) throw new Error('Connect a wallet first.');
+        const amountIn = ethers.BigNumber.from(
+          stateIn.token.stringify(stateIn.amount)
+        );
+        const estimate = await handleEstimate(
+          true,
+          amountIn,
+          account,
+          tokenIn,
+          tokenOut,
+        );
+
+        txToast = new TransactionToast({
+          loading: 'Swapping...',
+          success: 'Success'
+        });
+        
+        if (!estimate.steps) throw new Error('Unable to generate a transaction sequence');
+        const data = Farm.encodeStepsWithSlippage(
+          estimate.steps,
+          values.settings.slippage / 100,
+        );
+        const txn = await beanstalk.farm(data, { value: estimate.value });
+        txToast.confirming(txn);
+
+        const receipt = await txn.wait();
+        // await Promise.all([refetchFarmerSilo(), refetchFarmerBalances()]);
+        txToast.success(receipt);
+        formActions.resetForm();
+      } catch (err) {
+        txToast ? txToast.error(err) : toast.error(parseError(err));
+        formActions.setSubmitting(false);
+      }
     },
-    []
+    [account, beanstalk, handleEstimate]
   );
 
   return (
