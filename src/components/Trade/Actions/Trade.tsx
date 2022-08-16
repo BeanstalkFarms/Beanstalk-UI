@@ -651,22 +651,24 @@ const Trade: React.FC<{}> = () => {
       return Farm.estimate(
         startToken === Eth
          ? [
-           farm.wrapEth(), // amountOut is exact
-           ...farm.pair.WETH_BEAN(
-             'WETH',
-             _fromMode,
-             _toMode,
-           ),
+            farm.wrapEth(
+              FarmToMode.INTERNAL
+            ),
+            ...farm.pair.WETH_BEAN(
+              'WETH',
+              FarmFromMode.INTERNAL,
+              _toMode,
+            ),
          ]
          : [
-           ...farm.pair.WETH_BEAN(
-             'BEAN',
-             _fromMode,
-             FarmToMode.INTERNAL, // send WETH to INTERNAL
-           ), // amountOut is not exact
-           farm.unwrapEth(
-             FarmFromMode.INTERNAL_TOLERANT  // unwrap WETH from INTERNAL
-           ), // always goes to EXTERNAL because ETH is not ERC20 and therefore not circ. bal. compatible
+            ...farm.pair.WETH_BEAN(
+              'BEAN',
+              _fromMode,
+              FarmToMode.INTERNAL, // send WETH to INTERNAL
+            ), // amountOut is not exact
+            farm.unwrapEth(
+              FarmFromMode.INTERNAL_TOLERANT  // unwrap WETH from INTERNAL
+            ), // always goes to EXTERNAL because ETH is not ERC20 and therefore not circ. bal. compatible
          ],
        [amountIn],
        forward,
@@ -778,7 +780,7 @@ const Trade: React.FC<{}> = () => {
 
         txToast = new TransactionToast({
           loading: 'Swapping...',
-          success: 'Success'
+          success: 'Swap successful.'
         });
         
         if (!estimate.steps) throw new Error('Unable to generate a transaction sequence');
