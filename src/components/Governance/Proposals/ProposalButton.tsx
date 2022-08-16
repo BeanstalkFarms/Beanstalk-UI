@@ -12,26 +12,23 @@ import useGovernanceQuery from '~/hooks/useGovernanceQuery';
 import { VotesDocument } from '~/generated/graphql';
 import useAccount from '~/hooks/ledger/useAccount';
 
-// TODO:
-// - query list of wallet addresses that have voted for a proposal
-//   and check is connected wallet is in that list
-
 const ProposalButton: React.FC<{ proposal: any }> = (props) => {
+  /// Setup
   const account = useAccount();
   const p = props.proposal;
+
+  /// State
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
   const totalStalk = beanstalkSilo.stalk.total;
+
+  /// Query Votes
   const queryConfig = useMemo(() => ({
     variables: {
       proposal_id: p.id.toString().toLowerCase(),
       voter_address: account ? account.toLowerCase() : '',
     }
   }), [p, account]);
-
   const { data: voteData } = useGovernanceQuery(VotesDocument, queryConfig);
-  console.log('VOTES', voteData);
-
-  // const { loadingProposal, proposalError, proposalData } = useGovernanceQuery(ProposalDocument, { variables: { proposal_id: p.id } });
 
   return (
     <Button

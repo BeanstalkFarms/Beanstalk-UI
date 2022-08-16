@@ -12,12 +12,11 @@ const queryConfig = {
 
 const SLUGS = ['BIP', 'BOP', 'BFCP', 'BSP', 'BFBP'];
 const Proposals: React.FC<{}> = () => {
+  ///
   const [tab, handleChange] = useTabs(SLUGS, 'type');
 
-  /// Query all proposals
+  /// Query Proposals
   const { loading, error, data } = useGovernanceQuery(ProposalsDocument, queryConfig);
-
-  // TODO: hasNew() to see if a tab has active proposals
 
   // filter proposals by type (eg: BIP, BOP, ...)
   const filteredProposals = useMemo(() => {
@@ -25,7 +24,6 @@ const Proposals: React.FC<{}> = () => {
       return data.proposals.filter((p: any) => p.title.split('-')[0] === SLUGS[tab]);
     }
   }, [data, loading, tab]);
-  console.log(`${SLUGS[tab]} Proposals:`, filteredProposals);
 
   return (
     <Card sx={{ position: 'relative' }}>

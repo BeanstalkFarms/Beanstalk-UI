@@ -6,7 +6,6 @@ import {
   Stack, Typography
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
-// import ReactMarkdown from 'react-markdown';
 import PageHeader from '~/components/Common/PageHeader';
 import useGovernanceQuery from '~/hooks/useGovernanceQuery';
 import { ProposalDocument } from '~/generated/graphql';
@@ -16,17 +15,19 @@ import { IconSize } from '~/components/App/muiTheme';
 import MarkdownWrapper from '~/components/Common/MarkdownWrapper';
 
 const ProposalPage: React.FC = () => {
-  // Routing
+  /// Routing
   const { id } = useParams<{ id: string }>();
+
+  /// Query proposal data
   const queryConfig = useMemo(() => ({
     variables: { proposal_id: id }
   }), [id]);
   const { loading, error, data } = useGovernanceQuery(ProposalDocument, queryConfig);
-  console.log('PROPOSAL: ', data);
 
   if (loading || data === undefined) {
     return null;
   }
+
   return (
     <Container maxWidth="lg">
       <Stack gap={2}>
