@@ -1,4 +1,4 @@
-import { Alert, CircularProgress, IconButton, Link, Stack } from '@mui/material';
+import { Accordion, AccordionDetails, Alert, Box, CircularProgress, IconButton, Link, Stack } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ethers } from 'ethers';
@@ -12,6 +12,7 @@ import {
   SmartSubmitButton,
   TokenAdornment,
   TokenSelectDialog,
+  TxnPreview,
   TxnSettings,
 } from '~/components/Common/Form';
 import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
@@ -38,13 +39,15 @@ import useChainConstant from '~/hooks/useChainConstant';
 import { optimizeFromMode } from '~/util/Farm';
 import copy from '~/constants/copy';
 import IconWrapper from '~/components/Common/IconWrapper';
+import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
+import { ActionType } from '~/util/Actions';
 
 /// ---------------------------------------------------------------
 
 type TradeFormValues = {
   /** Multiple tokens can (eventually) be swapped into tokenOut */
   tokensIn:   FormTokenState[];
-  modeIn:     FarmFromMode;
+  modeIn:     FarmFromMode.INTERNAL | FarmFromMode.EXTERNAL;
   /** One output token can be selected */
   tokenOut:   FormTokenState;
   modeOut:    FarmToMode;
@@ -115,6 +118,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   const amountOut = stateOut.amount;
   // Other
   const tokensMatch = tokenIn === tokenOut;
+  const pathway   = getPathway(tokenIn, tokenOut);
   const noBalance = !(balanceIn?.total.gt(0));
   const expectedFromMode = balanceIn
     ? optimizeFromMode(
@@ -252,7 +256,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   
   /// Checks
   const pathwayCheck = (
-    getPathway(tokenIn, tokenOut) !== false
+    pathway !== false
   );
   const ethModeCheck = (
     /// If ETH is selected as an output, the only possible destination is EXTERNAL.
@@ -407,26 +411,50 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
             Swapping from {tokenIn.symbol} to {tokenOut.symbol} is currently unsupported.
           </Alert>
         ) : null}
+        {/**
+          * After the upgrade to `handleChangeModeIn` / `handleChangeModeOut`
+          * this should never be true. */}
         {diffDestinations === false ? (
           <Alert variant="standard" color="warning" icon={AlertIcon}>
             Please choose a different source or destination.
           </Alert>
         ) : null}
-        {/* <Box>
-          <Accordion variant="outlined">
-            <StyledAccordionSummary title="Transaction Details" />
-            <AccordionDetails>
-              <TxnPreview
-                actions={[
-                  {
-                    type: ActionType.BASE,
-                    message: 'Trade!'
-                  },
-                ]}
-              />
-            </AccordionDetails>
-          </Accordion>
-        </Box> */}
+        {amountIn?.gt(0) && amountOut?.gt(0) ? (
+          <Box>
+            <Accordion variant="outlined">
+              <StyledAccordionSummary title="Transaction Details" />
+              <AccordionDetails>
+                <TxnPreview
+                  actions={
+                    tokensMatch ? [
+                      {
+                        type: ActionType.TRANSFER_BALANCE,
+                        amount: amountIn,
+                        token: tokenIn,
+                        source: modeIn,
+                        destination: modeOut,
+                      }
+                    ] : [
+                      {
+                        type: ActionType.SWAP,
+                        tokenIn: tokenIn,
+                        amountIn: amountIn,
+                        amountOut: amountOut,
+                        tokenOut: tokenOut,
+                      },
+                      {
+                        type: ActionType.RECEIVE_TOKEN,
+                        amount: amountOut,
+                        token: tokenOut,
+                        destination: modeOut,
+                      },
+                    ]
+                  }
+                />
+              </AccordionDetails>
+            </Accordion>
+          </Box>
+        ) : null}
         <SmartSubmitButton
           type="submit"
           variant="contained"

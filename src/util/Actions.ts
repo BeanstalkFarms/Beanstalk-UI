@@ -1,7 +1,7 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 import Token from '~/classes/Token';
-import { FarmToMode } from '~/lib/Beanstalk/Farm';
+import { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import { displayFullBN, displayTokenAmount } from '~/util/Tokens';
 import copy from '~/constants/copy';
 import { BEAN, PODS, SPROUTS } from '../constants/tokens';
@@ -11,8 +11,9 @@ export enum ActionType {
   /// GENERIC
   BASE,
   END_TOKEN,
-  RECEIVE_TOKEN,
   SWAP,
+  RECEIVE_TOKEN,
+  TRANSFER_BALANCE,
 
   /// SILO
   DEPOSIT,
@@ -65,6 +66,14 @@ export type ReceiveTokenAction = {
   amount: BigNumber;
   token: Token;
   destination?: FarmToMode;
+}
+
+export type TransferBalanceAction = {
+  type: ActionType.TRANSFER_BALANCE;
+  amount: BigNumber;
+  token: Token;
+  source: FarmFromMode.INTERNAL | FarmFromMode.EXTERNAL;
+  destination: FarmToMode;
 }
 
 /// ////////////////////////////// SILO /////////////////////////////////
@@ -184,9 +193,10 @@ export type FertilizerRewardsAction = {
 export type Action = (
   /// GENERAL
   BaseAction
+  | EndTokenAction
   | SwapAction
   | ReceiveTokenAction
-  | EndTokenAction
+  | TransferBalanceAction
   /// SILO
   | SiloDepositAction
   | SiloWithdrawAction
@@ -216,6 +226,8 @@ export type Action = (
 export const parseActionMessage = (a: Action) => {
   switch (a.type) {
     /// GENERIC
+    case ActionType.END_TOKEN:
+      return null;
     case ActionType.SWAP:
       return `Swap ${displayTokenAmount(a.amountIn, a.tokenIn)} for ${displayTokenAmount(a.amountOut, a.tokenOut)}.`;
     case ActionType.RECEIVE_TOKEN:
@@ -224,8 +236,8 @@ export const parseActionMessage = (a: Action) => {
           ? ` to your ${copy.MODES[a.destination]}`
           : ''
       }.`;
-    case ActionType.END_TOKEN:
-      return null;
+    case ActionType.TRANSFER_BALANCE:
+      return `Move ${displayTokenAmount(a.amount, a.token)} from your ${copy.MODES[a.source]} to your ${copy.MODES[a.destination]}.`;
 
     /// SILO
     case ActionType.DEPOSIT:
@@ -257,6 +269,7 @@ export const parseActionMessage = (a: Action) => {
       return `Receive ${displayTokenAmount(a.podAmount, PODS)} at ${displayFullBN(a.placeInLine, 0)} in the Pod Line.`;
     case ActionType.HARVEST:
       return `Harvest ${displayFullBN(a.amount, PODS.displayDecimals)} Pods.`;
+    // fixme: duplicate of RECEIVE_TOKEN?
     case ActionType.RECEIVE_BEANS:
       return `Add ${displayFullBN(a.amount, BEAN[1].displayDecimals)} Beans${
         a.destination
