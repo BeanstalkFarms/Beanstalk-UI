@@ -1,0 +1,29 @@
+query Proposal($proposal_id: String) {
+  proposal(id: $proposal_id) {
+    id
+    title
+    body
+    choices
+    start
+    end
+    snapshot
+    state
+    author
+    created
+    scores
+    scores_by_strategy
+    scores_total
+    scores_updated
+    plugins
+    network
+    strategies {
+      name
+      network
+      params
+    }
+    space {
+      id
+      name
+    }
+  }
+}

@@ -41,6 +41,7 @@ import EditOrderPage from '../../pages/market/edit-order';
 import TradePage from '../../pages/trade';
 import AnalyticsPage from '../../pages/analytics';
 import GovernancePage from '~/pages/governance';
+import ProposalPage from '~/pages/governance/proposal';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -161,11 +162,9 @@ export default function App() {
           <Route path="/market/order/:id" element={<OrderPage />} />
           <Route path="/market/order/:id/edit" element={<EditOrderPage />} />
           <Route path="/market/listing/:id" element={<ListingPage />} />
-          <Route
-            path="/market/listing/:id/edit"
-            element={<EditListingPage />}
-          />
+          <Route path="/market/listing/:id/edit" element={<EditListingPage />} />
           <Route path="/nft" element={<NFTPage />} />
+          <Route path="/proposal/:id" element={<ProposalPage />} />
           <Route path="/silo" element={<SiloPage />} />
           <Route path="/silo/:address" element={<SiloTokenPage />} />
           <Route path="/trade" element={<TradePage />} />

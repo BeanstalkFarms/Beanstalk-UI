@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DocumentNode, QueryOptions, useLazyQuery } from '@apollo/client';
 import { apolloSnapshotClient } from '~/graph/client';
-import { ProposalsDocument } from '~/generated/graphql';
 
 const useGovernanceQuery = (
   document: DocumentNode,
@@ -29,10 +28,14 @@ const useGovernanceQuery = (
         };
         promises.push(apolloSnapshotClient.query({
           // ...config,
-          query: ProposalsDocument,
+          query: document,
           variables,
           notifyOnNetworkStatusChange: true,
-        }).then((r) => r));
+        }).then((r) => {
+            console.log('RETURNED DATA', r.data);
+            return r;
+          }
+        ));
 
         /**
          * Wait for queries to complete

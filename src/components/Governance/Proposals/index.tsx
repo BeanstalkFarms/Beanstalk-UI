@@ -17,6 +17,8 @@ const Proposals: React.FC<{}> = () => {
   /// Query all proposals
   const { loading, error, data } = useGovernanceQuery(ProposalsDocument, queryConfig);
 
+  // TODO: hasNew() to see if a tab has active proposals
+
   // filter proposals by type (eg: BIP, BOP, ...)
   const filteredProposals = useMemo(() => {
     if (!loading && data !== undefined) {
