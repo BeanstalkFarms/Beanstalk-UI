@@ -870,7 +870,15 @@ const Trade: React.FC<{}> = () => {
           refetchFarmerBalances()
         ]);
         txToast.success(receipt);
-        formActions.resetForm();
+        // formActions.resetForm();
+        formActions.setFieldValue('tokensIn.0', {
+          token: tokenIn,
+          amount: undefined,
+        });
+        formActions.setFieldValue('tokenOut', {
+          token: tokenOut,
+          amount: undefined,
+        });
       } catch (err) {
         txToast ? txToast.error(err) : toast.error(parseError(err));
         formActions.setSubmitting(false);
