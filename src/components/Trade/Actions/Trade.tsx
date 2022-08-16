@@ -110,7 +110,6 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   const tokenIn   = stateIn.token;
   const modeIn    = values.modeIn;
   const amountIn  = stateIn.amount;
-  const balanceIn = balances[tokenIn.address];
   // Outputs
   const stateOut  = values.tokenOut;
   const tokenOut  = stateOut.token;
@@ -118,8 +117,20 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   const amountOut = stateOut.amount;
   // Other
   const tokensMatch = tokenIn === tokenOut;
+  const [balanceIn, balanceInInput, balanceInMax] = useMemo(() => {
+    const _balanceIn = balances[tokenIn.address];
+    if (tokensMatch) {
+      const _balanceInMax = _balanceIn[
+        modeIn === FarmFromMode.INTERNAL 
+          ? 'internal'
+          : 'external'
+      ];
+      return [_balanceIn, _balanceInMax, _balanceInMax] as const;
+    } 
+    return [_balanceIn, _balanceIn, _balanceIn?.total || ZERO_BN] as const;
+  }, [balances, modeIn, tokenIn.address, tokensMatch]);
   const pathway   = getPathway(tokenIn, tokenOut);
-  const noBalance = !(balanceIn?.total.gt(0));
+  const noBalance = !(balanceInMax?.gt(0));
   const expectedFromMode = balanceIn
     ? optimizeFromMode(
       /// Manually set a maximum of `total` to prevent
@@ -253,8 +264,17 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
       });
     }
   }, [modeIn, modeOut, setFieldValue, tokenIn, tokenOut, tokensMatch]);
+
+  const handleMax = useCallback(() => {
+    setFieldValue('tokensIn.0.amount', balanceInMax);
+    getAmountOut(tokenIn, balanceInMax);
+  }, [balanceInMax, getAmountOut, setFieldValue, tokenIn]);
   
   /// Checks
+  const isQuoting = (
+    quotingIn
+    || quotingOut
+  );
   const pathwayCheck = (
     pathway !== false
   );
@@ -268,16 +288,22 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
     amountIn?.gt(0)
     && amountOut?.gt(0)
   );
-  const diffDestinations = (
+  const diffModeCheck = (
     tokensMatch
       ? modeIn.valueOf() !== modeOut.valueOf() // compare string enum vals
+      : true
+  );
+  const enoughBalanceCheck = (
+    amountIn
+      ? amountIn.gt(0) && balanceInMax.gte(amountIn)
       : true
   );
   const isValid = (
     pathwayCheck
     && ethModeCheck
     && amountsCheck
-    && diffDestinations
+    && diffModeCheck
+    && enoughBalanceCheck
   );
 
   return (
@@ -318,15 +344,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
                 : undefined
             }
             balance={
-              tokensMatch
-                ? (
-                  balanceIn[
-                    modeIn === FarmFromMode.INTERNAL 
-                      ? 'internal'
-                      : 'external'
-                  ]
-                )
-                : (balanceIn || ZERO_BN)
+              balanceInInput
             }
             disabled={
               quotingIn
@@ -338,6 +356,9 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
                 : undefined
             }
             handleChange={handleChangeAmountIn}
+            error={
+              !noBalance && !enoughBalanceCheck
+            }
           />
           {tokensMatch ? (
             <FarmModeField
@@ -374,7 +395,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
               /// Can't type into the output field if
               /// user has no balance of the input.
               || noBalance
-              ///
+              /// No way to quote for this pathway
               || !pathwayCheck
             }
             quote={
@@ -414,12 +435,29 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
         {/**
           * After the upgrade to `handleChangeModeIn` / `handleChangeModeOut`
           * this should never be true. */}
-        {diffDestinations === false ? (
+        {diffModeCheck === false ? (
           <Alert variant="standard" color="warning" icon={AlertIcon}>
             Please choose a different source or destination.
           </Alert>
         ) : null}
-        {amountIn?.gt(0) && amountOut?.gt(0) ? (
+        {/**
+          * If the user has some balance of the input token, but derives
+          * an `amountIn` that is too high by typing in the second input,
+          * show a message and prompt them to use `max`.
+          */}
+        {(!noBalance && !enoughBalanceCheck) ? (
+          <Alert variant="standard" color="warning" icon={AlertIcon}>
+            Not enough {tokenIn.symbol}{tokensMatch ? ` in your ${copy.MODES[modeIn]}` : ''} to execute this transaction.&nbsp;
+            <Link
+              onClick={handleMax}
+              sx={{ display: 'inline-block', cursor: 'pointer', breakInside: 'avoid' }}
+              underline="hover"
+            >
+              Use max &rarr;
+            </Link>
+          </Alert>
+        ) : null}
+        {isValid ? (
           <Box>
             <Accordion variant="outlined">
               <StyledAccordionSummary title="Transaction Details" />
@@ -429,7 +467,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
                     tokensMatch ? [
                       {
                         type: ActionType.TRANSFER_BALANCE,
-                        amount: amountIn,
+                        amount: amountIn!,
                         token: tokenIn,
                         source: modeIn,
                         destination: modeOut,
@@ -438,13 +476,13 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
                       {
                         type: ActionType.SWAP,
                         tokenIn: tokenIn,
-                        amountIn: amountIn,
-                        amountOut: amountOut,
+                        amountIn: amountIn!,
+                        amountOut: amountOut!,
                         tokenOut: tokenOut,
                       },
                       {
                         type: ActionType.RECEIVE_TOKEN,
-                        amount: amountOut,
+                        amount: amountOut!,
                         token: tokenOut,
                         destination: modeOut,
                       },
@@ -461,7 +499,11 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
           color="primary"
           size="large"
           loading={isSubmitting}
-          disabled={!isValid || isSubmitting}
+          disabled={
+            !isValid 
+            || isSubmitting
+            || isQuoting
+          }
           contract={beanstalk}
           tokens={
             shouldApprove
@@ -470,7 +512,11 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
           }
           mode="auto"
         >
-          {noBalance ? 'Nothing to swap' : 'Swap'}
+          {noBalance 
+            ? 'Nothing to swap' 
+            // : !enoughBalanceCheck
+            // ? 'Not enough to swap'
+            : 'Swap'}
         </SmartSubmitButton>
       </Stack>
     </Form>
