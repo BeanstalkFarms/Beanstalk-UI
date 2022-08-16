@@ -6,13 +6,14 @@ import ProposalList from '~/components/Governance/Proposals/ProposalList';
 import { ProposalsDocument } from '~/generated/graphql';
 import useGovernanceQuery from '~/hooks/useGovernanceQuery';
 
+/// Variables
+const snapshotSpaces = ['beanstalkdao.eth', 'beanstalkfarms.eth', 'wearebeansprout.eth'];
+const SLUGS = ['dao', 'beanstalk-farms', 'bean-sprout'];
 const queryConfig = {
-  variables: { space_in: ['beanstalkdao.eth', 'beanstalkfarms.eth', 'wearebeansprout.eth'] },
+  variables: { space_in: snapshotSpaces },
 };
 
-const SLUGS = ['BIP', 'BOP', 'BFCP', 'BSP', 'BFBP'];
-const Proposals: React.FC<{}> = () => {
-  ///
+const Proposals: React.FC = () => {
   const [tab, handleChange] = useTabs(SLUGS, 'type');
 
   /// Query Proposals
@@ -21,7 +22,7 @@ const Proposals: React.FC<{}> = () => {
   // filter proposals by type (eg: BIP, BOP, ...)
   const filteredProposals = useMemo(() => {
     if (!loading && data !== undefined) {
-      return data.proposals.filter((p: any) => p.title.split('-')[0] === SLUGS[tab]);
+      return data.proposals.filter((p: any) => p.space.id === snapshotSpaces[tab]);
     }
   }, [data, loading, tab]);
 
@@ -39,11 +40,9 @@ const Proposals: React.FC<{}> = () => {
             onChange={handleChange}
             sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }}
             variant="scrollable">
-            <BadgeTab label="BIP" showBadge />
-            <BadgeTab label="BOP" showBadge={false} />
-            <BadgeTab label="BFCP" showBadge={false} />
-            <BadgeTab label="BSP" showBadge={false} />
-            <BadgeTab label="BFBP" showBadge={false} />
+            <BadgeTab label="DAO" showBadge />
+            <BadgeTab label="Beanstalk Farms" showBadge={false} />
+            <BadgeTab label="Bean Sprout" showBadge={false} />
           </Tabs>
         </Stack>
         <Box sx={{ px: 1, pb: 1 }}>
@@ -62,18 +61,6 @@ const Proposals: React.FC<{}> = () => {
           {tab === 2 &&
             <ProposalList
               title="A BFCP is a..."
-              proposals={filteredProposals}
-            />
-          }
-          {tab === 3 &&
-            <ProposalList
-              title="A BSP is a..."
-              proposals={filteredProposals}
-            />
-          }
-          {tab === 4 &&
-            <ProposalList
-              title="A BFBP is a..."
               proposals={filteredProposals}
             />
           }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, ButtonProps, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Button, ButtonProps, Stack, Tooltip, Typography, StackProps as MuiStackProps } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { FontSize } from '../App/muiTheme';
 
@@ -24,11 +24,14 @@ const DescriptionButton : React.FC<ButtonProps & {
   tag?: JSX.Element;
   /** */
   tooltipTitle?: string;
+  /** */
+  StackProps?: MuiStackProps;
 }> = ({
   title,
   description,
   tooltipTitle,
   selected,
+  StackProps,
   tag,
   icon,
   sx,
@@ -37,7 +40,6 @@ const DescriptionButton : React.FC<ButtonProps & {
   <Button
     variant="outlined"
     color="secondary"
-    {...props}
     sx={{
       textAlign: 'left',
       px: GAP,
@@ -53,8 +55,9 @@ const DescriptionButton : React.FC<ButtonProps & {
       },
       height: 'auto'
     }}
+    {...props}
   >
-    <Stack direction="row" gap={0.5} justifyContent="space-between" alignItems="center">
+    <Stack direction="row" gap={0.5} justifyContent="space-between" alignItems="center" {...StackProps}>
       {/* Icon + Title */}
       <Stack gap={0.5}>
         <Tooltip title={tooltipTitle || ''} placement="top" sx={{ pointerEvents: 'all' }}>
