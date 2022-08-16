@@ -3,6 +3,7 @@ import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ethers } from 'ethers';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import toast from 'react-hot-toast';
 import {
   FormApprovingState, FormTokenState,
@@ -34,6 +35,7 @@ import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import useChainConstant from '~/hooks/useChainConstant';
 import { optimizeFromMode } from '~/util/Farm';
 import copy from '~/constants/copy';
+import IconWrapper from '~/components/Common/IconWrapper';
 
 type TradeFormValues = {
   /** Multiple tokens can (eventually) be swapped into tokenOut */
@@ -60,11 +62,17 @@ enum Pathway {
   BEAN_CRV3_UNDERLYING, // 5
 }
 
-const Quoting = <CircularProgress variant="indeterminate" size="small" sx={{ width: 14, height: 14 }} />;
-
 const QUOTE_SETTINGS = {
   ignoreSameToken: false
 };
+
+const Quoting = <CircularProgress variant="indeterminate" size="small" sx={{ width: 14, height: 14 }} />;
+
+const AlertIcon = (
+  <IconWrapper boxSize={IconSize.medium}>
+    <WarningAmberIcon sx={{ fontSize: IconSize.small }} />
+  </IconWrapper>
+);
 
 const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   balances: ReturnType<typeof useFarmerBalances>;
@@ -165,7 +173,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
     }
   }, [tokenIn, getAmountOut, setFieldValue]);
   const handleChangeAmountOut = useCallback((_amountOutClamped) => {
-    console.debug('[TokenInput] handleChangeAmountOut', _amountOutClamped);
+    console.debug('[TokenInput] handleChangeAmountOut',   _amountOutClamped);
     if (_amountOutClamped) {
       console.debug('[TokenInput] getMinAmountIn', [tokenOut, _amountOutClamped]);
       getMinAmountIn(tokenOut, _amountOutClamped);
@@ -312,6 +320,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
             }
             disabled={
               quotingIn
+              || !pathwayCheck
             }
             quote={
               quotingOut
@@ -355,6 +364,8 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
               /// Can't type into the output field if
               /// user has no balance of the input.
               || noBalance
+              ///
+              || !pathwayCheck
             }
             quote={
               quotingIn
@@ -372,7 +383,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
         </>
         {/* Warnings */}
         {ethModeCheck === false ? (
-          <Alert variant="standard" color="warning">
+          <Alert variant="standard" color="warning" icon={AlertIcon}>
             ETH can only be delivered to your Circulating Balance.&nbsp;
             <Link
               onClick={() => {
@@ -386,12 +397,12 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
           </Alert>
         ) : null}
         {pathwayCheck === false ? (
-          <Alert variant="standard" color="warning">
+          <Alert variant="standard" color="warning" icon={AlertIcon}>
             Swapping from {tokenIn.symbol} to {tokenOut.symbol} is currently unsupported.
           </Alert>
         ) : null}
         {diffDestinations === false ? (
-          <Alert variant="standard" color="warning">
+          <Alert variant="standard" color="warning" icon={AlertIcon}>
             Please choose a different source or destination.
           </Alert>
         ) : null}
