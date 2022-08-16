@@ -6,12 +6,15 @@ import AddressIcon from '../AddressIcon';
 import PillSelectField, { PillSelectFieldProps } from './PillSelectField';
 import { IconSize } from '../../App/muiTheme';
 
-const FarmModeField : React.FC<Partial<PillSelectFieldProps> & {
-  name : string;
-  circDesc? : string;
-  farmDesc? : string;
-  baseMode? : (typeof FarmFromMode | typeof FarmToMode);
-}> = ({
+const FarmModeField : React.FC<
+  Partial<PillSelectFieldProps>
+  & {
+    name : string;
+    circDesc? : string;
+    farmDesc? : string;
+    baseMode? : (typeof FarmFromMode | typeof FarmToMode);
+  }
+> = ({
   circDesc: _circDesc,
   farmDesc: _farmDesc,
   label: _label,

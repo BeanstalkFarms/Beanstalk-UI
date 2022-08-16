@@ -33,6 +33,7 @@ import TransactionToast from '~/components/Common/TxnToast';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import useChainConstant from '~/hooks/useChainConstant';
 import { optimizeFromMode } from '~/util/Farm';
+import copy from '~/constants/copy';
 
 type TradeFormValues = {
   /** Multiple tokens can (eventually) be swapped into tokenOut */
@@ -51,12 +52,12 @@ type DirectionalQuoteHandler = (
 ) => QuoteHandler;
 
 enum Pathway {
-  TRANSFER,
-  ETH_WETH,
-  BEAN_CRV3,
-  BEAN_ETH,
-  BEAN_WETH, // make this BEAN_TRICRYPTO_UNDERLYING
-  BEAN_CRV3_UNDERLYING,
+  TRANSFER,   // 0
+  ETH_WETH,   // 1
+  BEAN_CRV3,  // 2
+  BEAN_ETH,   // 3
+  BEAN_WETH,  // 4; make this BEAN_TRICRYPTO_UNDERLYING
+  BEAN_CRV3_UNDERLYING, // 5
 }
 
 const Quoting = <CircularProgress variant="indeterminate" size="small" sx={{ width: 14, height: 14 }} />;
@@ -98,7 +99,6 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   const tokenOut  = stateOut.token;
   const modeOut   = values.modeOut;
   const amountOut = stateOut.amount;
-  // const balanceOut = balances[tokenOut.address];
   // Other
   const tokensMatch = tokenIn === tokenOut;
   const noBalance = !(balanceIn?.total.gt(0));
@@ -110,6 +110,14 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
       balanceIn
     )
     : FarmFromMode.INTERNAL;
+  const shouldApprove = tokensMatch 
+    /// If matching tokens, only approve if input token is using EXTERNAL balances.
+    ? modeIn === FarmFromMode.EXTERNAL
+    /// Otherwise, approve if we expect to use an EXTERNAL baalnce.
+    : (
+      (expectedFromMode === FarmFromMode.EXTERNAL
+      || expectedFromMode === FarmFromMode.INTERNAL_EXTERNAL)
+    );
 
   /// Memoize to prevent infinite loop on useQuote
   const handleBackward = useMemo(() => handleQuote('backward'), [handleQuote]);
@@ -127,6 +135,23 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
     console.debug('[TokenInput] got new resultOut', resultOut);
     setFieldValue('tokenOut.amount', resultOut?.amountOut);
   }, [setFieldValue, resultOut]);
+
+  const handleChangeModeIn = useCallback((v: FarmFromMode) => {
+    const newModeOut = (
+      v === FarmFromMode.INTERNAL
+        ? FarmToMode.EXTERNAL
+        : FarmToMode.INTERNAL
+    );
+    setFieldValue('modeOut', newModeOut);
+  }, [setFieldValue]);
+  const handleChangeModeOut = useCallback((v: FarmToMode) => {
+    const newModeIn = (
+      v === FarmToMode.INTERNAL
+        ? FarmFromMode.EXTERNAL
+        : FarmFromMode.INTERNAL
+    );
+    setFieldValue('modeIn', newModeIn);
+  }, [setFieldValue]);
   
   /// When amountIn changes, refresh amountOut
   /// Only refresh if amountIn was changed by user input,
@@ -211,11 +236,12 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
     }
   }, [modeIn, modeOut, setFieldValue, tokenIn, tokenOut, tokensMatch]);
   
+  /// Checks
   const pathwayCheck = (
     getPathway(tokenIn, tokenOut) !== false
   );
-  /// If ETH is selected as an output, the only possible destination is EXTERNAL.
   const ethModeCheck = (
+    /// If ETH is selected as an output, the only possible destination is EXTERNAL.
     tokenOut === Eth
       ? (modeOut === FarmToMode.EXTERNAL)
       : true
@@ -257,7 +283,6 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
         <>
           <TokenInputField
             token={tokenIn}
-            balance={balanceIn || ZERO_BN}
             name="tokensIn.0.amount"
             // MUI
             fullWidth
@@ -269,6 +294,22 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
                 />
               )
             }}
+            balanceLabel={
+              tokensMatch
+                ? copy.MODES[modeIn as (FarmFromMode.INTERNAL | FarmFromMode.EXTERNAL)]
+                : undefined
+            }
+            balance={
+              tokensMatch
+                ? (
+                  balanceIn[
+                    modeIn === FarmFromMode.INTERNAL 
+                      ? 'internal'
+                      : 'external'
+                  ]
+                )
+                : (balanceIn || ZERO_BN)
+            }
             disabled={
               quotingIn
             }
@@ -284,6 +325,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
               name="modeIn"
               label="Source"
               baseMode={FarmFromMode}
+              onChange={handleChangeModeIn}
             />
           ) : null}
         </>
@@ -325,6 +367,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
             name="modeOut"
             label="Destination"
             baseMode={FarmToMode}
+            onChange={handleChangeModeOut}
           />
         </>
         {/* Warnings */}
@@ -376,9 +419,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
           disabled={!isValid || isSubmitting}
           contract={beanstalk}
           tokens={
-            /// FIXME: when optimizeFromMode is not INTERNAL
-            (expectedFromMode === FarmFromMode.EXTERNAL
-            || expectedFromMode === FarmFromMode.INTERNAL_EXTERNAL)
+            shouldApprove
               ? values.tokensIn
               : []
           }
@@ -486,10 +527,10 @@ const Trade: React.FC<{}> = () => {
     _tokenOut: Token,
   ) => {
     if (_tokenIn === _tokenOut) return Pathway.TRANSFER;
-    if (isPair(_tokenIn, _tokenOut, [Eth, Weth])) return Pathway.ETH_WETH;
-    if (isPair(_tokenIn, _tokenOut, [Bean, Crv3])) return Pathway.BEAN_CRV3;
-    if (isPair(_tokenIn, _tokenOut, [Bean, Eth])) return Pathway.BEAN_ETH;
-    if (isPair(_tokenIn, _tokenOut, [Bean, Weth])) return Pathway.BEAN_WETH;
+    if (isPair(_tokenIn, _tokenOut, [Eth, Weth]))   return Pathway.ETH_WETH;
+    if (isPair(_tokenIn, _tokenOut, [Bean, Crv3]))  return Pathway.BEAN_CRV3;
+    if (isPair(_tokenIn, _tokenOut, [Bean, Eth]))   return Pathway.BEAN_ETH;
+    if (isPair(_tokenIn, _tokenOut, [Bean, Weth]))  return Pathway.BEAN_WETH;
     if (
       (_tokenIn === Bean && crv3Underlying.has(_tokenOut as any))
       || (_tokenOut === Bean && crv3Underlying.has(_tokenIn as any))
@@ -517,6 +558,8 @@ const Trade: React.FC<{}> = () => {
     });
 
     const pathway = getPathway(_tokenIn, _tokenOut);
+
+    console.debug('[handleEstimate] got pathway: ', pathway);
 
     /// Say I want to buy 1000 BEAN and I have ETH.
     /// I select ETH as the input token, BEAN as the output token.
@@ -567,6 +610,7 @@ const Trade: React.FC<{}> = () => {
     } 
 
     if (pathway === Pathway.BEAN_CRV3) {
+      console.debug('[handleEstimate] estimating: BEAN <-> CRV3');
       return Farm.estimate(
         [
           farm.exchange(
@@ -585,6 +629,7 @@ const Trade: React.FC<{}> = () => {
 
     /// BEAN <-> ETH
     if (pathway === Pathway.BEAN_ETH) {
+      console.debug('[handleEstimate] estimating: BEAN <-> ETH');
       return Farm.estimate(
         startToken === Eth
          ? [
@@ -612,6 +657,7 @@ const Trade: React.FC<{}> = () => {
 
     /// BEAN <-> WETH
     if (pathway === Pathway.BEAN_WETH) {
+      console.debug('[handleEstimate] estimating: BEAN <-> WETH');
       return Farm.estimate(
         startToken === Weth
           ? farm.pair.WETH_BEAN(
@@ -688,6 +734,8 @@ const Trade: React.FC<{}> = () => {
       try {
         const stateIn = values.tokensIn[0];
         const tokenIn = stateIn.token;
+        const modeIn  = values.modeIn;
+        const balanceIn = farmerBalances[tokenIn.address];
         const stateOut = values.tokenOut;
         const tokenOut = stateOut.token;
         const modeOut  = values.modeOut;
@@ -703,7 +751,9 @@ const Trade: React.FC<{}> = () => {
           account,
           tokenIn,
           tokenOut,
-          FarmFromMode.INTERNAL_EXTERNAL,
+          tokenIn === tokenOut
+            ? modeIn
+            : optimizeFromMode(stateIn.amount || ZERO_BN, balanceIn),
           /// FIXME: no such thing as "internal ETH"
           modeOut, 
         );
@@ -732,7 +782,7 @@ const Trade: React.FC<{}> = () => {
         formActions.setSubmitting(false);
       }
     },
-    [account, beanstalk, handleEstimate, refetchFarmerBalances]
+    [account, beanstalk, farmerBalances, handleEstimate, refetchFarmerBalances]
   );
 
   return (
@@ -761,3 +811,13 @@ const Trade: React.FC<{}> = () => {
 };
 
 export default Trade;
+
+/**
+ * Sequence:
+ * - 1 ETH -> INTERNAL WETH
+ * - 0.5 INTERNAL WETH -> EXTERNAL WETH
+ * - Buy beans with 0.1 INTERNAL WETH (uses INTERNAL only)
+ * - Buy beans with 0.5 INTERNAL WETH (uses INTERNAL_EXTERNAL)
+ *  - FAIL: ended up buying an additional 0.5 WETH, maybe with beans?
+ * 
+ */
