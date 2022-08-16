@@ -81,7 +81,7 @@ const DepositForm : React.FC<
   );
 
   /// Derived
-  const isReady   = bdv.gt(0);
+  const isReady = bdv.gt(0);
 
   ///
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {

@@ -148,9 +148,16 @@ export default class Farm {
     _amount: ethers.BigNumber,
     _slippage: number
   ) {
+    console.debug(
+      '[Farm] slip',
+      _amount,
+      _slippage,
+      Farm.SLIPPAGE_PRECISION * (1 - _slippage),
+      // ethers.BigNumber.from(Farm.SLIPPAGE_PRECISION * (1 - _slippage))
+    );
     return (
       _amount
-        .mul(Farm.SLIPPAGE_PRECISION * (1 - _slippage))
+        .mul(Math.floor(Farm.SLIPPAGE_PRECISION * (1 - _slippage)))
         .div(Farm.SLIPPAGE_PRECISION)
     );
   }
@@ -209,7 +216,12 @@ export default class Farm {
     return {
       /// the resulting amountOut is just the argument
       /// that would've been passed to the next function
-      amountOut: nextAmountIn,
+      amountOut: (
+        _forward === true
+          ? nextAmountIn
+          : nextAmountIn
+          // : Farm.slip(nextAmountIn, -((0.04 + 0.1 + 0.04 + 0.04 + 0.0291) / 100))
+      ),
       ///
       value,
       ///

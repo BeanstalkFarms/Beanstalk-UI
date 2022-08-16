@@ -5,10 +5,10 @@ import Trade from '~/components/Trade/Actions/Trade';
 const TradeActions : React.FC<{}> = () => (
   <Card sx={{ position: 'relative' }}>
     <Stack gap={1.5}>
-      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>
+      <Box px={2} pt={2}>
         <Typography variant="h4">Swap</Typography>
-      </Stack>
-      <Box sx={{ px: 1, pb: 1, position: 'relative' }}>
+      </Box>
+      <Box px={1} pb={1}>
         <Trade />
       </Box>
     </Stack>

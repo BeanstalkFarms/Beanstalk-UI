@@ -7,10 +7,12 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import toast from 'react-hot-toast';
 import {
   FormApprovingState, FormTokenState,
+  SettingInput,
   SlippageSettingsFragment,
   SmartSubmitButton,
   TokenAdornment,
   TokenSelectDialog,
+  TxnSettings,
 } from '~/components/Common/Form';
 import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
 import TokenInputField from '~/components/Common/Form/TokenInputField';
@@ -36,6 +38,8 @@ import useChainConstant from '~/hooks/useChainConstant';
 import { optimizeFromMode } from '~/util/Farm';
 import copy from '~/constants/copy';
 import IconWrapper from '~/components/Common/IconWrapper';
+
+/// ---------------------------------------------------------------
 
 type TradeFormValues = {
   /** Multiple tokens can (eventually) be swapped into tokenOut */
@@ -73,6 +77,8 @@ const AlertIcon = (
     <WarningAmberIcon sx={{ fontSize: IconSize.small }} />
   </IconWrapper>
 );
+
+/// ---------------------------------------------------------------
 
 const TradeForm: React.FC<FormikProps<TradeFormValues> & {
   balances: ReturnType<typeof useFarmerBalances>;
@@ -620,6 +626,7 @@ const Trade: React.FC<{}> = () => {
       );
     } 
 
+    /// BEAN <-> 3CRV
     if (pathway === Pathway.BEAN_CRV3) {
       console.debug('[handleEstimate] estimating: BEAN <-> CRV3');
       return Farm.estimate(
@@ -804,9 +811,9 @@ const Trade: React.FC<{}> = () => {
     >
       {(formikProps: FormikProps<TradeFormValues>) => (
         <>
-          {/* <TxnSettings placement="form-top-right">
+          <TxnSettings placement="form-top-right">
             <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
-          </TxnSettings> */}
+          </TxnSettings>
           <TradeForm
             balances={farmerBalances}
             beanstalk={beanstalk}
