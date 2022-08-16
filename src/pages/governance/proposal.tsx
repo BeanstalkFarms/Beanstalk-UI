@@ -7,27 +7,15 @@ import {
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
 // import ReactMarkdown from 'react-markdown';
-import { makeStyles } from '@mui/styles';
 import PageHeader from '~/components/Common/PageHeader';
 import useGovernanceQuery from '~/hooks/useGovernanceQuery';
 import { ProposalDocument } from '~/generated/graphql';
 import { trimAddress } from '~/util';
 import blueCircle from '~/img/interface/blue-circle.svg';
 import { IconSize } from '~/components/App/muiTheme';
-
-const useStyles = makeStyles(() => ({
-  markdown: {
-    '& .reactMarkDown': {
-      li: {
-        fontSize: '30px'
-      },
-      fontSize: '30px'
-    }
-  }
-}));
+import MarkdownWrapper from '~/components/Common/MarkdownWrapper';
 
 const ProposalPage: React.FC = () => {
-  const styles = useStyles();
   // Routing
   const { id } = useParams<{ id: string }>();
   const queryConfig = useMemo(() => ({
@@ -51,7 +39,10 @@ const ProposalPage: React.FC = () => {
             {/* title & stats */}
             <Stack gap={1}>
               <Typography variant="bodyLarge">{data?.proposal?.title}</Typography>
-              <Stack direction={{ xs: 'column', lg: 'row' }} alignItems={{ xs: 'start', lg: 'center' }} gap={{ xs: 0, lg: 2 }}>
+              <Stack
+                direction={{ xs: 'column', lg: 'row' }}
+                alignItems={{ xs: 'start', lg: 'center' }}
+                gap={{ xs: 0, lg: 2 }}>
                 <Stack direction="row" alignItems="center" gap={0.5}>
                   <img src={blueCircle} alt="" width={IconSize.small} />
                   <Typography variant="body1">{trimAddress(data?.proposal?.id)}</Typography>
@@ -67,7 +58,9 @@ const ProposalPage: React.FC = () => {
                       borderRadius: 4
                     }}
                   />
-                  <Typography variant="body1">{data?.proposal?.state.charAt(0).toUpperCase() + data?.proposal?.state.slice(1)}</Typography>
+                  <Typography
+                    variant="body1">{data?.proposal?.state.charAt(0).toUpperCase() + data?.proposal?.state.slice(1)}
+                  </Typography>
                 </Stack>
                 <Typography variant="body1">Vote ends in 6 days</Typography>
                 <Stack direction="row" gap={0.5}>
@@ -77,7 +70,7 @@ const ProposalPage: React.FC = () => {
             </Stack>
             {/* markdown */}
             <Box>
-              {/* <MarkDownElement>{styles.markdown}>{data?.proposal?.body}</MarkDownElement> */}
+              <MarkdownWrapper>{data?.proposal?.body}</MarkdownWrapper>
             </Box>
           </Stack>
         </Card>

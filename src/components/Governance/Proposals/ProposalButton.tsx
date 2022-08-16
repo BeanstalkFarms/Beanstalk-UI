@@ -28,7 +28,7 @@ const ProposalButton: React.FC<{ proposal: any }> = (props) => {
     }
   }), [p, account]);
 
-  const { loadingVote, voteError, data: voteData } = useGovernanceQuery(VotesDocument, queryConfig);
+  const { data: voteData } = useGovernanceQuery(VotesDocument, queryConfig);
   console.log('VOTES', voteData);
 
   // const { loadingProposal, proposalError, proposalData } = useGovernanceQuery(ProposalDocument, { variables: { proposal_id: p.id } });
