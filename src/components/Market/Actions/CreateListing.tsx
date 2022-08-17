@@ -12,7 +12,7 @@ import {
   TokenInputField,
   TxnPreview
 } from '~/components/Common/Form';
-import DestinationField from '~/components/Common/Form/DestinationField';
+import FarmModeField from '~/components/Common/Form/FarmModeField';
 import TransactionToast from '~/components/Common/TxnToast';
 import PlotInputField from '~/components/Common/Form/PlotInputField';
 import TxnAccordion from '~/components/Common/TxnAccordion';
@@ -127,9 +127,9 @@ const CreateListingForm: React.FC<
                 max={placeInLine.plus(plot.start || ZERO_BN)}
               />
             </FieldWrapper>
-            <DestinationField
+            <FarmModeField
               name="destination"
-              walletDesc="When Pods are sold, send Beans to your wallet."
+              circDesc="When Pods are sold, send Beans to your wallet."
               farmDesc="When Pods are sold, send Beans to your internal Beanstalk balance."
               label="Send proceeds to"
             />

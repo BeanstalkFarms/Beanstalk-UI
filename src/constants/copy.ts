@@ -1,12 +1,14 @@
-import { FarmToMode } from '~/lib/Beanstalk/Farm';
+import { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 
-const TO_MODE = {
-  [FarmToMode.INTERNAL]: 'Farm Balance',
-  [FarmToMode.EXTERNAL]: 'Circulating Balance',
+const MODES = {
+  [FarmToMode.INTERNAL]:    'Farm Balance',
+  [FarmFromMode.INTERNAL]:  'Farm Balance',
+  [FarmToMode.EXTERNAL]:    'Circulating Balance',
+  [FarmFromMode.EXTERNAL]:  'Circulating Balance',
 };
 
 const copy = {
-  TO_MODE
+  MODES: MODES
 };
 
 export default copy;

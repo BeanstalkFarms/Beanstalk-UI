@@ -9,7 +9,7 @@ import RewardsDialog from '~/components/Silo/RewardsDialog';
 import DropdownIcon from '~/components/Common/DropdownIcon';
 import useWhitelist from '~/hooks/useWhitelist';
 import usePools from '~/hooks/usePools';
-import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
+import useFarmerBalancesBreakdown from '~/hooks/useFarmerBalancesBreakdown';
 import useToggle from '~/hooks/display/useToggle';
 import useRevitalized from '~/hooks/useRevitalized';
 import useSeason from '~/hooks/useSeason';
@@ -36,7 +36,7 @@ const SiloPage : React.FC = () => {
   /// State
   const farmerSilo    = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
-  const breakdown     = useFarmerSiloBreakdown();
+  const breakdown     = useFarmerBalancesBreakdown();
   const balances      = useFarmerSiloBalances();
   const season        = useSeason();
   const { revitalizedStalk, revitalizedSeeds } = useRevitalized();

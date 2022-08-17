@@ -366,13 +366,6 @@ export const BALANCE_TOKENS: ChainConstant<NativeToken | ERC20Token>[] = [
   ...ERC20_TOKENS,
 ];
 
-// Tokens that used the generalized silo whitelist in Beanstalk V1.
-export const GENERALIZED_SILO_WHITELIST: ChainConstant<ERC20Token>[] = [
-  BEAN_CRV3_LP,
-  UNRIPE_BEAN,
-  UNRIPE_BEAN_CRV3
-];
-
 // Assets underlying 3CRV (accessible when depositing/removing liquidity)
 export const CRV3_UNDERLYING: ChainConstant<ERC20Token>[] = [
   DAI,

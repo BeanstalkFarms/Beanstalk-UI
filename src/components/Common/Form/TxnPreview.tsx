@@ -18,6 +18,8 @@ import {
 } from '~/util/Actions';
 import { SupportedChainId } from '~/constants/chains';
 import { BEAN, PODS, SEEDS, SPROUTS, STALK, USDC } from '~/constants/tokens';
+import { FarmToMode } from '~/lib/Beanstalk/Farm';
+import AddressIcon from '~/components/Common/AddressIcon';
 
 // -----------------------------------------------------------------------
 
@@ -78,20 +80,35 @@ const TxnStep : React.FC<{
   actions,
   highlighted,
 }) => {
-  let action;
+  let step;
   switch (type) {
     /// SWAP
     case ActionType.SWAP:
-      action = (
+      step = (
         <SwapStep actions={actions as SwapAction[]} />
       );
       break;
+    case ActionType.RECEIVE_TOKEN: {
+      // eslint-disable-next-line
+      const a = actions[0] as ReceiveTokenAction;
+      step = (
+        <IconRow spacing={0.5}>
+          {/* <TokenIcon token={a.token} style={{ height: '100%' }} /> */}
+          {a.destination !== undefined ? (
+            a.destination === FarmToMode.INTERNAL
+              ? <Typography>🚜</Typography>
+              : <AddressIcon />
+          ) : null}
+        </IconRow>
+      );
+      break;
+    }
 
     /// SILO
     case ActionType.DEPOSIT:
     case ActionType.WITHDRAW:
     case ActionType.CLAIM_WITHDRAWAL:
-      action = (
+      step = (
         <IconRow>
           <img src={siloIcon} style={{ height: '100%' }} alt="" />
           {(actions as SiloDepositAction[]).map((a) => (
@@ -101,14 +118,14 @@ const TxnStep : React.FC<{
       );
       break;
     case ActionType.TRANSFER:
-      action = (
+      step = (
         <IconRow>
           <TokenIcon token={(actions[0] as SiloTransitAction).token} style={{ height: '100%' }} />
         </IconRow>
       );
       break;
     case ActionType.UPDATE_SILO_REWARDS:
-      action = (
+      step = (
         <IconRow spacing={0}>
           <Typography fontWeight="bold" sx={{ fontSize: 20 }}>{(actions[0] as SiloRewardsAction).stalk.lt(0) ? '🔥' : '+'}</Typography>
           <TokenIcon token={STALK} style={{ height: '100%' }} />
@@ -117,7 +134,7 @@ const TxnStep : React.FC<{
       );
       break;
     case ActionType.IN_TRANSIT:
-      action = (
+      step = (
         <IconRow>
           <TokenIcon token={(actions[0] as SiloTransitAction).token} style={{ height: '100%' }} />
         </IconRow>
@@ -126,14 +143,14 @@ const TxnStep : React.FC<{
 
     /// FIELD
     case ActionType.BUY_BEANS:
-      action = (
+      step = (
         <IconRow>
           <TokenIcon token={(actions[0] as SiloTransitAction).token} style={{ height: '100%' }} />
         </IconRow>
       );
       break;
     case ActionType.BURN_BEANS:
-      action = (
+      step = (
         <IconRow spacing={0.3}>
           <Typography fontWeight="bold" sx={{ fontSize: 20 }}>🔥</Typography>
           <TokenIcon token={BEAN[1]} style={{ height: '100%' }} />
@@ -141,35 +158,28 @@ const TxnStep : React.FC<{
       );
       break;
       case ActionType.HARVEST:
-        action = (
+        step = (
           <IconRow>
             <TokenIcon token={PODS} style={{ height: '100%' }} />
           </IconRow>
         );
         break;
     case ActionType.RECEIVE_PODS:
-      action = (
+      step = (
         <IconRow>
           <TokenIcon token={PODS} style={{ height: '100%' }} />
         </IconRow>
       );
       break;
     case ActionType.RECEIVE_BEANS:
-      action = (
+      step = (
         <IconRow>
           <TokenIcon token={BEAN[1]} style={{ height: '100%' }} />
         </IconRow>
       );
       break;
-    case ActionType.RECEIVE_TOKEN:
-      action = (
-        <IconRow>
-          <TokenIcon token={(actions[0] as ReceiveTokenAction).token} style={{ height: '100%' }} />
-        </IconRow>
-      );
-      break;
     case ActionType.TRANSFER_PODS:
-      action = (
+      step = (
         <IconRow>
           <TokenIcon token={PODS} style={{ height: '100%' }} />
         </IconRow>
@@ -178,7 +188,7 @@ const TxnStep : React.FC<{
 
     /// MARKET
     case ActionType.CREATE_ORDER:
-      action = (
+      step = (
         <IconRow>
           <TokenIcon token={BEAN[1]} style={{ height: '100%', marginTop: 0, }} />
           <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
@@ -188,26 +198,26 @@ const TxnStep : React.FC<{
       break;
     // FIXME: better way to reduce duplicate code here?
     case ActionType.BUY_PODS:
-      action = (
+      step = (
         <TokenIcon token={PODS} style={{ height: '100%', marginTop: 0, }} />
       );
       break;
     case ActionType.SELL_PODS:
-      action = (
+      step = (
         <TokenIcon token={PODS} style={{ height: '100%', marginTop: 0, }} />
       );
       break;
 
     /// FERTILIZER
     case ActionType.RINSE:
-      action = (
+      step = (
         <IconRow>
           <TokenIcon token={SPROUTS} style={{ height: '100%' }} />
         </IconRow>
       );
       break;
     case ActionType.BUY_FERTILIZER:
-      action = (
+      step = (
         <IconRow>
           <TokenIcon token={USDC[SupportedChainId.MAINNET]} style={{ height: '100%', marginTop: 0, }} />
           <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
@@ -216,7 +226,7 @@ const TxnStep : React.FC<{
       );
       break;
     case ActionType.RECEIVE_FERT_REWARDS:
-      action = (
+      step = (
         <IconRow>
           <img src={FERTILIZER_ICONS.active} alt="FERT" style={{ height: '100%' }} />
           <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
@@ -227,7 +237,7 @@ const TxnStep : React.FC<{
 
     /// ?
     case ActionType.END_TOKEN:
-      action = (
+      step = (
         <IconRow>
           <TokenIcon token={(actions[0] as SiloTransitAction).token} style={{ height: '100%' }} />
         </IconRow>
@@ -264,7 +274,7 @@ const TxnStep : React.FC<{
             opacity: (highlighted === undefined || highlighted === type) ? 1 : 0.2,
           }}
         >
-          {action}
+          {step}
         </Box>
       </Box>
     </Box>
@@ -280,6 +290,7 @@ const EXECUTION_STEPS = [
 
   /// Group 2:
   /// Beanstalk function calls
+  ActionType.TRANSFER_BALANCE,
   ActionType.HARVEST,
   ActionType.DEPOSIT,
   ActionType.WITHDRAW,

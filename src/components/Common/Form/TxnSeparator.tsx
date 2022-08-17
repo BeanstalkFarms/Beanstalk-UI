@@ -7,6 +7,6 @@ const TxnSeparator : React.FC<StackProps> = ({ ...props }) => (
   <Stack direction="row" justifyContent="center" {...props}>
     <ExpandMoreIcon color="secondary" width={IconSize.xs} />
   </Stack>
-  );
+);
 
 export default TxnSeparator;

@@ -27,7 +27,7 @@ import {
 import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import { ZERO_BN } from '~/constants';
 import { displayTokenAmount, toStringBaseUnitBN, toTokenUnitsBN, parseError } from '~/util';
-import DestinationField from '~/components/Common/Form/DestinationField';
+import FarmModeField from '~/components/Common/Form/FarmModeField';
 import TokenIcon from '~/components/Common/TokenIcon';
 import useToggle from '~/hooks/display/useToggle';
 import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
@@ -179,7 +179,7 @@ const ClaimForm : React.FC<
         />
         <Stack gap={0}>
           {/* Setting: Destination */}
-          <DestinationField
+          <FarmModeField
             name="destination"
           />
           {/* Setting: Claim LP */}
@@ -311,7 +311,7 @@ const Claim : React.FC<{
 
       txToast = new TransactionToast({
         loading: `Claiming ${displayTokenAmount(claimableBalance, token)} from the Silo...`,
-        success: `Claim successful. Added ${displayTokenAmount(values.token.amountOut || ZERO_BN, tokenOut)} to your ${copy.TO_MODE[values.destination]}.`,
+        success: `Claim successful. Added ${displayTokenAmount(values.token.amountOut || ZERO_BN, tokenOut)} to your ${copy.MODES[values.destination]}.`,
       });
       
       // If the user wants to swap their LP token for something else,

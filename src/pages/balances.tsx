@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Container, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import TotalBalanceCard from '~/components/Balances/TotalBalancesCard';
-import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
+import useFarmerBalancesBreakdown from '~/hooks/useFarmerBalancesBreakdown';
 import { PODS, SEEDS, STALK, SPROUTS } from '~/constants/tokens';
 import { AppState } from '~/state';
 import StatsCard, { StatItem } from '~/components/Common/StatsCard';
@@ -14,7 +14,7 @@ const BalancesPage: React.FC = () => {
   const farmerBarn = useSelector<AppState, AppState['_farmer']['barn']>((state) => state._farmer.barn);
 
   // Breakdowns
-  const breakdown = useFarmerSiloBreakdown();
+  const breakdown = useFarmerBalancesBreakdown();
 
   /// Total Balances
   const STAT_ITEMS: StatItem[] = [

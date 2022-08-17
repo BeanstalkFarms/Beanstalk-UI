@@ -133,9 +133,9 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
       TransitionProps={{}}
     >
       <StyledDialogTitle id="customized-dialog-title" onClose={handleClose} sx={{ pb: 0.5 }}>
-        {title || mode === TokenSelectMode.MULTI 
-          ? 'Select Tokens'
-          : 'Select Token'}
+        {title || (mode === TokenSelectMode.MULTI 
+            ? 'Select Tokens'
+            : 'Select Token')}
       </StyledDialogTitle>
       <StyledDialogContent sx={{ pb: mode === TokenSelectMode.MULTI ? 0 : 1, pt: 0 }}>
         {/**

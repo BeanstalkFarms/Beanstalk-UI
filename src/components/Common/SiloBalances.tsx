@@ -3,7 +3,7 @@ import { Stack, Typography, Grid, Box, Tooltip } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/Pie';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
+import useFarmerBalancesBreakdown from '~/hooks/useFarmerBalancesBreakdown';
 import useBeanstalkSiloBreakdown from '~/hooks/useBeanstalkSiloBreakdown';
 import { displayFullBN, displayUSD } from '~/util';
 import { Token } from '~/classes';
@@ -123,7 +123,7 @@ const STATE_IDS = Object.keys(STATE_CONFIG) as StateID[];
 
 const SiloBalances: React.FC<{
   breakdown: (
-    ReturnType<typeof useFarmerSiloBreakdown>
+    ReturnType<typeof useFarmerBalancesBreakdown>
     | ReturnType<typeof useBeanstalkSiloBreakdown>
   );
   /* */

@@ -24,7 +24,7 @@ import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { BEAN, PODS } from '~/constants/tokens';
 import copy from '~/constants/copy';
-import DestinationField from '../../Common/Form/DestinationField';
+import FarmModeField from '../../Common/Form/FarmModeField';
 import TransactionToast from '../../Common/TxnToast';
 import { ZERO_BN } from '../../../constants';
 import TokenAdornment from '../../Common/Form/TokenAdornment';
@@ -77,7 +77,7 @@ const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
         {values.amount?.gt(0) ? (
           <>
             {/* Setting: Destination */}
-            <DestinationField
+            <FarmModeField
               name="destination"
             />
             <TxnSeparator mt={-1} />
@@ -175,7 +175,7 @@ const Harvest: React.FC<{}> = () => {
 
         txToast = new TransactionToast({
           loading: `Harvesting ${displayFullBN(farmerField.harvestablePods, PODS.displayDecimals)} Pods.`,
-          success: `Harvest successful. Added ${displayFullBN(farmerField.harvestablePods, PODS.displayDecimals)} Beans to your ${copy.TO_MODE[values.destination]}.`,
+          success: `Harvest successful. Added ${displayFullBN(farmerField.harvestablePods, PODS.displayDecimals)} Beans to your ${copy.MODES[values.destination]}.`,
         });
 
         const txn = await beanstalk.harvest(
