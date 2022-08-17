@@ -2,7 +2,7 @@ import { Box, Card, Chip, Stack, styled, Tab, TabProps, Tabs } from '@mui/materi
 import BigNumber from 'bignumber.js';
 import React from 'react';
 import { Token } from 'graphql';
-import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
+import useFarmerBalancesBreakdown from '~/hooks/useFarmerBalancesBreakdown';
 import { AppState } from '~/state';
 
 import useTabs from '~/hooks/display/useTabs';
@@ -53,7 +53,7 @@ const SLUGS = ['deposits', 'stalk'];
 const Overview: React.FC<{
   farmerSilo:     AppState['_farmer']['silo'];
   beanstalkSilo:  AppState['_beanstalk']['silo'];
-  breakdown:      ReturnType<typeof useFarmerSiloBreakdown>;
+  breakdown:      ReturnType<typeof useFarmerBalancesBreakdown>;
   season:         BigNumber;
 }> = ({ farmerSilo, beanstalkSilo, breakdown, season }) => {
   const [tab, handleChange] = useTabs(SLUGS, 'view');
