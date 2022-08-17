@@ -1,9 +1,9 @@
 import React from 'react';
-import { Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import EmptyState from '~/components/Common/ZeroState/EmptyState';
 import ProposalButton from '~/components/Governance/Proposals/ProposalButton';
 
-const ProposalList: React.FC<{ title: string; proposals: any; }> = (props) => {
+const ProposalList: React.FC<{ proposals: any; }> = (props) => {
   //
   if (props.proposals === undefined) {
     return null;
@@ -11,7 +11,6 @@ const ProposalList: React.FC<{ title: string; proposals: any; }> = (props) => {
   
   return (
     <Stack px={2} pb={2} gap={2}>
-      <Typography>{props.title}</Typography>
       <Stack gap={2}>
         {props.proposals.length === 0 ? (
           <EmptyState message="No proposals of this type." />
@@ -22,7 +21,6 @@ const ProposalList: React.FC<{ title: string; proposals: any; }> = (props) => {
             ))}
           </>
         )}
-
       </Stack>
     </Stack>
   );

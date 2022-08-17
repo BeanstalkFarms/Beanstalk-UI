@@ -31,10 +31,7 @@ const useGovernanceQuery = (
           query: document,
           variables,
           notifyOnNetworkStatusChange: true,
-        }).then((r) => {
-            console.log('RETURNED DATA', r.data);
-            return r;
-          }
+        }).then((r) => r
         ));
 
         /**

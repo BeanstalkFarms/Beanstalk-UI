@@ -1,5 +1,14 @@
 import React from 'react';
-import { Box, Button, ButtonProps, Stack, Tooltip, Typography, StackProps as MuiStackProps } from '@mui/material';
+import {
+  Box,
+  Button,
+  ButtonProps,
+  Stack,
+  Tooltip,
+  Typography,
+  StackProps as MuiStackProps,
+  TypographyProps
+} from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { FontSize } from '../App/muiTheme';
 
@@ -26,12 +35,15 @@ const DescriptionButton : React.FC<ButtonProps & {
   tooltipTitle?: string;
   /** */
   StackProps?: MuiStackProps;
+  /** */
+  TitleProps?: TypographyProps;
 }> = ({
   title,
   description,
   tooltipTitle,
   selected,
   StackProps,
+  TitleProps,
   tag,
   icon,
   sx,
@@ -67,7 +79,7 @@ const DescriptionButton : React.FC<ButtonProps & {
                 {icon}&nbsp;
               </>
             )}
-            <Typography variant="bodyMedium">
+            <Typography variant="bodyMedium" {...TitleProps}>
               {title}
               {tooltipTitle && (
                 <>

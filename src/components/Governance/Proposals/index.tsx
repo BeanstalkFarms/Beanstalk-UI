@@ -17,7 +17,7 @@ const Proposals: React.FC = () => {
   const [tab, handleChange] = useTabs(SLUGS, 'type');
 
   /// Query Proposals
-  const { loading, error, data } = useGovernanceQuery(ProposalsDocument, queryConfig);
+  const { loading, data } = useGovernanceQuery(ProposalsDocument, queryConfig);
 
   // filter proposals by type (eg: BIP, BOP, ...)
   const filteredProposals = useMemo(() => {
@@ -45,25 +45,8 @@ const Proposals: React.FC = () => {
             <BadgeTab label="Bean Sprout" showBadge={false} />
           </Tabs>
         </Stack>
-        <Box sx={{ px: 1, pb: 1 }}>
-          {tab === 0 &&
-            <ProposalList
-              title="A BIP is a Beanstalk Improvement Proposal. A BIP requires 50% of all STALK in order to be committed."
-              proposals={filteredProposals}
-            />
-          }
-          {tab === 1 &&
-            <ProposalList
-              title="A BOP is a..."
-              proposals={filteredProposals}
-            />
-          }
-          {tab === 2 &&
-            <ProposalList
-              title="A BFCP is a..."
-              proposals={filteredProposals}
-            />
-          }
+        <Box>
+          <ProposalList proposals={filteredProposals} />
         </Box>
       </Stack>
     </Card>

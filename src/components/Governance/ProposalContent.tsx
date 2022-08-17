@@ -1,12 +1,10 @@
 import React, { useMemo } from 'react';
-import { Box, Card, Stack, Typography } from '@mui/material';
+import { Box, Card, CircularProgress, Stack, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { ProposalDocument } from '~/generated/graphql';
 import useGovernanceQuery from '~/hooks/useGovernanceQuery';
-import blueCircle from '~/img/interface/blue-circle.svg';
-import { IconSize } from '~/components/App/muiTheme';
-import { trimAddress } from '~/util';
 import MarkdownWrapper from '~/components/Common/MarkdownWrapper';
+import ProposalStats from '~/components/Governance/Proposals/ProposalStats';
 
 const ProposalContent: React.FC = () => {
   /// Routing
@@ -16,10 +14,17 @@ const ProposalContent: React.FC = () => {
   const queryConfig = useMemo(() => ({
     variables: { proposal_id: id }
   }), [id]);
-  const { loading, error, data } = useGovernanceQuery(ProposalDocument, queryConfig);
+  const { loading, data } = useGovernanceQuery(ProposalDocument, queryConfig);
 
+  // loading
   if (loading || data === undefined) {
-    return null;
+    return (
+      <Card>
+        <Box height={300} display="flex" alignItems="center" justifyContent="center">
+          <CircularProgress />
+        </Box>
+      </Card>
+    );
   }
 
   return (
@@ -28,34 +33,7 @@ const ProposalContent: React.FC = () => {
         {/* title & stats */}
         <Stack gap={1}>
           <Typography variant="bodyLarge">{data?.proposal?.title}</Typography>
-          <Stack
-            direction={{ xs: 'column', lg: 'row' }}
-            alignItems={{ xs: 'start', lg: 'center' }}
-            gap={{ xs: 0, lg: 2 }}>
-            <Stack direction="row" alignItems="center" gap={0.5}>
-              <img src={blueCircle} alt="" width={IconSize.small} />
-              <Typography variant="body1">{trimAddress(data?.proposal?.id)}</Typography>
-            </Stack>
-            <Stack direction="row" display="inline-flex" alignItems="center" gap={0.5}>
-              <Box
-                className="B-badge"
-                sx={{
-                  opacity: 0.7,
-                  width: 8,
-                  height: 8,
-                  backgroundColor: data?.proposal?.state === 'active' ? 'primary.main' : 'gray',
-                  borderRadius: 4
-                }}
-              />
-              <Typography
-                variant="body1">{data?.proposal?.state.charAt(0).toUpperCase() + data?.proposal?.state.slice(1)}
-              </Typography>
-            </Stack>
-            <Typography variant="body1">Vote ends in 6 days</Typography>
-            <Stack direction="row" gap={0.5}>
-              <Typography variant="body1">Quorum</Typography>
-            </Stack>
-          </Stack>
+          <ProposalStats proposal={data?.proposal} />
         </Stack>
         {/* markdown */}
         <Box>
