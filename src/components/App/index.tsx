@@ -133,7 +133,7 @@ export default function App() {
           backgroundSize: '100%',
           backgroundRepeat: 'no-repeat',
           width: '100%',
-          minHeight: `calc(100vh - ${NAV_CONTAINER_HEIGHT})`,
+          minHeight: `calc(100vh - ${NAV_CONTAINER_HEIGHT}px)`,
           paddingTop: {
             md: 4,
             xs: 2,

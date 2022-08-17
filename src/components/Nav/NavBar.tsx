@@ -17,7 +17,8 @@ import HoverMenu from './HoverMenu';
 /// Navbar Positioning
 export const BANNER_HEIGHT = 0; // 35;
 export const NAV_HEIGHT    = 64;
-export const NAV_CONTAINER_HEIGHT = BANNER_HEIGHT + NAV_HEIGHT;
+export const NAV_BORDER_HEIGHT = 1;
+export const NAV_CONTAINER_HEIGHT = BANNER_HEIGHT + NAV_HEIGHT + NAV_BORDER_HEIGHT;
 export const NAV_ELEM_HEIGHT = 45;
 
 const NavBar: React.FC<{}> = () => (
@@ -29,7 +30,7 @@ const NavBar: React.FC<{}> = () => (
     sx={{
       position: 'sticky',
       backgroundColor: BeanstalkPalette.lightBlue,
-      borderBottom: `1px solid ${BeanstalkPalette.blue}`,
+      borderBottom: `${NAV_BORDER_HEIGHT}px solid ${BeanstalkPalette.blue}`,
     }}
   >
     {/* <Banner height={BANNER_HEIGHT} href="https://snapshot.org/#/beanstalkdao.eth/">
