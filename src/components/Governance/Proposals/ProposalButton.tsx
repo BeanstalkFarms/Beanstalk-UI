@@ -29,6 +29,7 @@ const ProposalButton: React.FC<{ proposal: any }> = (props) => {
     }
   }), [p, account]);
   const { data: voteData } = useGovernanceQuery(VotesDocument, queryConfig);
+  console.log('VOTES dATA', voteData);
 
   return (
     <Button
@@ -47,17 +48,14 @@ const ProposalButton: React.FC<{ proposal: any }> = (props) => {
       <Stack gap={1} width="100%">
         {/* top row */}
         {/* middle row */}
-        <Stack gap={1}>
-          <Stack direction="row" justifyContent="space-between">
-            <Typography textAlign="left" variant="bodyLarge">{p.title}</Typography>
-            {(account && voteData?.votes?.length > 0) && (
-              <Stack direction="row" alignItems="center" gap={0.5}>
-                <CheckIcon sx={{ color: BeanstalkPalette.logoGreen, width: IconSize.small }} />
-                <Typography variant="body1">Voted</Typography>
-              </Stack>
-            )}
-          </Stack>
-          <Typography textAlign="left" color="gray" variant="body1">{p.title}</Typography>
+        <Stack direction="row" justifyContent="space-between">
+          <Typography textAlign="left" variant="bodyLarge">{p.title}</Typography>
+          {(account && voteData?.votes?.length > 0) && (
+            <Stack direction="row" alignItems="center" gap={0.5}>
+              <CheckIcon sx={{ color: BeanstalkPalette.logoGreen, width: IconSize.small }} />
+              <Typography variant="body1">Voted</Typography>
+            </Stack>
+          )}
         </Stack>
         {/* bottom row */}
         <Stack direction={{ xs: 'column', lg: 'row' }} justifyContent="space-between">

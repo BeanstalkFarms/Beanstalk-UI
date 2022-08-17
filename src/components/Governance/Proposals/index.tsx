@@ -6,6 +6,19 @@ import ProposalList from '~/components/Governance/Proposals/ProposalList';
 import { ProposalsDocument } from '~/generated/graphql';
 import useGovernanceQuery from '~/hooks/useGovernanceQuery';
 
+export type Proposal = {
+  /** Proposal ID on Snapshot. */
+  id: string;
+  /** */
+  title: string;
+  /** Number of Stalk voted for each choice */
+  scores: number[];
+  /** Status of proposal: active, closed, etc. */
+  state: string;
+  /** Date & time the proposal closes */
+  end: number;
+}
+
 /// Variables
 const snapshotSpaces = ['beanstalkdao.eth', 'beanstalkfarms.eth', 'wearebeansprout.eth'];
 const SLUGS = ['dao', 'beanstalk-farms', 'bean-sprout'];

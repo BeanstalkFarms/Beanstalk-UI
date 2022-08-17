@@ -8,7 +8,7 @@ query Proposals($space_in: [String]) {
   ) {
     id
     author
-    body
+#    body
     choices
     created
     end
