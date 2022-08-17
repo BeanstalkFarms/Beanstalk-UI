@@ -10,7 +10,7 @@ import useAccount from '~/hooks/ledger/useAccount';
 import { TabData } from '~/components/Silo/Views';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { SEEDS, STALK } from '~/constants/tokens';
-import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
+import useFarmerBalancesBreakdown from '~/hooks/useFarmerBalancesBreakdown';
 
 // ------------------------------------------------
 
@@ -18,7 +18,7 @@ const DepositsView: React.FC<TabData> = ({ season, current, series }) => {
   const account = useAccount();
   
   // state
-  const breakdown     = useFarmerSiloBreakdown();
+  const breakdown     = useFarmerBalancesBreakdown();
   
   const [displayValue, setDisplayValue] = useState(current);
   const handleCursor = useCallback(
