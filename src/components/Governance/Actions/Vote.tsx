@@ -51,7 +51,7 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
         {/* progress bars */}
         <Stack px={1} pb={1} gap={1}>
           {proposal.choices.map((choice: string, index: number) => (
-            <Stack>
+            <Stack gap={0.5}>
               <Stack direction="row" justifyContent="space-between">
                 <Typography variant="body1">{choice}</Typography>
                 <Typography variant="body1">{displayBN(new BigNumber(proposal.scores[index]))} STALK • {((proposal.scores[index] / proposal.scores_total) * 100).toFixed(2)}%</Typography>
@@ -117,9 +117,6 @@ const Vote: React.FC<{}> = () => {
   const account = useAccount();
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
-  // const provider = useProvider();
-  const network = '1';
-  const provider = snapshot.utils.getProvider(network);
 
   /// Routing
   const { id } = useParams<{ id: string }>();
