@@ -44,7 +44,7 @@ import { ActionType } from '~/util/Actions';
 
 /// ---------------------------------------------------------------
 
-type TradeFormValues = {
+type SwapFormValues = {
   /** Multiple tokens can (eventually) be swapped into tokenOut */
   tokensIn:   FormTokenState[];
   modeIn:     FarmFromMode.INTERNAL | FarmFromMode.EXTERNAL;
@@ -83,7 +83,7 @@ const AlertIcon = (
 
 /// ---------------------------------------------------------------
 
-const TradeForm: React.FC<FormikProps<TradeFormValues> & {
+const SwapForm: React.FC<FormikProps<SwapFormValues> & {
   balances: ReturnType<typeof useFarmerBalances>;
   beanstalk: Beanstalk;
   handleQuote: DirectionalQuoteHandler;
@@ -257,7 +257,7 @@ const TradeForm: React.FC<FormikProps<TradeFormValues> & {
       setFieldValue('tokensIn.0', {
         token: tokenOut,
         amount: undefined,
-      } as TradeFormValues['tokensIn'][number]);
+      } as SwapFormValues['tokensIn'][number]);
       setFieldValue('tokenOut', {
         token: tokenIn,
         amount: undefined,
@@ -573,7 +573,7 @@ const isPair = (_tokenIn : Token, _tokenOut : Token, _pair : [Token, Token]) => 
   return s.has(_tokenIn) && s.has(_tokenOut);
 };
 
-const Trade: React.FC<{}> = () => {
+const Swap: React.FC<{}> = () => {
   ///
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
@@ -595,7 +595,7 @@ const Trade: React.FC<{}> = () => {
   const [refetchFarmerBalances] = useFetchFarmerBalances();
 
   // Form setup
-  const initialValues: TradeFormValues = useMemo(() => ({
+  const initialValues: SwapFormValues = useMemo(() => ({
     tokensIn: [
       {
         token: Eth,
@@ -823,7 +823,7 @@ const Trade: React.FC<{}> = () => {
   );
 
   const onSubmit = useCallback(
-    async (values: TradeFormValues, formActions: FormikHelpers<TradeFormValues>) => {
+    async (values: SwapFormValues, formActions: FormikHelpers<SwapFormValues>) => {
       let txToast;
       try {
         const stateIn = values.tokensIn[0];
@@ -888,17 +888,17 @@ const Trade: React.FC<{}> = () => {
   );
 
   return (
-    <Formik<TradeFormValues>
+    <Formik<SwapFormValues>
       enableReinitialize
       initialValues={initialValues}
       onSubmit={onSubmit}
     >
-      {(formikProps: FormikProps<TradeFormValues>) => (
+      {(formikProps: FormikProps<SwapFormValues>) => (
         <>
           <TxnSettings placement="form-top-right">
             <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
           </TxnSettings>
-          <TradeForm
+          <SwapForm
             balances={farmerBalances}
             beanstalk={beanstalk}
             tokenList={tokenList}
@@ -912,7 +912,7 @@ const Trade: React.FC<{}> = () => {
   );
 };
 
-export default Trade;
+export default Swap;
 
 /**
  * Sequence:

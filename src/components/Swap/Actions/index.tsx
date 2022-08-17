@@ -1,17 +1,17 @@
 import { Box, Card, Stack, Typography } from '@mui/material';
 import React from 'react';
-import Trade from '~/components/Trade/Actions/Trade';
+import Swap from '~/components/Swap/Actions/Swap';
 
-const TradeActions : React.FC<{}> = () => (
+const SwapActions : React.FC<{}> = () => (
   <Card sx={{ position: 'relative' }}>
     <Stack gap={1.5}>
       <Box px={2} pt={2}>
         <Typography variant="h4">Swap</Typography>
       </Box>
       <Box px={1} pb={1}>
-        <Trade />
+        <Swap />
       </Box>
     </Stack>
   </Card>
 );
-export default TradeActions;
+export default SwapActions;

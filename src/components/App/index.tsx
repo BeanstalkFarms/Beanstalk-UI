@@ -38,7 +38,7 @@ import OrderPage from '../../pages/market/order';
 import ListingPage from '../../pages/market/listing';
 import EditListingPage from '../../pages/market/edit-listing';
 import EditOrderPage from '../../pages/market/edit-order';
-import TradePage from '../../pages/trade';
+import SwapPage from '../../pages/swap';
 import AnalyticsPage from '../../pages/analytics';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
@@ -166,7 +166,7 @@ export default function App() {
           <Route path="/nft" element={<NFTPage />} />
           <Route path="/silo" element={<SiloPage />} />
           <Route path="/silo/:address" element={<SiloTokenPage />} />
-          <Route path="/trade" element={<TradePage />} />
+          <Route path="/swap" element={<SwapPage />} />
         </Routes>
       </Box>
     </>
