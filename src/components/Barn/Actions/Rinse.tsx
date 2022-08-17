@@ -12,7 +12,7 @@ import {
 } from '~/components/Common/Form';
 import TxnPreview from '~/components/Common/Form/TxnPreview';
 import TxnAccordion from '~/components/Common/TxnAccordion';
-import DestinationField from '~/components/Common/Form/DestinationField';
+import FarmModeField from '~/components/Common/Form/FarmModeField';
 import TransactionToast from '~/components/Common/TxnToast';
 import useFarmerFertilizer from '~/hooks/redux/useFarmerFertilizer';
 import { useBeanstalkContract } from '~/hooks/useContract';
@@ -71,7 +71,7 @@ const RinseForm : React.FC<
               )
             }}
           />
-          <DestinationField
+          <FarmModeField
             name="destination"
           />
           {/* Outputs */}
@@ -149,7 +149,7 @@ const Rinse : React.FC<{}> = () => {
 
       txToast = new TransactionToast({
         loading: `Rinsing ${displayFullBN(farmerBarn.fertilizedSprouts, SPROUTS.displayDecimals)} Sprouts...`,
-        success: `Rinse successful. Added ${displayFullBN(farmerBarn.fertilizedSprouts, SPROUTS.displayDecimals)} Beans to your ${copy.TO_MODE[values.destination]}.`,
+        success: `Rinse successful. Added ${displayFullBN(farmerBarn.fertilizedSprouts, SPROUTS.displayDecimals)} Beans to your ${copy.MODES[values.destination]}.`,
       });
 
       const txn = await beanstalk.claimFertilized(

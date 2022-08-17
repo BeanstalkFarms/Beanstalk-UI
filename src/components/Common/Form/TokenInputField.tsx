@@ -172,32 +172,41 @@ const TokenInput: React.FC<
   }, []);
 
   // PROBLEM: BigNumber('0') == BigNumber('0.0').
-  // ------------------------------------------
+  // --------------------------------------------
   // If a user were to try to type in a small number (0.001 ETH for example),
-  // using BigNumber to track the state of the input wouldn't work; when
+  // using BigNumber to track the state of the input wouldn't work; ex. when
   // I try to go from 0 to 0.0 the input value stays as just 0.
   //
   // SOLUTION:
   // Allow TokenInputField to maintain `displayAmount`, an internal `string` representation of `field.value`.
-  // - On input change, store the input value (as a string) in displayAmount. Update form state 
+  // - On input change, store the input value (as `string`) in displayAmount.
   // - In the below effect, check for edge cases:
-  //    a. If `field.value === undefined`         (i.e. the value has been cleared), reset the input.
-  //    b. If `field.value !== BN(displayAmount)` (i.e. a new value was provided),   update `displayAmount`.
+  //    a. If `field.value === undefined` (i.e. the value has been cleared), reset the input.
+  //    b. If `field.value.toString() !== displayAmount` (i.e. a new value was provided), update `displayAmount`.
   //
   // Called after:
   // (1) user clicks max (via setFieldValue)
   // (2) handleChange
-  //
+  // (3) external modification to field.value
   useEffect(() => {
-    console.debug('[TokenInputField] field.value or displayAmount changed:', {
-      name: field.name,
-      value: field.value,
-      valueString: field.value?.toString(),
-      displayAmount: displayAmount,
-      updatingDisplayValue: field.value?.toString() !== displayAmount,
-    });
-    if (!field.value) setDisplayAmount('');
-    else if (field.value.toString() !== displayAmount) setDisplayAmount(field.value.toString()); // 
+    if (!field.value) {
+      if (displayAmount !== '') {
+        console.debug('[TokenInputField] clearing', {
+          name: field.name,
+        });
+        setDisplayAmount('');
+      }
+    }
+    else if (field.value.toString() !== displayAmount) {
+      console.debug('[TokenInputField] field.value or displayAmount changed:', {
+        name: field.name,
+        value: field.value,
+        valueString: field.value?.toString(),
+        displayAmount: displayAmount,
+        updatingDisplayValue: field.value?.toString() !== displayAmount,
+      });
+      setDisplayAmount(field.value.toString()); 
+    }
   }, [field.name, field.value, displayAmount]);
 
   return (

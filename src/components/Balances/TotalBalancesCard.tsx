@@ -1,20 +1,20 @@
 import React from 'react';
 import { Box, Stack, Typography } from '@mui/material';
-import { useAccount } from 'wagmi';
 import Stat from '~/components/Common/Stat';
 import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
 import SiloBalances from '~/components/Common/SiloBalances';
 import Fiat from '~/components/Common/Fiat';
-import useFarmerSiloBreakdown from '~/hooks/useFarmerSiloBreakdown';
+import useFarmerBalancesBreakdown from '~/hooks/useFarmerBalancesBreakdown';
 import useWhitelist from '../../hooks/useWhitelist';
 import WalletButton from '../Common/Connection/WalletButton';
+import useAccount from '~/hooks/ledger/useAccount';
 
 export interface TotalBalanceCardProps {
-  breakdown: ReturnType<typeof useFarmerSiloBreakdown>;
+  breakdown: ReturnType<typeof useFarmerBalancesBreakdown>;
 }
 
 const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
-  const { data: account } = useAccount();
+  const account = useAccount();
   return (
     <Box>
       <Stat

@@ -18,7 +18,7 @@ import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSumma
 import TokenInputField from '~/components/Common/Form/TokenInputField';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import TransactionToast from '~/components/Common/TxnToast';
-import DestinationField from '~/components/Common/Form/DestinationField';
+import FarmModeField from '~/components/Common/Form/FarmModeField';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import { Beanstalk } from '~/generated/index';
 import useToggle from '~/hooks/display/useToggle';
@@ -127,7 +127,7 @@ const ChopForm: React.FC<
           }}
         />
         <Stack gap={0.5}>
-          <DestinationField
+          <FarmModeField
             name="destination"
           />
           <Stack direction="row" justifyContent="space-between" px={0.5}>

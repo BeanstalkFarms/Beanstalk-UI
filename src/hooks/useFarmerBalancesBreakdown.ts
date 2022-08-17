@@ -60,22 +60,33 @@ const TOKEN_STATE = [
   'circulating'
 ] as const;
  
-export default function useFarmerSiloBreakdown() {
-  // Constants
-  const WHITELIST = useWhitelist();
-  const WHITELIST_ADDRS = useMemo(() => Object.keys(WHITELIST), [WHITELIST]);
+export default function useFarmerBalancesBreakdown() {
+  /// Constants
+  const whitelist = useWhitelist();
+  const whitelistAddrs = useMemo(() => Object.keys(whitelist), [whitelist]);
 
-  // Balances
+  /// Balances
   const siloBalances  = useSelector<AppState, AppState['_farmer']['silo']['balances']>((state) => state._farmer.silo.balances);
   const tokenBalances = useSelector<AppState, AppState['_farmer']['balances']>((state) => state._farmer.balances);
 
-  // Helpers
+  /// Helpers
   const getUSD = useSiloTokenToFiat();
 
-  return useMemo(() => 
-    // console.debug('[useFarmerSiloBreakdown] running reducer');
-     WHITELIST_ADDRS.reduce((prev, address) => {
-      const TOKEN        = WHITELIST[address];
+  return useMemo(() => {
+    const prev = {
+      totalValue:     new BigNumber(0),
+      states: {
+        deposited:    _initState(whitelistAddrs),
+        withdrawn:    _initState(whitelistAddrs),
+        claimable:    _initState(whitelistAddrs),
+        farm:         _initState(whitelistAddrs),
+        circulating:  _initState(whitelistAddrs),
+      }
+    };
+
+    /// Silo whitelist
+    whitelistAddrs.forEach((address) => {
+      const token        = whitelist[address];
       const siloBalance  = siloBalances[address];
       const tokenBalance = tokenBalances[address] || ZERO_BN;
 
@@ -89,11 +100,11 @@ export default function useFarmerSiloBreakdown() {
           circulating: tokenBalance.external,
         };
         const usdValueByState = {
-          deposited:   getUSD(TOKEN, siloBalance.deposited?.amount),
-          withdrawn:   getUSD(TOKEN, siloBalance.withdrawn?.amount),
-          claimable:   getUSD(TOKEN, siloBalance.claimable?.amount),
-          farm:        getUSD(TOKEN, tokenBalance.internal),
-          circulating: getUSD(TOKEN, tokenBalance.external),
+          deposited:   getUSD(token, siloBalance.deposited?.amount),
+          withdrawn:   getUSD(token, siloBalance.withdrawn?.amount),
+          claimable:   getUSD(token, siloBalance.claimable?.amount),
+          farm:        getUSD(token, tokenBalance.internal),
+          circulating: getUSD(token, tokenBalance.external),
         };
 
         // Aggregate value of all states.
@@ -111,22 +122,15 @@ export default function useFarmerSiloBreakdown() {
           prev.states[s].byToken[address].value  = prev.states[s].byToken[address].value.plus(usdValueByState[s]);
         });
       }
-      return prev;
-    }, {
-      /** The total USD value of all tokens in the Silo. */
-      totalValue:   new BigNumber(0),
-      /** */
-      states: {
-        deposited:    _initState(WHITELIST_ADDRS),
-        withdrawn:    _initState(WHITELIST_ADDRS),
-        claimable:    _initState(WHITELIST_ADDRS),
-        farm:         _initState(WHITELIST_ADDRS),
-        circulating:  _initState(WHITELIST_ADDRS),
-      }
-    }),  
+    });
+
+    ///
+
+    return prev;
+  },
   [
-    WHITELIST,
-    WHITELIST_ADDRS,
+    whitelist,
+    whitelistAddrs,
     siloBalances,
     tokenBalances,
     getUSD,

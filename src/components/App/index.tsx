@@ -12,7 +12,7 @@ import TransactionHistoryPage from '~/pages/history';
 import BalancesPage from '~/pages/balances';
 // import pageBackgroundGradient from '~/img/theme/bg-mainnet-gradient.png';
 import pageBackground from '~/img/theme/bg-mainnet.png';
-import NavBar from '~/components/Nav/NavBar';
+import NavBar, { NAV_CONTAINER_HEIGHT } from '~/components/Nav/NavBar';
 import PoolsUpdater from '~/state/bean/pools/updater';
 import UnripeUpdater from '~/state/bean/unripe/updater';
 import SunUpdater from '~/state/beanstalk/sun/updater';
@@ -38,7 +38,7 @@ import OrderPage from '../../pages/market/order';
 import ListingPage from '../../pages/market/listing';
 import EditListingPage from '../../pages/market/edit-listing';
 import EditOrderPage from '../../pages/market/edit-order';
-import TradePage from '../../pages/trade';
+import SwapPage from '../../pages/swap';
 import AnalyticsPage from '../../pages/analytics';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
@@ -46,7 +46,7 @@ BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 const CustomToaster: React.FC = () => (
   <Toaster
     containerStyle={{
-      top: 78,
+      top: NAV_CONTAINER_HEIGHT + 10,
     }}
     toastOptions={{
       duration: 4000,
@@ -133,7 +133,7 @@ export default function App() {
           backgroundSize: '100%',
           backgroundRepeat: 'no-repeat',
           width: '100%',
-          minHeight: 'calc(100vh - 65px)',
+          minHeight: `calc(100vh - ${NAV_CONTAINER_HEIGHT}px)`,
           paddingTop: {
             md: 4,
             xs: 2,
@@ -166,7 +166,7 @@ export default function App() {
           <Route path="/nft" element={<NFTPage />} />
           <Route path="/silo" element={<SiloPage />} />
           <Route path="/silo/:address" element={<SiloTokenPage />} />
-          <Route path="/trade" element={<TradePage />} />
+          <Route path="/swap" element={<SwapPage />} />
         </Routes>
       </Box>
     </>

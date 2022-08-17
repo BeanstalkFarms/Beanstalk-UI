@@ -148,9 +148,16 @@ export default class Farm {
     _amount: ethers.BigNumber,
     _slippage: number
   ) {
+    console.debug(
+      '[Farm] slip',
+      _amount,
+      _slippage,
+      Farm.SLIPPAGE_PRECISION * (1 - _slippage),
+      // ethers.BigNumber.from(Farm.SLIPPAGE_PRECISION * (1 - _slippage))
+    );
     return (
       _amount
-        .mul(Farm.SLIPPAGE_PRECISION * (1 - _slippage))
+        .mul(Math.floor(Farm.SLIPPAGE_PRECISION * (1 - _slippage)))
         .div(Farm.SLIPPAGE_PRECISION)
     );
   }
@@ -209,7 +216,12 @@ export default class Farm {
     return {
       /// the resulting amountOut is just the argument
       /// that would've been passed to the next function
-      amountOut: nextAmountIn,
+      amountOut: (
+        _forward === true
+          ? nextAmountIn
+          : nextAmountIn
+          // : Farm.slip(nextAmountIn, -((0.04 + 0.1 + 0.04 + 0.04 + 0.0291) / 100))
+      ),
       ///
       value,
       ///
@@ -261,6 +273,53 @@ export default class Farm {
     ),
   ]
 
+  pair = {
+    WETH_BEAN: (
+      _tokenIn : 'WETH' | 'BEAN',
+      _fromMode? : FarmFromMode,
+      _toMode?: FarmToMode,
+    ) => {
+      // default: WETH -> BEAN; flip if input is BEAN
+      const Weth = getChainConstant(WETH, this.provider.network.chainId).address;
+      const Usdt = getChainConstant(USDT, this.provider.network.chainId).address;
+      const Bean = getChainConstant(BEAN, this.provider.network.chainId).address;
+      
+      return _tokenIn === 'WETH'
+        ? [
+          this.exchange(
+            this.contracts.curve.pools.tricrypto2.address,
+            this.contracts.curve.registries.cryptoFactory.address,
+            Weth,
+            Usdt,
+            _fromMode
+          ),
+          this.exchangeUnderlying(
+            this.contracts.curve.pools.beanCrv3.address,
+            Usdt,
+            Bean,
+            undefined, // default from mode
+            _toMode
+          ),
+        ]
+        : [
+          this.exchangeUnderlying(
+            this.contracts.curve.pools.beanCrv3.address,
+            Bean,
+            Usdt,
+            _fromMode
+          ),
+          this.exchange(
+            this.contracts.curve.pools.tricrypto2.address,
+            this.contracts.curve.registries.cryptoFactory.address,
+            Usdt,
+            Weth,
+            undefined, // default from mode
+            _toMode
+          ),
+        ];
+    }
+  };
+
   // ------------------------------------------
 
   wrapEth = (
@@ -281,6 +340,54 @@ export default class Farm {
         ])
       ),
       decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('wrapEth', data),
+    };
+  };
+
+  unwrapEth = (
+    /// Default to EXTERNAL because Beanstalk can't store INTERNAL ETH.
+    _fromMode : FarmFromMode = FarmFromMode.INTERNAL,
+  ) : ChainableFunction => async (_amountInStep: ethers.BigNumber) => {
+    console.debug('[step@wrapEth] run', {
+      _fromMode,
+      _amountInStep
+    });
+    return {
+      name: 'unwrapEth',
+      amountOut: _amountInStep, // amountInStep should be an amount of ETH.
+      encode: (_: ethers.BigNumber) => (
+        this.contracts.beanstalk.interface.encodeFunctionData('unwrapEth', [
+          _amountInStep,        // ignore minAmountOut since there is no slippage
+          _fromMode,              //
+        ])
+      ),
+      decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('unwrapEth', data),
+    };
+  };
+
+  transferToken = (
+    _tokenIn : string,
+    _recipient : string,
+    _fromMode : FarmFromMode = FarmFromMode.INTERNAL_TOLERANT,
+    _toMode : FarmToMode  = FarmToMode.INTERNAL,
+  ) : ChainableFunction => async (_amountInStep: ethers.BigNumber) => {
+    console.debug('[step@transferToken] run', {
+      _fromMode,
+      _toMode,
+      _amountInStep,
+    });
+    return {
+      name: 'transferToken',
+      amountOut: _amountInStep, // transfer exact amount
+      encode: (_: ethers.BigNumber) => (
+        this.contracts.beanstalk.interface.encodeFunctionData('transferToken', [
+          _tokenIn,      //
+          _recipient,    //
+          _amountInStep, // ignore minAmountOut since there is no slippage
+          _fromMode,     //
+          _toMode,       //
+        ])
+      ),
+      decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('transferToken', data),
     };
   };
 
@@ -412,7 +519,7 @@ export default class Farm {
     _fromMode : FarmFromMode = FarmFromMode.INTERNAL_TOLERANT,
     _toMode   : FarmToMode   = FarmToMode.INTERNAL,
   ) : ChainableFunction => async (_amountInStep: ethers.BigNumber, _forward : boolean = true) => {
-    /// exchanges can be run in reverse
+    /// exchangeUnderlying can be estimated in reverse
     const [tokenIn, tokenOut] = Farm.direction(_tokenIn, _tokenOut, _forward);
 
     console.debug(`[step@exchangeUnderlying] run [${_forward ? 'forward' : 'backward'}]`, {
@@ -436,8 +543,8 @@ export default class Farm {
     // Only MetaPools have the ability to exchange_underlying
     // FIXME: 3pool also has a single get_dy_underlying method, will we ever use this?
     const amountOut = await CurveMetaPool__factory.connect(_pool, this.provider).callStatic['get_dy_underlying(int128,int128,uint256)'](
-      i, // 3,  // i = USDT = coins[3] ([0=BEAN, 1=CRV3] => [0=BEAN, 1=DAI, 2=USDC, 3=USDT])
-      j, // 0,  // j = BEAN = coins[0]
+      i, // i = USDT = coins[3] ([0=BEAN, 1=CRV3] => [0=BEAN, 1=DAI, 2=USDC, 3=USDT])
+      j, // j = BEAN = coins[0]
       _amountInStep,
       { gasLimit: 10000000 }
     );
@@ -456,8 +563,8 @@ export default class Farm {
       encode: (minAmountOut: ethers.BigNumber) => (
         this.contracts.beanstalk.interface.encodeFunctionData('exchangeUnderlying', [
           _pool,
-          tokenIn,
-          tokenOut,
+          tokenIn, // fixme
+          tokenOut, // fixme
           _amountInStep,
           minAmountOut,
           _fromMode,

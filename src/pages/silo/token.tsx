@@ -10,6 +10,12 @@ import { ERC20Token } from '~/classes/Token';
 import usePools from '~/hooks/usePools';
 import useWhitelist from '~/hooks/useWhitelist';
 import { AppState } from '~/state';
+import GuideButton from '~/components/Common/Guide/GuideButton';
+import { HOW_TO_CLAIM_WITHDRAWALS,
+  HOW_TO_CONVERT_DEPOSITS,
+  HOW_TO_DEPOSIT_IN_THE_SILO, HOW_TO_TRANSFER_DEPOSITS,
+  HOW_TO_WITHDRAW_FROM_THE_SILO
+} from '~/util/Guides';
 
 const TokenPage: React.FC<{}> = () => {
   // Constants
@@ -50,6 +56,18 @@ const TokenPage: React.FC<{}> = () => {
           title={whitelistedToken.name}
           icon={<TokenIcon style={{ marginTop: 3 }} token={whitelistedToken} />}
           returnPath="/silo"
+          control={
+            <GuideButton
+              title="The Farmers' Almanac: Silo Guides"
+              guides={[
+                HOW_TO_DEPOSIT_IN_THE_SILO,
+                HOW_TO_CONVERT_DEPOSITS,
+                HOW_TO_TRANSFER_DEPOSITS,
+                HOW_TO_WITHDRAW_FROM_THE_SILO,
+                HOW_TO_CLAIM_WITHDRAWALS,
+              ]}
+            />
+          }
         />
         {whitelistedToken.isLP && (
           <PoolCard

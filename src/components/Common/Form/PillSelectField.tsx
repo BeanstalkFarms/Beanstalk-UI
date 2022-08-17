@@ -6,7 +6,7 @@ import DescriptionButton from '../DescriptionButton';
 import PillDialogField from './PillDialogField';
 
 export type PillSelectFieldProps = {
-  /** */
+  /** Options */
   options: ({
     title: string;
     description: string;
@@ -20,12 +20,15 @@ export type PillSelectFieldProps = {
   label: string;
   /** Tooltip */
   tooltip?: string,
+  /** */
+  onChange?: (v: any) => void;
 };
 const PillSelectField : React.FC<PillSelectFieldProps> = ({
   options,
   name,
   label,
   tooltip,
+  onChange,
 }) => {
   const [isOpen, show, hide] = useToggle();
   return (
@@ -34,6 +37,7 @@ const PillSelectField : React.FC<PillSelectFieldProps> = ({
         const pill = options.find((x) => x.value === fieldProps.field.value)?.pill || <Typography variant="body1">Select {label}</Typography>; // FIXME: inefficient
         const set = (v: any) => () => {
           fieldProps.form.setFieldValue(name, v);
+          onChange?.(v);
           hide();
         };
         return (

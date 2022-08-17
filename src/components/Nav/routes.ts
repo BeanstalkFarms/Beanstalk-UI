@@ -3,7 +3,7 @@ import beanNFTIcon from '~/img/nav-icons/bean-nft.svg';
 import discordIcon from '~/img/nav-icons/discord.svg';
 import githubIcon from '~/img/nav-icons/github.svg';
 import governanceIcon from '~/img/nav-icons/governance.svg';
-import tradeIcon from '~/img/nav-icons/trade.svg';
+import swapIcon from '~/img/nav-icons/trade.svg';
 import twitterIcon from '~/img/nav-icons/twitter.svg';
 import duneIcon from '~/img/nav-icons/dune.svg';
 import docsIcon from '~/img/nav-icons/docs.svg';
@@ -62,9 +62,9 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       small: true
     },
     {
-      path: 'trade',
-      title: 'Trade',
-      icon: tradeIcon,
+      path: 'swap',
+      title: 'Swap',
+      icon: swapIcon,
       small: true
     },
     {

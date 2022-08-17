@@ -2,10 +2,9 @@ import React from 'react';
 import {
   AppBar,
   Box,
-  Link,
   Stack,
 } from '@mui/material';
-import { BeanstalkPalette, FontSize } from '~/components/App/muiTheme';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 import WalletButton from '~/components/Common/Connection/WalletButton';
 import NetworkButton from '~/components/Common/Connection/NetworkButton';
 import PriceButton from './Buttons/PriceButton';
@@ -14,7 +13,13 @@ import LinkButton from './Buttons/LinkButton';
 import AboutButton from './Buttons/AboutButton';
 import ROUTES from './routes';
 import HoverMenu from './HoverMenu';
-import snapshotLogo from '~/img/ecosystem/snapshot-logo.svg';
+
+/// Navbar Positioning
+export const BANNER_HEIGHT = 0; // 35;
+export const NAV_HEIGHT    = 64;
+export const NAV_BORDER_HEIGHT = 1;
+export const NAV_CONTAINER_HEIGHT = BANNER_HEIGHT + NAV_HEIGHT + NAV_BORDER_HEIGHT;
+export const NAV_ELEM_HEIGHT = 45;
 
 const NavBar: React.FC<{}> = () => (
   <AppBar
@@ -25,27 +30,25 @@ const NavBar: React.FC<{}> = () => (
     sx={{
       position: 'sticky',
       backgroundColor: BeanstalkPalette.lightBlue,
-      borderBottom: `1px solid ${BeanstalkPalette.blue}`,
+      borderBottom: `${NAV_BORDER_HEIGHT}px solid ${BeanstalkPalette.blue}`,
     }}
   >
-    <Link href="https://snapshot.org/#/beanstalkdao.eth/" target="_blank" rel="noreferrer" underline="none" sx={{ color: '#333', fontSize: FontSize.sm }}>
-      <Box sx={{ backgroundColor: 'white', textAlign: 'center', px: 2, py: 0.75 }}>
-        <img src={snapshotLogo} alt="Snapshot" style={{ height: 14, marginBottom: -2 }} />&nbsp;
-        BIP-22 and BIP-23, the Q3 budget proposals for Beanstalk Farms and Bean Sprout respectively, are live on Snapshot. <strong>Vote now &rarr;</strong>
-      </Box>
-    </Link>
+    {/* <Banner height={BANNER_HEIGHT} href="https://snapshot.org/#/beanstalkdao.eth/">
+      <img src={snapshotLogo} alt="Snapshot" style={{ height: 14, marginBottom: -2 }} />&nbsp;
+      BIP-22 and BIP-23, the Q3 budget proposals for Beanstalk Farms and Bean Sprout, respectively, are live on Snapshot. <strong>Vote now &rarr;</strong>
+    </Banner> */}
     <Stack
       direction="row"
       alignItems="center"
       justifyContent="space-between"
-      height="64px"
+      height={`${NAV_HEIGHT}px`}
       px={1}
       gap={1}
     >
       {/* Desktop: Left Side */}
       <Stack direction="row" alignItems="center" sx={{ flex: 1 }} height="100%" gap={1}>
-        <PriceButton sx={{ height: 45 }} />
-        <SunButton sx={{ height: 45 }} />
+        <PriceButton sx={{ height: NAV_ELEM_HEIGHT }} />
+        <SunButton sx={{ height: NAV_ELEM_HEIGHT }} />
         <Stack
           direction="row"
           alignItems="center"
@@ -73,10 +76,10 @@ const NavBar: React.FC<{}> = () => (
         gap={1}
       >
         <Box sx={{ display: { sm: 'block', xs: 'none' } }}>
-          <NetworkButton sx={{ height: 45 }} />
+          <NetworkButton sx={{ height: NAV_ELEM_HEIGHT }} />
         </Box>
-        <WalletButton sx={{ height: 45 }} />
-        <AboutButton sx={{ height: 45 }} />
+        <WalletButton sx={{ height: NAV_ELEM_HEIGHT }} />
+        <AboutButton sx={{ height: NAV_ELEM_HEIGHT }} />
       </Stack>
     </Stack>
   </AppBar>
