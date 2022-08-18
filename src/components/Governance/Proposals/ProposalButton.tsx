@@ -50,7 +50,7 @@ const ProposalButton: React.FC<{ proposal: any }> = (props) => {
         {/* top row */}
         <Stack direction={{ xs: 'column-reverse', md: 'row' }} justifyContent="space-between">
           <Typography display={{ xs: 'none', md: 'block' }} textAlign="left" variant="bodyLarge">{p.title}</Typography>
-          <Typography display={{ xs: 'block', md: 'none' }} textAlign="left" variant="bodyLarge" sx={{ fontSize: { xs: '20px', md: 'inherit' }, lineHeight: '24px' }}>{p.title.toString().substring(0, 55)}...</Typography>
+          <Typography display={{ xs: 'block', md: 'none' }} textAlign="left" variant="bodyLarge" sx={{ fontSize: { xs: '20px', md: 'inherit' }, lineHeight: '24px' }}>{p.title.toString().substring(0, 55)}{p.title.length > 55 ? '...' : null}</Typography>
           {/* show if user has voted */}
           {(account && voteData?.votes?.length) ? (
             <Stack direction="row" alignItems="center" gap={0.5}>
