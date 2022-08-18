@@ -54,7 +54,7 @@ export type SnapshotData<T extends MinimumViableSnapshotQuery> = T['seasons'][nu
 const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
   document: DocumentNode,
   range:    SeasonRange,
-  config?:  Partial<QueryOptions>,
+  queryConfig?:  Partial<QueryOptions>,
 ) => {
   /// Custom loading prop
   const [loading, setLoading] = useState(false);
@@ -69,9 +69,9 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
         if (range !== SeasonRange.ALL) {
           // data.seasons is sorted by season, descending.
           await get({
-            ...config,
+            ...queryConfig,
             variables: {
-              ...config?.variables,
+              ...queryConfig?.variables,
               first: SEASON_RANGE_TO_COUNT[range],
               season_lte: 999999999
             },
@@ -81,9 +81,9 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
           // Initialize Season data with a call to the first
           // set of Seasons.
           const init = await get({
-            ...config,
+            ...queryConfig,
             variables: {
-              ...config?.variables,
+              ...queryConfig?.variables,
               first: undefined,
               season_lte: 999999999
             },
@@ -103,7 +103,7 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
            */
           const latestSubgraphSeason = init.data.seasons[0].season;
 
-          console.debug(`[useSeasonsQuery] requested all seasons. current season is ${latestSubgraphSeason}. oldest loaded season ${null}`, init.data.seasons, config);
+          console.debug(`[useSeasonsQuery] requested all seasons. current season is ${latestSubgraphSeason}. oldest loaded season ${null}`, init.data.seasons, queryConfig);
 
           /**
            * 3000 / 1000 = 3 queries
@@ -113,7 +113,7 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
            */
           const numQueries = Math.ceil(
             /// If `season_gt` is provided, we only query back to that season.
-            (latestSubgraphSeason - (config?.variables?.season_gt || 0))
+            (latestSubgraphSeason - (queryConfig?.variables?.season_gt || 0))
             / PAGE_SIZE
           );
           const promises = [];
@@ -125,14 +125,14 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
               latestSubgraphSeason - i * PAGE_SIZE,
             );
             const variables = {
-              ...config?.variables,
+              ...queryConfig?.variables,
               first: season < 1000 ? (season - 1) : 1000,
               season_lte: season,
             };
             console.debug(`[useSeasonsQuery] get: ${season} -> ${Math.max(season - 1000, 2)}`, variables);
             promises.push(
               apolloClient.query({
-                ...config,
+                ...queryConfig,
                 query: document,
                 variables,
                 notifyOnNetworkStatusChange: true,
@@ -154,7 +154,7 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
         console.error(e);
       }
     })();
-  }, [range, get, config, document]);
+  }, [range, get, queryConfig, document]);
 
   return {
     ...query,
