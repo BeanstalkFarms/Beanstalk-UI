@@ -1,5 +1,5 @@
 import { Box, Button, CircularProgress, LinearProgress, Stack, Typography } from '@mui/material';
-import { Field, FieldProps, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -26,6 +26,10 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
   setFieldValue,
   proposal,
 }) => {
+  const handleClick = useCallback((option: number | undefined) => () => {
+    setFieldValue('option', option);
+  }, [setFieldValue]);
+
   /// Loading
   if (proposal === undefined) {
     return (
@@ -55,7 +59,7 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
                 <Typography variant="body1">
                   {displayBN(new BigNumber(proposal.scores[index]))} STALK
                   <Typography
-                    display={proposal.scores_total > 0 ? 'inline' : 'none'}>• {((proposal.scores[index] / proposal.scores_total) * 100).toFixed(2)}%
+                    display={proposal.scores_total > 0 ? 'inline' : 'none'}>•{((proposal.scores[index] / proposal.scores_total) * 100).toFixed(2)}%
                   </Typography>
                 </Typography>
               </Stack>
@@ -69,39 +73,30 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
         </Stack>
         {proposal.type === 'single-choice' ? (
           <>
-            <Field name="option">
-              {(fieldProps: FieldProps<any>) => {
-                const set = (v: any) => () => {
-                  // if user clicks on the selected action, unselect the action
-                  if (fieldProps.form.values.option !== undefined && v === fieldProps.form.values.option) {
-                    fieldProps.form.setFieldValue('option', undefined);
-                  } else {
-                    fieldProps.form.setFieldValue('option', v);
-                  }
-                };
+            <Stack gap={1}>
+              {proposal.choices.map((choice: string, index: number) => {
+                const option = index + 1;
+                const isSelected = values.option === option;
                 return (
-                  <Stack gap={1}>
-                    {proposal.choices.map((choice: string, index: number) => (
-                      <DescriptionButton
-                        key={index + 1}
-                        title={choice}
-                        onClick={set(index + 1)}
-                        isSelected={fieldProps.form.values.option === (index + 1)}
-                        sx={{ p: 1 }}
-                        StackProps={{ sx: { justifyContent: 'center' } }}
-                        TitleProps={{ variant: 'body1' }}
-                        disabled={differenceInTime <= 0}
-                      />
-                    ))}
-                  </Stack>
+                  <DescriptionButton
+                    key={option}
+                    title={choice}
+                    onClick={handleClick(isSelected ? undefined : option)}
+                    isSelected={isSelected}
+                    sx={{ p: 1 }}
+                    StackProps={{ sx: { justifyContent: 'center' } }}
+                    TitleProps={{ variant: 'body1' }}
+                    disabled={differenceInTime <= 0}
+                    size="medium"
+                  />
                 );
-              }}
-            </Field>
+              })}
+            </Stack>
             <LoadingButton
               type="submit"
               variant="contained"
               color="primary"
-              size="large"
+              size="medium"
               disabled={disableSubmit}
             >
               {differenceInTime <= 0 ? 'Vote ended' : 'Vote'}
