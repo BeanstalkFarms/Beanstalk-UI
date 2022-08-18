@@ -36,15 +36,36 @@ const Proposals: React.FC = () => {
     if (!loading && data !== undefined) {
       return data.proposals?.filter((p: any) => p.space.id === snapshotSpaces[t]);
     }
-  }, [data, loading]); 
-
-  /// Filtered proposal data
-  const daoProposals = useMemo(() => filterProposals(0), [filterProposals]);
-  const beanstalkFarmsProposals = useMemo(() => filterProposals(1), [filterProposals]);
-  const beanSproutProposals = useMemo(() => filterProposals(2), [filterProposals]);
+  }, [data, loading]);
 
   /// true if any proposals are active
-  const hasActive = (proposals: any) => proposals?.filter((p: any) => p.state === 'active').length > 0;
+  const hasActive = (proposals: any) => {
+    if (proposals) {
+      return proposals?.filter((p: any) => p.state === 'active').length > 0;
+    }
+    return false;
+  };
+
+  /// Dao Proposals
+  const [daoProposals, hasActiveDao] = useMemo(() => {
+    const filtered = filterProposals(0);
+    const hasActiveProposals = hasActive(filtered);
+    return [filtered, hasActiveProposals];
+  }, [filterProposals]);
+
+  /// Beanstalk Farms Proposals
+  const [beanstalkFarmsProposals, hasActiveBF] = useMemo(() => {
+    const filtered = filterProposals(1);
+    const hasActiveProposals = hasActive(filtered);
+    return [filtered, hasActiveProposals];
+  }, [filterProposals]);
+
+  /// Bean Sprout Proposals
+  const [beanSproutProposals, hasActiveBS] = useMemo(() => {
+    const filtered = filterProposals(2);
+    const hasActiveProposals = hasActive(filtered);
+    return [filtered, hasActiveProposals];
+  }, [filterProposals]);
 
   return (
     <Card sx={{ position: 'relative' }}>
@@ -59,9 +80,9 @@ const Proposals: React.FC = () => {
             onChange={handleChange}
             sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }}
             variant="scrollable">
-            <BadgeTab label="DAO" showBadge={hasActive(daoProposals)} />
-            <BadgeTab label="Beanstalk Farms" showBadge={hasActive(beanstalkFarmsProposals)} />
-            <BadgeTab label="Bean Sprout" showBadge={hasActive(beanSproutProposals)} />
+            <BadgeTab label="DAO" showBadge={hasActiveDao} />
+            <BadgeTab label="Beanstalk Farms" showBadge={hasActiveBF} />
+            <BadgeTab label="Bean Sprout" showBadge={hasActiveBS} />
           </Tabs>
         </Stack>
         <Box>
