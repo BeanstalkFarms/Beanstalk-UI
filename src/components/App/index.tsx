@@ -164,7 +164,7 @@ export default function App() {
           <Route path="/market/listing/:id" element={<ListingPage />} />
           <Route path="/market/listing/:id/edit" element={<EditListingPage />} />
           <Route path="/nft" element={<NFTPage />} />
-          <Route path="/proposal/:id" element={<ProposalPage />} />
+          <Route path="/governance/:id" element={<ProposalPage />} />
           <Route path="/silo" element={<SiloPage />} />
           <Route path="/silo/:address" element={<SiloTokenPage />} />
           <Route path="/trade" element={<TradePage />} />

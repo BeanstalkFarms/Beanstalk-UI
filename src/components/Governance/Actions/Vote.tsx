@@ -5,7 +5,7 @@ import React, { useCallback, useMemo } from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useParams } from 'react-router-dom';
 import snapshot from '@snapshot-labs/snapshot.js';
-import { ContractTransaction, Wallet } from 'ethers';
+import { Wallet } from 'ethers';
 import BigNumber from 'bignumber.js';
 import useAccount from '~/hooks/ledger/useAccount';
 import useGovernanceQuery from '~/hooks/useGovernanceQuery';
@@ -88,10 +88,10 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
                   <Stack gap={1}>
                     {proposal.choices.map((choice: string, index: number) => (
                       <DescriptionButton
-                        key={proposal.choices.length - index}
+                        key={index + 1}
                         title={choice}
-                        onClick={set(proposal.choices.length - index)}
-                        selected={fieldProps.form.values.option === (proposal.choices.length - index)}
+                        onClick={set(index + 1)}
+                        selected={fieldProps.form.values.option === (index + 1)}
                         // button style
                         sx={{ p: 1 }}
                         // stack style
@@ -170,17 +170,23 @@ const Vote: React.FC<{}> = () => {
         const hub = 'https://hub.snapshot.org';
         const client = new snapshot.Client712(hub);
 
-        const receipt = await client.vote(signer as Wallet, account, {
+        const message = {
           space: data?.proposal?.space?.id,
           proposal: data?.proposal?.id,
           type: data?.proposal?.type,
           choice: values.option,
-          app: data?.proposal?.space?.id
-        });
-        txToast.confirming(receipt as ContractTransaction);
+          app: 'snapshot'
+        };
 
-        const r = await (receipt as ContractTransaction).wait();
-        txToast.success(r);
+        console.debug('[Vote]', signer, await signer?.getAddress(), account, message);
+
+        const _account = await signer?.getAddress();
+        if (!_account) throw new Error('Missing signer');
+
+        const result = await client.vote(signer as Wallet, _account, message);
+        console.debug('[vote: result]', result);
+
+        txToast.success();
         /// vote
       } catch (err) {
         console.error(err);

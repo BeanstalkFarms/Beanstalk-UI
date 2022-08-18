@@ -55,7 +55,7 @@ export const getDateMessage = (end: number) => {
     }
   } else {
     // in the past
-    dateMessage = `Vote ended on ${endDate.toLocaleDateString('en-US', {
+    dateMessage = `Ended on ${endDate.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'

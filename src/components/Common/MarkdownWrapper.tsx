@@ -15,6 +15,7 @@ const MarkdownWrapper: React.FC = ({ children }) => (
             fontSize: FontSize.base,
             color: BeanstalkPalette.lightGrey,
             lineHeight: '1.25rem',
+            wordBreak: 'break-all'
           }
         } as React.HTMLProps<HTMLParagraphElement>,
       },

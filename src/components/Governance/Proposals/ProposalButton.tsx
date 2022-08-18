@@ -2,9 +2,7 @@ import React, { useMemo } from 'react';
 import { Button, Stack, Typography } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import { useSelector } from 'react-redux';
-import BigNumber from 'bignumber.js';
 import { Link as ReactRouterLink } from 'react-router-dom';
-import { displayBN } from '~/util';
 import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
 import { AppState } from '~/state';
 import useGovernanceQuery from '~/hooks/useGovernanceQuery';
@@ -40,7 +38,7 @@ const ProposalButton: React.FC<{ proposal: any }> = (props) => {
       variant="outlined"
       color="secondary"
       component={ReactRouterLink}
-      to={`/proposal/${p.id}`}
+      to={`/governance/${p.id}`}
       sx={{
         p: 2,
         height: 'auto',
@@ -50,8 +48,9 @@ const ProposalButton: React.FC<{ proposal: any }> = (props) => {
     >
       <Stack gap={1} width="100%">
         {/* top row */}
-        <Stack direction="row" justifyContent="space-between">
-          <Typography textAlign="left" variant="bodyLarge">{p.title}</Typography>
+        <Stack direction={{ xs: 'column-reverse', md: 'row' }} justifyContent="space-between">
+          <Typography display={{ xs: 'none', md: 'block' }} textAlign="left" variant="bodyLarge">{p.title}</Typography>
+          <Typography display={{ xs: 'block', md: 'none' }} textAlign="left" variant="bodyLarge" sx={{ fontSize: { xs: '20px', md: 'inherit' }, lineHeight: '24px' }}>{p.title.toString().substring(0, 55)}...</Typography>
           {/* show if user has voted */}
           {(account && voteData?.votes?.length > 0) && (
             <Stack direction="row" alignItems="center" gap={0.5}>
@@ -62,15 +61,7 @@ const ProposalButton: React.FC<{ proposal: any }> = (props) => {
         </Stack>
         {/* bottom row */}
         <Stack direction={{ xs: 'column', lg: 'row' }} justifyContent="space-between">
-          <ProposalStats proposal={p} />
-          {/* if there is time remaining... */}
-          {differenceInTime > 0 && (
-            <Stack direction="row" alignItems="center" gap={0.5}>
-              <Typography variant="body1">
-                {displayBN(new BigNumber(p.scores[0]).div(totalStalk).multipliedBy(100))}% of Stalk voted For
-              </Typography>
-            </Stack>
-          )}
+          <ProposalStats totalStalk={totalStalk} differenceInTime={differenceInTime} proposal={p} />
         </Stack>
       </Stack>
     </Button>

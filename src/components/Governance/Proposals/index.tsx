@@ -31,6 +31,7 @@ const Proposals: React.FC = () => {
 
   /// Query Proposals
   const { loading, data } = useGovernanceQuery(ProposalsDocument, queryConfig);
+
   const filterProposals = useCallback((t: number) => {
     if (!loading && data !== undefined) {
       return data.proposals?.filter((p: any) => p.space.id === snapshotSpaces[t]);
