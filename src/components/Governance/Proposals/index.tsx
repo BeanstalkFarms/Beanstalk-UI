@@ -3,8 +3,7 @@ import { Box, Card, Stack, Tabs } from '@mui/material';
 import useTabs from '~/hooks/display/useTabs';
 import BadgeTab from '~/components/Common/BadgeTab';
 import ProposalList from '~/components/Governance/Proposals/ProposalList';
-import { ProposalsDocument } from '~/generated/graphql';
-import useGovernanceQuery from '~/hooks/useGovernanceQuery';
+import { useProposalsQuery } from '~/generated/graphql';
 
 // export type Proposal = {
 //   /** Proposal ID on Snapshot. */
@@ -24,13 +23,14 @@ const snapshotSpaces = ['beanstalkdao.eth', 'beanstalkfarms.eth', 'wearebeanspro
 const SLUGS = ['dao', 'beanstalk-farms', 'bean-sprout'];
 const queryConfig = {
   variables: { space_in: snapshotSpaces },
+  context: { subgraph: 'snapshot' }
 };
 
 const Proposals: React.FC = () => {
   const [tab, handleChange] = useTabs(SLUGS, 'type');
 
   /// Query Proposals
-  const { loading, data } = useGovernanceQuery(ProposalsDocument, queryConfig);
+  const { loading, data } = useProposalsQuery(queryConfig);
 
   const filterProposals = useCallback((t: number) => {
     if (!loading && data !== undefined) {

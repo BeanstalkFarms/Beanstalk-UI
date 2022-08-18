@@ -68,6 +68,7 @@ const DescriptionButton : React.FC<ButtonProps & {
       '&:hover': {
         backgroundColor: isSelected ? '#F6FAFE' : null,
       },
+      height: 'auto'
     }}
     {...props}
   >

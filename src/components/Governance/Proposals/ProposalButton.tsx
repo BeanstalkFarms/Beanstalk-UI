@@ -1,14 +1,13 @@
 import React, { useMemo } from 'react';
 import { Button, Stack, Typography } from '@mui/material';
-import CheckIcon from '@mui/icons-material/Check';
 import { useSelector } from 'react-redux';
 import { Link as ReactRouterLink } from 'react-router-dom';
-import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
+import CheckIcon from '@mui/icons-material/Check';
 import { AppState } from '~/state';
-import useGovernanceQuery from '~/hooks/useGovernanceQuery';
-import { VotesDocument } from '~/generated/graphql';
-import useAccount from '~/hooks/ledger/useAccount';
 import ProposalStats from '~/components/Governance/Proposals/ProposalStats';
+import useAccount from '~/hooks/ledger/useAccount';
+import { useVotesQuery } from '~/generated/graphql';
+import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
 
 const ProposalButton: React.FC<{ proposal: any }> = (props) => {
   /// Setup
@@ -24,15 +23,16 @@ const ProposalButton: React.FC<{ proposal: any }> = (props) => {
     variables: {
       proposal_id: p.id.toString().toLowerCase(),
       voter_address: account ? account.toLowerCase() : '',
-    }
+    },
+    context: { subgraph: 'snapshot' }
   }), [p, account]);
-  const { data: voteData } = useGovernanceQuery(VotesDocument, queryConfig);
+  const { data: voteData } = useVotesQuery(queryConfig);
 
   // Time
   const today = new Date();
   const endDate = new Date(p.end * 1000);
   const differenceInTime = endDate.getTime() - today.getTime();
-
+  
   return (
     <Button
       variant="outlined"
@@ -52,12 +52,12 @@ const ProposalButton: React.FC<{ proposal: any }> = (props) => {
           <Typography display={{ xs: 'none', md: 'block' }} textAlign="left" variant="bodyLarge">{p.title}</Typography>
           <Typography display={{ xs: 'block', md: 'none' }} textAlign="left" variant="bodyLarge" sx={{ fontSize: { xs: '20px', md: 'inherit' }, lineHeight: '24px' }}>{p.title.toString().substring(0, 55)}...</Typography>
           {/* show if user has voted */}
-          {(account && voteData?.votes?.length > 0) && (
-            <Stack direction="row" alignItems="center" gap={0.5}>
-              <CheckIcon sx={{ color: BeanstalkPalette.logoGreen, width: IconSize.small }} />
-              <Typography variant="body1">Voted</Typography>
-            </Stack>
-          )}
+          {(account && voteData?.votes && voteData?.votes?.length > 0) && (
+          <Stack direction="row" alignItems="center" gap={0.5}> 
+            <CheckIcon sx={{ color: BeanstalkPalette.logoGreen, width: IconSize.small }} /> 
+            <Typography variant="body1">Voted</Typography> 
+          </Stack> 
+           )} 
         </Stack>
         {/* bottom row */}
         <Stack direction={{ xs: 'column', lg: 'row' }} justifyContent="space-between">

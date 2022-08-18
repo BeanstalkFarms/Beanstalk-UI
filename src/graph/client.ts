@@ -151,12 +151,11 @@ export const apolloClient = new ApolloClient({
   link: ApolloLink.split(
     (operation) => operation.getContext().subgraph === 'bean',
     beanLink, // true
-    beanstalkLink, // false
+    ApolloLink.split(
+      (operation) => operation.getContext().subgraph === 'snapshot',
+      snapshotLink, // true
+      beanstalkLink, // false
+    ),
   ),
-  cache,
-});
-
-export const apolloSnapshotClient = new ApolloClient({
-  link: snapshotLink,
   cache,
 });

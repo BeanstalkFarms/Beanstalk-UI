@@ -1,15 +1,13 @@
 import { Box, Button, CircularProgress, LinearProgress, Stack, Typography } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
-
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useParams } from 'react-router-dom';
 import snapshot from '@snapshot-labs/snapshot.js';
 import { Wallet } from 'ethers';
 import BigNumber from 'bignumber.js';
 import useAccount from '~/hooks/ledger/useAccount';
-import useGovernanceQuery from '~/hooks/useGovernanceQuery';
-import { ProposalDocument } from '~/generated/graphql';
+import { useProposalQuery } from '~/generated/graphql';
 import DescriptionButton from '~/components/Common/DescriptionButton';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { displayBN } from '~/util';
@@ -129,9 +127,10 @@ const Vote: React.FC<{}> = () => {
 
   /// Query proposal data
   const queryConfig = useMemo(() => ({
-    variables: { proposal_id: id }
+    variables: { proposal_id: id },
+    context: { subgraph: 'snapshot' }
   }), [id]);
-  const { data } = useGovernanceQuery(ProposalDocument, queryConfig);
+  const { data } = useProposalQuery(queryConfig);
 
   // Form setup
   const initialValues: VoteFormValues = useMemo(() => ({
@@ -147,6 +146,7 @@ const Vote: React.FC<{}> = () => {
       try {
         if (!account) throw new Error('Connect a wallet first.');
         if (values.option === undefined) throw new Error('Select a voting option.');
+        if (!data?.proposal) throw new Error('Error loading proposal data.');
 
         txToast = new TransactionToast({
           loading: 'Voting on proposal...',
@@ -169,7 +169,7 @@ const Vote: React.FC<{}> = () => {
         const _account = await signer?.getAddress();
         if (!_account) throw new Error('Missing signer');
 
-        const result = await client.vote(signer as Wallet, _account, message);
+        const result = await client.vote(signer as Wallet, _account, message as any);
         console.debug('[vote: result]', result);
 
         txToast.success();
@@ -180,7 +180,7 @@ const Vote: React.FC<{}> = () => {
         formActions.setSubmitting(false);
       }
     },
-    [account, data?.proposal?.id, data?.proposal?.space?.id, data?.proposal?.type, signer]
+    [account, data?.proposal, signer]
   );
 
   return (

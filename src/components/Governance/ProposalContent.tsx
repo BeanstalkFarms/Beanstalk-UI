@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react';
 import { Box, Card, CircularProgress, Divider, Stack, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { ProposalDocument } from '~/generated/graphql';
-import useGovernanceQuery from '~/hooks/useGovernanceQuery';
+import { useProposalQuery } from '~/generated/graphql';
 import MarkdownWrapper from '~/components/Common/MarkdownWrapper';
 import ProposalStats from '~/components/Governance/Proposals/ProposalStats';
 
@@ -12,9 +11,10 @@ const ProposalContent: React.FC = () => {
 
   /// Query proposal data
   const queryConfig = useMemo(() => ({
-    variables: { proposal_id: id }
+    variables: { proposal_id: id },
+    context: { subgraph: 'snapshot' }
   }), [id]);
-  const { loading, data } = useGovernanceQuery(ProposalDocument, queryConfig);
+  const { loading, data } = useProposalQuery(queryConfig);
   
   /// Loading
   if (loading || data === undefined) {
