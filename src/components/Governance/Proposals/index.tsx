@@ -46,7 +46,7 @@ const Proposals: React.FC = () => {
     return false;
   };
 
-  /// Filter proposals & checks if there are any active ones
+  /// Filter proposals & check if there are any active ones
   const filterProposals = useCallback((t: number) => {
     const filtered = filterBySpace(t);
     const hasActiveProposals = hasActive(filtered);

@@ -28,15 +28,6 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
     setFieldValue('option', option);
   }, [setFieldValue]);
 
-  /// Loading
-  if (proposal === undefined) {
-    return (
-      <Box height={100} display="flex" alignItems="center" justifyContent="center">
-        <CircularProgress />
-      </Box>
-    );
-  }
-
   /// Time
   const today = new Date();
   const endDate = new Date(proposal.end * 1000);
@@ -133,10 +124,10 @@ const Vote: React.FC<{}> = () => {
   /// Query proposal data
   const queryConfig = useMemo(() => ({
     variables: { proposal_id: id },
-    context: { subgraph: 'snapshot' }
+    context: { subgraph: 'snapshot' },
   }), [id]);
   // TODO: Return typed version of data
-  const { data } = useProposalQuery(queryConfig);
+  const { loading, error, data } = useProposalQuery(queryConfig);
 
   // Form setup
   const initialValues: VoteFormValues = useMemo(() => ({
@@ -188,6 +179,22 @@ const Vote: React.FC<{}> = () => {
     },
     [account, data?.proposal, signer]
   );
+
+  if (loading) {
+    return (
+      <Box height={100} display="flex" alignItems="center" justifyContent="center">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box height={100} display="flex" alignItems="center" justifyContent="center">
+        <Typography>{error.message.toString()}</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Formik<VoteFormValues>

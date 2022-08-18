@@ -14,14 +14,18 @@ const ProposalContent: React.FC = () => {
     variables: { proposal_id: id },
     context: { subgraph: 'snapshot' }
   }), [id]);
-  const { loading, data } = useProposalQuery(queryConfig);
+  const { loading, error, data } = useProposalQuery(queryConfig);
   
   /// Loading
-  if (loading || data === undefined) {
+  if (loading || error || !data) {
     return (
       <Card>
         <Box height={300} display="flex" alignItems="center" justifyContent="center">
-          <CircularProgress />
+          {error ? (
+            <Typography>Error: {error.message}</Typography>
+          ) : (
+            <CircularProgress />
+          )}
         </Box>
       </Card>
     );
