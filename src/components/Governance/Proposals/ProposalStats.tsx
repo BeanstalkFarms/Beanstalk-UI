@@ -11,20 +11,21 @@ const ProposalStats: React.FC<{ proposal: any, differenceInTime?: number, totalS
         <Box
           className="B-badge"
           sx={{
-              opacity: 0.7,
-              width: 8,
-              height: 8,
-              backgroundColor: props.proposal.state === 'active' ? 'primary.main' : 'gray',
-              borderRadius: 4
-            }}
-          />
-        <Typography
-          variant="body1">{props.proposal.state.charAt(0).toUpperCase() + props.proposal.state.slice(1)}
+            opacity: 0.7,
+            width: 8,
+            height: 8,
+            backgroundColor: props.proposal.state === 'active' ? 'primary.main' : 'gray',
+            borderRadius: 4
+          }}
+        />
+        <Typography variant="body1">
+          {props.proposal.state.charAt(0).toUpperCase() + props.proposal.state.slice(1)}
         </Typography>
       </Stack>
-      <Typography variant="body1">{getDateMessage(props.proposal.end)}</Typography>
+      <Typography variant="body1">
+        {getDateMessage(props.proposal.end)}
+      </Typography>
     </Stack>
-
     {/* if there is time remaining... */}
     {(props.differenceInTime && props.totalStalk && props.differenceInTime > 0) && (
       <Stack direction="row" alignItems="center" gap={0.5} display={{ xs: 'none', md: 'block' }}>
@@ -34,6 +35,6 @@ const ProposalStats: React.FC<{ proposal: any, differenceInTime?: number, totalS
       </Stack>
     )}
   </Stack>
-  );
+);
 
 export default ProposalStats;

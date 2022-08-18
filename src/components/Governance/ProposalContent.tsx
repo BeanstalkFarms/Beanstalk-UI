@@ -15,11 +15,8 @@ const ProposalContent: React.FC = () => {
     variables: { proposal_id: id }
   }), [id]);
   const { loading, data } = useGovernanceQuery(ProposalDocument, queryConfig);
-
-  // Netlify function
-  // const proposal = loadProposal();
   
-  // loading
+  /// Loading
   if (loading || data === undefined) {
     return (
       <Card>
