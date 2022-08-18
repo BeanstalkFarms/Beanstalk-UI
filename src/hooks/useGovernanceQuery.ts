@@ -22,17 +22,20 @@ const useGovernanceQuery = (
           },
           fetchPolicy: 'cache-first',
         });
+
         const promises = [];
         const variables = {
           ...config?.variables,
         };
-        promises.push(apolloSnapshotClient.query({
-          // ...config,
-          query: document,
-          variables,
-          notifyOnNetworkStatusChange: true,
-        }).then((r) => r
-        ));
+        promises.push(
+          apolloSnapshotClient.query({
+            // ...config,
+            query: document,
+            variables,
+            notifyOnNetworkStatusChange: true,
+          })
+          .then((r) => r)
+        );
 
         /**
          * Wait for queries to complete
