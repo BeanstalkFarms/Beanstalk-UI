@@ -5,8 +5,9 @@ import BigNumber from 'bignumber.js';
 import useAccount from '~/hooks/ledger/useAccount';
 import { displayBN, trimAddress } from '~/util';
 import { AppState } from '~/state';
-import circleImg from '~/img/interface/blue-circle.svg';
 import AuthEmptyState from '~/components/Common/ZeroState/AuthEmptyState';
+import AddressIcon from '~/components/Common/AddressIcon';
+import { IconSize } from '~/components/App/muiTheme';
 
 const StalkholderCard : React.FC = () => {
   const account = useAccount();
@@ -20,7 +21,7 @@ const StalkholderCard : React.FC = () => {
           <Typography variant="h4">Stalkholder</Typography>
           {account && (
             <Stack direction="row" alignItems="center" gap={0.3}>
-              <img src={circleImg} alt="" />
+              <AddressIcon address={account} size={IconSize.xs} />
               <Typography variant="body1" color="gray">{trimAddress(account)}</Typography>
             </Stack>
           )}

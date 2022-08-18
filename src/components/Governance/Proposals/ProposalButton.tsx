@@ -3,11 +3,11 @@ import { Button, Stack, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import CheckIcon from '@mui/icons-material/Check';
+import BigNumber from 'bignumber.js';
 import { AppState } from '~/state';
 import { useVotesQuery } from '~/generated/graphql';
 import useAccount from '~/hooks/ledger/useAccount';
 import ProposalStats from '~/components/Governance/Proposals/ProposalStats';
-
 import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
 
 const ProposalButton: React.FC<{ proposal: any }> = (props) => {
@@ -17,7 +17,6 @@ const ProposalButton: React.FC<{ proposal: any }> = (props) => {
 
   /// State
   const totalStalk = useSelector<AppState, BigNumber>((state) => state._beanstalk.silo.stalk.total);
-  const totalStalk = beanstalkSilo.stalk.total;
 
   /// Query Votes
   const { data: voteData } = useVotesQuery({

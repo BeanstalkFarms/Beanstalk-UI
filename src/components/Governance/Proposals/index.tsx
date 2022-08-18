@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { Box, Card, Stack, Tabs } from '@mui/material';
 import useTabs from '~/hooks/display/useTabs';
 import BadgeTab from '~/components/Common/BadgeTab';
@@ -32,7 +32,7 @@ const Proposals: React.FC = () => {
   /// Query Proposals
   const { loading, data } = useProposalsQuery(queryConfig);
 
-  const filterProposals = useCallback((t: number) => {
+  const filterBySpace = useCallback((t: number) => {
     if (!loading && data !== undefined) {
       return data.proposals?.filter((p: any) => p.space.id === snapshotSpaces[t]);
     }
@@ -46,26 +46,16 @@ const Proposals: React.FC = () => {
     return false;
   };
 
-  /// Dao Proposals
-  const [daoProposals, hasActiveDao] = useMemo(() => {
-    const filtered = filterProposals(0);
+  /// Filter proposals & checks if there are any active ones
+  const filterProposals = useCallback((t: number) => {
+    const filtered = filterBySpace(t);
     const hasActiveProposals = hasActive(filtered);
     return [filtered, hasActiveProposals];
-  }, [filterProposals]);
+  }, [filterBySpace]);
 
-  /// Beanstalk Farms Proposals
-  const [beanstalkFarmsProposals, hasActiveBF] = useMemo(() => {
-    const filtered = filterProposals(1);
-    const hasActiveProposals = hasActive(filtered);
-    return [filtered, hasActiveProposals];
-  }, [filterProposals]);
-
-  /// Bean Sprout Proposals
-  const [beanSproutProposals, hasActiveBS] = useMemo(() => {
-    const filtered = filterProposals(2);
-    const hasActiveProposals = hasActive(filtered);
-    return [filtered, hasActiveProposals];
-  }, [filterProposals]);
+  const [daoProposals, hasActiveDao] = filterProposals(0);
+  const [beanstalkFarmsProposals, hasActiveBF] = filterProposals(1);
+  const [beanSproutProposals, hasActiveBS] = filterProposals(2);
 
   return (
     <Card sx={{ position: 'relative' }}>
@@ -80,9 +70,9 @@ const Proposals: React.FC = () => {
             onChange={handleChange}
             sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }}
             variant="scrollable">
-            <BadgeTab label="DAO" showBadge={hasActiveDao} />
-            <BadgeTab label="Beanstalk Farms" showBadge={hasActiveBF} />
-            <BadgeTab label="Bean Sprout" showBadge={hasActiveBS} />
+            <BadgeTab label="DAO" showBadge={hasActiveDao as boolean} />
+            <BadgeTab label="Beanstalk Farms" showBadge={hasActiveBF as boolean} />
+            <BadgeTab label="Bean Sprout" showBadge={hasActiveBS as boolean} />
           </Tabs>
         </Stack>
         <Box>

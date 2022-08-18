@@ -130,6 +130,7 @@ const Vote: React.FC<{}> = () => {
     variables: { proposal_id: id },
     context: { subgraph: 'snapshot' }
   }), [id]);
+  // TODO: Return typed version of data
   const { data } = useProposalQuery(queryConfig);
 
   // Form setup
