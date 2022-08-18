@@ -20,10 +20,10 @@ type VoteFormValues = {
 const VoteForm: React.FC<FormikProps<VoteFormValues> & {
   proposal: any;
 }> = ({
-  values,
-  setFieldValue,
-  proposal,
-}) => {
+        values,
+        setFieldValue,
+        proposal,
+      }) => {
   const handleClick = useCallback((option: number | undefined) => () => {
     setFieldValue('option', option);
   }, [setFieldValue]);
@@ -38,7 +38,7 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
   }
 
   /// Time
-  const today   = new Date();
+  const today = new Date();
   const endDate = new Date(proposal.end * 1000);
   const differenceInTime = endDate.getTime() - today.getTime();
 
@@ -71,34 +71,39 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
         </Stack>
         {proposal.type === 'single-choice' ? (
           <>
-            <Stack gap={1}>
-              {proposal.choices.map((choice: string, index: number) => {
-                const option = index + 1;
-                const isSelected = values.option === option;
-                return (
-                  <DescriptionButton
-                    key={option}
-                    title={choice}
-                    onClick={handleClick(isSelected ? undefined : option)}
-                    isSelected={isSelected}
-                    sx={{ p: 1 }}
-                    StackProps={{ sx: { justifyContent: 'center' } }}
-                    TitleProps={{ variant: 'body1' }}
-                    disabled={differenceInTime <= 0}
-                    size="medium"
-                  />
-                );
-              })}
-            </Stack>
-            <LoadingButton
-              type="submit"
-              variant="contained"
-              color="primary"
-              size="medium"
-              disabled={disableSubmit}
-            >
-              {differenceInTime <= 0 ? 'Vote ended' : 'Vote'}
-            </LoadingButton>
+            {/* hide form if voting period has ended */}
+            {differenceInTime > 0 && (
+              <>
+                <Stack gap={1}>
+                  {proposal.choices.map((choice: string, index: number) => {
+                    const option = index + 1;
+                    const isSelected = values.option === option;
+                    return (
+                      <DescriptionButton
+                        key={option}
+                        title={choice}
+                        onClick={handleClick(isSelected ? undefined : option)}
+                        isSelected={isSelected}
+                        sx={{ p: 1 }}
+                        StackProps={{ sx: { justifyContent: 'center' } }}
+                        TitleProps={{ variant: 'body1' }}
+                        disabled={differenceInTime <= 0}
+                        size="medium"
+                      />
+                    );
+                  })}
+                </Stack>
+                <LoadingButton
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  size="medium"
+                  disabled={disableSubmit}
+                >
+                  {differenceInTime <= 0 ? 'Vote ended' : 'Vote'}
+                </LoadingButton>
+              </>
+            )}
           </>
         ) : (
           <Button
