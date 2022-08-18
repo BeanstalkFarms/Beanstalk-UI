@@ -29,7 +29,11 @@ const ProposalButton: React.FC<{ proposal: any }> = (props) => {
     }
   }), [p, account]);
   const { data: voteData } = useGovernanceQuery(VotesDocument, queryConfig);
-  console.log('VOTES dATA', voteData);
+
+  // Time
+  const today = new Date();
+  const endDate = new Date(p.end * 1000);
+  const differenceInTime = endDate.getTime() - today.getTime();
 
   return (
     <Button
@@ -39,17 +43,16 @@ const ProposalButton: React.FC<{ proposal: any }> = (props) => {
       to={`/proposal/${p.id}`}
       sx={{
         p: 2,
-        height: 'auto', // FIXME
-        // display: 'block',
+        height: 'auto',
         color: '#000000',
         borderColor: '#c7ddf0',
       }}
     >
       <Stack gap={1} width="100%">
         {/* top row */}
-        {/* middle row */}
         <Stack direction="row" justifyContent="space-between">
           <Typography textAlign="left" variant="bodyLarge">{p.title}</Typography>
+          {/* show if user has voted */}
           {(account && voteData?.votes?.length > 0) && (
             <Stack direction="row" alignItems="center" gap={0.5}>
               <CheckIcon sx={{ color: BeanstalkPalette.logoGreen, width: IconSize.small }} />
@@ -60,12 +63,14 @@ const ProposalButton: React.FC<{ proposal: any }> = (props) => {
         {/* bottom row */}
         <Stack direction={{ xs: 'column', lg: 'row' }} justifyContent="space-between">
           <ProposalStats proposal={p} />
-          {/* show if user has voted */}
-          <Stack direction="row" alignItems="center" gap={0.5}>
-            <Typography variant="body1">{displayBN(new BigNumber(p.scores[0]).div(totalStalk).multipliedBy(100))}% of
-              Stalk voted For
-            </Typography>
-          </Stack>
+          {/* if there is time remaining... */}
+          {differenceInTime > 0 && (
+            <Stack direction="row" alignItems="center" gap={0.5}>
+              <Typography variant="body1">
+                {displayBN(new BigNumber(p.scores[0]).div(totalStalk).multipliedBy(100))}% of Stalk voted For
+              </Typography>
+            </Stack>
+          )}
         </Stack>
       </Stack>
     </Button>

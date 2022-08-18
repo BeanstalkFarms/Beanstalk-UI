@@ -4,7 +4,7 @@ import EmptyState from '~/components/Common/ZeroState/EmptyState';
 import ProposalButton from '~/components/Governance/Proposals/ProposalButton';
 
 const ProposalList: React.FC<{ proposals: any; }> = (props) => {
-  //
+  // Null state
   if (props.proposals === undefined) {
     return null;
   }

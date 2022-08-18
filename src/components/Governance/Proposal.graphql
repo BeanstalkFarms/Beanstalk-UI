@@ -6,6 +6,7 @@ query Proposal($proposal_id: String) {
     choices
     start
     end
+    link
     snapshot
     state
     author
@@ -14,6 +15,7 @@ query Proposal($proposal_id: String) {
     scores_by_strategy
     scores_total
     scores_updated
+    type
     plugins
     network
     strategies {

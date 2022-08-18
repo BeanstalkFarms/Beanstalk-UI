@@ -1,5 +1,23 @@
+export async function loadProposal() {
+  const proposalData : any = await fetch('/.netlify/functions/proposal').then((response) => response.json());
+  return proposalData;  // if (nftData.length === 0) {
+  //   return {
+  //     genesis: [],
+  //     winter: [],
+  //   };
+  // }
+  //
+  // const genesisNFTs = nftData.filter((n) => n.subcollection === 'Genesis');
+  // const winterNFTs  = nftData.filter((n) => n.subcollection === 'Winter');
+  //
+  // return {
+  //   genesis: genesisNFTs,
+  //   winter: winterNFTs,
+  // };
+}
+
 /**
- * Formats date messages for governance proposals.
+ * Formats date messages for proposal proposal.
  */
 export const getDateMessage = (end: number) => {
   /// Dates

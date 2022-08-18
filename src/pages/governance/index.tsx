@@ -3,7 +3,6 @@ import {
   Container,
   Stack
 } from '@mui/material';
-
 import PageHeader from '~/components/Common/PageHeader';
 import Proposals from '~/components/Governance/Proposals';
 
@@ -15,7 +14,6 @@ const GovernancePage: React.FC = () => (
         description="Participate in Beanstalk governance as a Stalkholder"
       />
       <Proposals />
-      {/* page content */}
     </Stack>
   </Container>
 );

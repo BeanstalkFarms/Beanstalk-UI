@@ -5,6 +5,7 @@ import { ProposalDocument } from '~/generated/graphql';
 import useGovernanceQuery from '~/hooks/useGovernanceQuery';
 import MarkdownWrapper from '~/components/Common/MarkdownWrapper';
 import ProposalStats from '~/components/Governance/Proposals/ProposalStats';
+import { loadProposal } from '~/util/Governance';
 
 const ProposalContent: React.FC = () => {
   /// Routing
@@ -15,6 +16,9 @@ const ProposalContent: React.FC = () => {
     variables: { proposal_id: id }
   }), [id]);
   const { loading, data } = useGovernanceQuery(ProposalDocument, queryConfig);
+  
+  const proposal = loadProposal();
+  console.log('PROPOSAL', proposal);
 
   // loading
   if (loading || data === undefined) {

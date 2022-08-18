@@ -10,10 +10,7 @@ import ProposalContent from '~/components/Governance/ProposalContent';
 const ProposalPage: React.FC = () => (
   <Container maxWidth="lg">
     <Stack gap={2}>
-      <PageHeader
-          // title={`${data?.proposal?.title}`}
-        returnPath="/governance"
-        />
+      <PageHeader returnPath="/governance" />
       <Grid container direction={{ xs: 'column-reverse', md: 'row' }} spacing={2}>
         <Grid item xs={12} md={8}>
           <ProposalContent />

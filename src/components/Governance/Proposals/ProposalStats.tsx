@@ -20,9 +20,6 @@ const ProposalStats: React.FC<{ proposal: any }> = (props) => (
       </Typography>
     </Stack>
     <Typography variant="body1">{getDateMessage(props.proposal.end)}</Typography>
-    <Stack direction="row" gap={0.5}>
-      <Typography variant="body1">Quorum</Typography>
-    </Stack>
   </Stack>
   );
 
