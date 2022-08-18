@@ -21,13 +21,12 @@ type VoteFormValues = {
 
 const VoteForm: React.FC<FormikProps<VoteFormValues> & {
   proposal: any;
-}> = (
-  {
-    values,
-    setFieldValue,
-    proposal,
-  }) => {
-  // loading
+}> = ({
+  values,
+  setFieldValue,
+  proposal,
+}) => {
+  /// Loading
   if (proposal === undefined) {
     return (
       <Box height={100} display="flex" alignItems="center" justifyContent="center">
@@ -36,12 +35,12 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
     );
   }
 
-  // Time
-  const today = new Date();
+  /// Time
+  const today   = new Date();
   const endDate = new Date(proposal.end * 1000);
   const differenceInTime = endDate.getTime() - today.getTime();
 
-  // option isn't selected or the voting period has ended
+  /// Option isn't selected or the voting period has ended
   const disableSubmit = (values.option === undefined) || differenceInTime <= 0;
 
   return (
@@ -70,13 +69,9 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
         </Stack>
         {proposal.type === 'single-choice' ? (
           <>
-            <Field name="action">
+            <Field name="option">
               {(fieldProps: FieldProps<any>) => {
                 const set = (v: any) => () => {
-                  // don't allow user to select option if vote has ended
-                  if (differenceInTime <= 0) {
-                    return;
-                  }
                   // if user clicks on the selected action, unselect the action
                   if (fieldProps.form.values.option !== undefined && v === fieldProps.form.values.option) {
                     fieldProps.form.setFieldValue('option', undefined);
@@ -91,15 +86,11 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
                         key={index + 1}
                         title={choice}
                         onClick={set(index + 1)}
-                        selected={fieldProps.form.values.option === (index + 1)}
-                        // button style
+                        isSelected={fieldProps.form.values.option === (index + 1)}
                         sx={{ p: 1 }}
-                        // stack style
                         StackProps={{ sx: { justifyContent: 'center' } }}
-                        // title style
-                        TitleProps={{
-                          variant: 'body1'
-                        }}
+                        TitleProps={{ variant: 'body1' }}
+                        disabled={differenceInTime <= 0}
                       />
                     ))}
                   </Stack>

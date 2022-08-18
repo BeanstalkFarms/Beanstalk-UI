@@ -21,7 +21,7 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
   const STAT_ITEMS: StatItem[] = [
     {
       title: 'Stalk',
-      tooltip: 'This is the total Stalk supply. Stalk is the proposal token of the Beanstalk DAO. Stalk entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs.',
+      tooltip: 'This is the total Stalk supply. Stalk is the governance token of the Beanstalk DAO. Stalk entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs.',
       token: STALK,
       amount: beanstalkSilo.stalk.total
     },

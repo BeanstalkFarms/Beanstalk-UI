@@ -20,7 +20,7 @@ const BalancesPage: React.FC = () => {
   const STAT_ITEMS: StatItem[] = [
     {
       title: 'Stalk',
-      tooltip: 'This is your total Stalk balance. Stalk is the proposal token of the Beanstalk DAO. Stalk entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo.',
+      tooltip: 'This is your total Stalk balance. Stalk is the governance token of the Beanstalk DAO. Stalk entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo.',
       token: STALK,
       amount: farmerSilo.stalk.total
     },

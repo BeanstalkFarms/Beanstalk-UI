@@ -1,20 +1,7 @@
-export async function loadProposal() {
-  const proposalData : any = await fetch('/.netlify/functions/proposal').then((response) => response.json());
-  return proposalData;  // if (nftData.length === 0) {
-  //   return {
-  //     genesis: [],
-  //     winter: [],
-  //   };
-  // }
-  //
-  // const genesisNFTs = nftData.filter((n) => n.subcollection === 'Genesis');
-  // const winterNFTs  = nftData.filter((n) => n.subcollection === 'Winter');
-  //
-  // return {
-  //   genesis: genesisNFTs,
-  //   winter: winterNFTs,
-  // };
-}
+// export async function loadProposal() {
+//   const proposalData : any = await fetch('/.netlify/functions/proposal').then((response) => response.json());
+//   return proposalData;
+// }
 
 /**
  * Formats date messages for proposal proposal.
@@ -22,16 +9,16 @@ export async function loadProposal() {
 export const getDateMessage = (end: number) => {
   /// Dates
   let dateMessage;
-  const today = new Date();
+  const today   = new Date();
   const endDate = new Date(end * 1000);
 
   /// Calculations
-  const differenceInTime = endDate.getTime() - today.getTime();
-  const differenceInHours = differenceInTime / 36e5;
-  const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+  const differenceInTime  = endDate.getTime() - today.getTime();
+  const differenceInHours = differenceInTime / (1000 * 3600);
+  const differenceInDays  = differenceInHours / 24;
   today.setHours(0, 0, 0, 0);
 
-  // date is in the future
+  /// Date is in the future
   if (differenceInHours > 0) {
     if (differenceInHours <= 1) {
       // less than one hour away
