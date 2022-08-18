@@ -16,7 +16,7 @@ const ProposalButton: React.FC<{ proposal: any }> = (props) => {
   const p = props.proposal;
 
   /// State
-  const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
+  const totalStalk = useSelector<AppState, BigNumber>((state) => state._beanstalk.silo.stalk.total);
   const totalStalk = beanstalkSilo.stalk.total;
 
   /// Query Votes
