@@ -1,6 +1,6 @@
 import React from 'react';
 import MuiMarkdown from 'mui-markdown';
-import { BeanstalkPalette, FontSize, FontWeight } from '~/components/App/muiTheme';
+import { FontSize, FontWeight } from '~/components/App/muiTheme';
 
 /**
  * Styles Markdown text to match MUI theme.
@@ -13,7 +13,6 @@ const MarkdownWrapper: React.FC = ({ children }) => (
         props: {
           style: {
             fontSize: FontSize.base,
-            color: BeanstalkPalette.lightGrey,
             lineHeight: '1.25rem',
             wordBreak: 'break-all'
           }
@@ -24,9 +23,7 @@ const MarkdownWrapper: React.FC = ({ children }) => (
         props: {
           style: {
             marginTop: '10px',
-            marginLeft: '5px',
             fontSize: FontSize.base,
-            color: BeanstalkPalette.lightGrey,
             lineHeight: '1.25rem',
           }
         } as React.HTMLProps<HTMLParagraphElement>,
