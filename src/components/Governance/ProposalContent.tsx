@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useProposalQuery } from '~/generated/graphql';
 import MarkdownWrapper from '~/components/Common/MarkdownWrapper';
 import ProposalStats from '~/components/Governance/Proposals/ProposalStats';
+import { Proposal } from '~/util/Governance';
 
 const ProposalContent: React.FC = () => {
   /// Routing
@@ -11,10 +12,11 @@ const ProposalContent: React.FC = () => {
 
   /// Query proposal data
   const queryConfig = useMemo(() => ({
-    variables: { proposal_id: id },
+    variables: { proposal_id: id as string },
     context: { subgraph: 'snapshot' }
   }), [id]);
   const { loading, error, data } = useProposalQuery(queryConfig);
+  const proposal = data?.proposal as Proposal;
   
   /// Loading
   if (loading || error || !data) {
@@ -35,12 +37,12 @@ const ProposalContent: React.FC = () => {
     <Card sx={{ p: 2 }}>
       <Stack gap={1}>
         {/* title & stats */}
-        <Typography variant="h2">{data?.proposal?.title}</Typography>
-        <ProposalStats proposal={data?.proposal} />
+        <Typography variant="h2">{proposal.title}</Typography>
+        <ProposalStats proposal={proposal} />
         <Divider sx={{ mt: 1 }}  />
         {/* markdown */}
         <Box maxWidth="100%">
-          <MarkdownWrapper>{data?.proposal?.body}</MarkdownWrapper>
+          <MarkdownWrapper>{proposal.body}</MarkdownWrapper>
         </Box>
       </Stack>
     </Card>

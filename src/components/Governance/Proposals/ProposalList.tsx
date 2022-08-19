@@ -1,12 +1,17 @@
 import React from 'react';
-import { Stack } from '@mui/material';
+import { Box, CircularProgress, Stack } from '@mui/material';
 import EmptyState from '~/components/Common/ZeroState/EmptyState';
 import ProposalButton from '~/components/Governance/Proposals/ProposalButton';
+import { Proposal } from '~/util/Governance';
 
-const ProposalList: React.FC<{ proposals: any; }> = (props) => {
+const ProposalList: React.FC<{ proposals: Proposal[] }> = (props) => {
   // Null state
-  if (props.proposals === undefined) {
-    return null;
+  if (!props.proposals) {
+    return (
+      <Box height={100} display="flex" alignItems="center" justifyContent="center">
+        <CircularProgress />
+      </Box>
+    );
   }
   
   return (
@@ -16,7 +21,7 @@ const ProposalList: React.FC<{ proposals: any; }> = (props) => {
           <EmptyState message="No proposals of this type." />
         ) : (
           <>
-            {props.proposals.map((p: any) => (
+            {props.proposals.map((p) => (
               <ProposalButton proposal={p} />
             ))}
           </>

@@ -4,25 +4,13 @@ import useTabs from '~/hooks/display/useTabs';
 import BadgeTab from '~/components/Common/BadgeTab';
 import ProposalList from '~/components/Governance/Proposals/ProposalList';
 import { useProposalsQuery } from '~/generated/graphql';
-
-// export type Proposal = {
-//   /** Proposal ID on Snapshot. */
-//   id: string;
-//   /** */
-//   title: string;
-//   /** Number of Stalk voted for each choice */
-//   scores: number[];
-//   /** Status of proposal: active, closed, etc. */
-//   state: string;
-//   /** Date & time the proposal closes */
-//   end: number;
-// }
+import { Proposal } from '~/util/Governance';
 
 /// Variables
-const snapshotSpaces = ['beanstalkdao.eth', 'beanstalkfarms.eth', 'wearebeansprout.eth'];
+const SNAPSHOT_SPACES = ['beanstalkdao.eth', 'beanstalkfarms.eth', 'wearebeansprout.eth'];
 const SLUGS = ['dao', 'beanstalk-farms', 'bean-sprout'];
 const queryConfig = {
-  variables: { space_in: snapshotSpaces },
+  variables: { space_in: SNAPSHOT_SPACES },
   context: { subgraph: 'snapshot' }
 };
 
@@ -33,15 +21,20 @@ const Proposals: React.FC = () => {
   const { loading, data } = useProposalsQuery(queryConfig);
 
   const filterBySpace = useCallback((t: number) => {
-    if (!loading && data !== undefined) {
-      return data.proposals?.filter((p: any) => p.space.id === snapshotSpaces[t]);
+    if (!loading && data?.proposals) {
+      return data.proposals.filter(
+        (p) => p !== null && p?.space?.id === SNAPSHOT_SPACES[t]
+      ) as Proposal[];
     }
+    return [];
   }, [data, loading]);
 
   /// true if any proposals are active
-  const hasActive = (proposals: any) => {
+  const hasActive = (proposals: Proposal[]) => {
     if (proposals) {
-      return proposals?.filter((p: any) => p.state === 'active').length > 0;
+      return proposals.filter(
+        (p) => p?.state === 'active'
+      ).length > 0;
     }
     return false;
   };
@@ -50,7 +43,7 @@ const Proposals: React.FC = () => {
   const filterProposals = useCallback((t: number) => {
     const filtered = filterBySpace(t);
     const hasActiveProposals = hasActive(filtered);
-    return [filtered, hasActiveProposals];
+    return [filtered, hasActiveProposals] as const;
   }, [filterBySpace]);
 
   const [daoProposals, hasActiveDao] = filterProposals(0);

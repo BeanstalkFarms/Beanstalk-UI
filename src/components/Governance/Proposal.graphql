@@ -1,31 +1,9 @@
-query Proposal($proposal_id: String) {
+#import "./Proposal.fragment.graphql"
+query Proposal($proposal_id: String!) {
   proposal(id: $proposal_id) {
-    id
-    title
+    ...Proposal
+    # Only on the individual Proposal page
     body
     choices
-    start
-    end
-    link
-    snapshot
-    state
-    author
-    created
-    scores
-    scores_by_strategy
-    scores_total
-    scores_updated
-    type
-    plugins
-    network
-    strategies {
-      name
-      network
-      params
-    }
-    space {
-      id
-      name
-    }
   }
 }

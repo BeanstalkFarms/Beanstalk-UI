@@ -1,35 +1,12 @@
-query Proposals($space_in: [String]) {
+#import "./Proposal.fragment.graphql"
+query Proposals($space_in: [String!]!) {
   proposals (
     where: {
-      space_in: $space_in,
+      space_in: $space_in
     },
     orderBy: "created",
     orderDirection: desc
   ) {
-    id
-    author
-#    body
-    choices
-    created
-    end
-    link
-    network
-    quorum
-    scores
-    scores_by_strategy
-    scores_state
-    scores_total
-    scores_updated
-    snapshot
-    start
-    state
-    space {
-      id
-      name
-    }
-    symbol
-    title
-    type
-    votes
+    ...Proposal
   }
 }

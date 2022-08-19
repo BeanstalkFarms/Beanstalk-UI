@@ -12,13 +12,14 @@ import DescriptionButton from '~/components/Common/DescriptionButton';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { displayBN } from '~/util';
 import TransactionToast from '~/components/Common/TxnToast';
+import { Proposal } from '~/util/Governance';
 
 type VoteFormValues = {
   option: number | undefined;
 };
 
 const VoteForm: React.FC<FormikProps<VoteFormValues> & {
-  proposal: any;
+  proposal: Proposal;
 }> = ({
         values,
         setFieldValue,
@@ -113,7 +114,7 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
 
 // ---------------------------------------------------
 
-const Vote: React.FC<{}> = () => {
+const Vote: React.FC = () => {
   ///
   const account = useAccount();
   const { data: signer } = useSigner();
@@ -123,11 +124,12 @@ const Vote: React.FC<{}> = () => {
 
   /// Query proposal data
   const queryConfig = useMemo(() => ({
-    variables: { proposal_id: id },
+    variables: { proposal_id: id as string },
     context: { subgraph: 'snapshot' },
   }), [id]);
   // TODO: Return typed version of data
   const { loading, error, data } = useProposalQuery(queryConfig);
+  const proposal = data?.proposal as Proposal;
 
   // Form setup
   const initialValues: VoteFormValues = useMemo(() => ({
@@ -143,7 +145,7 @@ const Vote: React.FC<{}> = () => {
       try {
         if (!account) throw new Error('Connect a wallet first.');
         if (values.option === undefined) throw new Error('Select a voting option.');
-        if (!data?.proposal) throw new Error('Error loading proposal data.');
+        if (!proposal) throw new Error('Error loading proposal data.');
 
         txToast = new TransactionToast({
           loading: 'Voting on proposal...',
@@ -154,9 +156,9 @@ const Vote: React.FC<{}> = () => {
         const client = new snapshot.Client712(hub);
 
         const message = {
-          space: data?.proposal?.space?.id,
-          proposal: data?.proposal?.id,
-          type: data?.proposal?.type,
+          space: proposal.space.id,
+          proposal: proposal.id,
+          type: proposal.type,
           choice: values.option,
           app: 'snapshot'
         };
@@ -177,7 +179,7 @@ const Vote: React.FC<{}> = () => {
         formActions.setSubmitting(false);
       }
     },
-    [account, data?.proposal, signer]
+    [account, proposal, signer]
   );
 
   if (loading) {
@@ -204,7 +206,7 @@ const Vote: React.FC<{}> = () => {
     >
       {(formikProps: FormikProps<VoteFormValues>) => (
         <VoteForm
-          proposal={data?.proposal}
+          proposal={proposal}
           {...formikProps}
         />
       )}

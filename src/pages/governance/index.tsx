@@ -13,6 +13,7 @@ const GovernancePage: React.FC = () => (
       <PageHeader
         title="Governance"
         description="Participate in Beanstalk governance as a Stalkholder"
+        href="https://docs.bean.money/governance/proposals"
       />
       <Grid container direction={{ xs: 'column', md: 'row' }} spacing={2}>
         <Grid item xs={12} md={4}>

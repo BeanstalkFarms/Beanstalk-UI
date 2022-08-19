@@ -9,8 +9,9 @@ import { useVotesQuery } from '~/generated/graphql';
 import useAccount from '~/hooks/ledger/useAccount';
 import ProposalStats from '~/components/Governance/Proposals/ProposalStats';
 import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
+import { Proposal } from '~/util/Governance';
 
-const ProposalButton: React.FC<{ proposal: any }> = (props) => {
+const ProposalButton: React.FC<{ proposal: Proposal }> = (props) => {
   /// Setup
   const account = useAccount();
   const p = props.proposal;

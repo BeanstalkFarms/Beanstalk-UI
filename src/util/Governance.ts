@@ -3,8 +3,40 @@
 //   return proposalData;
 // }
 
+export type Proposal = {
+  /**  */
+  id: string;
+  /**  */
+  title: string;
+  /** The voting options. */
+  choices: Array<string>;
+  /** Markdown of the proposal. */
+  body?: string;
+  /** Voting type (i.e. single-choice, etc.) */
+  type: string;
+  /** When the voting period closes. */
+  end: number;
+  /** URL to the proposal on Snapshot. */
+  link?: string;
+  /** The amount of STALK that has voted for each choice. */
+  scores: Array<number>;
+  /** Total STALK that has voted. */
+  scores_total: number;
+  /** Last time the scores were updated. */
+  scores_updated?: number;
+  /** Whether the proposal is active or closed. */
+  state: string;
+  /** snapshot.org/#/<space.eth> */
+  space: {
+    /**  */
+    id: string;
+    /**  */
+    name?: string;
+  }
+}
+
 /**
- * Formats date messages for proposal proposal.
+ * Formats date messages for governance proposal.
  */
 export const getDateMessage = (end: number) => {
   /// Dates
