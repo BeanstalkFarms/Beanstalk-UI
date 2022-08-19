@@ -15,18 +15,16 @@ const ProposalList: React.FC<{ proposals: Proposal[] }> = (props) => {
   }
   
   return (
-    <Stack px={2} pb={2} gap={2}>
-      <Stack gap={2}>
-        {props.proposals.length === 0 ? (
-          <EmptyState message="No proposals of this type." />
-        ) : (
-          <>
-            {props.proposals.map((p) => (
-              <ProposalButton proposal={p} />
-            ))}
-          </>
-        )}
-      </Stack>
+    <Stack px={1} pb={1} gap={1}>
+      {props.proposals.length === 0 ? (
+        <EmptyState message="No proposals of this type." />
+      ) : (
+        <>
+          {props.proposals.map((p) => (
+            <ProposalButton proposal={p} />
+          ))}
+        </>
+      )}
     </Stack>
   );
 };

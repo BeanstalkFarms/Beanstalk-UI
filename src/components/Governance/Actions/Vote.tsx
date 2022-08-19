@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import snapshot from '@snapshot-labs/snapshot.js';
 import { Wallet } from 'ethers';
 import BigNumber from 'bignumber.js';
+import { useSelector } from 'react-redux';
 import useAccount from '~/hooks/ledger/useAccount';
 import { useProposalQuery } from '~/generated/graphql';
 import DescriptionButton from '~/components/Common/DescriptionButton';
@@ -13,6 +14,7 @@ import { useSigner } from '~/hooks/ledger/useSigner';
 import { displayBN } from '~/util';
 import TransactionToast from '~/components/Common/TxnToast';
 import { Proposal } from '~/util/Governance';
+import { AppState } from '~/state';
 
 type VoteFormValues = {
   option: number | undefined;
@@ -34,8 +36,11 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
   const endDate = new Date(proposal.end * 1000);
   const differenceInTime = endDate.getTime() - today.getTime();
 
+  /// State
+  const farmerSilo    = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
+
   /// Option isn't selected or the voting period has ended
-  const disableSubmit = (values.option === undefined) || differenceInTime <= 0;
+  const disableSubmit = (values.option === undefined) || differenceInTime <= 0 || farmerSilo.stalk.active.lte(0);
 
   return (
     <Form autoComplete="off">
@@ -92,7 +97,13 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
                   size="medium"
                   disabled={disableSubmit}
                 >
-                  {differenceInTime <= 0 ? 'Vote ended' : 'Vote'}
+                  {differenceInTime <= 0
+                    ? 'Vote ended'
+                    : (farmerSilo.stalk.active.lte(0)
+                      ? 'Need Stalk to vote'
+                      : 'Vote'
+                    )
+                  }
                 </LoadingButton>
               </>
             )}
