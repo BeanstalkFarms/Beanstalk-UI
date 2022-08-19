@@ -11,13 +11,13 @@ const ProposalStats: React.FC<{ proposal: Proposal, differenceInTime?: number, t
         <Box
           className="B-badge"
           sx={{
-              opacity: 0.7,
-              width: 8,
-              height: 8,
-              backgroundColor: props.proposal.state === 'active' ? 'primary.main' : 'gray',
-              borderRadius: 4
-            }}
-          />
+            opacity: 0.7,
+            width: 8,
+            height: 8,
+            backgroundColor: props.proposal.state === 'active' ? 'primary.main' : 'gray',
+            borderRadius: 4
+          }}
+        />
         <Typography variant="body1">
           {props.proposal.state.charAt(0).toUpperCase() + props.proposal.state.slice(1)}
         </Typography>
@@ -28,20 +28,18 @@ const ProposalStats: React.FC<{ proposal: Proposal, differenceInTime?: number, t
     </Stack>
     {/* if there is time remaining... */}
     {(props.differenceInTime && props.totalStalk && props.differenceInTime > 0) && (
-    <Stack direction="row" alignItems="center" gap={0.5} display={{ xs: 'none', md: 'block' }}>
-      {props.proposal.space.id === 'wearebeansprout.eth' ? (
-        <Typography textAlign={{ xs: 'center', md: 'left' }} variant="body1">
-          {displayBN(new BigNumber(props.proposal.scores_total).div(props.totalStalk).multipliedBy(100))}% of Stalk
-          voted
-        </Typography>
-          ) : (
-            <Typography textAlign={{ xs: 'center', md: 'left' }} variant="body1">
-              {displayBN(new BigNumber(props.proposal.scores[0]).div(props.totalStalk).multipliedBy(100))}% of Stalk
-              voted For
-            </Typography>
-          )}
-    </Stack>
-      )}
+      <Stack direction="row" alignItems="center" gap={0.5} display={{ xs: 'none', md: 'block' }}>
+        {props.proposal.space.id === 'wearebeansprout.eth' ? (
+          <Typography textAlign={{ xs: 'center', md: 'left' }} variant="body1">
+            {displayBN(new BigNumber(props.proposal.scores_total).div(props.totalStalk).multipliedBy(100))}% of Stalk voted
+          </Typography>
+        ) : (
+          <Typography textAlign={{ xs: 'center', md: 'left' }} variant="body1">
+            {displayBN(new BigNumber(props.proposal.scores[0]).div(props.totalStalk).multipliedBy(100))}% of Stalk voted For
+          </Typography>
+        )}
+      </Stack>
+    )}  
   </Stack>
 );
 

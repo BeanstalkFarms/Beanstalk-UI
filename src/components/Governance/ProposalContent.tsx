@@ -36,11 +36,11 @@ const ProposalContent: React.FC = () => {
   return (
     <Card sx={{ p: 2 }}>
       <Stack gap={1}>
-        {/* title & stats */}
+        {/* Title & stats */}
         <Typography variant="h2">{proposal.title}</Typography>
         <ProposalStats proposal={proposal} />
         <Divider sx={{ mt: 1 }}  />
-        {/* markdown */}
+        {/* Markdown */}
         <Box maxWidth="100%">
           <MarkdownWrapper>{proposal.body}</MarkdownWrapper>
         </Box>
