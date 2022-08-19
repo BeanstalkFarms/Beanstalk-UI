@@ -165,14 +165,14 @@ const ClaimRewardsForm : React.FC<
                             key={option.value}
                             title={option.title}
                             description={isMobile ? undefined : `${option.description}`}
-                            tooltipTitle={isMobile ? `${option.description}` : undefined}
+                            titleTooltip={isMobile ? `${option.description}` : undefined}
                             tag={<GasTag gasLimit={gas?.[option.value] || null} />}
                             // Button
                             fullWidth
                             onClick={set(option.value)}
                             onMouseOver={onMouseOver(option.value)}
                             onMouseLeave={onMouseOutContainer}
-                            selected={hovered}
+                            isSelected={hovered}
                             disabled={disabled}
                             sx={{
                               '&:disabled': {

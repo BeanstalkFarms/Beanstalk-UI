@@ -136,6 +136,10 @@ const beanLink = new HttpLink({
   uri: BEAN_SUBGRAPH_ADDRESSES[SupportedChainId.MAINNET],
 });
 
+const snapshotLink = new HttpLink({
+  uri: 'https://hub.snapshot.org/graphql',
+});
+
 // const beanV1Link = new HttpLink({
 //   //    https://thegraph.com/explorer/subgraph?id=CsmWTbztr1EQcRYmgqUYpSaVc8exTnVmhUxsaswvkbjG&view=Overview
 //   uri: 'https://gateway.thegraph.com/api/fe672ef9fcdfb617c4d7755f36a31131/subgraphs/id/CsmWTbztr1EQcRYmgqUYpSaVc8exTnVmhUxsaswvkbjG'
@@ -147,7 +151,11 @@ export const apolloClient = new ApolloClient({
   link: ApolloLink.split(
     (operation) => operation.getContext().subgraph === 'bean',
     beanLink, // true
-    beanstalkLink, // false
+    ApolloLink.split(
+      (operation) => operation.getContext().subgraph === 'snapshot',
+      snapshotLink, // true
+      beanstalkLink, // false
+    ),
   ),
   cache,
 });

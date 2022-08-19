@@ -40,6 +40,8 @@ import EditListingPage from '../../pages/market/edit-listing';
 import EditOrderPage from '../../pages/market/edit-order';
 import SwapPage from '../../pages/swap';
 import AnalyticsPage from '../../pages/analytics';
+import GovernancePage from '~/pages/governance';
+import ProposalPage from '~/pages/governance/proposal';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -151,6 +153,7 @@ export default function App() {
           <Route path="/barn" element={<Barn />} />
           <Route path="/chop" element={<ChopPage />} />
           <Route path="/field" element={<FieldPage />} />
+          <Route path="/governance" element={<GovernancePage />} />
           <Route path="/history" element={<TransactionHistoryPage />} />
           <Route path="/market" element={<PodMarketPage />} />
           <Route path="/market/account" element={<MarketAccountPage />} />
@@ -159,11 +162,9 @@ export default function App() {
           <Route path="/market/order/:id" element={<OrderPage />} />
           <Route path="/market/order/:id/edit" element={<EditOrderPage />} />
           <Route path="/market/listing/:id" element={<ListingPage />} />
-          <Route
-            path="/market/listing/:id/edit"
-            element={<EditListingPage />}
-          />
+          <Route path="/market/listing/:id/edit" element={<EditListingPage />} />
           <Route path="/nft" element={<NFTPage />} />
+          <Route path="/governance/:id" element={<ProposalPage />} />
           <Route path="/silo" element={<SiloPage />} />
           <Route path="/silo/:address" element={<SiloTokenPage />} />
           <Route path="/swap" element={<SwapPage />} />

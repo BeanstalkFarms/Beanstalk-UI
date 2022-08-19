@@ -10,7 +10,12 @@ const GuideDialog: React.FC<DialogProps & GuideProps> = (props) => (
     <StyledDialogContent>
       <Stack gap={1}>
         {props.guides.map((guide) => (
-          <DescriptionButton title={guide.title} onClick={props.onClose as any} href={guide.url} />
+          <DescriptionButton
+            title={guide.title}
+            onClick={props.onClose as any}
+            href={guide.url}
+            StackProps={{ sx: { justifyContent: 'center' } }}
+          />
         ))}
       </Stack>
     </StyledDialogContent>

@@ -255,7 +255,8 @@ let muiTheme = createTheme({
     bodyLarge: {
       fontFamily: 'Futura PT',
       fontSize: FontSize['2xl'], // 24px
-      fontWeight: FontWeight.medium
+      fontWeight: FontWeight.medium,
+      lineHeight: '1.875rem' // 30px
     },
     // page subtitles
     subtitle1: {

@@ -1,7 +1,7 @@
-import { Box, Stack, Tab, TabProps } from '@mui/material';
+import { Box, BoxProps, Stack, Tab, TabProps } from '@mui/material';
 import React from 'react';
 
-export const Badge = () => (
+export const Badge: React.FC<BoxProps> = (props) => (
   <Box
     className="B-badge"
     sx={{
@@ -11,6 +11,7 @@ export const Badge = () => (
       backgroundColor: 'primary.main',
       borderRadius: 4
     }}
+    {...props}
   />
 );
 
