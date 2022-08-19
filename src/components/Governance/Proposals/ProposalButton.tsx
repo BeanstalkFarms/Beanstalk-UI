@@ -11,10 +11,9 @@ import ProposalStats from '~/components/Governance/Proposals/ProposalStats';
 import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
 import { Proposal } from '~/util/Governance';
 
-const ProposalButton: React.FC<{ proposal: Proposal }> = (props) => {
+const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
   /// Setup
   const account = useAccount();
-  const p = props.proposal;
 
   /// State
   const totalStalk = useSelector<AppState, BigNumber>((state) => state._beanstalk.silo.stalk.total);
@@ -22,15 +21,15 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = (props) => {
   /// Query Votes
   const { data: voteData } = useVotesQuery({
     variables: {
-      proposal_id: p.id.toString().toLowerCase(),
+      proposal_id: proposal.id.toString().toLowerCase(),
       voter_address: account ? account.toLowerCase() : '',
     },
     context: { subgraph: 'snapshot' }
   });
 
-  // Time
+  /// Time
   const today = new Date();
-  const endDate = new Date(p.end * 1000);
+  const endDate = new Date(proposal.end * 1000);
   const differenceInTime = endDate.getTime() - today.getTime();
   
   return (
@@ -38,7 +37,7 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = (props) => {
       variant="outlined"
       color="secondary"
       component={ReactRouterLink}
-      to={`/governance/${p.id}`}
+      to={`/governance/${proposal.id}`}
       sx={{
         p: 2,
         height: 'auto',
@@ -47,11 +46,11 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = (props) => {
       }}
     >
       <Stack gap={1} width="100%">
-        {/* top row */}
+        {/* Top row */}
         <Stack direction={{ xs: 'column-reverse', md: 'row' }} justifyContent="space-between">
-          <Typography display={{ xs: 'none', md: 'block' }} textAlign="left" variant="bodyLarge">{p.title}</Typography>
-          <Typography display={{ xs: 'block', md: 'none' }} textAlign="left" variant="bodyLarge" sx={{ fontSize: { xs: '20px', md: 'inherit' }, lineHeight: '24px' }}>{p.title.toString().substring(0, 55)}{p.title.length > 55 ? '...' : null}</Typography>
-          {/* show if user has voted */}
+          <Typography display={{ xs: 'none', md: 'block' }} textAlign="left" variant="bodyLarge">{proposal.title}</Typography>
+          <Typography display={{ xs: 'block', md: 'none' }} textAlign="left" variant="bodyLarge" sx={{ fontSize: { xs: '20px', md: 'inherit' }, lineHeight: '24px' }}>{proposal.title.toString().substring(0, 55)}{proposal.title.length > 55 ? '...' : null}</Typography>
+          {/* Sshow if user has voted */}
           {(account && voteData?.votes?.length) ? (
             <Stack direction="row" alignItems="center" gap={0.5}>
               <CheckIcon sx={{ color: BeanstalkPalette.logoGreen, width: IconSize.small }} />
@@ -59,9 +58,9 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = (props) => {
             </Stack>
           ) : null}
         </Stack>
-        {/* bottom row */}
+        {/* Bottom row */}
         <Stack direction={{ xs: 'column', lg: 'row' }} justifyContent="space-between">
-          <ProposalStats totalStalk={totalStalk} differenceInTime={differenceInTime} proposal={p} />
+          <ProposalStats totalStalk={totalStalk} differenceInTime={differenceInTime} proposal={proposal} />
         </Stack>
       </Stack>
     </Button>

@@ -7,11 +7,11 @@ import snapshot from '@snapshot-labs/snapshot.js';
 import { Wallet } from 'ethers';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
-import useAccount from '~/hooks/ledger/useAccount';
+import toast from 'react-hot-toast';
 import { useProposalQuery } from '~/generated/graphql';
 import DescriptionButton from '~/components/Common/DescriptionButton';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import { displayBN } from '~/util';
+import { displayBN , parseError } from '~/util';
 import TransactionToast from '~/components/Common/TxnToast';
 import { Proposal } from '~/util/Governance';
 import { AppState } from '~/state';
@@ -23,21 +23,22 @@ type VoteFormValues = {
 const VoteForm: React.FC<FormikProps<VoteFormValues> & {
   proposal: Proposal;
 }> = ({
-        values,
-        setFieldValue,
-        proposal,
-      }) => {
-  const handleClick = useCallback((option: number | undefined) => () => {
-    setFieldValue('option', option);
-  }, [setFieldValue]);
-
+  values,
+  setFieldValue,
+  proposal,
+}) => {
   /// Time
   const today = new Date();
   const endDate = new Date(proposal.end * 1000);
   const differenceInTime = endDate.getTime() - today.getTime();
-
+  
   /// State
   const farmerSilo    = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
+
+  /// Handlers
+  const handleClick = useCallback((option: number | undefined) => () => {
+    setFieldValue('option', option);
+  }, [setFieldValue]);
 
   /// Option isn't selected or the voting period has ended
   const disableSubmit = (values.option === undefined) || differenceInTime <= 0 || farmerSilo.stalk.active.lte(0);
@@ -84,7 +85,6 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
                         sx={{ p: 1 }}
                         StackProps={{ sx: { justifyContent: 'center' } }}
                         TitleProps={{ variant: 'body1' }}
-                        disabled={differenceInTime <= 0}
                         size="medium"
                       />
                     );
@@ -97,12 +97,9 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
                   size="medium"
                   disabled={disableSubmit}
                 >
-                  {differenceInTime <= 0
-                    ? 'Vote ended'
-                    : (farmerSilo.stalk.active.lte(0)
-                      ? 'Need Stalk to vote'
-                      : 'Vote'
-                    )
+                  {farmerSilo.stalk.active.lte(0)
+                    ? 'Need Stalk to vote'
+                    : 'Vote'
                   }
                 </LoadingButton>
               </>
@@ -126,8 +123,6 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
 // ---------------------------------------------------
 
 const Vote: React.FC = () => {
-  ///
-  const account = useAccount();
   const { data: signer } = useSigner();
 
   /// Routing
@@ -138,15 +133,11 @@ const Vote: React.FC = () => {
     variables: { proposal_id: id as string },
     context: { subgraph: 'snapshot' },
   }), [id]);
-  // TODO: Return typed version of data
-  const { loading, error, data } = useProposalQuery(queryConfig);
+  const { loading, error, data, refetch: refetchProposal } = useProposalQuery(queryConfig);
   const proposal = data?.proposal as Proposal;
 
-  // Form setup
-  const initialValues: VoteFormValues = useMemo(() => ({
-    option: undefined,
-  }), []);
-
+  /// Form setup
+  const initialValues: VoteFormValues = useMemo(() => ({ option: undefined }), []);
   const onSubmit = useCallback(
     async (
       values: VoteFormValues,
@@ -154,8 +145,9 @@ const Vote: React.FC = () => {
     ) => {
       let txToast;
       try {
-        if (!account) throw new Error('Connect a wallet first.');
-        if (values.option === undefined) throw new Error('Select a voting option.');
+        const _account = await signer?.getAddress();
+        if (!_account) throw new Error('Missing signer.');
+        if (values.option === undefined) throw new Error('Select a voting option.'); // use undefined here since option can be numerical zero 
         if (!proposal) throw new Error('Error loading proposal data.');
 
         txToast = new TransactionToast({
@@ -165,7 +157,6 @@ const Vote: React.FC = () => {
 
         const hub = 'https://hub.snapshot.org';
         const client = new snapshot.Client712(hub);
-
         const message = {
           space: proposal.space.id,
           proposal: proposal.id,
@@ -174,23 +165,17 @@ const Vote: React.FC = () => {
           app: 'snapshot'
         };
 
-        console.debug('[Vote]', signer, await signer?.getAddress(), account, message);
-
-        const _account = await signer?.getAddress();
-        if (!_account) throw new Error('Missing signer');
-
         const result = await client.vote(signer as Wallet, _account, message as any);
-        console.debug('[vote: result]', result);
-
+        console.debug('[Vote] Voting result: ', result);
+        await refetchProposal();
         txToast.success();
-        /// vote
       } catch (err) {
         console.error(err);
-        // txToast ? txToast.error(err) : toast.error(parseError(err));
+        txToast ? txToast.error(err) : toast.error(parseError(err));
         formActions.setSubmitting(false);
       }
     },
-    [account, proposal, signer]
+    [proposal, signer, refetchProposal]
   );
 
   if (loading) {

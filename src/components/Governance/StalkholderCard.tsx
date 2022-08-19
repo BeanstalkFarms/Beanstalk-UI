@@ -10,7 +10,7 @@ import AddressIcon from '~/components/Common/AddressIcon';
 import { IconSize } from '~/components/App/muiTheme';
 
 const StalkholderCard : React.FC = () => {
-  const account = useAccount();
+  const account       = useAccount();
   const farmerSilo    = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
   
@@ -22,7 +22,7 @@ const StalkholderCard : React.FC = () => {
           {account && (
             <Stack direction="row" alignItems="center" gap={0.3}>
               <AddressIcon address={account} size={IconSize.xs} />
-              <Typography variant="body1" color="gray">{trimAddress(account)}</Typography>
+              <Typography variant="body1">{trimAddress(account)}</Typography>
             </Stack>
           )}
         </Stack>
@@ -33,7 +33,7 @@ const StalkholderCard : React.FC = () => {
           </Stack>
         ) : (
           <Box height={{ xs: 100, md: 150 }}>
-            <AuthEmptyState />
+            <AuthEmptyState message="Your Stalk will appear here." />
           </Box>
         )}
       </Stack>

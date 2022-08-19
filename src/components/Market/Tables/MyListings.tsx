@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
 import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button, useMediaQuery } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import COLUMNS from '~/components/Common/Table/cells';
 import MarketBaseTable from './Base';
@@ -13,11 +13,7 @@ import { AppState } from '~/state';
 const components = {
   NoRowsOverlay() {
     return (
-      <AuthEmptyState message="You Listings will appear here.">
-        <Button component={Link} to="/market/create" variant="contained" color="primary">
-          Create Listing
-        </Button>
-      </AuthEmptyState>
+      <AuthEmptyState message="You Listings will appear here." />
     );
   },
   Pagination: TablePagination,
