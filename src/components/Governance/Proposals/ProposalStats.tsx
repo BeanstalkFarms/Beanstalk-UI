@@ -29,9 +29,15 @@ const ProposalStats: React.FC<{ proposal: any, differenceInTime?: number, totalS
     {/* if there is time remaining... */}
     {(props.differenceInTime && props.totalStalk && props.differenceInTime > 0) && (
       <Stack direction="row" alignItems="center" gap={0.5} display={{ xs: 'none', md: 'block' }}>
-        <Typography textAlign={{ xs: 'center', md: 'left' }} variant="body1">
-          {displayBN(new BigNumber(props.proposal.scores[0]).div(props.totalStalk).multipliedBy(100))}% of Stalk voted For
-        </Typography>
+        {props.proposal.space.id === 'wearebeansprout.eth' ? (
+          <Typography textAlign={{ xs: 'center', md: 'left' }} variant="body1">
+            {displayBN(new BigNumber(props.proposal.scores_total).div(props.totalStalk).multipliedBy(100))}% of Stalk voted
+          </Typography>
+        ) : (
+          <Typography textAlign={{ xs: 'center', md: 'left' }} variant="body1">
+            {displayBN(new BigNumber(props.proposal.scores[0]).div(props.totalStalk).multipliedBy(100))}% of Stalk voted For
+          </Typography>
+        )}
       </Stack>
     )}
   </Stack>
