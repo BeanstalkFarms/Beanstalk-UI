@@ -5,6 +5,6 @@ export const resetBeanstalkGovernance = createAction(
   'beanstalk/governance/reset'
 );
 
-export const updateActiveProposals = createAction<BeanstalkGovernance>(
-  'beanstalk/governance/update'
+export const updateActiveProposals = createAction<BeanstalkGovernance['activeProposals']>(
+  'beanstalk/governance/updateActiveProposals'
 );

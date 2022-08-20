@@ -13,6 +13,6 @@ export default createReducer(initialState, (builder) =>
   builder
     .addCase(resetBeanstalkGovernance, () => initialState)
     .addCase(updateActiveProposals, (state, { payload }) => {
-      state.activeProposals = payload.activeProposals;
+      state.activeProposals = payload;
     })
 );

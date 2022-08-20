@@ -1,15 +1,15 @@
 fragment Proposal on Proposal {
+  id
+  title
+  type
+  end
+  link
+  scores
+  scores_total
+  scores_updated
+  state
+  space {
     id
-    title
-    type
-    end
-    link
-    scores
-    scores_total
-    scores_updated # ?
-    state
-    space {
-      id
-      name
-    }
+    name
+  }
 }

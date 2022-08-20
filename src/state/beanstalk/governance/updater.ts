@@ -1,12 +1,12 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useBeanstalkContract } from '~/hooks/useContract';
 import { resetBeanstalkGovernance, updateActiveProposals } from './actions';
-import { useProposalsQuery } from '~/generated/graphql';
+import { useProposalsLazyQuery } from '~/generated/graphql';
+import { SNAPSHOT_SPACES } from '~/util/Governance';
 
 const queryConfig = {
   variables: {
-    space_in: ['beanstalkdao.eth', 'beanstalkfarms.eth'],
+    space_in: SNAPSHOT_SPACES,
     state: 'active'
   },
   context: { subgraph: 'snapshot' }
@@ -14,22 +14,27 @@ const queryConfig = {
 
 export const useFetchBeanstalkGovernance = () => {
   const dispatch = useDispatch();
-  const beanstalk = useBeanstalkContract();
+  const [get] = useProposalsLazyQuery(queryConfig);
 
-  // Fetch active proposals
-  const { error, loading, data } = useProposalsQuery(queryConfig);
-
-  // Handlers
+  /// Handlers
   const fetch = useCallback(async () => {
-    if (beanstalk && data?.proposals && !loading && !error) {
-      dispatch(updateActiveProposals({
-        activeProposals: data?.proposals?.map((p) => ({
-            id: p?.id,
-            title: p?.title
+    const result = await get();
+    if (result.data?.proposals?.length) {
+      dispatch(updateActiveProposals(
+        result.data.proposals
+          /// HACK:
+          /// The snapshot.org graphql API defines that the proposals
+          /// array can have `null` elements. I believe this shouldn't
+          /// be allowed, but to fix we check for null values and manually
+          /// assert existence of `p`.
+          .filter((p) => p !== null)
+          .map((p) => ({
+            id: (p!).id,
+            title: (p!).title
           }))
-      }));
+      ));
     }
-  }, [beanstalk, data?.proposals, loading, error, dispatch]);
+  }, [get, dispatch]);
   
   const clear = useCallback(() => {
     console.debug('[beanstalk/governance/useBeanstalkGovernance] CLEAR');
