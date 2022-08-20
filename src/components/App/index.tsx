@@ -42,6 +42,8 @@ import TradePage from '../../pages/trade';
 import AnalyticsPage from '../../pages/analytics';
 import GovernancePage from '~/pages/governance';
 import ProposalPage from '~/pages/governance/proposal';
+import GovernanceUpdater from '~/state/beanstalk/governance/updater';
+import NewProposalsDialog from '~/components/Common/NewProposalsDialog';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -108,6 +110,7 @@ export default function App() {
       <FieldUpdater />
       <SiloUpdater />
       <SunUpdater />
+      <GovernanceUpdater />
       {/* -----------------------
        * Farmer Updaters
        * ----------------------- */}
@@ -123,6 +126,7 @@ export default function App() {
       <CustomToaster />
       {/* only show welcome back modal on non barn-raise pages */}
       {location.pathname !== '/' && <WelcomeBackModal />}
+      <NewProposalsDialog />
       <Box
         sx={{
           // backgroundColor: BeanstalkPalette.lighterBlue,

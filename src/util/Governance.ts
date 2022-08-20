@@ -3,6 +3,8 @@
 //   return proposalData;
 // }
 
+export const SNAPSHOT_SPACES = ['beanstalkdao.eth', 'beanstalkfarms.eth', 'wearebeansprout.eth'];
+
 export type Proposal = {
   /**  */
   id: string;

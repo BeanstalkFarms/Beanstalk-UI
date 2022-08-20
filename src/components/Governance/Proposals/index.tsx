@@ -4,10 +4,9 @@ import useTabs from '~/hooks/display/useTabs';
 import BadgeTab from '~/components/Common/BadgeTab';
 import ProposalList from '~/components/Governance/Proposals/ProposalList';
 import { useProposalsQuery } from '~/generated/graphql';
-import { Proposal } from '~/util/Governance';
+import { Proposal, SNAPSHOT_SPACES } from '~/util/Governance';
 
 /// Variables
-const SNAPSHOT_SPACES = ['beanstalkdao.eth', 'beanstalkfarms.eth', 'wearebeansprout.eth'];
 const SLUGS = ['dao', 'beanstalk-farms', 'bean-sprout'];
 const queryConfig = {
   variables: { space_in: SNAPSHOT_SPACES },
@@ -17,9 +16,10 @@ const queryConfig = {
 const Proposals: React.FC = () => {
   const [tab, handleChange] = useTabs(SLUGS, 'type');
 
-  /// Query Proposals
+  // Query Proposals
   const { loading, data } = useProposalsQuery(queryConfig);
 
+  /// Helpers
   const filterBySpace = useCallback((t: number) => {
     if (!loading && data?.proposals) {
       return data.proposals.filter(
@@ -29,8 +29,8 @@ const Proposals: React.FC = () => {
     return [];
   }, [data, loading]);
 
-  /// true if any proposals are active
   const hasActive = (proposals: Proposal[]) => {
+    // true if any proposals are active
     if (proposals) {
       return proposals.filter(
         (p) => p?.state === 'active'

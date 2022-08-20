@@ -1,64 +1,39 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { bigNumberResult, tokenResult } from '~/util';
-import { BEAN } from '~/constants/tokens';
 import { useBeanstalkContract } from '~/hooks/useContract';
-import { resetBeanstalkField, updateBeanstalkField } from './actions';
-import { ZERO_BN } from '~/constants';
+import { resetBeanstalkGovernance, updateActiveProposals } from './actions';
+import { useProposalsQuery } from '~/generated/graphql';
 
-export const useFetchBeanstalkField = () => {
+const queryConfig = {
+  variables: {
+    space_in: ['beanstalkdao.eth', 'beanstalkfarms.eth'],
+    state: 'active'
+  },
+  context: { subgraph: 'snapshot' }
+};
+
+export const useFetchBeanstalkGovernance = () => {
   const dispatch = useDispatch();
   const beanstalk = useBeanstalkContract();
 
+  // Fetch active proposals
+  const { error, loading, data } = useProposalsQuery(queryConfig);
+
   // Handlers
   const fetch = useCallback(async () => {
-    if (beanstalk) {
-      console.debug('[beanstalk/field/useBeanstalkField] FETCH');
-      
-      const [
-        harvestableIndex,
-        podIndex,
-        soil,
-        weather,
-      ] = await Promise.all([
-        beanstalk.harvestableIndex().then(tokenResult(BEAN)), // FIXME
-        beanstalk.podIndex().then(tokenResult(BEAN)),
-        beanstalk.totalSoil().then(tokenResult(BEAN)),
-        beanstalk.weather().then((_weather) => ({
-          didSowBelowMin: _weather.didSowBelowMin,
-          didSowFaster: _weather.didSowFaster,
-          lastDSoil: tokenResult(BEAN)(_weather.lastDSoil),
-          lastSoilPercent: bigNumberResult(_weather.lastSoilPercent),
-          lastSowTime: bigNumberResult(_weather.lastSowTime),
-          nextSowTime: bigNumberResult(_weather.nextSowTime),
-          startSoil: tokenResult(BEAN)(_weather.startSoil),
-          yield: bigNumberResult(_weather.yield),
-        })),
-      ] as const);
-
-      console.debug('[beanstalk/field/useBeanstalkField] RESULT');
-
-      dispatch(updateBeanstalkField({
-        harvestableIndex,
-        podIndex,
-        podLine: podIndex.minus(harvestableIndex),
-        soil,
-        weather,
-        rain: {
-          // FIXME
-          raining: false,
-          rainStart: ZERO_BN,
-        },
+    if (beanstalk && data?.proposals && !loading && !error) {
+      dispatch(updateActiveProposals({
+        activeProposals: data?.proposals?.map((p) => ({
+            id: p?.id,
+            title: p?.title
+          }))
       }));
     }
-  }, [
-    dispatch,
-    beanstalk,
-  ]);
+  }, [beanstalk, data?.proposals, loading, error, dispatch]);
   
   const clear = useCallback(() => {
-    console.debug('[beanstalk/field/useBeanstalkField] CLEAR');
-    dispatch(resetBeanstalkField());
+    console.debug('[beanstalk/governance/useBeanstalkGovernance] CLEAR');
+    dispatch(resetBeanstalkGovernance());
   }, [dispatch]);
 
   return [fetch, clear] as const;
@@ -66,8 +41,8 @@ export const useFetchBeanstalkField = () => {
 
 // -- Updater
 
-const FieldUpdater = () => {
-  const [fetch, clear] = useFetchBeanstalkField();
+const GovernanceUpdater = () => {
+  const [fetch, clear] = useFetchBeanstalkGovernance();
 
   useEffect(() => {
     clear();
@@ -77,4 +52,4 @@ const FieldUpdater = () => {
   return null;
 };
 
-export default FieldUpdater;
+export default GovernanceUpdater;
