@@ -61,6 +61,8 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
     || !canVote // no stalk
   );
 
+  if (!proposal.choices) return null;
+
   return (
     <Form autoComplete="off">
       <Stack gap={1}>
@@ -73,7 +75,7 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
               <Stack direction="row" justifyContent="space-between">
                 <Typography variant="body1">
                   {isClosed && existingChoice !== undefined && (existingChoice === index + 1) ? (
-                    <Tooltip title={`You voted: ${proposal.choices[existingChoice - 1]}`}>
+                    <Tooltip title={`You voted: ${proposal.choices![existingChoice - 1]}`}>
                       <span>✓&nbsp;</span>
                     </Tooltip>
                   ) : null}
@@ -88,7 +90,11 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
               </Stack>
               <LinearProgress
                 variant="determinate"
-                value={proposal.scores_total > 0 ? (proposal.scores[index] / proposal.scores_total) * 100 : 0}
+                value={(
+                  proposal.scores_total > 0 
+                    ? (proposal.scores[index] / proposal.scores_total) * 100 
+                    : 0
+                )}
                 sx={{ height: '10px', borderRadius: 1 }}
               />
             </Stack>
@@ -171,12 +177,14 @@ const Vote: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   /// Query: Proposal
-  const queryConfig = useMemo(() => ({
-    variables: { proposal_id: id as string },
+  const { loading, error, data, refetch: refetchProposal } = useProposalQuery({
+    variables: { proposal_id: id || '' },
     context: { subgraph: 'snapshot' },
-  }), [id]);
-  const { loading, error, data, refetch: refetchProposal } = useProposalQuery(queryConfig);
-  const proposal = data?.proposal as Proposal;
+    fetchPolicy: 'cache-only',
+    nextFetchPolicy: 'network-only',
+    skip: !id
+  });
+  const proposal = data?.proposal;
 
   /// Query Votes
   const { 
@@ -189,7 +197,8 @@ const Vote: React.FC = () => {
     },
     skip: !account || !proposal?.id, // only send query when wallet connected
     context: { subgraph: 'snapshot' },
-    nextFetchPolicy: 'network-only'
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'network-only',
   });
   const existingChoice = voteData?.votes?.[0]?.choice;
   
@@ -209,6 +218,7 @@ const Vote: React.FC = () => {
         if (values.choice === undefined) throw new Error('Select a voting choice.'); // use undefined here since 'choice' can be numerical zero 
         if (!proposal) throw new Error('Error loading proposal data.');
         if (proposal.type !== 'single-choice') throw new Error('Unsupported proposal type. Please vote through snapshot.org directly.');
+        if (!proposal?.space?.id) throw new Error('Unknown space.');
 
         txToast = new TransactionToast({
           loading: 'Voting on proposal...',
@@ -245,7 +255,7 @@ const Vote: React.FC = () => {
     [proposal, signer, refetchProposal, refetchVotes]
   );
 
-  if (loading) {
+  if (loading || !proposal) {
     return (
       <Box height={100} display="flex" alignItems="center" justifyContent="center">
         <CircularProgress />
@@ -269,7 +279,7 @@ const Vote: React.FC = () => {
     >
       {(formikProps: FormikProps<VoteFormValues>) => (
         <VoteForm
-          proposal={proposal}
+          proposal={proposal as Proposal}
           existingChoice={existingChoice}
           {...formikProps}
         />

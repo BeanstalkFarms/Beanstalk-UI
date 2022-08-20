@@ -27,7 +27,7 @@ export type Proposal = {
   /**  */
   title: string;
   /** The voting options. */
-  choices: Array<string>;
+  choices?: string[];
   /** Markdown of the proposal. */
   body?: string;
   /** Voting type (i.e. single-choice, etc.) */
@@ -37,7 +37,7 @@ export type Proposal = {
   /** URL to the proposal on Snapshot. */
   link?: string;
   /** The amount of STALK that has voted for each choice. */
-  scores: Array<number>;
+  scores: number[];
   /** Total STALK that has voted. */
   scores_total: number;
   /** Last time the scores were updated. */
