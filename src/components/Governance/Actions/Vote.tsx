@@ -139,10 +139,10 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
                   {canVote 
                     ? (
                       alreadyVotedThisChoice
-                        ? `Already voted ${proposal.choices[existingChoice - 1]}`
+                        ? `Already Voted: ${proposal.choices[existingChoice - 1]}`
                         : 'Vote'
                     )
-                    : 'Need Stalk to vote'
+                    : 'Need Stalk to Vote'
                   }
                 </LoadingButton>
               </>

@@ -40,7 +40,7 @@ const ProposalContent: React.FC = () => {
       <Stack gap={1}>
         {/* Title & stats */}
         <Typography variant="h2">{proposal.title}</Typography>
-        <ProposalStats proposal={proposal} />
+        <ProposalStats proposal={proposal} showLink />
         <Divider sx={{ mt: 1 }}  />
         {/* Markdown */}
         <Box maxWidth="100%">
