@@ -222,7 +222,7 @@ const NFTPage: React.FC = () => {
             {/* Zero state when not logged in */}
             {account === undefined ? (
               <Box height={300}>
-                <AuthEmptyState title="BeaNFTs" state={authState} />
+                <AuthEmptyState message="Your BeaNFTs will appear here." />
               </Box>
             ) : (
               <>

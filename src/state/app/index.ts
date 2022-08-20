@@ -1,14 +1,16 @@
 import type { EthPriceResponse } from '~/functions/ethprice/ethprice';
 
-export type AppSettings = {
+export type Settings = {
   denomination: 'usd' | 'bdv';
 };
 
-export type AppFlags = {
+export type Flags = {
+
+}
+
+export type App = {
   /** ETH price data */
   ethPrices: null | EthPriceResponse;
   /** User settings */
-  settings: AppSettings;
+  settings: Settings;
 }
-
-export type App = AppFlags;

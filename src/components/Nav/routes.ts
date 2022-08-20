@@ -68,8 +68,7 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       small: true
     },
     {
-      path: 'governance',
-      href: 'https://snapshot.org/#/beanstalkdao.eth',
+      path: '/governance',
       title: 'Governance',
       icon: governanceIcon,
       small: true

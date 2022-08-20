@@ -27,7 +27,6 @@ import FieldUpdater from '~/state/beanstalk/field/updater';
 import AppUpdater from '~/state/app/updater';
 import { BeanstalkPalette } from './muiTheme';
 import './App.css';
-import WelcomeBackModal from '../Common/WelcomeBackModal';
 import PodMarketPage from '../../pages/market';
 import NFTPage from '../../pages/nft';
 import ChopPage from '../../pages/chop';
@@ -40,6 +39,10 @@ import EditListingPage from '../../pages/market/edit-listing';
 import EditOrderPage from '../../pages/market/edit-order';
 import SwapPage from '../../pages/swap';
 import AnalyticsPage from '../../pages/analytics';
+import GovernancePage from '~/pages/governance';
+import ProposalPage from '~/pages/governance/proposal';
+import GovernanceUpdater from '~/state/beanstalk/governance/updater';
+import NewProposalsDialog from '~/components/Governance/NewProposalsDialog';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -106,6 +109,7 @@ export default function App() {
       <FieldUpdater />
       <SiloUpdater />
       <SunUpdater />
+      <GovernanceUpdater />
       {/* -----------------------
        * Farmer Updaters
        * ----------------------- */}
@@ -119,8 +123,7 @@ export default function App() {
        * ----------------------- */}
       <NavBar />
       <CustomToaster />
-      {/* only show welcome back modal on non barn-raise pages */}
-      {location.pathname !== '/' && <WelcomeBackModal />}
+      <NewProposalsDialog />
       <Box
         sx={{
           // backgroundColor: BeanstalkPalette.lighterBlue,
@@ -151,6 +154,7 @@ export default function App() {
           <Route path="/barn" element={<Barn />} />
           <Route path="/chop" element={<ChopPage />} />
           <Route path="/field" element={<FieldPage />} />
+          <Route path="/governance" element={<GovernancePage />} />
           <Route path="/history" element={<TransactionHistoryPage />} />
           <Route path="/market" element={<PodMarketPage />} />
           <Route path="/market/account" element={<MarketAccountPage />} />
@@ -159,11 +163,9 @@ export default function App() {
           <Route path="/market/order/:id" element={<OrderPage />} />
           <Route path="/market/order/:id/edit" element={<EditOrderPage />} />
           <Route path="/market/listing/:id" element={<ListingPage />} />
-          <Route
-            path="/market/listing/:id/edit"
-            element={<EditListingPage />}
-          />
+          <Route path="/market/listing/:id/edit" element={<EditListingPage />} />
           <Route path="/nft" element={<NFTPage />} />
+          <Route path="/governance/:id" element={<ProposalPage />} />
           <Route path="/silo" element={<SiloPage />} />
           <Route path="/silo/:address" element={<SiloTokenPage />} />
           <Route path="/swap" element={<SwapPage />} />

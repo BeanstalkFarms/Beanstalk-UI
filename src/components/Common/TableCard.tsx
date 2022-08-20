@@ -95,7 +95,10 @@ const TableCard : React.FC<{
           components={{
             NoRowsOverlay() {
               return (
-                <AuthEmptyState title={title} state={state} option="message" />
+                <AuthEmptyState
+                  message={`Your ${title} will appear here.`}
+                  hideWalletButton
+                />
               );
             },
             Pagination: TablePagination

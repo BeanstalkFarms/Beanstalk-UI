@@ -34,21 +34,6 @@ export default function AppUpdater() {
   
   useEthPrices();
 
-  // const pressed  = useAppFlag('almanacView');
-  // useEffect(() => {
-  //   window.addEventListener('blur', () => {
-  //     dispatch(setAlmanacView(false));
-  //   });
-  // }, [dispatch]);
-  // useHotkeys('opt+q, alt+q', (/* event, handler */) => {
-  //   if (!pressed) {
-  //     dispatch(setAlmanacView(true));
-  //   }
-  // }, { keydown: true }, [pressed]);
-  // useHotkeys('opt+q, alt+q', (/* event, handler */) => {
-  //   dispatch(setAlmanacView(false));
-  // }, { keyup: true });
-
   useHotkeys('opt+f, alt+f', (/* event, handler */) => {
     dispatch(updateSetting({ key: 'denomination', value: denomination === 'bdv' ? 'usd' : 'bdv' }));
     toast.success(`Updated setting: Show fiat in ${denomination === 'bdv' ? 'USD' : 'BDV'}.`);
@@ -81,3 +66,18 @@ export default function AppUpdater() {
 
   return null;
 }
+
+// const pressed  = useAppFlag('almanacView');
+// useEffect(() => {
+//   window.addEventListener('blur', () => {
+//     dispatch(setAlmanacView(false));
+//   });
+// }, [dispatch]);
+// useHotkeys('opt+q, alt+q', (/* event, handler */) => {
+//   if (!pressed) {
+//     dispatch(setAlmanacView(true));
+//   }
+// }, { keydown: true }, [pressed]);
+// useHotkeys('opt+q, alt+q', (/* event, handler */) => {
+//   dispatch(setAlmanacView(false));
+// }, { keyup: true });

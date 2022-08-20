@@ -1,0 +1,16 @@
+fragment Proposal on Proposal {
+  id
+  title
+  type
+  start
+  end
+  link
+  scores
+  scores_total
+  scores_updated
+  state
+  space {
+    id
+    name
+  }
+}
