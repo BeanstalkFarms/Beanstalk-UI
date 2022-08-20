@@ -19,9 +19,9 @@ export const useFetchBeanstalkGovernance = () => {
   /// Handlers
   const fetch = useCallback(async () => {
     const result = await get();
-    if (result.data?.proposals?.length) {
+    if (Array.isArray(result.data?.proposals)) {
       dispatch(updateActiveProposals(
-        result.data.proposals
+        result.data!.proposals
           /// HACK:
           /// The snapshot.org graphql API defines that the proposals
           /// array can have `null` elements. I believe this shouldn't
