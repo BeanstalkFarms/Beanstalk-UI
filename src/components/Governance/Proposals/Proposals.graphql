@@ -1,4 +1,4 @@
-#import "./Proposal.fragment.graphql"
+#import "../Proposal/Proposal.fragment.graphql"
 query Proposals($space_in: [String!]!, $state: String) {
   proposals (
     where: {

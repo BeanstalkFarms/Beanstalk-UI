@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import PageHeader from '~/components/Common/PageHeader';
 import GovernanceActions from '~/components/Governance/Actions';
-import ProposalContent from '~/components/Governance/ProposalContent';
+import ProposalContent from '~/components/Governance/Proposal';
 
 const ProposalPage: React.FC = () => (
   <Container maxWidth="lg">
@@ -21,6 +21,6 @@ const ProposalPage: React.FC = () => (
       </Grid>
     </Stack>
   </Container>
-  );
+);
 
 export default ProposalPage;

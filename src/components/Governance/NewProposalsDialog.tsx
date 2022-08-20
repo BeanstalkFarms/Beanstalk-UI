@@ -3,7 +3,7 @@ import { Box, Button, Stack, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import { Link } from 'react-router-dom';
-import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from './Dialog';
+import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
 import { AppState } from '~/state';
 import { ActiveProposal } from '~/state/beanstalk/governance';
 import useAccount from '~/hooks/ledger/useAccount';
@@ -24,7 +24,7 @@ const NewProposalsDialog: React.FC = () => {
   const [hasNotSeen, setHasNotSeen] = useState<ActiveProposal[]>([]);
 
   // State
-  const activeProposals = useSelector<AppState, Array<ActiveProposal>>((state) => state._beanstalk.governance.activeProposals);
+  const activeProposals = useSelector<AppState, ActiveProposal[]>((state) => state._beanstalk.governance.activeProposals);
   const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
 
@@ -35,19 +35,19 @@ const NewProposalsDialog: React.FC = () => {
   const createProposalString = () => {
     // ex: BIP-1 is open for voting
     if (hasNotSeen.length === 1) {
-      return `${hasNotSeen[0]?.title?.split(':')[0].bold()} is open for voting.`;
+      return `${hasNotSeen[0]?.title?.split(':')[0]} is open for voting.`;
     }
     // ex: BIP-1 and BOP-2 are open for voting
     if (hasNotSeen.length === 2) {
-      return `${hasNotSeen[0]?.title?.split(':')[0].bold()} and ${hasNotSeen[0]?.title?.split(':')[1].bold()} are open for voting.`;
+      return `${hasNotSeen[0]?.title?.split(':')[0]} and ${hasNotSeen[0]?.title?.split(':')[1]} are open for voting.`;
     }
     // ex: BIP-1, BOP-2, and BFCP-A-2 are open for voting
     const titles: (string | undefined)[] = hasNotSeen.map((p) => p.title);
     return titles.reduce((prev, curr, i) => {
       if (i + 1 === titles.length) {
-        return prev?.concat(`and ${curr?.split(':')[0].bold()} are open for voting.`);
+        return prev?.concat(`and ${curr?.split(':')[0]} are open for voting.`);
       }
-      return prev?.concat(`${curr?.split(':')[0].bold()}, `);
+      return prev?.concat(`${curr?.split(':')[0]}, `);
     }, '');
   };
 

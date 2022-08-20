@@ -43,7 +43,7 @@ import AnalyticsPage from '../../pages/analytics';
 import GovernancePage from '~/pages/governance';
 import ProposalPage from '~/pages/governance/proposal';
 import GovernanceUpdater from '~/state/beanstalk/governance/updater';
-import NewProposalsDialog from '~/components/Common/NewProposalsDialog';
+import NewProposalsDialog from '~/components/Governance/NewProposalsDialog';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
