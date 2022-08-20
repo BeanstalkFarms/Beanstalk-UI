@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, LinearProgress, Stack, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, LinearProgress, Stack, Tooltip, Typography } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -53,10 +53,11 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
     existingChoice !== undefined 
     && existingChoice === values.choice
   );
+  const isClosed = differenceInTime <= 0;
   const isInvalid = (
     values.choice === undefined // no choice selected
     || alreadyVotedThisChoice // already voted for this same choice
-    || differenceInTime <= 0 // expired
+    || isClosed // expired
     || !canVote // no stalk
   );
 
@@ -66,11 +67,18 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
         {/**
           * Progress by choice
           */}
-        <Stack px={1} pb={1} gap={1}>
+        <Stack px={1} pb={1} gap={1.5}>
           {proposal.choices.map((choice: string, index: number) => (
             <Stack gap={0.5}>
               <Stack direction="row" justifyContent="space-between">
-                <Typography variant="body1">{choice}</Typography>
+                <Typography variant="body1">
+                  {isClosed && existingChoice !== undefined && (existingChoice === index + 1) ? (
+                    <Tooltip title={`You voted: ${proposal.choices[existingChoice - 1]}`}>
+                      <span>✓&nbsp;</span>
+                    </Tooltip>
+                  ) : null}
+                  {choice}
+                </Typography>
                 <Typography variant="body1">
                   {displayFullBN(new BigNumber(proposal.scores[index]), 0, 0)} STALK
                   <Typography
@@ -89,7 +97,7 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
         {/**
           * Voting
           */}
-        {differenceInTime > 0 && (
+        {!isClosed && (
           proposal.type === 'single-choice' ? (
             account ? (
               <>
@@ -204,7 +212,7 @@ const Vote: React.FC = () => {
 
         txToast = new TransactionToast({
           loading: 'Voting on proposal...',
-          success: 'Vote successful. It may take some time for your vote to appear on the Beanstalk UI.',
+          success: 'Vote successful. It may take some time for your vote to appear on the Beanstalk UI. Check Snapshot for the latest results.',
         });
 
         const hub = 'https://hub.snapshot.org';
