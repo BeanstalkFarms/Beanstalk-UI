@@ -1,6 +1,8 @@
 export type ActiveProposal = {
-  id: string | undefined;
-  title: string | undefined;
+  id:     string;
+  title:  string;
+  start:  number;
+  end:    number;
 }
 
 export type BeanstalkGovernance = {

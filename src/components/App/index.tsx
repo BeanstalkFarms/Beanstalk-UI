@@ -27,7 +27,6 @@ import FieldUpdater from '~/state/beanstalk/field/updater';
 import AppUpdater from '~/state/app/updater';
 import { BeanstalkPalette } from './muiTheme';
 import './App.css';
-import WelcomeBackModal from '../Common/WelcomeBackModal';
 import PodMarketPage from '../../pages/market';
 import NFTPage from '../../pages/nft';
 import ChopPage from '../../pages/chop';
@@ -124,8 +123,6 @@ export default function App() {
        * ----------------------- */}
       <NavBar />
       <CustomToaster />
-      {/* only show welcome back modal on non barn-raise pages */}
-      {location.pathname !== '/' && <WelcomeBackModal />}
       <NewProposalsDialog />
       <Box
         sx={{

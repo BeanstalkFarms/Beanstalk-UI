@@ -29,8 +29,10 @@ export const useFetchBeanstalkGovernance = () => {
           /// assert existence of `p`.
           .filter((p) => p !== null)
           .map((p) => ({
-            id: (p!).id,
-            title: (p!).title
+            id: p!.id,
+            title: p!.title,
+            start: p!.start,
+            end: p!.end,
           }))
       ));
     }

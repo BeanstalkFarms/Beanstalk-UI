@@ -1,134 +1,106 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
-import BigNumber from 'bignumber.js';
 import { Link } from 'react-router-dom';
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
 import { AppState } from '~/state';
 import { ActiveProposal } from '~/state/beanstalk/governance';
-import useAccount from '~/hooks/ledger/useAccount';
 import { displayBN } from '~/util';
-import { BeanstalkPalette } from '~/components/App/muiTheme';
+import { IconSize } from '~/components/App/muiTheme';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { STALK } from '~/constants/tokens';
+import useAppFlag from '~/hooks/useAppFlag';
+import useToggle from '~/hooks/display/useToggle';
+import { getDateCountdown } from '~/util/Time';
+import { getProposalTag } from '~/util/Governance';
+
+// const getLastSeen = (account: string) => {
+//   try {
+//     return parseInt(
+//       localStorage.getItem(`beanstalk.account.${account}.last_gov_prompt`) || '0',
+//       10
+//     );
+//   } catch (e) {
+//     return 0;
+//   }
+// };
 
 /**
  *
  */
 const NewProposalsDialog: React.FC = () => {
-  // Hooks
-  const account = useAccount();
+  /// Local state
+  const [modalOpen, showModal, hideModal] = useToggle();
+  const [unseenProposals, setUnseenProposals] = useState<ActiveProposal[]>([]);
+  const [getLastSeen, setLastSeen] = useAppFlag<number>('last_gov_prompt', 'int', 0);
 
-  // Local state
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [hasNotSeen, setHasNotSeen] = useState<ActiveProposal[]>([]);
-
-  // State
+  /// State
   const activeProposals = useSelector<AppState, ActiveProposal[]>((state) => state._beanstalk.governance.activeProposals);
   const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
-  const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
 
-  // Handlers
-  const handleClose = useCallback(() => setModalOpen(false), []);
-
-  // Helpers
-  const createProposalString = () => {
-    // ex: BIP-1 is open for voting
-    if (hasNotSeen.length === 1) {
-      return `${hasNotSeen[0]?.title?.split(':')[0]} is open for voting.`;
-    }
-    // ex: BIP-1 and BOP-2 are open for voting
-    if (hasNotSeen.length === 2) {
-      return `${hasNotSeen[0]?.title?.split(':')[0]} and ${hasNotSeen[0]?.title?.split(':')[1]} are open for voting.`;
-    }
-    // ex: BIP-1, BOP-2, and BFCP-A-2 are open for voting
-    const titles: (string | undefined)[] = hasNotSeen.map((p) => p.title);
-    return titles.reduce((prev, curr, i) => {
-      if (i + 1 === titles.length) {
-        return prev?.concat(`and ${curr?.split(':')[0]} are open for voting.`);
-      }
-      return prev?.concat(`${curr?.split(':')[0]}, `);
-    }, '');
-  };
-
-  const proposalString = createProposalString();
+  const dismiss = useCallback(() => {
+    setLastSeen(Math.floor(new Date().getTime() / 1000));
+    hideModal();
+  }, [hideModal, setLastSeen]);
 
   useEffect(() => {
-    if (account) {
-      activeProposals.forEach((p) => {
-        if (p.id) {
-          const seenProposal = localStorage.getItem(p.id);
-          if (!seenProposal) {
-            localStorage.setItem(p.id, 'true');
-            setHasNotSeen(hasNotSeen.concat(p));
-            setModalOpen(true);
-          }
-        }
-      });
+    const lastSeen = getLastSeen();
+    const _unseenProposals = activeProposals.filter(
+      (p) => p.start > lastSeen,
+    );
+    if (_unseenProposals.length > 0) {
+      setUnseenProposals(_unseenProposals);
+      showModal(true);
     }
-  }, [account, activeProposals, hasNotSeen, setModalOpen]);
+  }, [activeProposals, getLastSeen, setLastSeen, showModal]);
 
-  if (proposalString === undefined) {
-    return null;
-  }
+  const destination = unseenProposals.length === 1
+    ? `/governance/${unseenProposals[0].id}`
+    : '/governance';
+  const buttonText = unseenProposals.length === 1
+    ? `View ${getProposalTag(unseenProposals[0].title) || 'proposal'}`
+    : 'View proposals';
 
   return (
     <StyledDialog
-      onClose={handleClose}
+      onClose={dismiss}
       open={modalOpen}
       fullWidth
-      PaperProps={{
-        sx: {
-          maxWidth: '431px'
-        }
-      }}
     >
-      <StyledDialogTitle onClose={handleClose}>
-        <Typography variant="h4">Use Stalk to vote on new governance proposals</Typography>
+      <StyledDialogTitle onClose={dismiss}>
+        New governance proposals
       </StyledDialogTitle>
-      <StyledDialogContent sx={{ px: 2 }}>
-        <Box display="flex" alignItems="center" justifyContent="center" height={115}>
-          <Stack>
-            <Typography variant="bodyLarge" textAlign="center"><TokenIcon
-              token={STALK} />{displayBN(farmerSilo.stalk.active)}
-            </Typography>
-            <Typography
-              variant="body1"
-              color="gray"
-              textAlign="center">{displayBN((farmerSilo.stalk.active.div(beanstalkSilo.stalk.total)).multipliedBy(new BigNumber(100)))}%
-              Ownership
+      <StyledDialogContent sx={{ px: 2, pt: 1, pb: 1 }}>
+        <Box display="flex" alignItems="center" justifyContent="center" py={3}>
+          <Stack direction="row" alignItems="center" gap={0.3}>
+            <TokenIcon token={STALK} style={{ height: IconSize.small }} />
+            <Typography variant="bodyLarge" textAlign="center">
+              {displayBN(farmerSilo.stalk.active)} STALK
             </Typography>
           </Stack>
         </Box>
-        <Typography textAlign="center">
-          <Typography
-            display="inline"
-            dangerouslySetInnerHTML={{
-              __html: proposalString
-            }}
-          />
-          &nbsp;The voting periods will end DD/MM at XX:XX UTC.
-        </Typography>
-
+        <Stack gap={0.5}>
+          {unseenProposals.map((p) => (
+            <Stack key={p.id} alignItems="flex-start" direction="row" justifyContent="space-between">
+              <Typography>{p.title}</Typography>
+              <Typography variant="body2" whiteSpace="nowrap" fontWeight="bold">
+                Ends {getDateCountdown(p.end * 1000)[0]}
+              </Typography>
+            </Stack>
+          ))}
+        </Stack>
       </StyledDialogContent>
-      <StyledDialogActions sx={{ gap: 1, p: 1 }}>
+      <StyledDialogActions sx={{ gap: 1 }}>
         <Button
-          onClick={handleClose}
+          onClick={dismiss}
           fullWidth
-          color="light"
-          sx={{
-            border: 1,
-            color: BeanstalkPalette.lightGrey,
-            borderColor: BeanstalkPalette.lightestGrey,
-            '&:hover': {
-              opacity: 0.8
-            }
-          }}
+          color="dark"
+          variant="outlined"
         >
           <Typography variant="body1">Not now</Typography>
         </Button>
-        <Button onClick={handleClose} component={Link} to="/governance" fullWidth>
-          Continue
+        <Button onClick={dismiss} component={Link} to={destination} fullWidth>
+          {buttonText}
         </Button>
       </StyledDialogActions>
     </StyledDialog>
