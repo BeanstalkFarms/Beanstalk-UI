@@ -2,11 +2,10 @@ import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { resetBeanstalkGovernance, updateActiveProposals } from './actions';
 import { useProposalsLazyQuery } from '~/generated/graphql';
-import { SNAPSHOT_SPACES } from '~/util/Governance';
 
 const queryConfig = {
   variables: {
-    space_in: SNAPSHOT_SPACES,
+    space_in: ['beanstalkdao.eth', 'beanstalkfarms.eth'],
     state: 'active'
   },
   context: { subgraph: 'snapshot' }
