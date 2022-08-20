@@ -29,7 +29,7 @@ const ProposalStats: React.FC<{
       </Typography>
       {showLink && (
         <Link
-          href={`https://snapshot.org/#/${proposal.space}/proposal/${proposal.id}`}
+          href={`https://snapshot.org/#/${proposal.space.id}/proposal/${proposal.id}`}
           target="_blank"
           rel="noreferrer"
           underline="hover"

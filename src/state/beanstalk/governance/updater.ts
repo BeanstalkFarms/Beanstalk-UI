@@ -18,6 +18,7 @@ export const useFetchBeanstalkGovernance = () => {
   /// Handlers
   const fetch = useCallback(async () => {
     const result = await get();
+    console.debug('[beanstalk/governance]', result);
     if (Array.isArray(result.data?.proposals)) {
       dispatch(updateActiveProposals(
         result.data!.proposals
