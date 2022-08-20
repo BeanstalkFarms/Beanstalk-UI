@@ -1,4 +1,4 @@
-query Votes($proposal_id: String, $voter_address: String) {
+query Votes($proposal_id: String!, $voter_address: String!) {
   votes (
     first: 1000
     skip: 0

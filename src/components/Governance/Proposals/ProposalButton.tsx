@@ -12,18 +12,17 @@ import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
 import { Proposal } from '~/util/Governance';
 
 const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
-  /// Setup
-  const account = useAccount();
-
   /// State
+  const account = useAccount();
   const totalStalk = useSelector<AppState, BigNumber>((state) => state._beanstalk.silo.stalk.total);
 
   /// Query Votes
   const { data: voteData } = useVotesQuery({
     variables: {
-      proposal_id: proposal.id.toString().toLowerCase(),
-      voter_address: account ? account.toLowerCase() : '',
+      proposal_id: proposal.id.toLowerCase(),
+      voter_address: account || '',
     },
+    skip: !account, // only send query when wallet connected
     context: { subgraph: 'snapshot' }
   });
 
@@ -48,8 +47,12 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
       <Stack gap={1} width="100%">
         {/* Top row */}
         <Stack direction={{ xs: 'column-reverse', md: 'row' }} justifyContent="space-between">
-          <Typography display={{ xs: 'none', md: 'block' }} textAlign="left" variant="bodyLarge">{proposal.title}</Typography>
-          <Typography display={{ xs: 'block', md: 'none' }} textAlign="left" variant="bodyLarge" sx={{ fontSize: { xs: '20px', md: 'inherit' }, lineHeight: '24px' }}>{proposal.title.toString().substring(0, 55)}{proposal.title.length > 55 ? '...' : null}</Typography>
+          <Typography display={{ xs: 'none', md: 'block' }} textAlign="left" variant="bodyLarge">
+            {proposal.title}
+          </Typography>
+          <Typography display={{ xs: 'block', md: 'none' }} textAlign="left" variant="bodyLarge" sx={{ fontSize: { xs: '20px', md: 'inherit' }, lineHeight: '24px' }}>
+            {proposal.title.substring(0, 55)}{proposal.title.length > 55 ? '...' : null}
+          </Typography>
           {/* Sshow if user has voted */}
           {(account && voteData?.votes?.length) ? (
             <Stack direction="row" alignItems="center" gap={0.5}>
@@ -60,7 +63,11 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
         </Stack>
         {/* Bottom row */}
         <Stack direction={{ xs: 'column', lg: 'row' }} justifyContent="space-between">
-          <ProposalStats totalStalk={totalStalk} differenceInTime={differenceInTime} proposal={proposal} />
+          <ProposalStats
+            totalStalk={totalStalk}
+            differenceInTime={differenceInTime}
+            proposal={proposal}
+          />
         </Stack>
       </Stack>
     </Button>
