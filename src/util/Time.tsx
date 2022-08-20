@@ -1,42 +1,52 @@
 export const sleep = (ms: number = 1000) => new Promise<void>((r) => setTimeout(() => { r(); }, ms));
 
-export function timeToString(timeDifference: number) {
-  const timeInDays = Math.floor(timeDifference / 86400);
-  if (timeInDays > 0) return `${timeInDays} ${timeInDays > 1 ? 'days' : 'day'}`;
-  const timeInHours = Math.floor(timeDifference / 3600);
-  if (timeInHours > 0) return `${timeInHours} hr`;
-  const timeInMinutes = Math.floor(timeDifference / 60);
-  if (timeInMinutes > 0) return `${timeInMinutes} min`;
+export const getDateCountdown = (
+  /** ms since epoch; getTime() */
+  time: number 
+) => {
+  /// Dates
+  let msg;
+  const now = new Date();
+  const end = new Date(time);
 
-  return `${Math.floor(timeDifference)} sec`;
-}
+  /// Calculations
+  const differenceInTime  = end.getTime() - now.getTime();
+  const differenceInHours = differenceInTime / (1000 * 3600);
+  const differenceInDays  = differenceInHours / 24;
+  now.setHours(0, 0, 0, 0);
 
-export function timeToStringDetailed(timeDifference: number) {
-  const timeInDays = Math.floor(timeDifference / 86400);
-  const timeInHours = Math.floor(timeDifference / 3600);
-  const timeInMinutes = Math.floor(timeDifference / 60);
-  const timeInSeconds = Math.floor(timeDifference);
+  const active = differenceInHours > 0;
 
-  if (timeInDays > 0) {
-    return `${timeInDays} ${timeInDays > 1 ? 'days' : 'day'}, ${timeInHours - timeInDays * 24} hr, ${timeInMinutes - timeInHours * 60} min, ${timeInSeconds - timeInMinutes * 60} sec`;
+  /// Date is in the future
+  if (active) {
+    if (differenceInHours <= 1) {
+      // less than one hour away
+      msg = `in ${Math.round(differenceInHours * 60)} minutes`;
+    } else if (Math.round(differenceInHours) === 1) {
+      // exactly one hour away
+      msg = `in ${Math.round(differenceInHours)} hour`;
+    } else if (differenceInHours > 1 && differenceInHours <= 24) {
+      // less than one day away
+      msg = `in ${Math.round(differenceInHours)} hours`;
+    } else if (differenceInHours > 24 && differenceInDays <= 7) {
+      // less than one week away
+      msg = `in ${Math.round(differenceInDays)} days`;
+    } else if (differenceInDays > 7) {
+      // greater than one week away
+      msg = `on ${end.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      })}`;
+    }
+  } else {
+    // in the past
+    msg = `on ${end.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    })}`;
   }
-  if (timeInHours > 0) {
-    return `${timeInHours} hr, ${timeInMinutes - timeInHours * 60} min, ${timeInSeconds - timeInMinutes * 60} sec`;
-  }
-  if (timeInMinutes > 0) {
-    return `${timeInMinutes} min, ${timeInSeconds - timeInMinutes * 60} sec`;
-  }
 
-  return `${timeInSeconds} sec`;
-}
-
-export const benchmarkStart = (operation : string) => {
-  console.log(`LOADING ${operation}`);
-  return Date.now();
-};
-
-export const benchmarkEnd = (operation : string, startTime : number) => {
-  console.log(
-    `LOADED ${operation} (${(Date.now() - startTime) / 1e3} seconds)`
-  );
+  return [msg, active] as const;
 };

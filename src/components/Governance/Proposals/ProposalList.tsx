@@ -18,13 +18,9 @@ const ProposalList: React.FC<{ proposals: Proposal[] }> = (props) => {
     <Stack px={1} pb={1} gap={1}>
       {props.proposals.length === 0 ? (
         <EmptyState message="No proposals of this type." />
-      ) : (
-        <>
-          {props.proposals.map((p) => (
-            <ProposalButton proposal={p} />
-          ))}
-        </>
-      )}
+      ) : props.proposals.map((p) => (
+        <ProposalButton key={p.id} proposal={p} />
+      ))}
     </Stack>
   );
 };

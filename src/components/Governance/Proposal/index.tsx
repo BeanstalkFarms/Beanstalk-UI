@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Box, Card, CircularProgress, Divider, Stack, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useProposalQuery } from '~/generated/graphql';
@@ -11,11 +11,13 @@ const ProposalContent: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   /// Query proposal data
-  const queryConfig = useMemo(() => ({
-    variables: { proposal_id: id as string },
-    context: { subgraph: 'snapshot' }
-  }), [id]);
-  const { loading, error, data } = useProposalQuery(queryConfig);
+  const { loading, error, data } = useProposalQuery({
+    variables: { proposal_id: id || '' },
+    context: { subgraph: 'snapshot' },
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'network-only',
+    skip: !id
+  });
   const proposal = data?.proposal as Proposal;
   
   /// Loading
@@ -38,7 +40,7 @@ const ProposalContent: React.FC = () => {
       <Stack gap={1}>
         {/* Title & stats */}
         <Typography variant="h2">{proposal.title}</Typography>
-        <ProposalStats proposal={proposal} />
+        <ProposalStats proposal={proposal} showLink />
         <Divider sx={{ mt: 1 }}  />
         {/* Markdown */}
         <Box maxWidth="100%">

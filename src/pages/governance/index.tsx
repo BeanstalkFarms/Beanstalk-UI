@@ -16,10 +16,10 @@ const GovernancePage: React.FC = () => (
         href="https://docs.bean.money/governance/proposals"
       />
       <Grid container direction={{ xs: 'column', md: 'row' }} spacing={2}>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} lg={3.5}>
           <StalkholderCard />
         </Grid>
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} lg={8.5}>
           <Proposals />
         </Grid>
       </Grid>

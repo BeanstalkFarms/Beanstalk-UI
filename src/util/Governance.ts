@@ -3,13 +3,31 @@
 //   return proposalData;
 // }
 
+import { getDateCountdown } from '~/util/Time';
+
+// ^(BIP|BOP)-[0-9]+
+// export const PROPOSAL_TYPES = [
+//   'BIP',
+//   'BOP',
+//   'BFCP-A',
+//   'BFCP-B',
+//   'BFCP-C',
+//   'BFCP-D',
+// ];
+
+export const SNAPSHOT_SPACES = [
+  'beanstalkdao.eth',
+  'beanstalkfarms.eth',
+  'wearebeansprout.eth'
+];
+
 export type Proposal = {
   /**  */
   id: string;
   /**  */
   title: string;
   /** The voting options. */
-  choices: Array<string>;
+  choices?: string[];
   /** Markdown of the proposal. */
   body?: string;
   /** Voting type (i.e. single-choice, etc.) */
@@ -19,7 +37,7 @@ export type Proposal = {
   /** URL to the proposal on Snapshot. */
   link?: string;
   /** The amount of STALK that has voted for each choice. */
-  scores: Array<number>;
+  scores: number[];
   /** Total STALK that has voted. */
   scores_total: number;
   /** Last time the scores were updated. */
@@ -39,47 +57,15 @@ export type Proposal = {
  * Formats date messages for governance proposal.
  */
 export const getDateMessage = (end: number) => {
-  /// Dates
-  let dateMessage;
-  const today   = new Date();
-  const endDate = new Date(end * 1000);
+  const [message, active] = getDateCountdown(end * 1000);
+  return active ? `Vote ends ${message}` : `Ended ${message}`;
+};
 
-  /// Calculations
-  const differenceInTime  = endDate.getTime() - today.getTime();
-  const differenceInHours = differenceInTime / (1000 * 3600);
-  const differenceInDays  = differenceInHours / 24;
-  today.setHours(0, 0, 0, 0);
-
-  /// Date is in the future
-  if (differenceInHours > 0) {
-    if (differenceInHours <= 1) {
-      // less than one hour away
-      dateMessage = `Vote ends in ${Math.round(differenceInHours * 60)} minutes`;
-    } else if (Math.round(differenceInHours) === 1) {
-      // exactly one hour away
-      dateMessage = `Vote ends in ${Math.round(differenceInHours)} hour`;
-    } else if (differenceInHours > 1 && differenceInHours <= 24) {
-      // less than one day away
-      dateMessage = `Vote ends in ${Math.round(differenceInHours)} hours`;
-    } else if (differenceInHours > 24 && differenceInDays <= 7) {
-      // less than one week away
-      dateMessage = `Vote ends in ${Math.round(differenceInDays)} days`;
-    } else if (differenceInDays > 7) {
-      // greater than one week away
-      dateMessage = `Vote ends on ${endDate.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      })}`;
-    }
-  } else {
-    // in the past
-    dateMessage = `Ended on ${endDate.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    })}`;
-  }
-
-  return dateMessage;
+export const getProposalTag = (title: string) => {
+  const sep = title.indexOf(':', 5);
+  return (
+    sep > -1
+      ? title.substring(0, sep)
+      : null
+  );
 };

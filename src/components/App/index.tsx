@@ -27,7 +27,6 @@ import FieldUpdater from '~/state/beanstalk/field/updater';
 import AppUpdater from '~/state/app/updater';
 import { BeanstalkPalette } from './muiTheme';
 import './App.css';
-import WelcomeBackModal from '../Common/WelcomeBackModal';
 import PodMarketPage from '../../pages/market';
 import NFTPage from '../../pages/nft';
 import ChopPage from '../../pages/chop';
@@ -42,6 +41,8 @@ import SwapPage from '../../pages/swap';
 import AnalyticsPage from '../../pages/analytics';
 import GovernancePage from '~/pages/governance';
 import ProposalPage from '~/pages/governance/proposal';
+import GovernanceUpdater from '~/state/beanstalk/governance/updater';
+import NewProposalsDialog from '~/components/Governance/NewProposalsDialog';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -108,6 +109,7 @@ export default function App() {
       <FieldUpdater />
       <SiloUpdater />
       <SunUpdater />
+      <GovernanceUpdater />
       {/* -----------------------
        * Farmer Updaters
        * ----------------------- */}
@@ -121,8 +123,7 @@ export default function App() {
        * ----------------------- */}
       <NavBar />
       <CustomToaster />
-      {/* only show welcome back modal on non barn-raise pages */}
-      {location.pathname !== '/' && <WelcomeBackModal />}
+      <NewProposalsDialog />
       <Box
         sx={{
           // backgroundColor: BeanstalkPalette.lighterBlue,

@@ -1,13 +1,13 @@
 import { useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '~/state';
-import { AppSettings } from '~/state/app';
+import { Settings } from '~/state/app';
 import { updateSetting } from '~/state/app/actions';
 
-const useSetting = (key: keyof AppSettings) => {
+const useSetting = (key: keyof Settings) => {
   const dispatch = useDispatch();
   const value  = useSelector<AppState, AppState['app']['settings'][typeof key]>((state) => state.app.settings[key]);
-  const update = useCallback((_value: AppSettings[typeof key]) => {
+  const update = useCallback((_value: Settings[typeof key]) => {
     dispatch(
       updateSetting({
         key,
