@@ -71,7 +71,7 @@ const TransactionHistoryPage: React.FC = () => {
               <Tab label="Field" />
               {/* <Tab label="Other" /> */}
             </Tabs>
-            {walletEvents !== undefined && walletEvents.length > 1 ? (
+            {walletEvents !== undefined && walletEvents.length > 0 ? (
               <Grid container>
                 {walletEvents.map((event) => (
                   <Grid key={`${event.transactionHash}-${event.logIndex}`} item width="100%">
