@@ -2,18 +2,18 @@ import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { resetBeanstalkGovernance, updateActiveProposals } from './actions';
 import { useProposalsLazyQuery } from '~/generated/graphql';
-
-const queryConfig = {
-  variables: {
-    space_in: ['beanstalkdao.eth', 'beanstalkfarms.eth'],
-    state: 'active'
-  },
-  context: { subgraph: 'snapshot' }
-};
+import { SNAPSHOT_SPACES } from '~/util/Governance';
 
 export const useFetchBeanstalkGovernance = () => {
   const dispatch = useDispatch();
-  const [get] = useProposalsLazyQuery(queryConfig);
+  const [get] = useProposalsLazyQuery({
+    variables: {
+      space_in: SNAPSHOT_SPACES,
+      state: 'active'
+    },
+    fetchPolicy: 'network-only',
+    context: { subgraph: 'snapshot' }
+  });
 
   /// Handlers
   const fetch = useCallback(async () => {

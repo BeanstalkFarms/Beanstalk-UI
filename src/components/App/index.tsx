@@ -1,6 +1,6 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { Box, CssBaseline } from '@mui/material';
 import { ToastBar, Toaster } from 'react-hot-toast';
 import SiloPage from '~/pages/silo';
@@ -12,7 +12,7 @@ import TransactionHistoryPage from '~/pages/history';
 import BalancesPage from '~/pages/balances';
 // import pageBackgroundGradient from '~/img/theme/bg-mainnet-gradient.png';
 import pageBackground from '~/img/theme/bg-mainnet.png';
-import NavBar, { NAV_CONTAINER_HEIGHT } from '~/components/Nav/NavBar';
+import NavBar from '~/components/Nav/NavBar';
 import PoolsUpdater from '~/state/bean/pools/updater';
 import UnripeUpdater from '~/state/bean/unripe/updater';
 import SunUpdater from '~/state/beanstalk/sun/updater';
@@ -43,13 +43,15 @@ import GovernancePage from '~/pages/governance';
 import ProposalPage from '~/pages/governance/proposal';
 import GovernanceUpdater from '~/state/beanstalk/governance/updater';
 import NewProposalsDialog from '~/components/Governance/NewProposalsDialog';
+import useNavHeight from '~/hooks/layout/usePageDimensions';
+import useBanner from '~/hooks/layout/useBanner';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
-const CustomToaster: React.FC = () => (
+const CustomToaster: React.FC<{ navHeight: number }> = ({ navHeight }) => (
   <Toaster
     containerStyle={{
-      top: NAV_CONTAINER_HEIGHT + 10,
+      top: navHeight + 10,
     }}
     toastOptions={{
       duration: 4000,
@@ -92,7 +94,8 @@ const CustomToaster: React.FC = () => (
 );
 
 export default function App() {
-  const location = useLocation();
+  const banner    = useBanner();
+  const navHeight = useNavHeight(!!banner);
   return (
     <>
       <CssBaseline />
@@ -121,22 +124,21 @@ export default function App() {
       {/* -----------------------
        * Content
        * ----------------------- */}
-      <NavBar />
-      <CustomToaster />
+      <NavBar>{banner}</NavBar>
+      <CustomToaster
+        navHeight={navHeight}
+      />
       <NewProposalsDialog />
       <Box
         sx={{
-          // backgroundColor: BeanstalkPalette.lighterBlue,
           backgroundColor: BeanstalkPalette.lightBlue,
-          // backgroundColor: '#dfedfb',
           backgroundImage: `url(${pageBackground})`,
-          // backgroundImage: `url(${pageBackgroundGradient})`,
           backgroundAttachment: 'fixed',
           backgroundPosition: 'bottom center',
           backgroundSize: '100%',
           backgroundRepeat: 'no-repeat',
           width: '100%',
-          minHeight: `calc(100vh - ${NAV_CONTAINER_HEIGHT}px)`,
+          minHeight: `calc(100vh - ${navHeight}px)`,
           paddingTop: {
             md: 4,
             xs: 2,

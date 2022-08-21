@@ -72,7 +72,7 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
         <Stack px={1} pb={1} gap={1.5}>
           {proposal.choices.map((choice: string, index: number) => (
             <Stack gap={0.5}>
-              <Stack direction="row" justifyContent="space-between">
+              <Stack direction="row" columnGap={0.5} flexWrap="wrap" justifyContent="space-between">
                 <Typography variant="body1">
                   {isClosed && existingChoice !== undefined && (existingChoice === index + 1) ? (
                     <Tooltip title={`You voted: ${proposal.choices![existingChoice - 1]}`}>
@@ -81,7 +81,7 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
                   ) : null}
                   {choice}
                 </Typography>
-                <Typography variant="body1">
+                <Typography variant="body1" color="text.secondary">
                   {displayFullBN(new BigNumber(proposal.scores[index]), 0, 0)} STALK
                   <Typography
                     display={proposal.scores_total > 0 ? 'inline' : 'none'}>•{((proposal.scores[index] / proposal.scores_total) * 100).toFixed(2)}%

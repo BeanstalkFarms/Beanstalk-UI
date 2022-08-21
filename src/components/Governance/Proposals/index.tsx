@@ -8,16 +8,16 @@ import { Proposal, SNAPSHOT_SPACES } from '~/util/Governance';
 
 /// Variables
 const SLUGS = ['dao', 'beanstalk-farms', 'bean-sprout'];
-const queryConfig = {
-  variables: { space_in: SNAPSHOT_SPACES },
-  context: { subgraph: 'snapshot' }
-};
 
 const Proposals: React.FC = () => {
   const [tab, handleChange] = useTabs(SLUGS, 'type');
 
   // Query Proposals
-  const { loading, data } = useProposalsQuery(queryConfig);
+  const { loading, data } = useProposalsQuery({
+    variables: { space_in: SNAPSHOT_SPACES },
+    fetchPolicy: 'cache-and-network',
+    context: { subgraph: 'snapshot' }
+  });
 
   /// Helpers
   const filterBySpace = useCallback((t: number) => {

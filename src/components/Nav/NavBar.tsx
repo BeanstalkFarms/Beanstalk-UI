@@ -13,15 +13,9 @@ import LinkButton from './Buttons/LinkButton';
 import AboutButton from './Buttons/AboutButton';
 import ROUTES from './routes';
 import HoverMenu from './HoverMenu';
+import { NAV_BORDER_HEIGHT, NAV_ELEM_HEIGHT, NAV_HEIGHT } from '~/hooks/layout/usePageDimensions';
 
-/// Navbar Positioning
-export const BANNER_HEIGHT = 0; // 35;
-export const NAV_HEIGHT    = 64;
-export const NAV_BORDER_HEIGHT = 1;
-export const NAV_CONTAINER_HEIGHT = BANNER_HEIGHT + NAV_HEIGHT + NAV_BORDER_HEIGHT;
-export const NAV_ELEM_HEIGHT = 45;
-
-const NavBar: React.FC<{}> = () => (
+const NavBar: React.FC<{}> = ({ children }) => (
   <AppBar
     // Using position: sticky means that
     // the main content region will always start
@@ -33,10 +27,7 @@ const NavBar: React.FC<{}> = () => (
       borderBottom: `${NAV_BORDER_HEIGHT}px solid ${BeanstalkPalette.blue}`,
     }}
   >
-    {/* <Banner height={BANNER_HEIGHT} href="https://snapshot.org/#/beanstalkdao.eth/">
-      <img src={snapshotLogo} alt="Snapshot" style={{ height: 14, marginBottom: -2 }} />&nbsp;
-      BIP-22 and BIP-23, the Q3 budget proposals for Beanstalk Farms and Bean Sprout, respectively, are live on Snapshot. <strong>Vote now &rarr;</strong>
-    </Banner> */}
+    {children}
     <Stack
       direction="row"
       alignItems="center"
@@ -54,15 +45,15 @@ const NavBar: React.FC<{}> = () => (
           alignItems="center"
           sx={{ display: { lg: 'flex', xs: 'none' } }}
           height="100%"
-          >
+        >
           {ROUTES.top.map((item) => (
             <LinkButton
               key={item.path}
               to={item.path}
               title={item.title}
               tag={item.tag}
-              />
-            ))}
+            />
+          ))}
           <HoverMenu items={ROUTES.more}>
             More
           </HoverMenu>
@@ -74,7 +65,7 @@ const NavBar: React.FC<{}> = () => (
         justifyContent="flex-end"
         alignItems="center"
         gap={1}
-      >
+        >
         <Box sx={{ display: { sm: 'block', xs: 'none' } }}>
           <NetworkButton sx={{ height: NAV_ELEM_HEIGHT }} />
         </Box>
@@ -83,6 +74,6 @@ const NavBar: React.FC<{}> = () => (
       </Stack>
     </Stack>
   </AppBar>
-);
+  );
 
 export default NavBar;

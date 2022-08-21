@@ -22,6 +22,7 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
       proposal_id: proposal.id.toLowerCase(),
       voter_address: account || '',
     },
+    fetchPolicy: 'cache-and-network',
     skip: !account, // only send query when wallet connected
     context: { subgraph: 'snapshot' }
   });
