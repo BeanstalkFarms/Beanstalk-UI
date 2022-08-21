@@ -25,7 +25,7 @@ const MarkdownWrapper: React.FC = ({ children }) => (
             marginTop: '10px',
             fontSize: FontSize.base,
             lineHeight: '1.25rem',
-            wordBreak: 'break-all'
+            wordBreak: 'break-word'
           }
         } as React.HTMLProps<HTMLParagraphElement>,
       },
@@ -38,7 +38,7 @@ const MarkdownWrapper: React.FC = ({ children }) => (
             fontFamily: 'Futura PT',
             fontSize: FontSize['2xl'], // 24px
             fontWeight: FontWeight.medium,
-            wordBreak: 'break-all'
+            wordBreak: 'break-word'
           },
         } as React.HTMLProps<HTMLParagraphElement>,
       },
@@ -52,7 +52,7 @@ const MarkdownWrapper: React.FC = ({ children }) => (
             fontSize: FontSize['1xl'], // 20px
             fontWeight: FontWeight.medium,
             lineHeight: '1.875rem',
-            wordBreak: 'break-all'
+            wordBreak: 'break-word'
           },
         } as React.HTMLProps<HTMLParagraphElement>,
       },
@@ -64,7 +64,7 @@ const MarkdownWrapper: React.FC = ({ children }) => (
             marginBottom: '0px',
             fontSize: FontSize.lg, // 18px
             fontWeight: FontWeight.normal,
-            wordBreak: 'break-all'
+            wordBreak: 'break-word'
           },
         } as React.HTMLProps<HTMLParagraphElement>,
       },
@@ -77,7 +77,7 @@ const MarkdownWrapper: React.FC = ({ children }) => (
             fontSize: FontSize.base, // 16px
             fontWeight: FontWeight.normal,
             lineHeight: '1.25rem',
-            wordBreak: 'break-all'
+            wordBreak: 'break-word'
           },
         } as React.HTMLProps<HTMLParagraphElement>,
       },
