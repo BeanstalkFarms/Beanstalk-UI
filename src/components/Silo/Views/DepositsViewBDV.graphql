@@ -1,0 +1,20 @@
+query SeasonalFarmerDepositedBDV(
+  $account: String!,
+  $season_lte: Int,
+  $first: Int
+) {
+  seasons: siloHourlySnapshots(
+    where: {
+      season_lte: $season_lte,
+      silo: $account
+    }
+    first: $first
+    orderBy: season
+    orderDirection: desc
+  ) { 
+    id
+    season
+    timestamp
+    totalDepositedBDV
+  }
+}

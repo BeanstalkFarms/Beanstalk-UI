@@ -1,0 +1,21 @@
+# query SeasonalDepositedBeans(
+#   $season_lte: Int,
+#   $season_gt: Int,
+#   $first: Int
+# ) {
+#   seasons: siloAssetHourlySnapshots(
+#     where: {
+#       season_lte: $season_lte,
+#       season_gt:  $season_gt,
+#       siloAsset: "0x88673cb5439fe3ea7eaa633c2e02fb07284e0765-0xbea0000029ad1c77d3d5d23ba2d8893db9d1efab"
+#     }
+#     first: $first
+#     orderBy: season
+#     orderDirection: desc
+#   ) { 
+#     id
+#     season
+#     timestamp
+#     totalDepositedAmount
+#   }
+# }

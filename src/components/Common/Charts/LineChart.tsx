@@ -9,6 +9,7 @@ import { useTooltip } from '@visx/tooltip';
 import {
   curveLinear,
   curveStep,
+  curveStepAfter,
   curveNatural,
   curveBasis,
   curveMonotoneX,
@@ -17,9 +18,10 @@ import { Axis, Orientation } from '@visx/axis';
 import { CurveFactory } from 'd3-shape';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 
-const CURVES = {
+export const CURVES = {
   linear: curveLinear,
   step: curveStep,
+  stepAfter: curveStepAfter,
   natural: curveNatural,
   basis: curveBasis,
   monotoneX: curveMonotoneX,
