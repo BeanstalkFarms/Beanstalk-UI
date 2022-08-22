@@ -39,7 +39,7 @@ import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { AppState } from '~/state';
 import { useFetchPools } from '~/state/bean/pools/updater';
 import { useFetchSilo } from '~/state/beanstalk/silo/updater';
-import useFarm from '~/hooks/useFarm';
+import useFarm from '~/hooks/sdk/useFarm';
 
 // -----------------------------------------------------------------------
 

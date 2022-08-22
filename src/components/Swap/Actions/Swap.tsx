@@ -29,7 +29,7 @@ import { useSigner } from '~/hooks/ledger/useSigner';
 import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import useQuote, { QuoteHandler } from '~/hooks/useQuote';
-import useFarm from '~/hooks/useFarm';
+import useFarm from '~/hooks/sdk/useFarm';
 import useAccount from '~/hooks/ledger/useAccount';
 import { toStringBaseUnitBN, toTokenUnitsBN, parseError, MinBN } from '~/util';
 import { IconSize } from '~/components/App/muiTheme';
