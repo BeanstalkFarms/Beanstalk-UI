@@ -1,5 +1,5 @@
 import isEmpty from 'lodash/isEmpty';
-import useFarmerBalances from './farmer/useFarmerBalances';
+import useFarmerBalances from './useFarmerBalances';
 
 /**
  * Ensure we've loaded a Farmer's balances.

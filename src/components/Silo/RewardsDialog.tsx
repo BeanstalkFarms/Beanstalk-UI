@@ -26,7 +26,7 @@ import RewardsBar, { RewardsBarProps } from './RewardsBar';
 import { hoverMap } from '../../constants/silo';
 import { BeanstalkPalette } from '../App/muiTheme';
 import useTimedRefresh from '~/hooks/useTimedRefresh';
-import useFarmerSiloBalances from '~/hooks/useFarmerSiloBalances';
+import useFarmerSiloBalances from '~/hooks/farmer/useFarmerSiloBalances';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
 
 export type SendFormValues = {

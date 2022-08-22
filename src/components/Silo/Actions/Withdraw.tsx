@@ -32,7 +32,7 @@ import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import { useFetchSilo } from '~/state/beanstalk/silo/updater';
 import IconWrapper from '../../Common/IconWrapper';
 import { IconSize } from '../../App/muiTheme';
-import useFarmerSilo from '~/hooks/useFarmerSilo';
+import useFarmerSilo from '~/hooks/farmer/useFarmerSilo';
 
 // -----------------------------------------------------------------------
 

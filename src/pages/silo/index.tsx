@@ -15,7 +15,7 @@ import useRevitalized from '~/hooks/useRevitalized';
 import useSeason from '~/hooks/useSeason';
 import { AppState } from '~/state';
 import { UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
-import useFarmerSiloBalances from '~/hooks/useFarmerSiloBalances';
+import useFarmerSiloBalances from '~/hooks/farmer/useFarmerSiloBalances';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import GuideButton from '~/components/Common/Guide/GuideButton';
 import {

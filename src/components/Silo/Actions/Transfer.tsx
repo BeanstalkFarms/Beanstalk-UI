@@ -18,7 +18,7 @@ import { ZERO_BN } from '~/constants';
 import { Token } from '~/classes';
 import { FarmerSilo } from '~/state/farmer/silo';
 import { ERC20Token } from '~/classes/Token';
-import useFarmerSiloBalances from '~/hooks/useFarmerSiloBalances';
+import useFarmerSiloBalances from '~/hooks/farmer/useFarmerSiloBalances';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import { useFetchSilo } from '~/state/beanstalk/silo/updater';
 import { useSigner } from '~/hooks/ledger/useSigner';

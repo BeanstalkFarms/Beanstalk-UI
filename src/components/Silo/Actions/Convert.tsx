@@ -38,7 +38,7 @@ import { useFetchPools } from '~/state/bean/pools/updater';
 import { ActionType } from '~/util/Actions';
 import { IconSize } from '../../App/muiTheme';
 import IconWrapper from '../../Common/IconWrapper';
-import useFarmerSilo from '~/hooks/useFarmerSilo';
+import useFarmerSilo from '~/hooks/farmer/useFarmerSilo';
 
 // -----------------------------------------------------------------------
 
