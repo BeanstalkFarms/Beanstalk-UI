@@ -175,7 +175,6 @@ export default function App() {
           <Route path="/404" element={<PageNotFound />} />
           <Route path="*" element={<Navigate replace to="/404" />} />
         </Routes>
-        {/* <Navigate to="/404" /> */}
       </Box>
     </>
   );
