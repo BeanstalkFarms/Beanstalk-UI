@@ -5,7 +5,7 @@ import Stat from '../Common/Stat';
 import { displayUSD } from '../../util';
 import SiloBalances from '../Common/SiloBalances';
 import useWhitelist from '../../hooks/useWhitelist';
-import useBeanstalkSiloBreakdown from '../../hooks/useBeanstalkSiloBreakdown';
+import useBeanstalkSiloBreakdown from '../../hooks/beanstalk/useBeanstalkSiloBreakdown';
 import StatsCard, { StatItem } from '~/components/Common/StatsCard';
 import { SEEDS, SPROUTS, STALK, PODS } from '~/constants/tokens';
 import { AppState } from '~/state';
