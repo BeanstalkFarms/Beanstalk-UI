@@ -8,11 +8,11 @@ import {
 import throttle from 'lodash/throttle';
 import { useTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
-import usePools from '~/hooks/usePools';
+import usePools from '~/hooks/beanstalk/usePools';
 import PoolCard from '~/components/Silo/PoolCard';
 import BeanProgressIcon from '~/components/Common/BeanProgressIcon';
-import useSeason from '~/hooks/useSeason';
-import usePrice from '~/hooks/usePrice';
+import useSeason from '~/hooks/beanstalk/useSeason';
+import usePrice from '~/hooks/beanstalk/usePrice';
 import { displayBeanPrice, displayBN } from '~/util/Tokens';
 import { NEW_BN, ZERO_BN } from '~/constants';
 import { useFetchPools } from '~/state/bean/pools/updater';

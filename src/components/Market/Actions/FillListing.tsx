@@ -26,7 +26,7 @@ import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { Beanstalk } from '~/generated';
-import usePreferredToken, { PreferredToken } from '~/hooks/usePreferredToken';
+import usePreferredToken, { PreferredToken } from '~/hooks/farmer/usePreferredToken';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { ActionType } from '~/util/Actions';

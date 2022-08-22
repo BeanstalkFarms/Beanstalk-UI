@@ -25,7 +25,7 @@ import DescriptionButton from '../Common/DescriptionButton';
 import RewardsBar, { RewardsBarProps } from './RewardsBar';
 import { hoverMap } from '../../constants/silo';
 import { BeanstalkPalette } from '../App/muiTheme';
-import useTimedRefresh from '~/hooks/useTimedRefresh';
+import useTimedRefresh from '~/hooks/app/useTimedRefresh';
 import useFarmerSiloBalances from '~/hooks/farmer/useFarmerSiloBalances';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
 

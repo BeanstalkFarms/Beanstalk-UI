@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useHotkeys } from 'react-hotkeys-hook';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import useTimedRefresh from '~/hooks/useTimedRefresh';
+import useTimedRefresh from '~/hooks/app/useTimedRefresh';
 import useSetting from '~/hooks/app/useSetting';
 import { setEthPrices, updateSetting } from './actions';
 

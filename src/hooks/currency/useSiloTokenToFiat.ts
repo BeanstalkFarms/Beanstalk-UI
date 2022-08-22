@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import Token from '~/classes/Token';
-import usePrice from '~/hooks/usePrice';
+import usePrice from '~/hooks/beanstalk/usePrice';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';

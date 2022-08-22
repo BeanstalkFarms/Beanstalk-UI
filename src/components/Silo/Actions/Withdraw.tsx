@@ -18,7 +18,7 @@ import {
   SmartSubmitButton
 } from '~/components/Common/Form';
 import BeanstalkSDK from '~/lib/Beanstalk';
-import useSeason from '~/hooks/useSeason';
+import useSeason from '~/hooks/beanstalk/useSeason';
 import { FarmerSilo } from '~/state/farmer/silo';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { displayFullBN, parseError, toStringBaseUnitBN } from '~/util';

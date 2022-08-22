@@ -11,7 +11,7 @@ import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSumma
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { FarmerSiloBalance } from '~/state/farmer/silo';
 import { ActionType } from '~/util/Actions';
-import usePools from '~/hooks/usePools';
+import usePools from '~/hooks/beanstalk/usePools';
 import { ERC20Token } from '~/classes/Token';
 import {
   FormTokenState,

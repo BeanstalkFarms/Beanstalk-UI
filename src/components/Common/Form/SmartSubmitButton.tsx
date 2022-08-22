@@ -6,7 +6,7 @@ import { useFormikContext } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useConnect } from 'wagmi';
 import toast from 'react-hot-toast';
-import useAllowances from '~/hooks/useAllowances';
+import useAllowances from '~/hooks/farmer/useAllowances';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import { useGetERC20Contract } from '~/hooks/ledger/useContract';
 import Token from '~/classes/Token';

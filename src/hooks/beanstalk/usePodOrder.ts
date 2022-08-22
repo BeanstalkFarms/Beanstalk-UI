@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { usePodOrderQuery } from '~/generated/graphql';
 import { Source } from '~/util';
 import { castPodOrder } from '~/state/farmer/market';
-import useFarmerOrders from './farmer/useFarmerOrders';
+import useFarmerOrders from '../farmer/useFarmerOrders';
 
 const usePodOrder = (id: string | undefined) => {
   const farmerOrders   = useFarmerOrders();

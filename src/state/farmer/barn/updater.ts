@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import { useBeanstalkContract, useFertilizerContract } from '~/hooks/ledger/useContract';
-import { REPLANT_INITIAL_ID } from '~/hooks/useHumidity';
+import { REPLANT_INITIAL_ID } from '~/hooks/beanstalk/useHumidity';
 import useChainId from '~/hooks/chain/useChainId';
 import { tokenResult } from '~/util';
 import useBlocks from '~/hooks/ledger/useBlocks';

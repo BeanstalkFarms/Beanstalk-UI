@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { REPLANTED_CHAINS } from '~/constants';
-import useChainId from './chain/useChainId';
+import useChainId from '../chain/useChainId';
 
 export default function useMigrateCall() {
   const chainId = useChainId();

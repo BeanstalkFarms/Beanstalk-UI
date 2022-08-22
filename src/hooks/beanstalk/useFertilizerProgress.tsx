@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { AppState } from '~/state';
-import { ZERO_BN } from '../constants';
+import { ZERO_BN } from '../../constants';
 
 /**
  * The percentage of fertilizer sold.

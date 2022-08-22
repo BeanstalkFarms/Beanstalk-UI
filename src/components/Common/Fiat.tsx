@@ -5,7 +5,7 @@ import logo from '~/img/tokens/bean-logo.svg';
 import { Token } from '~/classes';
 import useSiloTokenToFiat from '~/hooks/currency/useSiloTokenToFiat';
 import useSetting from '~/hooks/app/useSetting';
-import usePrice from '~/hooks/usePrice';
+import usePrice from '~/hooks/beanstalk/usePrice';
 import { displayBN, displayFullBN } from '~/util';
 import { ZERO_BN } from '~/constants';
 

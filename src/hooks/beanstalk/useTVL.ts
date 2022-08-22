@@ -4,8 +4,8 @@ import Token from '~/classes/Token';
 import { ZERO_BN } from '~/constants';
 import { BEAN } from '~/constants/tokens';
 import { AppState } from '~/state';
-import useBeansToUSD from './currency/useBeansToUSD';
-import useChainConstant from './chain/useChainConstant';
+import useBeansToUSD from '../currency/useBeansToUSD';
+import useChainConstant from '../chain/useChainConstant';
 
 /**
  * Get the USD value of a given token in the Silo.

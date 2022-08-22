@@ -5,7 +5,7 @@ import { DocumentNode } from 'graphql';
 import { QueryOptions } from '@apollo/client';
 import Stat, { StatProps } from '~/components/Common/Stat';
 import LineChart, { DataPoint, LineChartProps } from '~/components/Common/Charts/LineChart';
-import useSeasonsQuery, { MinimumViableSnapshotQuery, SeasonAggregation, SeasonRange } from '~/hooks/useSeasonsQuery';
+import useSeasonsQuery, { MinimumViableSnapshotQuery, SeasonAggregation, SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import TimeTabs, { TimeTabState } from './TimeTabs';
 import { sortSeasons } from '~/util/Season';

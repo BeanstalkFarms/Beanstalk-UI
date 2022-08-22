@@ -12,8 +12,8 @@ import {
   STEADY_SOW_TIME,
   ZERO_BN,
 } from '~/constants';
-import usePodRate from '~/hooks/usePodRate';
-import useSeason from '~/hooks/useSeason';
+import usePodRate from '~/hooks/beanstalk/usePodRate';
+import useSeason from '~/hooks/beanstalk/useSeason';
 import { AppState } from '~/state';
 import { MaxBN, MinBN } from '~/util';
 

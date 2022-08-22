@@ -7,7 +7,7 @@ import { Token } from '~/classes';
 import { FarmerSiloBalance } from '~/state/farmer/silo';
 import type { DepositCrate } from '~/state/farmer/silo';
 import { displayBN, displayFullBN } from '~/util';
-import useSeason from '~/hooks/useSeason';
+import useSeason from '~/hooks/beanstalk/useSeason';
 import { BEAN, STALK } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
 import useSiloTokenToFiat from '~/hooks/currency/useSiloTokenToFiat';

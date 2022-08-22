@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import BigNumber from 'bignumber.js';
-import usePrice from '~/hooks/usePrice';
+import usePrice from '~/hooks/beanstalk/usePrice';
 import { ZERO_BN } from '~/constants';
 
 /**

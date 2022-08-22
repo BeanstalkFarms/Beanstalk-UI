@@ -30,7 +30,7 @@ import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import TxnSeparator from '~/components/Common/Form/TxnSeparator';
 import useToggle from '~/hooks/display/useToggle';
 import { combineBalances, optimizeFromMode } from '~/util/Farm';
-import usePreferredToken from '~/hooks/usePreferredToken';
+import usePreferredToken from '~/hooks/farmer/usePreferredToken';
 import useTokenMap from '~/hooks/chain/useTokenMap';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';

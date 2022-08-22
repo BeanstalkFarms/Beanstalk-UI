@@ -5,7 +5,7 @@ import { useProvider } from 'wagmi';
 import flattenDeep from 'lodash/flattenDeep';
 import useChainId from '~/hooks/chain/useChainId';
 import { Event } from '~/lib/Beanstalk/EventProcessor';
-import useEventCache from '~/hooks/events/useEventCache';
+import useEventCache from '~/hooks/farmer/useEventCache';
 import useAccount from '~/hooks/ledger/useAccount';
 import { EventCacheName } from '.';
 import { ingestEvents } from './actions';

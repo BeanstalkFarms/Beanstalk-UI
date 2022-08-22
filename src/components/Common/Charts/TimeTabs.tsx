@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { Button, Divider, Stack, StackProps, Typography } from '@mui/material';
-import { SeasonAggregation, SeasonRange } from '~/hooks/useSeasonsQuery';
+import { SeasonAggregation, SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
 import { BeanstalkPalette } from '../../App/muiTheme';
 
 const DISPLAY = [

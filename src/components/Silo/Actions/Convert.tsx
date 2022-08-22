@@ -29,7 +29,7 @@ import { useSigner } from '~/hooks/ledger/useSigner';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import { tokenResult, parseError } from '~/util';
 import { FarmerSilo } from '~/state/farmer/silo';
-import useSeason from '~/hooks/useSeason';
+import useSeason from '~/hooks/beanstalk/useSeason';
 import { convert, Encoder as ConvertEncoder } from '~/lib/Beanstalk/Silo/Convert';
 import TransactionToast from '~/components/Common/TxnToast';
 import useBDV from '~/hooks/beanstalk/useBDV';

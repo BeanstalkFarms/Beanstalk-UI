@@ -7,8 +7,8 @@ import PoolCard from '~/components/Silo/PoolCard';
 import PageHeaderSecondary from '~/components/Common/PageHeaderSecondary';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { ERC20Token } from '~/classes/Token';
-import usePools from '~/hooks/usePools';
-import useWhitelist from '~/hooks/useWhitelist';
+import usePools from '~/hooks/beanstalk/usePools';
+import useWhitelist from '~/hooks/beanstalk/useWhitelist';
 import { AppState } from '~/state';
 import GuideButton from '~/components/Common/Guide/GuideButton';
 import { HOW_TO_CLAIM_WITHDRAWALS,

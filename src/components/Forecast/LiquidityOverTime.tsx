@@ -5,7 +5,7 @@ import { AppState } from '~/state';
 import { ZERO_BN } from '../../constants';
 import { SeasonalLiquidityDocument, SeasonalLiquidityQuery } from '~/generated/graphql';
 import SeasonPlot from '~/components/Common/Charts/SeasonPlot';
-import useSeason from '~/hooks/useSeason';
+import useSeason from '~/hooks/beanstalk/useSeason';
 
 /// Setup SeasonPlot
 const getValue = (season: SeasonalLiquidityQuery['seasons'][number]) => parseFloat(season.totalLiquidityUSD);
