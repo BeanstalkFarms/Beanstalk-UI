@@ -19,7 +19,7 @@ import {
   parseError,
   toStringBaseUnitBN
 } from '~/util';
-import useFarmerField from '~/hooks/useFarmerField';
+import useFarmerField from '~/hooks/farmer/useFarmerField';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { BEAN, PODS } from '~/constants/tokens';
