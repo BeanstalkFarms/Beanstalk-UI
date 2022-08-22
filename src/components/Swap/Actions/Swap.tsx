@@ -536,6 +536,17 @@ const SUPPORTED_TOKENS = [
 ];
 
 /**
+ * Ensure that both `_tokenIn` and `_tokenOut` are in `_pair`, regardless of order.
+ */
+const isPair = (_tokenIn : Token, _tokenOut : Token, _pair : [Token, Token]) => {
+  const s = new Set(_pair);
+  return s.has(_tokenIn) && s.has(_tokenOut);
+};
+
+/**
+ * SWAP
+ * Implementation notes
+ * 
  * BEAN + ETH
  * ---------------
  * BEAN   -> ETH      exchange_underlying(BEAN, USDT) => exchange(USDT, WETH) => unwrapEth
@@ -564,15 +575,6 @@ const SUPPORTED_TOKENS = [
  * USDC   -> USDT     exchange(USDC, USDT, 3POOL)
  * ...etc
  */
-
-/**
- * Ensure that both `_tokenIn` and `_tokenOut` are in `_pair`, regardless of order.
- */
-const isPair = (_tokenIn : Token, _tokenOut : Token, _pair : [Token, Token]) => {
-  const s = new Set(_pair);
-  return s.has(_tokenIn) && s.has(_tokenOut);
-};
-
 const Swap: React.FC<{}> = () => {
   ///
   const { data: signer } = useSigner();
@@ -913,13 +915,3 @@ const Swap: React.FC<{}> = () => {
 };
 
 export default Swap;
-
-/**
- * Sequence:
- * - 1 ETH -> INTERNAL WETH
- * - 0.5 INTERNAL WETH -> EXTERNAL WETH
- * - Buy beans with 0.1 INTERNAL WETH (uses INTERNAL only)
- * - Buy beans with 0.5 INTERNAL WETH (uses INTERNAL_EXTERNAL)
- *  - FAIL: ended up buying an additional 0.5 WETH, maybe with beans?
- * 
- */

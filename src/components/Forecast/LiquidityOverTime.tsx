@@ -32,13 +32,6 @@ const LiquidityOverTime: React.FC<{} & CardProps> = ({ sx }) => {
   return (
     <Card sx={{ width: '100%', pt: 2, ...sx }}>
       <Box sx={{ position: 'relative' }}>
-        {/* <BlurComponent blur={10} opacity={0.7} sx={{ borderRadius: 1 }}> */}
-        {/*  <Typography variant="body1" color="gray">Historical liquidity will be available soon.</Typography> */}
-        {/* </BlurComponent> */}
-        
-        {/* <LiquidityBalances */}
-        {/*  balances={balances} */}
-        {/* /> */}
         <SeasonPlot
           document={SeasonalLiquidityDocument}
           height={250}

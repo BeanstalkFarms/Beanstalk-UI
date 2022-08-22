@@ -3,13 +3,6 @@ import BigNumber from 'bignumber.js';
 import { Routes, Route } from 'react-router-dom';
 import { Box, CssBaseline } from '@mui/material';
 import { ToastBar, Toaster } from 'react-hot-toast';
-import SiloPage from '~/pages/silo';
-import SiloTokenPage from '~/pages/silo/token';
-import FieldPage from '~/pages/field';
-import ForecastPage from '~/pages/forecast';
-import Barn from '~/pages/barn';
-import TransactionHistoryPage from '~/pages/history';
-import BalancesPage from '~/pages/balances';
 // import pageBackgroundGradient from '~/img/theme/bg-mainnet-gradient.png';
 import pageBackground from '~/img/theme/bg-mainnet.png';
 import NavBar from '~/components/Nav/NavBar';
@@ -25,26 +18,31 @@ import FarmerBarnUpdater from '~/state/farmer/barn/updater';
 import FarmerMarketUpdater from '~/state/farmer/market/updater';
 import FieldUpdater from '~/state/beanstalk/field/updater';
 import AppUpdater from '~/state/app/updater';
-import { BeanstalkPalette } from './muiTheme';
-import './App.css';
-import PodMarketPage from '../../pages/market';
-import NFTPage from '../../pages/nft';
-import ChopPage from '../../pages/chop';
-import MarketAccountPage from '../../pages/market/account';
-import MarketActivityPage from '../../pages/market/activity';
-import CreatePage from '../../pages/market/create';
-import OrderPage from '../../pages/market/order';
-import ListingPage from '../../pages/market/listing';
-import EditListingPage from '../../pages/market/edit-listing';
-import EditOrderPage from '../../pages/market/edit-order';
-import SwapPage from '../../pages/swap';
-import AnalyticsPage from '../../pages/analytics';
+import SiloPage from '~/pages/silo';
+import SiloTokenPage from '~/pages/silo/token';
+import FieldPage from '~/pages/field';
+import ForecastPage from '~/pages/forecast';
+import Barn from '~/pages/barn';
+import TransactionHistoryPage from '~/pages/history';
+import BalancesPage from '~/pages/balances';
+import PodMarketPage from '~/pages/market';
+import NFTPage from '~/pages/nft';
+import ChopPage from '~/pages/chop';
+import MarketAccountPage from '~/pages/market/account';
+import MarketActivityPage from '~/pages/market/activity';
+import CreatePage from '~/pages/market/create';
+import OrderPage from '~/pages/market/order';
+import ListingPage from '~/pages/market/listing';
+import SwapPage from '~/pages/swap';
+import AnalyticsPage from '~/pages/analytics';
 import GovernancePage from '~/pages/governance';
 import ProposalPage from '~/pages/governance/proposal';
 import GovernanceUpdater from '~/state/beanstalk/governance/updater';
 import NewProposalsDialog from '~/components/Governance/NewProposalsDialog';
 import useNavHeight from '~/hooks/layout/usePageDimensions';
 import useBanner from '~/hooks/layout/useBanner';
+import { BeanstalkPalette } from './muiTheme';
+import './App.css';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -69,20 +67,6 @@ const CustomToaster: React.FC<{ navHeight: number }> = ({ navHeight }) => (
         style={{
           ...t.style,
           fontFamily: 'Futura PT',
-          /// Option 1: Pops up instantly,
-          // then slides out to the right side
-          // animation: 'none',
-          // position: 'absolute',
-          // right: t.visible ? 0 : -500,
-          // transition: 'right 0.4s ease-in-out',
-          // opacity: 1,
-          /// Option 2: Slides in and out, but there's
-          // an issue where it "flashes back" after
-          // completing the animation.
-          // position: 'absolute',
-          // animation: t.visible ? 'custom-enter 1s ease-in-out' : 'custom-exit 1s ease-in-out',
-          // animationFillMode: 'forwards'
-          // Option 3: Tries to fix toasts stacking on top of each other
           animation: 'none',
           marginRight: t.visible ? 0 : -500,
           transition: 'margin-right 0.4s ease-in-out',
@@ -163,9 +147,7 @@ export default function App() {
           <Route path="/market/activity" element={<MarketActivityPage />} />
           <Route path="/market/create" element={<CreatePage />} />
           <Route path="/market/order/:id" element={<OrderPage />} />
-          <Route path="/market/order/:id/edit" element={<EditOrderPage />} />
           <Route path="/market/listing/:id" element={<ListingPage />} />
-          <Route path="/market/listing/:id/edit" element={<EditListingPage />} />
           <Route path="/nft" element={<NFTPage />} />
           <Route path="/governance/:id" element={<ProposalPage />} />
           <Route path="/silo" element={<SiloPage />} />

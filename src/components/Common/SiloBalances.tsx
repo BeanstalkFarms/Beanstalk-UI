@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Stack, Typography, Grid, Box, Tooltip } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/Pie';
+import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/PieChart';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import useFarmerBalancesBreakdown from '~/hooks/useFarmerBalancesBreakdown';
 import useBeanstalkSiloBreakdown from '~/hooks/useBeanstalkSiloBreakdown';

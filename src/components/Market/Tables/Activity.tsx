@@ -56,7 +56,6 @@ const ActivityTable: React.FC<
           </Box>
         </Box>
       </Box>
-
     </Card>
   );
 };

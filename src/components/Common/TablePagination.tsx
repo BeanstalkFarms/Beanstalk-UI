@@ -14,48 +14,48 @@ const useStyles = makeStyles({
 });
 
 const TablePagination: React.FC<{}> = () => {
-    const classes = useStyles();
-    const apiRef = useGridApiContext();
-    const page = useGridSelector(apiRef, gridPageSelector);
-    const pageCount = useGridSelector(apiRef, gridPageCountSelector);
+  const classes = useStyles();
+  const apiRef = useGridApiContext();
+  const page = useGridSelector(apiRef, gridPageSelector);
+  const pageCount = useGridSelector(apiRef, gridPageCountSelector);
 
-    const handleBack = () => {
-      if (page > 0) {
-        apiRef.current.setPage(page - 1);
-      }
-    };
-    
-    const handleForward = () => {
-      if (page < pageCount) {
-        apiRef.current.setPage(page + 1);
-      }
-    };
-    
-    return (
-      <Stack direction="row" alignItems="center" gap={0.5}>
-        <ArrowBackIcon 
-          className={classes.arrow} 
-          onClick={handleBack} 
-          sx={{
-            color: page === 0 ? 'gray' : null,
-            '&:hover': {
-              color: page === 0 ? 'gray' : BeanstalkPalette.logoGreen,
-            }
-          }}
-        />
-        <Typography variant="body1">Page {page + 1} of {pageCount === 0 ? pageCount + 1 : pageCount}</Typography>
-        <ArrowForwardIcon
-          className={classes.arrow}
-          onClick={handleForward}
-          sx={{
-            color: page === pageCount - 1 || pageCount === 0 ? 'gray' : null,
-            '&:hover': {
-              color: page === pageCount - 1 || pageCount === 0 ? 'gray' : BeanstalkPalette.logoGreen,
-            }
-          }}
-        />
-      </Stack>
-    );
+  const handleBack = () => {
+    if (page > 0) {
+      apiRef.current.setPage(page - 1);
+    }
   };
+  
+  const handleForward = () => {
+    if (page < pageCount) {
+      apiRef.current.setPage(page + 1);
+    }
+  };
+  
+  return (
+    <Stack direction="row" alignItems="center" gap={0.5}>
+      <ArrowBackIcon 
+        className={classes.arrow} 
+        onClick={handleBack} 
+        sx={{
+          color: page === 0 ? 'gray' : null,
+          '&:hover': {
+            color: page === 0 ? 'gray' : BeanstalkPalette.logoGreen,
+          }
+        }}
+      />
+      <Typography variant="body1">Page {page + 1} of {pageCount === 0 ? pageCount + 1 : pageCount}</Typography>
+      <ArrowForwardIcon
+        className={classes.arrow}
+        onClick={handleForward}
+        sx={{
+          color: page === pageCount - 1 || pageCount === 0 ? 'gray' : null,
+          '&:hover': {
+            color: page === pageCount - 1 || pageCount === 0 ? 'gray' : BeanstalkPalette.logoGreen,
+          }
+        }}
+      />
+    </Stack>
+  );
+};
 
 export default TablePagination;

@@ -11,38 +11,25 @@ import NetworkDialog from './NetworkDialog';
 const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
   const { activeChain } = useNetwork();
 
-  // Dialog
+  /// Dialog
   const [anchor, toggleAnchor] = useAnchor();
   const open = Boolean(anchor);
   
   if (!activeChain) return null;
-
-  const startIcon = SupportedChainId[activeChain.id] ? (
-    <TokenIcon
-      token={ETH[SupportedChainId.MAINNET]}
-      // Want this icon bigger than surrounding text
-      style={{ height: '1.4em' }}
-    />
-  ) : (
-    <TokenIcon
-      token={ETH[SupportedChainId.MAINNET]}
-      // Want this icon bigger than surrounding text
-      style={{ height: '1.4em' }}
-    />
-  );
-  const text = SupportedChainId[activeChain.id] ? (
-    activeChain.name
-  ) : (
-    'Switch Network'
-  );
-
+  const text = SupportedChainId[activeChain.id] ? activeChain.name : 'Switch Network';
+  
   return (
     <>
       <Button
         disableFocusRipple
         variant="contained"
         color="light"
-        startIcon={startIcon}
+        startIcon={(
+          <TokenIcon
+            token={ETH[SupportedChainId.MAINNET]}
+            style={{ height: '1.4em' }}
+          />
+        )}
         endIcon={<DropdownIcon open={open} />}
         onClick={toggleAnchor}
         {...props}

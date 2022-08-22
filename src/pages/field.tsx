@@ -95,9 +95,7 @@ const FieldPage: React.FC = () => {
             />
           }
         />
-        <FieldConditions
-          beanstalkField={beanstalkField}
-        />
+        <FieldConditions beanstalkField={beanstalkField} />
         <FieldActions />
         <TableCard
           title="Pod Balance"

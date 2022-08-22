@@ -17,7 +17,6 @@ import { AppState } from '~/state';
 import { UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
 import useFarmerSiloBalances from '~/hooks/useFarmerSiloBalances';
 import useGetChainToken from '~/hooks/useGetChainToken';
-import useAccount from '~/hooks/ledger/useAccount';
 import GuideButton from '~/components/Common/Guide/GuideButton';
 import {
   CLAIM_SILO_REWARDS,
@@ -26,7 +25,6 @@ import {
 
 const SiloPage : React.FC = () => {
   /// Helpers
-  const account = useAccount();
   const getChainToken = useGetChainToken();
   
   /// Chain Constants
@@ -81,13 +79,6 @@ const SiloPage : React.FC = () => {
         />
         <Card>
           <Box sx={{ width: '100%', height: '100%', position: 'relative' }}>
-            {/* {(!account || breakdown.totalValue?.eq(0)) && ( */}
-            {/*  <BlurComponent> */}
-            {/*    <Stack justifyContent="center" alignItems="center" gap={1} px={1}> */}
-            {/*      <Typography variant="body1" color="gray">Receive <TokenIcon token={STALK} />Stalk and <TokenIcon token={SEEDS} />Seeds for Depositing whitelisted assets in the Silo. Stalkholders earn a portion of new Bean mints. Seeds grow into Stalk every season.</Typography> */}
-            {/*    </Stack> */}
-            {/*  </BlurComponent> */}
-            {/* )} */}
             <Stack
               sx={{ pl: 2, pr: 2, py: 1.5 }}
               direction={{ xs: 'column', lg: 'row' }}

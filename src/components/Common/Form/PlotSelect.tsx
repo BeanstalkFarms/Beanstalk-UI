@@ -15,10 +15,10 @@ import { makeStyles } from '@mui/styles';
 import { useTheme } from '@mui/material/styles';
 import { BEAN, PODS } from '~/constants/tokens';
 import useFarmerListings from '~/hooks/redux/useFarmerListings';
-import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
-import { displayBN, displayFullBN, toStringBaseUnitBN } from '../../util';
-import podIcon from '../../img/beanstalk/pod-icon.svg';
-import { PlotMap } from '../../state/farmer/field';
+import { BeanstalkPalette, FontSize, IconSize } from '~/components/App/muiTheme';
+import { displayBN, displayFullBN, toStringBaseUnitBN } from '~/util';
+import podIcon from '~/img/beanstalk/pod-icon.svg';
+import { PlotMap } from '~/state/farmer/field';
 
 const useStyles = makeStyles(() => ({
   tokenLogo: {
@@ -96,11 +96,6 @@ const PlotSelect: React.FC<PlotSelectProps> = ({
                     {isMobile ? '@' : 'Place in Line:'} {displayBN(new BigNumber(index).minus(harvestableIndex))}{listing ? <>&nbsp;&middot; Currently listed</> : null}
                   </>
                 )}
-                secondaryTypographyProps={{
-                  // sx: {
-                  //   color: '#333333 !important'
-                  // }
-                }}
                 sx={{ my: 0 }}
               />
             </Stack>

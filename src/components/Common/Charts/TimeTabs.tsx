@@ -52,9 +52,6 @@ const TimeTabs: React.FC<
             py: 0.3,
             mt: -0.3,
             minWidth: 0,
-            '&:hover': {
-              // backgroundColor: 'transparent'
-            }
           }}
           disableRipple
         >
@@ -77,9 +74,6 @@ const TimeTabs: React.FC<
             py: 0.3,
             mt: -0.3,
             minWidth: 0,
-            '&:hover': {
-              // backgroundColor: 'transparent'
-            }
           }}
           disableRipple
         >

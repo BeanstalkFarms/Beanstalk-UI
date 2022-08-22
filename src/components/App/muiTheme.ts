@@ -483,7 +483,8 @@ let muiTheme = createTheme({
       styleOverrides: {
         root: sx({
           fontWeight: 'normal',
-          mr: { xs: 2, md: 0 }
+          mr: { xs: 2, md: 0 },
+          minHeight: 0,
         }),
         indicator: {
           display: 'none',

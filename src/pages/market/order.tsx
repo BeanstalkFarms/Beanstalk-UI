@@ -20,7 +20,7 @@ import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 const OrderPage: React.FC = () => {
   const account = useAccount();
   const { id } = useParams<{ id: string }>();
-  const { data: _order, source, loading, error } = usePodOrder(id);
+  const { data: order, source, loading, error } = usePodOrder(id);
   const beanstalk = useBeanstalkContract();
 
   const [orderValid, setOrderValid] = useState<null | boolean>(null);
@@ -28,9 +28,9 @@ const OrderPage: React.FC = () => {
     if (id) {
       (async () => {
         try {
-          const order = await beanstalk.podOrderById(id.toString()).then(bigNumberResult);
-          console.debug('[pages/order] order = ', order);
-          setOrderValid(order?.gt(0));
+          const _order = await beanstalk.podOrderById(id.toString()).then(bigNumberResult);
+          console.debug('[pages/order] order = ', _order);
+          setOrderValid(_order?.gt(0));
         } catch (e) {
           console.error(e);
           setOrderValid(false);
@@ -38,6 +38,8 @@ const OrderPage: React.FC = () => {
       })();
     }
   }, [beanstalk, id]);
+
+  //
   if (loading) {
     return (
       <GenericZero loading />
@@ -50,14 +52,13 @@ const OrderPage: React.FC = () => {
       </GenericZero>
     );
   }
-  if (!_order || !orderValid) {
+  if (!order || !orderValid) {
     return (
       <GenericZero title="Not found">
         <Typography>Order not found.</Typography>
       </GenericZero>
     );
   }
-  const order = _order;
 
   return (
     <Container maxWidth="sm">
@@ -105,7 +106,7 @@ const OrderPage: React.FC = () => {
             </Stack>
           </Card>
         )}
-        <Box sx={{ }}>
+        <Box>
           <Typography color="text.secondary" textAlign="right">
             Data source: {source === Source.SUBGRAPH ? 'Subgraph' : 'RPC'}
           </Typography>
