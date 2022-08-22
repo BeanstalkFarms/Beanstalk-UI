@@ -22,7 +22,7 @@ import FarmModeField from '~/components/Common/Form/FarmModeField';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import { Beanstalk } from '~/generated/index';
 import useToggle from '~/hooks/display/useToggle';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useFarmerBalances from '~/hooks/useFarmerBalances';
 import useTokenMap from '~/hooks/useTokenMap';
 import { useSigner } from '~/hooks/ledger/useSigner';

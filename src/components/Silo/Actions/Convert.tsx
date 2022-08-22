@@ -17,7 +17,7 @@ import PillRow from '~/components/Common/Form/PillRow';
 import TokenSelectDialog, { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
 import { BEAN, BEAN_CRV3_LP, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
 import BeanstalkSDK from '~/lib/Beanstalk';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { displayFullBN, MaxBN, MinBN, toStringBaseUnitBN } from '~/util/Tokens';
 import { Beanstalk } from '~/generated/index';
 import { QuoteHandler } from '~/hooks/useQuote';

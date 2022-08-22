@@ -14,7 +14,7 @@ import {
 import FarmModeField from '~/components/Common/Form/FarmModeField';
 import useFarmerPlots from '~/hooks/redux/useFarmerPlots';
 import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { parseError } from '~/util';

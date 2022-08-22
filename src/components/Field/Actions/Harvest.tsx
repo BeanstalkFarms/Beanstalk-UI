@@ -11,7 +11,7 @@ import {
   TxnSeparator
 } from '~/components/Common/Form';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { ActionType } from '~/util/Actions';
 import Farm, { FarmToMode } from '~/lib/Beanstalk/Farm';
 import {

@@ -11,7 +11,7 @@ import GasTag from '~/components/Common/GasTag';
 import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { ClaimRewardsAction } from '~/lib/Beanstalk/Farm';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { parseError } from '~/util'; 
 import { UNRIPE_BEAN, UNRIPE_BEAN_CRV3, UNRIPE_TOKENS } from '~/constants/tokens';
 import useTokenMap from '~/hooks/useTokenMap';

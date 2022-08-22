@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import { BEAN_TO_SEEDS, BEAN_TO_STALK, ZERO_BN } from '~/constants';
 import { BEAN, SEEDS, STALK } from '~/constants/tokens';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useChainId from '~/hooks/chain/useChainId';
 import { bigNumberResult, tokenResult } from '~/util';
 import useBlocks from '~/hooks/ledger/useBlocks';

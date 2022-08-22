@@ -3,7 +3,7 @@ import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import toast from 'react-hot-toast';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useSeason from '~/hooks/useSeason';
 import { AppState } from '~/state';
 import { bigNumberResult } from '~/util/Ledger';

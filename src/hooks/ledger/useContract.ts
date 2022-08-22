@@ -8,7 +8,7 @@ import BEANSTALK_FERTILIZER_ABI from '~/constants/abi/Beanstalk/BeanstalkFertili
 import ERC20_ABI from '~/constants/abi/ERC20.json';
 import BEANFT_GENESIS_ABI from '~/constants/abi/BeaNFT/BeaNFTGenesis.json';
 import BEANFT_WINTER_ABI from '~/constants/abi/BeaNFT/BeaNFTWinter.json';
-import useChainConstant from './chain/useChainConstant';
+import useChainConstant from '../chain/useChainConstant';
 import { SupportedChainId } from '~/constants/chains';
 import {
   BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES,

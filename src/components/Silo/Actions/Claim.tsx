@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { Token } from '~/classes';
 import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { FarmerSiloBalance } from '~/state/farmer/silo';
 import { ActionType } from '~/util/Actions';
 import usePools from '~/hooks/usePools';

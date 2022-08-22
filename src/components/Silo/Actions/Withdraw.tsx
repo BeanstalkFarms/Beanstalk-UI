@@ -20,7 +20,7 @@ import {
 import BeanstalkSDK from '~/lib/Beanstalk';
 import useSeason from '~/hooks/useSeason';
 import { FarmerSilo } from '~/state/farmer/silo';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { displayFullBN, parseError, toStringBaseUnitBN } from '~/util';
 import TransactionToast from '~/components/Common/TxnToast';
 import { useSigner } from '~/hooks/ledger/useSigner';

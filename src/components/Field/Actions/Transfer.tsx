@@ -8,7 +8,7 @@ import { PlotFragment, PlotSettingsFragment, SmartSubmitButton, TokenOutputField
 import TransactionToast from '~/components/Common/TxnToast';
 import PlotInputField from '~/components/Common/Form/PlotInputField';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useAccount from '~/hooks/ledger/useAccount';
 import useFarmerPlots from '~/hooks/redux/useFarmerPlots';
 import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';

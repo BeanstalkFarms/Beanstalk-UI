@@ -24,7 +24,7 @@ import {
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import { Beanstalk } from '~/generated/index';
 import useToggle from '~/hooks/display/useToggle';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useFarmerBalances from '~/hooks/useFarmerBalances';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import usePreferredToken, { PreferredToken } from '~/hooks/usePreferredToken';

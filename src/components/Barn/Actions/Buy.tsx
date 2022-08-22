@@ -24,7 +24,7 @@ import useToggle from '~/hooks/display/useToggle';
 import { QuoteHandler } from '~/hooks/useQuote';
 import useChainId from '~/hooks/chain/useChainId';
 import useFertilizerSummary from '~/hooks/summary/useFertilizerSummary';
-import { useBeanstalkContract, useFertilizerContract } from '~/hooks/useContract';
+import { useBeanstalkContract, useFertilizerContract } from '~/hooks/ledger/useContract';
 import useTokenMap from '~/hooks/useTokenMap';
 import useFarmerBalances from '~/hooks/useFarmerBalances';
 import usePreferredToken, { PreferredToken } from '~/hooks/usePreferredToken';

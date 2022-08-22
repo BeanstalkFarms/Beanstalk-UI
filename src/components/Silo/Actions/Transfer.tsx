@@ -22,7 +22,7 @@ import useFarmerSiloBalances from '~/hooks/useFarmerSiloBalances';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import { useFetchSilo } from '~/state/beanstalk/silo/updater';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import BeanstalkSDK from '~/lib/Beanstalk';
 import useSeason from '~/hooks/useSeason';
 import TxnSeparator from '~/components/Common/Form/TxnSeparator';

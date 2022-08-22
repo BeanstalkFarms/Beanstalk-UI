@@ -8,7 +8,7 @@ import { useConnect } from 'wagmi';
 import toast from 'react-hot-toast';
 import useAllowances from '~/hooks/useAllowances';
 import useChainConstant from '~/hooks/chain/useChainConstant';
-import { useGetERC20Contract } from '~/hooks/useContract';
+import { useGetERC20Contract } from '~/hooks/ledger/useContract';
 import Token from '~/classes/Token';
 import { parseError, trimAddress } from '~/util';
 import { BEANSTALK_ADDRESSES, BEANSTALK_FERTILIZER_ADDRESSES } from '~/constants/addresses';

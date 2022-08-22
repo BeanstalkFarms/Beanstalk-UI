@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import SunriseCountdown from '~/components/Sun/SunriseCountdown';
 import useToggle from '~/hooks/display/useToggle';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import TransactionToast from '~/components/Common/TxnToast';
 import { StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
 import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';

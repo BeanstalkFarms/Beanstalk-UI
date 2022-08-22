@@ -16,7 +16,7 @@ import GenericZero from '~/components/Common/ZeroState/GenericZero';
 import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
 import usePodListing from '~/hooks/usePodListing';
 import useAccount from '~/hooks/ledger/useAccount';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { bigNumberResult, Source } from '~/util';
 
 const ListingPage: React.FC = () => {

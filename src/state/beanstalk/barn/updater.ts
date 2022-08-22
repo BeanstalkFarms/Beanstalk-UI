@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import { BARNRAISE_CUSTODIAN_ADDRESSES, USDC_ADDRESSES } from '~/constants/addresses';
 import { BEAN } from '~/constants/tokens';
 import useChainConstant from '~/hooks/chain/useChainConstant';
-import { useBeanstalkContract, useBeanstalkFertilizerContract, useERC20Contract } from '~/hooks/useContract';
+import { useBeanstalkContract, useBeanstalkFertilizerContract, useERC20Contract } from '~/hooks/ledger/useContract';
 import { tokenResult, bigNumberResult } from '~/util';
 import useChainId from '~/hooks/chain/useChainId';
 import { resetBarn, updateBarn } from './actions';

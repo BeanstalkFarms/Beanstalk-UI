@@ -24,7 +24,7 @@ import useTokenMap from '~/hooks/useTokenMap';
 import useToggle from '~/hooks/display/useToggle';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { Beanstalk } from '~/generated';
 import usePreferredToken, { PreferredToken } from '~/hooks/usePreferredToken';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';

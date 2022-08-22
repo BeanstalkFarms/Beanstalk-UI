@@ -3,7 +3,7 @@ import { Button } from '@mui/material';
 import CachedIcon from '@mui/icons-material/Cached';
 import { useAccount } from 'wagmi';
 import { Beanstalk } from '~/generated';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useTokenMap from '~/hooks/useTokenMap';
 import { getAccount } from '~/util/Account';
 import { toTokenUnitsBN } from '~/util/Tokens';
