@@ -4,7 +4,7 @@ import Stat from '~/components/Common/Stat';
 import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
 import SiloBalances from '~/components/Common/SiloBalances';
 import Fiat from '~/components/Common/Fiat';
-import useFarmerBalancesBreakdown from '~/hooks/useFarmerBalancesBreakdown';
+import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import useWhitelist from '../../hooks/useWhitelist';
 import WalletButton from '../Common/Connection/WalletButton';
 import useAccount from '~/hooks/ledger/useAccount';

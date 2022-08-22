@@ -9,7 +9,7 @@ import RewardsDialog from '~/components/Silo/RewardsDialog';
 import DropdownIcon from '~/components/Common/DropdownIcon';
 import useWhitelist from '~/hooks/useWhitelist';
 import usePools from '~/hooks/usePools';
-import useFarmerBalancesBreakdown from '~/hooks/useFarmerBalancesBreakdown';
+import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import useToggle from '~/hooks/display/useToggle';
 import useRevitalized from '~/hooks/useRevitalized';
 import useSeason from '~/hooks/useSeason';

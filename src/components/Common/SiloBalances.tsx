@@ -3,7 +3,7 @@ import { Stack, Typography, Grid, Box, Tooltip } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/PieChart';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import useFarmerBalancesBreakdown from '~/hooks/useFarmerBalancesBreakdown';
+import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import useBeanstalkSiloBreakdown from '~/hooks/beanstalk/useBeanstalkSiloBreakdown';
 import { displayFullBN, displayUSD } from '~/util';
 import { Token } from '~/classes';
