@@ -21,7 +21,7 @@ import {
   TxnSettings
 } from '~/components/Common/Form';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
-import useChainId from '~/hooks/useChain';
+import useChainId from '~/hooks/chain/useChainId';
 import useChainConstant from '~/hooks/useChainConstant';
 import useFarmerBalances from '~/hooks/useFarmerBalances';
 import { QuoteHandler } from '~/hooks/useQuote';

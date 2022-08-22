@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import { BEAN_TO_SEEDS, BEAN_TO_STALK, ZERO_BN } from '~/constants';
 import { BEAN, SEEDS, STALK } from '~/constants/tokens';
 import { useBeanstalkContract } from '~/hooks/useContract';
-import useChainId from '~/hooks/useChain';
+import useChainId from '~/hooks/chain/useChainId';
 import { bigNumberResult, tokenResult } from '~/util';
 import useBlocks from '~/hooks/useBlocks';
 import useAccount from '~/hooks/ledger/useAccount';

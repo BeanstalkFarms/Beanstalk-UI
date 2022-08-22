@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { AppState } from '~/state';
 import { getChainConstant } from '../util';
 import { UNRIPE_BEAN } from '../constants/tokens';
-import useChainId from './useChain';
+import useChainId from './chain/useChainId';
 import { NEW_BN } from '../constants';
 
 /**

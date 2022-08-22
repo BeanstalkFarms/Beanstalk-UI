@@ -6,7 +6,7 @@ import { BEAN } from '~/constants/tokens';
 import useChainConstant from '~/hooks/useChainConstant';
 import { useBeanstalkContract, useBeanstalkFertilizerContract, useERC20Contract } from '~/hooks/useContract';
 import { tokenResult, bigNumberResult } from '~/util';
-import useChainId from '~/hooks/useChain';
+import useChainId from '~/hooks/chain/useChainId';
 import { resetBarn, updateBarn } from './actions';
 
 const fetchGlobal = fetch;

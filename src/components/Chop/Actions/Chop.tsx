@@ -26,7 +26,7 @@ import { useBeanstalkContract } from '~/hooks/useContract';
 import useFarmerBalances from '~/hooks/useFarmerBalances';
 import useTokenMap from '~/hooks/useTokenMap';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import useChainId from '~/hooks/useChain';
+import useChainId from '~/hooks/chain/useChainId';
 import useAccount from '~/hooks/ledger/useAccount';
 import usePreferredToken, { PreferredToken } from '~/hooks/usePreferredToken';
 import { optimizeFromMode } from '~/util/Farm';

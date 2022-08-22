@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import flatMap from 'lodash/flatMap';
 import { ZERO_BN } from '~/constants';
 import { BALANCE_TOKENS, ERC20_TOKENS, ETH } from '~/constants/tokens';
-import useChainId from '~/hooks/useChain';
+import useChainId from '~/hooks/chain/useChainId';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useMigrateCall from '~/hooks/useMigrateCall';
 import useTokenMap from '~/hooks/useTokenMap';

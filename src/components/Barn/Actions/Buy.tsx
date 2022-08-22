@@ -22,7 +22,7 @@ import { ERC20Token, NativeToken } from '~/classes/Token';
 import { Token } from '~/classes';
 import useToggle from '~/hooks/display/useToggle';
 import { QuoteHandler } from '~/hooks/useQuote';
-import useChainId from '~/hooks/useChain';
+import useChainId from '~/hooks/chain/useChainId';
 import useFertilizerSummary from '~/hooks/summary/useFertilizerSummary';
 import { useBeanstalkContract, useFertilizerContract } from '~/hooks/useContract';
 import useTokenMap from '~/hooks/useTokenMap';

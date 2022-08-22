@@ -7,7 +7,7 @@ import WalletButton from '~/components/Common/Connection/WalletButton';
 import { Event } from '~/lib/Beanstalk/EventProcessor';
 import { AppState } from '~/state';
 import useAccount from '../hooks/ledger/useAccount';
-import useChainId from '../hooks/useChain';
+import useChainId from '../hooks/chain/useChainId';
 import { getEventCacheId } from '../util/State';
 import { EventCacheName } from '../state/farmer/events2';
 import EmptyState from '../components/Common/ZeroState/EmptyState';

@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useBeanstalkContract } from '~/hooks/useContract';
-import useChainId from '~/hooks/useChain';
+import useChainId from '~/hooks/chain/useChainId';
 import useBlocks from '~/hooks/useBlocks';
 import useAccount from '~/hooks/ledger/useAccount';
 import EventProcessor from '~/lib/Beanstalk/EventProcessor';

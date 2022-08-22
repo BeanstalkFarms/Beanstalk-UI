@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import useChainConstant from '~/hooks/useChainConstant';
 import { useBeanstalkContract, useFertilizerContract } from '~/hooks/useContract';
 import { REPLANT_INITIAL_ID } from '~/hooks/useHumidity';
-import useChainId from '~/hooks/useChain';
+import useChainId from '~/hooks/chain/useChainId';
 import { tokenResult } from '~/util';
 import useBlocks from '~/hooks/useBlocks';
 import useAccount from '~/hooks/ledger/useAccount';
