@@ -3,7 +3,6 @@ import BigNumber from 'bignumber.js';
 import { Routes, Route } from 'react-router-dom';
 import { Box, CssBaseline } from '@mui/material';
 import { ToastBar, Toaster } from 'react-hot-toast';
-// import pageBackgroundGradient from '~/img/theme/bg-mainnet-gradient.png';
 import pageBackground from '~/img/theme/bg-mainnet.png';
 import NavBar from '~/components/Nav/NavBar';
 import PoolsUpdater from '~/state/bean/pools/updater';
@@ -39,8 +38,8 @@ import GovernancePage from '~/pages/governance';
 import ProposalPage from '~/pages/governance/proposal';
 import GovernanceUpdater from '~/state/beanstalk/governance/updater';
 import NewProposalsDialog from '~/components/Governance/NewProposalsDialog';
-import useNavHeight from '~/hooks/layout/usePageDimensions';
-import useBanner from '~/hooks/layout/useBanner';
+import useNavHeight from '~/hooks/app/usePageDimensions';
+import useBanner from '~/hooks/app/useBanner';
 import { BeanstalkPalette } from './muiTheme';
 import './App.css';
 

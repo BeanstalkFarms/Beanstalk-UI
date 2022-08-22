@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import Banner from '~/components/Nav/Banner';
-import { BANNER_HEIGHT } from '~/hooks/layout/usePageDimensions';
+import { BANNER_HEIGHT } from '~/hooks/app/usePageDimensions';
 import { AppState } from '~/state';
 import { ActiveProposal } from '~/state/beanstalk/governance';
 import snapshotLogo from '~/img/ecosystem/snapshot-logo.svg';
