@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { AddressMap, ZERO_BN } from '~/constants';
 import { AppState } from '~/state';
-import useSiloTokenToFiat from '../currency/useSiloTokenToFiat';
+import useSiloTokenToFiat from '../beanstalk/useSiloTokenToFiat';
 import useWhitelist from '../beanstalk/useWhitelist';
 
 // -----------------

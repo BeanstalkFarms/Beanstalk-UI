@@ -10,7 +10,7 @@ import { displayBN, displayFullBN } from '~/util';
 import useSeason from '~/hooks/beanstalk/useSeason';
 import { BEAN, STALK } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
-import useSiloTokenToFiat from '~/hooks/currency/useSiloTokenToFiat';
+import useSiloTokenToFiat from '~/hooks/beanstalk/useSiloTokenToFiat';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import COLUMNS from '~/components/Common/Table/cells';
 import Fiat from '~/components/Common/Fiat';

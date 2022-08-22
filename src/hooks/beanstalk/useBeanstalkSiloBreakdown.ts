@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AddressMap, ZERO_BN } from '~/constants';
 import { AppState } from '~/state';
-import useSiloTokenToFiat from '../currency/useSiloTokenToFiat';
+import useSiloTokenToFiat from './useSiloTokenToFiat';
 import useWhitelist from './useWhitelist';
 
 // -----------------
