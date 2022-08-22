@@ -17,7 +17,7 @@ import { UNRIPE_BEAN, UNRIPE_BEAN_CRV3, UNRIPE_TOKENS } from '~/constants/tokens
 import useTokenMap from '~/hooks/chain/useTokenMap';
 import { selectCratesForEnroot } from '~/util/Crates';
 import useAccount from '~/hooks/ledger/useAccount';
-import useBDV from '~/hooks/useBDV';
+import useBDV from '~/hooks/beanstalk/useBDV';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import { AppState } from '~/state';
 import TransactionToast from '../Common/TxnToast';

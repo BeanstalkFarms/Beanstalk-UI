@@ -32,7 +32,7 @@ import { FarmerSilo } from '~/state/farmer/silo';
 import useSeason from '~/hooks/useSeason';
 import { convert, Encoder as ConvertEncoder } from '~/lib/Beanstalk/Silo/Convert';
 import TransactionToast from '~/components/Common/TxnToast';
-import useBDV from '~/hooks/useBDV';
+import useBDV from '~/hooks/beanstalk/useBDV';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { useFetchPools } from '~/state/bean/pools/updater';
 import { ActionType } from '~/util/Actions';
