@@ -6,7 +6,7 @@ import { BEAN, SEEDS, STALK } from '~/constants/tokens';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useChainId from '~/hooks/chain/useChainId';
 import { bigNumberResult, tokenResult } from '~/util';
-import useBlocks from '~/hooks/chain/useBlocks';
+import useBlocks from '~/hooks/ledger/useBlocks';
 import useAccount from '~/hooks/ledger/useAccount';
 import EventProcessor from '~/lib/Beanstalk/EventProcessor';
 import useWhitelist from '~/hooks/useWhitelist';
