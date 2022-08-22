@@ -20,7 +20,7 @@ import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import useChainId from '~/hooks/chain/useChainId';
 import useFarmerBalances from '~/hooks/useFarmerBalances';
 import { QuoteHandler } from '~/hooks/ledger/useQuote';
-import useTokenMap from '~/hooks/useTokenMap';
+import useTokenMap from '~/hooks/chain/useTokenMap';
 import useToggle from '~/hooks/display/useToggle';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import { useSigner } from '~/hooks/ledger/useSigner';

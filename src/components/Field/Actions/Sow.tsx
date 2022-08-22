@@ -29,7 +29,7 @@ import useFarmerBalances from '~/hooks/useFarmerBalances';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import usePreferredToken, { PreferredToken } from '~/hooks/usePreferredToken';
 import { QuoteHandler } from '~/hooks/ledger/useQuote';
-import useTokenMap from '~/hooks/useTokenMap';
+import useTokenMap from '~/hooks/chain/useTokenMap';
 import Farm, { ChainableFunction, FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import { displayBN, displayFullBN, MinBN, parseError, toStringBaseUnitBN, toTokenUnitsBN } from '~/util';
 import { useSigner } from '~/hooks/ledger/useSigner';

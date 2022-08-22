@@ -31,7 +31,7 @@ import TxnSeparator from '~/components/Common/Form/TxnSeparator';
 import useToggle from '~/hooks/display/useToggle';
 import { combineBalances, optimizeFromMode } from '~/util/Farm';
 import usePreferredToken from '~/hooks/usePreferredToken';
-import useTokenMap from '~/hooks/useTokenMap';
+import useTokenMap from '~/hooks/chain/useTokenMap';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import { parseError } from '~/util';

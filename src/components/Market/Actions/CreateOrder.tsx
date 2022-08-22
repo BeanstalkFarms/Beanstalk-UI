@@ -25,7 +25,7 @@ import useChainId from '~/hooks/chain/useChainId';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import useFarmerBalances from '~/hooks/useFarmerBalances';
 import { QuoteHandler } from '~/hooks/ledger/useQuote';
-import useTokenMap from '~/hooks/useTokenMap';
+import useTokenMap from '~/hooks/chain/useTokenMap';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import useToggle from '~/hooks/display/useToggle';
 import { Beanstalk } from '~/generated';

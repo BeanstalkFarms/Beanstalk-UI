@@ -6,7 +6,7 @@ import { BALANCE_TOKENS, ERC20_TOKENS, ETH } from '~/constants/tokens';
 import useChainId from '~/hooks/chain/useChainId';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useMigrateCall from '~/hooks/useMigrateCall';
-import useTokenMap from '~/hooks/useTokenMap';
+import useTokenMap from '~/hooks/chain/useTokenMap';
 import { tokenResult } from '~/util';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import useAccount from '~/hooks/ledger/useAccount';

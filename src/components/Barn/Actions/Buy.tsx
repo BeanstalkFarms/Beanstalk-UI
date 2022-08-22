@@ -25,7 +25,7 @@ import { QuoteHandler } from '~/hooks/ledger/useQuote';
 import useChainId from '~/hooks/chain/useChainId';
 import useFertilizerSummary from '~/hooks/summary/useFertilizerSummary';
 import { useBeanstalkContract, useFertilizerContract } from '~/hooks/ledger/useContract';
-import useTokenMap from '~/hooks/useTokenMap';
+import useTokenMap from '~/hooks/chain/useTokenMap';
 import useFarmerBalances from '~/hooks/useFarmerBalances';
 import usePreferredToken, { PreferredToken } from '~/hooks/usePreferredToken';
 import { useSigner } from '~/hooks/ledger/useSigner';

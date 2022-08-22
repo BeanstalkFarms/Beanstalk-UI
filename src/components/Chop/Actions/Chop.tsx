@@ -24,7 +24,7 @@ import { Beanstalk } from '~/generated/index';
 import useToggle from '~/hooks/display/useToggle';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useFarmerBalances from '~/hooks/useFarmerBalances';
-import useTokenMap from '~/hooks/useTokenMap';
+import useTokenMap from '~/hooks/chain/useTokenMap';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import useChainId from '~/hooks/chain/useChainId';
 import useAccount from '~/hooks/ledger/useAccount';

@@ -24,7 +24,7 @@ import { ZERO_BN } from '~/constants';
 import { BEAN, CRV3, CRV3_UNDERLYING, DAI, ETH, USDC, USDT, WETH } from '~/constants/tokens';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useFarmerBalances from '~/hooks/useFarmerBalances';
-import useTokenMap from '~/hooks/useTokenMap';
+import useTokenMap from '~/hooks/chain/useTokenMap';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';

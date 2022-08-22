@@ -14,7 +14,7 @@ import { ClaimRewardsAction } from '~/lib/Beanstalk/Farm';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { parseError } from '~/util'; 
 import { UNRIPE_BEAN, UNRIPE_BEAN_CRV3, UNRIPE_TOKENS } from '~/constants/tokens';
-import useTokenMap from '~/hooks/useTokenMap';
+import useTokenMap from '~/hooks/chain/useTokenMap';
 import { selectCratesForEnroot } from '~/util/Crates';
 import useAccount from '~/hooks/ledger/useAccount';
 import useBDV from '~/hooks/useBDV';

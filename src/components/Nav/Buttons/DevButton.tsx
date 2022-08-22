@@ -4,7 +4,7 @@ import CachedIcon from '@mui/icons-material/Cached';
 import { useAccount } from 'wagmi';
 import { Beanstalk } from '~/generated';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
-import useTokenMap from '~/hooks/useTokenMap';
+import useTokenMap from '~/hooks/chain/useTokenMap';
 import { getAccount } from '~/util/Account';
 import { toTokenUnitsBN } from '~/util/Tokens';
 import { ERC20_TOKENS } from '~/constants/tokens';
