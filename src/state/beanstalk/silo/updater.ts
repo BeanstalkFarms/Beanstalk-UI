@@ -6,7 +6,7 @@ import { tokenResult, toStringBaseUnitBN } from '~/util';
 import { BEAN, SEEDS, STALK } from '~/constants/tokens';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useWhitelist from '~/hooks/useWhitelist';
-import { useGetChainConstant } from '~/hooks/useChainConstant';
+import { useGetChainConstant } from '~/hooks/chain/useChainConstant';
 import { resetBeanstalkSilo, updateBeanstalkSilo } from './actions';
 import { BeanstalkSiloBalance } from './index';
 

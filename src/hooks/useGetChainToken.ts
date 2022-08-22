@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import Token from '~/classes/Token';
 import { ChainConstant } from '~/constants';
-import { useGetChainConstant } from './useChainConstant';
+import { useGetChainConstant } from './chain/useChainConstant';
 
 /**
  * Returns a callback that accepts a `TokenOrTokenMap`.

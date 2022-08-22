@@ -35,7 +35,7 @@ import { toStringBaseUnitBN, toTokenUnitsBN, parseError, MinBN } from '~/util';
 import { IconSize } from '~/components/App/muiTheme';
 import TransactionToast from '~/components/Common/TxnToast';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
-import useChainConstant from '~/hooks/useChainConstant';
+import useChainConstant from '~/hooks/chain/useChainConstant';
 import { optimizeFromMode } from '~/util/Farm';
 import copy from '~/constants/copy';
 import IconWrapper from '~/components/Common/IconWrapper';

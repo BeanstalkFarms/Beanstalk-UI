@@ -36,7 +36,7 @@ import { QuoteHandler } from '~/hooks/useQuote';
 import TransactionToast from '~/components/Common/TxnToast';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
-import useChainConstant from '~/hooks/useChainConstant';
+import useChainConstant from '~/hooks/chain/useChainConstant';
 import { BEAN_CRV3_LP } from '~/constants/tokens';
 import copy from '~/constants/copy';
 

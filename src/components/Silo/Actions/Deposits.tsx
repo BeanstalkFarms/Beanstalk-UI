@@ -11,7 +11,7 @@ import useSeason from '~/hooks/useSeason';
 import { BEAN, STALK } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
 import useSiloTokenToFiat from '~/hooks/currency/useSiloTokenToFiat';
-import useChainConstant from '~/hooks/useChainConstant';
+import useChainConstant from '~/hooks/chain/useChainConstant';
 import COLUMNS from '~/components/Common/Table/cells';
 import Fiat from '~/components/Common/Fiat';
 import TableCard from '../../Common/TableCard';

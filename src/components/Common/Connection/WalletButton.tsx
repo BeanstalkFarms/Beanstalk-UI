@@ -18,7 +18,7 @@ import {
 import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { IMPERSONATED_ACCOUNT, trimAddress } from '~/util';
-import useChainConstant from '~/hooks/useChainConstant';
+import useChainConstant from '~/hooks/chain/useChainConstant';
 import balancesIcon from '~/img/nav-icons/balances.svg';
 import historyIcon from '~/img/nav-icons/history.svg';
 import etherscanIcon from '~/img/nav-icons/etherscan.svg';

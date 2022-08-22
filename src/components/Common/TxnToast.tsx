@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { Box, IconButton, Link, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { makeStyles } from '@mui/styles';
-import useChainConstant from '~/hooks/useChainConstant';
+import useChainConstant from '~/hooks/chain/useChainConstant';
 import { parseError } from '~/util';
 import { CHAIN_INFO } from '~/constants/chains';
 

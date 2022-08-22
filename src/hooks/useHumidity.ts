@@ -5,7 +5,7 @@ import { MaxBN } from '~/util/Tokens';
 import { SupportedChainId } from '~/constants/chains';
 import { ZERO_BN } from '~/constants';
 import { AppState } from '~/state';
-import useChainConstant from './useChainConstant';
+import useChainConstant from './chain/useChainConstant';
 
 // ----------------------------------------
 

@@ -10,7 +10,7 @@ import TransactionToast from '~/components/Common/TxnToast';
 import { BEAN } from '~/constants/tokens';
 import useToggle from '~/hooks/display/useToggle';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import useChainConstant from '~/hooks/useChainConstant';
+import useChainConstant from '~/hooks/chain/useChainConstant';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
