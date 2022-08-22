@@ -26,7 +26,7 @@ import { ERC20Token, NativeToken } from '~/classes/Token';
 import Pool from '~/classes/Pool';
 import SmartSubmitButton from '~/components/Common/Form/SmartSubmitButton';
 import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
-import useGetChainToken from '~/hooks/useGetChainToken';
+import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import TxnSeparator from '~/components/Common/Form/TxnSeparator';
 import useToggle from '~/hooks/display/useToggle';
 import { combineBalances, optimizeFromMode } from '~/util/Farm';

@@ -5,7 +5,7 @@ import { BEAN_TO_STALK, BEAN_TO_SEEDS, ZERO_BN, LP_TO_SEEDS } from '~/constants'
 import { UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
 import { AppState } from '~/state';
 import useFarmerSiloBalances from './useFarmerSiloBalances';
-import useGetChainToken from './useGetChainToken';
+import useGetChainToken from './chain/useGetChainToken';
 
 /**
  * Calculate the Farmer's current number of revitalized Stalk and Seeds.

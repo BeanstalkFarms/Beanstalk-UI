@@ -17,7 +17,7 @@ import TransactionToast from '~/components/Common/TxnToast';
 import PlotInputField from '~/components/Common/Form/PlotInputField';
 import TxnAccordion from '~/components/Common/TxnAccordion';
 import { useBeanstalkContract } from '~/hooks/useContract';
-import useGetChainToken from '~/hooks/useGetChainToken';
+import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import useFarmerListings from '~/hooks/redux/useFarmerListings';
 import useFarmerPlots from '~/hooks/redux/useFarmerPlots';

@@ -28,7 +28,7 @@ import { UNRIPE_ASSET_TOOLTIPS } from '~/constants/tooltips';
 import { ZERO_BN } from '~/constants';
 import { displayFullBN, toTokenUnitsBN, parseError } from '~/util';
 import { useBeanstalkContract } from '~/hooks/useContract';
-import useGetChainToken from '~/hooks/useGetChainToken';
+import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import useAccount from '~/hooks/ledger/useAccount';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';

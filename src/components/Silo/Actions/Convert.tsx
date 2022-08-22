@@ -23,7 +23,7 @@ import { Beanstalk } from '~/generated/index';
 import { QuoteHandler } from '~/hooks/useQuote';
 import { ZERO_BN } from '~/constants';
 import Farm from '~/lib/Beanstalk/Farm';
-import useGetChainToken from '~/hooks/useGetChainToken';
+import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import useToggle from '~/hooks/display/useToggle';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';

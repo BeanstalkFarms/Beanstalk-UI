@@ -16,7 +16,7 @@ import useSeason from '~/hooks/useSeason';
 import { AppState } from '~/state';
 import { UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
 import useFarmerSiloBalances from '~/hooks/useFarmerSiloBalances';
-import useGetChainToken from '~/hooks/useGetChainToken';
+import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import GuideButton from '~/components/Common/Guide/GuideButton';
 import {
   CLAIM_SILO_REWARDS,

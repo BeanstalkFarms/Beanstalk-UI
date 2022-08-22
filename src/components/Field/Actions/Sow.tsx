@@ -26,7 +26,7 @@ import { Beanstalk } from '~/generated/index';
 import useToggle from '~/hooks/display/useToggle';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import useFarmerBalances from '~/hooks/useFarmerBalances';
-import useGetChainToken from '~/hooks/useGetChainToken';
+import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import usePreferredToken, { PreferredToken } from '~/hooks/usePreferredToken';
 import { QuoteHandler } from '~/hooks/useQuote';
 import useTokenMap from '~/hooks/useTokenMap';

@@ -22,7 +22,7 @@ import useFarmerBalances from '~/hooks/useFarmerBalances';
 import { QuoteHandler } from '~/hooks/useQuote';
 import useTokenMap from '~/hooks/useTokenMap';
 import useToggle from '~/hooks/display/useToggle';
-import useGetChainToken from '~/hooks/useGetChainToken';
+import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { useBeanstalkContract } from '~/hooks/useContract';
 import { Beanstalk } from '~/generated';

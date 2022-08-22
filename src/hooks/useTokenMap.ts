@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import Token from '~/classes/Token';
 import { ChainConstant, TokenMap } from '~/constants';
-import useGetChainToken from './useGetChainToken';
+import useGetChainToken from './chain/useGetChainToken';
 
 export default function useTokenMap<T extends Token>(
   list: (T | ChainConstant<T>)[]

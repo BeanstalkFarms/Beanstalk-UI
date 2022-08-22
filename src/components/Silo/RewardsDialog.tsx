@@ -27,7 +27,7 @@ import { hoverMap } from '../../constants/silo';
 import { BeanstalkPalette } from '../App/muiTheme';
 import useTimedRefresh from '~/hooks/useTimedRefresh';
 import useFarmerSiloBalances from '~/hooks/useFarmerSiloBalances';
-import useGetChainToken from '~/hooks/useGetChainToken';
+import useGetChainToken from '~/hooks/chain/useGetChainToken';
 
 export type SendFormValues = {
   to?: string;

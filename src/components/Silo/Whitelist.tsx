@@ -13,7 +13,7 @@ import { displayFullBN, displayTokenAmount } from '~/util/Tokens';
 import useBDV from '~/hooks/useBDV';
 import { BeanstalkPalette, FontSize, IconSize } from '~/components/App/muiTheme';
 import Fiat from '~/components/Common/Fiat';
-import useGetChainToken from '~/hooks/useGetChainToken';
+import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import useSetting from '~/hooks/useSetting';
 
 const ARROW_CONTAINER_WIDTH = 20;

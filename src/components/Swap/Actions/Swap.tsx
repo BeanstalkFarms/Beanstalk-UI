@@ -27,7 +27,7 @@ import useFarmerBalances from '~/hooks/useFarmerBalances';
 import useTokenMap from '~/hooks/useTokenMap';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
-import useGetChainToken from '~/hooks/useGetChainToken';
+import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import useQuote, { QuoteHandler } from '~/hooks/useQuote';
 import useFarm from '~/hooks/useFarm';
 import useAccount from '~/hooks/ledger/useAccount';

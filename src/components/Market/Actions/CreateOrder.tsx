@@ -26,7 +26,7 @@ import useChainConstant from '~/hooks/chain/useChainConstant';
 import useFarmerBalances from '~/hooks/useFarmerBalances';
 import { QuoteHandler } from '~/hooks/useQuote';
 import useTokenMap from '~/hooks/useTokenMap';
-import useGetChainToken from '~/hooks/useGetChainToken';
+import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import useToggle from '~/hooks/display/useToggle';
 import { Beanstalk } from '~/generated';
 import { useBeanstalkContract } from '~/hooks/useContract';
