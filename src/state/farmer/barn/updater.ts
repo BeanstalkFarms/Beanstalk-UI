@@ -5,7 +5,7 @@ import { useBeanstalkContract, useFertilizerContract } from '~/hooks/useContract
 import { REPLANT_INITIAL_ID } from '~/hooks/useHumidity';
 import useChainId from '~/hooks/chain/useChainId';
 import { tokenResult } from '~/util';
-import useBlocks from '~/hooks/useBlocks';
+import useBlocks from '~/hooks/chain/useBlocks';
 import useAccount from '~/hooks/ledger/useAccount';
 import { resetFarmerBarn, updateFarmerBarn } from './actions';
 import useEvents, { GetQueryFilters } from '../events2/updater';
