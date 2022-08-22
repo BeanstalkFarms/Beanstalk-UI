@@ -1,0 +1,20 @@
+query SeasonalFarmerStalk(
+  $account: String!,
+  $season_lte: Int,
+  $first: Int
+) {
+  seasons: siloHourlySnapshots(
+    where: {
+      silo: $account,
+      season_lte: $season_lte,
+    }
+    first: $first
+    orderBy: season
+    orderDirection: desc
+  ) {
+    id
+    season
+    timestamp
+    totalStalk
+  }
+}

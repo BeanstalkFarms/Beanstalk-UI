@@ -1,0 +1,15 @@
+query SeasonalFarmerStalk2($account: ID!) {
+  farmer(id: $account) {
+    silo {
+      hourlySnapshots(
+        orderBy: season,
+        orderDirection: asc
+      ) {
+        totalStalk
+        season
+        timestamp
+        id
+      }
+    }
+  }
+}

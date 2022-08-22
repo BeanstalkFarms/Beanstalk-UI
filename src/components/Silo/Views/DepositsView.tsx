@@ -15,7 +15,6 @@ const StatProps : (React.ComponentProps<typeof SeasonPlot>)['StatProps'] = {
   gap: 0.25,
   color: 'primary',
   sx: { ml: 0 },
-  
 };
 const LineChartProps : React.ComponentProps<typeof SeasonPlot>['LineChartProps'] = {
   curve: 'stepAfter',
