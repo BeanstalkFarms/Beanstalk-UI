@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Card, CircularProgress, Divider, Stack, Typography } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { useProposalQuery } from '~/generated/graphql';
 import MarkdownWrapper from '~/components/Common/MarkdownWrapper';
 import ProposalStats from '~/components/Governance/Proposals/ProposalStats';
@@ -18,10 +18,15 @@ const ProposalContent: React.FC = () => {
     nextFetchPolicy: 'network-only',
     skip: !id
   });
+
+  if (!loading && data?.proposal === null) {
+    return <Navigate replace to="/404" />;
+  }
+
   const proposal = data?.proposal as Proposal;
   
   /// Loading
-  if (loading || error || !data) {
+  if (loading || error || !data || !proposal) {
     return (
       <Card>
         <Box height={300} display="flex" alignItems="center" justifyContent="center">
@@ -39,12 +44,12 @@ const ProposalContent: React.FC = () => {
     <Card sx={{ p: 2 }}>
       <Stack gap={1}>
         {/* Title & stats */}
-        <Typography variant="h2">{proposal.title}</Typography>
+        <Typography variant="h2">{proposal?.title}</Typography>
         <ProposalStats proposal={proposal} showLink />
         <Divider sx={{ mt: 1 }}  />
         {/* Markdown */}
         <Box maxWidth="100%">
-          <MarkdownWrapper>{proposal.body}</MarkdownWrapper>
+          <MarkdownWrapper>{proposal?.body}</MarkdownWrapper>
         </Box>
       </Stack>
     </Card>
