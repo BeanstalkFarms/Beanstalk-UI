@@ -13,7 +13,7 @@ import {
 } from '~/components/Common/Form';
 import FarmModeField from '~/components/Common/Form/FarmModeField';
 import useFarmerPlots from '~/hooks/farmer/useFarmerPlots';
-import useHarvestableIndex from '~/hooks/farmer/useHarvestableIndex';
+import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import { useSigner } from '~/hooks/ledger/useSigner';

@@ -8,7 +8,7 @@ import { castPodListing, PodListing } from '~/state/farmer/market';
 import { toStringBaseUnitBN } from '~/util/index';
 import { BEAN } from '~/constants/tokens';
 import { useAllPodListingsQuery } from '~/generated/graphql';
-import useHarvestableIndex from '~/hooks/farmer/useHarvestableIndex';
+import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import MarketBaseTable from './Base';
 
 const AllListings : React.FC<{}> = () => {

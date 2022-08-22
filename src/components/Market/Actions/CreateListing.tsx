@@ -21,7 +21,7 @@ import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import useFarmerListings from '~/hooks/farmer/useFarmerListings';
 import useFarmerPlots from '~/hooks/farmer/useFarmerPlots';
-import useHarvestableIndex from '~/hooks/farmer/useHarvestableIndex';
+import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import { ActionType } from '~/util/Actions';
 import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
 import { PlotMap } from '~/state/farmer/field';

@@ -11,7 +11,7 @@ import { useSigner } from '~/hooks/ledger/useSigner';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useAccount from '~/hooks/ledger/useAccount';
 import useFarmerPlots from '~/hooks/farmer/useFarmerPlots';
-import useHarvestableIndex from '~/hooks/farmer/useHarvestableIndex';
+import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import { PODS } from '~/constants/tokens';
 import { ZERO_BN } from '../../../constants';
 import { displayFullBN, toStringBaseUnitBN, trimAddress } from '../../../util';
