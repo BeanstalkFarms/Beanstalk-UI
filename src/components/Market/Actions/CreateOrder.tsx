@@ -23,7 +23,7 @@ import {
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import useChainId from '~/hooks/chain/useChainId';
 import useChainConstant from '~/hooks/chain/useChainConstant';
-import useFarmerBalances from '~/hooks/useFarmerBalances';
+import useFarmerBalances from '~/hooks/farmer/useFarmerBalances';
 import { QuoteHandler } from '~/hooks/ledger/useQuote';
 import useTokenMap from '~/hooks/chain/useTokenMap';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';

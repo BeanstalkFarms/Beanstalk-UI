@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import Token from '~/classes/Token';
 import { ChainConstant } from '~/constants';
 import useGetChainToken from './chain/useGetChainToken';
-import useFarmerBalances from './useFarmerBalances';
+import useFarmerBalances from './farmer/useFarmerBalances';
 
 type TokenOrTokenMap = Token | ChainConstant<Token>;
 

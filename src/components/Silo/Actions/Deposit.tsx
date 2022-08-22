@@ -15,7 +15,7 @@ import TokenQuoteProvider from '~/components/Common/Form/TokenQuoteProvider';
 import TxnPreview from '~/components/Common/Form/TxnPreview';
 import BeanstalkSDK from '~/lib/Beanstalk';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
-import useFarmerBalances from '~/hooks/useFarmerBalances';
+import useFarmerBalances from '~/hooks/farmer/useFarmerBalances';
 import { Balance, FarmerBalances } from '~/state/farmer/balances';
 import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from '~/util/Tokens';
 import TransactionToast from '~/components/Common/TxnToast';
