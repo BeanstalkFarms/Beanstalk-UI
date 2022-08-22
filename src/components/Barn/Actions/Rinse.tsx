@@ -14,7 +14,7 @@ import TxnPreview from '~/components/Common/Form/TxnPreview';
 import TxnAccordion from '~/components/Common/TxnAccordion';
 import FarmModeField from '~/components/Common/Form/FarmModeField';
 import TransactionToast from '~/components/Common/TxnToast';
-import useFarmerFertilizer from '~/hooks/redux/useFarmerFertilizer';
+import useFarmerFertilizer from '~/hooks/farmer/useFarmerFertilizer';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import useAccount from '~/hooks/ledger/useAccount';

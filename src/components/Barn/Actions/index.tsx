@@ -2,7 +2,7 @@ import React from 'react';
 import { Tab } from '@mui/material';
 import useTabs from '~/hooks/display/useTabs';
 import BadgeTab from '~/components/Common/BadgeTab';
-import useFarmerFertilizer from '~/hooks/redux/useFarmerFertilizer';
+import useFarmerFertilizer from '~/hooks/farmer/useFarmerFertilizer';
 import Rinse from './Rinse';
 import Buy from './Buy';
 import { Module, ModuleContent, ModuleTabs } from '~/components/Common/Module';
