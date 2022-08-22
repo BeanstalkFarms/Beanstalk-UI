@@ -37,7 +37,7 @@ import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/t
 import { NEW_BN, ZERO_BN } from '~/constants';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { AppState } from '~/state';
-import useChopPenalty from '~/hooks/useChopPenalty';
+import useChopPenalty from '~/hooks/beanstalk/useChopPenalty';
 
 type ChopFormValues = FormState & {
   destination: FarmToMode | undefined;

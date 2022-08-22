@@ -1,10 +1,10 @@
 import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import { AppState } from '~/state';
-import { getChainConstant } from '../util';
-import { UNRIPE_BEAN } from '../constants/tokens';
-import useChainId from './chain/useChainId';
-import { NEW_BN } from '../constants';
+import { getChainConstant } from '../../util';
+import { UNRIPE_BEAN } from '../../constants/tokens';
+import useChainId from '../chain/useChainId';
+import { NEW_BN } from '../../constants';
 
 /**
  * Returns the chop penalty for a given
