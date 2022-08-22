@@ -21,7 +21,7 @@ import TokenIcon from '~/components/Common/TokenIcon';
 import { ERC20Token, NativeToken } from '~/classes/Token';
 import { Token } from '~/classes';
 import useToggle from '~/hooks/display/useToggle';
-import { QuoteHandler } from '~/hooks/useQuote';
+import { QuoteHandler } from '~/hooks/ledger/useQuote';
 import useChainId from '~/hooks/chain/useChainId';
 import useFertilizerSummary from '~/hooks/summary/useFertilizerSummary';
 import { useBeanstalkContract, useFertilizerContract } from '~/hooks/ledger/useContract';

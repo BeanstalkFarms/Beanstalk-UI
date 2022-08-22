@@ -20,7 +20,7 @@ import BeanstalkSDK from '~/lib/Beanstalk';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { displayFullBN, MaxBN, MinBN, toStringBaseUnitBN } from '~/util/Tokens';
 import { Beanstalk } from '~/generated/index';
-import { QuoteHandler } from '~/hooks/useQuote';
+import { QuoteHandler } from '~/hooks/ledger/useQuote';
 import { ZERO_BN } from '~/constants';
 import Farm from '~/lib/Beanstalk/Farm';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';

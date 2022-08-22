@@ -28,7 +28,7 @@ import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useFarmerBalances from '~/hooks/useFarmerBalances';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import usePreferredToken, { PreferredToken } from '~/hooks/usePreferredToken';
-import { QuoteHandler } from '~/hooks/useQuote';
+import { QuoteHandler } from '~/hooks/ledger/useQuote';
 import useTokenMap from '~/hooks/useTokenMap';
 import Farm, { ChainableFunction, FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import { displayBN, displayFullBN, MinBN, parseError, toStringBaseUnitBN, toTokenUnitsBN } from '~/util';

@@ -20,7 +20,7 @@ import { Balance, FarmerBalances } from '~/state/farmer/balances';
 import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from '~/util/Tokens';
 import TransactionToast from '~/components/Common/TxnToast';
 import { Beanstalk } from '~/generated/index';
-import { QuoteHandler } from '~/hooks/useQuote';
+import { QuoteHandler } from '~/hooks/ledger/useQuote';
 import { ZERO_BN } from '~/constants';
 import { ERC20Token, NativeToken } from '~/classes/Token';
 import Pool from '~/classes/Pool';
