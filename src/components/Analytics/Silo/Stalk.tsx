@@ -2,8 +2,8 @@ import React from 'react';
 import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
 import { SeasonalStalkDocument, SeasonalStalkQuery } from '~/generated/graphql';
 import { SnapshotData } from '~/hooks/useSeasonsQuery';
-import { toTokenUnitsBN } from '../../../util';
-import { STALK } from '../../../constants/tokens';
+import { toTokenUnitsBN } from '~/util';
+import { STALK } from '~/constants/tokens';
 
 const getValue = (season: SnapshotData<SeasonalStalkQuery>) => toTokenUnitsBN(season.totalStalk, STALK.decimals).toNumber();
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
