@@ -16,9 +16,8 @@ import { useTheme } from '@mui/material/styles';
 import { BEAN, PODS } from '~/constants/tokens';
 import useFarmerListings from '~/hooks/farmer/useFarmerListings';
 import { BeanstalkPalette, FontSize, IconSize } from '~/components/App/muiTheme';
-import { displayBN, displayFullBN, toStringBaseUnitBN } from '~/util';
+import { displayBN, displayFullBN, toStringBaseUnitBN , PlotMap } from '~/util';
 import podIcon from '~/img/beanstalk/pod-icon.svg';
-import { PlotMap } from '~/state/farmer/field';
 
 const useStyles = makeStyles(() => ({
   tokenLogo: {

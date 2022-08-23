@@ -24,9 +24,9 @@ import useFarmerPlots from '~/hooks/farmer/useFarmerPlots';
 import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import { ActionType } from '~/util/Actions';
 import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
-import { PlotMap } from '~/state/farmer/field';
+import { PlotMap , toStringBaseUnitBN , parseError, displayTokenAmount, displayBN, displayFullBN } from '~/util';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
-import { toStringBaseUnitBN , parseError, displayTokenAmount, displayBN, displayFullBN } from '~/util';
+
 import { BEAN, PODS } from '~/constants/tokens';
 import { ONE_BN, ZERO_BN } from '~/constants';
 import FieldWrapper from '../../Common/Form/FieldWrapper';

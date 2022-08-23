@@ -6,8 +6,7 @@ import { withTooltip } from '@visx/tooltip';
 import BigNumber from 'bignumber.js';
 /* @ts-ignore */
 import { Stack, Tooltip, Typography } from '@mui/material';
-import { PlotMap } from '../../state/farmer/field';
-import { displayBN } from '../../util';
+import { PlotMap, displayBN } from '~/util';
 
 type GraphProps = {
   width: number;

@@ -17,13 +17,13 @@ import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import { parseError } from '~/util';
+import { parseError , PlotMap } from '~/util';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import { BEAN } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
-import { PlotMap } from '~/state/farmer/field';
+
 import { PodOrder } from '~/state/farmer/market';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
