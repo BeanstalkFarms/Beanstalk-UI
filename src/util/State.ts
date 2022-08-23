@@ -3,11 +3,10 @@ import { EventCacheName, FarmerEvents } from '~/state/farmer/events2';
 
 /**
  * Return the key at which Farmer events should be held in localStorage.
- * 
  * @param chainId
  * @param account 
  * @param cacheId 
- * @returns 
+ * @returns string
  */
 export const getEventCacheId = (
   chainId: number,

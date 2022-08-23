@@ -14,14 +14,13 @@ import {
   PodListingCancelledEvent, PodListingCreatedEvent, PodListingFilledEvent, PodOrderCancelledEvent, PodOrderCreatedEvent, PodOrderFilledEvent } from '~/generated/Beanstalk/Beanstalk';
 import { BEAN, PODS } from '~/constants/tokens';
 import { TokenMap } from '~/constants';
-import { PlotMap } from '~/state/farmer/field';
 import { FarmerSiloBalance, WithdrawalCrate } from '~/state/farmer/silo';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 import { FarmToMode } from './Farm';
+import { PlotMap } from '~/util';
 
 // ----------------------------------------
 
-// : Readonly<(keyof Beanstalk['filters'])[]>
 const SupportedEvents  = [
   // Field
   'Sow',
@@ -91,7 +90,7 @@ export type EventProcessorData = {
 }
 
 export type EventKeys = 'event' | 'args' | 'blockNumber' | 'transactionIndex' | 'transactionHash' | 'logIndex'
-export type Simplify<T extends ethers.Event> = Pick<T, EventKeys> & { facet?: string, returnValues?: any };
+export type Simplify<T extends ethers.Event> = Pick<T, EventKeys> & { returnValues?: any };
 export type Event = Simplify<ethers.Event>;
 
 export default class EventProcessor {
@@ -116,10 +115,8 @@ export default class EventProcessor {
 
   orders    : EventProcessorData['orders'];
 
-  // ----------------------------
-  // |      SETUP + UTILS       |
-  // ----------------------------
-
+  /// /////////////////////// SETUP //////////////////////////
+  
   constructor(
     account : string,
     epp : EventProcessingParameters,
@@ -156,9 +153,7 @@ export default class EventProcessor {
     };
   }
 
-  // ----------------------------
-  // |          FIELD           |
-  // ----------------------------
+  /// /////////////////////// FIELD //////////////////////////
 
   Sow(event: Simplify<SowEvent>) {
     const index       = tokenBN(event.args.index, PODS).toString();
@@ -207,20 +202,16 @@ export default class EventProcessor {
   }
 
   PlotTransfer(event: Simplify<PlotTransferEvent>) {
-    // Numerical "index" of the Plot.
-    // Absolute, with respect to Pod 0.
+    // Numerical "index" of the Plot. Absolute, with respect to Pod 0.
     const transferIndex   = tokenBN(event.args.id, Bean);
     const podsTransferred = tokenBN(event.args.pods, Bean);
 
-    // This account received a Plot
     if (event.args.to.toLowerCase() === this.account) {
+      // This account received a Plot
       this.plots[transferIndex.toString()] = podsTransferred;
     }
-    // This account sent a Plot
     else {
-      // String version of `idx`, used to key
-      // objects. This prevents duplicate toString() calls
-      // and resolves Typescript errors.
+      // This account sent a Plot
       const indexStr = transferIndex.toString();
 
       // ----------------------------------------
@@ -244,9 +235,7 @@ export default class EventProcessor {
       // the PlotTransfer event.
       // ----------------------------------------
       if (this.plots[indexStr] !== undefined) {
-        // ----------------------------------------
         // A known Plot was sent.
-        // ----------------------------------------
         if (!podsTransferred.isEqualTo(this.plots[indexStr])) {
           const newStartIndex = transferIndex.plus(podsTransferred);
           this.plots[newStartIndex.toString()] = this.plots[indexStr].minus(podsTransferred);
@@ -254,11 +243,9 @@ export default class EventProcessor {
         delete this.plots[indexStr];
       }
       else {
-        // ----------------------------------------
         // A Plot was partially sent from a non-zero
         // starting index. Find the containing Plot
         // in our cache.
-        // ----------------------------------------
         let i = 0;
         let found = false;
         const plotIndices = Object.keys(this.plots);
@@ -377,9 +364,7 @@ export default class EventProcessor {
     };
   }
 
-  // ----------------------------
-  // |      SILO: UTILITIES     |
-  // ----------------------------
+  /// /////////////////////// SILO: UTILS  //////////////////////////
 
   parseWithdrawals(_token: string, _season: BigNumber) {
     return EventProcessor._parseWithdrawals(
@@ -432,9 +417,7 @@ export default class EventProcessor {
     };
   }
 
-  // ----------------------------
-  // |      SILO: DEPOSIT       |
-  // ----------------------------
+  /// /////////////////////// SILO: DEPOSIT  //////////////////////////
 
   // eslint-disable-next-line class-methods-use-this
   _upsertDeposit(
@@ -452,11 +435,8 @@ export default class EventProcessor {
   }
 
   _removeDeposit(
-    /** */
     season: string,
-    /** token address; lowercase before inputting */
     token: string,
-    /** */
     _amount: EBN,
   ) {
     if (!this.epp.whitelist[token]) throw new Error(`Attempted to process an event with an unknown token: ${token}`);
@@ -491,14 +471,6 @@ export default class EventProcessor {
     const amount    = tokenBN(event.args.amount, this.epp.whitelist[token]);
     const bdv       = tokenBN(event.args.bdv, Bean);
 
-    // console.debug('[EventProcessor@AddDeposit] ', {
-    //   season,
-    //   amount: amount.toString(),
-    //   bdv: bdv.toString(),
-    //   token,
-    //   event,
-    // });
-
     this.deposits[token] = {
       ...this.deposits[token],
       [season]: this._upsertDeposit(this.deposits[token][season], amount, bdv),
@@ -523,9 +495,7 @@ export default class EventProcessor {
     });
   }
 
-  // ----------------------------
-  // |      SILO: WITHDRAW      |
-  // ----------------------------
+  /// /////////////////////// SILO: WITHDRAW  //////////////////////////
 
   // eslint-disable-next-line class-methods-use-this
   _upsertWithdrawal(
@@ -540,11 +510,8 @@ export default class EventProcessor {
   }
 
   _removeWithdrawal(
-    /** */
     season: string,
-    /** token address; lowercase before inputting */
     token: string,
-    /** */
     _amount: EBN,
   ) {
     // For gas optimization reasons, `RemoveWithdrawal` is emitted
@@ -555,7 +522,6 @@ export default class EventProcessor {
     // In these cases we just ignore the event.
     if (_amount.eq(0) || !this.epp.whitelist[token]) return;
 
-    ///
     const existingWithdrawal = this.withdrawals[token][season];
     if (!existingWithdrawal) throw new Error(`Received a RemoveWithdrawal(s) event for an unknown Withdrawal: ${token} ${season}`);
 
@@ -594,9 +560,7 @@ export default class EventProcessor {
     });
   }
 
-  // ----------------------------
-  // |          MARKET          |
-  // ----------------------------
+  /// /////////////////////// MARKET  //////////////////////////
 
   PodListingCreated(event: Simplify<PodListingCreatedEvent>) {
     const id          = event.args.index.toString();
@@ -609,7 +573,6 @@ export default class EventProcessor {
       pricePerPod:      tokenBN(event.args.pricePerPod, BEAN[1]),
       maxHarvestableIndex: tokenBN(event.args.maxHarvestableIndex, BEAN[1]),
       mode:             event.args.mode.toString() as FarmToMode,
-      // extra
       amount:           amount,   //
       totalAmount:      amount,   //
       remainingAmount:  amount,   //

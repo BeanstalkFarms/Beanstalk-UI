@@ -21,6 +21,14 @@ const epp : EventProcessingParameters = {
 
 // ------------------------------------------
 
+/**
+ * When parsing event data, ethers returns an array
+ * that also has named properties. This recreates
+ * the same array, assuming that the keys in the 
+ * provided object are ordered. 
+ * @note downstream SDK functions used the named keys
+ * and not the indices; this is more for consistency.
+ */
 const propArray = (o: { [key: string] : any }) => 
   Object.keys(o).reduce((prev, key) => { 
     prev[prev.length] = o[key];
@@ -426,24 +434,3 @@ describe('the Silo', () => {
     expect(p.withdrawals[t1]).toStrictEqual({});
   });
 });
-
-// const mockEvent = <T extends Event['args']>(name: string, args: T) => ({
-//   // Used for event processing
-//   event: name,
-//   args: args,
-//   // Mocked Ethereum event parameters
-//   eventSignature: '',
-//   blockNumber: 0,
-//   blockHash: '0xBLOCKHASH',
-//   transactionIndex: 0,
-//   removed: false,
-//   address: '0xADDRESS',
-//   data: '0xDATA',
-//   topics: ['0xTOPIC'],
-//   transactionHash: '0xHASH',
-//   logIndex: 0,
-//   removeEventListener: () => {},
-//   getBlock: () => {},
-//   getTransaction: () => {},
-//   getTransactionReceipt: () => {},
-// })

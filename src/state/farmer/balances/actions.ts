@@ -5,8 +5,6 @@ import { Balance } from '.';
 export type UpdateBalancePayload = {
   token: Token,
   balance: Balance;
-  // internalBalance: BigNumber;
-  // externalBalance: BigNumber;
 };
 
 export const updateBalances = createAction<UpdateBalancePayload[]>(

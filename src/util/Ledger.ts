@@ -19,6 +19,7 @@ export enum Source {
 
 export const identityResult = (result: any) => result;
 
+// FIXME: `instanceof BNJS` call; is this faster than always calling `.toString()`?
 export const bigNumberResult = (result: any) => new BigNumber(result instanceof BNJS ? result.toString() : result);
 
 export const tokenResult = (_token: Token | ChainConstant<Token>) => {

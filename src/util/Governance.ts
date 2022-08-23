@@ -1,15 +1,5 @@
 import { getDateCountdown } from '~/util/Time';
 
-// ^(BIP|BOP)-[0-9]+
-// export const PROPOSAL_TYPES = [
-//   'BIP',
-//   'BOP',
-//   'BFCP-A',
-//   'BFCP-B',
-//   'BFCP-C',
-//   'BFCP-D',
-// ];
-
 export const SNAPSHOT_SPACES = [
   'beanstalkdao.eth',
   'beanstalkfarms.eth',
@@ -50,6 +40,7 @@ export type Proposal = {
 
 /**
  * Formats date messages for governance proposal.
+ * @returns string
  */
 export const getDateMessage = (end: number) => {
   const [message, active] = getDateCountdown(end * 1000);
@@ -58,8 +49,8 @@ export const getDateMessage = (end: number) => {
 
 /**
  * Splits a typical proposal title after the colon (ex. BIP-24).
- * @returns string
- * @returns null if no colon found
+ * @note Could use a regex like `^(BIP|BOP)-[0-9]+`.
+ * @returns string | null if no colon found
  */
 export const getProposalTag = (title: string) => {
   const sep = title.indexOf(':', 5);

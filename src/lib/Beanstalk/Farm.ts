@@ -37,6 +37,9 @@ export type ChainableFunctionResult = {
 export type ChainableFunction = (amountIn: ethers.BigNumber, forward?: boolean) => Promise<ChainableFunctionResult>;
 
 /**
+ * Estimation Design Notes (Silo Chad)
+ * -----------------------------------
+ * 
  * Forward calculation:
  * Start with an `amountIn`, walk through steps to get a final `amountOut`.
  * 
@@ -132,7 +135,6 @@ export default class Farm {
 
   contracts : ReturnType<typeof getContracts>;
 
-  /// FIXME: what precision to use here
   static SLIPPAGE_PRECISION = 10 ** 6;
 
   // ------------------------------------------
@@ -148,13 +150,6 @@ export default class Farm {
     _amount: ethers.BigNumber,
     _slippage: number
   ) {
-    console.debug(
-      '[Farm] slip',
-      _amount,
-      _slippage,
-      Farm.SLIPPAGE_PRECISION * (1 - _slippage),
-      // ethers.BigNumber.from(Farm.SLIPPAGE_PRECISION * (1 - _slippage))
-    );
     return (
       _amount
         .mul(Math.floor(Farm.SLIPPAGE_PRECISION * (1 - _slippage)))
@@ -174,8 +169,8 @@ export default class Farm {
    * Executes a sequence of contract calls to estimate the `amountOut` received of some token
    * after an arbitrary set of chained transactions.
    * @param _fns array of chainable functions. Each accepts an `amountIn` and provides an `amountOut`.
-   * @param _args
-   * @param _forward
+   * @param _args[0] amount of the token to begin the sequence with
+   * @param _forward whether to estimate forward or backward
    * @returns struct containing the final `amountOut` and aggregated steps
    */
   static async estimate(
@@ -187,9 +182,9 @@ export default class Farm {
     value: ethers.BigNumber;
     steps: ChainableFunctionResult[];
   }> {
-    let nextAmountIn = _args[0]; /// 
+    let nextAmountIn = _args[0];
     let value = ethers.BigNumber.from(0);
-    const steps : ChainableFunctionResult[] = []; ///
+    const steps : ChainableFunctionResult[] = [];
     const exec = async (i: number) => {
       try {
         const step = await _fns[i](nextAmountIn, _forward);
@@ -216,15 +211,8 @@ export default class Farm {
     return {
       /// the resulting amountOut is just the argument
       /// that would've been passed to the next function
-      amountOut: (
-        _forward === true
-          ? nextAmountIn
-          : nextAmountIn
-          // : Farm.slip(nextAmountIn, -((0.04 + 0.1 + 0.04 + 0.04 + 0.0291) / 100))
-      ),
-      ///
+      amountOut: nextAmountIn,
       value,
-      ///
       steps,
     };
   }
@@ -357,7 +345,7 @@ export default class Farm {
       encode: (_: ethers.BigNumber) => (
         this.contracts.beanstalk.interface.encodeFunctionData('unwrapEth', [
           _amountInStep,        // ignore minAmountOut since there is no slippage
-          _fromMode,              //
+          _fromMode,            //
         ])
       ),
       decode: (data: string) => this.contracts.beanstalk.interface.decodeFunctionData('unwrapEth', data),
@@ -434,7 +422,7 @@ export default class Farm {
       { gasLimit: 10000000 }
     );
 
-    // Get amount out based on the selected pool
+    /// Get amount out based on the selected pool
     const poolAddr = _pool.toLowerCase();
     const pools = this.contracts.curve.pools;
     let amountOut;
@@ -468,7 +456,6 @@ export default class Farm {
       );
     }
 
-    //
     if (!amountOut) throw new Error('No supported pool found');
     console.debug('[step@exchange] finish:', {
       i,
@@ -540,8 +527,8 @@ export default class Farm {
       { gasLimit: 1000000 }
     );
     
-    // Only MetaPools have the ability to exchange_underlying
-    // FIXME: 3pool also has a single get_dy_underlying method, will we ever use this?
+    /// Only MetaPools have the ability to exchange_underlying
+    /// FIXME: 3pool also has a single get_dy_underlying method, will we ever use this?
     const amountOut = await CurveMetaPool__factory.connect(_pool, this.provider).callStatic['get_dy_underlying(int128,int128,uint256)'](
       i, // i = USDT = coins[3] ([0=BEAN, 1=CRV3] => [0=BEAN, 1=DAI, 2=USDC, 3=USDT])
       j, // j = BEAN = coins[0]
@@ -563,8 +550,8 @@ export default class Farm {
       encode: (minAmountOut: ethers.BigNumber) => (
         this.contracts.beanstalk.interface.encodeFunctionData('exchangeUnderlying', [
           _pool,
-          tokenIn, // fixme
-          tokenOut, // fixme
+          tokenIn,
+          tokenOut,
           _amountInStep,
           minAmountOut,
           _fromMode,
@@ -680,7 +667,7 @@ export default class Farm {
   }
 
   /**
-   * Remove liquidity from a pool as a single token.
+   * Remove liquidity from a Curve pool as a single token.
    * Supports: tricrypto2, 3pool, metapools, crypto pools.
    * @param _pool 
    * @param _registry 
@@ -702,8 +689,8 @@ export default class Farm {
       const coins = await registry.callStatic.get_coins(_pool, { gasLimit: 10000000 });
       const i = coins.findIndex((addr) => addr.toLowerCase() === _tokenOut.toLowerCase());
       
-      // FIXME: only difference between this and addLiquidity is the boolean
-      // Get amount out based on the selected pool
+      /// FIXME: only difference between this and addLiquidity is the boolean
+      /// Get amount out based on the selected pool
       const poolAddr = _pool.toLowerCase();
       const pools = this.contracts.curve.pools;
       let amountOut;

@@ -43,6 +43,7 @@ export enum ActionType {
 }
 
 /// ////////////////////////////// GENERIC /////////////////////////////////
+
 export type BaseAction = {
   type: ActionType.BASE;
   message?: string | React.ReactElement;

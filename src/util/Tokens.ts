@@ -35,7 +35,8 @@ export function MaxBN(bn1: BigNumber, bn2: BigNumber): BigNumber {
 
 /**
  * Trim a BigNumber to a set number of decimals.
- * FIXME: legacy code, seems very inefficient
+ * 
+ * @FIXME legacy code, seems very inefficient.
  */
 export function TrimBN(
   bn: BigNumber,
