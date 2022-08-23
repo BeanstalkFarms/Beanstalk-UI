@@ -1,8 +1,3 @@
-// export async function loadProposal() {
-//   const proposalData : any = await fetch('/.netlify/functions/proposal').then((response) => response.json());
-//   return proposalData;
-// }
-
 import { getDateCountdown } from '~/util/Time';
 
 // ^(BIP|BOP)-[0-9]+
@@ -61,6 +56,11 @@ export const getDateMessage = (end: number) => {
   return active ? `Vote ends ${message}` : `Ended ${message}`;
 };
 
+/**
+ * Splits a typical proposal title after the colon (ex. BIP-24).
+ * @returns string
+ * @returns null if no colon found
+ */
 export const getProposalTag = (title: string) => {
   const sep = title.indexOf(':', 5);
   return (

@@ -1,6 +1,24 @@
 import { ethers } from 'ethers';
 import { EventCacheName, FarmerEvents } from '~/state/farmer/events2';
 
+/**
+ * Return the key at which Farmer events should be held in localStorage.
+ * 
+ * @param chainId
+ * @param account 
+ * @param cacheId 
+ * @returns 
+ */
+export const getEventCacheId = (
+  chainId: number,
+  account: string,
+  cacheId: EventCacheName
+) => `${chainId}-${account.toLowerCase()}-${cacheId}`;
+
+/**
+ * Load Redux state from localStorage.
+ * @unused
+ */
 export const loadState = () => {
   try {
     const serializedState = localStorage.getItem('state');
@@ -14,6 +32,11 @@ export const loadState = () => {
   }
 };
 
+/**
+ * Save Redux state to localStorage.
+ * @unused
+ * @param state 
+ */
 export const saveState = (state: any) => {
   try {
     const serializedState = JSON.stringify(state);
@@ -24,12 +47,10 @@ export const saveState = (state: any) => {
   }
 };
 
-export const getEventCacheId = (
-  chainId: number,
-  account: string,
-  cacheId: EventCacheName
-) => `${chainId}-${account.toLowerCase()}-${cacheId}`;
-
+/**
+ * Rehydrate BigNumbers from stored value in Redux
+ * @unused
+ */
 export const rehydrateEvents2 = (events2: FarmerEvents | undefined) => {
   try {
     if (!events2) return;
