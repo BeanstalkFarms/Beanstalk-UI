@@ -14,8 +14,8 @@ import TxnPreview from '~/components/Common/Form/TxnPreview';
 import TxnAccordion from '~/components/Common/TxnAccordion';
 import FarmModeField from '~/components/Common/Form/FarmModeField';
 import TransactionToast from '~/components/Common/TxnToast';
-import useFarmerFertilizer from '~/hooks/redux/useFarmerFertilizer';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import useFarmerFertilizer from '~/hooks/farmer/useFarmerFertilizer';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import useAccount from '~/hooks/ledger/useAccount';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
@@ -52,56 +52,53 @@ const RinseForm : React.FC<
   return (
     <Form autoComplete="off" noValidate>
       <Stack gap={1}>
-        {/* Form Contents */}
-        <Stack gap={1}>
-          {/* Inputs */}
-          <TokenInputField
-            token={SPROUTS}
-            balanceLabel="Rinsable Balance"
-            balance={amountSprouts || ZERO_BN}
-            name="amount"
-            disabled
-            // MUI
-            fullWidth
-            InputProps={{
-              endAdornment: (
-                <TokenAdornment
-                  token={SPROUTS}
-                />
-              )
-            }}
-          />
-          <FarmModeField
-            name="destination"
-          />
-          {/* Outputs */}
-          {amountSprouts?.gt(0) ? (
-            <>
-              <TxnSeparator />
-              <TokenOutputField
-                token={BEAN[1]}
-                amount={amountSprouts}
+        {/* Inputs */}
+        <TokenInputField
+          token={SPROUTS}
+          balanceLabel="Rinsable Balance"
+          balance={amountSprouts || ZERO_BN}
+          name="amount"
+          disabled
+          // MUI
+          fullWidth
+          InputProps={{
+            endAdornment: (
+              <TokenAdornment
+                token={SPROUTS}
               />
-              <Box sx={{ width: '100%', mt: 0 }}>
-                <TxnAccordion defaultExpanded={false}>
-                  <TxnPreview
-                    actions={[
-                      {
-                        type: ActionType.RINSE,
-                        amount: amountSprouts,
-                      },
-                      {
-                        type: ActionType.RECEIVE_BEANS,
-                        amount: amountSprouts,
-                        destination: values.destination,
-                      },
-                    ]}
-                  />
-                </TxnAccordion>
-              </Box>
-            </>
-          ) : null}
-        </Stack>
+            )
+          }}
+        />
+        <FarmModeField
+          name="destination"
+        />
+        {/* Outputs */}
+        {amountSprouts?.gt(0) ? (
+          <>
+            <TxnSeparator />
+            <TokenOutputField
+              token={BEAN[1]}
+              amount={amountSprouts}
+            />
+            <Box sx={{ width: '100%', mt: 0 }}>
+              <TxnAccordion defaultExpanded={false}>
+                <TxnPreview
+                  actions={[
+                    {
+                      type: ActionType.RINSE,
+                      amount: amountSprouts,
+                    },
+                    {
+                      type: ActionType.RECEIVE_BEANS,
+                      amount: amountSprouts,
+                      destination: values.destination,
+                    },
+                  ]}
+                />
+              </TxnAccordion>
+            </Box>
+          </>
+        ) : null}
         {/* Submit */}
         <SmartSubmitButton
           loading={isSubmitting}

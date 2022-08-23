@@ -22,13 +22,13 @@ import FarmModeField from '~/components/Common/Form/FarmModeField';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import { Beanstalk } from '~/generated/index';
 import useToggle from '~/hooks/display/useToggle';
-import { useBeanstalkContract } from '~/hooks/useContract';
-import useFarmerBalances from '~/hooks/useFarmerBalances';
-import useTokenMap from '~/hooks/useTokenMap';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
+import useFarmerBalances from '~/hooks/farmer/useFarmerBalances';
+import useTokenMap from '~/hooks/chain/useTokenMap';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import useChainId from '~/hooks/useChain';
+import useChainId from '~/hooks/chain/useChainId';
 import useAccount from '~/hooks/ledger/useAccount';
-import usePreferredToken, { PreferredToken } from '~/hooks/usePreferredToken';
+import usePreferredToken, { PreferredToken } from '~/hooks/farmer/usePreferredToken';
 import { optimizeFromMode } from '~/util/Farm';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import { ActionType } from '~/util/Actions';
@@ -37,7 +37,7 @@ import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/t
 import { NEW_BN, ZERO_BN } from '~/constants';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { AppState } from '~/state';
-import useChopPenalty from '~/hooks/useChopPenalty';
+import useChopPenalty from '~/hooks/beanstalk/useChopPenalty';
 
 type ChopFormValues = FormState & {
   destination: FarmToMode | undefined;

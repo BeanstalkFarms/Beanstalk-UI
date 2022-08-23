@@ -1,16 +1,17 @@
 import { Container } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Card, Grid, Stack, Tab, Tabs } from '@mui/material';
+import { Card, Grid, Stack, Tab } from '@mui/material';
 import EventItem from '~/components/History/EventItem';
 import WalletButton from '~/components/Common/Connection/WalletButton';
 import { Event } from '~/lib/Beanstalk/EventProcessor';
 import { AppState } from '~/state';
 import useAccount from '../hooks/ledger/useAccount';
-import useChainId from '../hooks/useChain';
+import useChainId from '../hooks/chain/useChainId';
 import { getEventCacheId } from '../util/State';
 import { EventCacheName } from '../state/farmer/events2';
 import EmptyState from '../components/Common/ZeroState/EmptyState';
+import { Module, ModuleContent, ModuleTabs } from '~/components/Common/Module';
 
 const facetByTab = {
   0: undefined,
@@ -52,6 +53,7 @@ const TransactionHistoryPage: React.FC = () => {
     filterEventsByFacet();
   }, [account, chainId, events, tab]);
 
+  // FIXME: use zero state
   if (!account) {
     return (
       <Card component={Stack} direction="row" alignItems="center" justifyContent="center" sx={{ p: 4 }}>
@@ -62,32 +64,29 @@ const TransactionHistoryPage: React.FC = () => {
 
   return (
     <Container maxWidth="md">
-      <Stack gap={2}>
-        <Card sx={{ border: 'none', p: 2 }}>
-          <Stack gap={0.5}>
-            <Tabs value={tab} onChange={handleSetTab} sx={{ minHeight: 0 }}>
-              <Tab label="All" />
-              <Tab label="Silo" />
-              <Tab label="Field" />
-              {/* <Tab label="Other" /> */}
-            </Tabs>
-            {walletEvents !== undefined && walletEvents.length > 0 ? (
-              <Grid container>
-                {walletEvents.map((event) => (
-                  <Grid key={`${event.transactionHash}-${event.logIndex}`} item width="100%">
-                    <EventItem
-                      event={event}
-                      account={account ? account.toString().toLowerCase() : ''}
+      <Module>
+        <ModuleTabs value={tab} onChange={handleSetTab}>
+          <Tab label="All" />
+          <Tab label="Silo" />
+          <Tab label="Field" />
+        </ModuleTabs>
+        <ModuleContent>
+          {walletEvents !== undefined && walletEvents.length > 0 ? (
+            <Grid container>
+              {walletEvents.map((event) => (
+                <Grid key={`${event.transactionHash}-${event.logIndex}`} item width="100%">
+                  <EventItem
+                    event={event}
+                    account={account ? account.toString().toLowerCase() : ''}
                       />
-                  </Grid>
+                </Grid>
                   ))}
-              </Grid>
+            </Grid>
             ) : (
               <EmptyState message="No transactions of this type." />
             )}
-          </Stack>
-        </Card>
-      </Stack>
+        </ModuleContent>
+      </Module>
     </Container>
   );
 };

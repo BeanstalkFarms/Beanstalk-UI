@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { ERC20Token, NativeToken } from '~/classes/Token';
-import { QuoteHandlerResult } from '~/hooks/useQuote';
+import { QuoteHandlerResult } from '~/hooks/ledger/useQuote';
 
 /**
  * 

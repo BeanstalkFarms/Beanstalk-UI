@@ -17,9 +17,8 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-
 import { IMPERSONATED_ACCOUNT, trimAddress } from '~/util';
-import useChainConstant from '~/hooks/useChainConstant';
+import useChainConstant from '~/hooks/chain/useChainConstant';
 import balancesIcon from '~/img/nav-icons/balances.svg';
 import historyIcon from '~/img/nav-icons/history.svg';
 import etherscanIcon from '~/img/nav-icons/etherscan.svg';
@@ -28,36 +27,34 @@ import useAnchor from '~/hooks/display/useAnchor';
 import useToggle from '~/hooks/display/useToggle';
 import useAccount from '~/hooks/ledger/useAccount';
 import { CHAIN_INFO } from '~/constants/chains';
-import { BeanstalkPalette } from '../../App/muiTheme';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 import WalletDialog from './WalletDialog';
-import DropdownIcon from '../DropdownIcon';
-import PickBeansDialog from '../../Farmer/Unripe/PickDialog';
-import AddressIcon from '../AddressIcon';
-
-// -----------------------------------------------------------------
+import DropdownIcon from '~/components/Common/DropdownIcon';
+import PickBeansDialog from '~/components/Farmer/Unripe/PickDialog';
+import AddressIcon from '~/components/Common/AddressIcon';
 
 const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props }) => {
   const account = useAccount();
-  const { data: account2 } = useWagmiAccount();
+  const { data: accountRaw } = useWagmiAccount();
   const { activeChain } = useNetwork();
   const { disconnect } = useDisconnect();
   const chain = useChainConstant(CHAIN_INFO);
 
-  // Theme
+  /// Theme
   const theme = useTheme();
   const isMedium = useMediaQuery(theme.breakpoints.down('md')); // trim additional account text
 
-  // Menu
+  /// Menu
   const [menuAnchor, toggleMenuAnchor] = useAnchor();
   const menuVisible = Boolean(menuAnchor);
 
-  // Dialog: Wallet
+  /// Dialog: Wallet
   const [selectingWallet, showWallets, hideWallets] = useToggle();
 
-  // Dialog: Pick Unripe Beans
+  /// Dialog: Pick Unripe Beans
   const [picking, showPick, hidePick] = useToggle(toggleMenuAnchor);
 
-  // Display: Not Connected
+  /// Display: Not Connected
   if (!account || !activeChain?.id) {
     return (
       <>
@@ -183,7 +180,7 @@ const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
     </MenuList>
   );
 
-  // Connected
+  /// Connected
   return (
     <>
       {/* Wallet Button */}
@@ -203,7 +200,7 @@ const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
         } : props.sx}
       >
         <Typography variant="bodyMedium" display={{ xs: 'none', sm: 'block' }}>
-          {trimAddress(IMPERSONATED_ACCOUNT || account2?.address)}
+          {trimAddress(IMPERSONATED_ACCOUNT || accountRaw?.address)}
         </Typography>
       </Button>
       {/* Mobile: Drawer */}

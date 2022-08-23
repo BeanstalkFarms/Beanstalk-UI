@@ -8,10 +8,10 @@ import toast from 'react-hot-toast';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { Token } from '~/classes';
 import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { FarmerSiloBalance } from '~/state/farmer/silo';
 import { ActionType } from '~/util/Actions';
-import usePools from '~/hooks/usePools';
+import usePools from '~/hooks/beanstalk/usePools';
 import { ERC20Token } from '~/classes/Token';
 import {
   FormTokenState,
@@ -32,11 +32,11 @@ import TokenIcon from '~/components/Common/TokenIcon';
 import useToggle from '~/hooks/display/useToggle';
 import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
 import PillRow from '~/components/Common/Form/PillRow';
-import { QuoteHandler } from '~/hooks/useQuote';
+import { QuoteHandler } from '~/hooks/ledger/useQuote';
 import TransactionToast from '~/components/Common/TxnToast';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
-import useChainConstant from '~/hooks/useChainConstant';
+import useChainConstant from '~/hooks/chain/useChainConstant';
 import { BEAN_CRV3_LP } from '~/constants/tokens';
 import copy from '~/constants/copy';
 

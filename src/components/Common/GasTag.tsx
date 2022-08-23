@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { DateTime } from 'luxon';
-import useGasUSD from '~/hooks/ledger/useGasUSD';
+import useGasToUSD from '~/hooks/ledger/useGasToUSD';
 import { AppState } from '~/state';
 import { displayUSD } from '~/util';
 
@@ -13,7 +13,7 @@ const GasTag : React.FC<{
   gasLimit
 }) => {
   const prices    = useSelector<AppState, AppState['app']['ethPrices']>((state) => state.app.ethPrices);
-  const getGasUSD = useGasUSD();
+  const getGasUSD = useGasToUSD();
   const gasUSD    = gasLimit ? getGasUSD(gasLimit) : null;
   return (
     <Tooltip title={(

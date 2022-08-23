@@ -9,8 +9,9 @@ const GuideDialog: React.FC<DialogProps & GuideProps> = (props) => (
     <StyledDialogTitle onClose={props.onClose as any}>{props.title}</StyledDialogTitle>
     <StyledDialogContent>
       <Stack gap={1}>
-        {props.guides.map((guide) => (
+        {props.guides.map((guide, index) => (
           <DescriptionButton
+            key={index}
             title={guide.title}
             onClick={props.onClose as any}
             href={guide.url}
@@ -20,6 +21,6 @@ const GuideDialog: React.FC<DialogProps & GuideProps> = (props) => (
       </Stack>
     </StyledDialogContent>
   </StyledDialog>
-  );
+);
 
 export default GuideDialog;

@@ -12,10 +12,10 @@ import {
   TxnSeparator
 } from '~/components/Common/Form';
 import FarmModeField from '~/components/Common/Form/FarmModeField';
-import useFarmerPlots from '~/hooks/redux/useFarmerPlots';
-import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
-import { useBeanstalkContract } from '~/hooks/useContract';
-import useChainConstant from '~/hooks/useChainConstant';
+import useFarmerPlots from '~/hooks/farmer/useFarmerPlots';
+import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
+import useChainConstant from '~/hooks/chain/useChainConstant';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { parseError } from '~/util';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';

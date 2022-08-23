@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import BigNumber from 'bignumber.js';
-import { useBeanstalkContract } from '~/hooks/useContract';
-import useChainId from '~/hooks/useChain';
-import useTokenMap from '~/hooks/useTokenMap';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
+import useChainId from '~/hooks/chain/useChainId';
+import useTokenMap from '~/hooks/chain/useTokenMap';
 import { tokenResult } from '~/util';
 import { AddressMap } from '~/constants';
 import { resetUnripe, updateUnripe } from './actions';

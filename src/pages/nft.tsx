@@ -8,7 +8,7 @@ import { ClaimStatus, loadNFTs, Nft } from '~/util/BeaNFTs';
 import NFTDialog from '~/components/NFT/NFTDialog';
 import { BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES } from '~/constants';
 import NFTGrid from '~/components/NFT/NFTGrid';
-import { useGenesisNFTContract, useWinterNFTContract } from '~/hooks/useContract';
+import { useGenesisNFTContract, useWinterNFTContract } from '~/hooks/ledger/useContract';
 import TransactionToast from '~/components/Common/TxnToast';
 import useAccount from '../hooks/ledger/useAccount';
 import AuthEmptyState from '~/components/Common/ZeroState/AuthEmptyState';

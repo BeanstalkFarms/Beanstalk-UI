@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Card, Stack, Tab, Tabs } from '@mui/material';
+import { Box, Tab } from '@mui/material';
 import { Pool } from '~/classes';
 import { ERC20Token } from '~/classes/Token';
 import { FarmerSiloBalance } from '~/state/farmer/silo';
@@ -12,6 +12,7 @@ import Deposits from './Deposits';
 import Withdrawals from './Withdrawals';
 import Transfer from './Transfer';
 import Convert from './Convert';
+import { Module, ModuleTabs, ModuleContent } from '~/components/Common/Module';
 
 const SLUGS = ['deposit', 'convert', 'transfer', 'withdraw', 'claim'];
 
@@ -33,73 +34,51 @@ const SiloActions : React.FC<{
   const hasClaimable = props.siloBalance?.claimable?.amount.gt(0);
   return (
     <>
-      <Card sx={{ position: 'relative' }}>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          sx={{
-            overflow: 'visible',
-            px: 2,
-            pt: 2,
-            pb: 1.5,
-          }}
-        >
-          <Tabs
-            value={tab}
-            onChange={handleChange}
-            sx={{ minHeight: 0 }}
-          >
-            <Tab label="Deposit" />
-            <Tab label="Convert" />
-            <Tab label="Transfer" />
-            <Tab label="Withdraw" />
-            <BadgeTab
-              showBadge={hasClaimable}
-              label="Claim"
-              sx={{ overflow: 'visible' }}
+      <Module>
+        <ModuleTabs value={tab} onChange={handleChange}>
+          <Tab label="Deposit" />
+          <Tab label="Convert" />
+          <Tab label="Transfer" />
+          <Tab label="Withdraw" />
+          <BadgeTab label="Claim" showBadge={hasClaimable} />
+        </ModuleTabs>
+        <ModuleContent>
+          {tab === 0 ? (
+            <Deposit
+              pool={props.pool}
+              token={props.token}
             />
-          </Tabs>
-        </Stack>
-        <Stack gap={1.5}>
-          <Box sx={{ px: 1, pb: 1 }}>
-            {tab === 0 ? (
-              <Deposit
-                pool={props.pool}
-                token={props.token}
-              />
-            ) : null}
-            {tab === 1 ? (
-              <Convert
-                pool={props.pool}
-                fromToken={props.token}
-              />
-            ) : null}
-            {tab === 2 ? (
-              <Transfer token={props.token} />
-            ) : null}
-            {tab === 3 ? (
-              <Withdraw
-                token={props.token}
-              />
-            ) : null}
-            {tab === 4 ? (
-              <Claim
-                token={props.token}
-                siloBalance={props.siloBalance}
-              />
-            ) : null}
-          </Box>
-        </Stack>
-      </Card>
+          ) : null}
+          {tab === 1 ? (
+            <Convert
+              pool={props.pool}
+              fromToken={props.token}
+            />
+          ) : null}
+          {tab === 2 ? (
+            <Transfer token={props.token} />
+          ) : null}
+          {tab === 3 ? (
+            <Withdraw
+              token={props.token}
+            />
+          ) : null}
+          {tab === 4 ? (
+            <Claim
+              token={props.token}
+              siloBalance={props.siloBalance}
+            />
+          ) : null}
+        </ModuleContent>
+      </Module>
       {/* Tables */}
-      <Box sx={{ display: tab === 0 || tab === 1 || tab === 2 ? 'block' : 'none' }}>
+      <Box sx={{ display: tab <= 2 ? 'block' : 'none' }}>
         <Deposits
           token={props.token}
           balance={props.siloBalance}
         />
       </Box>
-      <Box sx={{ display: tab === 3 || tab === 4 ? 'block' : 'none' }}>
+      <Box sx={{ display: tab >= 3 ? 'block' : 'none' }}>
         <Withdrawals
           token={props.token}
           balance={props.siloBalance}

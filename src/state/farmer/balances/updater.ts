@@ -3,12 +3,11 @@ import { useDispatch } from 'react-redux';
 import flatMap from 'lodash/flatMap';
 import { ZERO_BN } from '~/constants';
 import { BALANCE_TOKENS, ERC20_TOKENS, ETH } from '~/constants/tokens';
-import useChainId from '~/hooks/useChain';
-import { useBeanstalkContract } from '~/hooks/useContract';
-import useMigrateCall from '~/hooks/useMigrateCall';
-import useTokenMap from '~/hooks/useTokenMap';
+import useChainId from '~/hooks/chain/useChainId';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
+import useTokenMap from '~/hooks/chain/useTokenMap';
 import { tokenResult } from '~/util';
-import useChainConstant from '~/hooks/useChainConstant';
+import useChainConstant from '~/hooks/chain/useChainConstant';
 import useAccount from '~/hooks/ledger/useAccount';
 import { clearBalances, updateBalances } from './actions';
 
@@ -26,7 +25,6 @@ export const useFetchFarmerBalances = () => {
 
   // Contracts
   const beanstalk = useBeanstalkContract();
-  const migrate   = useMigrateCall();
 
   // Handlers
   // FIXME: make this callback accept a tokens array to prevent reloading all balances on every call

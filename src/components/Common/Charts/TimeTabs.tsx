@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { Button, Divider, Stack, StackProps, Typography } from '@mui/material';
-import { SeasonAggregation, SeasonRange } from '~/hooks/useSeasonsQuery';
+import { SeasonAggregation, SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
 import { BeanstalkPalette } from '../../App/muiTheme';
 
 const DISPLAY = [
@@ -52,9 +52,6 @@ const TimeTabs: React.FC<
             py: 0.3,
             mt: -0.3,
             minWidth: 0,
-            '&:hover': {
-              // backgroundColor: 'transparent'
-            }
           }}
           disableRipple
         >
@@ -77,9 +74,6 @@ const TimeTabs: React.FC<
             py: 0.3,
             mt: -0.3,
             minWidth: 0,
-            '&:hover': {
-              // backgroundColor: 'transparent'
-            }
           }}
           disableRipple
         >

@@ -13,16 +13,16 @@ import ListingDetails from '~/components/Market/Cards/ListingDetails';
 import PageHeaderSecondary from '~/components/Common/PageHeaderSecondary';
 import CancelListing from '~/components/Market/Actions/CancelListing';
 import GenericZero from '~/components/Common/ZeroState/GenericZero';
-import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
-import usePodListing from '~/hooks/usePodListing';
+import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
+import usePodListing from '~/hooks/beanstalk/usePodListing';
 import useAccount from '~/hooks/ledger/useAccount';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { bigNumberResult, Source } from '~/util';
 
 const ListingPage: React.FC = () => {
   const account = useAccount();
   const { id } = useParams<{ id: string }>();
-  const { data: _listing, source, loading, error } = usePodListing(id);
+  const { data: listing, source, loading, error } = usePodListing(id);
   const harvestableIndex = useHarvestableIndex();
   const beanstalk = useBeanstalkContract();
 
@@ -31,9 +31,9 @@ const ListingPage: React.FC = () => {
     if (id) {
       (async () => {
         try {
-          const listing = await beanstalk.podListing(id.toString()).then(bigNumberResult);
-          console.debug('[pages/listing] listing = ', listing);
-          setListingValid(listing?.gt(0));
+          const _listing = await beanstalk.podListing(id.toString()).then(bigNumberResult);
+          console.debug('[pages/listing] listing = ', _listing);
+          setListingValid(_listing?.gt(0));
         } catch (e) {
           console.error(e);
           setListingValid(false);
@@ -42,6 +42,7 @@ const ListingPage: React.FC = () => {
     }
   }, [beanstalk, id]);
 
+  ///
   if (loading) {
     return (
       <GenericZero loading />
@@ -54,7 +55,7 @@ const ListingPage: React.FC = () => {
       </GenericZero>
     );
   }
-  if (!_listing || !listingValid) {
+  if (!listing || !listingValid) {
     return (
       <GenericZero title="Not found">
         <Typography>Listing not found.</Typography>
@@ -62,8 +63,6 @@ const ListingPage: React.FC = () => {
     );
   }
   
-  const listing = _listing;
-
   return (
     <Container maxWidth="sm">
       <Stack spacing={2}>
@@ -72,7 +71,6 @@ const ListingPage: React.FC = () => {
             <Stack direction="row" gap={0.5} alignItems="center">
               <Typography variant="h2">
                 Listing #{listing.id}
-                {/* {`${trimAddress(listing.account)}'s Pod Listing`} */}
               </Typography>
             </Stack>
           )}
@@ -113,7 +111,7 @@ const ListingPage: React.FC = () => {
             </Stack>
           </Card>
         )}
-        <Box sx={{ }}>
+        <Box>
           <Typography color="text.secondary" textAlign="right">
             Data source: {source === Source.SUBGRAPH ? 'Subgraph' : 'RPC'}
           </Typography>

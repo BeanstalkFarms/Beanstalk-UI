@@ -4,9 +4,9 @@ import { BEAN_TO_SEEDS, BEAN_TO_STALK,  ONE_BN,  TokenMap, ZERO_BN } from '~/con
 import { bigNumberResult } from '~/util/Ledger';
 import { tokenResult, toStringBaseUnitBN } from '~/util';
 import { BEAN, SEEDS, STALK } from '~/constants/tokens';
-import { useBeanstalkContract } from '~/hooks/useContract';
-import useWhitelist from '~/hooks/useWhitelist';
-import { useGetChainConstant } from '~/hooks/useChainConstant';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
+import useWhitelist from '~/hooks/beanstalk/useWhitelist';
+import { useGetChainConstant } from '~/hooks/chain/useChainConstant';
 import { resetBeanstalkSilo, updateBeanstalkSilo } from './actions';
 import { BeanstalkSiloBalance } from './index';
 

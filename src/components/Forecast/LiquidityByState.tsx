@@ -4,8 +4,8 @@ import { useSelector } from 'react-redux';
 import Stat from '../Common/Stat';
 import { displayUSD } from '../../util';
 import SiloBalances from '../Common/SiloBalances';
-import useWhitelist from '../../hooks/useWhitelist';
-import useBeanstalkSiloBreakdown from '../../hooks/useBeanstalkSiloBreakdown';
+import useWhitelist from '../../hooks/beanstalk/useWhitelist';
+import useBeanstalkSiloBreakdown from '../../hooks/beanstalk/useBeanstalkSiloBreakdown';
 import StatsCard, { StatItem } from '~/components/Common/StatsCard';
 import { SEEDS, SPROUTS, STALK, PODS } from '~/constants/tokens';
 import { AppState } from '~/state';
@@ -13,9 +13,9 @@ import { AppState } from '~/state';
 const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
   const breakdown = useBeanstalkSiloBreakdown();
   const whitelist = useWhitelist();
-  const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
+  const beanstalkSilo  = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
-  const beanstalkBarn = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
+  const beanstalkBarn  = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
 
   /// Total Balances
   const STAT_ITEMS: StatItem[] = [
@@ -35,9 +35,7 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
       title: 'Pods',
       tooltip: 'This is the total Pod supply. Pods become Harvestable on a FIFO basis.',
       token: PODS,
-      // tooltip: 'This is the total number of pods ever minted.',
-      // token: PODS,
-      amount: beanstalkField.podLine // FIXME: @silochad - is this what we want?
+      amount: beanstalkField.podLine
     },
     {
       title: 'Sprouts',

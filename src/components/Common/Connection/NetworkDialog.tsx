@@ -15,6 +15,11 @@ const NetworkDialog: React.FC<{
   open,
   handleClose
 }) => {
+  /// Theme
+  const theme = useTheme();
+  const isMedium = useMediaQuery(theme.breakpoints.down('md'));
+  
+  ///
   const { activeChain, chains, error, pendingChainId, switchNetwork } = useNetwork({
     onSettled(data, err) {
       if (!err) {
@@ -36,9 +41,6 @@ const NetworkDialog: React.FC<{
     },
     [switchNetwork, handleClose]
   );
-  
-  const theme = useTheme();
-  const isMedium = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <Dialog onClose={handleClose} open={open}>
@@ -54,10 +56,10 @@ const NetworkDialog: React.FC<{
           ) : null}
           {chains.map((chain) => (
             <Button
+              key={chain.id}
               size="large"
               variant="outlined"
               color="primary"
-              key={chain.id}
               onClick={handleSwitch(chain.id)}
               sx={{
                 py: 1,
