@@ -1,7 +1,7 @@
 import React from 'react';
 import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
 import { SeasonalRRoRDocument, SeasonalRRoRQuery } from '~/generated/graphql';
-import { SnapshotData } from '~/hooks/useSeasonsQuery';
+import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
 
 const getValue = (season: SnapshotData<SeasonalRRoRQuery>) => parseFloat(season.realRateOfReturn) * 100;
 const formatValue = (value: number) => `${value.toFixed(2)}%`;

@@ -12,8 +12,6 @@ const TokenIcon : React.FC<{
       height: '1em',
       width: 'auto',
       verticalAlign: 'top',
-      // verticalAlign: 'middle',
-      // marginTop: '1.5px',
       ...style
     }}
   />

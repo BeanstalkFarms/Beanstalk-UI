@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
-import { Box, Card, Stack, Tabs } from '@mui/material';
 import useTabs from '~/hooks/display/useTabs';
 import BadgeTab from '~/components/Common/BadgeTab';
 import ProposalList from '~/components/Governance/Proposals/ProposalList';
 import { useProposalsQuery } from '~/generated/graphql';
 import { Proposal, SNAPSHOT_SPACES } from '~/util/Governance';
+import { Module, ModuleContent, ModuleTabs } from '~/components/Common/Module';
 
 /// Variables
 const SLUGS = ['dao', 'beanstalk-farms', 'bean-sprout'];
@@ -51,30 +51,22 @@ const Proposals: React.FC = () => {
   const [beanSproutProposals, hasActiveBS] = filterProposals(2);
 
   return (
-    <Card sx={{ position: 'relative' }}>
-      <Stack gap={1.5}>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          sx={{ overflow: 'visible', px: 2, pt: 2 }}>
-          <Tabs
-            value={tab}
-            onChange={handleChange}
-            sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }}
-            variant="scrollable">
-            <BadgeTab label="DAO" showBadge={hasActiveDao as boolean} />
-            <BadgeTab label="Beanstalk Farms" showBadge={hasActiveBF as boolean} />
-            <BadgeTab label="Bean Sprout" showBadge={hasActiveBS as boolean} />
-          </Tabs>
-        </Stack>
-        <Box>
-          {tab === 0 && <ProposalList proposals={daoProposals} />}
-          {tab === 1 && <ProposalList proposals={beanstalkFarmsProposals} />}
-          {tab === 2 && <ProposalList proposals={beanSproutProposals} />}
-        </Box>
-      </Stack>
-    </Card>
+    <Module>
+      <ModuleTabs
+        value={tab}
+        onChange={handleChange}
+        sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }}
+        variant="scrollable">
+        <BadgeTab label="DAO" showBadge={hasActiveDao as boolean} />
+        <BadgeTab label="Beanstalk Farms" showBadge={hasActiveBF as boolean} />
+        <BadgeTab label="Bean Sprout" showBadge={hasActiveBS as boolean} />
+      </ModuleTabs>
+      <ModuleContent>
+        {tab === 0 && <ProposalList proposals={daoProposals} />}
+        {tab === 1 && <ProposalList proposals={beanstalkFarmsProposals} />}
+        {tab === 2 && <ProposalList proposals={beanSproutProposals} />}
+      </ModuleContent>
+    </Module>
   );
 };
 

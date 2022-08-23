@@ -2,7 +2,7 @@ import { Box, Card, Chip, Stack, styled, Tab, TabProps, Tabs } from '@mui/materi
 import BigNumber from 'bignumber.js';
 import React from 'react';
 import { Token } from 'graphql';
-import useFarmerBalancesBreakdown from '~/hooks/useFarmerBalancesBreakdown';
+import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import { AppState } from '~/state';
 
 import useTabs from '~/hooks/display/useTabs';

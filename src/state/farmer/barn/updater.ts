@@ -1,11 +1,11 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import useChainConstant from '~/hooks/useChainConstant';
-import { useBeanstalkContract, useFertilizerContract } from '~/hooks/useContract';
-import { REPLANT_INITIAL_ID } from '~/hooks/useHumidity';
-import useChainId from '~/hooks/useChain';
+import useChainConstant from '~/hooks/chain/useChainConstant';
+import { useBeanstalkContract, useFertilizerContract } from '~/hooks/ledger/useContract';
+import { REPLANT_INITIAL_ID } from '~/hooks/beanstalk/useHumidity';
+import useChainId from '~/hooks/chain/useChainId';
 import { tokenResult } from '~/util';
-import useBlocks from '~/hooks/useBlocks';
+import useBlocks from '~/hooks/ledger/useBlocks';
 import useAccount from '~/hooks/ledger/useAccount';
 import { resetFarmerBarn, updateFarmerBarn } from './actions';
 import useEvents, { GetQueryFilters } from '../events2/updater';

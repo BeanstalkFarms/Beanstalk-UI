@@ -10,11 +10,11 @@ import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN, BEAN_CRV3_LP, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
 import { AddressMap, ONE_BN, ZERO_BN } from '~/constants';
 import { displayFullBN, displayTokenAmount } from '~/util/Tokens';
-import useBDV from '~/hooks/useBDV';
+import useBDV from '~/hooks/beanstalk/useBDV';
 import { BeanstalkPalette, FontSize, IconSize } from '~/components/App/muiTheme';
 import Fiat from '~/components/Common/Fiat';
-import useGetChainToken from '~/hooks/useGetChainToken';
-import useSetting from '~/hooks/useSetting';
+import useGetChainToken from '~/hooks/chain/useGetChainToken';
+import useSetting from '~/hooks/app/useSetting';
 
 const ARROW_CONTAINER_WIDTH = 20;
 

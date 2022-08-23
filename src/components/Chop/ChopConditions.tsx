@@ -3,10 +3,10 @@ import { Card, CircularProgress, Grid, Stack, Tooltip, Typography } from '@mui/m
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useSelector } from 'react-redux';
 import { displayBN, displayFullBN } from '../../util';
-import useChopPenalty from '../../hooks/useChopPenalty';
+import useChopPenalty from '../../hooks/beanstalk/useChopPenalty';
 import { NEW_BN } from '../../constants';
 import { BeanstalkPalette, FontSize } from '../App/muiTheme';
-import useFertilizerProgress from '../../hooks/useFertilizerProgress';
+import useFertilizerProgress from '../../hooks/beanstalk/useFertilizerProgress';
 import { AppState } from '~/state';
 
 const ChopConditions: React.FC<{}> = () => {

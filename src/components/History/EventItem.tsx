@@ -7,7 +7,7 @@ import { BEAN, PODS, SILO_WHITELIST } from '~/constants/tokens';
 import { SupportedChainId } from '~/constants/chains';
 import { Event } from '~/lib/Beanstalk/EventProcessor';
 import TokenIcon from '../Common/TokenIcon';
-import useTokenMap from '../../hooks/useTokenMap';
+import useTokenMap from '../../hooks/chain/useTokenMap';
 
 export interface EventItemProps {
   event: Event;

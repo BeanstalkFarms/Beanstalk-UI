@@ -22,7 +22,9 @@ const StatHorizontal : React.FC<{
         )}
       </Typography>
     </Tooltip>
-    <Stack direction="row" alignItems="center" gap={0.3}>{children}</Stack>
+    <Stack direction="row" alignItems="center" gap={0.3}>
+      {children}
+    </Stack>
   </Stack>
 );
 

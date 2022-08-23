@@ -18,11 +18,12 @@ import MyListingsTable from '~/components/Market/Tables/MyListings';
 
 const SLUGS = ['orders', 'listings'];
 const MarketAccountPage: React.FC = () => {
-  ///
-  const [tab, handleChangeTab] = useTabs(SLUGS, 'view');
-
+  /// Theme
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  /// Tabs
+  const [tab, handleChangeTab] = useTabs(SLUGS, 'view');
 
   return (
     <Container maxWidth="lg">

@@ -1,17 +1,16 @@
-import { Box, Card, Stack, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import React from 'react';
+import { Module, ModuleContent, ModuleHeader } from '~/components/Common/Module';
 import Swap from '~/components/Swap/Actions/Swap';
 
 const SwapActions : React.FC<{}> = () => (
-  <Card sx={{ position: 'relative' }}>
-    <Stack gap={1.5}>
-      <Box px={2} pt={2}>
-        <Typography variant="h4">Swap</Typography>
-      </Box>
-      <Box px={1} pb={1}>
-        <Swap />
-      </Box>
-    </Stack>
-  </Card>
+  <Module>
+    <ModuleHeader>
+      <Typography variant="h4">Swap</Typography>  
+    </ModuleHeader>
+    <ModuleContent>
+      <Swap />
+    </ModuleContent>
+  </Module>
 );
 export default SwapActions;

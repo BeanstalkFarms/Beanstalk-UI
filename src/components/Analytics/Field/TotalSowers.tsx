@@ -1,8 +1,8 @@
 import React from 'react';
 import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
 import { SeasonalTotalSowersDocument, SeasonalTotalSowersQuery } from '~/generated/graphql';
-import useSeason from '~/hooks/useSeason';
-import { SnapshotData } from '~/hooks/useSeasonsQuery';
+import useSeason from '~/hooks/beanstalk/useSeason';
+import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
 
 const getValue = (season: SnapshotData<SeasonalTotalSowersQuery>) => season.totalNumberOfSowers;
 const formatValue = (value: number) => `${value}`;

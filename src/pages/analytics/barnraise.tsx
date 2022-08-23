@@ -6,7 +6,7 @@ import Stat from '~/components/Common/Stat';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import AmountRaisedCard from '~/components/Analytics/Barn/AmountRaisedCard';
 import ComingSoonCard from '~/components/Common/ZeroState/ComingSoonCard';
-import useChainId from '~/hooks/useChain';
+import useChainId from '~/hooks/chain/useChainId';
 import useTabs from '~/hooks/display/useTabs';
 import { displayBN } from '~/util';
 import { SupportedChainId } from '~/constants';

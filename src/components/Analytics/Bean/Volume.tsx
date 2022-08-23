@@ -1,7 +1,7 @@
 import React from 'react';
 import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
 import { SeasonalVolumeDocument, SeasonalVolumeQuery } from '~/generated/graphql';
-import useSeason from '~/hooks/useSeason';
+import useSeason from '~/hooks/beanstalk/useSeason';
 
 const getValue = (season: SeasonalVolumeQuery['seasons'][number]) => parseFloat(season.hourlyVolumeUSD);
 const formatValue = (value: number) => `$${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;

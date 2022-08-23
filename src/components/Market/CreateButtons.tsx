@@ -14,9 +14,9 @@ const CreateButtons: React.FC = () => (
       color="primary"
       variant="contained"
       sx={{ py: 1 }}
-      >
+    >
       <Typography variant="h4">Create New</Typography>
     </Button>
   </Stack>
-  );
+);
 export default CreateButtons;

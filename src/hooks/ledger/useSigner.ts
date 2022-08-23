@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 import { useSigner as useWagmiSigner } from 'wagmi';
-import useChainId from '~/hooks/useChain';
+import useChainId from '~/hooks/chain/useChainId';
 import { TESTNET_CHAINS, TESTNET_RPC_ADDRESSES } from '~/constants';
 
 export let useSigner = useWagmiSigner;

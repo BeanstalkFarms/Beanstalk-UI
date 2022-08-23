@@ -12,7 +12,7 @@ import ROUTES from './routes';
 import MenuItemMobile from './MenuItemMobile';
 import DropdownIcon from '../Common/DropdownIcon';
 import useToggle from '../../hooks/display/useToggle';
-import useChainConstant from '../../hooks/useChainConstant';
+import useChainConstant from '../../hooks/chain/useChainConstant';
 import { BEANSTALK_ADDRESSES, CHAIN_INFO } from '../../constants';
 
 const NavDrawer: React.FC<{

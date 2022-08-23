@@ -10,7 +10,7 @@ import useAccount from '~/hooks/ledger/useAccount';
 import { TabData } from '~/components/Silo/Views';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { SEEDS, STALK } from '~/constants/tokens';
-import useFarmerBalancesBreakdown from '~/hooks/useFarmerBalancesBreakdown';
+import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 
 // ------------------------------------------------
 

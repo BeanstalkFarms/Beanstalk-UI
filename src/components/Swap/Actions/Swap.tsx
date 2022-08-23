@@ -22,20 +22,20 @@ import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import { Beanstalk } from '~/generated/index';
 import { ZERO_BN } from '~/constants';
 import { BEAN, CRV3, CRV3_UNDERLYING, DAI, ETH, USDC, USDT, WETH } from '~/constants/tokens';
-import { useBeanstalkContract } from '~/hooks/useContract';
-import useFarmerBalances from '~/hooks/useFarmerBalances';
-import useTokenMap from '~/hooks/useTokenMap';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
+import useFarmerBalances from '~/hooks/farmer/useFarmerBalances';
+import useTokenMap from '~/hooks/chain/useTokenMap';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
-import useGetChainToken from '~/hooks/useGetChainToken';
-import useQuote, { QuoteHandler } from '~/hooks/useQuote';
-import useFarm from '~/hooks/useFarm';
+import useGetChainToken from '~/hooks/chain/useGetChainToken';
+import useQuote, { QuoteHandler } from '~/hooks/ledger/useQuote';
+import useFarm from '~/hooks/sdk/useFarm';
 import useAccount from '~/hooks/ledger/useAccount';
 import { toStringBaseUnitBN, toTokenUnitsBN, parseError, MinBN } from '~/util';
 import { IconSize } from '~/components/App/muiTheme';
 import TransactionToast from '~/components/Common/TxnToast';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
-import useChainConstant from '~/hooks/useChainConstant';
+import useChainConstant from '~/hooks/chain/useChainConstant';
 import { optimizeFromMode } from '~/util/Farm';
 import copy from '~/constants/copy';
 import IconWrapper from '~/components/Common/IconWrapper';
@@ -536,6 +536,17 @@ const SUPPORTED_TOKENS = [
 ];
 
 /**
+ * Ensure that both `_tokenIn` and `_tokenOut` are in `_pair`, regardless of order.
+ */
+const isPair = (_tokenIn : Token, _tokenOut : Token, _pair : [Token, Token]) => {
+  const s = new Set(_pair);
+  return s.has(_tokenIn) && s.has(_tokenOut);
+};
+
+/**
+ * SWAP
+ * Implementation notes
+ * 
  * BEAN + ETH
  * ---------------
  * BEAN   -> ETH      exchange_underlying(BEAN, USDT) => exchange(USDT, WETH) => unwrapEth
@@ -564,15 +575,6 @@ const SUPPORTED_TOKENS = [
  * USDC   -> USDT     exchange(USDC, USDT, 3POOL)
  * ...etc
  */
-
-/**
- * Ensure that both `_tokenIn` and `_tokenOut` are in `_pair`, regardless of order.
- */
-const isPair = (_tokenIn : Token, _tokenOut : Token, _pair : [Token, Token]) => {
-  const s = new Set(_pair);
-  return s.has(_tokenIn) && s.has(_tokenOut);
-};
-
 const Swap: React.FC<{}> = () => {
   ///
   const { data: signer } = useSigner();
@@ -913,13 +915,3 @@ const Swap: React.FC<{}> = () => {
 };
 
 export default Swap;
-
-/**
- * Sequence:
- * - 1 ETH -> INTERNAL WETH
- * - 0.5 INTERNAL WETH -> EXTERNAL WETH
- * - Buy beans with 0.1 INTERNAL WETH (uses INTERNAL only)
- * - Buy beans with 0.5 INTERNAL WETH (uses INTERNAL_EXTERNAL)
- *  - FAIL: ended up buying an additional 0.5 WETH, maybe with beans?
- * 
- */

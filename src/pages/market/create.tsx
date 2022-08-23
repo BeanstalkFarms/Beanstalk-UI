@@ -9,9 +9,7 @@ import MarketActions from '../../components/Market/Actions';
 const CreatePage: React.FC = () => (
   <Container maxWidth="sm">
     <Stack spacing={2}>
-      <PageHeader
-        returnPath="/market/account"
-      />
+      <PageHeader returnPath="/market/account" />
       <MarketActions />
     </Stack>
   </Container>

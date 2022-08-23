@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { StyledDialog, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
-import useSetting from '~/hooks/useSetting';
+import useSetting from '~/hooks/app/useSetting';
 import { setNextSunrise, setRemainingUntilSunrise } from '~/state/beanstalk/sun/actions';
 
 const Split : React.FC = ({ children }) => (

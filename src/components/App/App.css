@@ -1,21 +1,3 @@
-/** Enter/exit animations for toasts */
-@keyframes custom-enter {
-  0% {
-    right: -500px;
-  }
-  50% {
-    right: 0px;
-  }
-}
-@keyframes custom-exit {
-  0% {
-    right: 0px;
-  }
-  50% {
-    right: -500px;
-  }
-}
-
 /** Spinning animation for Sun icon when awaiting = true */
 @keyframes rotate {
   from {

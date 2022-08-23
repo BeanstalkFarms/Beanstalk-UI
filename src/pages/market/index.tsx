@@ -11,52 +11,9 @@ import { mockDepositData } from '../../components/Common/Charts/LineChart.mock';
 
 const SLUGS = ['buy', 'sell'];
 const PodMarketPage: React.FC = () => {
+  /// Tabs
   const [tab, handleChangeTab] = useTabs(SLUGS, 'view');
   const handleCursor = () => null;
-
-  const content = (
-    <>
-      {/** Graph */}
-      <Card>
-        <Box sx={{ px: 2, pt: 2, pb: 1.5 }}>
-          <Typography variant="h4">Overview</Typography>
-        </Box>
-        <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
-          <BlurComponent sx={{ borderRadius: 1 }}>
-            <Stack justifyContent="center" alignItems="center" gap={1}>
-              <Typography variant="body1" color="gray">The Pod Market overview graph is in development.</Typography>
-            </Stack>
-          </BlurComponent>
-          <LineChart
-            series={[mockDepositData]}
-            onCursor={handleCursor}
-          />
-        </Box>
-      </Card>
-      {/** Buy Now and Sell Now */}
-      <Card>
-        <Box sx={{ px: 2, pt: 2, pb: 1.5 }}>
-          <Tabs
-            value={tab}
-            onChange={handleChangeTab}
-            sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }}
-            variant="scrollable"
-          >
-            <Tab label="Buy Now" />
-            <Tab label="Sell Now" />
-          </Tabs>
-        </Box>
-        <Box sx={{ px: 1, pb: 1 }}>
-          {tab === 0 && (
-            <AllListings />
-          )}
-          {tab === 1 && (
-            <AllOrders />
-          )}
-        </Box>
-      </Card>
-    </>
-  );
 
   return (
     <Container maxWidth="lg">
@@ -67,7 +24,51 @@ const PodMarketPage: React.FC = () => {
           href="https://docs.bean.money/farm/market#the-pod-market"
           control={<CreateButtons />}
         />
-        {content}
+        {/**
+          * Graph
+          */}
+        <Card>
+          <Box sx={{ px: 2, pt: 2, pb: 1.5 }}>
+            <Typography variant="h4">Overview</Typography>
+          </Box>
+          <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
+            <BlurComponent sx={{ borderRadius: 1 }}>
+              <Stack justifyContent="center" alignItems="center" gap={1}>
+                <Typography variant="body1" color="gray">
+                  The Pod Market overview graph is in development.
+                </Typography>
+              </Stack>
+            </BlurComponent>
+            <LineChart
+              series={[mockDepositData]}
+              onCursor={handleCursor}
+            />
+          </Box>
+        </Card>
+        {/**
+          * Buy Now and Sell Now
+          */}
+        <Card>
+          <Box sx={{ px: 2, pt: 2, pb: 1.5 }}>
+            <Tabs
+              value={tab}
+              onChange={handleChangeTab}
+              sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }}
+              variant="scrollable"
+            >
+              <Tab label="Buy Now" />
+              <Tab label="Sell Now" />
+            </Tabs>
+          </Box>
+          <Box sx={{ px: 1, pb: 1 }}>
+            {tab === 0 && (
+              <AllListings />
+            )}
+            {tab === 1 && (
+              <AllOrders />
+            )}
+          </Box>
+        </Card>
       </Stack>
     </Container>
   );
