@@ -12,7 +12,7 @@ import { sortCratesBySeason } from './Utils';
  * @returns totalStalkRemoved   
  * @returns removedCrates       
  */
-function selectCratesToWithdraw(
+export function selectCratesToWithdraw(
   token: Token,
   amount: BigNumber,
   depositedCrates: DepositCrate[],

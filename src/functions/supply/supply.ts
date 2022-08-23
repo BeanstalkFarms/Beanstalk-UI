@@ -6,6 +6,9 @@ const provider = new ethers.providers.AlchemyProvider(1, process.env.VITE_ALCHEM
 const address  = '0xBEA0000029AD1c77D3d5D23Ba2D8893dB9d1Efab';
 const bean     = ERC20__factory.connect(address, provider);
 
+/**
+ * Load the latest Bean supply from Ethereum.
+ */
 const handler: Handler = async () => {
   try {
     return {

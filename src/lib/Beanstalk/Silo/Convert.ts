@@ -21,7 +21,7 @@ export enum ConvertKind {
  * @param currentSeason used to calculate loss of grown stalk.
  * @returns 
  */
-function selectCratesToConvert(
+export function selectCratesToConvert(
   fromToken:        Token,
   toToken:          Token,
   fromAmount:       BigNumber,
