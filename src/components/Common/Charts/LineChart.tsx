@@ -293,8 +293,6 @@ const Graph: React.FC<GraphProps> = (props) => {
       - axisHeight // chart edge to data region first pixel
       - margin.bottom  // chart edge to data region first pixel
   };
-
-  console.log('WIDTH', width);
   
   return (
     <>
@@ -337,7 +335,7 @@ const Graph: React.FC<GraphProps> = (props) => {
             tickValues={xTickSeasons}
           />
         </g>
-        <g transform={`translate(${width - yAxisWidth}, 0)`}>
+        <g transform={`translate(${width - yAxisWidth}, 1)`}>
           <Axis
             key="axis"
             orientation={Orientation.right}
@@ -346,8 +344,8 @@ const Graph: React.FC<GraphProps> = (props) => {
             tickFormat={yTickFormat}
             tickStroke={axisColor}
             tickLabelProps={yTickLabelProps}
-            numTicks={5}
-            strokeWidth={0}
+            numTicks={7}
+            strokeWidth={1}
           />
         </g>
         {/**
