@@ -32,7 +32,7 @@ const FertilizerImage : React.FC<FertilizerImageProps> = ({
       alignItems="center"
       justifyContent="center"
       sx={{
-        width: '100%',
+        height: '100%',
         aspectRatio: '1/1',
         borderColor: isNew ? BeanstalkPalette.logoGreen : grey[300],
         borderWidth: id ? 0 : 1, // if ID is present, use button border

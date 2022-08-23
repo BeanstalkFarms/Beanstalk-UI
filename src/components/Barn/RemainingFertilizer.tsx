@@ -29,10 +29,10 @@ const RemainingFertilizer: React.FC = () => {
           direction={{ xs: 'column', md: 'row' }}
           alignItems={{ xs: 'left', md: 'stretch' }}
           justifyContent={{ md: 'left' }}
-          gap={2}
+          gap={4}
         >
           {/* left column */}
-          <Box sx={{ minWidth: 10, display: { xs: 'none', md: 'block' } }}>
+          <Box sx={{ minWidth: 10, display: { xs: 'none', md: 'block' }, aspectRatio: '1/1' }}>
             <FertilizerImage progress={Math.max(progress.toNumber(), 0.05)} />
           </Box>
           {/* right column */}
