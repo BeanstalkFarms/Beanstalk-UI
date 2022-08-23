@@ -122,7 +122,7 @@ const yTickLabelProps = () => ({
   fill: tickLabelColor,
   fontSize: 12,
   fontFamily: 'Futura PT',
-  textAnchor: 'start',
+  textAnchor: 'end',
 } as const);
 
 // ------------------------
@@ -335,7 +335,7 @@ const Graph: React.FC<GraphProps> = (props) => {
             tickValues={xTickSeasons}
           />
         </g>
-        <g transform={`translate(${width - yAxisWidth}, 1)`}>
+        <g transform={`translate(${width - 20}, 1)`}>
           <Axis
             key="axis"
             orientation={Orientation.right}
@@ -344,8 +344,8 @@ const Graph: React.FC<GraphProps> = (props) => {
             tickFormat={yTickFormat}
             tickStroke={axisColor}
             tickLabelProps={yTickLabelProps}
-            numTicks={7}
-            strokeWidth={1}
+            numTicks={6}
+            strokeWidth={0}
           />
         </g>
         {/**
