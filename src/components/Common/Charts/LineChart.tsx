@@ -42,6 +42,7 @@ export type LineChartProps = {
   onCursor: (ds?: DataPoint[]) => void;
   isTWAP?: boolean; // used to indicate if we are displaying TWAP price
   curve?: CurveFactory | (keyof typeof CURVES);
+  yAxisMultiplier?: number;
   children?: (props: GraphProps & {
     scales: Scale[];
     dataRegion: DataRegion;
@@ -138,6 +139,7 @@ const Graph: React.FC<GraphProps> = (props) => {
     series,
     onCursor,
     isTWAP,
+    yAxisMultiplier,
     curve: _curve = 'linear',
     children,
   } = props;
@@ -147,7 +149,7 @@ const Graph: React.FC<GraphProps> = (props) => {
   const data = series[0];
   const curve = typeof _curve === 'string' ? CURVES[_curve] : _curve;
 
-  const yAxisWidth = 60;
+  const yAxisWidth = 57;
 
   /**
    * 
@@ -266,8 +268,8 @@ const Graph: React.FC<GraphProps> = (props) => {
     if (isTWAP) {
       return displayFullBN(new BigNumber(val), 4, 4);
     }
-    return displayBN(new BigNumber(val));
-  }, [isTWAP]);
+    return displayBN(yAxisMultiplier ? new BigNumber(val * yAxisMultiplier) : new BigNumber(val));
+  }, [isTWAP, yAxisMultiplier]);
 
   if (!series || series.length === 0) return null;
   
@@ -335,7 +337,7 @@ const Graph: React.FC<GraphProps> = (props) => {
             tickValues={xTickSeasons}
           />
         </g>
-        <g transform={`translate(${width - 20}, 1)`}>
+        <g transform={`translate(${width - 17}, 1)`}>
           <Axis
             key="axis"
             orientation={Orientation.right}

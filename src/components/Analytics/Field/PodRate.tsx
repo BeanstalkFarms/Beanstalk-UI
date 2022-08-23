@@ -25,6 +25,7 @@ const PodRate: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height })
       getValue={getValue}
       formatValue={formatValue}
       StatProps={StatProps}
+      LineChartProps={{ yAxisMultiplier: 100 }}
     />
   );
 };
