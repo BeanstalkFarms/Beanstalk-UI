@@ -9,7 +9,6 @@ import { AddressMap } from '~/constants';
 import { resetUnripe, updateUnripe } from './actions';
 import { UNRIPE_TOKENS } from '../../../constants/tokens';
 
-// Hook
 export const useUnripe = () => {
   const dispatch = useDispatch();
   const beanstalk = useBeanstalkContract();
@@ -21,7 +20,6 @@ export const useUnripe = () => {
         const tokenAddresses = Object.keys(unripeTokens); // ['0x1BEA0', '0x1BEA1']
         const results = await Promise.all(
           tokenAddresses.map((addr) => (
-            // VERIFY: the percentage returned uses the underlying token's decimals
             beanstalk.getPercentPenalty(addr).then(tokenResult(unripeTokens[addr]))
           ))
         ); // [BigNumber(0.001), BigNumber(0.0014)]
@@ -32,7 +30,6 @@ export const useUnripe = () => {
           }, {})
         }));
       } catch (err) {
-        /// ???
         console.error(err);
       }
     }
@@ -49,7 +46,6 @@ export const useUnripe = () => {
   return [fetch, clear] as const;
 };
 
-// Component
 const UnripeUpdater = () => {
   const [fetch, clear] = useUnripe();
   const chainId = useChainId();

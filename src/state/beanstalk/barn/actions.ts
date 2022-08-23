@@ -1,12 +1,12 @@
 import { createAction } from '@reduxjs/toolkit';
 import BigNumber from 'bignumber.js';
-import { Barn } from '.';
+import { BeanstalkBarn } from '.';
 
 export const resetBarn = createAction(
   'beanstalk/barn/reset'
 );
 
-export const updateBarn = createAction<Barn>(
+export const updateBarn = createAction<BeanstalkBarn>(
   'beanstalk/barn/update'
 );
 

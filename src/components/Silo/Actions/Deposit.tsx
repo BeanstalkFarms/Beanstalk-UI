@@ -38,7 +38,7 @@ import { parseError } from '~/util';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { AppState } from '~/state';
 import { useFetchPools } from '~/state/bean/pools/updater';
-import { useFetchSilo } from '~/state/beanstalk/silo/updater';
+import { useFetchBeanstalkSilo } from '~/state/beanstalk/silo/updater';
 import useFarm from '~/hooks/sdk/useFarm';
 
 // -----------------------------------------------------------------------
@@ -263,7 +263,7 @@ const Deposit : React.FC<{
   const [refetchFarmerSilo]     = useFetchFarmerSilo();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
   const [refetchPools]          = useFetchPools();
-  const [refetchSilo]           = useFetchSilo();
+  const [refetchSilo]           = useFetchBeanstalkSilo();
 
   /// Network
   const { data: signer } = useSigner();

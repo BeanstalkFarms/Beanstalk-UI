@@ -10,7 +10,7 @@ import { useGetChainConstant } from '~/hooks/chain/useChainConstant';
 import { resetBeanstalkSilo, updateBeanstalkSilo } from './actions';
 import { BeanstalkSiloBalance } from './index';
 
-export const useFetchSilo = () => {
+export const useFetchBeanstalkSilo = () => {
   const dispatch = useDispatch();
   const beanstalk = useBeanstalkContract();
   const FULL_WHITELIST = useWhitelist();
@@ -137,7 +137,7 @@ export const useFetchSilo = () => {
 // -- Updater
 
 const BeanstalkSiloUpdater = () => {
-  const [fetch, clear] = useFetchSilo();
+  const [fetch, clear] = useFetchBeanstalkSilo();
 
   useEffect(() => {
     clear();

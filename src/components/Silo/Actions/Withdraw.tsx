@@ -29,7 +29,7 @@ import { AppState } from '~/state';
 import { ActionType } from '~/util/Actions';
 import { ZERO_BN } from '~/constants';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
-import { useFetchSilo } from '~/state/beanstalk/silo/updater';
+import { useFetchBeanstalkSilo } from '~/state/beanstalk/silo/updater';
 import IconWrapper from '../../Common/IconWrapper';
 import { IconSize } from '../../App/muiTheme';
 import useFarmerSilo from '~/hooks/farmer/useFarmerSilo';
@@ -250,7 +250,7 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
   const farmerSilo          = useFarmerSilo();
   const siloBalances        = farmerSilo.balances;
   const [refetchFarmerSilo] = useFetchFarmerSilo();
-  const [refetchSilo]       = useFetchSilo();
+  const [refetchSilo]       = useFetchBeanstalkSilo();
   
   /// Form data
   const depositedBalance = siloBalances[token.address]?.deposited.amount;

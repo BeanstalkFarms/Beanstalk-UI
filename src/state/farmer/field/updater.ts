@@ -74,7 +74,6 @@ export const useFetchFarmerField = () => {
       const p = new EventProcessor(account, { season, whitelist });
       p.ingestAll(allEvents);
 
-      // Update Field
       dispatch(updateFarmerField(
         p.parsePlots(harvestableIndex)
       ));
