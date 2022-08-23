@@ -1,6 +1,6 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Box, CssBaseline } from '@mui/material';
 import { ToastBar, Toaster } from 'react-hot-toast';
 import pageBackground from '~/img/theme/bg-mainnet.png';
@@ -42,6 +42,7 @@ import useNavHeight from '~/hooks/app/usePageDimensions';
 import useBanner from '~/hooks/app/useBanner';
 import { BeanstalkPalette } from './muiTheme';
 import './App.css';
+import PageNotFound from '~/pages/error/404';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -152,6 +153,8 @@ export default function App() {
           <Route path="/silo" element={<SiloPage />} />
           <Route path="/silo/:address" element={<SiloTokenPage />} />
           <Route path="/swap" element={<SwapPage />} />
+          <Route path="/404" element={<PageNotFound />} />
+          <Route path="*" element={<Navigate replace to="/404" />} />
         </Routes>
       </Box>
     </>
