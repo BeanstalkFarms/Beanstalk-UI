@@ -247,11 +247,6 @@ export class CurveMetaPool extends Pool {
           ] as Reserves
       );
   }
-
-  // public getAmountOut(): Promise<BigNumber> {
-  //   return this.getContract()
-  //     .get_dy()
-  // }
 }
 
 // ------------------------------------

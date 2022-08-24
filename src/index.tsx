@@ -8,15 +8,6 @@ import Wrapper from '~/components/App/Wrapper';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 
-// @ts-ignore
-// BigNumber.prototype.toJSON = function toJSON() {
-//   return {
-//     type: 'BigNumber.js',
-//     // bignumber can rehydrate hex numbers with decimals
-//     // 0x4.5c316a055757d5a9eb2 = 4.360129
-//     hex: `0x${this.toString(16)}`,
-//   };
-// };
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface DefaultTheme extends Theme {}
