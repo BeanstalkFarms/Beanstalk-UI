@@ -14,32 +14,32 @@ import { FormState, SettingInput, TxnSettings } from '~/components/Common/Form';
 import TokenQuoteProvider from '~/components/Common/Form/TokenQuoteProvider';
 import TxnPreview from '~/components/Common/Form/TxnPreview';
 import BeanstalkSDK from '~/lib/Beanstalk';
-import { useBeanstalkContract } from '~/hooks/useContract';
-import useFarmerBalances from '~/hooks/useFarmerBalances';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
+import useFarmerBalances from '~/hooks/farmer/useFarmerBalances';
 import { Balance, FarmerBalances } from '~/state/farmer/balances';
 import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN } from '~/util/Tokens';
 import TransactionToast from '~/components/Common/TxnToast';
 import { Beanstalk } from '~/generated/index';
-import { QuoteHandler } from '~/hooks/useQuote';
+import { QuoteHandler } from '~/hooks/ledger/useQuote';
 import { ZERO_BN } from '~/constants';
 import { ERC20Token, NativeToken } from '~/classes/Token';
 import Pool from '~/classes/Pool';
 import SmartSubmitButton from '~/components/Common/Form/SmartSubmitButton';
 import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
-import useGetChainToken from '~/hooks/useGetChainToken';
+import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import TxnSeparator from '~/components/Common/Form/TxnSeparator';
 import useToggle from '~/hooks/display/useToggle';
 import { combineBalances, optimizeFromMode } from '~/util/Farm';
-import usePreferredToken from '~/hooks/usePreferredToken';
-import useTokenMap from '~/hooks/useTokenMap';
+import usePreferredToken from '~/hooks/farmer/usePreferredToken';
+import useTokenMap from '~/hooks/chain/useTokenMap';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import { parseError } from '~/util';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { AppState } from '~/state';
 import { useFetchPools } from '~/state/bean/pools/updater';
-import { useFetchSilo } from '~/state/beanstalk/silo/updater';
-import useFarm from '~/hooks/useFarm';
+import { useFetchBeanstalkSilo } from '~/state/beanstalk/silo/updater';
+import useFarm from '~/hooks/sdk/useFarm';
 
 // -----------------------------------------------------------------------
 
@@ -263,7 +263,7 @@ const Deposit : React.FC<{
   const [refetchFarmerSilo]     = useFetchFarmerSilo();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
   const [refetchPools]          = useFetchPools();
-  const [refetchSilo]           = useFetchSilo();
+  const [refetchSilo]           = useFetchBeanstalkSilo();
 
   /// Network
   const { data: signer } = useSigner();

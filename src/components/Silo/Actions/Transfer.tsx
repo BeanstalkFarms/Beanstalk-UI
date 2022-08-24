@@ -18,13 +18,13 @@ import { ZERO_BN } from '~/constants';
 import { Token } from '~/classes';
 import { FarmerSilo } from '~/state/farmer/silo';
 import { ERC20Token } from '~/classes/Token';
-import useFarmerSiloBalances from '~/hooks/useFarmerSiloBalances';
+import useFarmerSiloBalances from '~/hooks/farmer/useFarmerSiloBalances';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
-import { useFetchSilo } from '~/state/beanstalk/silo/updater';
+import { useFetchBeanstalkSilo } from '~/state/beanstalk/silo/updater';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import BeanstalkSDK from '~/lib/Beanstalk';
-import useSeason from '~/hooks/useSeason';
+import useSeason from '~/hooks/beanstalk/useSeason';
 import TxnSeparator from '~/components/Common/Form/TxnSeparator';
 import { SEEDS, STALK } from '~/constants/tokens';
 import { displayFullBN, displayTokenAmount, parseError, toStringBaseUnitBN, trimAddress } from '~/util';
@@ -201,7 +201,7 @@ const Transfer: React.FC<{ token: ERC20Token; }> = ({ token }) => {
   const season = useSeason();
   const siloBalances = useFarmerSiloBalances();
   const [refetchFarmerSilo] = useFetchFarmerSilo();
-  const [refetchSilo] = useFetchSilo();
+  const [refetchSilo] = useFetchBeanstalkSilo();
 
   // Form data
   const depositedBalance = siloBalances[token.address]?.deposited.amount;

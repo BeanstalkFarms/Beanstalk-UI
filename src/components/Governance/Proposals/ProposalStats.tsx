@@ -34,7 +34,7 @@ const ProposalStats: React.FC<{
           target="_blank"
           rel="noreferrer"
           underline="hover"
-            >
+        >
           View on Snapshot
         </Link>
       )}

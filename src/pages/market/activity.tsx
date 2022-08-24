@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Box,
   Card,
   Container,
   Link,
@@ -95,24 +94,17 @@ const rows = new Array(20).fill(null).map((_, i) => (
   }
 ));
 
-const MarketActivityPage: React.FC = () => {
-  const content = (<ActivityTable columns={columns} rows={rows} />);
-  // const content = <Card sx={{ height: '300px' }}><Soon /></Card>
-
-  return (
-    <Container maxWidth="lg">
-      <Stack spacing={2}>
-        <PageHeaderSecondary
-          title="Marketplace Activity"
+const MarketActivityPage: React.FC = () => (
+  <Container maxWidth="lg">
+    <Stack spacing={2}>
+      <PageHeaderSecondary
+        title="Marketplace Activity"
         />
-        <Card>
-          <Box sx={{ position: 'relative ' }}>
-            {content}
-          </Box>
-        </Card>
-      </Stack>
-    </Container>
-  );
-};
+      <Card>
+        <ActivityTable columns={columns} rows={rows} />
+      </Card>
+    </Stack>
+  </Container>
+);
 
 export default MarketActivityPage;

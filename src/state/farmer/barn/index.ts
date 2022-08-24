@@ -30,14 +30,10 @@ export const castFertilizerBalance = (balance: FertilizerResponse['fertilizerBal
 export type FertilizerBalance = ReturnType<typeof castFertilizerBalance>;
 
 export type FarmerBarn = {
-  /** 
-   * Fertilizer ERC1155 tokens. The key is a token ID,
-   * value is the amount of that ID owned by the Farmer.
-   * In Beanstlak this is referred to as "Fertilized".
+  /**
+   * 
    */
-  // fertilizer: {
-  //   [id: string]: BigNumber;
-  // };
+  balances: FertilizerBalance[]
 
   /**
    * The total number of [Unfertilized] Sprouts held by the Farmer.
@@ -50,9 +46,4 @@ export type FarmerBarn = {
    * When the Farmer calls `rinse()` this is reset to 0.
    */
   fertilizedSprouts: BigNumber;
-
-  /**
-   * 
-   */
-  balances: FertilizerBalance[]
 }

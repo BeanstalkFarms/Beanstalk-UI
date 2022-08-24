@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Container, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import TotalBalanceCard from '~/components/Balances/TotalBalancesCard';
-import useFarmerBalancesBreakdown from '~/hooks/useFarmerBalancesBreakdown';
+import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import { PODS, SEEDS, STALK, SPROUTS } from '~/constants/tokens';
 import { AppState } from '~/state';
 import StatsCard, { StatItem } from '~/components/Common/StatsCard';

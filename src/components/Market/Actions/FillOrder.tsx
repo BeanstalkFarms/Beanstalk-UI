@@ -12,18 +12,18 @@ import {
   TxnSeparator
 } from '~/components/Common/Form';
 import FarmModeField from '~/components/Common/Form/FarmModeField';
-import useFarmerPlots from '~/hooks/redux/useFarmerPlots';
-import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
-import { useBeanstalkContract } from '~/hooks/useContract';
-import useChainConstant from '~/hooks/useChainConstant';
+import useFarmerPlots from '~/hooks/farmer/useFarmerPlots';
+import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
+import useChainConstant from '~/hooks/chain/useChainConstant';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import { parseError } from '~/util';
+import { parseError , PlotMap } from '~/util';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import { BEAN } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
-import { PlotMap } from '~/state/farmer/field';
+
 import { PodOrder } from '~/state/farmer/market';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';

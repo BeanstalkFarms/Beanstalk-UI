@@ -1,14 +1,13 @@
-import { Box, Button, CircularProgress, LinearProgress, Stack, Tooltip, Typography } from '@mui/material';
+import { Button, LinearProgress, Stack, Tooltip, Typography } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { useParams } from 'react-router-dom';
 import snapshot from '@snapshot-labs/snapshot.js';
 import { Wallet } from 'ethers';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
-import { useProposalQuery, useVotesQuery } from '~/generated/graphql';
+import { useVotesQuery } from '~/generated/graphql';
 import DescriptionButton from '~/components/Common/DescriptionButton';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import {  displayFullBN, parseError } from '~/util';
@@ -169,22 +168,9 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
 
 // ---------------------------------------------------
 
-const Vote: React.FC = () => {
+const Vote: React.FC<{ proposal: Proposal }> = (props) => {
   const account = useAccount();
   const { data: signer } = useSigner();
-
-  /// Routing
-  const { id } = useParams<{ id: string }>();
-
-  /// Query: Proposal
-  const { loading, error, data, refetch: refetchProposal } = useProposalQuery({
-    variables: { proposal_id: id || '' },
-    context: { subgraph: 'snapshot' },
-    fetchPolicy: 'cache-only',
-    nextFetchPolicy: 'network-only',
-    skip: !id
-  });
-  const proposal = data?.proposal;
 
   /// Query Votes
   const { 
@@ -192,10 +178,10 @@ const Vote: React.FC = () => {
     refetch : refetchVotes,
   } = useVotesQuery({
     variables: {
-      proposal_id: proposal?.id.toLowerCase() || '',
+      proposal_id: props.proposal?.id.toLowerCase() || '',
       voter_address: account || '',
     },
-    skip: !account || !proposal?.id, // only send query when wallet connected
+    skip: !account || !props.proposal?.id, // only send query when wallet connected
     context: { subgraph: 'snapshot' },
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'network-only',
@@ -216,9 +202,9 @@ const Vote: React.FC = () => {
         const _account = await signer?.getAddress();
         if (!_account) throw new Error('Missing signer.');
         if (values.choice === undefined) throw new Error('Select a voting choice.'); // use undefined here since 'choice' can be numerical zero 
-        if (!proposal) throw new Error('Error loading proposal data.');
-        if (proposal.type !== 'single-choice') throw new Error('Unsupported proposal type. Please vote through snapshot.org directly.');
-        if (!proposal?.space?.id) throw new Error('Unknown space.');
+        if (!props.proposal) throw new Error('Error loading proposal data.');
+        if (props.proposal.type !== 'single-choice') throw new Error('Unsupported proposal type. Please vote through snapshot.org directly.');
+        if (!props.proposal?.space?.id) throw new Error('Unknown space.');
 
         txToast = new TransactionToast({
           loading: 'Voting on proposal...',
@@ -228,9 +214,9 @@ const Vote: React.FC = () => {
         const hub = 'https://hub.snapshot.org';
         const client = new snapshot.Client712(hub);
         const message = {
-          space: proposal.space.id,
-          proposal: proposal.id,
-          type: proposal.type as 'single-choice', // 'single-choice' | 'approval' | 'quadratic' | 'ranked-choice' | 'weighted' | 'basic';
+          space: props.proposal.space.id,
+          proposal: props.proposal.id,
+          type: props.proposal.type as 'single-choice', // 'single-choice' | 'approval' | 'quadratic' | 'ranked-choice' | 'weighted' | 'basic';
           choice: values.choice,
           app: 'snapshot'
         };
@@ -242,7 +228,6 @@ const Vote: React.FC = () => {
         );
         console.debug('[Vote] Voting result: ', result);
         await Promise.all([
-          refetchProposal(),
           refetchVotes()
         ]);
         txToast.success();
@@ -252,24 +237,8 @@ const Vote: React.FC = () => {
         formActions.setSubmitting(false);
       }
     },
-    [proposal, signer, refetchProposal, refetchVotes]
+    [props.proposal, signer, refetchVotes]
   );
-
-  if (loading || !proposal) {
-    return (
-      <Box height={100} display="flex" alignItems="center" justifyContent="center">
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box height={100} display="flex" alignItems="center" justifyContent="center">
-        <Typography>{error.message.toString()}</Typography>
-      </Box>
-    );
-  }
 
   return (
     <Formik<VoteFormValues>
@@ -279,7 +248,7 @@ const Vote: React.FC = () => {
     >
       {(formikProps: FormikProps<VoteFormValues>) => (
         <VoteForm
-          proposal={proposal as Proposal}
+          proposal={props.proposal}
           existingChoice={existingChoice}
           {...formikProps}
         />

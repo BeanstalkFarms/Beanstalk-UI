@@ -1,19 +1,4 @@
-// export async function loadProposal() {
-//   const proposalData : any = await fetch('/.netlify/functions/proposal').then((response) => response.json());
-//   return proposalData;
-// }
-
 import { getDateCountdown } from '~/util/Time';
-
-// ^(BIP|BOP)-[0-9]+
-// export const PROPOSAL_TYPES = [
-//   'BIP',
-//   'BOP',
-//   'BFCP-A',
-//   'BFCP-B',
-//   'BFCP-C',
-//   'BFCP-D',
-// ];
 
 export const SNAPSHOT_SPACES = [
   'beanstalkdao.eth',
@@ -55,12 +40,18 @@ export type Proposal = {
 
 /**
  * Formats date messages for governance proposal.
+ * @returns string
  */
 export const getDateMessage = (end: number) => {
   const [message, active] = getDateCountdown(end * 1000);
   return active ? `Vote ends ${message}` : `Ended ${message}`;
 };
 
+/**
+ * Splits a typical proposal title after the colon (ex. BIP-24).
+ * @note Could use a regex like `^(BIP|BOP)-[0-9]+`.
+ * @returns string | null if no colon found
+ */
 export const getProposalTag = (title: string) => {
   const sep = title.indexOf(':', 5);
   return (

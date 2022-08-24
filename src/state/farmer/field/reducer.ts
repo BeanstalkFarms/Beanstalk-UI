@@ -1,9 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { ZERO_BN } from '~/constants';
-import { Field } from '.';
+import { FarmerField } from '.';
 import { resetFarmerField, updateFarmerField } from './actions';
 
-const initialState : Field = {
+const initialState : FarmerField = {
   plots: {},
   harvestablePlots: {},
   pods: ZERO_BN,

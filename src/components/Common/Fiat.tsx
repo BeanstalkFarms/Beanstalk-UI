@@ -3,20 +3,17 @@ import BigNumber from 'bignumber.js';
 import { Stack } from '@mui/material';
 import logo from '~/img/tokens/bean-logo.svg';
 import { Token } from '~/classes';
-import useSiloTokenToFiat from '~/hooks/currency/useSiloTokenToFiat';
-import useSetting from '~/hooks/useSetting';
-import usePrice from '~/hooks/usePrice';
+import useSiloTokenToFiat from '~/hooks/beanstalk/useSiloTokenToFiat';
+import useSetting from '~/hooks/app/useSetting';
+import usePrice from '~/hooks/beanstalk/usePrice';
 import { displayBN, displayFullBN } from '~/util';
 import { ZERO_BN } from '~/constants';
 
 const Fiat : React.FC<{
   /* usd value of `amount`. if defined, overrides siloTokenToFiat */
   value?: BigNumber,
-  /* */
   token?: Token,
-  /* */
   amount: BigNumber | undefined,
-  //
   allowNegative?: boolean,
   chop?: boolean,
   truncate?: boolean,

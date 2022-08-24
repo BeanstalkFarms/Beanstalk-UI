@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import BigNumber from 'bignumber.js';
+import { NEW_BN } from '~/constants';
 import { getNextExpectedSunrise, Sun } from '.';
 import { 
   setNextSunrise,
@@ -10,13 +10,11 @@ import {
   resetSun
 } from './actions';
 
-const NEG1 = new BigNumber(-1);
-
 const getInitialState = () => {
   const nextSunrise = getNextExpectedSunrise();
   return {
-    season: NEG1,
-    seasonTime: NEG1,
+    season: NEW_BN,
+    seasonTime: NEW_BN,
     sunrise: {
       awaiting: false,
       next: nextSunrise,
@@ -29,6 +27,7 @@ const initialState : Sun = getInitialState();
 
 export default createReducer(initialState, (builder) =>
   builder
+    .addCase(resetSun, () => getInitialState())
     .addCase(updateSeason, (state, { payload }) => {
       state.season = payload;
     })
@@ -44,5 +43,4 @@ export default createReducer(initialState, (builder) =>
     .addCase(setRemainingUntilSunrise, (state, { payload }) => {
       state.sunrise.remaining = payload;
     })
-    .addCase(resetSun, () => getInitialState())
 );

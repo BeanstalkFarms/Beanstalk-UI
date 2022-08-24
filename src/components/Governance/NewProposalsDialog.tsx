@@ -9,25 +9,11 @@ import { displayBN } from '~/util';
 import { IconSize } from '~/components/App/muiTheme';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { STALK } from '~/constants/tokens';
-import useAppFlag from '~/hooks/useAppFlag';
+import useAppFlag from '~/hooks/app/useAppFlag';
 import useToggle from '~/hooks/display/useToggle';
 import { getDateCountdown } from '~/util/Time';
 import { getProposalTag } from '~/util/Governance';
 
-// const getLastSeen = (account: string) => {
-//   try {
-//     return parseInt(
-//       localStorage.getItem(`beanstalk.account.${account}.last_gov_prompt`) || '0',
-//       10
-//     );
-//   } catch (e) {
-//     return 0;
-//   }
-// };
-
-/**
- *
- */
 const NewProposalsDialog: React.FC = () => {
   /// Local state
   const [modalOpen, showModal, hideModal] = useToggle();

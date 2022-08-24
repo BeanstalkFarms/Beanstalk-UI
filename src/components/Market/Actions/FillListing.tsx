@@ -17,16 +17,16 @@ import {
   TxnSettings
 } from '~/components/Common/Form';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
-import useChainId from '~/hooks/useChain';
-import useFarmerBalances from '~/hooks/useFarmerBalances';
-import { QuoteHandler } from '~/hooks/useQuote';
-import useTokenMap from '~/hooks/useTokenMap';
+import useChainId from '~/hooks/chain/useChainId';
+import useFarmerBalances from '~/hooks/farmer/useFarmerBalances';
+import { QuoteHandler } from '~/hooks/ledger/useQuote';
+import useTokenMap from '~/hooks/chain/useTokenMap';
 import useToggle from '~/hooks/display/useToggle';
-import useGetChainToken from '~/hooks/useGetChainToken';
+import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { Beanstalk } from '~/generated';
-import usePreferredToken, { PreferredToken } from '~/hooks/usePreferredToken';
+import usePreferredToken, { PreferredToken } from '~/hooks/farmer/usePreferredToken';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { ActionType } from '~/util/Actions';

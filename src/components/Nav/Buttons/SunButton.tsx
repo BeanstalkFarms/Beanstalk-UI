@@ -14,15 +14,15 @@ import drySeasonIcon from '~/img/beanstalk/sun/dry-season.svg';
 import rainySeasonIcon from '~/img/beanstalk/sun/rainy-season.svg';
 import SunriseButton from '~/components/Sun/SunriseButton';
 import { SunButtonQuery, useSunButtonQuery } from '~/generated/graphql';
-import usePrice from '~/hooks/usePrice';
-import useSeason from '~/hooks/useSeason';
+import usePrice from '~/hooks/beanstalk/usePrice';
+import useSeason from '~/hooks/beanstalk/useSeason';
 import { toTokenUnitsBN } from '~/util';
 import { BEAN } from '~/constants/tokens';
 import { NEW_BN, ZERO_BN } from '~/constants';
 import { AppState } from '~/state';
 import FolderMenu from '../FolderMenu';
 import SeasonCard from '../../Sun/SeasonCard';
-import usePeg from '~/hooks/usePeg';
+import usePeg from '~/hooks/beanstalk/usePeg';
 
 const castField = (data: SunButtonQuery['fields'][number]) => ({
   season:   new BigNumber(data.season),

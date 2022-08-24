@@ -44,7 +44,7 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-.alm {
+/* .alm {
   overflow: visible;
   pointer-events: none;
 }
@@ -61,4 +61,4 @@ input[type=number] {
   right: -5px;
   cursor: pointer;
   background: rgba(0,0,0,0.1)
-}
+} */

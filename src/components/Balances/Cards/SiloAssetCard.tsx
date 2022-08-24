@@ -4,7 +4,7 @@ import { SEEDS, STALK } from '~/constants/tokens';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { AppState } from '~/state';
 import { displayBN, displayFullBN } from '~/util';
-import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/Pie';
+import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/PieChart';
 import StatCard from '../StatCard';
 
 export type StalkCardProps = (

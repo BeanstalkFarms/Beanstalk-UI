@@ -21,15 +21,15 @@ import {
   TxnSettings
 } from '~/components/Common/Form';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
-import useChainId from '~/hooks/useChain';
-import useChainConstant from '~/hooks/useChainConstant';
-import useFarmerBalances from '~/hooks/useFarmerBalances';
-import { QuoteHandler } from '~/hooks/useQuote';
-import useTokenMap from '~/hooks/useTokenMap';
-import useGetChainToken from '~/hooks/useGetChainToken';
+import useChainId from '~/hooks/chain/useChainId';
+import useChainConstant from '~/hooks/chain/useChainConstant';
+import useFarmerBalances from '~/hooks/farmer/useFarmerBalances';
+import { QuoteHandler } from '~/hooks/ledger/useQuote';
+import useTokenMap from '~/hooks/chain/useTokenMap';
+import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import useToggle from '~/hooks/display/useToggle';
 import { Beanstalk } from '~/generated';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { useFetchFarmerMarket } from '~/state/farmer/market/updater';

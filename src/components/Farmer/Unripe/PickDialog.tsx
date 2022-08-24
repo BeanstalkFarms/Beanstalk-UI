@@ -27,8 +27,8 @@ import { BEAN, BEAN_CRV3_LP, BEAN_ETH_UNIV2_LP, BEAN_LUSD_LP, UNRIPE_BEAN, UNRIP
 import { UNRIPE_ASSET_TOOLTIPS } from '~/constants/tooltips';
 import { ZERO_BN } from '~/constants';
 import { displayFullBN, toTokenUnitsBN, parseError } from '~/util';
-import { useBeanstalkContract } from '~/hooks/useContract';
-import useGetChainToken from '~/hooks/useGetChainToken';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
+import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import useAccount from '~/hooks/ledger/useAccount';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';

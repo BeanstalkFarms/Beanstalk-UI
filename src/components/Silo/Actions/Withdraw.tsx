@@ -18,9 +18,9 @@ import {
   SmartSubmitButton
 } from '~/components/Common/Form';
 import BeanstalkSDK from '~/lib/Beanstalk';
-import useSeason from '~/hooks/useSeason';
+import useSeason from '~/hooks/beanstalk/useSeason';
 import { FarmerSilo } from '~/state/farmer/silo';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { displayFullBN, parseError, toStringBaseUnitBN } from '~/util';
 import TransactionToast from '~/components/Common/TxnToast';
 import { useSigner } from '~/hooks/ledger/useSigner';
@@ -29,10 +29,10 @@ import { AppState } from '~/state';
 import { ActionType } from '~/util/Actions';
 import { ZERO_BN } from '~/constants';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
-import { useFetchSilo } from '~/state/beanstalk/silo/updater';
+import { useFetchBeanstalkSilo } from '~/state/beanstalk/silo/updater';
 import IconWrapper from '../../Common/IconWrapper';
 import { IconSize } from '../../App/muiTheme';
-import useFarmerSilo from '~/hooks/useFarmerSilo';
+import useFarmerSilo from '~/hooks/farmer/useFarmerSilo';
 
 // -----------------------------------------------------------------------
 
@@ -250,7 +250,7 @@ const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
   const farmerSilo          = useFarmerSilo();
   const siloBalances        = farmerSilo.balances;
   const [refetchFarmerSilo] = useFetchFarmerSilo();
-  const [refetchSilo]       = useFetchSilo();
+  const [refetchSilo]       = useFetchBeanstalkSilo();
   
   /// Form data
   const depositedBalance = siloBalances[token.address]?.deposited.amount;

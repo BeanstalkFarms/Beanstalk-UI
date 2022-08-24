@@ -5,7 +5,7 @@ import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/Seas
 import { SeasonalSupplyQuery, SeasonalSupplyDocument } from '~/generated/graphql';
 import { BEAN } from '~/constants/tokens';
 import { toTokenUnitsBN } from '~/util';
-import { SnapshotData } from '~/hooks/useSeasonsQuery';
+import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
 
 const getValue = (season: SnapshotData<SeasonalSupplyQuery>) => toTokenUnitsBN(season.beans, BEAN[1].decimals).toNumber();
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;

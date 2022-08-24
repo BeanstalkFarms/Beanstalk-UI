@@ -8,10 +8,10 @@ import { PlotFragment, PlotSettingsFragment, SmartSubmitButton, TokenOutputField
 import TransactionToast from '~/components/Common/TxnToast';
 import PlotInputField from '~/components/Common/Form/PlotInputField';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useAccount from '~/hooks/ledger/useAccount';
-import useFarmerPlots from '~/hooks/redux/useFarmerPlots';
-import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
+import useFarmerPlots from '~/hooks/farmer/useFarmerPlots';
+import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import { PODS } from '~/constants/tokens';
 import { ZERO_BN } from '../../../constants';
 import { displayFullBN, toStringBaseUnitBN, trimAddress } from '../../../util';

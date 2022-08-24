@@ -35,7 +35,8 @@ export function MaxBN(bn1: BigNumber, bn2: BigNumber): BigNumber {
 
 /**
  * Trim a BigNumber to a set number of decimals.
- * FIXME: legacy code, seems very inefficient
+ * 
+ * @FIXME legacy code, seems very inefficient.
  */
 export function TrimBN(
   bn: BigNumber,
@@ -160,13 +161,21 @@ export function displayUSD(
   return `$${displayFullBN(v, 2, 2)}`;
 }
 
+/**
+ * Standard Bean price display: truncate with ROUND_FLOOR.
+ * 
+ * 0.99995 => "0.9999"
+ * 1.00006 => "1.0000"
+ * 
+ * @param price Bean price
+ * @param decimals number of decimals to display
+ * @returns string; truncated Bean price
+ */
 export function displayBeanPrice(
-  bn: BigNumber,
-  decimals: number,
+  price: BigNumber,
+  decimals: number = 4,
 ) {
-  // 0.99995 => "0.9999"
-  // 1.00006 => "1.0000"
-  return bn.dp(decimals, BigNumber.ROUND_FLOOR).toFixed(decimals);
+  return price.dp(decimals, BigNumber.ROUND_FLOOR).toFixed(decimals);
 }
 
 // -------------------------
@@ -174,18 +183,18 @@ export function displayBeanPrice(
 // -------------------------
 
 /**
- * Convert a "raw amount" (decimal form) to "token amount" (integer form).
+ * Convert a "decimal amount" (decimal form) to "token amount" (integer form).
  * This is what's stored on chain.
  *
- * @param rawAmt
+ * @param decimalAmt
  * @param decimals
- * @returns
+ * @returns int
  */
  export function toBaseUnitBN(
-  rawAmt:   BigNumber.Value,
-  decimals: BigNumber.Value,
+  decimalAmt: BigNumber.Value,
+  decimals:   BigNumber.Value,
 ): BigNumber {
-  const amt = new BigNumber(rawAmt);
+  const amt = new BigNumber(decimalAmt);
   const base = new BigNumber(10);
   const decimalsBN = new BigNumber(decimals);
   const digits = base.pow(decimalsBN);
@@ -193,7 +202,7 @@ export function displayBeanPrice(
 }
 
 /**
- * Convert a "token amount" (integer form) to "raw amount" (decimal form).
+ * Convert a "token amount" (integer form) to "decimal amount" (decimal form).
  * This is typically what's displayed to users within the application.
  *
  * @param tokenAmt BigNumber.Value
@@ -212,14 +221,16 @@ export function toTokenUnitsBN(
 }
 
 /**
- *
- * @param rawAmt
+ * Convert a "raw amount" (decimal form) to "token amount" (integer form).
+ * This is what's stored on chain.
+ * 
+ * @param decimalAmt
  * @param decimals
- * @returns
+ * @returns string
  */
  export function toStringBaseUnitBN(
-  rawAmt:   BigNumber.Value,
-  decimals: BigNumber.Value,
+  decimalAmt: BigNumber.Value,
+  decimals:   BigNumber.Value,
 ): string {
-  return toBaseUnitBN(rawAmt, decimals).toFixed();
+  return toBaseUnitBN(decimalAmt, decimals).toFixed();
 }

@@ -1,10 +1,9 @@
-import { DateTime, Duration } from 'luxon';
+import { DateTime } from 'luxon';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import BigNumber from 'bignumber.js';
 import toast from 'react-hot-toast';
-import { useBeanstalkContract } from '~/hooks/useContract';
-import useSeason from '~/hooks/useSeason';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
+import useSeason from '~/hooks/beanstalk/useSeason';
 import { AppState } from '~/state';
 import { bigNumberResult } from '~/util/Ledger';
 import { getNextExpectedSunrise } from '.';
@@ -21,7 +20,6 @@ export const useSun = () => {
   const dispatch = useDispatch();
   const beanstalk = useBeanstalkContract();
 
-  // Handlers
   const fetch = useCallback(async () => {
     try {
       if (beanstalk) {
@@ -62,8 +60,6 @@ const SunUpdater = () => {
   const season    = useSeason();
   const next      = useSelector<AppState, DateTime>((state) => state._beanstalk.sun.sunrise.next);
   const awaiting  = useSelector<AppState, boolean>((state) => state._beanstalk.sun.sunrise.awaiting);
-  const seasonTime  = useSelector<AppState, BigNumber>((state) => state._beanstalk.sun.seasonTime);
-  const remaining  = useSelector<AppState, Duration>((state) => state._beanstalk.sun.sunrise.remaining);
   
   useEffect(() => {
     if (awaiting === false) {

@@ -1,18 +1,18 @@
 import React from 'react';
-import { Box, Card, Stack, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import Vote from '~/components/Governance/Actions/Vote';
+import { Module, ModuleContent, ModuleHeader } from '~/components/Common/Module';
+import { Proposal } from '~/util/Governance';
 
-const GovernanceActions : React.FC = () => (
-  <Card sx={{ position: 'sticky', top: 120 }}>
-    <Stack gap={1}>
-      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ overflow: 'visible', px: 2, pt: 2 }}>
-        <Typography variant="h4">Results</Typography>
-      </Stack>
-      <Box sx={{ px: 1, pb: 1 }}>
-        <Vote />
-      </Box>
-    </Stack>
-  </Card>
+const GovernanceActions : React.FC<{ proposal: Proposal }> = (props) => (
+  <Module sx={{ position: 'sticky', top: 120 }}>
+    <ModuleHeader>
+      <Typography variant="h4">Results</Typography>
+    </ModuleHeader>
+    <ModuleContent>
+      <Vote proposal={props.proposal} />
+    </ModuleContent>
+  </Module>
 );
 
 export default GovernanceActions;

@@ -1,3 +1,6 @@
+/// Proof-of-concept: Almanac Tab
+/// Highlight the tab with a border on keystroke.
+
 // import React from 'react';
 // import { Tab, TabProps } from '@mui/material';
 // import useAppFlag from '~/hooks/display/useAppFlag';

@@ -2,14 +2,14 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Box, Card, Stack, Typography, Tooltip } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import useHumidity from '~/hooks/useHumidity';
+import useHumidity from '~/hooks/beanstalk/useHumidity';
 import SunriseCountdown from '~/components/Sun/SunriseCountdown';
-import useSeason from '~/hooks/useSeason';
+import useSeason from '~/hooks/beanstalk/useSeason';
 import { AppState } from '~/state';
 import { displayFullBN } from '~/util';
 import FertilizerImage from './FertilizerImage';
 import { BeanstalkPalette, FontSize } from '../App/muiTheme';
-import useFertilizerProgress from '../../hooks/useFertilizerProgress';
+import useFertilizerProgress from '../../hooks/beanstalk/useFertilizerProgress';
 
 const RemainingFertilizer: React.FC = () => {
   const [humidity, nextDecreaseAmount] = useHumidity();
@@ -29,10 +29,10 @@ const RemainingFertilizer: React.FC = () => {
           direction={{ xs: 'column', md: 'row' }}
           alignItems={{ xs: 'left', md: 'stretch' }}
           justifyContent={{ md: 'left' }}
-          gap={2}
+          gap={4}
         >
           {/* left column */}
-          <Box sx={{ minWidth: 10, display: { xs: 'none', md: 'block' } }}>
+          <Box sx={{ minWidth: 10, display: { xs: 'none', md: 'block' }, aspectRatio: '1/1' }}>
             <FertilizerImage progress={Math.max(progress.toNumber(), 0.05)} />
           </Box>
           {/* right column */}

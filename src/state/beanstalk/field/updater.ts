@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { bigNumberResult, tokenResult } from '~/util';
 import { BEAN } from '~/constants/tokens';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { resetBeanstalkField, updateBeanstalkField } from './actions';
 import { ZERO_BN } from '~/constants';
 

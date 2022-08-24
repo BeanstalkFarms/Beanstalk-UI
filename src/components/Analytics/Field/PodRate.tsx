@@ -1,9 +1,9 @@
 import React from 'react';
 import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
 import { SeasonalPodRateDocument, SeasonalPodRateQuery } from '~/generated/graphql';
-import useSeason from '~/hooks/useSeason';
-import usePodRate from '~/hooks/usePodRate';
-import { SnapshotData } from '~/hooks/useSeasonsQuery';
+import useSeason from '~/hooks/beanstalk/useSeason';
+import usePodRate from '~/hooks/beanstalk/usePodRate';
+import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
 
 const getValue = (season: SnapshotData<SeasonalPodRateQuery>) => parseFloat(season.podRate);
 const formatValue = (value: number) => `${(value * 100).toFixed(2)}%`;
@@ -25,6 +25,7 @@ const PodRate: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height })
       getValue={getValue}
       formatValue={formatValue}
       StatProps={StatProps}
+      LineChartProps={{ yAxisMultiplier: 100 }}
     />
   );
 };

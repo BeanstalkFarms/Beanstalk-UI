@@ -1,15 +1,14 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import BigNumber from 'bignumber.js';
-import { useBeanstalkContract } from '~/hooks/useContract';
-import useChainId from '~/hooks/useChain';
-import useTokenMap from '~/hooks/useTokenMap';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
+import useChainId from '~/hooks/chain/useChainId';
+import useTokenMap from '~/hooks/chain/useTokenMap';
 import { tokenResult } from '~/util';
 import { AddressMap } from '~/constants';
 import { resetUnripe, updateUnripe } from './actions';
 import { UNRIPE_TOKENS } from '../../../constants/tokens';
 
-// Hook
 export const useUnripe = () => {
   const dispatch = useDispatch();
   const beanstalk = useBeanstalkContract();
@@ -21,7 +20,6 @@ export const useUnripe = () => {
         const tokenAddresses = Object.keys(unripeTokens); // ['0x1BEA0', '0x1BEA1']
         const results = await Promise.all(
           tokenAddresses.map((addr) => (
-            // VERIFY: the percentage returned uses the underlying token's decimals
             beanstalk.getPercentPenalty(addr).then(tokenResult(unripeTokens[addr]))
           ))
         ); // [BigNumber(0.001), BigNumber(0.0014)]
@@ -32,7 +30,6 @@ export const useUnripe = () => {
           }, {})
         }));
       } catch (err) {
-        /// ???
         console.error(err);
       }
     }
@@ -49,7 +46,6 @@ export const useUnripe = () => {
   return [fetch, clear] as const;
 };
 
-// Component
 const UnripeUpdater = () => {
   const [fetch, clear] = useUnripe();
   const chainId = useChainId();

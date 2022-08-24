@@ -13,7 +13,7 @@ import LinkButton from './Buttons/LinkButton';
 import AboutButton from './Buttons/AboutButton';
 import ROUTES from './routes';
 import HoverMenu from './HoverMenu';
-import { NAV_BORDER_HEIGHT, NAV_ELEM_HEIGHT, NAV_HEIGHT } from '~/hooks/layout/usePageDimensions';
+import { NAV_BORDER_HEIGHT, NAV_ELEM_HEIGHT, NAV_HEIGHT } from '~/hooks/app/usePageDimensions';
 
 const NavBar: React.FC<{}> = ({ children }) => (
   <AppBar

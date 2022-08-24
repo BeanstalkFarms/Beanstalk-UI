@@ -70,8 +70,7 @@ export function deposit(
   summary.actions.push({
     type: ActionType.DEPOSIT,
     amount: summary.bdv,
-    // from the perspective of the deposit,
-    // the token is "coming in".
+    // from the perspective of the deposit, the token is "coming in".
     token: to, 
   });
   summary.actions.push({

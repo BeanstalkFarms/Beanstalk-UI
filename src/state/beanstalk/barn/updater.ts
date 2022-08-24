@@ -1,26 +1,24 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import BigNumber from 'bignumber.js';
-import { BARNRAISE_CUSTODIAN_ADDRESSES, USDC_ADDRESSES } from '~/constants/addresses';
+import { USDC_ADDRESSES } from '~/constants/addresses';
 import { BEAN } from '~/constants/tokens';
-import useChainConstant from '~/hooks/useChainConstant';
-import { useBeanstalkContract, useBeanstalkFertilizerContract, useERC20Contract } from '~/hooks/useContract';
+import { useBeanstalkContract, useBeanstalkFertilizerContract, useERC20Contract } from '~/hooks/ledger/useContract';
 import { tokenResult, bigNumberResult } from '~/util';
-import useChainId from '~/hooks/useChain';
+import useChainId from '~/hooks/chain/useChainId';
 import { resetBarn, updateBarn } from './actions';
 
 const fetchGlobal = fetch;
 
-export const useBarn = () => {
+export const useFetchBeanstalkBarn = () => {
   const dispatch        = useDispatch();
   const beanstalk       = useBeanstalkContract();
   const [fertContract]  = useBeanstalkFertilizerContract();
   const [usdcContract]  = useERC20Contract(USDC_ADDRESSES);
-  const custodian       = useChainConstant(BARNRAISE_CUSTODIAN_ADDRESSES);
 
   // Handlers
   const fetch = useCallback(async () => {
-    if (fertContract && usdcContract && custodian) {
+    if (fertContract && usdcContract) {
       console.debug('[beanstalk/fertilizer/updater] FETCH');
       const [
         remainingRecapitalization,
@@ -32,6 +30,7 @@ export const useBarn = () => {
         fertilized
       ] = await Promise.all([
         beanstalk.remainingRecapitalization().then(tokenResult(BEAN)),
+        /// FIXME: use compiled subgraph query
         await fetchGlobal('https://api.thegraph.com/subgraphs/name/publiuss/fertilizer', {
           method: 'POST',
           body: JSON.stringify({
@@ -65,8 +64,7 @@ export const useBarn = () => {
     dispatch,
     beanstalk,
     fertContract,
-    usdcContract,
-    custodian
+    usdcContract
   ]); 
   const clear = useCallback(() => {
     dispatch(resetBarn());
@@ -76,7 +74,7 @@ export const useBarn = () => {
 };
 
 const BarnUpdater = () => {
-  const [fetch, clear] = useBarn();
+  const [fetch, clear] = useFetchBeanstalkBarn();
   const chainId = useChainId();
   
   useEffect(() => {

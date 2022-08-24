@@ -141,7 +141,7 @@ const FolderMenu: React.FC<{
         <Box
           sx={(_theme) => ({
             background: 'white',
-            width: popperWidth !== undefined ? popperWidth : '450px',
+            width: popperWidth !== undefined ? popperWidth : '375px',
             borderBottomLeftRadius: _theme.shape.borderRadius,
             borderBottomRightRadius: _theme.shape.borderRadius,
             borderTopRightRadius: _theme.shape.borderRadius,

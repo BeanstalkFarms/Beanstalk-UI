@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-export type Barn = {
+export type BeanstalkBarn = {
   remaining: BigNumber;
   totalRaised: BigNumber;
   humidity: BigNumber;

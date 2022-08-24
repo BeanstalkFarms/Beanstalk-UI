@@ -2,7 +2,10 @@ import { Handler } from '@netlify/functions';
 
 const unripe = require('./unripe.json');
 
-const handler: Handler = async (event, context) => {
+/**
+ * Lookup Unripe Bean and Unripe LP count for the provided `account`.
+ */
+const handler: Handler = async (event) => {
   const account = event.queryStringParameters?.account?.toLowerCase();
   if (!account) {
     return {

@@ -4,13 +4,20 @@ import { BeanstalkPrice__factory } from '~/generated';
 
 const provider = new ethers.providers.AlchemyProvider(1, process.env.VITE_ALCHEMY_API_KEY);
 const address  = '0xA57289161FF18D67A68841922264B317170b0b81';
-const beanstalkPrice = BeanstalkPrice__factory.connect(address, provider);
+const contract = BeanstalkPrice__factory.connect(address, provider);
 
+/**
+ * Return a JSON version of the Beanstalk price contract's
+ * `price()` struct. This should only be used for display purposes.
+ */
 const handler: Handler = async () => {
   try {
-    const bp = await beanstalkPrice.price();
+    const bp = await contract.price();
     return {
       statusCode: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         price: bp.price.toString(),
         liquidity: bp.liquidity.toString(),

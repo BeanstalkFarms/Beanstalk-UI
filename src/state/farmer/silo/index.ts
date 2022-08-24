@@ -4,8 +4,6 @@ import { TokenMap } from '~/constants';
 /**
  * A Crate is an `amount` of a token Deposited or
  * Withdrawn during a given `season`.
- * 
- * `Deposit` and `Withdrawal` extend Crate.
  */
 export type Crate = {
   /** The amount of this Crate that was created, denominated in the underlying Token. */
@@ -19,7 +17,7 @@ export type Crate = {
  * that has been added to the Silo.
  */
 export type DepositCrate = Crate & {
-  /** The BDV of the Deposit is determined upon Deposit. */
+  /** The BDV of the Deposit, determined upon Deposit. */
   bdv: BigNumber;
   /** The amount of Stalk granted for this Deposit. */
   stalk: BigNumber;

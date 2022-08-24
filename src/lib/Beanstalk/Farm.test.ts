@@ -38,9 +38,6 @@ describe('utilities', () => {
     it('handles numbers outside the range', () => {
       expect(withinPriceRange(value, [0.5, 18])).toBe(false);
     });
-    // it('is true at the margins', () => {
-    //   expect(withinPriceRange(value, [0.9, 18])).toBe(true);
-    // });
   });
   describe('slippage', () => {
     const oneBean    = ethers.BigNumber.from(1_000_000); // 1 BEAN

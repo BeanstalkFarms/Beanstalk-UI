@@ -19,6 +19,7 @@ export enum Source {
 
 export const identityResult = (result: any) => result;
 
+// FIXME: `instanceof BNJS` call; is this faster than always calling `.toString()`?
 export const bigNumberResult = (result: any) => new BigNumber(result instanceof BNJS ? result.toString() : result);
 
 export const tokenResult = (_token: Token | ChainConstant<Token>) => {
@@ -33,19 +34,10 @@ export const tokenResult = (_token: Token | ChainConstant<Token>) => {
   );
 };
 
-// HACK:
-// Recursively parse all instances of BNJS as BigNumber
-export const bn = (v: any) => (v instanceof BNJS ? new BigNumber(v.toString()) : false);
-export const parseBNJS = (_o: { [key: string]: any }) => {
-  const o: { [key: string]: any } = {};
-  Object.keys(_o).forEach((k: string) => {
-    o[k] =
-      bn(_o[k]) ||
-      (Array.isArray(_o[k]) ? _o[k].map((v: any) => bn(v) || v) : _o[k]);
-  });
-  return o;
-};
-
+/**
+ * Return a formatted error string from a transaction error thrown by ethers.
+ * @FIXME improve parsing
+ */
 export const parseError = (error: any) => {
   switch (error.code) {
     /// ethers
@@ -72,3 +64,18 @@ export const parseError = (error: any) => {
       return `An unknown error occurred.${error?.code ? ` (code=${error?.code})` : ''}`;
   }
 };
+
+/**
+ * Recursively parse all instances of BNJS as BigNumber
+ * @unused
+ */
+ export const bn = (v: any) => (v instanceof BNJS ? new BigNumber(v.toString()) : false);
+ export const parseBNJS = (_o: { [key: string]: any }) => {
+   const o: { [key: string]: any } = {};
+   Object.keys(_o).forEach((k: string) => {
+     o[k] =
+       bn(_o[k]) ||
+       (Array.isArray(_o[k]) ? _o[k].map((v: any) => bn(v) || v) : _o[k]);
+   });
+   return o;
+ };

@@ -1,13 +1,13 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useBeanstalkContract } from '~/hooks/useContract';
-import useChainId from '~/hooks/useChain';
-import useBlocks from '~/hooks/useBlocks';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
+import useChainId from '~/hooks/chain/useChainId';
+import useBlocks from '~/hooks/ledger/useBlocks';
 import useAccount from '~/hooks/ledger/useAccount';
 import EventProcessor from '~/lib/Beanstalk/EventProcessor';
-import useWhitelist from '~/hooks/useWhitelist';
-import useSeason from '~/hooks/useSeason';
-import useHarvestableIndex from '~/hooks/redux/useHarvestableIndex';
+import useWhitelist from '~/hooks/beanstalk/useWhitelist';
+import useSeason from '~/hooks/beanstalk/useSeason';
+import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import { EventCacheName } from '../events2';
 import useEvents, { GetQueryFilters } from '../events2/updater';
 import { updateFarmerField, resetFarmerField } from './actions';
@@ -62,7 +62,7 @@ export const useFetchFarmerField = () => {
   const initialized = (
     account
     && fetchFieldEvents
-    && harvestableIndex.gt(0) // initialized to 0
+    && harvestableIndex.gt(0) // harvestedableIndex is initialized to 0
   );
 
   /// Handlers
@@ -74,7 +74,6 @@ export const useFetchFarmerField = () => {
       const p = new EventProcessor(account, { season, whitelist });
       p.ingestAll(allEvents);
 
-      // Update Field
       dispatch(updateFarmerField(
         p.parsePlots(harvestableIndex)
       ));

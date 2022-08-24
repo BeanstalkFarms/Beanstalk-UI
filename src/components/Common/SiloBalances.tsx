@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Stack, Typography, Grid, Box, Tooltip } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/Pie';
+import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/PieChart';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import useFarmerBalancesBreakdown from '~/hooks/useFarmerBalancesBreakdown';
-import useBeanstalkSiloBreakdown from '~/hooks/useBeanstalkSiloBreakdown';
+import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
+import useBeanstalkSiloBreakdown from '~/hooks/beanstalk/useBeanstalkSiloBreakdown';
 import { displayFullBN, displayUSD } from '~/util';
 import { Token } from '~/classes';
 import TokenIcon from './TokenIcon';
@@ -58,8 +58,6 @@ const TokenRow: React.FC<{
     alignItems="flex-start"
     sx={{
       cursor: onMouseOver ? 'pointer' : 'inherit',
-      // py: 1,
-      // px: 1.25,
       py: 0.75,
       px: 0.75,
       opacity: isFaded ? 0.3 : 1,
@@ -205,7 +203,6 @@ const SiloBalances: React.FC<{
                     value={breakdown.states[id as keyof typeof breakdown.states].value}
                     amount={breakdown.states[id as keyof typeof breakdown.states].value}
                   />
-                  // displayUSD(breakdown.states[id as keyof typeof breakdown.states].value)
                 }
                 isFaded={hoverState !== null && hoverState !== id}
                 isSelected={hoverState === id}

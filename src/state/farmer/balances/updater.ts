@@ -3,33 +3,30 @@ import { useDispatch } from 'react-redux';
 import flatMap from 'lodash/flatMap';
 import { ZERO_BN } from '~/constants';
 import { BALANCE_TOKENS, ERC20_TOKENS, ETH } from '~/constants/tokens';
-import useChainId from '~/hooks/useChain';
-import { useBeanstalkContract } from '~/hooks/useContract';
-import useMigrateCall from '~/hooks/useMigrateCall';
-import useTokenMap from '~/hooks/useTokenMap';
+import useChainId from '~/hooks/chain/useChainId';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
+import useTokenMap from '~/hooks/chain/useTokenMap';
 import { tokenResult } from '~/util';
-import useChainConstant from '~/hooks/useChainConstant';
+import useChainConstant from '~/hooks/chain/useChainConstant';
 import useAccount from '~/hooks/ledger/useAccount';
 import { clearBalances, updateBalances } from './actions';
 
-// -- Hooks
-
 export const useFetchFarmerBalances = () => {
-  // State
+  /// State
   const dispatch = useDispatch();
   const account  = useAccount();
   
-  // Constants
+  /// Constants
   const Eth = useChainConstant(ETH);
   const tokenMap = useTokenMap(BALANCE_TOKENS);
   const erc20TokenMap = useTokenMap(ERC20_TOKENS);
 
-  // Contracts
+  /// Contracts
   const beanstalk = useBeanstalkContract();
-  const migrate   = useMigrateCall();
 
-  // Handlers
-  // FIXME: make this callback accept a tokens array to prevent reloading all balances on every call
+  /// Handlers
+  /// FIXME: make this callback accept a tokens array to prevent reloading all balances on every call
+  /// FIXME: multicall
   const fetch = useCallback(async () => {
     try {
       if (account && tokenMap) {
@@ -78,7 +75,6 @@ export const useFetchFarmerBalances = () => {
         console.debug(`[farmer/updater/useFetchBalances] FETCH: balances (account = ${account})`);
         const balances = await promises;
         console.debug('[farmer/updater/useFetchBalances] RESULT: ', balances);
-        // console.table(balances);
 
         dispatch(updateBalances(balances));
         return promises;
@@ -103,8 +99,6 @@ export const useFetchFarmerBalances = () => {
   return [fetch, clear] as const;
 };
 
-// -- Updater
-
 const FarmerBalancesUpdater = () => {
   const [fetch, clear] = useFetchFarmerBalances();
   const account = useAccount();
@@ -112,9 +106,7 @@ const FarmerBalancesUpdater = () => {
 
   useEffect(() => {
     clear();
-    if (account) {
-      fetch();
-    }
+    if (account) fetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     account,

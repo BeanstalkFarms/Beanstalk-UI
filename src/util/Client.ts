@@ -16,10 +16,13 @@ export type JsonRpcBatchProviderConfig = Omit<providers.FallbackProviderConfig, 
   rpc: (chain: Chain) => { http: string; webSocket?: string } | null
 }
 
+/**
+ * Wrapper around ethers JsonRpcBatchProvider to enable
+ * batch behavior within wagmi.
+ */
 export function jsonRpcBatchProvider({
   pollingInterval,
   rpc,
-  //
   priority,
   stallTimeout,
   weight,
@@ -55,8 +58,9 @@ export function jsonRpcBatchProvider({
   };
 }
 
-// Setup node
-// FIXME: overlaps heavily with Uniswap fork implementation
+/**
+ * Create a new wagmi chain instance for a custom testnet.
+ */
 const makeTestnet = (_chainId: number, name: string) : Chain => ({
   id: _chainId,
   name: name,
@@ -75,10 +79,9 @@ const makeTestnet = (_chainId: number, name: string) : Chain => ({
   testnet: true,
 });
 
-const baseChains = [
-  chain.mainnet,
-];
+// ------------------------------------------------------------
 
+const baseChains = [chain.mainnet];
 if (import.meta.env.VITE_SHOW_DEV_CHAINS) {
   baseChains.push(makeTestnet(SupportedChainId.CUJO, 'Cujo'));
   baseChains.push(chain.localhost);
@@ -91,6 +94,9 @@ const { chains, provider } = configureChains(
       alchemyId: import.meta.env.VITE_ALCHEMY_API_KEY,
       priority: 0,
     }),
+    /// On known networks (homestead, goerli, etc.) Alchemy will
+    /// be used by default. In other cases, we fallback to a
+    /// provided RPC address for the given testnet chain.
     jsonRpcBatchProvider({
       priority: 1,
       rpc: (_chain) => {

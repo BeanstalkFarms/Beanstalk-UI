@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import TransactionToast from '~/components/Common/TxnToast';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import { useBeanstalkContract } from '~/hooks/useContract';
+import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
 

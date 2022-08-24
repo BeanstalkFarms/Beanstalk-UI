@@ -14,14 +14,20 @@ export type StatItem = {
   amountModifier?: BigNumber;
 }
 
+/**
+ * Show a Card with multiple statistics inside.
+ * Shown at the bottom of the Balances page & Beanstalk total assets.
+ */
 const StatsCard: React.FC<{
   stats: StatItem[];
 } & CardProps> = ({ stats }, props) => (
   <Card sx={{ p: 1 }} {...props}>
     <Grid container spacing={1} rowSpacing={3}>
       {stats.map((stat, index) => (
-        <Grid item xs={12} md={3} key={index}>
+        <Grid key={index} item xs={12} md={3}>
           <Stat
+            variant="h4"
+            gap={0}
             title={stat.title}
             titleTooltip={stat.tooltip}
             amountIcon={stat.token && <TokenIcon token={stat.token} />}
@@ -29,15 +35,12 @@ const StatsCard: React.FC<{
               <>
                 {displayFullBN(stat.amount, stat.token ? stat.token.displayDecimals : 2)}
                 {stat.amountModifier !== undefined && (
-                  <Typography
-                    color="primary"
-                    variant="h4">+ {displayFullBN(stat.amountModifier, stat.token ? stat.token.displayDecimals : 2)}
+                  <Typography color="primary" variant="h4">
+                    + {displayFullBN(stat.amountModifier, stat.token ? stat.token.displayDecimals : 2)}
                   </Typography>
                 )}
               </>
             )}
-            variant="h4"
-            gap={0}
           />
         </Grid>
       ))}

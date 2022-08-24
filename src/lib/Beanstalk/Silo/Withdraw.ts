@@ -1,20 +1,18 @@
 import BigNumber from 'bignumber.js';
 import { Token } from '~/classes';
 import { FormState } from '~/components/Common/Form';
-// import { Action, ActionType } from '~/util/Actions';
 import { DepositCrate } from '~/state/farmer/silo';
 import { sortCratesBySeason } from './Utils';
 
 /**
- * Select how much to Withdraw from Crates.
- * Calculate the Stalk and Seeds lost for Withdrawing
- * the selected Crates.
+ * Select how much to Withdraw from Crates. Calculate the Stalk and Seeds 
+ * lost for Withdrawing the selected Crates.
  * 
  * @returns totalAmountRemoved  
  * @returns totalStalkRemoved   
  * @returns removedCrates       
  */
-export function _selectCratesToWithdraw(
+export function selectCratesToWithdraw(
   token: Token,
   amount: BigNumber,
   depositedCrates: DepositCrate[],
@@ -26,6 +24,7 @@ export function _selectCratesToWithdraw(
   const deltaCrates : DepositCrate[] = [];
   const sortedCrates = sortCratesBySeason<DepositCrate>(depositedCrates);
 
+  /// FIXME: symmetry with `Convert`
   sortedCrates.some((crate) => {
     // How much to remove from the current crate.
     const crateAmountToRemove = (
@@ -92,7 +91,7 @@ export function withdraw(
     deltaBDV,
     deltaStalk,
     deltaCrates
-  } = _selectCratesToWithdraw(
+  } = selectCratesToWithdraw(
     from,
     withdrawAmount,
     depositedCrates,
