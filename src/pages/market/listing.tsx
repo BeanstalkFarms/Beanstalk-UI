@@ -56,6 +56,8 @@ const ListingPage: React.FC = () => {
     );
   }
   if (!listing || !listingValid) {
+    console.log('LISTING', listing);
+    console.log('IS LOADING', loading);
     return (
       <GenericZero title="Not found">
         <Typography>Listing not found.</Typography>
