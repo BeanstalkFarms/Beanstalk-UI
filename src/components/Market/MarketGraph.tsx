@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import { useTooltip, Tooltip } from '@visx/tooltip';
 import { Text } from '@visx/text';
@@ -12,6 +12,7 @@ import { PatternLines } from '@visx/pattern';
 import { Zoom, applyMatrixToPoint } from '@visx/zoom';
 import { ProvidedZoom, TransformMatrix } from '@visx/zoom/lib/types';
 import minBy from 'lodash/minBy';
+import { voronoi, VoronoiPolygon } from '@visx/voronoi';
 
 import { makeStyles } from '@mui/styles';
 import BigNumber from 'bignumber.js';
@@ -19,7 +20,7 @@ import { PodListing, PodOrder } from '~/state/farmer/market';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const useStyles = makeStyles({
-  positionRelative: {
+  relative: {
     position: 'relative'
   },
   listingBox: {
@@ -40,23 +41,13 @@ const useStyles = makeStyles({
     pointerEvents: 'auto',
     zIndex: 99999,
   },
-  graphStyle: {
-    borderRadius: '25px',
-    fontFamily: 'Futura-Pt-Book',
-    backgroundColor: 'red',
-    marginTop: 20,
-  },
-  //
-  axis: {
-    backgroundColor: '#fff',
-    fill: '#fff'
-  }
 });
 
 type CirclePosition = {
   x: number;
   y: number;
   radius: number;
+  id: string;
 };
 
 type LinePosition = {
@@ -64,6 +55,7 @@ type LinePosition = {
   y: number;
   width: number;
   height: number;
+  id: string;
 };
 
 type TooltipData = {
@@ -185,6 +177,18 @@ type GraphProps = {
   height: number;
 } & MarketGraphProps;
 
+const margin = {
+  top: 10,
+  left: 0,
+  right: 0,
+  bottom: 0,
+};
+const axis = {
+  xHeight: 28,
+  yWidth:  45,
+};
+const neighborRadius = 75;
+
 const Graph: React.FC<GraphProps> = ({
   height,
   width,
@@ -195,17 +199,10 @@ const Graph: React.FC<GraphProps> = ({
   harvestableIndex
 }) => {
   const classes = useStyles();
-  const leftAxisWidth    = 45;
-  const bottomAxisHeight = 28;
-  // Amount of top vertical padding in between graph content and graph container
-  const topVerticalPadding = 20;
-  // Amount of right horizontal padding in between graph content and graph container
-  const rightHorizontalPadding = 20;
 
-  // Set max x value to be 1M or max place in line with some buffer
-  const xDomain = [0, Math.max(maxPlaceInLine * 1.1)];
-  // Set max y value to be $1, price per pod should never exceed $1
-  const yDomain = [0, 1];
+  ///
+  const innerWidth  = width -  (margin.left + margin.right);
+  const innerHeight = height - (margin.top  + margin.bottom);
 
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -219,16 +216,26 @@ const Graph: React.FC<GraphProps> = ({
   } = useTooltip<TooltipData>();
 
   const xScale = scaleLinear<number>({
-    domain: xDomain,
-    range: [0, width - leftAxisWidth - rightHorizontalPadding],
+    domain: [
+      0,
+      Math.max(maxPlaceInLine * 1.1)
+    ],
+    range: [
+      0,                          //
+      innerWidth - axis.yWidth    //
+    ],
   });
 
   const yScale = scaleLinear<number>({
-    domain: yDomain,
-    range: [height - bottomAxisHeight, topVerticalPadding],
+    domain: [
+      0,
+      1
+    ],
+    range: [
+      height - axis.xHeight,      //
+      margin.top                  //
+    ],
   });
-
-  // -- Orders
 
   // const orderPositions : LinePosition[] = useMemo(() => 
   //   orders.map((order) => {
@@ -239,7 +246,7 @@ const Graph: React.FC<GraphProps> = ({
   //     );
   //     const w = xScale(order.maxPlaceInLine.toNumber());
   //     return {
-  //       x: leftAxisWidth, // fixme
+  //       x: axis.yWidth, // fixme
   //       y: y - h / 2,
   //       height: h,
   //       width: w,
@@ -269,8 +276,9 @@ const Graph: React.FC<GraphProps> = ({
 
   const orderPositions : CirclePosition[] = useMemo(() => 
     orders.map((order) => ({
+      id: order.id,
       // x position is current place in line
-      x: xScale(new BigNumber(order.maxPlaceInLine).toNumber()) + leftAxisWidth,
+      x: xScale(new BigNumber(order.maxPlaceInLine).toNumber()) + axis.yWidth,
       // y position is price per pod
       y: yScale(order.pricePerPod.toNumber()),
       // radius is plot size
@@ -281,8 +289,9 @@ const Graph: React.FC<GraphProps> = ({
 
   const listingPositions : CirclePosition[] = useMemo(() => 
     listings.map((listing) => ({
+      id: listing.id,
       // x position is current place in line
-      x: xScale(new BigNumber(listing.index).minus(harvestableIndex).toNumber()) + leftAxisWidth,
+      x: xScale(new BigNumber(listing.index).minus(harvestableIndex).toNumber()) + axis.yWidth,
       // y position is price per pod
       y: yScale(listing.pricePerPod.toNumber()),
       // radius is plot size
@@ -292,6 +301,11 @@ const Graph: React.FC<GraphProps> = ({
       ),
     })),
     [harvestableIndex, listings, maxPlotSize, xScale, yScale]
+  );
+
+  const combinedPositions : CirclePosition[] = useMemo(() => 
+    [...listingPositions, ...orderPositions],
+    [listingPositions, orderPositions]
   );
 
   const orderCircles = orderPositions.map((coordinate, i) => {
@@ -326,7 +340,22 @@ const Graph: React.FC<GraphProps> = ({
     );
   });
 
-  const handleMouseMove = (event: React.MouseEvent | React.TouchEvent, zoom: ProvidedZoom<SVGSVGElement>) => {
+  /// Voronoi
+  const voronoiLayout = useMemo(
+    () =>
+      voronoi<CirclePosition>({
+        x: (d) => d.x,
+        y: (d) => d.y,
+        width: innerWidth,
+        height: innerHeight,
+      })(combinedPositions),
+    [innerWidth, innerHeight, combinedPositions],
+  );
+  const polygons = voronoiLayout.polygons();
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [neighborIds, setNeighborIds] = useState<Set<string>>(new Set());
+
+  const handleMouseMove = useCallback((event: React.MouseEvent | React.TouchEvent, zoom: ProvidedZoom<SVGSVGElement>) => {
     if (!svgRef.current) return;
 
     // This is the mouse position with respect to the 
@@ -341,6 +370,27 @@ const Graph: React.FC<GraphProps> = ({
     // that we can hover over circles correctly even when zoomed in.
     const transformedPoint = zoom.applyInverseToPoint(point);
 
+    /// Voronoi
+    const closest = voronoiLayout.find(transformedPoint.x, transformedPoint.y, neighborRadius);
+
+    // find neighboring polygons to hightlight
+    if (closest && closest.data.id !== hoveredId) {
+      const neighbors = new Set<string>();
+      const cell = voronoiLayout.cells[closest.index];
+      if (!cell) return;
+
+      cell.halfedges.forEach((index) => {
+        const edge = voronoiLayout.edges[index];
+        const { left, right } = edge;
+        if (left && left !== closest) neighbors.add(left.data.id);
+        else if (right && right !== closest) neighbors.add(right.data.id);
+      });
+
+      setNeighborIds(neighbors);
+      setHoveredId(closest.data.id);
+    }
+
+    ///
     const listingIndex = findPointInCircles(listingPositions, transformedPoint);
     if (listingIndex !== undefined) {
       // Get the original position of the circle (no zoom)
@@ -388,7 +438,7 @@ const Graph: React.FC<GraphProps> = ({
         hideTooltip();
       // }
     }
-  };
+  }, [hideTooltip, hoveredId, listingPositions, showTooltip, voronoiLayout]);
 
   const scaleXMin = 1;
   const scaleXMax = 2;
@@ -441,7 +491,7 @@ const Graph: React.FC<GraphProps> = ({
         scaleYMax={4}
       >
         {(zoom) => (
-          <div className={classes.positionRelative}>
+          <div className={classes.relative}>
             <svg
               width={width}
               height={height}
@@ -449,12 +499,11 @@ const Graph: React.FC<GraphProps> = ({
             >
               <RectClipPath
                 id="zoom-clip"
-                width={width - leftAxisWidth}
-                height={height - bottomAxisHeight}
-                x={leftAxisWidth}
+                width={width - axis.yWidth}
+                height={height - axis.xHeight}
+                x={axis.yWidth}
                 y={0}
               />
-              
               <g clipPath="url(#zoom-clip)">
                 <g transform={zoom.toString()} overflow="hidden">
                   <PatternLines
@@ -468,6 +517,22 @@ const Graph: React.FC<GraphProps> = ({
                   {/* {orderLines} */}
                   {orderCircles}
                   {listingCircles}
+                  <g>
+                    {polygons.map((polygon) => (
+                      <VoronoiPolygon
+                        key={`polygon-${polygon.data.id}`}
+                        polygon={polygon}
+                        fill={
+                          hoveredId && (polygon.data.id === hoveredId || neighborIds.has(polygon.data.id))
+                            ? 'red'
+                            : 'transparent'
+                        }
+                        stroke="red"
+                        strokeWidth={1}
+                        fillOpacity={hoveredId && neighborIds.has(polygon.data.id) ? 0.5 : 1}
+                      />
+                    ))}
+                  </g>
                 </g>
               </g>
               {/* Contains the entire chart (incl. axes and labels)
@@ -479,9 +544,9 @@ const Graph: React.FC<GraphProps> = ({
               /> */}
               {/* Contains the chart; this seems to be sitting over top of the other elems */}
               <rect
-                width={width - leftAxisWidth}
-                height={height - bottomAxisHeight}
-                x={leftAxisWidth}
+                width={width - axis.yWidth}
+                height={height - axis.xHeight}
+                x={axis.yWidth}
                 y={0}
                 fill="transparent"
                 ref={svgRef}
@@ -510,7 +575,7 @@ const Graph: React.FC<GraphProps> = ({
               
               <AxisLeft
                 scale={rescaleYWithZoom(yScale, zoom)}
-                left={leftAxisWidth}
+                left={axis.yWidth}
                 // Labels
                 // label="Price Per Pod"
                 // labelProps={labelProps}
@@ -532,8 +597,8 @@ const Graph: React.FC<GraphProps> = ({
               {/* X axis: Place in Line */}
               <AxisBottom
                 scale={rescaleXWithZoom(xScale, zoom)}
-                top={height - bottomAxisHeight}
-                left={leftAxisWidth}
+                top={height - axis.xHeight}
+                left={axis.yWidth}
                 // Labels
                 // label="Place In Line"
                 // labelProps={labelProps}

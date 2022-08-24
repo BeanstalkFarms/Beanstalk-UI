@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Card, Container, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Container, Stack, Tab, Typography } from '@mui/material';
 import PageHeader from '~/components/Common/PageHeader';
 import useTabs from '~/hooks/display/useTabs';
 import AllListings from '~/components/Market/Tables/AllListings';
@@ -7,6 +7,7 @@ import AllOrders from '~/components/Market/Tables/AllOrders';
 import CreateButtons from '~/components/Market/CreateButtons';
 import useMarketData from '~/hooks/beanstalk/useMarketGraphData';
 import MarketGraph from '~/components/Market/MarketGraph';
+import { Module, ModuleContent, ModuleHeader, ModuleTabs } from '~/components/Common/Module';
 
 const SLUGS = ['buy', 'sell'];
 const PodMarketPage: React.FC = () => {
@@ -29,11 +30,11 @@ const PodMarketPage: React.FC = () => {
         {/**
           * Graph
           */}
-        <Card>
-          <Box sx={{ px: 2, pt: 2, pb: 1.5 }}>
+        <Module sx={{ overflow: 'visible' }}> 
+          <ModuleHeader>
             <Typography variant="h4">Overview</Typography>
-          </Box>
-          <Box sx={{ width: '100%', height: '400px', position: 'relative' }}>
+          </ModuleHeader>
+          <Box sx={{ width: '100%', height: '400px', position: 'relative', overflow: 'visible' }}>
             {data.listings !== undefined && data.orders !== undefined ? (
               <MarketGraph
                 listings={data.listings}
@@ -49,27 +50,20 @@ const PodMarketPage: React.FC = () => {
           {/* <Box>
             <pre>{JSON.stringify(data, null, 2)}</pre>
           </Box> */}
-        </Card>
+        </Module>
         {/**
           * Buy Now and Sell Now
           */}
-        <Card>
-          <Box sx={{ px: 2, pt: 2, pb: 1.5 }}>
-            <Tabs
-              value={tab}
-              onChange={handleChangeTab}
-              sx={{ minHeight: 0, overflow: 'visible', '& .MuiTabs-scroller': { overflow: 'visible' } }}
-              variant="scrollable"
-            >
-              <Tab label="Buy Now" />
-              <Tab label="Sell Now" />
-            </Tabs>
-          </Box>
-          <Box sx={{ px: 1, pb: 1 }}>
+        <Module>
+          <ModuleTabs value={tab} onChange={handleChangeTab}>
+            <Tab label="Buy Now" />
+            <Tab label="Sell Now" />
+          </ModuleTabs>
+          <ModuleContent>
             {tab === 0 && <AllListings />}
             {tab === 1 && <AllOrders />}
-          </Box>
-        </Card>
+          </ModuleContent>
+        </Module>
       </Stack>
     </Container>
   );

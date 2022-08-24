@@ -8366,7 +8366,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@visx/voronoi@npm:2.10.0":
+"@visx/voronoi@npm:2.10.0, @visx/voronoi@npm:^2.10.0":
   version: 2.10.0
   resolution: "@visx/voronoi@npm:2.10.0"
   dependencies:
@@ -10349,6 +10349,7 @@ __metadata:
     "@visx/gradient": ^2.10.0
     "@visx/mock-data": ^2.1.2
     "@visx/pattern": ^2.1.2
+    "@visx/voronoi": ^2.10.0
     "@visx/xychart": ^2.1.0
     "@visx/zoom": ^2.6.1
     "@vitejs/plugin-react": ^2.0.0

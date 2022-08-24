@@ -13,7 +13,6 @@ export default function usePodListings(
 ) {
   const harvestableIndex = useHarvestableIndex();
   const Bean = useChainConstant(BEAN);
-  console.debug('[usePodListings]' , harvestableIndex);
   return useAllPodListingsQuery({
     ...baseOptions,
     variables: {

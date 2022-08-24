@@ -17,6 +17,7 @@
     "@snapshot-labs/snapshot.js": "^0.4.19",
     "@visx/clip-path": "^2.10.0",
     "@visx/pattern": "^2.1.2",
+    "@visx/voronoi": "^2.10.0",
     "@visx/xychart": "^2.1.0",
     "@visx/zoom": "^2.6.1",
     "apollo3-cache-persist": "^0.14.1",
