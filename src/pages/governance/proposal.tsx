@@ -5,12 +5,13 @@ import {
   Container, Grid,
   Stack, Typography
 } from '@mui/material';
-import { Navigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import PageHeader from '~/components/Common/PageHeader';
 import GovernanceActions from '~/components/Governance/Actions';
 import ProposalContent from '~/components/Governance/Proposal';
 import { useProposalQuery } from '~/generated/graphql';
 import { Proposal } from '~/util/Governance';
+import PageNotFound from '~/pages/error/404';
 
 const ProposalPage: React.FC = () => {
   /// Routing
@@ -47,7 +48,7 @@ const ProposalPage: React.FC = () => {
 
   /// Finished loading but no proposal
   if ((!loading && data?.proposal === null) || !id) {
-    return <Navigate replace to="/404" />;
+    return <PageNotFound />;
   }
 
   return (
