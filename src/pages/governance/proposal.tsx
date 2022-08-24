@@ -26,13 +26,8 @@ const ProposalPage: React.FC = () => {
   });
   const proposal = data?.proposal as Proposal;
 
-  /// Handle 404 error
-  if ((!loading && data?.proposal === null) || !id) {
-    return <Navigate replace to="/404" />;
-  }
-
   /// Loading or Error
-  if (loading || error || !proposal) {
+  if (loading || error) {
     return (
       <>
         {error ? (
@@ -48,6 +43,11 @@ const ProposalPage: React.FC = () => {
         )}
       </>
     );
+  }
+
+  /// Finished loading but no proposal
+  if ((!loading && data?.proposal === null) || !id) {
+    return <Navigate replace to="/404" />;
   }
 
   return (
