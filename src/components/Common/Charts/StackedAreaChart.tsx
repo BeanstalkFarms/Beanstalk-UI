@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { bisector, extent, max, min } from 'd3-array';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import { AreaStack, Bar, Line } from '@visx/shape';
+import { AreaStack, Bar, Line, LinePath } from '@visx/shape';
 import { Group } from '@visx/group';
 import { scaleLinear } from '@visx/scale';
 import { localPoint } from '@visx/event';
@@ -16,7 +16,9 @@ import {
 import { Axis, Orientation } from '@visx/axis';
 import { CurveFactory } from 'd3-shape';
 import { LinearGradient } from '@visx/gradient';
+import BigNumber from 'bignumber.js';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
+import { displayBN } from '~/util';
 
 const CURVES = {
   linear: curveLinear,
@@ -51,6 +53,21 @@ type GraphProps = {
   width: number;
   height: number;
 } & LineChartProps;
+
+const strokes = [
+  {
+    stroke: BeanstalkPalette.logoGreen,
+    strokeWidth: 1,
+  },
+  {
+    stroke: BeanstalkPalette.darkBlue,
+    strokeWidth: 1,
+  },
+  {
+    stroke: BeanstalkPalette.lightGrey,
+    strokeWidth: 0.5,
+  },
+];
 
 // ------------------------
 //           Data
@@ -91,11 +108,18 @@ export const backgroundColor = '#da7cff';
 export const labelColor = '#340098';
 const axisColor = BeanstalkPalette.lightGrey;
 const tickLabelColor = BeanstalkPalette.lightGrey;
-const tickLabelProps = () => ({
+const xTickLabelProps = () => ({
   fill: tickLabelColor,
   fontSize: 12,
   fontFamily: 'Futura PT',
   textAnchor: 'middle',
+} as const);
+
+const yTickLabelProps = () => ({
+  fill: tickLabelColor,
+  fontSize: 12,
+  fontFamily: 'Futura PT',
+  textAnchor: 'end',
 } as const);
 
 const Graph: React.FC<GraphProps> = (props) => {
@@ -115,6 +139,7 @@ const Graph: React.FC<GraphProps> = (props) => {
   const data = series[0];
 
   const keys = ['value'];
+  const yAxisWidth = 57;
 
   /**
    *
@@ -139,7 +164,7 @@ const Graph: React.FC<GraphProps> = (props) => {
     });
 
     let yScale;
-    
+
     if (isTWAP) {
       const yMin = min(_data, getY);
       const yMax = max(_data, getY);
@@ -158,7 +183,7 @@ const Graph: React.FC<GraphProps> = (props) => {
       });
     }
 
-    xScale.range([0, width]);
+    xScale.range([0, width - yAxisWidth]);
 
     yScale.range([
       height - axisHeight - margin.bottom - strokeBuffer, // bottom edge
@@ -226,7 +251,8 @@ const Graph: React.FC<GraphProps> = (props) => {
     },
     [series]
   );
-  const tickFormat = useCallback((_, i) => tickDates[i], [tickDates]);
+  const xTickFormat = useCallback((_, i) => tickDates[i], [tickDates]);
+  const yTickFormat = useCallback((val) => displayBN(new BigNumber(val)), []);
 
   if (!series || series.length === 0) return null;
 
@@ -258,9 +284,9 @@ const Graph: React.FC<GraphProps> = (props) => {
     <>
       <svg width={width} height={height}>
         {/**
-          * Chart
-          */}
-        <Group width={width} height={dataRegion.yBottom - dataRegion.yTop}>
+         * Chart
+         */}
+        <Group width={width - yAxisWidth} height={dataRegion.yBottom - dataRegion.yTop}>
           <LinearGradient from={BeanstalkPalette.lightGreen} to={BeanstalkPalette.lightGreen} id="stacked-area-green" />
           <rect x={0} y={0} width={width} height={height} fill="transparent" rx={14} />
           <AreaStack<DataPoint>
@@ -278,13 +304,27 @@ const Graph: React.FC<GraphProps> = (props) => {
                 <path
                   key={`stack-${stack.key}`}
                   d={path(stack) || ''}
-                  stroke={BeanstalkPalette.logoGreen}
+                  // stroke={BeanstalkPalette.logoGreen}
                   fill="url(#stacked-area-green)"
-                  onClick={() => {}}
+                  onClick={() => {
+                  }}
                 />
               ))
             }
           </AreaStack>
+        </Group>
+        <Group width={width - yAxisWidth} height={dataRegion.yBottom - dataRegion.yTop}>
+          {children && children({ scales, dataRegion, ...props })}
+          {series.map((_data, index) => (
+            <LinePath<DataPoint>
+              key={index}
+              curve={curveLinear}
+              data={_data}
+              x={(d) => scales[index].xScale(getX(d)) ?? 0}
+              y={(d) => scales[index].yScale(getY(d)) ?? 0}
+              {...strokes[index]}
+            />
+          ))}
         </Group>
         {/**
          * Axis
@@ -295,10 +335,23 @@ const Graph: React.FC<GraphProps> = (props) => {
             orientation={Orientation.bottom}
             scale={scales[0].xScale}
             stroke={axisColor}
-            tickFormat={tickFormat}
+            tickFormat={xTickFormat}
             tickStroke={axisColor}
-            tickLabelProps={tickLabelProps}
+            tickLabelProps={xTickLabelProps}
             tickValues={tickSeasons}
+          />
+        </g>
+        <g transform={`translate(${width - 17}, 1)`}>
+          <Axis
+            key="axis"
+            orientation={Orientation.right}
+            scale={scales[0].yScale}
+            stroke={axisColor}
+            tickFormat={yTickFormat}
+            tickStroke={axisColor}
+            tickLabelProps={yTickLabelProps}
+            numTicks={6}
+            strokeWidth={0}
           />
         </g>
         {/**

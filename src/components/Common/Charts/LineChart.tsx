@@ -15,7 +15,9 @@ import {
 } from '@visx/curve';
 import { Axis, Orientation } from '@visx/axis';
 import { CurveFactory } from 'd3-shape';
+import BigNumber from 'bignumber.js';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
+import { displayBN, displayFullBN } from '~/util';
 
 const CURVES = {
   linear: curveLinear,
@@ -40,6 +42,7 @@ export type LineChartProps = {
   onCursor: (ds?: DataPoint[]) => void;
   isTWAP?: boolean; // used to indicate if we are displaying TWAP price
   curve?: CurveFactory | (keyof typeof CURVES);
+  yAxisMultiplier?: number;
   children?: (props: GraphProps & {
     scales: Scale[];
     dataRegion: DataRegion;
@@ -109,11 +112,18 @@ export const backgroundColor = '#da7cff';
 export const labelColor = '#340098';
 const axisColor      = BeanstalkPalette.lightGrey;
 const tickLabelColor = BeanstalkPalette.lightGrey;
-const tickLabelProps = () => ({
+const xTickLabelProps = () => ({
   fill: tickLabelColor,
   fontSize: 12,
   fontFamily: 'Futura PT',
   textAnchor: 'middle',
+} as const);
+
+const yTickLabelProps = () => ({
+  fill: tickLabelColor,
+  fontSize: 12,
+  fontFamily: 'Futura PT',
+  textAnchor: 'end',
 } as const);
 
 // ------------------------
@@ -129,6 +139,7 @@ const Graph: React.FC<GraphProps> = (props) => {
     series,
     onCursor,
     isTWAP,
+    yAxisMultiplier,
     curve: _curve = 'linear',
     children,
   } = props;
@@ -137,6 +148,8 @@ const Graph: React.FC<GraphProps> = (props) => {
   // circle but potentially multiple series).
   const data = series[0];
   const curve = typeof _curve === 'string' ? CURVES[_curve] : _curve;
+
+  const yAxisWidth = 57;
 
   /**
    * 
@@ -181,7 +194,7 @@ const Graph: React.FC<GraphProps> = (props) => {
       });
     }
 
-    xScale.range([0, width]);
+    xScale.range([0, width - yAxisWidth]);
     yScale.range([
       height - axisHeight - margin.bottom - strokeBuffer, // bottom edge
       margin.top,
@@ -234,8 +247,8 @@ const Graph: React.FC<GraphProps> = (props) => {
   }, [hideTooltip, onCursor]);
 
   const [
-    tickSeasons,
-    tickDates,
+    xTickSeasons,
+    xTickDates,
   ] = useMemo(
     () => {
       const interval = Math.ceil(series[0].length / 12);
@@ -250,7 +263,13 @@ const Graph: React.FC<GraphProps> = (props) => {
     },
     [series]
   );
-  const tickFormat = useCallback((_, i) => tickDates[i], [tickDates]);
+  const xTickFormat = useCallback((_, i) => xTickDates[i], [xTickDates]);
+  const yTickFormat = useCallback((val) => {
+    if (isTWAP) {
+      return displayFullBN(new BigNumber(val), 4, 4);
+    }
+    return displayBN(yAxisMultiplier ? new BigNumber(val * yAxisMultiplier) : new BigNumber(val));
+  }, [isTWAP, yAxisMultiplier]);
 
   if (!series || series.length === 0) return null;
   
@@ -283,11 +302,11 @@ const Graph: React.FC<GraphProps> = (props) => {
         {/**
           * Lines
           */}
-        <Group width={width} height={dataRegion.yBottom - dataRegion.yTop}>
+        <Group width={width - yAxisWidth} height={dataRegion.yBottom - dataRegion.yTop}>
           {isTWAP && (
             <Line
               from={{ x: 0,   y: scales[0].yScale(1) }}
-              to={{ x: width, y: scales[0].yScale(1) }}
+              to={{ x: width - yAxisWidth, y: scales[0].yScale(1) }}
               {...strokes[2]}
             />
           )}
@@ -312,10 +331,23 @@ const Graph: React.FC<GraphProps> = (props) => {
             orientation={Orientation.bottom}
             scale={scales[0].xScale}
             stroke={axisColor}
-            tickFormat={tickFormat}
+            tickFormat={xTickFormat}
             tickStroke={axisColor}
-            tickLabelProps={tickLabelProps}
-            tickValues={tickSeasons}
+            tickLabelProps={xTickLabelProps}
+            tickValues={xTickSeasons}
+          />
+        </g>
+        <g transform={`translate(${width - 17}, 1)`}>
+          <Axis
+            key="axis"
+            orientation={Orientation.right}
+            scale={scales[0].yScale}
+            stroke={axisColor}
+            tickFormat={yTickFormat}
+            tickStroke={axisColor}
+            tickLabelProps={yTickLabelProps}
+            numTicks={6}
+            strokeWidth={0}
           />
         </g>
         {/**
@@ -348,7 +380,7 @@ const Graph: React.FC<GraphProps> = (props) => {
         <Bar
           x={0}
           y={0}
-          width={width}
+          width={width - yAxisWidth}
           height={height}
           fill="transparent"
           rx={14}
