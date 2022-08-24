@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Box } from '@mui/material';
+import { Card, Stack } from '@mui/material';
 import { useTooltip, Tooltip } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { Circle } from '@visx/shape';
@@ -18,6 +18,8 @@ import { makeStyles } from '@mui/styles';
 import BigNumber from 'bignumber.js';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
+import EntityIcon from '~/components/Market/EntityIcon';
+import { displayBN } from '~/util';
 
 const useStyles = makeStyles({
   relative: {
@@ -25,7 +27,7 @@ const useStyles = makeStyles({
   },
   listingBox: {
     backgroundColor: '#b3cde3',
-    border: '2px solid #333',
+    border: '1px solid #333',
     boxShadow: 'rgb(33 33 33 / 20%) 0px 1px 2px',
     padding: '0.3rem 0.5rem',
     borderRadius: 10,
@@ -61,6 +63,7 @@ type LinePosition = {
 type TooltipData = {
   type: 'listing' | 'order';
   index: number;
+  coordinate: CirclePosition
 }
 
 const PATTERN_ID = 'brush_pattern';
@@ -318,7 +321,7 @@ const Graph: React.FC<GraphProps> = ({
         cy={coordinate.y}
         r={coordinate.radius}
         fill={BeanstalkPalette.logoGreen}
-        stroke={active ? BeanstalkPalette.logoGreen : '#fff'}
+        stroke={active ? BeanstalkPalette.mediumGreen : '#fff'}
         strokeWidth={active ? 2 : 1}
       />
     );
@@ -352,6 +355,7 @@ const Graph: React.FC<GraphProps> = ({
     [innerWidth, innerHeight, combinedPositions],
   );
   const polygons = voronoiLayout.polygons();
+  const [selectedPoint, setSelectedPoint] = useState<CirclePosition | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [neighborIds, setNeighborIds] = useState<Set<string>>(new Set());
 
@@ -407,43 +411,46 @@ const Graph: React.FC<GraphProps> = ({
       // Nudge inward to make hovering easier.
       showTooltip({
         tooltipLeft: zoomedCoordinate.x + coordinate.radius / Math.sqrt(2) - 100, // 200 = width of tooltip
-        tooltipTop: zoomedCoordinate.y + coordinate.radius / Math.sqrt(2) - 0,
+        tooltipTop:  zoomedCoordinate.y + coordinate.radius / Math.sqrt(2) - 0,
         tooltipData: {
           index: listingIndex,
           type: 'listing',
+          coordinate: coordinate
         }
       });
     } else {
+      const orderIndex = findPointInCircles(orderPositions, transformedPoint);
       // const orderIndex = findPointInLines(orderPositions, transformedPoint);
-      // if (orderIndex !== undefined) {
-      //   // Get the original position of the circle (no zoom)
-      //   const position = orderPositions[orderIndex];
+      if (orderIndex !== undefined) {
+        // Get the original position of the circle (no zoom)
+        const coordinate = orderPositions[orderIndex];
 
-      //   const zoomedCoordinate = zoom.applyToPoint({
-      //     x: position.x,
-      //     y: position.y,
-      //   });
+        const zoomedCoordinate = zoom.applyToPoint({
+          x: coordinate.x,
+          y: coordinate.y,
+        });
 
-      //   // Show tooltip at bottom-right corner of circle position.
-      //   // Nudge inward to make hovering easier.
-      //   showTooltip({
-      //     tooltipLeft: point.x - 90,        // -90 centers tooltip on mouse
-      //     tooltipTop: zoomedCoordinate.y,   // locks to the same y-position regardless of mouse
-      //     tooltipData: {
-      //       index: orderIndex,
-      //       type: 'order',
-      //     }
-      //   });
-      // } else {
+        // Show tooltip at bottom-right corner of circle position.
+        // Nudge inward to make hovering easier.
+        showTooltip({
+          tooltipLeft: point.x - 90,        // -90 centers tooltip on mouse
+          tooltipTop: zoomedCoordinate.y,   // locks to the same y-position regardless of mouse
+          tooltipData: {
+            index: orderIndex,
+            type: 'order',
+            coordinate: coordinate
+          }
+        });
+      } else {
         hideTooltip();
-      // }
+      }
     }
-  }, [hideTooltip, hoveredId, listingPositions, showTooltip, voronoiLayout]);
+  }, [hideTooltip, hoveredId, listingPositions, orderPositions, showTooltip, voronoiLayout]);
 
   const scaleXMin = 1;
-  const scaleXMax = 2;
+  const scaleXMax = 8;
   const scaleYMin = 1;
-  const scaleYMax = 2;
+  const scaleYMax = 8;
   
   // This works to constrain at x=0 y=0 but it causes some weird
   // mouse and zoom behavior.
@@ -485,10 +492,10 @@ const Graph: React.FC<GraphProps> = ({
         width={width}
         height={height}
         constrain={constrain}
-        scaleXMin={1 / 2}
-        scaleXMax={4}
-        scaleYMin={1 / 2}
-        scaleYMax={4}
+        scaleXMin={scaleXMin}
+        scaleXMax={scaleXMax}
+        scaleYMin={scaleYMin}
+        scaleYMax={scaleYMax}
       >
         {(zoom) => (
           <div className={classes.relative}>
@@ -514,9 +521,6 @@ const Graph: React.FC<GraphProps> = ({
                     strokeWidth={1}
                     orientation={['diagonal']}
                   />
-                  {/* {orderLines} */}
-                  {orderCircles}
-                  {listingCircles}
                   <g>
                     {polygons.map((polygon) => (
                       <VoronoiPolygon
@@ -527,12 +531,30 @@ const Graph: React.FC<GraphProps> = ({
                             ? 'red'
                             : 'transparent'
                         }
-                        stroke="red"
-                        strokeWidth={1}
-                        fillOpacity={hoveredId && neighborIds.has(polygon.data.id) ? 0.5 : 1}
+                        // stroke="red"
+                        // strokeWidth={1}
+                        fillOpacity={hoveredId && neighborIds.has(polygon.data.id) ? 0.05 : 0.2}
+                        strokeLinejoin="round"
                       />
                     ))}
                   </g>
+                  {(tooltipOpen && tooltipData && tooltipData?.type === 'order')
+                    ? (
+                      <rect
+                        key={`bar-${tooltipData.index}`}
+                        x={0}
+                        y={tooltipData.coordinate.y}
+                        height={tooltipData.coordinate.y}
+                        width={tooltipData.coordinate.x}
+                        fill={BeanstalkPalette.logoGreen}
+                        // fill={`url('#${PATTERN_ID}')`}
+                        // stroke={'#888'}
+                        // strokeWidth={active ? 1.5 : 1}
+                      />
+                    )
+                    : null}
+                  {orderCircles}
+                  {listingCircles}
                 </g>
               </g>
               {/* Contains the entire chart (incl. axes and labels)
@@ -640,10 +662,15 @@ const Graph: React.FC<GraphProps> = ({
                     fontSize: 13,
                   }}
                 >
-                  <Box
-                    className={tooltipData.type === 'listing' ? classes.listingBox : classes.orderBox}>
-                    <pre>{JSON.stringify(tooltipData.type === 'listing' ? listings[tooltipData.index] : orders[tooltipData.index], null,2)}</pre>
-
+                  <Card sx={{ backgroudColor: BeanstalkPalette.lightestBlue, px: 0.5, py: 0.5, }}>
+                    <Stack direction="row" alignItems="center">
+                      <EntityIcon type={tooltipData.type} />
+                      {tooltipData.type === 'listing' 
+                        ? displayBN(listings[tooltipData.index].remainingAmount) 
+                        : displayBN(orders[tooltipData.index].remainingAmount)
+                      }
+                    </Stack>
+                    {/* <pre>{JSON.stringify(tooltipData.type === 'listing' ? listings[tooltipData.index] : orders[tooltipData.index], null,2)}</pre> */}
                     {/* {tooltipData.type === 'listing' ? (
                       <GraphListingTooltip
                         listing={listings[tooltipData.index]}
@@ -662,7 +689,7 @@ const Graph: React.FC<GraphProps> = ({
                         }}
                       />
                     )} */}
-                  </Box>
+                  </Card>
                 </Tooltip>
               )}
           </div>
