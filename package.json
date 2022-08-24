@@ -15,6 +15,7 @@
     "@mui/x-data-grid": "^5.9.0",
     "@reduxjs/toolkit": "^1.5.0",
     "@snapshot-labs/snapshot.js": "^0.4.19",
+    "@visx/clip-path": "^2.10.0",
     "@visx/pattern": "^2.1.2",
     "@visx/xychart": "^2.1.0",
     "@visx/zoom": "^2.6.1",

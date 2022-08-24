@@ -8130,6 +8130,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@visx/clip-path@npm:^2.10.0":
+  version: 2.10.0
+  resolution: "@visx/clip-path@npm:2.10.0"
+  dependencies:
+    "@types/react": "*"
+    prop-types: ^15.5.10
+  peerDependencies:
+    react: ^16.0.0-0 || ^17.0.0-0 || ^18.0.0-0
+  checksum: 3db7ceea7da63762e510f3a84ae25bdd4933ad0c15e9324c0fa569986eec4681533f852dfa03602f96cbb311c49dc0c7c1241ba71840685f7380aa9767e6bf37
+  languageName: node
+  linkType: hard
+
 "@visx/curve@npm:2.1.0":
   version: 2.1.0
   resolution: "@visx/curve@npm:2.1.0"
@@ -10333,6 +10345,7 @@ __metadata:
     "@types/react-scrollspy": ^3.3.3
     "@typescript-eslint/eslint-plugin": 4.13.0
     "@typescript-eslint/parser": 4.13.0
+    "@visx/clip-path": ^2.10.0
     "@visx/gradient": ^2.10.0
     "@visx/mock-data": ^2.1.2
     "@visx/pattern": ^2.1.2
