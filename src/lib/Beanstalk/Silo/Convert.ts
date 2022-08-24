@@ -11,6 +11,16 @@ export enum ConvertKind {
   UNRIPE_LP_TO_BEANS  = 3,
 }
 
+/**
+ * Select Deposit Crates to convert. Calculate resulting gain/loss of Stalk and Seeds.
+ * 
+ * @param fromToken Token converting from. Used to calculate stalk and seeds.
+ * @param toToken Token converting to. Used to calculate stalk and seeds.
+ * @param fromAmount Amount of `fromToken` to convert.
+ * @param depositedCrates An array of deposit crates for `fromToken`.
+ * @param currentSeason used to calculate loss of grown stalk.
+ * @returns 
+ */
 export function selectCratesToConvert(
   fromToken:        Token,
   toToken:          Token,
@@ -19,11 +29,9 @@ export function selectCratesToConvert(
   currentSeason:    BigNumber,
 ) {
   let totalAmountConverted = new BigNumber(0);
-  let totalBDVRemoved    = new BigNumber(0);
-  let totalStalkRemoved  = new BigNumber(0);
+  let totalBDVRemoved      = new BigNumber(0);
+  let totalStalkRemoved    = new BigNumber(0);
   const deltaCrates : DepositCrate[] = [];
-
-  console.debug('typeof crates', typeof depositedCrates);
 
   /// TODO: handle the LP->LP case when we have two LP pools.
   const sortedCrates = (
@@ -39,6 +47,7 @@ export function selectCratesToConvert(
       : sortCratesByBDVRatio<DepositCrate>(depositedCrates, 'asc')
   );
 
+  /// FIXME: symmetry with `Withdraw`
   sortedCrates.some((crate) => {
     // How much to remove from the current crate.
     const crateAmountToRemove = (
@@ -81,7 +90,7 @@ export function selectCratesToConvert(
     deltaBDV:    totalBDVRemoved.negated(),
     /** stalk gained/lost during the convert */
     deltaStalk:  totalStalkRemoved.negated(),
-    /** */
+    /** affected crates */
     deltaCrates,
   };
 }
@@ -111,7 +120,7 @@ export function convert(
     bdv:     deltaBDV,
     stalk:   deltaStalk,
     seeds:   fromToken.getSeeds(deltaBDV),
-    actions: [],
+    actions: [], /// FIXME: finalize `actions` pattern for SDK
     deltaCrates,
   };
 }

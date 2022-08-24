@@ -17,7 +17,6 @@ const SLUGS = ['genesis', 'winter'];
 const NFTPage: React.FC = () => {
   const account = useAccount();
   const theme = useTheme();
-  const authState = !account ? 'disconnected' : 'ready';
   const { data: signer } = useSigner();
   const genesisContract = useGenesisNFTContract(signer);
   const winterContract = useWinterNFTContract(signer);

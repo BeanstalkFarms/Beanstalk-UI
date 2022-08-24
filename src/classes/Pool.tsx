@@ -14,11 +14,6 @@ import Token, { ERC20Token } from './Token';
 type Reserves = [BigNumber, BigNumber];
 
 /**
- * The decentralized exchange associated with the pool
- */
-// public readonly dex: Dex;
-
-/**
  * A Pool is an AMM liquidity pool between at least 2 tokens.
  */
 export default abstract class Pool {
@@ -252,11 +247,6 @@ export class CurveMetaPool extends Pool {
           ] as Reserves
       );
   }
-
-  // public getAmountOut(): Promise<BigNumber> {
-  //   return this.getContract()
-  //     .get_dy()
-  // }
 }
 
 // ------------------------------------

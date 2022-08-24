@@ -3,17 +3,32 @@
 // -----------------
 
 export * from './Account';
+export * from './Actions';
+export * from './BeaNFTs';
+export * from './BigNumber';
 export * from './Chain';
+export * from './Client';
+export * from './Crates';
+// export * from './Curve';
+export * from './Farm';
+export * from './Governance';
+export * from './Guides';
 export * from './Ledger';
+export * from './Season';
+export * from './State';
+export * from './Time';
 export * from './Tokens';
 
 // -----------------
-// Helpers
+// Shared Types
 // -----------------
 
-export function trimAddress(address: string, showSuffix : boolean = true) {
-  return `${address.substring(0, 6)}${showSuffix ? `..${address.slice(-4)}` : ''}`;
-}
+export type SeasonMap<T> = { [season: string]: T; }
+export type PlotMap<T>   = { [index: string]: T; }
+
+// -----------------
+// Other Helpers
+// -----------------
 
 const ordinalRulesEN = new Intl.PluralRules('en', { type: 'ordinal' });
 const suffixes : { [k: string] : string } = {

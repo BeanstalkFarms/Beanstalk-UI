@@ -1,15 +1,8 @@
 import BigNumber from 'bignumber.js';
-
-export type SeasonMap<T> = {
-  [season: string]: T;
-}
-
-export type PlotMap<T> = {
-  [index: string]: T;
-}
+import { PlotMap } from '~/util';
 
 /// FIXME: "Field" or "FarmerField";
-export type Field = {
+export type FarmerField = {
   plots: PlotMap<BigNumber>;
   pods: BigNumber;
   harvestablePlots: PlotMap<BigNumber>;

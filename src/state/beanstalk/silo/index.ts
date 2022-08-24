@@ -29,8 +29,7 @@ export type BeanstalkSiloBalances = {
 }
 
 /**
- * "Silo Assets" are rewards earned for 
- * holding tokens in the Silo.
+ * "Silo Assets" are rewards earned for holding tokens in the Silo.
  */
 export type BeanstalkSiloAssets = {
   beans: {

@@ -7,7 +7,7 @@ import { toTokenUnitsBN } from '~/util';
 /**
  * Cast a Pod Listing from Subgraph form -> Redux form.
  * @param listing The PodListing as returned by the subgraph.
- * @returns Redux form PodListing.
+ * @returns Redux form of PodListing.
  */
 export const castPodListing = (listing: PodListingFragment) : PodListing => {
   /// NOTE: try to maintain symmetry with subgraph vars here.
@@ -32,6 +32,11 @@ export const castPodListing = (listing: PodListingFragment) : PodListing => {
   };
 };
 
+/**
+ * Cast a Pod Order from Subgraph form -> Redux form.
+ * @param order The PodOrder as returned by the subgraph.
+ * @returns Redux form of PodOrder.
+ */
 export const castPodOrder = (order: PodOrderFragment) : PodOrder => {
   const amount = toTokenUnitsBN(order.amount,   BEAN[1].decimals);  
   const filled = toTokenUnitsBN(order.filledAmount,  BEAN[1].decimals);

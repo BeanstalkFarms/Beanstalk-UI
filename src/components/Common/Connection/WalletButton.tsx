@@ -200,7 +200,9 @@ const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
         } : props.sx}
       >
         <Typography variant="bodyMedium" display={{ xs: 'none', sm: 'block' }}>
-          {trimAddress(IMPERSONATED_ACCOUNT || accountRaw?.address)}
+          {/* Use `accountRaw` to match capitalization of wallet provider
+            * assert existence of accountRaw.address since we check `account` prior. */}
+          {trimAddress(IMPERSONATED_ACCOUNT || accountRaw?.address || '')}
         </Typography>
       </Button>
       {/* Mobile: Drawer */}

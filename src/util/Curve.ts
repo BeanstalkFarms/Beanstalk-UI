@@ -1,6 +1,11 @@
 import curve from '@curvefi/api';
 import { SupportedChainId, TESTNET_RPC_ADDRESSES } from '~/constants';
 
+/**
+ * Initialize a new instance of curve-js; load requisite data.
+ * @unused will be updated in a future release to support more
+ *         complex Curve swaps.
+ */
 export async function initCurve(chainId : SupportedChainId = 1) {
   // curve.chainId = chainId;
   if (TESTNET_RPC_ADDRESSES[chainId]) {

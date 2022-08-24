@@ -12,11 +12,8 @@ import { ZERO_BN } from '~/constants';
 const Fiat : React.FC<{
   /* usd value of `amount`. if defined, overrides siloTokenToFiat */
   value?: BigNumber,
-  /* */
   token?: Token,
-  /* */
   amount: BigNumber | undefined,
-  //
   allowNegative?: boolean,
   chop?: boolean,
   truncate?: boolean,

@@ -213,16 +213,6 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
             {amountIn}
           </Stack>
         </Stack>
-        {/* {expanded && (
-          <Box sx={{ backgroundColor: "#f8f8f8", borderRadius: 1, p: 1, mt: 1 }}>
-            {event.returnValues?.length?.toString() || 'none'}
-            {Array(event.returnValues.length).fill(null).map((_, index) => (
-              <div key={index}>
-                <Typography>{event.returnValues[index + event.returnValues.length]} {event.returnValues[index]?.toString()}</Typography>
-              </div>
-            ))}
-          </Box>
-        )} */}
       </Box>
       <Divider />
     </>
@@ -231,69 +221,69 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
 
 export default EventItem;
 
-  // const [eventDatetime, setEventDatetime] = useState('');
-  //
-  // const handleSetDatetime = () => {
-  //   getBlockTimestamp(event.blockNumber).then((t) => {
-  //     const date = new Date(t * 1e3);
-  //     const dateString = date.toLocaleDateString('en-US');
-  //     const timeString = date.toLocaleTimeString('en-US');
-  //     setEventDatetime(`${dateString} ${timeString}`);
-  //   });
-  // };
+// const [eventDatetime, setEventDatetime] = useState('');
+//
+// const handleSetDatetime = () => {
+//   getBlockTimestamp(event.blockNumber).then((t) => {
+//     const date = new Date(t * 1e3);
+//     const dateString = date.toLocaleDateString('en-US');
+//     const timeString = date.toLocaleTimeString('en-US');
+//     setEventDatetime(`${dateString} ${timeString}`);
+//   });
+// };
 
-  // useEffect(() => {
-  //   /** This is NOT an optimal way to get timestamps for events.
-  //    * A more ideal solution will 1) be off-chain and 2) not
-  //    * repeat calls for the same block number. - Cool Bean */
-  //   function handleSetDatetimeTwo() {
-  //     getBlockTimestamp(event.blockNumber).then((t) => {
-  //       const date = new Date(t * 1e3);
-  //       const dateString = date.toLocaleDateString('en-US');
-  //       const timeString = date.toLocaleTimeString('en-US');
-  //       setEventDatetime(`${dateString} ${timeString}`);
-  //     });
-  //   }
-  //
-  //   handleSetDatetimeTwo();
-  // }, [event.blockNumber]);
+// useEffect(() => {
+//   /** This is NOT an optimal way to get timestamps for events.
+//    * A more ideal solution will 1) be off-chain and 2) not
+//    * repeat calls for the same block number. - Cool Bean */
+//   function handleSetDatetimeTwo() {
+//     getBlockTimestamp(event.blockNumber).then((t) => {
+//       const date = new Date(t * 1e3);
+//       const dateString = date.toLocaleDateString('en-US');
+//       const timeString = date.toLocaleTimeString('en-US');
+//       setEventDatetime(`${dateString} ${timeString}`);
+//     });
+//   }
+//
+//   handleSetDatetimeTwo();
+// }, [event.blockNumber]);
 
 // ----- CODE TO HANDLE SWAPS -----
 // case 'Swap': {
-    //   if (event.args?.amount0In.toString() !== '0') {
-    //     const swapFrom = toTokenUnitsBN(
-    //       new BigNumber(event.args?.amount0In.toString()),
-    //       ETH[SupportedChainId.MAINNET].decimals
-    //     );
-    //     const swapTo = toTokenUnitsBN(
-    //       new BigNumber(event.args?.amount1Out.toString()),
-    //       BEAN[SupportedChainId.MAINNET].decimals
-    //     );
-    //
-    //     eventTitle = 'ETH to Bean Swap';
-    //     amountOut = (
-    //       <TokenDisplay color="red" input={[swapFrom, ETH[SupportedChainId.MAINNET]]} />
-    //     );
-    //     amountIn = (
-    //       <TokenDisplay color="green" input={[swapTo, BEAN[SupportedChainId.MAINNET]]} />
-    //     );
-    //   } else if (event.args?.amount1In.toString() !== '0') {
-    //     const swapFrom = toTokenUnitsBN(
-    //       new BigNumber(event.args?.amount1In.toString()),
-    //       BEAN[SupportedChainId.MAINNET].decimals
-    //     );
-    //     const swapTo = toTokenUnitsBN(
-    //       new BigNumber(event.args?.amount0Out.toString()),
-    //       ETH[SupportedChainId.MAINNET].decimals
-    //     );
-    //
-    //     eventTitle = 'Bean to ETH Swap';
-    //     amountOut = (
-    //       <TokenDisplay color="red" input={[swapFrom, BEAN[SupportedChainId.MAINNET]]} />
-    //     );
-    //     amountIn = (
-    //       <TokenDisplay color="green" input={[swapTo, ETH[SupportedChainId.MAINNET]]} />
-    //     );
-    //   }
-    //   break;
-    // }
+//   if (event.args?.amount0In.toString() !== '0') {
+//     const swapFrom = toTokenUnitsBN(
+//       new BigNumber(event.args?.amount0In.toString()),
+//       ETH[SupportedChainId.MAINNET].decimals
+//     );
+//     const swapTo = toTokenUnitsBN(
+//       new BigNumber(event.args?.amount1Out.toString()),
+//       BEAN[SupportedChainId.MAINNET].decimals
+//     );
+//
+//     eventTitle = 'ETH to Bean Swap';
+//     amountOut = (
+//       <TokenDisplay color="red" input={[swapFrom, ETH[SupportedChainId.MAINNET]]} />
+//     );
+//     amountIn = (
+//       <TokenDisplay color="green" input={[swapTo, BEAN[SupportedChainId.MAINNET]]} />
+//     );
+//   } else if (event.args?.amount1In.toString() !== '0') {
+//     const swapFrom = toTokenUnitsBN(
+//       new BigNumber(event.args?.amount1In.toString()),
+//       BEAN[SupportedChainId.MAINNET].decimals
+//     );
+//     const swapTo = toTokenUnitsBN(
+//       new BigNumber(event.args?.amount0Out.toString()),
+//       ETH[SupportedChainId.MAINNET].decimals
+//     );
+//
+//     eventTitle = 'Bean to ETH Swap';
+//     amountOut = (
+//       <TokenDisplay color="red" input={[swapFrom, BEAN[SupportedChainId.MAINNET]]} />
+//     );
+//     amountIn = (
+//       <TokenDisplay color="green" input={[swapTo, ETH[SupportedChainId.MAINNET]]} />
+//     );
+//   }
+//   break;
+// }

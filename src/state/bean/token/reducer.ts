@@ -1,12 +1,12 @@
 import { createReducer } from '@reduxjs/toolkit';
-import BigNumber from 'bignumber.js';
+import { NEW_BN } from '~/constants';
 import { BeanToken } from '.';
 import { updatePrice, updateSupply, updateDeltaB } from './actions';
 
 const initialState : BeanToken = {
-  price: new BigNumber(-1),
-  supply: new BigNumber(-1),
-  deltaB: new BigNumber(-1),
+  price:  NEW_BN,
+  supply: NEW_BN,
+  deltaB: NEW_BN,
 };
 
 export default createReducer(initialState, (builder) => 

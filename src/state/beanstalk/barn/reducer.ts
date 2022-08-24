@@ -1,9 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { NEW_BN, ZERO_BN } from '~/constants';
-import { Barn } from '.';
+import { BeanstalkBarn } from '.';
 import { resetBarn, setRemaining, setTotalRaised, setHumidity, updateBarn } from './actions';
 
-const initialState : Barn = {
+const initialState : BeanstalkBarn = {
   remaining:    ZERO_BN,
   totalRaised:  ZERO_BN,
   humidity:     NEW_BN,

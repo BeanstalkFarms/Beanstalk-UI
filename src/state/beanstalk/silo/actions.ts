@@ -8,7 +8,3 @@ export const resetBeanstalkSilo = createAction(
 export const updateBeanstalkSilo = createAction<BeanstalkSilo>(
   'beanstalk/silo/update'
 );
-
-// export const updateWithdrawSeasons = createAction<BigNumber>(
-//   'beanstalk/silo/updateWithdrawSeasons'
-// );

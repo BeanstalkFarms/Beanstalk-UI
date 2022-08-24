@@ -33,12 +33,16 @@ const baseSettings = {
   onReset: () => null,
 };
 
+/**
+ * 
+ * @param tokenOut 
+ * @param quoteHandler A function that returns a quoted amountOut value.
+ * @param _settings 
+ * @returns 
+ */
 export default function useQuote(
-  /** */
   tokenOut: ERC20Token | NativeToken,
-  /** A function that returns a quoted amountOut value. */
   quoteHandler: QuoteHandler,
-  /** */
   _settings?: Partial<QuoteSettings>,
 ) : [
   result: QuoteHandlerResult | null,
@@ -56,7 +60,6 @@ export default function useQuote(
     setQuoting(false);
   }, [tokenOut, settings]);
 
-  /// 
   const __getAmountOut = useCallback((
     tokenIn: ERC20Token | NativeToken,
     amountIn: BigNumber

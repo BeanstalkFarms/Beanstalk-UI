@@ -35,7 +35,7 @@ export type EthPriceResponse = {
 let data : null | EthPriceResponse = null;
 let lastRefreshed = new Date().getTime();
 
-/// Refresh every 10s
+/// Allow a refresh every 10s (~1 block)
 const REFRESH_MS = 10 * 1000;
 
 /// If we fail to get new data for this length of time,
@@ -47,6 +47,12 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
 };
 
+/**
+ * Lookup ETH gas prices and the USD price of ETH via Etherscan's API.
+ * Cache this value in the active serverless function's memory to reduce
+ * repeated requests to Etherscan. Apply refresh logic to in-memory cache
+ * to ensure data doesn't become stale.
+ */
 const handler: Handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
     return {
@@ -55,8 +61,6 @@ const handler: Handler = async (event) => {
     };
   }
 
-  // const module = event.queryStringParameters?.module || 'stats';
-  // const action = event.queryStringParameters?.action || 'ethprice';
   const now = new Date().getTime();
   const expired = (!data || ((now - lastRefreshed) > REFRESH_MS));
 
@@ -81,7 +85,6 @@ const handler: Handler = async (event) => {
       };
     } catch (e) {
       console.error(e);
-      /// ?
       if ((now - lastRefreshed) > FORCE_EXPIRY_MS) {
         data = null;
       }

@@ -58,8 +58,6 @@ const TokenRow: React.FC<{
     alignItems="flex-start"
     sx={{
       cursor: onMouseOver ? 'pointer' : 'inherit',
-      // py: 1,
-      // px: 1.25,
       py: 0.75,
       px: 0.75,
       opacity: isFaded ? 0.3 : 1,
@@ -205,7 +203,6 @@ const SiloBalances: React.FC<{
                     value={breakdown.states[id as keyof typeof breakdown.states].value}
                     amount={breakdown.states[id as keyof typeof breakdown.states].value}
                   />
-                  // displayUSD(breakdown.states[id as keyof typeof breakdown.states].value)
                 }
                 isFaded={hoverState !== null && hoverState !== id}
                 isSelected={hoverState === id}

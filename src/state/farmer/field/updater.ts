@@ -62,7 +62,7 @@ export const useFetchFarmerField = () => {
   const initialized = (
     account
     && fetchFieldEvents
-    && harvestableIndex.gt(0) // initialized to 0
+    && harvestableIndex.gt(0) // harvestedableIndex is initialized to 0
   );
 
   /// Handlers
@@ -74,7 +74,6 @@ export const useFetchFarmerField = () => {
       const p = new EventProcessor(account, { season, whitelist });
       p.ingestAll(allEvents);
 
-      // Update Field
       dispatch(updateFarmerField(
         p.parsePlots(harvestableIndex)
       ));

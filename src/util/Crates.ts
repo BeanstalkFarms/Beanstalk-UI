@@ -1,14 +1,12 @@
 import BigNumber from 'bignumber.js';
 import Token from '~/classes/Token';
-import { TokenMap } from '~/constants';
+import { TokenMap, ZERO_BN } from '~/constants';
 import { Beanstalk } from '~/generated';
-import { SeasonMap } from '~/state/farmer/field';
 import { Crate, DepositCrate, FarmerSiloBalance, WithdrawalCrate } from '~/state/farmer/silo';
-
-export type Withdrawals = SeasonMap<BigNumber>;
+import { SeasonMap } from '~/util';
 
 /**
- * Split Withdrawals into
+ * Split Withdrawals into:
  *    "withdrawn" (aka "transit")
  *    "claimable" (aka "receivable")
  *
@@ -17,18 +15,18 @@ export type Withdrawals = SeasonMap<BigNumber>;
  * @returns
  */
 export function parseWithdrawals(
-  withdrawals: Withdrawals,
-  currentSeason: BigNumber
+  withdrawals:    SeasonMap<BigNumber>,
+  currentSeason:  BigNumber
 ) : {
   withdrawn: FarmerSiloBalance['withdrawn'];
   claimable: FarmerSiloBalance['claimable'];
 } {
-  let transitBalance    = new BigNumber(0);
-  let receivableBalance = new BigNumber(0);
+  let transitBalance    = ZERO_BN;
+  let receivableBalance = ZERO_BN;
   const transitWithdrawals    : WithdrawalCrate[] = [];
   const receivableWithdrawals : WithdrawalCrate[] = [];
 
-  // Split each withdrawal between `receivable` and `transit`.
+  /// Split each withdrawal between `receivable` and `transit`.
   Object.keys(withdrawals).forEach((season: string) => {
     const v = withdrawals[season];
     const s = new BigNumber(season);
@@ -50,7 +48,7 @@ export function parseWithdrawals(
   return {
     withdrawn: {
       amount: transitBalance,
-      bdv: new BigNumber(0),
+      bdv:    ZERO_BN,
       crates: transitWithdrawals,
     },
     claimable: {
@@ -82,8 +80,8 @@ export const selectCratesForEnroot = (
           crates,
           encoded: beanstalk.interface.encodeFunctionData('enrootDeposit', [
             addr,
-            crates[0].season.toString(),
-            unripeTokens[addr].stringify(crates[0].amount),
+            crates[0].season.toString(), // season
+            unripeTokens[addr].stringify(crates[0].amount), // amount
           ])
         };
       } else {

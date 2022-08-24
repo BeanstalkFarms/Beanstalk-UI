@@ -1,16 +1,17 @@
-import curve, { initCurve } from '~/util/Curve';
+import curve from '~/util/Curve';
 
-beforeAll(() => initCurve(1), 60000);
+/// WIP: Test suite for curve-js.
 
 describe('init', () => {
-  it('can access basic functions like tvl', async () => {
-    const tvl = await curve.getTVL();
-    expect(tvl).toBeGreaterThan(0);
+  it('exists', () => {
+    expect(curve).toBeDefined();
   });
 });
 
+// beforeAll(() => initCurve(1), 60000);
+
 /**
- * Swap Types
+ * Curve Swap Types
  * ----------
  * 
  * remove_liquidity_one_coin
