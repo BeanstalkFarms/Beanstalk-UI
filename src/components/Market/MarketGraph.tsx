@@ -1,8 +1,8 @@
-import React, { useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { Box } from '@mui/material';
 import { useTooltip, Tooltip } from '@visx/tooltip';
 import { Text } from '@visx/text';
-import { Circle, Bar } from '@visx/shape';
+import { Circle } from '@visx/shape';
 import { AxisBottom, AxisLeft } from '@visx/axis';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { RectClipPath } from '@visx/clip-path';
@@ -16,6 +16,7 @@ import minBy from 'lodash/minBy';
 import { makeStyles } from '@mui/styles';
 import BigNumber from 'bignumber.js';
 import { PodListing, PodOrder } from '~/state/farmer/market';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const useStyles = makeStyles({
   positionRelative: {
@@ -44,6 +45,11 @@ const useStyles = makeStyles({
     fontFamily: 'Futura-Pt-Book',
     backgroundColor: 'red',
     marginTop: 20,
+  },
+  //
+  axis: {
+    backgroundColor: '#fff',
+    fill: '#fff'
   }
 });
 
@@ -189,8 +195,8 @@ const Graph: React.FC<GraphProps> = ({
   harvestableIndex
 }) => {
   const classes = useStyles();
-  const leftAxisWidth = 70;
-  const bottomAxisHeight = 50;
+  const leftAxisWidth    = 45;
+  const bottomAxisHeight = 28;
   // Amount of top vertical padding in between graph content and graph container
   const topVerticalPadding = 20;
   // Amount of right horizontal padding in between graph content and graph container
@@ -212,8 +218,6 @@ const Graph: React.FC<GraphProps> = ({
     tooltipData,
   } = useTooltip<TooltipData>();
 
-  if (width === undefined) return null;
-
   const xScale = scaleLinear<number>({
     domain: xDomain,
     range: [0, width - leftAxisWidth - rightHorizontalPadding],
@@ -226,62 +230,97 @@ const Graph: React.FC<GraphProps> = ({
 
   // -- Orders
 
-  const orderPositions : LinePosition[] = orders.map((order) => {
-    const y = yScale(order.pricePerPod.toNumber());
-    const h = calculateLineHeight(
-      order.remainingAmount.toNumber(),
-      maxPlotSize
-    );
-    const w = xScale(order.maxPlaceInLine.toNumber());
-    return {
-      x: leftAxisWidth,
-      y: y - h / 2,
-      height: h,
-      width: w,
-    };
-  });
+  // const orderPositions : LinePosition[] = useMemo(() => 
+  //   orders.map((order) => {
+  //     const y = yScale(order.pricePerPod.toNumber());
+  //     const h = calculateLineHeight(
+  //       order.remainingAmount.toNumber(),
+  //       maxPlotSize
+  //     );
+  //     const w = xScale(order.maxPlaceInLine.toNumber());
+  //     return {
+  //       x: leftAxisWidth, // fixme
+  //       y: y - h / 2,
+  //       height: h,
+  //       width: w,
+  //     };
+  //   }),
+  //   [maxPlotSize, orders, xScale, yScale]
+  // );
 
-  const orderLines = orderPositions.map((coordinate, i) => {
+  // const orderLines = useMemo(() => 
+  //   orderPositions.map((coordinate, i) => {
+  //     const active = tooltipData?.type === 'order' && i === tooltipData?.index;
+  //     return (
+  //       <Bar
+  //         key={`bar-${i}`}
+  //         x={coordinate.x}
+  //         y={coordinate.y}
+  //         height={coordinate.height}
+  //         width={coordinate.width}
+  //         fill={`url('#${PATTERN_ID}')`}
+  //         stroke={active ? '#000' : '#888'}
+  //         strokeWidth={active ? 1.5 : 1}
+  //       />
+  //     );
+  //   }),
+  //   [orderPositions, tooltipData?.index, tooltipData?.type]
+  // );
+
+  const orderPositions : CirclePosition[] = useMemo(() => 
+    orders.map((order) => ({
+      // x position is current place in line
+      x: xScale(new BigNumber(order.maxPlaceInLine).toNumber()) + leftAxisWidth,
+      // y position is price per pod
+      y: yScale(order.pricePerPod.toNumber()),
+      // radius is plot size
+      radius: 4,
+    })),
+    [orders, xScale, yScale]
+  );
+
+  const listingPositions : CirclePosition[] = useMemo(() => 
+    listings.map((listing) => ({
+      // x position is current place in line
+      x: xScale(new BigNumber(listing.index).minus(harvestableIndex).toNumber()) + leftAxisWidth,
+      // y position is price per pod
+      y: yScale(listing.pricePerPod.toNumber()),
+      // radius is plot size
+      radius: calculateCircleRadius(
+        listing.amount.toNumber(),
+        maxPlotSize
+      ),
+    })),
+    [harvestableIndex, listings, maxPlotSize, xScale, yScale]
+  );
+
+  const orderCircles = orderPositions.map((coordinate, i) => {
     const active = tooltipData?.type === 'order' && i === tooltipData?.index;
     return (
-      <Bar
-        key={`bar-${i}`}
-        x={coordinate.x}
-        y={coordinate.y}
-        height={coordinate.height}
-        width={coordinate.width}
-        fill={`url('#${PATTERN_ID}')`}
-        stroke={active ? '#000' : '#888'}
-        strokeWidth={active ? 1.5 : 1}
+      <Circle
+        key={`order-${i}`}
+        pointerEvents="none"
+        cx={coordinate.x}
+        cy={coordinate.y}
+        r={coordinate.radius}
+        fill={BeanstalkPalette.logoGreen}
+        stroke={active ? BeanstalkPalette.logoGreen : '#fff'}
+        strokeWidth={active ? 2 : 1}
       />
     );
   });
-
-  // -- Listings
-
-  const listingPositions : CirclePosition[] = listings.map((listing) => ({
-    // x position is current place in line
-    x: xScale(new BigNumber(listing.index).minus(harvestableIndex).toNumber()) + leftAxisWidth,
-    // y position is price per pod
-    y: yScale(listing.pricePerPod.toNumber()),
-    // radius is plot size
-    radius: calculateCircleRadius(
-      listing.amount.toNumber(),
-      maxPlotSize
-    ),
-  }));
 
   const listingCircles = listingPositions.map((coordinate, i) => {
     const active = tooltipData?.type === 'listing' && i === tooltipData?.index;
     return (
       <Circle
-        key={`point-${i}`}
+        key={`listing-${i}`}
         pointerEvents="none"
         cx={coordinate.x}
         cy={coordinate.y}
         r={coordinate.radius}
-        fill="#b3cde3"
-        stroke={active ? '#000' : '#888'}
+        fill={BeanstalkPalette.mediumRed}
+        stroke={active ? BeanstalkPalette.trueRed : '#fff'}
         strokeWidth={active ? 2 : 1}
       />
     );
@@ -325,36 +364,36 @@ const Graph: React.FC<GraphProps> = ({
         }
       });
     } else {
-      const orderIndex = findPointInLines(orderPositions, transformedPoint);
-      if (orderIndex !== undefined) {
-        // Get the original position of the circle (no zoom)
-        const position = orderPositions[orderIndex];
+      // const orderIndex = findPointInLines(orderPositions, transformedPoint);
+      // if (orderIndex !== undefined) {
+      //   // Get the original position of the circle (no zoom)
+      //   const position = orderPositions[orderIndex];
 
-        const zoomedCoordinate = zoom.applyToPoint({
-          x: position.x,
-          y: position.y,
-        });
+      //   const zoomedCoordinate = zoom.applyToPoint({
+      //     x: position.x,
+      //     y: position.y,
+      //   });
 
-        // Show tooltip at bottom-right corner of circle position.
-        // Nudge inward to make hovering easier.
-        showTooltip({
-          tooltipLeft: point.x - 90,        // -90 centers tooltip on mouse
-          tooltipTop: zoomedCoordinate.y,   // locks to the same y-position regardless of mouse
-          tooltipData: {
-            index: orderIndex,
-            type: 'order',
-          }
-        });
-      } else {
+      //   // Show tooltip at bottom-right corner of circle position.
+      //   // Nudge inward to make hovering easier.
+      //   showTooltip({
+      //     tooltipLeft: point.x - 90,        // -90 centers tooltip on mouse
+      //     tooltipTop: zoomedCoordinate.y,   // locks to the same y-position regardless of mouse
+      //     tooltipData: {
+      //       index: orderIndex,
+      //       type: 'order',
+      //     }
+      //   });
+      // } else {
         hideTooltip();
-      }
+      // }
     }
   };
 
   const scaleXMin = 1;
-  const scaleXMax = 4;
+  const scaleXMax = 2;
   const scaleYMin = 1;
-  const scaleYMax = 4;
+  const scaleYMax = 2;
   
   // This works to constrain at x=0 y=0 but it causes some weird
   // mouse and zoom behavior.
@@ -407,39 +446,43 @@ const Graph: React.FC<GraphProps> = ({
               width={width}
               height={height}
               ref={zoom.containerRef}
-              style={{
-                cursor: zoom.isDragging ? 'grabbing' : 'grab',
-                touchAction: 'none',
-              }}
             >
-              <RectClipPath id="zoom-clip" width={width} height={height} />
-              {/* Orders */}
-              <g transform={zoom.toString()}>
-                <PatternLines
-                  id={PATTERN_ID}
-                  height={5}
-                  width={5}
-                  stroke="green"
-                  strokeWidth={1}
-                  orientation={['diagonal']}
-                />
-                {orderLines}
-              </g>
-              {/* Listings */}
-              <g transform={zoom.toString()}>
-                {listingCircles}
+              <RectClipPath
+                id="zoom-clip"
+                width={width - leftAxisWidth}
+                height={height - bottomAxisHeight}
+                x={leftAxisWidth}
+                y={0}
+              />
+              
+              <g clipPath="url(#zoom-clip)">
+                <g transform={zoom.toString()} overflow="hidden">
+                  <PatternLines
+                    id={PATTERN_ID}
+                    height={5}
+                    width={5}
+                    stroke="green"
+                    strokeWidth={1}
+                    orientation={['diagonal']}
+                  />
+                  {/* {orderLines} */}
+                  {orderCircles}
+                  {listingCircles}
+                </g>
               </g>
               {/* Contains the entire chart (incl. axes and labels)
                   QUESTION: why have this + the below <rect> both take up the full dims? */}
-              <rect
+              {/* <rect
                 width={width}
                 height={height}
                 fill="transparent"
-              />
+              /> */}
               {/* Contains the chart; this seems to be sitting over top of the other elems */}
               <rect
-                width={width}
-                height={height}
+                width={width - leftAxisWidth}
+                height={height - bottomAxisHeight}
+                x={leftAxisWidth}
+                y={0}
                 fill="transparent"
                 ref={svgRef}
                 onTouchStart={zoom.dragStart}
@@ -454,19 +497,25 @@ const Graph: React.FC<GraphProps> = ({
                 onMouseLeave={() => {
                   if (zoom.isDragging) zoom.dragEnd();
                 }}
+                style={{
+                  cursor: zoom.isDragging ? 'grabbing' : 'grab',
+                  touchAction: 'none',
+                }}
                 // onDoubleClick={(event) => {
                   // const point = localPoint(event) || { x: 0, y: 0 };
                   // zoom.scale({ scaleX: 1.1, scaleY: 1.1, point });
                 // }}
               />
               {/* Y axis: Price per Pod */}
+              
               <AxisLeft
                 scale={rescaleYWithZoom(yScale, zoom)}
                 left={leftAxisWidth}
                 // Labels
-                label="Price Per Pod"
-                labelProps={labelProps}
-                labelOffset={40}
+                // label="Price Per Pod"
+                // labelProps={labelProps}
+                // labelOffset={40}
+                // axisClassName={classes.axis}
                 // Ticks
                 numTicks={10}
                 tickFormat={(d) => `$${d.toFixed(2)}`}
@@ -486,15 +535,15 @@ const Graph: React.FC<GraphProps> = ({
                 top={height - bottomAxisHeight}
                 left={leftAxisWidth}
                 // Labels
-                label="Place In Line"
-                labelProps={labelProps}
-                labelOffset={20}
+                // label="Place In Line"
+                // labelProps={labelProps}
+                // labelOffset={20}
                 // Ticks
                 numTicks={10}
                 tickComponent={(props) => {
                   const { formattedValue, ...renderProps } = props;
                   return (
-                    <Text {...renderProps} fontFamily="Futura PT">
+                    <Text {...renderProps} fontFamily="Futura PT" height={200}>
                       {formattedValue}
                     </Text>
                   );
