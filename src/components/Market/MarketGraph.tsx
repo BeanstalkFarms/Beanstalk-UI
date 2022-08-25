@@ -15,6 +15,7 @@ import { voronoi, VoronoiPolygon } from '@visx/voronoi';
 import CloseIcon from '@mui/icons-material/Close';
 import { makeStyles } from '@mui/styles';
 import BigNumber from 'bignumber.js';
+import { Link as RouterLink } from 'react-router-dom';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 import { BeanstalkPalette, FontSize } from '~/components/App/muiTheme';
 import EntityIcon from '~/components/Market/EntityIcon';
@@ -23,6 +24,9 @@ import Row from '~/components/Common/Row';
 import StatHorizontal from '~/components/Common/StatHorizontal';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN, PODS } from '~/constants/tokens';
+
+import './MarketGraph.css';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 const useStyles = makeStyles({
   relative: {
@@ -101,6 +105,9 @@ const axis = {
 };
 const neighborRadius = 75;
 
+const HOVER_MULTIPLIER = 1.8;
+const HOVER_PEER_OPACITY = 0.2;
+
 /// //////////////////////////////// STYLE & LAYOUT ///////////////////////////////////
 
 // Calculates a circle radius between MIN_RADIUS and MAX_RADIUS based on the given plotSize
@@ -166,7 +173,17 @@ const TooltipCard : React.FC<CardProps> = ({ children, sx, ...props }) => (
   </Card>
 );
 
-const SelectedPointPopover : React.FC<{ selectedPoint: TooltipData; listings: PodListing[]; orders: PodOrder[]; }> = ({ selectedPoint, listings, orders }) => {
+const SelectedPointPopover : React.FC<{ 
+  selectedPoint: TooltipData;
+  listings: PodListing[];
+  orders: PodOrder[];
+  onClose: () => void;
+}> = ({ 
+  selectedPoint,
+  listings,
+  orders,
+  onClose,
+}) => {
   let inner;
   if (selectedPoint.type === 'listing') {
     const data = listings[selectedPoint.index];
@@ -175,6 +192,7 @@ const SelectedPointPopover : React.FC<{ selectedPoint: TooltipData; listings: Po
         <Row gap={1} justifyContent="space-between">
           <Typography variant="h4">Pod Listing</Typography>
           <IconButton
+            onClick={onClose}
             disableRipple
             sx={{
               color: (theme) => theme.palette.grey[600],
@@ -193,8 +211,39 @@ const SelectedPointPopover : React.FC<{ selectedPoint: TooltipData; listings: Po
         <StatHorizontal label="# of Pods Listed">
           <Row gap={0.25}><TokenIcon token={PODS} /> {displayFullBN(data.remainingAmount, 2, 0)}</Row>
         </StatHorizontal>
-        <Button variant="contained" color="primary">
+        <Button component={RouterLink} to={`/market/listing/${data.id}`} variant="contained" color="primary">
           Buy
+        </Button>
+      </Stack>
+    );
+  } else {
+    const data = orders[selectedPoint.index];
+    inner = (
+      <Stack gap={1}>
+        <Row gap={1} justifyContent="space-between">
+          <Typography variant="h4">Pod Order</Typography>
+          <IconButton
+            onClick={onClose}
+            disableRipple
+            sx={{
+              color: (theme) => theme.palette.grey[600],
+              p: 0
+            }}
+          >
+            <CloseIcon sx={{ fontSize: FontSize.base }} />
+          </IconButton>
+        </Row>
+        <StatHorizontal label="Place in Line" labelTooltip="Any Pod in this range is eligible to sell to this Order.">
+          0 - {displayBN(data.maxPlaceInLine)}
+        </StatHorizontal>
+        <StatHorizontal label="Price per Pod">
+          <Row gap={0.25}><TokenIcon token={BEAN[1]} /> {displayFullBN(data.pricePerPod, 4, 2)}</Row>
+        </StatHorizontal>
+        <StatHorizontal label="Pods Requested">
+          <Row gap={0.25}><TokenIcon token={PODS} /> {displayFullBN(data.remainingAmount, 2, 0)}</Row>
+        </StatHorizontal>
+        <Button component={RouterLink} to={`/market/order/${data.id}`} variant="contained" color="primary">
+          Sell
         </Button>
       </Stack>
     );
@@ -305,9 +354,18 @@ const Graph: React.FC<GraphProps> = ({
   );
   const polygons = voronoiLayout.polygons();
   const [selectedPoint, setSelectedPoint] = useState<TooltipData | undefined>(undefined);
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [neighborIds, setNeighborIds] = useState<Set<string>>(new Set());
+  const [hoveredId, setVoronoiHoveredId] = useState<string | null>(null);
+  const [neighborIds, setVoronoiNeighborIds] = useState<Set<string>>(new Set());
   
+  /// Helpers
+  const peerOpacity = useCallback((_type: TooltipData['type'], _i: number) => (
+    !tooltipData?.type 
+      ? 1 
+      : tooltipData.type === _type
+        ? (tooltipData.index === _i ? 1 : HOVER_PEER_OPACITY)
+        : HOVER_PEER_OPACITY
+  ), [tooltipData]);
+
   /// Elements
   const orderCircles = orderPositions.map((coordinate, i) => {
     const active = tooltipData?.type === 'order' && i === tooltipData?.index;
@@ -316,18 +374,13 @@ const Graph: React.FC<GraphProps> = ({
         key={`order-${i}`}
         cx={coordinate.x}
         cy={coordinate.y}
-        r={active ? 1.5 * coordinate.radius : coordinate.radius}
-        opacity={
-          !tooltipData?.type 
-            ? 1 
-            : tooltipData.type === 'order' 
-              ? (tooltipData.index === i ? 1 : 0.2)
-              : 0.2
-        }
+        r={active ? HOVER_MULTIPLIER * coordinate.radius : coordinate.radius}
+        opacity={peerOpacity('order', i)}
         fill={BeanstalkPalette.logoGreen}
         stroke={active ? BeanstalkPalette.mediumGreen : '#fff'}
         strokeWidth={active ? 2 : 1}
         cursor="pointer"
+        className={`mg-point mg-point-o${active ? ' mg-active' : ''}`}
       />
     );
   });
@@ -338,25 +391,98 @@ const Graph: React.FC<GraphProps> = ({
         key={`listing-${i}`}
         cx={coordinate.x}
         cy={coordinate.y}
-        r={active ? 1.5 * coordinate.radius : coordinate.radius}
-        opacity={
-          !tooltipData?.type 
-            ? 1 
-            : tooltipData.type === 'listing' 
-              ? (tooltipData.index === i ? 1 : 0.2)
-              : 0.2
-        }
+        r={active ? HOVER_MULTIPLIER * coordinate.radius : coordinate.radius}
+        opacity={peerOpacity('listing', i)}
         fill={BeanstalkPalette.mediumRed}
         stroke={active ? BeanstalkPalette.trueRed : '#fff'}
         strokeWidth={active ? 2 : 1}
         cursor="pointer"
+        className={`mg-point mg-point-l${active ? ' mg-active' : ''}`}
       />
     );
   });
+  const voroniPolygons = (
+    <g>
+      {polygons.map((polygon) => (
+        <VoronoiPolygon
+          key={`polygon-${polygon.data.id}`}
+          polygon={polygon}
+          fill={
+            hoveredId && (polygon.data.id === hoveredId || neighborIds.has(polygon.data.id))
+              ? 'red'
+              : 'transparent'
+          }
+          fillOpacity={hoveredId && neighborIds.has(polygon.data.id) ? 0.05 : 0.2}
+          strokeLinejoin="round"
+        />
+      ))}
+    </g>
+  );
+  const cursorPositionLines = (tooltipOpen && tooltipData)
+    ? tooltipData?.type === 'listing'
+      ? (
+        <g>
+          <Line
+            from={{ x: 0, y: tooltipData.coordinate.y }}
+            to={{   x: tooltipData.coordinate.x, y: tooltipData.coordinate.y }}
+            stroke={BeanstalkPalette.lightGrey}
+            strokeWidth={1}
+            pointerEvents="none"
+          />
+          <Line
+            from={{ x: tooltipData.coordinate.x, y: innerHeight }}
+            to={{   x: tooltipData.coordinate.x, y: tooltipData.coordinate.y }}
+            stroke={BeanstalkPalette.lightGrey}
+            strokeWidth={1}
+            pointerEvents="none"
+          />
+          <Text fill="black" x={tooltipData.coordinate.x + 10} y={innerHeight - axis.xHeight} fontSize={14}>
+            {displayBN(listings[tooltipData.index].placeInLine)}
+          </Text>
+          <Text fill="black" x={axis.yWidth + 10} y={tooltipData.coordinate.y - 5} fontSize={14}>
+            {listings[tooltipData.index].pricePerPod.toFixed(4)}
+          </Text>
+        </g>
+      )
+      : (
+        <g>
+          <Line
+            from={{ x: 0, y: tooltipData.coordinate.y }}
+            to={{   x: tooltipData.coordinate.x, y: tooltipData.coordinate.y }}
+            stroke={BeanstalkPalette.lightGrey}
+            strokeWidth={1}
+            pointerEvents="none"
+          />
+          <Line
+            from={{ x: tooltipData.coordinate.x, y: innerHeight }}
+            to={{   x: tooltipData.coordinate.x, y: tooltipData.coordinate.y }}
+            stroke={BeanstalkPalette.lightGrey}
+            strokeWidth={1}
+            pointerEvents="none"
+          />
+          <rect
+            fill={`url(#${PATTERN_ID})`}
+            x={0}
+            y={tooltipData.coordinate.y}
+            height={innerHeight - tooltipData.coordinate.y}
+            width={tooltipData.coordinate.x}
+          />
+          <Text fill="black" x={tooltipData.coordinate.x + 10} y={innerHeight - axis.xHeight} fontSize={14}>
+            {displayBN(orders[tooltipData.index].maxPlaceInLine)}
+          </Text>
+          <Text fill="black" x={axis.yWidth + 10} y={tooltipData.coordinate.y - 5} fontSize={14}>
+            {orders[tooltipData.index].pricePerPod.toFixed(4)}
+          </Text>
+        </g>
+      )
+    : null;
+
+  // const; 
 
   /// Handlers
   const handleMouseMove = useCallback((event: React.MouseEvent | React.TouchEvent, zoom: ProvidedZoom<SVGSVGElement>) => {
-    if (!svgRef.current) return;
+    if (!svgRef.current) return;  //
+    if (selectedPoint) return;    // skip mouse interaction if a point is selected
 
     // This is the mouse position with respect to the 
     // svg element, which doesn't change size.
@@ -386,8 +512,8 @@ const Graph: React.FC<GraphProps> = ({
         else if (right && right !== closest) neighbors.add(right.data.id);
       });
 
-      setNeighborIds(neighbors);
-      setHoveredId(closest.data.id);
+      setVoronoiNeighborIds(neighbors);
+      setVoronoiHoveredId(closest.data.id);
     }
 
     ///
@@ -406,8 +532,8 @@ const Graph: React.FC<GraphProps> = ({
       // Show tooltip at bottom-right corner of circle position.
       // Nudge inward to make hovering easier.
       showTooltip({
-        tooltipLeft: zoomedCoordinate.x,// + coordinate.radius / Math.sqrt(2) - 100, // 200 = width of tooltip
-        tooltipTop:  zoomedCoordinate.y,// + coordinate.radius / Math.sqrt(2) - 0,
+        tooltipLeft: zoomedCoordinate.x,
+        tooltipTop:  zoomedCoordinate.y,
         tooltipData: {
           index: listingIndex,
           type: 'listing',
@@ -429,8 +555,8 @@ const Graph: React.FC<GraphProps> = ({
         // Show tooltip at bottom-right corner of circle position.
         // Nudge inward to make hovering easier.
         showTooltip({
-          tooltipLeft: zoomedCoordinate.x,        // -90 centers tooltip on mouse
-          tooltipTop: zoomedCoordinate.y,   // locks to the same y-position regardless of mouse
+          tooltipLeft:  zoomedCoordinate.x,
+          tooltipTop:   zoomedCoordinate.y,
           tooltipData: {
             index: orderIndex,
             type: 'order',
@@ -441,7 +567,32 @@ const Graph: React.FC<GraphProps> = ({
         hideTooltip();
       }
     }
-  }, [hideTooltip, hoveredId, listingPositions, orderPositions, showTooltip, voronoiLayout]);
+  }, [hideTooltip, hoveredId, listingPositions, orderPositions, selectedPoint, showTooltip, voronoiLayout]);
+
+  const handleClick = useCallback(() => { 
+    if (selectedPoint) {
+      setSelectedPoint(undefined);
+      hideTooltip();
+    }
+    else setSelectedPoint(tooltipData);
+  }, [hideTooltip, selectedPoint, tooltipData]);
+
+  useHotkeys('esc', () => {
+    setSelectedPoint(undefined);
+    hideTooltip();
+  }, {}, [setSelectedPoint, hideTooltip]);
+  // useHotkeys('tab', () => {
+  //   if (selectedPoint) {
+  //     if (selectedPoint.type === 'listing') {
+  //       const point = {
+  //         index: 0,
+  //         coordinate: listingPositions[0],
+  //         type: 'listing' as const
+  //       };
+  //       setSelectedPoint(point);
+  //     }
+  //   }
+  // }, {}, [selectedPoint]);
   
   // This works to constrain at x=0 y=0 but it causes some weird
   // mouse and zoom behavior.
@@ -502,89 +653,18 @@ const Graph: React.FC<GraphProps> = ({
                 x={axis.yWidth}
                 y={0}
               />
+              <PatternLines
+                id={PATTERN_ID}
+                height={5}
+                width={5}
+                stroke={BeanstalkPalette.logoGreen}
+                strokeWidth={1}
+                orientation={['diagonal']}
+              />
               <g clipPath="url(#zoom-clip)">
                 <g transform={zoom.toString()}>
-                  <PatternLines
-                    id={PATTERN_ID}
-                    height={5}
-                    width={5}
-                    stroke={BeanstalkPalette.logoGreen}
-                    strokeWidth={1}
-                    orientation={['diagonal']}
-                  />
-                  <g>
-                    {polygons.map((polygon) => (
-                      <VoronoiPolygon
-                        key={`polygon-${polygon.data.id}`}
-                        polygon={polygon}
-                        fill={
-                          hoveredId && (polygon.data.id === hoveredId || neighborIds.has(polygon.data.id))
-                            ? 'red'
-                            : 'transparent'
-                        }
-                        fillOpacity={hoveredId && neighborIds.has(polygon.data.id) ? 0.05 : 0.2}
-                        strokeLinejoin="round"
-                      />
-                    ))}
-                  </g>
-                  {(tooltipOpen && tooltipData)
-                    ? tooltipData?.type === 'listing'
-                      ? (
-                        <>
-                          <Line
-                            from={{ x: 0, y: tooltipData.coordinate.y }}
-                            to={{   x: tooltipData.coordinate.x, y: tooltipData.coordinate.y }}
-                            stroke={BeanstalkPalette.lightGrey}
-                            strokeWidth={1}
-                            pointerEvents="none"
-                          />
-                          <Line
-                            from={{ x: tooltipData.coordinate.x, y: innerHeight }}
-                            to={{   x: tooltipData.coordinate.x, y: tooltipData.coordinate.y }}
-                            stroke={BeanstalkPalette.lightGrey}
-                            strokeWidth={1}
-                            pointerEvents="none"
-                          />
-                          <Text fill="black" x={tooltipData.coordinate.x + 10} y={innerHeight - axis.xHeight} fontSize={14}>
-                            {displayBN(listings[tooltipData.index].placeInLine)}
-                          </Text>
-                          <Text fill="black" x={axis.yWidth + 10} y={tooltipData.coordinate.y - 5} fontSize={14}>
-                            {listings[tooltipData.index].pricePerPod.toFixed(4)}
-                          </Text>
-                        </>
-                      )
-                      : (
-                        <>
-                          <Line
-                            from={{ x: 0, y: tooltipData.coordinate.y }}
-                            to={{   x: tooltipData.coordinate.x, y: tooltipData.coordinate.y }}
-                            stroke={BeanstalkPalette.lightGrey}
-                            strokeWidth={1}
-                            pointerEvents="none"
-                          />
-                          <Line
-                            from={{ x: tooltipData.coordinate.x, y: innerHeight }}
-                            to={{   x: tooltipData.coordinate.x, y: tooltipData.coordinate.y }}
-                            stroke={BeanstalkPalette.lightGrey}
-                            strokeWidth={1}
-                            pointerEvents="none"
-                          />
-                          <rect
-                            fill={`url(#${PATTERN_ID})`}
-                            x={0}
-                            y={tooltipData.coordinate.y}
-                            height={innerHeight - tooltipData.coordinate.y}
-                            width={tooltipData.coordinate.x}
-                          />
-                          <Text fill="black" x={tooltipData.coordinate.x + 10} y={innerHeight - axis.xHeight} fontSize={14}>
-                            {displayBN(orders[tooltipData.index].maxPlaceInLine)}
-                          </Text>
-                          <Text fill="black" x={axis.yWidth + 10} y={tooltipData.coordinate.y - 5} fontSize={14}>
-                            {orders[tooltipData.index].pricePerPod.toFixed(4)}
-                          </Text>
-                        </>
-                      )
-                    : null}
+                  {voroniPolygons}
+                  {cursorPositionLines}
                   {orderCircles}
                   {listingCircles}
                 </g>
@@ -600,7 +680,7 @@ const Graph: React.FC<GraphProps> = ({
                 onTouchMove={zoom.dragMove}
                 onTouchEnd={zoom.dragEnd}
                 onMouseDown={zoom.dragStart}
-                onClick={() => { setSelectedPoint(tooltipData); }}
+                onClick={handleClick}
                 onMouseMove={(evt) => {
                   zoom.dragMove(evt); // handle zoom drag
                   handleMouseMove(evt, zoom); // handle hover event for tooltips
@@ -611,20 +691,22 @@ const Graph: React.FC<GraphProps> = ({
                 }}
                 style={{
                   cursor: (
-                    zoom.isDragging
-                      ? 'grabbing' 
-                      : tooltipData
-                        ? 'pointer'
-                        : 'grab'
+                    selectedPoint 
+                      ? 'default'         // when selected, freeze cursor
+                      : zoom.isDragging   
+                        ? 'grabbing'      // if dragging, show grab
+                        : tooltipData     
+                          ? 'pointer'     // hovering over a point but haven't clicked it yet
+                          : 'grab'        // not hovering a point, user can drag
                   ),
                   touchAction: 'none',
                 }}
               />
-              <AxisLeft
+              <AxisLeft<typeof yScale>
                 scale={rescaleYWithZoom(yScale, zoom)}
                 left={axis.yWidth}
                 numTicks={10}
-                tickFormat={(d) => `$${d.toFixed(2)}`}
+                tickFormat={(d) => d.valueOf().toFixed(2)}
                 tickComponent={(props) => {
                   const { formattedValue, ...renderProps } = props;
                   return (
@@ -636,7 +718,7 @@ const Graph: React.FC<GraphProps> = ({
                 hideZero
               />
               {/* X axis: Place in Line */}
-              <AxisBottom
+              <AxisBottom<typeof xScale>
                 scale={rescaleXWithZoom(xScale, zoom)}
                 top={height - axis.xHeight}
                 left={axis.yWidth}
@@ -649,7 +731,8 @@ const Graph: React.FC<GraphProps> = ({
                     </Text>
                   );
                 }}
-                tickFormat={(d: number) => {
+                tickFormat={(_d) => {
+                  const d = _d.valueOf();
                   if (d < 1e6) return `${d / 1e3}k`;
                   return `${d / 1e6}M`;
                 }}
@@ -660,10 +743,11 @@ const Graph: React.FC<GraphProps> = ({
               typeof tooltipData === 'object' &&
               tooltipData != null &&
               tooltipLeft != null &&
-              tooltipTop != null && (
+              tooltipTop != null &&
+              !selectedPoint && (
                 <Tooltip
                   offsetLeft={10}
-                  offsetTop={-70}
+                  offsetTop={-40}
                   left={tooltipLeft}
                   top={tooltipTop}
                   width={tooltipWidth}
@@ -684,9 +768,9 @@ const Graph: React.FC<GraphProps> = ({
                         : displayBN(orders[tooltipData.index].remainingAmount)
                       } Pods
                     </Row>
-                    <Typography display="block" variant="bodySmall" color="gray" textAlign="left" mt={0.25}>
+                    {/* <Typography display="block" variant="bodySmall" color="gray" textAlign="left" mt={0.25}>
                       Click to view
-                    </Typography>
+                    </Typography> */}
                   </TooltipCard>
                 </Tooltip>
             )}
@@ -695,6 +779,7 @@ const Graph: React.FC<GraphProps> = ({
                 selectedPoint={selectedPoint}
                 orders={orders}
                 listings={listings}
+                onClose={() => setSelectedPoint(undefined)}
               />
             )}
           </div>
