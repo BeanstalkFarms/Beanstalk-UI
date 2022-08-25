@@ -7,8 +7,8 @@ import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdow
 import useBeanstalkSiloBreakdown from '~/hooks/beanstalk/useBeanstalkSiloBreakdown';
 import { displayFullBN, displayUSD } from '~/util';
 import { Token } from '~/classes';
-import TokenIcon from './TokenIcon';
-import Fiat from './Fiat';
+import TokenIcon from '../TokenIcon';
+import Fiat from '../Fiat';
 
 // ------------------------------------------------------
 
@@ -119,7 +119,7 @@ const STATE_IDS = Object.keys(STATE_CONFIG) as StateID[];
 
 // ------------------------------------------------------
 
-const SiloBalances: React.FC<{
+const FarmerBalances: React.FC<{
   breakdown: (
     ReturnType<typeof useFarmerBalancesBreakdown>
     | ReturnType<typeof useBeanstalkSiloBreakdown>
@@ -299,4 +299,4 @@ const SiloBalances: React.FC<{
   );
 };
 
-export default SiloBalances;
+export default FarmerBalances;
