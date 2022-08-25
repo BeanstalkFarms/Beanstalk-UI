@@ -8,10 +8,11 @@ import { PodListing, PodOrder } from '~/state/farmer/market';
 */
 export const mockPodListingData: PodListing[] = new Array(20).fill(null).map((_, i) => {
   const amount = new BigNumber(5000000 * Math.random());
+  const index = new BigNumber(100000000 * Math.random());
   return {
     id: i.toString(),
     account: '0X123456789101112131415',
-    index: new BigNumber(100000000 * Math.random()),
+    index: index,
     start: new BigNumber(10000 * Math.random()),
     pricePerPod: new BigNumber(Math.random()),
     maxHarvestableIndex: new BigNumber(10000000 * Math.random()),
@@ -21,6 +22,7 @@ export const mockPodListingData: PodListing[] = new Array(20).fill(null).map((_,
     remainingAmount: amount,
     filledAmount: new BigNumber(3000000 * Math.random()),
     status: 'active',
+    placeInLine: index.minus(50_000_000)
   };
 });
 

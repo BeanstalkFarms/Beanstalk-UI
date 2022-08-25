@@ -44,7 +44,6 @@ const CancelOrder : React.FC<{
   const Bean = useChainConstant(BEAN);
   
   /// Local state
-  // const [destination, setDestination] = useState<FarmToMode | null>(null);
   const [loading, setLoading] = useState(false);
   const [isOpen, show, hide]  = useToggle();
   
@@ -54,7 +53,6 @@ const CancelOrder : React.FC<{
   
   /// Refetch
   const [refetchFarmerBalances]  = useFetchFarmerBalances();
-  // const [refetchFarmerField]     = useFetchFarmerField();
   const [refetchFarmerMarket]    = useFetchFarmerMarket();
 
   const onClick = useCallback(() => {

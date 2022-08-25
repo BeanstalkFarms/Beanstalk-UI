@@ -13,7 +13,7 @@ import {
   RemoveDepositsEvent,
   PodListingCancelledEvent, PodListingCreatedEvent, PodListingFilledEvent, PodOrderCancelledEvent, PodOrderCreatedEvent, PodOrderFilledEvent } from '~/generated/Beanstalk/Beanstalk';
 import { BEAN, PODS } from '~/constants/tokens';
-import { TokenMap } from '~/constants';
+import { TokenMap, ZERO_BN } from '~/constants';
 import { FarmerSiloBalance, WithdrawalCrate } from '~/state/farmer/silo';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 import { FarmToMode } from './Farm';
@@ -578,6 +578,7 @@ export default class EventProcessor {
       remainingAmount:  amount,   //
       filledAmount:     BN(0),    // 
       status:           'active',
+      placeInLine:      ZERO_BN,  // FIXME
     };
   }
 

@@ -26,6 +26,7 @@ const ListingPage: React.FC = () => {
   const harvestableIndex = useHarvestableIndex();
   const beanstalk = useBeanstalkContract();
 
+  /// Verify that this listing is still live via the contract.
   const [listingValid, setListingValid] = useState<null | boolean>(null);
   useEffect(() => {
     if (id) {
@@ -42,8 +43,8 @@ const ListingPage: React.FC = () => {
     }
   }, [beanstalk, id]);
 
-  ///
-  if (loading) {
+  /// Loading isn't complete until listingValid is set
+  if (loading || listingValid === null) {
     return (
       <GenericZero loading />
     );
