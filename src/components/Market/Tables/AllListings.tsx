@@ -1,33 +1,16 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import COLUMNS from '~/components/Common/Table/cells';
-import { castPodListing, PodListing } from '~/state/farmer/market';
-import { toStringBaseUnitBN } from '~/util/index';
-import { BEAN } from '~/constants/tokens';
-import { useAllPodListingsQuery } from '~/generated/graphql';
-import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
+import { PodListing } from '~/state/farmer/market';
 import MarketBaseTable from './Base';
+import useMarketData from '~/hooks/beanstalk/useMarketData';
 
-const AllListings : React.FC<{}> = () => {
+const AllListings : React.FC<{ data: ReturnType<typeof useMarketData> }> = ({ data }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
-  /// Data
-  const harvestableIndex  = useHarvestableIndex();
-  const { data, loading } = useAllPodListingsQuery({
-    variables: {
-      first: 1000,
-      maxHarvestableIndex: toStringBaseUnitBN(harvestableIndex, BEAN[1].decimals),
-    },
-    fetchPolicy: 'cache-and-network',
-  });
-  const rows : PodListing[] = useMemo(() => {
-    if (loading || !data?.podListings) return [];
-    return data.podListings.map<PodListing>(castPodListing);
-  }, [data?.podListings, loading]);
 
   /// Navigation
   const navigate = useNavigate();
@@ -40,20 +23,20 @@ const AllListings : React.FC<{}> = () => {
     ? [
       COLUMNS.listingId(1.3),
       // index
-      COLUMNS.plotIndex(harvestableIndex, 1),
+      COLUMNS.plotIndex(data.harvestableIndex, 1),
       // pricePerPod
       COLUMNS.pricePerPod(1),
       // amount
       COLUMNS.numPodsActive(1),
       // maxHarvestableIndex
-      COLUMNS.expiry(harvestableIndex, 1),
+      COLUMNS.expiry(data.harvestableIndex, 1),
       // other
       COLUMNS.rightChevron
     ]
     : [
       COLUMNS.listingId(0.7),
       // index
-      COLUMNS.plotIndex(harvestableIndex, 1),
+      COLUMNS.plotIndex(data.harvestableIndex, 1),
       // pricePerPod
       COLUMNS.pricePerPod(1),
       // amount
@@ -63,8 +46,8 @@ const AllListings : React.FC<{}> = () => {
   return (
     <MarketBaseTable
       columns={columns}
-      rows={rows}
-      loading={loading}
+      rows={data.listings}
+      loading={data.loading}
       maxRows={8}
       onRowClick={handleClick}
       getRowId={(row : PodListing) => `${row.account}-${row.id}`}

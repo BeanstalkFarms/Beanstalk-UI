@@ -5,19 +5,14 @@ import useTabs from '~/hooks/display/useTabs';
 import AllListings from '~/components/Market/Tables/AllListings';
 import AllOrders from '~/components/Market/Tables/AllOrders';
 import CreateButtons from '~/components/Market/CreateButtons';
-import useMarketData from '~/hooks/beanstalk/useMarketGraphData';
+import useMarketData from '~/hooks/beanstalk/useMarketData';
 import MarketGraph from '~/components/Market/MarketGraph';
 import { Module, ModuleContent, ModuleHeader, ModuleTabs } from '~/components/Common/Module';
 
 const SLUGS = ['buy', 'sell'];
 const PodMarketPage: React.FC = () => {
-  /// Tabs
   const [tab, handleChangeTab] = useTabs(SLUGS, 'view');
-  const handleCursor = () => null;
-
-  /// Data
   const data = useMarketData();
-
   return (
     <Container maxWidth="lg">
       <Stack spacing={2}>
@@ -60,8 +55,8 @@ const PodMarketPage: React.FC = () => {
             <Tab label="Sell Now" />
           </ModuleTabs>
           <ModuleContent>
-            {tab === 0 && <AllListings />}
-            {tab === 1 && <AllOrders />}
+            {tab === 0 && <AllListings data={data} />}
+            {tab === 1 && <AllOrders data={data} />}
           </ModuleContent>
         </Module>
       </Stack>

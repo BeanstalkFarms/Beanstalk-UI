@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
 import { Box, Button, Card, CardProps, IconButton, Stack, Typography } from '@mui/material';
 import { useTooltip, Tooltip } from '@visx/tooltip';
 import { Text } from '@visx/text';
@@ -26,7 +27,6 @@ import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN, PODS } from '~/constants/tokens';
 
 import './MarketGraph.css';
-import { useHotkeys } from 'react-hotkeys-hook';
 
 const useStyles = makeStyles({
   relative: {
@@ -86,12 +86,20 @@ const PATTERN_ID = 'brush_pattern';
 export const accentColor = '#f6acc8';
 export const background = '#584153';
 export const background2 = '#af8baf';
+const axisColor      = BeanstalkPalette.lightGrey;
+const tickLabelColor = BeanstalkPalette.lightGrey;
+const tickLabelProps = (type: 'x' | 'y') => () => ({
+  fill: tickLabelColor,
+  fontSize: 12,
+  fontFamily: 'Futura PT',
+  textAnchor: (type === 'x' ? 'middle' as const : 'end' as const),
+});
 
 const tooltipWidth = 100;
 const scaleXMin = 1;
-const scaleXMax = 8;
+const scaleXMax = 1;
 const scaleYMin = 1;
-const scaleYMax = 8;
+const scaleYMax = 1;
 
 const margin = {
   top: 10,
@@ -274,7 +282,7 @@ const Graph: React.FC<GraphProps> = ({
   ///
   const innerWidth  = width -  (margin.left + margin.right);
   const innerHeight = height - (margin.top  + margin.bottom);
-  const svgRef = useRef<SVGSVGElement>(null);
+  const svgRef = useRef<SVGRectElement>(null);
   
   /// Tooltip
   const {
@@ -477,8 +485,6 @@ const Graph: React.FC<GraphProps> = ({
       )
     : null;
 
-  // const; 
-
   /// Handlers
   const handleMouseMove = useCallback((event: React.MouseEvent | React.TouchEvent, zoom: ProvidedZoom<SVGSVGElement>) => {
     if (!svgRef.current) return;  //
@@ -531,7 +537,7 @@ const Graph: React.FC<GraphProps> = ({
 
       // Show tooltip at bottom-right corner of circle position.
       // Nudge inward to make hovering easier.
-      showTooltip({
+      return showTooltip({
         tooltipLeft: zoomedCoordinate.x,
         tooltipTop:  zoomedCoordinate.y,
         tooltipData: {
@@ -540,33 +546,34 @@ const Graph: React.FC<GraphProps> = ({
           coordinate: coordinate
         }
       });
-    } else {
-      const orderIndex = findPointInCircles(orderPositions, transformedPoint);
-      // const orderIndex = findPointInLines(orderPositions, transformedPoint);
-      if (orderIndex !== undefined) {
-        // Get the original position of the circle (no zoom)
-        const coordinate = orderPositions[orderIndex];
-
-        const zoomedCoordinate = zoom.applyToPoint({
-          x: coordinate.x,
-          y: coordinate.y,
-        });
-
-        // Show tooltip at bottom-right corner of circle position.
-        // Nudge inward to make hovering easier.
-        showTooltip({
-          tooltipLeft:  zoomedCoordinate.x,
-          tooltipTop:   zoomedCoordinate.y,
-          tooltipData: {
-            index: orderIndex,
-            type: 'order',
-            coordinate: coordinate
-          }
-        });
-      } else {
-        hideTooltip();
-      }
     }
+
+    ///
+    const orderIndex = findPointInCircles(orderPositions, transformedPoint);
+    if (orderIndex !== undefined) {
+      // Get the original position of the circle (no zoom)
+      const coordinate = orderPositions[orderIndex];
+
+      const zoomedCoordinate = zoom.applyToPoint({
+        x: coordinate.x,
+        y: coordinate.y,
+      });
+
+      // Show tooltip at bottom-right corner of circle position.
+      // Nudge inward to make hovering easier.
+      return showTooltip({
+        tooltipLeft:  zoomedCoordinate.x,
+        tooltipTop:   zoomedCoordinate.y,
+        tooltipData: {
+          index: orderIndex,
+          type: 'order',
+          coordinate: coordinate
+        }
+      });
+    }
+
+    ///
+    return hideTooltip();
   }, [hideTooltip, hoveredId, listingPositions, orderPositions, selectedPoint, showTooltip, voronoiLayout]);
 
   const handleClick = useCallback(() => { 
@@ -706,15 +713,9 @@ const Graph: React.FC<GraphProps> = ({
                 scale={rescaleYWithZoom(yScale, zoom)}
                 left={axis.yWidth}
                 numTicks={10}
+                stroke={axisColor}
+                tickLabelProps={tickLabelProps('y')}
                 tickFormat={(d) => d.valueOf().toFixed(2)}
-                tickComponent={(props) => {
-                  const { formattedValue, ...renderProps } = props;
-                  return (
-                    <Text {...renderProps} fontFamily="Futura PT">
-                      {formattedValue}
-                    </Text>
-                  );
-                }}
                 hideZero
               />
               {/* X axis: Place in Line */}
@@ -723,14 +724,8 @@ const Graph: React.FC<GraphProps> = ({
                 top={height - axis.xHeight}
                 left={axis.yWidth}
                 numTicks={10}
-                tickComponent={(props) => {
-                  const { formattedValue, ...renderProps } = props;
-                  return (
-                    <Text {...renderProps} fontFamily="Futura PT" height={200}>
-                      {formattedValue}
-                    </Text>
-                  );
-                }}
+                stroke={axisColor}
+                tickLabelProps={tickLabelProps('x')}
                 tickFormat={(_d) => {
                   const d = _d.valueOf();
                   if (d < 1e6) return `${d / 1e3}k`;

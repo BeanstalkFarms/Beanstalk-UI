@@ -3,19 +3,21 @@ import { usePodListingQuery } from '~/generated/graphql';
 import { Source } from '~/util';
 import { castPodListing } from '~/state/farmer/market';
 import useFarmerListings from '../farmer/useFarmerListings';
+import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 
 const usePodListing = (index: string | undefined) => {
   const farmerListings = useFarmerListings();
   const query          = usePodListingQuery({ variables: { index: index || '' }, skip: !index });
+  const harvestableIndex = useHarvestableIndex();
   const [data, source] = useMemo(() => {
     if (index && query.data?.podListings?.[0]) {
-      return [castPodListing(query.data.podListings[0]), Source.SUBGRAPH];
+      return [castPodListing(query.data.podListings[0], harvestableIndex), Source.SUBGRAPH];
     }
     if (index && farmerListings[index]) {
       return [farmerListings[index], Source.LOCAL];
     }
     return [undefined, undefined];
-  }, [farmerListings, index, query.data?.podListings]);
+  }, [farmerListings, harvestableIndex, index, query.data?.podListings]);
   
   return {
     ...query,
