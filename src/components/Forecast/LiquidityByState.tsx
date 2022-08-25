@@ -3,19 +3,21 @@ import { CardProps, Card } from '@mui/material';
 import { useSelector } from 'react-redux';
 import Stat from '../Common/Stat';
 import { displayUSD } from '../../util';
-import SiloBalances from '../Common/SiloBalances';
 import useWhitelist from '../../hooks/beanstalk/useWhitelist';
-import useBeanstalkSiloBreakdown from '../../hooks/beanstalk/useBeanstalkSiloBreakdown';
+import useBeanstalkSiloBreakdown2 from '../../hooks/beanstalk/useBeanstalkSiloBreakdown2';
+// import useBeanstalkSiloBreakdown from '../../hooks/beanstalk/useBeanstalkSiloBreakdown';
 import StatsCard, { StatItem } from '~/components/Common/StatsCard';
 import { SEEDS, SPROUTS, STALK, PODS } from '~/constants/tokens';
 import { AppState } from '~/state';
 
 const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
-  const breakdown = useBeanstalkSiloBreakdown();
+  const breakdown = useBeanstalkSiloBreakdown2();
   const whitelist = useWhitelist();
   const beanstalkSilo  = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
   const beanstalkBarn  = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
+
+  console.log('BREAKDOWN', breakdown);
 
   /// Total Balances
   const STAT_ITEMS: StatItem[] = [
@@ -54,11 +56,11 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
         gap={0.25}
         sx={{ ml: 0 }}
       />
-      <SiloBalances
-        breakdown={breakdown}
-        whitelist={whitelist}
-        assetLabel="Asset"
-      />
+      {/* <BeanstalkBalances */}
+      {/*  breakdown={breakdown} */}
+      {/*  whitelist={whitelist} */}
+      {/*  assetLabel="Asset" */}
+      {/* /> */}
       <StatsCard stats={STAT_ITEMS} />
     </Card>
   );
