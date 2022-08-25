@@ -1,26 +1,16 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { DataGridProps, GridRowParams } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { useMediaQuery } from '@mui/material';
 import COLUMNS from '~/components/Common/Table/cells';
-import { castPodOrder, PodOrder } from '~/state/farmer/market';
-import { useAllPodOrdersQuery } from '~/generated/graphql';
+import { PodOrder } from '~/state/farmer/market';
 import MarketBaseTable from './Base';
+import useMarketData from '~/hooks/beanstalk/useMarketData';
 
-const AllListings : React.FC<{}> = () => {
+const AllListings : React.FC<{ data: ReturnType<typeof useMarketData> }> = ({ data }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
-  /// Data
-  const { data, loading } = useAllPodOrdersQuery({
-    variables: { first: 1000, },
-    fetchPolicy: 'cache-and-network',
-  });
-  const rows : PodOrder[] = useMemo(() => {
-    if (loading || !data?.podOrders) return [];
-    return data.podOrders.map<PodOrder>(castPodOrder);
-  }, [data?.podOrders, loading]);
 
   /// Navigation
   const navigate = useNavigate();
@@ -47,8 +37,8 @@ const AllListings : React.FC<{}> = () => {
   return (
     <MarketBaseTable
       columns={columns}
-      rows={rows}
-      loading={loading}
+      rows={data.orders}
+      loading={data.loading}
       maxRows={8}
       onRowClick={handleClick}
       getRowId={(row : PodOrder) => row.id.toString()} // pod order ids are unique by default

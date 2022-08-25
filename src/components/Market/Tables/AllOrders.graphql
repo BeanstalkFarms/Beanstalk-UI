@@ -1,9 +1,13 @@
-query AllPodOrders($first: Int) {
+#import "../PodOrder.fragment.graphql"
+query AllPodOrders(
+  $first: Int = 1000,
+  $status: String = "active"
+) {
   podOrders(
     first: $first,
     orderBy: createdAt,
     orderDirection: desc,
-    where: { status: "active" }
+    where: { status: $status }
   ) {
     ...PodOrder
   }

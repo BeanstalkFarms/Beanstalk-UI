@@ -1,7 +1,8 @@
-import { Stack, Tooltip, Typography } from '@mui/material';
+import { Tooltip, Typography } from '@mui/material';
 import React from 'react';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { FontSize } from '../App/muiTheme';
+import Row from '~/components/Common/Row';
 
 const StatHorizontal : React.FC<{
   label: string,
@@ -11,7 +12,7 @@ const StatHorizontal : React.FC<{
   labelTooltip = '',
   children
 }) => (
-  <Stack direction="row" alignItems="center" justifyContent="space-between">
+  <Row justifyContent="space-between" gap={2}>
     <Tooltip title={labelTooltip} placement="right">
       <Typography>
         {label}&nbsp;
@@ -22,10 +23,10 @@ const StatHorizontal : React.FC<{
         )}
       </Typography>
     </Tooltip>
-    <Stack direction="row" alignItems="center" gap={0.3}>
+    <Row gap={0.3}>
       {children}
-    </Stack>
-  </Stack>
+    </Row>
+  </Row>
 );
 
 export default StatHorizontal;

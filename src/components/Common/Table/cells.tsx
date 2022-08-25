@@ -4,12 +4,12 @@ import { GridColumns, GridRenderCellParams, GridValueFormatterParams } from '@mu
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import BigNumber from 'bignumber.js';
 import { displayBN, displayFullBN, MaxBN } from '~/util';
-import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { BEAN, PODS } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 import TokenIcon from '../TokenIcon';
 import AddressIcon from '../AddressIcon';
+import EntityIcon from '~/components/Market/EntityIcon';
 
 const basicCell = (params : GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
 
@@ -94,19 +94,7 @@ const COLUMNS = {
         placement="right"
         title="">
         <Stack direction="row" gap={1} alignItems="center">
-          <Stack
-            alignItems="center"
-            justifyContent="center"
-            sx={{
-              backgroundColor: BeanstalkPalette.mediumRed,
-              width: '25px',
-              height: '25px',
-              p: 1,
-              pl: 1.1,
-              borderRadius: '50%'
-            }}>
-            <TokenIcon token={PODS} />
-          </Stack>
+          <EntityIcon type="listing" />
           <Typography display={{ xs: 'none', md: 'block' }}>
             #{params.row.id}
           </Typography>
@@ -133,20 +121,7 @@ const COLUMNS = {
         placement="right"
         title="">
         <Stack direction="row" gap={1} alignItems="center">
-          {/* FIXME: standardize */}
-          <Stack
-            alignItems="center"
-            justifyContent="center"
-            sx={{
-              backgroundColor: BeanstalkPalette.mediumGreen,
-              width: '25px',
-              height: '25px',
-              p: 1,
-              pl: 1.1,
-              borderRadius: '50%'
-            }}>
-            <TokenIcon token={PODS} />
-          </Stack>
+          <EntityIcon type="order" />
           <Typography display={{ xs: 'none', md: 'block' }}>
             {params.row.id.substring(0, 8)}
           </Typography>
