@@ -15,6 +15,8 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
   const beanstalkBarn = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
 
+  console.log('BREAKDOWN', breakdown);
+
   /// Total Balances
   const STAT_ITEMS: StatItem[] = [
     {
