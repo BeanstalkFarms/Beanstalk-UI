@@ -9,9 +9,10 @@ import { toTokenUnitsBN } from '~/util';
  * @param listing The PodListing as returned by the subgraph.
  * @returns Redux form of PodListing.
  */
-export const castPodListing = (listing: PodListingFragment) : PodListing => {
+export const castPodListing = (listing: PodListingFragment, harvestableIndex: BigNumber) : PodListing => {
   /// NOTE: try to maintain symmetry with subgraph vars here.
   const [account, id]     = listing.id.split('-'); /// Subgraph returns a conjoined ID.
+  const index             = toTokenUnitsBN(id, BEAN[1].decimals);
   const amount            = toTokenUnitsBN(listing.amount,      BEAN[1].decimals);  
   const totalAmount       = toTokenUnitsBN(listing.totalAmount, BEAN[1].decimals); 
   const filledAmount      = totalAmount.minus(amount);
@@ -19,7 +20,7 @@ export const castPodListing = (listing: PodListingFragment) : PodListing => {
   return {
     id:                   id,
     account:              account,
-    index:                toTokenUnitsBN(id, BEAN[1].decimals),
+    index:                index,
     amount:               amount,
     totalAmount:          totalAmount,
     filledAmount:         filledAmount,
@@ -29,6 +30,8 @@ export const castPodListing = (listing: PodListingFragment) : PodListing => {
     start:                toTokenUnitsBN(listing.start, BEAN[1].decimals),
     status:               listing.status as 'active' | 'filled',
     mode:                 listing.mode.toString() as FarmToMode, // FIXME: use numbers instead?
+    // ---
+    placeInLine:          index.minus(harvestableIndex)
   };
 };
 
@@ -138,6 +141,11 @@ export type PodListing = {
    * FIXME: make this an enum
    */
   status: 'active' | 'filled';
+
+  /**
+   * 
+   */
+  placeInLine: BigNumber;
 };
 
 export type PodOrder = {

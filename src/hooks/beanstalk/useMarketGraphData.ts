@@ -15,7 +15,7 @@ const useMarketData = () => {
   const ordersQ   = useAllPodOrdersQuery({ variables: { status: 'active' } });
   
   /// Cast query data to BigNumber, etc.
-  const listings = useCastApolloQuery<PodListing>(listingsQ, 'podListings', castPodListing);
+  const listings = useCastApolloQuery<PodListing>(listingsQ, 'podListings', (_listing) => castPodListing(_listing, harvestableIndex));
   const orders   = useCastApolloQuery<PodOrder>(ordersQ, 'podOrders', castPodOrder);
   
   /// Calculations
