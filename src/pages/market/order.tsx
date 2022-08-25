@@ -16,6 +16,7 @@ import { bigNumberResult, Source } from '~/util';
 import FillOrder from '../../components/Market/Actions/FillOrder';
 import OrderDetails from '../../components/Market/Cards/OrderDetails';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
+import { Module, ModuleContent, ModuleHeader } from '~/components/Common/Module';
 
 const OrderPage: React.FC = () => {
   const account = useAccount();
@@ -23,6 +24,7 @@ const OrderPage: React.FC = () => {
   const { data: order, source, loading, error } = usePodOrder(id);
   const beanstalk = useBeanstalkContract();
 
+  /// Verify that this order is still live via the contract.
   const [orderValid, setOrderValid] = useState<null | boolean>(null);
   useEffect(() => {
     if (id) {
@@ -39,8 +41,8 @@ const OrderPage: React.FC = () => {
     }
   }, [beanstalk, id]);
 
-  //
-  if (loading) {
+  /// Loading isn't complete until orderValid is set
+  if (loading || orderValid === null) {
     return (
       <GenericZero loading />
     );
@@ -66,7 +68,6 @@ const OrderPage: React.FC = () => {
         <PageHeaderSecondary
           title={(
             <Stack direction="row" gap={0.5} alignItems="center">
-              {/* <AddressIcon address={order.account} /> */}
               <Typography variant="h2">
                 Order {order.id.substring(0, 8)}
               </Typography>
@@ -84,7 +85,7 @@ const OrderPage: React.FC = () => {
             <Box>
               <Divider
                 color="secondary"
-                sx={{ my: 1, borderWidth: 0, borderTopWidth: 1, }}
+                sx={{ my: 1, borderWidth: 0, borderTopWidth: 1 }}
               />
               <CancelOrder
                 order={order}
@@ -93,18 +94,16 @@ const OrderPage: React.FC = () => {
           ) : null}
         </Card>
         {account === order.account ? null : (
-          <Card sx={{ position: 'relative' }}>
-            <Stack gap={1.5} sx={{ p: 1 }}>
-              <Box sx={{ pt: 1, px: 1 }}>
-                <Typography variant="h4">Fill</Typography>
-              </Box>
-              <Box>
-                <FillOrder
-                  podOrder={order}
-                />
-              </Box>
-            </Stack>
-          </Card>
+          <Module>
+            <ModuleHeader>
+              <Typography variant="h4">Fill</Typography>
+            </ModuleHeader>
+            <ModuleContent>
+              <FillOrder
+                podOrder={order}
+              />
+            </ModuleContent>
+          </Module>
         )}
         <Box>
           <Typography color="text.secondary" textAlign="right">

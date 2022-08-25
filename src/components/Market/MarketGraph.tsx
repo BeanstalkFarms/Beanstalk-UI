@@ -93,6 +93,8 @@ const tickLabelProps = (type: 'x' | 'y') => () => ({
   fontSize: 12,
   fontFamily: 'Futura PT',
   textAnchor: (type === 'x' ? 'middle' as const : 'end' as const),
+  dy: (type === 'x' ? undefined : 4),
+  dx: (type === 'x' ? undefined : -2),
 });
 
 const tooltipWidth = 100;
@@ -715,6 +717,7 @@ const Graph: React.FC<GraphProps> = ({
                 numTicks={10}
                 stroke={axisColor}
                 tickLabelProps={tickLabelProps('y')}
+                tickStroke={axisColor}
                 tickFormat={(d) => d.valueOf().toFixed(2)}
                 hideZero
               />
@@ -726,6 +729,7 @@ const Graph: React.FC<GraphProps> = ({
                 numTicks={10}
                 stroke={axisColor}
                 tickLabelProps={tickLabelProps('x')}
+                tickStroke={axisColor}
                 tickFormat={(_d) => {
                   const d = _d.valueOf();
                   if (d < 1e6) return `${d / 1e3}k`;
