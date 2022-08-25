@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import Stat from '~/components/Common/Stat';
 import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
-import SiloBalances from '~/components/Common/SiloBalances';
+import FarmerBalances from '~/components/Common/Balances/FarmerBalances';
 import Fiat from '~/components/Common/Fiat';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import useWhitelist from '../../hooks/beanstalk/useWhitelist';
@@ -32,7 +32,7 @@ const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
             </Stack>
           </BlurComponent>
         )}
-        <SiloBalances
+        <FarmerBalances
           breakdown={breakdown}
           whitelist={useWhitelist()}
         />
