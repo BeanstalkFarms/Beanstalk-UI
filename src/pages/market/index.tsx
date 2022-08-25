@@ -11,6 +11,7 @@ import { Module, ModuleContent, ModuleHeader, ModuleTabs } from '~/components/Co
 
 const SLUGS = ['buy', 'sell'];
 const PodMarketPage: React.FC = () => {
+  /// Tabs
   const [tab, handleChangeTab] = useTabs(SLUGS, 'view');
   const data = useMarketData();
   return (
