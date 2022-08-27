@@ -1,121 +1,12 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Stack, Typography, Grid, Box, Tooltip } from '@mui/material';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { Stack, Typography, Grid, Box } from '@mui/material';
 import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/PieChart';
-import { BeanstalkPalette } from '~/components/App/muiTheme';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import useBeanstalkSiloBreakdown from '~/hooks/beanstalk/useBeanstalkSiloBreakdown';
 import { displayFullBN, displayUSD } from '~/util';
-import { Token } from '~/classes';
-import TokenIcon from '../TokenIcon';
 import Fiat from '../Fiat';
-
-// ------------------------------------------------------
-
-const TokenRow: React.FC<{
-  /* Label */
-  label: string;
-  /* Matches color shown in pie chart */
-  color?: string;
-  /* */
-  showColor?: boolean;
-  /* If this row represents a Token, pass it */
-  token? : Token;
-  /* The amount of Token */
-  amount?: string | JSX.Element;
-  /* The USD value of the amount of Token */
-  value?: string | JSX.Element;
-  /* Fade this row out when others are selected */
-  isFaded: boolean;
-  /* Show a border when this row is selected */
-  isSelected?: boolean;
-  /* Handlers */
-  onMouseOver?: () => void;
-  onMouseOut?: () => void;
-  onClick?: () => void;
-  /* Display a tooltip when hovering over the value */
-  tooltip?: string | JSX. Element;
-  /* Include tooltips about asset states (Deposited, Withdrawn, etc.) */
-  assetStates?: boolean;
-}> = ({
-  label,
-  color,
-  showColor,
-  token,
-  amount,
-  value,
-  tooltip,
-  assetStates = false,
-  isFaded = false,
-  isSelected = false,
-  onMouseOver,
-  onMouseOut,
-  onClick
-}) => (
-  <Stack
-    direction="row"
-    justifyContent="space-between"
-    alignItems="flex-start"
-    sx={{
-      cursor: onMouseOver ? 'pointer' : 'inherit',
-      py: 0.75,
-      px: 0.75,
-      opacity: isFaded ? 0.3 : 1,
-      outline: isSelected ? `1px solid ${BeanstalkPalette.blue}` : null,
-      borderRadius: 1,
-    }}
-    onMouseOver={onMouseOver}
-    onFocus={onMouseOver}
-    onMouseOut={onMouseOut}
-    onBlur={onMouseOut}
-    onClick={onClick}
-  >
-    {/* 5px gap between color and typography; shift circle back width+gap px */}
-    <Stack direction="row" gap="5px" alignItems="center">
-      {color && (
-        <Box sx={{ width: 8, height: 8, borderRadius: 8, backgroundColor: showColor ? color : 'transparent', mt: '-2px', ml: '-13px' }} />
-      )}
-      <Typography variant="body1" color="text.secondary" sx={token ? { display: 'block' } : undefined}>
-        {label}
-      </Typography>
-      {(assetStates) && (
-        <Tooltip title={tooltip || ''} placement="top">
-          <HelpOutlineIcon
-            sx={{ color: 'text.secondary', fontSize: '14px' }}
-          />
-        </Tooltip>
-      )}
-    </Stack>
-    <Tooltip title={!assetStates ? tooltip || '' : ''} placement="top">
-      <Stack direction="row" alignItems="center" gap={0.5}>
-        {token && <TokenIcon token={token} />}
-        {amount && (
-          <Typography variant="body1" textAlign="right">
-            {amount}
-          </Typography>
-        )}
-        {value && (
-          <Typography variant="body1" textAlign="right" display="block">
-            {value}
-          </Typography>
-        )}
-      </Stack>
-    </Tooltip>
-  </Stack>
-);
-
-const STATE_CONFIG: { [key: string]: [name: string, color: string, tooltip: string] } = {
-  // Silo
-  deposited:    ['Deposited', BeanstalkPalette.logoGreen, 'Assets that are Deposited in the Silo.'],
-  withdrawn:    ['Withdrawn', '#DFB385', 'Assets being Withdrawn from the Silo. At the end of the current Season, Withdrawn assets become Claimable.'],
-  claimable:    ['Claimable', '#ECBCB3', 'Assets that can be Claimed after a Withdrawal.'],
-  // Farm
-  farm:         ['Farm', '#F2E797', 'Assets stored in Beanstalk. Farm assets can be used in transactions on the Farm.'],
-  circulating:  ['Circulating', BeanstalkPalette.lightBlue, 'Beanstalk assets in your wallet.'],
-};
-
-type StateID = keyof typeof STATE_CONFIG;
-const STATE_IDS = Object.keys(STATE_CONFIG) as StateID[];
+import { STATE_CONFIG, STATE_IDS, StateID } from '~/util/Balances';
+import TokenRow from '~/components/Common/Balances/TokenRow';
 
 // ------------------------------------------------------
 
@@ -143,11 +34,13 @@ const FarmerBalances: React.FC<{
       setAllow(true);
     }
   }, [allowNewHoverState]);
+
   const onMouseOver = useCallback((v: StateID) => (
     allowNewHoverState ? () => setHoverState(v) : undefined
   ), [allowNewHoverState]);
+
   const onClick = useCallback((v: StateID) => () => {
-    if (allowNewHoverState === false) {
+    if (!allowNewHoverState) {
       setHoverState(v);
       setAllow(true);
     } else {
@@ -155,6 +48,7 @@ const FarmerBalances: React.FC<{
       setAllow(false);
     }
   }, [allowNewHoverState]);
+
   const availableStates = Object.keys(breakdown.states);
 
   // Compile Pie chart data
@@ -267,29 +161,6 @@ const FarmerBalances: React.FC<{
                     />
                   );
                 })}
-                {/* {Object.keys(whitelist).sort((a, b) => {
-                  const _a : number = breakdown.states[hoverState as keyof typeof breakdown.states]?.byToken[a]?.value.toNumber() || 0;
-                  const _b : number = breakdown.states[hoverState as keyof typeof breakdown.states]?.byToken[b]?.value.toNumber() || 0;
-                  return _b - _a;
-                }).map((address) => {
-                  const token = whitelist[address];
-                  const inThisState = breakdown.states[hoverState as keyof typeof breakdown.states]?.byToken[address];
-                  return (
-                    <TokenRow
-                      key={address}
-                      label={`${token.name}`}
-                      color={token.color}
-                      token={token}
-                      isFaded={false}
-                      amount={`${displayFullBN(inThisState?.amount, token.displayDecimals)} ${token.name}`}
-                      tooltip={(
-                        <>
-                          {displayFullBN(inThisState?.amount)} {token.name}
-                        </>
-                      )}
-                    />
-                  );
-                })} */}
               </Box>
             </Stack>
           )}
