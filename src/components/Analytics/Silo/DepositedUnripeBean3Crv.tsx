@@ -9,6 +9,7 @@ const getValue = (season: SnapshotData<SeasonalDepositedUnripeBean3CrvQuery>) =>
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const StatProps = {
   title: 'Deposited Unripe BEAN:3CRV',
+  titleTooltip: 'The total number of Deposited Unripe BEAN:3CRV LP Tokens.',
   gap: 0.5,
 };
 const queryConfig = {

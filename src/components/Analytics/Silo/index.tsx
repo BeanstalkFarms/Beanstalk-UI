@@ -1,12 +1,13 @@
 import { Card, Tab, Tabs } from '@mui/material';
 import React from 'react';
-import DepositedBeans from './DepositedBeans';
-import DepositedBean3CRV from './DepositedBean3Crv';
-import DepositedUnripeBeans from './DepositedUnripeBeans';
-import DepositedUnripeBean3CRV from './DepositedUnripeBean3Crv';
-import Stalk from './Stalk';
-import Seeds from './Seeds';
+// import DepositedBeans from './DepositedBeans';
+// import DepositedBean3CRV from './DepositedBean3Crv';
+// import DepositedUnripeBeans from './DepositedUnripeBeans';
+// import DepositedUnripeBean3CRV from './DepositedUnripeBean3Crv';
+// import Stalk from './Stalk';
+// import Seeds from './Seeds';
 import useTabs from '~/hooks/display/useTabs';
+import Soon from '~/components/Common/ZeroState/Soon';
 
 const SLUGS = [
   'deposited_bean',
@@ -31,12 +32,18 @@ const SiloAnalytics: React.FC<{}> = () => {
         <Tab label="Stalk" />
         <Tab label="Seeds" />
       </Tabs>
-      {tab === 0 && <DepositedBeans height={300} />}
+      {/* {tab === 0 && <DepositedBeans height={300} />}
       {tab === 1 && <DepositedBean3CRV height={300} />}
       {tab === 2 && <DepositedUnripeBeans height={300} />}
       {tab === 3 && <DepositedUnripeBean3CRV height={300} />}
       {tab === 4 && <Stalk height={300} />}
-      {tab === 5 && <Seeds height={300} />}
+      {tab === 5 && <Seeds height={300} />} */}
+      {tab === 0 && <Soon />}
+      {tab === 1 && <Soon />}
+      {tab === 2 && <Soon />}
+      {tab === 3 && <Soon />}
+      {tab === 4 && <Soon />}
+      {tab === 5 && <Soon />}
     </Card>
   );
 };

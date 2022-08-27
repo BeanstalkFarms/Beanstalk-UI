@@ -9,6 +9,7 @@ const getValue = (season: SnapshotData<SeasonalPodsQuery>) => toTokenUnitsBN(sea
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const StatProps = {
   title: 'Pods',
+  titleTooltip: 'The total number of Pods.',
   gap: 0.5,
 };
 

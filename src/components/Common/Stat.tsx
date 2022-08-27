@@ -50,7 +50,7 @@ const Stat: React.FC<StatProps> = ({
         <Typography variant="body1">
           {title}
           {titleTooltip && (
-            <Tooltip title={titleTooltip} placement="top">
+            <Tooltip title={titleTooltip} placement="right">
               <HelpOutlineIcon
                 sx={{
                   display: 'inline',

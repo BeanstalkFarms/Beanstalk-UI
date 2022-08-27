@@ -6,6 +6,8 @@ import {
 import PageHeader from '~/components/Common/PageHeader';
 import Proposals from '~/components/Governance/Proposals';
 import StalkholderCard from '~/components/Governance/StalkholderCard';
+ import { HOW_TO_VOTE } from '~/util/Guides';
+import GuideButton from '~/components/Common/Guide/GuideButton';
 
 const GovernancePage: React.FC = () => (
   <Container maxWidth="lg">
@@ -14,6 +16,14 @@ const GovernancePage: React.FC = () => (
         title="Governance"
         description="Participate in Beanstalk governance as a Stalkholder"
         href="https://docs.bean.money/governance/proposals"
+        control={
+          <GuideButton
+            title="The Farmers' Almanac: Governance Guides"
+            guides={[
+              HOW_TO_VOTE,
+            ]}
+          />
+        }
       />
       <Grid container direction={{ xs: 'column', md: 'row' }} spacing={2}>
         <Grid item xs={12} lg={3.5}>
