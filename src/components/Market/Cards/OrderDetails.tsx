@@ -45,7 +45,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
           <TokenIcon token={BEAN[1]} style={{ height: IconSize.xs }} />
           <Typography>{displayBN(podOrder.pricePerPod)}</Typography>
         </StatHorizontal>
-        <StatHorizontal label="Pods Requested" labelTooltip="The number of Pods left to be sold to this Order.">
+        <StatHorizontal label="Amount" labelTooltip="The number of Pods left to be sold to this Order.">
           <TokenIcon token={PODS} style={{ height: IconSize.xs }} />
           <Typography>{displayBN(podOrder.remainingAmount)}</Typography>
         </StatHorizontal>

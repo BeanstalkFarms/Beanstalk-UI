@@ -12,6 +12,7 @@ import { useGenesisNFTContract, useWinterNFTContract } from '~/hooks/ledger/useC
 import TransactionToast from '~/components/Common/TxnToast';
 import useAccount from '../hooks/ledger/useAccount';
 import AuthEmptyState from '~/components/Common/ZeroState/AuthEmptyState';
+import PageHeader from '~/components/Common/PageHeader';
 
 const SLUGS = ['genesis', 'winter'];
 const NFTPage: React.FC = () => {
@@ -199,6 +200,11 @@ const NFTPage: React.FC = () => {
   return (
     <Container maxWidth="lg">
       <Stack spacing={2}>
+        <PageHeader
+          title="BeaNFTs"
+          description="View and mint your BeaNFTs"
+          href="https://docs.bean.money/additional-resources/beanfts"
+        />
         <Card sx={{ p: 2 }}>
           <Stack gap={1.5}>
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ px: 0.5 }}>

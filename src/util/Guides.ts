@@ -53,6 +53,28 @@ export const HOW_TO_RINSE_SPROUTS: Guide = {
   url: 'https://docs.bean.money/guides/barn/rinse'
 };
 
+// GOVERNANCE
+export const HOW_TO_VOTE: Guide = {
+  title: 'How to Vote on Governance Proposals',
+  url: 'https://docs.bean.money/guides/governance/vote-on-proposals'
+};
+
+// SWAP
+export const HOW_TO_TRADE_BEANS: Guide = {
+  title: 'How to Trade Beans',
+  url: 'https://docs.bean.money/guides/swap/trade-beans'
+};
+export const HOW_TO_TRANSFER_FARM_BALANCE: Guide = {
+  title: 'How to Transfer Farm Balances',
+  url: 'https://docs.bean.money/guides/swap/transfer-farm-balance'
+};
+
+// BALANCES
+export const HOW_TO_UNDERSTAND_BALANCES: Guide = {
+  title: 'How to Understand My Balances',
+  url: 'https://docs.bean.money/guides/balances/understand-my-balances'
+};
+
 /// CHOP
 export const HOW_TO_CHOP_UNRIPE_BEANS: Guide = {
   title: 'How to Chop Unripe Beans',
