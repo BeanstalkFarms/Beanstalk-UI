@@ -21,7 +21,7 @@ const PodMarketPage: React.FC = () => {
           title="The Pod Market"
           description="Trade the Beanstalk-native debt asset"
           href="https://docs.bean.money/farm/market#the-pod-market"
-          control={<CreateButtons />}
+          control={<CreateButtons />} // need to add (?) <GuideButton />
         />
         {/**
           * Graph

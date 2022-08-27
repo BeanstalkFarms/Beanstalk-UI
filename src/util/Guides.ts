@@ -3,21 +3,7 @@ export type Guide = {
   url: string;
 };
 
-/// FIELD
-export const HOW_TO_SOW_BEANS: Guide = {
-  title: 'How to Sow Beans',
-  url: 'https://docs.bean.money/guides/field/sow'
-};
-export const HOW_TO_TRANSFER_PODS: Guide = {
-  title: 'How to Transfer Pods',
-  url: 'https://docs.bean.money/guides/field/transfer'
-};
-export const HOW_TO_HARVEST_PODS: Guide = {
-  title: 'How to Harvest Pods',
-  url: 'https://docs.bean.money/guides/field/harvest'
-};
-
-/// SILO
+// SILO
 export const CLAIM_SILO_REWARDS: Guide = {
   title: 'How to Claim Silo Rewards',
   url: 'https://docs.bean.money/guides/silo/claim-rewards'
@@ -43,7 +29,21 @@ export const HOW_TO_TRANSFER_DEPOSITS: Guide = {
   url: 'https://docs.bean.money/guides/silo/transfer'
 };
 
-/// BARN
+// FIELD
+export const HOW_TO_SOW_BEANS: Guide = {
+  title: 'How to Sow Beans',
+  url: 'https://docs.bean.money/guides/field/sow'
+};
+export const HOW_TO_TRANSFER_PODS: Guide = {
+  title: 'How to Transfer Pods',
+  url: 'https://docs.bean.money/guides/field/transfer'
+};
+export const HOW_TO_HARVEST_PODS: Guide = {
+  title: 'How to Harvest Pods',
+  url: 'https://docs.bean.money/guides/field/harvest'
+};
+
+// BARN
 export const HOW_TO_BUY_FERTILIZER: Guide = {
   title: 'How to Buy Fertilizer',
   url: 'https://docs.bean.money/guides/barn/buy-fertilizer'
@@ -53,10 +53,14 @@ export const HOW_TO_RINSE_SPROUTS: Guide = {
   url: 'https://docs.bean.money/guides/barn/rinse'
 };
 
-// GOVERNANCE
-export const HOW_TO_VOTE: Guide = {
-  title: 'How to Vote on Governance Proposals',
-  url: 'https://docs.bean.money/guides/governance/vote-on-proposals'
+// MARKET
+export const HOW_TO_BUY_PODS: Guide = {
+  title: 'How to Buy Pods',
+  url: 'https://docs.bean.money/guides/market/buy-pods'
+};
+export const HOW_TO_SELL_PODS: Guide = {
+  title: 'How to Sell Pods',
+  url: 'https://docs.bean.money/guides/market/sell-pods'
 };
 
 // SWAP
@@ -67,6 +71,12 @@ export const HOW_TO_TRADE_BEANS: Guide = {
 export const HOW_TO_TRANSFER_FARM_BALANCE: Guide = {
   title: 'How to Transfer Farm Balances',
   url: 'https://docs.bean.money/guides/swap/transfer-farm-balance'
+};
+
+// GOVERNANCE
+export const HOW_TO_VOTE: Guide = {
+  title: 'How to Vote on Governance Proposals',
+  url: 'https://docs.bean.money/guides/governance/vote-on-proposals'
 };
 
 // BALANCES
