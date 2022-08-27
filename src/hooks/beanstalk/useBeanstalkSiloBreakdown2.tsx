@@ -71,7 +71,6 @@ export default function useBeanstalkSiloBreakdown2() {
   return useMemo(() =>
     // console.debug('[useBeanstalkSiloBreakdown] running reducer');
      WHITELIST_ADDRS.reduce((prev, address) => {
-       console.log('PREV', prev);
       const TOKEN        = WHITELIST[address];
       const siloBalance  = siloBalances[address];
 
@@ -93,7 +92,6 @@ export default function useBeanstalkSiloBreakdown2() {
               TOKEN_STATE.reduce((p, c) => p.plus(usdValueByState[c]), ZERO_BN)
             )
         );
-        console.log('ERE');
 
         // Aggregate amounts of each Token
         prev.tokens[address].amount = prev.tokens[address].amount.plus(
