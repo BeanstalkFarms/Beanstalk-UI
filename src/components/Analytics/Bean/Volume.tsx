@@ -7,6 +7,7 @@ const getValue = (season: SeasonalVolumeQuery['seasons'][number]) => parseFloat(
 const formatValue = (value: number) => `$${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const StatProps = {
   title: 'Volume',
+  titleTooltip: 'The USD volume in the BEAN:3CRV pool at the end of every Season/day.',
   gap: 0.25,
   color: 'primary',
   sx: { ml: 0 },

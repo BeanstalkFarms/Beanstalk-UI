@@ -83,7 +83,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
     }
     // claim from silo
     case 'RemoveWithdrawal': {
-      processTokenEvent(event, 'Remove Withdrawn', true, false);
+      processTokenEvent(event, 'Claim', true, false);
       break;
     }
     case 'RemoveWithdrawals': {

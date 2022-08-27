@@ -30,7 +30,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
         </Box>
       </Stack>
       <Stack gap={1}>
-        <StatHorizontal label="Place in Line">
+        <StatHorizontal label="Place in Line" labelTooltip="Pods within this range can be used to Fill this Order.">
           <Tooltip title={(
             <>
               0 - {displayFullBN(podOrder.maxPlaceInLine)}

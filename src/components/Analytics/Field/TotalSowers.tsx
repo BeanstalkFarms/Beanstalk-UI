@@ -8,6 +8,7 @@ const getValue = (season: SnapshotData<SeasonalTotalSowersQuery>) => season.tota
 const formatValue = (value: number) => `${value}`;
 const StatProps = {
   title: 'Total Sowers',
+  titleTooltip: 'The total number of unique Sowers.',
   gap: 0.25,
   sx: { ml: 0 }
 };

@@ -26,7 +26,7 @@ const ListingDetails: React.FC<{
       </Box>
     </Stack>
     <Stack gap={1}>
-      <StatHorizontal label="Place in Line">
+      <StatHorizontal label="Place in Line" labelTooltip="The Place in Line of the first Pod in this Listing.">
         <Typography>{displayBN(podListing.index.minus(harvestableIndex))}</Typography>
       </StatHorizontal>
       <StatHorizontal label="Price per Pod" labelTooltip="The number of Beans requested per Pod.">
