@@ -8,6 +8,7 @@ import CreateButtons from '~/components/Market/CreateButtons';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
 import MarketGraph from '~/components/Market/MarketGraph';
 import { Module, ModuleContent, ModuleHeader, ModuleTabs } from '~/components/Common/Module';
+import GuideButton from '~/components/Common/Guide/GuideButton';
 
 const SLUGS = ['buy', 'sell'];
 const PodMarketPage: React.FC = () => {
@@ -21,7 +22,21 @@ const PodMarketPage: React.FC = () => {
           title="The Pod Market"
           description="Trade the Beanstalk-native debt asset"
           href="https://docs.bean.money/farm/market#the-pod-market"
-          control={<CreateButtons />} // need to add (?) <GuideButton />
+          OuterStackProps={{
+            alignItems: 'end'
+          }}
+          control={
+            <Stack direction="row" alignItems="center" gap={1}>
+              <GuideButton
+                title="TITLE HERE"
+                guides={[
+                  // GUIDES HERE
+                ]}
+              />
+              <CreateButtons />
+            </Stack>
+
+        }
         />
         {/**
           * Graph
