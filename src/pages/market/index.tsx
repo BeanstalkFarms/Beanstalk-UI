@@ -9,6 +9,7 @@ import useMarketData from '~/hooks/beanstalk/useMarketData';
 import MarketGraph from '~/components/Market/MarketGraph';
 import { Module, ModuleContent, ModuleHeader, ModuleTabs } from '~/components/Common/Module';
 import GuideButton from '~/components/Common/Guide/GuideButton';
+import { HOW_TO_BUY_PODS, HOW_TO_SELL_PODS } from '~/util';
 
 const SLUGS = ['buy', 'sell'];
 const PodMarketPage: React.FC = () => {
@@ -28,9 +29,10 @@ const PodMarketPage: React.FC = () => {
           control={
             <Stack direction="row" alignItems="center" gap={1}>
               <GuideButton
-                title="TITLE HERE"
+                title="The Farmers' Almanac: Pod Marketplace Guides"
                 guides={[
-                  // GUIDES HERE
+                  HOW_TO_BUY_PODS,
+                  HOW_TO_SELL_PODS
                 ]}
               />
               <CreateButtons />
