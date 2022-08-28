@@ -35,13 +35,12 @@ const PodMarketPage: React.FC = () => {
               />
               <CreateButtons />
             </Stack>
-
-        }
+          }
         />
         {/**
-          * Graph
-          */}
-        <Module sx={{ overflow: 'visible' }}> 
+         * Graph
+         */}
+        <Module sx={{ overflow: 'visible' }}>
           <ModuleHeader>
             <Typography variant="h4">Overview</Typography>
           </ModuleHeader>
@@ -63,8 +62,8 @@ const PodMarketPage: React.FC = () => {
           </Box> */}
         </Module>
         {/**
-          * Buy Now and Sell Now
-          */}
+         * Buy Now and Sell Now
+         */}
         <Module>
           <ModuleTabs value={tab} onChange={handleChangeTab}>
             <Tab label="Buy Now" />
