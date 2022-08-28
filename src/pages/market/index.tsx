@@ -29,7 +29,7 @@ const PodMarketPage: React.FC = () => {
           control={
             <Stack direction="row" alignItems="center" gap={1}>
               <GuideButton
-                title="The Farmers' Almanac: Pod Marketplace Guides"
+                title="The Farmers' Almanac: Market Guides"
                 guides={[
                   HOW_TO_BUY_PODS,
                   HOW_TO_SELL_PODS
