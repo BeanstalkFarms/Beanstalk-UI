@@ -52,6 +52,14 @@ export const HOW_TO_RINSE_SPROUTS: Guide = {
   title: 'How to Rinse Sprouts',
   url: 'https://docs.bean.money/guides/barn/rinse'
 };
+export const HOW_TO_TRANSFER_FERTILIZER: Guide = {
+  title: 'How to Transfer Fertilizer',
+  url: 'https://docs.bean.money/guides/barn/transfer-fertilizer'
+};
+export const HOW_TO_TRADE_FERTILIZER: Guide = {
+  title: 'How to Trade Fertilizer',
+  url: 'https://docs.bean.money/guides/barn/trade-fertilizer'
+};
 
 // MARKET
 export const HOW_TO_BUY_PODS: Guide = {
@@ -61,6 +69,18 @@ export const HOW_TO_BUY_PODS: Guide = {
 export const HOW_TO_SELL_PODS: Guide = {
   title: 'How to Sell Pods',
   url: 'https://docs.bean.money/guides/market/sell-pods'
+};
+
+// BALANCES
+export const HOW_TO_UNDERSTAND_BALANCES: Guide = {
+  title: 'How to Understand My Balances',
+  url: 'https://docs.bean.money/guides/balances/understand-my-balances'
+};
+
+// BEANFTS
+export const HOW_TO_MINT_BEANFTS: Guide = {
+  title: 'How to Mint BeaNFTs',
+  url: 'https://docs.bean.money/guides/beanfts/mint-beanfts'
 };
 
 // SWAP
@@ -77,12 +97,6 @@ export const HOW_TO_TRANSFER_FARM_BALANCE: Guide = {
 export const HOW_TO_VOTE: Guide = {
   title: 'How to Vote on Governance Proposals',
   url: 'https://docs.bean.money/guides/governance/vote-on-proposals'
-};
-
-// BALANCES
-export const HOW_TO_UNDERSTAND_BALANCES: Guide = {
-  title: 'How to Understand My Balances',
-  url: 'https://docs.bean.money/guides/balances/understand-my-balances'
 };
 
 /// CHOP

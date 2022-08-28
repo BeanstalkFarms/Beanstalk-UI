@@ -13,6 +13,8 @@ import TransactionToast from '~/components/Common/TxnToast';
 import useAccount from '../hooks/ledger/useAccount';
 import AuthEmptyState from '~/components/Common/ZeroState/AuthEmptyState';
 import PageHeader from '~/components/Common/PageHeader';
+import GuideButton from '~/components/Common/Guide/GuideButton';
+import { HOW_TO_MINT_BEANFTS } from '~/util/Guides';
 
 const SLUGS = ['genesis', 'winter'];
 const NFTPage: React.FC = () => {
@@ -204,6 +206,14 @@ const NFTPage: React.FC = () => {
           title="BeaNFTs"
           description="View and mint your BeaNFTs"
           href="https://docs.bean.money/additional-resources/beanfts"
+          control={
+            <GuideButton
+              title="The Farmers' Almanac: BeaNFT Guides"
+              guides={[
+                HOW_TO_MINT_BEANFTS,
+              ]}
+            />
+          }
         />
         <Card sx={{ p: 2 }}>
           <Stack gap={1.5}>
