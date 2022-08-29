@@ -27,6 +27,10 @@ export type BeanstalkSiloBalance = {
   budget?: {
     amount: BigNumber;
   }
+  /** Total token supply minus all the above categories. */
+  farmPlusCirculating?: {
+    amount: BigNumber;
+  }
 }
 
 /**

@@ -21,6 +21,7 @@ const BeanstalkBalances: React.FC<{
    }) => {
     // Constants
     const WHITELIST = useWhitelist();
+    console.log('BREAK 1');
 
     // Drilldown against a State of Token (DEPOSITED, WITHDRAWN, etc.)
     const [hoverAddress, setHoverAddress] = useState<string | null>(null);
@@ -33,6 +34,7 @@ const BeanstalkBalances: React.FC<{
         setAllow(true);
       }
     }, [allowNewHoverState]);
+    console.log('BREAK 2');
 
     const onMouseOver = useCallback((address: string) => (
       allowNewHoverState ? () => setHoverAddress(address) : undefined
@@ -47,23 +49,26 @@ const BeanstalkBalances: React.FC<{
         setAllow(false);
       }
     }, [allowNewHoverState]);
+    console.log('BREAK 3');
 
     const availableTokens = Object.keys(breakdown.tokens);
 
     // Compile Pie chart data
     const pieChartData = useMemo(() => {
       if (hoverAddress) {
-        const thisAddress = breakdown.tokens[hoverAddress as keyof typeof breakdown.tokens];
-        return Object.keys(thisAddress?.byState).reduce<PieDataPoint[]>((prev, state, index) => {
-          const value = thisAddress?.byState[state].value.toNumber();
-          prev.push({
-            state: state,
-            label: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][0],
-            value,
-            color: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][1],
-          });
-          return prev;
-        }, []).sort((a, b) => b.value - a.value);
+        if (breakdown.tokens[hoverAddress]) {
+          const thisAddress = breakdown.tokens[hoverAddress as keyof typeof breakdown.tokens];
+          return Object.keys(thisAddress?.byState).reduce<PieDataPoint[]>((prev, state, index) => {
+            const value = thisAddress?.byState[state].value.toNumber();
+            prev.push({
+              state: state,
+              label: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][0],
+              value,
+              color: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][1],
+            });
+            return prev;
+          }, []).sort((a, b) => b.value - a.value);
+        }
       }
       return availableTokens.map((address) => ({
         label: WHITELIST[address].name,
@@ -71,6 +76,7 @@ const BeanstalkBalances: React.FC<{
         color: WHITELIST[address].color
       } as PieDataPoint));
     }, [hoverAddress, availableTokens, breakdown, WHITELIST]);
+    console.log('BREAK 4');
 
     return (
       <div>

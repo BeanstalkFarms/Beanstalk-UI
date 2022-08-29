@@ -20,11 +20,15 @@ export const useFetchBeanstalkSilo = () => {
   const WHITELIST = FULL_WHITELIST;
   const chainId = useChainId();
   const poolState = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
+  const beanSupply = useSelector<AppState, AppState['_bean']['token']['supply']>((state) => state._bean.token.supply);
+  const unripeTokenState = useSelector<AppState, AppState['_bean']['unripe']>((state) => state._bean.unripe);
 
   /// 
   const getChainConstant = useGetChainConstant();
   const Bean = getChainConstant(BEAN);
   const Bean3CRV = getChainConstant(BEAN_CRV3_LP);
+  const urBean = getChainConstant(UNRIPE_BEAN);
+  const urBean3CRV = getChainConstant(UNRIPE_BEAN_CRV3);
 
   /// Handlers
   const fetch = useCallback(async () => {
@@ -121,24 +125,43 @@ export const useFetchBeanstalkSilo = () => {
           agg[curr.token].ripe = { amount: curr.ripe };
         }
 
-        // Add Pooled state to Bean token
+        /// BEAN SPECIFIC STATES
         if (WHITELIST[curr.token] === Bean) {
-          /// BUDGET BEANS
-          // console.log('BSM BAL', bsmBeansTotal.plus(bfmBeansTotal).toNumber());
-          // console.log('BFM BAL', bfmBeansTotal.toNumber());
-          agg[curr.token].budget = { amount: bsmBeansTotal.plus(bfmBeansTotal) };
+          // Budget Beans
+          const beansInMultiSig = bsmBeansTotal.plus(bfmBeansTotal);
+          agg[curr.token].budget = { amount: beansInMultiSig };
 
-          /// POOLED BEANS
+          // Pooled Beans
           const POOL_ADDRESSES = Object.keys(ALL_POOLS[chainId]);
           // sum the bean reserves for each pool
-          const totalBeans = POOL_ADDRESSES.reduce((prev, poolAddr) => {
+          const totalPooledBeans = POOL_ADDRESSES.reduce((prev, poolAddr) => {
             const reserves = poolState[poolAddr]?.reserves;
             if (reserves) {
               return prev.plus(reserves[0]);
             }
             return prev;
           }, ZERO_BN);
-          agg[curr.token].pooled = { amount: totalBeans };
+          agg[curr.token].pooled = { amount: totalPooledBeans };
+
+          // Farm + Circulating
+          agg[curr.token].farmPlusCirculating = {
+            amount: beanSupply
+              .minus(beansInMultiSig)
+              .minus(totalPooledBeans)
+              .minus(curr.ripe)
+              .minus(curr.deposited)
+              .minus(curr.withdrawn)
+              // TODO: subtract claimable
+          };
+        }
+
+        // Farm + Circulating for Unripe Tokens
+        if (WHITELIST[curr.token] === urBean || WHITELIST[curr.token] === urBean3CRV) {
+          agg[curr.token].farmPlusCirculating = {
+            amount: unripeTokenState[curr.token]?.supply
+              .minus(curr.deposited)
+              .minus(curr.withdrawn)
+          };
         }
 
         return agg;
@@ -174,7 +197,7 @@ export const useFetchBeanstalkSilo = () => {
         withdrawSeasons: withdrawSeasons
       }));
     }
-  }, [beanstalk, WHITELIST, dispatch, Bean, Bean3CRV, chainId, poolState]);
+  }, [beanstalk, WHITELIST, dispatch, Bean, Bean3CRV, urBean, urBean3CRV, chainId, beanSupply, poolState, unripeTokenState]);
 
   const clear = useCallback(() => {
     console.debug('[beanstalk/silo/useBeanstalkSilo] CLEAR');

@@ -16,7 +16,8 @@ const TOKEN_STATE = [
   'withdrawn',
   'pooled',
   'ripe',
-  'budget'
+  'budget',
+  'farmPlusCirculating'
 ] as const;
 
 export type SiloTokenState = {
@@ -36,6 +37,7 @@ const _initState = (tokenAddresses: string[], siloBalances: TokenMap<BeanstalkSi
       value: new BigNumber(0),
       amount: new BigNumber(0),
       byState: TOKEN_STATE
+        // Don't show every state for every token
         .filter((state) => siloBalances[address][state] !== undefined)
         .reduce<SiloTokenState>(
         (_prev, state) => {
@@ -65,7 +67,7 @@ const _initState = (tokenAddresses: string[], siloBalances: TokenMap<BeanstalkSi
  * - deposited
  * - withdrawn
  * - circulating
- * - claimable.
+ * - claimable
  */
 export default function useBeanstalkSiloBreakdown2() {
   // Constants
@@ -90,32 +92,34 @@ export default function useBeanstalkSiloBreakdown2() {
           pooled:      siloBalance.pooled ? siloBalance.pooled?.amount : undefined,
           ripe:        siloBalance.ripe ? siloBalance.ripe?.amount : undefined,
           budget:      siloBalance.budget ? siloBalance.budget?.amount : undefined,
+          farmPlusCirculating:       siloBalance.farmPlusCirculating ? siloBalance.farmPlusCirculating?.amount : undefined,
         };
         const usdValueByState = {
           deposited:   getUSD(TOKEN, siloBalance.deposited?.amount),
           withdrawn:   getUSD(TOKEN, siloBalance.withdrawn?.amount),
           pooled:      siloBalance.pooled ? getUSD(TOKEN, siloBalance.pooled?.amount) : undefined,
           ripe:        siloBalance.ripe ? getUSD(TOKEN, siloBalance.ripe?.amount) : undefined,
-          budget:      siloBalance.budget ? getUSD(TOKEN, siloBalance.budget?.amount) : undefined
+          budget:      siloBalance.budget ? getUSD(TOKEN, siloBalance.budget?.amount) : undefined,
+          farmPlusCirculating:      siloBalance.farmPlusCirculating ? getUSD(TOKEN, siloBalance.farmPlusCirculating?.amount) : undefined,
         };
 
         // Aggregate value of all states.
         prev.totalValue = (
           prev.totalValue
             .plus(
-              TOKEN_STATE.reduce((p, c) => p.plus(usdValueByState[c] !== undefined ? usdValueByState[c] as BigNumber : ZERO_BN), ZERO_BN)
+              TOKEN_STATE.reduce((p, c) => p.plus(usdValueByState[c] || ZERO_BN), ZERO_BN)
             )
         );
 
         // Aggregate amounts of each Token
         prev.tokens[address].amount = prev.tokens[address].amount.plus(
           TOKEN_STATE.reduce((p, c) => p.plus(
-            amountByState[c] !== undefined ? amountByState[c] as BigNumber : ZERO_BN), ZERO_BN
+            amountByState[c] || ZERO_BN), ZERO_BN
           )
         );
         prev.tokens[address].value = prev.tokens[address].value.plus(
           TOKEN_STATE.reduce((p, c) => p.plus(
-            usdValueByState[c] !== undefined ? usdValueByState[c] as BigNumber : ZERO_BN), ZERO_BN
+            usdValueByState[c] || ZERO_BN), ZERO_BN
           )
         );
 

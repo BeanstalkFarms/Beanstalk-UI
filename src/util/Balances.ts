@@ -10,7 +10,8 @@ export const STATE_CONFIG: { [key: string]: [name: string, color: string, toolti
   circulating:  ['Circulating', BeanstalkPalette.lightBlue, 'Beanstalk assets in your wallet.'],
   pooled:       ['Pooled', BeanstalkPalette.grey, 'Total Beans across all pools.'],
   ripe:         ['Ripe', BeanstalkPalette.washedRed, 'Total underlying.'],
-  budget:       ['Budget', BeanstalkPalette.brown, 'Total Beans in the BFM and BSM multi-sig wallets.']
+  budget:       ['Budget', BeanstalkPalette.brown, 'Total Beans in the BFM and BSM multi-sig wallets.'],
+  farmPlusCirculating:        ['Farm & Circulating', BeanstalkPalette.darkBlue, 'Total farm and circulating Beans.']
 };
 
 export type StateID = keyof typeof STATE_CONFIG;
