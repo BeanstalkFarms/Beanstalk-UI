@@ -164,6 +164,16 @@ export const useFetchBeanstalkSilo = () => {
           };
         }
 
+        // Farm + Circulating for LP Tokens
+        if (poolState[curr.token]) {
+          agg[curr.token].farmPlusCirculating = {
+            amount: poolState[curr.token].supply
+              .minus(curr.deposited)
+              .minus(curr.withdrawn)
+              .minus(curr.ripe || ZERO_BN)
+          };
+        }
+
         return agg;
       }, {} as TokenMap<BeanstalkSiloBalance>);
 
