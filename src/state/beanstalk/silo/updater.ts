@@ -31,12 +31,21 @@ export const useFetchBeanstalkSilo = () => {
     if (beanstalk) {
       console.debug('[beanstalk/silo/useBeanstalkSilo] FETCH: whitelist = ', WHITELIST);
 
+      const multiSigs = [
+        // Beanstalk Farms Multi-sig (BFM)
+        '0x21DE18B6A8f78eDe6D16C50A167f6B222DC08DF7',
+        // Bean Sprout Multi-sig (BSM)
+        '0xb7ab3f0667eFF5e2299d39C23Aa0C956e8982235'
+      ];
+
       const [
         // 0
         stalkTotal,
         seedsTotal,
         rootsTotal,
         earnedBeansTotal,
+        bfmBeansTotal,
+        bsmBeansTotal,
         // 4
         poolBalancesTotal,
         // 5
@@ -47,6 +56,8 @@ export const useFetchBeanstalkSilo = () => {
         beanstalk.totalSeeds().then(tokenResult(SEEDS)),  // 
         beanstalk.totalRoots().then(bigNumberResult),     //
         beanstalk.totalEarnedBeans().then(tokenResult(BEAN)),
+        beanstalk.getBalance(multiSigs[0], BEAN[1].address).then(tokenResult(BEAN)),
+        beanstalk.getBalance(multiSigs[1], BEAN[1].address).then(tokenResult(BEAN)),
         // 4
         Promise.all(
           Object.keys(WHITELIST).map((addr) => (
@@ -112,14 +123,18 @@ export const useFetchBeanstalkSilo = () => {
 
         // Add Pooled state to Bean token
         if (WHITELIST[curr.token] === Bean) {
-          // TODO: Calculate number of Budget beans
+          /// BUDGET BEANS
+          // console.log('BSM BAL', bsmBeansTotal.plus(bfmBeansTotal).toNumber());
+          // console.log('BFM BAL', bfmBeansTotal.toNumber());
+          agg[curr.token].budget = { amount: bsmBeansTotal.plus(bfmBeansTotal) };
+
+          /// POOLED BEANS
           const POOL_ADDRESSES = Object.keys(ALL_POOLS[chainId]);
           // sum the bean reserves for each pool
           const totalBeans = POOL_ADDRESSES.reduce((prev, poolAddr) => {
             const reserves = poolState[poolAddr]?.reserves;
-            const sumOfReserves = reserves?.reduce((p, c) => p.plus(c), ZERO_BN);
-            if (sumOfReserves) {
-              return prev.plus(sumOfReserves);
+            if (reserves) {
+              return prev.plus(reserves[0]);
             }
             return prev;
           }, ZERO_BN);

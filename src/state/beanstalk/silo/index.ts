@@ -18,9 +18,13 @@ export type BeanstalkSiloBalance = {
   /** The amount of Beans across all pools. */
   pooled?: {
     amount: BigNumber;
-  }
+  };
   /** Total underlying. Only applies to BEAN and BEAN:3CRV. */
   ripe?: {
+    amount: BigNumber;
+  };
+  /** Number of Beans in BFM & BSM multi-sig wallets. */
+  budget?: {
     amount: BigNumber;
   }
 }
