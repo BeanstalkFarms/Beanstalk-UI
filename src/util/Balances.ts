@@ -8,6 +8,7 @@ export const STATE_CONFIG: { [key: string]: [name: string, color: string, toolti
   // Farm
   farm:         ['Farm', '#F2E797', 'Assets stored in Beanstalk. Farm assets can be used in transactions on the Farm.'],
   circulating:  ['Circulating', BeanstalkPalette.lightBlue, 'Beanstalk assets in your wallet.'],
+  pooled: ['Pooled', BeanstalkPalette.grey, 'Total Beans across all pools.']
 };
 
 export type StateID = keyof typeof STATE_CONFIG;

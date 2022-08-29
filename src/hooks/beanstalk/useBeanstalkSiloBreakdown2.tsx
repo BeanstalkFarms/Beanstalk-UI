@@ -1,10 +1,11 @@
 import BigNumber from 'bignumber.js';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { AddressMap, ZERO_BN } from '~/constants';
+import { AddressMap, TokenMap, ZERO_BN } from '~/constants';
 import { AppState } from '~/state';
 import useSiloTokenToFiat from './useSiloTokenToFiat';
 import useWhitelist from './useWhitelist';
+import { BeanstalkSiloBalance } from '~/state/beanstalk/silo';
 
 // -----------------
 // Types and Helpers
@@ -13,6 +14,7 @@ import useWhitelist from './useWhitelist';
 const TOKEN_STATE = [
   'deposited',
   'withdrawn',
+  'pooled'
 ] as const;
 
 export type SiloTokenState = {
@@ -26,20 +28,24 @@ export type SiloTokenBreakdown = {
   tokens: AddressMap<{ amount: BigNumber, value: BigNumber, byState: SiloTokenState }>;
 }
 
-const _initState = (tokenAddresses: string[]) => tokenAddresses.reduce<SiloTokenBreakdown['tokens']>((prev, address) => {
-  prev[address] = {
-    value: new BigNumber(0),
-    amount: new BigNumber(0),
-    byState: TOKEN_STATE.reduce<SiloTokenState>(
-      (_prev, state) => {
-        _prev[state] = {
-          value: new BigNumber(0),
-        };
-        return _prev;
-      },
-      {},
-    ),
-  };
+const _initState = (tokenAddresses: string[], siloBalances: TokenMap<BeanstalkSiloBalance>) => tokenAddresses.reduce<SiloTokenBreakdown['tokens']>((prev, address) => {
+  if (siloBalances && siloBalances[address]) {
+    prev[address] = {
+      value: new BigNumber(0),
+      amount: new BigNumber(0),
+      byState: TOKEN_STATE
+        .filter((state) => siloBalances[address][state] !== undefined)
+        .reduce<SiloTokenState>(
+        (_prev, state) => {
+          _prev[state] = {
+            value: new BigNumber(0),
+          };
+          return _prev;
+        },
+        {},
+      ),
+    };
+  }
   return prev;
 }, {}) as SiloTokenBreakdown['tokens'];
 
@@ -79,31 +85,39 @@ export default function useBeanstalkSiloBreakdown2() {
         const amountByState = {
           deposited:   siloBalance.deposited?.amount,
           withdrawn:   siloBalance.withdrawn?.amount,
+          pooled:      siloBalance.pooled ? siloBalance.pooled?.amount : undefined,
         };
         const usdValueByState = {
           deposited:   getUSD(TOKEN, siloBalance.deposited?.amount),
           withdrawn:   getUSD(TOKEN, siloBalance.withdrawn?.amount),
+          pooled:      siloBalance.pooled ? getUSD(TOKEN, siloBalance.pooled?.amount) : undefined
         };
 
         // Aggregate value of all states.
         prev.totalValue = (
           prev.totalValue
             .plus(
-              TOKEN_STATE.reduce((p, c) => p.plus(usdValueByState[c]), ZERO_BN)
+              TOKEN_STATE.reduce((p, c) => p.plus(usdValueByState[c] !== undefined ? usdValueByState[c] as BigNumber : ZERO_BN), ZERO_BN)
             )
         );
 
         // Aggregate amounts of each Token
         prev.tokens[address].amount = prev.tokens[address].amount.plus(
-          TOKEN_STATE.reduce((p, c) => p.plus(amountByState[c]), ZERO_BN)
+          TOKEN_STATE.reduce((p, c) => p.plus(
+            amountByState[c] !== undefined ? amountByState[c] as BigNumber : ZERO_BN), ZERO_BN
+          )
         );
         prev.tokens[address].value = prev.tokens[address].value.plus(
-          TOKEN_STATE.reduce((p, c) => p.plus(usdValueByState[c]), ZERO_BN)
+          TOKEN_STATE.reduce((p, c) => p.plus(
+            usdValueByState[c] !== undefined ? usdValueByState[c] as BigNumber : ZERO_BN), ZERO_BN
+          )
         );
 
         // Aggregate amounts of each State
         TOKEN_STATE.forEach((s) => {
-          prev.tokens[address].byState[s].value = prev.tokens[address].byState[s].value.plus(usdValueByState[s]);
+          if (usdValueByState[s] !== undefined) {
+            prev.tokens[address].byState[s].value = prev.tokens[address].byState[s].value.plus(usdValueByState[s] as BigNumber);
+          }
         });
       }
       return prev;
@@ -111,7 +125,7 @@ export default function useBeanstalkSiloBreakdown2() {
       /** The total USD value of all tokens in the Silo. */
       totalValue:   new BigNumber(0),
       /** */
-      tokens: _initState(WHITELIST_ADDRS),
+      tokens: _initState(WHITELIST_ADDRS, siloBalances),
     }),
   [
     WHITELIST,
