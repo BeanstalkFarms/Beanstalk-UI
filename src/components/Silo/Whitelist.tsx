@@ -168,50 +168,59 @@ const Whitelist : React.FC<{
                       componentsProps={TOOLTIP_COMPONENT_PROPS}
                       title={
                         isUnripe ? (
-                          <Stack direction={{ xs: 'column', md: 'row' }} gap={{ xs: 0, md: 1 }} alignItems="stretch">
-                            <Stack display={{ xs: 'none', md: 'flex' }} alignItems="center" justifyContent="center">=</Stack>
-                            {/* <Box sx={{ px: 1, py: 0.5, maxWidth: 215, }}>
-                              <Stat
-                                title={<Row gap={0.5}><TokenIcon token={token} /> Total Deposited {token.symbol}</Row>}
-                                gap={0.25}
-                                variant="h4"
-                                amount={displayTokenAmount(beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN, token, { showName: false })}
-                                subtitle={
-                                  <>
-                                    The total number of {token.symbol} Deposited in the Silo.
-                                  </>
-                                }
-                              />
-                            </Box> */}
-                            {/* <Stack alignItems="center" justifyContent="center">×</Stack> */}
-                            <Box sx={{ px: 1, py: 0.5, maxWidth: 215 }}>
-                              <Stat
-                                title={<Row gap={0.5}><TokenIcon token={underlyingToken!} /> Underlying {underlyingToken!.symbol}</Row>}
-                                gap={0.25}
-                                variant="h4"
-                                amount={(
-                                  <Fiat
-                                    token={underlyingToken!}
-                                    amount={unripeTokens[token.address]?.underlying || ZERO_BN}
-                                    chop={false}
-                                  />
-                                )}
-                                subtitle={`The ${denomination.toUpperCase()} value of the ${underlyingToken!.symbol} underlying all ${token.symbol}.`}
-                              />
-                            </Box>
-                            <Stack alignItems="center" justifyContent="center">×</Stack>
-                            <Box sx={{ px: 1, py: 0.5,  maxWidth: 245 }}>
-                              <Stat
-                                title="% Deposited"
-                                gap={0.25}
-                                variant="h4"
-                                amount={`${(pctUnderlyingDeposited).times(100).toFixed(2)}%`}
-                                subtitle={
-                                  <>
-                                    The percentage of all {token.symbol} that is currently Deposited in the Silo.
-                                  </>
-                                }
-                              />
+                          <Stack gap={0.5}>
+                            <Stack direction={{ xs: 'column', md: 'row' }} gap={{ xs: 0, md: 1 }} alignItems="stretch">
+                              <Stack display={{ xs: 'none', md: 'flex' }} alignItems="center" justifyContent="center">=</Stack>
+                              {/* <Box sx={{ px: 1, py: 0.5, maxWidth: 215, }}>
+                                <Stat
+                                  title={<Row gap={0.5}><TokenIcon token={token} /> Total Deposited {token.symbol}</Row>}
+                                  gap={0.25}
+                                  variant="h4"
+                                  amount={displayTokenAmount(beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN, token, { showName: false })}
+                                  subtitle={
+                                    <>
+                                      The total number of {token.symbol} Deposited in the Silo.
+                                    </>
+                                  }
+                                />
+                              </Box> */}
+                              {/* <Stack alignItems="center" justifyContent="center">×</Stack> */}
+                              <Box sx={{ px: 1, py: 0.5, maxWidth: 215 }}>
+                                <Stat
+                                  title={<Row gap={0.5}><TokenIcon token={underlyingToken!} /> Underlying {underlyingToken!.symbol}</Row>}
+                                  gap={0.25}
+                                  variant="h4"
+                                  amount={(
+                                    <Fiat
+                                      token={underlyingToken!}
+                                      amount={unripeTokens[token.address]?.underlying || ZERO_BN}
+                                      chop={false}
+                                    />
+                                  )}
+                                  subtitle={`The ${denomination.toUpperCase()} value of the ${underlyingToken!.symbol} underlying all ${token.symbol}.`}
+                                />
+                              </Box>
+                              <Stack alignItems="center" justifyContent="center">×</Stack>
+                              <Box sx={{ px: 1, py: 0.5,  maxWidth: 245 }}>
+                                <Stat
+                                  title="% Deposited"
+                                  gap={0.25}
+                                  variant="h4"
+                                  amount={`${(pctUnderlyingDeposited).times(100).toFixed(2)}%`}
+                                  subtitle={
+                                    <>
+                                      The percentage of all {token.symbol} that is currently Deposited in the Silo.
+                                    </>
+                                  }
+                                />
+                              </Box>
+                            </Stack>
+                            <Divider />
+                            <Box sx={{ pl: { xs: 0, md:  2.7 } }}>
+                              <Typography variant="bodySmall" color="gray" textAlign="left">
+                                Total Amount Deposited: {displayFullBN(beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN, token.displayDecimals)} {token.symbol}<br />
+                                Total Supply: {displayFullBN(unripeTokens[token.address]?.supply || ZERO_BN)} {token.symbol}<br />
+                              </Typography>
                             </Box>
                           </Stack>
                         ) : (
