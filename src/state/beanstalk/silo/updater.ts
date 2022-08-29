@@ -1,6 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import BigNumber from 'bignumber.js';
+import { useDispatch, useSelector } from 'react-redux';
 import { BEAN_TO_SEEDS, BEAN_TO_STALK,  ONE_BN,  TokenMap, ZERO_BN } from '~/constants';
 import { bigNumberResult } from '~/util/Ledger';
 import { tokenResult, toStringBaseUnitBN } from '~/util';
@@ -10,12 +9,17 @@ import useWhitelist from '~/hooks/beanstalk/useWhitelist';
 import { useGetChainConstant } from '~/hooks/chain/useChainConstant';
 import { resetBeanstalkSilo, updateBeanstalkSilo } from './actions';
 import { BeanstalkSiloBalance } from './index';
+import ALL_POOLS from '~/constants/pools';
+import useChainId from '~/hooks/chain/useChainId';
+import { AppState } from '~/state';
 
 export const useFetchBeanstalkSilo = () => {
   const dispatch = useDispatch();
   const beanstalk = useBeanstalkContract();
   const FULL_WHITELIST = useWhitelist();
   const WHITELIST = FULL_WHITELIST;
+  const chainId = useChainId();
+  const poolState = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
 
   /// 
   const getChainConstant = useGetChainConstant();
@@ -81,8 +85,6 @@ export const useFetchBeanstalkSilo = () => {
       const earnedStalkTotal = earnedBeansTotal.times(BEAN_TO_STALK);
       const earnedSeedTotal  = earnedBeansTotal.times(BEAN_TO_SEEDS);
 
-      console.log('POOL BALANCES', poolBalancesTotal);
-
       /// Aggregate balances
       const balances = poolBalancesTotal.reduce((agg, curr) => {
         agg[curr.token] = {
@@ -94,9 +96,22 @@ export const useFetchBeanstalkSilo = () => {
             amount: curr.withdrawn,
           }
         };
+
+        // Add Pooled state to Bean token
         if (WHITELIST[curr.token] === Bean) {
-          agg[curr.token].pooled = { amount: new BigNumber(10000) };
+          const POOL_ADDRESSES = Object.keys(ALL_POOLS[chainId]);
+          // sum the bean reserves for each pool
+          const totalBeans = POOL_ADDRESSES.reduce((prev, poolAddr) => {
+            const reserves = poolState[poolAddr].reserves;
+            const sumOfReserves = reserves.reduce((p, c) => p.plus(c), ZERO_BN);
+            if (sumOfReserves) {
+              return prev.plus(sumOfReserves);
+            }
+            return prev;
+          }, ZERO_BN);
+          agg[curr.token].pooled = { amount: totalBeans };
         }
+
         return agg;
       }, {} as TokenMap<BeanstalkSiloBalance>);
 
@@ -130,7 +145,7 @@ export const useFetchBeanstalkSilo = () => {
         withdrawSeasons: withdrawSeasons
       }));
     }
-  }, [beanstalk, WHITELIST, dispatch, Bean]);
+  }, [beanstalk, WHITELIST, dispatch, Bean, chainId, poolState]);
 
   const clear = useCallback(() => {
     console.debug('[beanstalk/silo/useBeanstalkSilo] CLEAR');
