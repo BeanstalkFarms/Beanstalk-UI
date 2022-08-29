@@ -3,17 +3,18 @@ import { Card, CircularProgress, Grid, Stack, Tooltip, Typography } from '@mui/m
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useSelector } from 'react-redux';
 import { displayBN, displayFullBN } from '../../util';
-import useChopPenalty from '../../hooks/beanstalk/useChopPenalty';
-import { NEW_BN } from '../../constants';
 import { BeanstalkPalette, FontSize } from '../App/muiTheme';
 import useFertilizerProgress from '../../hooks/beanstalk/useFertilizerProgress';
 import { AppState } from '~/state';
+import useChainConstant from '~/hooks/chain/useChainConstant';
+import { UNRIPE_BEAN } from '~/constants/tokens';
 
 const ChopConditions: React.FC<{}> = () => {
-  const chopPenalty     = useChopPenalty();
   const fertilizerSold  = useFertilizerProgress();
   const barn = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
   const pctDebtRepaid = barn.fertilized.div(barn.fertilized.plus(barn.unfertilized));
+  const unripeTokens = useSelector<AppState, AppState['_bean']['unripe']>((_state) => _state._bean.unripe);
+  const urBean = useChainConstant(UNRIPE_BEAN);
   return (
     <Card sx={{ p: 2 }}>
       <Stack gap={1}>
@@ -32,11 +33,11 @@ const ChopConditions: React.FC<{}> = () => {
                   />
                 </Typography>
               </Tooltip>
-              {chopPenalty === NEW_BN ? (
+              {!unripeTokens[urBean.address] ? (
                 <CircularProgress size={16} thickness={5} sx={{ color: BeanstalkPalette.washedRed }} />
               ) : (
                 <Typography variant="bodyLarge" fontWeight="400" color={BeanstalkPalette.washedRed}>
-                  {displayBN(chopPenalty)}%
+                  {displayBN(unripeTokens[urBean.address].chopPenalty)}%
                 </Typography>
               )}
             </Stack>

@@ -16,7 +16,7 @@ export type StatProps = {
   /**  */
   amountTooltip?: JSX.Element | string;
   /** Subtext shown below the statistic (ex. "Season X") */
-  subtitle?: string;
+  subtitle?: JSX.Element | string;
   /** Typography variant to use (default: h1) */
   variant?: TypographyProps['variant'];
   /** Typography styles */
