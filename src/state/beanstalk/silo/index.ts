@@ -19,6 +19,10 @@ export type BeanstalkSiloBalance = {
   pooled?: {
     amount: BigNumber;
   }
+  /** Total underlying. Only applies to BEAN and BEAN:3CRV. */
+  ripe?: {
+    amount: BigNumber;
+  }
 }
 
 /**

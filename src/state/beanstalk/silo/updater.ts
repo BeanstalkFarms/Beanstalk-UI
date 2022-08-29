@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { BEAN_TO_SEEDS, BEAN_TO_STALK,  ONE_BN,  TokenMap, ZERO_BN } from '~/constants';
 import { bigNumberResult } from '~/util/Ledger';
 import { tokenResult, toStringBaseUnitBN } from '~/util';
-import { BEAN, SEEDS, STALK } from '~/constants/tokens';
+import { BEAN, BEAN_CRV3_LP, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useWhitelist from '~/hooks/beanstalk/useWhitelist';
 import { useGetChainConstant } from '~/hooks/chain/useChainConstant';
@@ -24,6 +24,7 @@ export const useFetchBeanstalkSilo = () => {
   /// 
   const getChainConstant = useGetChainConstant();
   const Bean = getChainConstant(BEAN);
+  const Bean3CRV = getChainConstant(BEAN_CRV3_LP);
 
   /// Handlers
   const fetch = useCallback(async () => {
@@ -64,12 +65,19 @@ export const useFetchBeanstalkSilo = () => {
                       console.error(`Failed to fetch BDV: ${addr}`);
                       console.error(err);
                       throw err;
-                    })
+                    }),
+              // Only Bean and Bean:3CRV have Ripe tokens
+              WHITELIST[addr] === Bean || WHITELIST[addr] === Bean3CRV
+                ? WHITELIST[addr] === Bean
+                  ? beanstalk.getTotalUnderlying(UNRIPE_BEAN[1].address).then(tokenResult(WHITELIST[addr]))
+                  : beanstalk.getTotalUnderlying(UNRIPE_BEAN_CRV3[1].address).then(tokenResult(WHITELIST[addr]))
+                : ZERO_BN
             ]).then((data) => ({
               token: addr.toLowerCase(),
               deposited: data[0],
               withdrawn: data[1],
               bdvPerToken: data[2],
+              ripe: data[3]
             }))
           ))
         ),
@@ -97,13 +105,19 @@ export const useFetchBeanstalkSilo = () => {
           }
         };
 
+        // Add Ripe state to BEAN and BEAN:3CRV
+        if (WHITELIST[curr.token] === Bean || WHITELIST[curr.token] === Bean3CRV) {
+          agg[curr.token].ripe = { amount: curr.ripe };
+        }
+
         // Add Pooled state to Bean token
         if (WHITELIST[curr.token] === Bean) {
+          // TODO: Calculate number of Budget beans
           const POOL_ADDRESSES = Object.keys(ALL_POOLS[chainId]);
           // sum the bean reserves for each pool
           const totalBeans = POOL_ADDRESSES.reduce((prev, poolAddr) => {
-            const reserves = poolState[poolAddr].reserves;
-            const sumOfReserves = reserves.reduce((p, c) => p.plus(c), ZERO_BN);
+            const reserves = poolState[poolAddr]?.reserves;
+            const sumOfReserves = reserves?.reduce((p, c) => p.plus(c), ZERO_BN);
             if (sumOfReserves) {
               return prev.plus(sumOfReserves);
             }
@@ -145,7 +159,7 @@ export const useFetchBeanstalkSilo = () => {
         withdrawSeasons: withdrawSeasons
       }));
     }
-  }, [beanstalk, WHITELIST, dispatch, Bean, chainId, poolState]);
+  }, [beanstalk, WHITELIST, dispatch, Bean, Bean3CRV, chainId, poolState]);
 
   const clear = useCallback(() => {
     console.debug('[beanstalk/silo/useBeanstalkSilo] CLEAR');
