@@ -26,18 +26,17 @@ import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useFarmerBalances from '~/hooks/farmer/useFarmerBalances';
 import useTokenMap from '~/hooks/chain/useTokenMap';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import useChainId from '~/hooks/chain/useChainId';
 import useAccount from '~/hooks/ledger/useAccount';
 import usePreferredToken, { PreferredToken } from '~/hooks/farmer/usePreferredToken';
 import { optimizeFromMode } from '~/util/Farm';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import { ActionType } from '~/util/Actions';
-import { displayBN, displayFullBN, getChainConstant, parseError, toStringBaseUnitBN } from '~/util';
-import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
-import { NEW_BN, ZERO_BN } from '~/constants';
+import { displayBN, displayFullBN, parseError, toStringBaseUnitBN } from '~/util';
+import { UNRIPE_BEAN, UNRIPE_BEAN_CRV3, UNRIPE_TOKENS } from '~/constants/tokens';
+import { ZERO_BN } from '~/constants';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { AppState } from '~/state';
-import useChopPenalty from '~/hooks/beanstalk/useChopPenalty';
+import useUnripeUnderlying from '~/hooks/beanstalk/useUnripeUnderlying';
 
 type ChopFormValues = FormState & {
   destination: FarmToMode | undefined;
@@ -54,26 +53,20 @@ const ChopForm: React.FC<
   balances,
   beanstalk,
 }) => {
-  const chainId = useChainId();
-  const erc20TokenMap = useTokenMap<ERC20Token | NativeToken>([UNRIPE_BEAN, UNRIPE_BEAN_CRV3]);
+  const erc20TokenMap = useTokenMap<ERC20Token | NativeToken>(UNRIPE_TOKENS);
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
-
-  /// Maps an unripe token to its output token
-  const tokenOutputMap = {
-    [getChainConstant(UNRIPE_BEAN, chainId).address]:      getChainConstant(BEAN, chainId),
-    [getChainConstant(UNRIPE_BEAN_CRV3, chainId).address]: getChainConstant(BEAN_CRV3_LP, chainId),
-  };
+  const unripeUnderlying = useUnripeUnderlying();
 
   /// Derived values
   const state          = values.tokens[0];
   const inputToken     = state.token;
   const tokenBalance   = balances[inputToken.address];
-  const outputToken    = tokenOutputMap[inputToken.address];
+  const outputToken    = unripeUnderlying[inputToken.address];
 
   /// Chop Penalty  = 99% <-> Chop Rate     = 0.01
-  const chopPenalty = useChopPenalty(inputToken.address);
-  const chopRates   = useSelector<AppState, AppState['_bean']['unripe']['chopPenalties']>((_state) => _state._bean.unripe.chopPenalties);
-  const amountOut   = state.amount?.multipliedBy(chopRates[inputToken.address] || ZERO_BN);
+  const unripeTokens = useSelector<AppState, AppState['_bean']['unripe']>((_state) => _state._bean.unripe);
+  const amountOut = state.amount?.multipliedBy(unripeTokens[inputToken.address]?.chopRate || ZERO_BN);
+  const chopPenalty = unripeTokens[inputToken.address]?.chopPenalty || new BigNumber(100);
 
   ///
   const handleSelectTokens = useCallback((_tokens: Set<Token>) => {
@@ -132,10 +125,12 @@ const ChopForm: React.FC<
           />
           <Stack direction="row" justifyContent="space-between" px={0.5}>
             <Typography variant="body1" color="gray">Chop Penalty</Typography>
-            {chopPenalty === NEW_BN ? (
+            {!unripeTokens[inputToken.address] ? (
               <CircularProgress size={16} thickness={5} sx={{ color: BeanstalkPalette.washedRed }} />
             ) : (
-              <Typography variant="body1" color={BeanstalkPalette.washedRed}>{displayFullBN(chopPenalty, 5)}%</Typography>
+              <Typography variant="body1" color={BeanstalkPalette.washedRed}>
+                {displayFullBN(chopPenalty, 5)}%
+              </Typography>
             )}
           </Stack>
         </Stack>

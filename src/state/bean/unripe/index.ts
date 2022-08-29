@@ -1,6 +1,10 @@
 import BigNumber from 'bignumber.js';
 import { AddressMap } from '~/constants';
 
-export type Unripe = {
-  chopPenalties: AddressMap<BigNumber>;
+export type UnripeToken = {
+  chopRate: BigNumber;
+  chopPenalty: BigNumber;
+  underlying: BigNumber;
 }
+
+export type Unripe = AddressMap<UnripeToken>;

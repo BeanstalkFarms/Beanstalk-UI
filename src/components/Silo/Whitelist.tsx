@@ -3,7 +3,6 @@ import { Box, Button, Card, Divider, Grid, Link, Stack, Tooltip, Typography } fr
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Link as RouterLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import BigNumber from 'bignumber.js';
 import { Pool, Token } from '~/classes';
 import { AppState } from '~/state';
 import TokenIcon from '~/components/Common/TokenIcon';
@@ -59,7 +58,7 @@ const Whitelist : React.FC<{
   /// State
   const getBDV        = useBDV();
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
-  const chopPenalties = useSelector<AppState, AppState['_bean']['unripe']['chopPenalties']>((state) => state._bean.unripe.chopPenalties);
+  const unripeTokens  = useSelector<AppState, AppState['_bean']['unripe']>((state) => state._bean.unripe);
 
   return (
     <Card>
@@ -110,9 +109,7 @@ const Whitelist : React.FC<{
       <Stack gap={1} sx={{ p: 1 }}>
         {config.whitelist.map((token) => {
           const deposited   = farmerSilo.balances[token.address]?.deposited;
-          /// TEMP: CHOP
           const isUnripe    = token === urBean || token === urBeanCrv3;
-          const chopPenalty = isUnripe ? new BigNumber(1).minus(chopPenalties[token.address]).multipliedBy(100) : ZERO_BN; 
           return (
             <Box key={`${token.address}-${token.chainId}`}>
               <Button
@@ -242,7 +239,7 @@ const Whitelist : React.FC<{
                                   title="Chop Rate"
                                   gap={0.25}
                                   variant="h4"
-                                  amount={`1 - ${chopPenalty.toFixed(4)}%`}
+                                  amount={`1 - ${(unripeTokens[token.address]?.chopPenalty || ZERO_BN).toFixed(4)}%`}
                                   subtitle={
                                     <>
                                       The current penalty for chopping<br />{token.symbol} for {chopPairs[token.address].symbol}. <Link href="https://docs.bean.money/farm/barn#chopping" target="_blank" rel="noreferrer" underline="hover" onClick={(e) => { e.stopPropagation(); }}>Learn more</Link>
