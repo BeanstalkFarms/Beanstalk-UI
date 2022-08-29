@@ -54,8 +54,8 @@ const BeanstalkBalances: React.FC<{
     const pieChartData = useMemo(() => {
       if (hoverAddress) {
         const thisAddress = breakdown.tokens[hoverAddress as keyof typeof breakdown.tokens];
-        return Object.keys(thisAddress.byState).reduce<PieDataPoint[]>((prev, state, index) => {
-          const value = thisAddress.byState[state].value.toNumber();
+        return Object.keys(thisAddress?.byState).reduce<PieDataPoint[]>((prev, state, index) => {
+          const value = thisAddress?.byState[state].value.toNumber();
           prev.push({
             state: state,
             label: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][0],
