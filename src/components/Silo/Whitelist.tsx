@@ -16,13 +16,14 @@ import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import useSetting from '~/hooks/app/useSetting';
 import Row from '~/components/Common/Row';
 import Stat from '~/components/Common/Stat';
+import useUnripeUnderlying from '~/hooks/beanstalk/useUnripeUnderlying';
 
 const ARROW_CONTAINER_WIDTH = 20;
 const TOOLTIP_COMPONENT_PROPS = {
   tooltip: {
     sx: {
       maxWidth: 'none !important',
-      boxShadow: '-20px 6px 60px 20px rgba(255,255,255,0.8) !important'
+      boxShadow: '0px 6px 20px 10px rgba(255,255,255,0.3) !important'
     }
   }
 };
@@ -50,10 +51,7 @@ const Whitelist : React.FC<{
   const BeanCrv3      = getChainToken(BEAN_CRV3_LP);
   const urBean        = getChainToken(UNRIPE_BEAN);
   const urBeanCrv3    = getChainToken(UNRIPE_BEAN_CRV3);
-  const chopPairs     = {
-    [urBean.address]: Bean,
-    [urBeanCrv3.address]: BeanCrv3,
-  };
+  const unripeUnderlyingTokens = useUnripeUnderlying();
 
   /// State
   const getBDV        = useBDV();
@@ -110,6 +108,13 @@ const Whitelist : React.FC<{
         {config.whitelist.map((token) => {
           const deposited   = farmerSilo.balances[token.address]?.deposited;
           const isUnripe    = token === urBean || token === urBeanCrv3;
+          const underlyingToken = isUnripe ? (
+            unripeUnderlyingTokens[token.address]
+          ) : null;
+          const pctUnderlyingDeposited = isUnripe ? (
+            (beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN)
+              .div(unripeTokens[token.address]?.supply || ONE_BN)
+          ) : ONE_BN;
           return (
             <Box key={`${token.address}-${token.chainId}`}>
               <Button
@@ -158,16 +163,113 @@ const Whitelist : React.FC<{
                     * Cell: TVD
                     */}
                   <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
-                    <Tooltip placement="right" title={<>{displayTokenAmount(beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN, token, { showName: false })} {token.symbol}</>}>
+                    <Tooltip
+                      placement="right"
+                      componentsProps={TOOLTIP_COMPONENT_PROPS}
+                      title={
+                        isUnripe ? (
+                          <Stack direction={{ xs: 'column', md: 'row' }} gap={{ xs: 0, md: 1 }} alignItems="stretch">
+                            <Stack display={{ xs: 'none', md: 'flex' }} alignItems="center" justifyContent="center">=</Stack>
+                            {/* <Box sx={{ px: 1, py: 0.5, maxWidth: 215, }}>
+                              <Stat
+                                title={<Row gap={0.5}><TokenIcon token={token} /> Total Deposited {token.symbol}</Row>}
+                                gap={0.25}
+                                variant="h4"
+                                amount={displayTokenAmount(beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN, token, { showName: false })}
+                                subtitle={
+                                  <>
+                                    The total number of {token.symbol} Deposited in the Silo.
+                                  </>
+                                }
+                              />
+                            </Box> */}
+                            {/* <Stack alignItems="center" justifyContent="center">×</Stack> */}
+                            <Box sx={{ px: 1, py: 0.5, maxWidth: 215 }}>
+                              <Stat
+                                title={<Row gap={0.5}><TokenIcon token={underlyingToken!} /> Underlying {underlyingToken!.symbol}</Row>}
+                                gap={0.25}
+                                variant="h4"
+                                amount={(
+                                  <Fiat
+                                    token={underlyingToken!}
+                                    amount={unripeTokens[token.address]?.underlying || ZERO_BN}
+                                    chop={false}
+                                  />
+                                )}
+                                subtitle={`The ${denomination.toUpperCase()} value of the ${underlyingToken!.symbol} underlying all ${token.symbol}.`}
+                              />
+                            </Box>
+                            <Stack alignItems="center" justifyContent="center">×</Stack>
+                            <Box sx={{ px: 1, py: 0.5,  maxWidth: 245 }}>
+                              <Stat
+                                title="% Deposited"
+                                gap={0.25}
+                                variant="h4"
+                                amount={`${(pctUnderlyingDeposited).times(100).toFixed(2)}%`}
+                                subtitle={
+                                  <>
+                                    The percentage of all {token.symbol} that is currently Deposited in the Silo.
+                                  </>
+                                }
+                              />
+                            </Box>
+                          </Stack>
+                        ) : (
+                          <Stack direction={{ xs: 'column', md: 'row' }} gap={{ xs: 0, md: 1 }} alignItems="stretch">
+                            <Stack display={{ xs: 'none', md: 'flex' }} alignItems="center" justifyContent="center">=</Stack>
+                            <Box sx={{ px: 1, py: 0.5, maxWidth: 245 }}>
+                              <Stat
+                                title={<Row gap={0.5}><TokenIcon token={token} /> Total Deposited {token.symbol}</Row>}
+                                gap={0.25}
+                                variant="h4"
+                                amount={displayTokenAmount(beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN, token, { showName: false })}
+                                subtitle={
+                                  <>
+                                    The total number of {token.symbol} Deposited in the Silo.
+                                  </>
+                                }
+                              />
+                            </Box>
+                            <Stack alignItems="center" justifyContent="center">×</Stack>
+                            <Box sx={{ px: 1, py: 0.5 }}>
+                              <Stat
+                                title={`${token.symbol} Price`}
+                                gap={0.25}
+                                variant="h4"
+                                amount={(
+                                  <Fiat
+                                    token={token}
+                                    amount={ONE_BN}
+                                  />
+                                )}
+                                subtitle={`The current price of ${token.symbol}.`}
+                              />
+                            </Box>
+                          </Stack>
+                        )
+                      }
+                    >
                       <Typography display="inline" color="black">
-                        <Fiat
-                          token={token}
-                          amount={beanstalkSilo.balances[token.address]?.deposited.amount}
-                          truncate
-                        />
                         {isUnripe ? (
-                          <Typography display="inline" color={BeanstalkPalette.washedRed}>*</Typography>
-                        ) : null}
+                          <>
+                            <Fiat
+                              token={underlyingToken!}
+                              amount={(
+                                pctUnderlyingDeposited
+                                  .times(unripeTokens[token.address]?.underlying || ZERO_BN)
+                              )}
+                              truncate
+                              chop={false}
+                            />
+                            <Typography display="inline" color={BeanstalkPalette.washedRed}>*</Typography>
+                          </>
+                        ) : (
+                          <Fiat
+                            token={token}
+                            amount={beanstalkSilo.balances[token.address]?.deposited.amount}
+                            truncate
+                          />
+                        )}
                       </Typography>
                     </Tooltip>
                   </Grid>
@@ -218,54 +320,52 @@ const Whitelist : React.FC<{
                         placement="left"
                         componentsProps={TOOLTIP_COMPONENT_PROPS}
                         title={isUnripe ? (
-                          <>
-                            <Stack direction={{ xs: 'column', md: 'row' }} gap={{ xs: 0, md: 1 }} alignItems="stretch">
-                              <Box sx={{ px: 1, py: 0.5, backgroundColor: 'transparent' }}>
-                                <Stat
-                                  title={<Row gap={0.5}><TokenIcon token={token} /> {token.symbol}</Row>}
-                                  gap={0.25}
-                                  variant="h4"
-                                  amount={displayTokenAmount(deposited?.amount || ZERO_BN, token, { showName: false })}
-                                  subtitle={
-                                    <>
-                                      The number of {token.symbol}<br />you have Deposited in the Silo.
-                                    </>
-                                  }
-                                />
-                              </Box>
-                              <Stack alignItems="center" justifyContent="center">×</Stack>
-                              <Box sx={{ px: 1, py: 0.5, backgroundColor: 'transparent',  maxWidth: 215 }}>
-                                <Stat
-                                  title="Chop Rate"
-                                  gap={0.25}
-                                  variant="h4"
-                                  amount={`1 - ${(unripeTokens[token.address]?.chopPenalty || ZERO_BN).toFixed(4)}%`}
-                                  subtitle={
-                                    <>
-                                      The current penalty for chopping<br />{token.symbol} for {chopPairs[token.address].symbol}. <Link href="https://docs.bean.money/farm/barn#chopping" target="_blank" rel="noreferrer" underline="hover" onClick={(e) => { e.stopPropagation(); }}>Learn more</Link>
-                                    </>
-                                  }
-                                />
-                              </Box>
-                              <Stack alignItems="center" justifyContent="center">×</Stack>
-                              <Box sx={{ px: 1, py: 0.5, backgroundColor: 'transparent', maxWidth: 215 }}>
-                                <Stat
-                                  title={`${chopPairs[token.address]} Price`}
-                                  gap={0.25}
-                                  variant="h4"
-                                  amount={(
-                                    <Fiat
-                                      token={chopPairs[token.address]}
-                                      amount={ONE_BN}
-                                      chop={false}
-                                    />
-                                  )}
-                                  subtitle={`The current price of ${chopPairs[token.address].symbol}.`}
-                                />
-                              </Box>
-                              <Stack display={{ xs: 'none', md: 'flex' }} alignItems="center" justifyContent="center">=</Stack>
-                            </Stack>
-                          </>
+                          <Stack direction={{ xs: 'column', md: 'row' }} gap={{ xs: 0, md: 1 }} alignItems="stretch">
+                            <Box sx={{ px: 1, py: 0.5, backgroundColor: 'transparent' }}>
+                              <Stat
+                                title={<Row gap={0.5}><TokenIcon token={token} /> {token.symbol}</Row>}
+                                gap={0.25}
+                                variant="h4"
+                                amount={displayTokenAmount(deposited?.amount || ZERO_BN, token, { showName: false })}
+                                subtitle={
+                                  <>
+                                    The number of {token.symbol}<br />you have Deposited in the Silo.
+                                  </>
+                                }
+                              />
+                            </Box>
+                            <Stack alignItems="center" justifyContent="center">×</Stack>
+                            <Box sx={{ px: 1, py: 0.5,  maxWidth: 215 }}>
+                              <Stat
+                                title="Chop Rate"
+                                gap={0.25}
+                                variant="h4"
+                                amount={`1 - ${(unripeTokens[token.address]?.chopPenalty || ZERO_BN).toFixed(4)}%`}
+                                subtitle={
+                                  <>
+                                    The current penalty for chopping<br />{token.symbol} for {unripeUnderlyingTokens[token.address].symbol}. <Link href="https://docs.bean.money/farm/barn#chopping" target="_blank" rel="noreferrer" underline="hover" onClick={(e) => { e.stopPropagation(); }}>Learn more</Link>
+                                  </>
+                                }
+                              />
+                            </Box>
+                            <Stack alignItems="center" justifyContent="center">×</Stack>
+                            <Box sx={{ px: 1, py: 0.5, maxWidth: 215 }}>
+                              <Stat
+                                title={`${unripeUnderlyingTokens[token.address]} Price`}
+                                gap={0.25}
+                                variant="h4"
+                                amount={(
+                                  <Fiat
+                                    token={unripeUnderlyingTokens[token.address]}
+                                    amount={ONE_BN}
+                                    chop={false}
+                                  />
+                                )}
+                                subtitle={`The current price of ${unripeUnderlyingTokens[token.address].symbol}.`}
+                              />
+                            </Box>
+                            <Stack display={{ xs: 'none', md: 'flex' }} alignItems="center" justifyContent="center">=</Stack>
+                          </Stack>
                       ) : ''}>
                         <Typography color="black">
                           <Row gap={0.3}>

@@ -29,7 +29,8 @@ export const useUnripe = () => {
               /// when Chopping. To keep this consistency in variable names, we rename this value
               /// to the `Chop Rate` and then say `Chop Penalty = (1 - Chop Rate) x 100%`.
               beanstalk.getPercentPenalty(addr).then(tokenResult(unripeTokens[addr])),
-              beanstalk.getTotalUnderlying(addr).then(tokenResult(unripeUnderlyingTokens[addr]))
+              beanstalk.getTotalUnderlying(addr).then(tokenResult(unripeUnderlyingTokens[addr])),
+              unripeTokens[addr].getTotalSupply().then(tokenResult(unripeTokens[addr])),
             ])
           ))
         );
@@ -40,6 +41,7 @@ export const useUnripe = () => {
             chopRate:     chopRate,
             chopPenalty:  ONE_BN.minus(chopRate).times(100),
             underlying:   results[index][1],
+            supply:       results[index][2],
           };
           return prev;
         }, {});
