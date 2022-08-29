@@ -14,7 +14,8 @@ import { BeanstalkSiloBalance } from '~/state/beanstalk/silo';
 const TOKEN_STATE = [
   'deposited',
   'withdrawn',
-  'pooled'
+  'pooled',
+  'ripe'
 ] as const;
 
 export type SiloTokenState = {
@@ -86,11 +87,13 @@ export default function useBeanstalkSiloBreakdown2() {
           deposited:   siloBalance.deposited?.amount,
           withdrawn:   siloBalance.withdrawn?.amount,
           pooled:      siloBalance.pooled ? siloBalance.pooled?.amount : undefined,
+          ripe:        siloBalance.ripe ? siloBalance.ripe?.amount : undefined,
         };
         const usdValueByState = {
           deposited:   getUSD(TOKEN, siloBalance.deposited?.amount),
           withdrawn:   getUSD(TOKEN, siloBalance.withdrawn?.amount),
-          pooled:      siloBalance.pooled ? getUSD(TOKEN, siloBalance.pooled?.amount) : undefined
+          pooled:      siloBalance.pooled ? getUSD(TOKEN, siloBalance.pooled?.amount) : undefined,
+          ripe:        siloBalance.ripe ? getUSD(TOKEN, siloBalance.ripe?.amount) : undefined
         };
 
         // Aggregate value of all states.
