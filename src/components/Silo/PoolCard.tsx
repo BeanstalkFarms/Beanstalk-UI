@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, ButtonProps as MuiButtonProps, Card, LinkProps, Stack, Typography } from '@mui/material';
 import { BeanPoolState } from '~/state/bean/pools';
-import { displayBN, displayFullBN } from '~/util';
+import { displayBeanPrice, displayBN } from '~/util';
 import { Pool } from '~/classes';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { ZERO_BN } from '~/constants';
@@ -31,7 +31,7 @@ const PoolCard: React.FC<{
           ))}
         </Stack>
         <Typography sx={{ fontWeight: 600, pt: 0.2 }}>
-          ${displayFullBN(poolState?.price || ZERO_BN, 4)}
+          ${displayBeanPrice(poolState?.price || ZERO_BN, 4)}
         </Typography>
       </Stack>
       <Stack>
