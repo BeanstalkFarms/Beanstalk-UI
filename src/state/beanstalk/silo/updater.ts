@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import BigNumber from 'bignumber.js';
 import { BEAN_TO_SEEDS, BEAN_TO_STALK,  ONE_BN,  TokenMap, ZERO_BN } from '~/constants';
 import { bigNumberResult } from '~/util/Ledger';
 import { tokenResult, toStringBaseUnitBN } from '~/util';
@@ -80,6 +81,8 @@ export const useFetchBeanstalkSilo = () => {
       const earnedStalkTotal = earnedBeansTotal.times(BEAN_TO_STALK);
       const earnedSeedTotal  = earnedBeansTotal.times(BEAN_TO_SEEDS);
 
+      console.log('POOL BALANCES', poolBalancesTotal);
+
       /// Aggregate balances
       const balances = poolBalancesTotal.reduce((agg, curr) => {
         agg[curr.token] = {
@@ -91,6 +94,9 @@ export const useFetchBeanstalkSilo = () => {
             amount: curr.withdrawn,
           }
         };
+        if (WHITELIST[curr.token] === Bean) {
+          agg[curr.token].pooled = { amount: new BigNumber(10000) };
+        }
         return agg;
       }, {} as TokenMap<BeanstalkSiloBalance>);
 

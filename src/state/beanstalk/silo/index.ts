@@ -15,6 +15,10 @@ export type BeanstalkSiloBalance = {
     /** The total amount of this Token currently in the Withdrawn state. */
     amount: BigNumber;
   };
+  /** The amount of Beans across all pools. */
+  pooled?: {
+    amount: BigNumber;
+  }
 }
 
 /**
