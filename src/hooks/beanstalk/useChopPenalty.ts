@@ -18,7 +18,7 @@ const useChopPenalty = (tokenAddr?: string) => {
   const chainId         = useChainId();
   const unripe          = useSelector<AppState, AppState['_bean']['unripe']>((state) => state._bean.unripe);
   const unripeBeanAddr  = getChainConstant(UNRIPE_BEAN, chainId).address;
-  const chopPenalty     = unripe.chopRates[tokenAddr !== undefined ? tokenAddr : unripeBeanAddr];
+  const chopPenalty     = unripe.chopPenalties[tokenAddr !== undefined ? tokenAddr : unripeBeanAddr];
   return chopPenalty 
     ? new BigNumber(1).minus(chopPenalty).multipliedBy(100) 
     : NEW_BN;

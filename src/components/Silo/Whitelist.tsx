@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box, Button, Card, Divider, Grid, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Card, Divider, Grid, Link, Stack, Tooltip, Typography } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import { Pool, Token } from '~/classes';
@@ -15,8 +15,18 @@ import { BeanstalkPalette, FontSize, IconSize } from '~/components/App/muiTheme'
 import Fiat from '~/components/Common/Fiat';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import useSetting from '~/hooks/app/useSetting';
+import Row from '~/components/Common/Row';
+import Stat from '~/components/Common/Stat';
 
 const ARROW_CONTAINER_WIDTH = 20;
+const TOOLTIP_COMPONENT_PROPS = {
+  tooltip: {
+    sx: {
+      maxWidth: 'none !important',
+      boxShadow: '-20px 6px 60px 20px rgba(255,255,255,0.8) !important'
+    }
+  }
+};
 
 /**
  * Display a pseudo-table of Whitelisted Silo Tokens.
@@ -32,10 +42,10 @@ const Whitelist : React.FC<{
   farmerSilo,
   config,
 }) => {
-  ///
+  /// Settings
   const [denomination] = useSetting('denomination');
 
-  ///
+  /// Chain
   const getChainToken = useGetChainToken();
   const Bean          = getChainToken(BEAN);
   const BeanCrv3      = getChainToken(BEAN_CRV3_LP);
@@ -46,10 +56,10 @@ const Whitelist : React.FC<{
     [urBeanCrv3.address]: BeanCrv3,
   };
 
-  ///
+  /// State
   const getBDV        = useBDV();
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
-  const chopPenalties = useSelector<AppState, AppState['_bean']['unripe']['chopRates']>((state) => state._bean.unripe.chopRates);
+  const chopPenalties = useSelector<AppState, AppState['_bean']['unripe']['chopPenalties']>((state) => state._bean.unripe.chopPenalties);
 
   return (
     <Card>
@@ -97,7 +107,7 @@ const Whitelist : React.FC<{
           </Grid>
         </Grid>
       </Box>
-      <Stack direction="column" gap={1} sx={{ p: 1 }}>
+      <Stack gap={1} sx={{ p: 1 }}>
         {config.whitelist.map((token) => {
           const deposited   = farmerSilo.balances[token.address]?.deposited;
           /// TEMP: CHOP
@@ -106,7 +116,7 @@ const Whitelist : React.FC<{
           return (
             <Box key={`${token.address}-${token.chainId}`}>
               <Button
-                component={Link}
+                component={RouterLink}
                 to={`/silo/${token.address}`}
                 fullWidth
                 variant="outlined"
@@ -123,7 +133,7 @@ const Whitelist : React.FC<{
                     * Cell: Token
                     */}
                   <Grid item md={3} xs={7}>
-                    <Stack direction="row" alignItems="center" gap={1}>
+                    <Row gap={1}>
                       <img
                         src={token.logo}
                         alt={token.name}
@@ -132,7 +142,7 @@ const Whitelist : React.FC<{
                       <Typography color="black" display="inline">
                         {token.name}
                       </Typography>
-                    </Stack>
+                    </Row>
                   </Grid>
 
                   {/** 
@@ -177,23 +187,23 @@ const Whitelist : React.FC<{
                         ? (
                           <Tooltip title={(
                             <>
-                              {displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)} Deposited BEAN<br />
+                              {displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)} Deposited Beans<br />
                               +&nbsp;
                               <Typography display="inline" color="primary">
                                 {displayFullBN(farmerSilo.beans.earned || ZERO_BN, token.displayDecimals)}
-                              </Typography> Earned BEAN<br />
+                              </Typography> Earned Beans<br />
                               <Divider sx={{ my: 0.5, opacity: 0.7, borderBottomWidth: 0, }} />
                               = {displayFullBN(farmerSilo.beans.earned.plus(deposited?.amount || ZERO_BN), token.displayDecimals)} BEAN<br />
                             </> 
                           )}>
                             <span>
                               {displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)}
-                              {/* {farmerSilo.beans.earned.gt(0) ? (
+                              {farmerSilo.beans.earned.gt(0) ? (
                                 <Typography component="span" color="primary.main">
                                   {' + '}
                                   {displayFullBN(farmerSilo.beans.earned, token.displayDecimals)}
                                 </Typography>
-                              ) : null} */}
+                              ) : null}
                             </span>
                           </Tooltip>
                         )
@@ -209,40 +219,59 @@ const Whitelist : React.FC<{
                     <Stack direction="row" alignItems="center" justifyContent="flex-end">
                       <Tooltip
                         placement="left"
+                        componentsProps={TOOLTIP_COMPONENT_PROPS}
                         title={isUnripe ? (
                           <>
-                            <Typography fontWeight="bold" mb={1}>
-                              {denomination === 'bdv' ? 'Bean' : 'USD'} Value
-                            </Typography>
-                            <div>
-                              {displayTokenAmount(deposited?.amount || ZERO_BN, token, { showName: false })} {token.symbol}
-                            </div>
-                            <div>
-                              ×&nbsp;
-                              <Typography display="inline" color={BeanstalkPalette.washedRed}>
-                                {chopPenalty.toFixed(4)}%
-                              </Typography>
-                              &nbsp;Chop Penalty
-                            </div>
-                            <div>
-                              × <Fiat
-                                token={chopPairs[token.address]}
-                                amount={ONE_BN}
-                                chop={false}
-                            /> per {chopPairs[token.address].symbol}
-                            </div>
-                            <Divider sx={{ my: 0.5, opacity: 0.7, borderBottomWidth: 0, }} />
-                            <div>
-                              =&nbsp;
-                              <Fiat
-                                token={token}
-                                amount={deposited?.amount}
-                              />
-                            </div>
+                            <Stack direction={{ xs: 'column', md: 'row' }} gap={{ xs: 0, md: 1 }} alignItems="stretch">
+                              <Box sx={{ px: 1, py: 0.5, backgroundColor: 'transparent' }}>
+                                <Stat
+                                  title={<Row gap={0.5}><TokenIcon token={token} /> {token.symbol}</Row>}
+                                  gap={0.25}
+                                  variant="h4"
+                                  amount={displayTokenAmount(deposited?.amount || ZERO_BN, token, { showName: false })}
+                                  subtitle={
+                                    <>
+                                      The number of {token.symbol}<br />you have Deposited in the Silo.
+                                    </>
+                                  }
+                                />
+                              </Box>
+                              <Stack alignItems="center" justifyContent="center">×</Stack>
+                              <Box sx={{ px: 1, py: 0.5, backgroundColor: 'transparent',  maxWidth: 215 }}>
+                                <Stat
+                                  title="Chop Rate"
+                                  gap={0.25}
+                                  variant="h4"
+                                  amount={`1 - ${chopPenalty.toFixed(4)}%`}
+                                  subtitle={
+                                    <>
+                                      The current penalty for chopping<br />{token.symbol} for {chopPairs[token.address].symbol}. <Link href="https://docs.bean.money/farm/barn#chopping" target="_blank" rel="noreferrer" underline="hover" onClick={(e) => { e.stopPropagation(); }}>Learn more</Link>
+                                    </>
+                                  }
+                                />
+                              </Box>
+                              <Stack alignItems="center" justifyContent="center">×</Stack>
+                              <Box sx={{ px: 1, py: 0.5, backgroundColor: 'transparent', maxWidth: 215 }}>
+                                <Stat
+                                  title={`${chopPairs[token.address]} Price`}
+                                  gap={0.25}
+                                  variant="h4"
+                                  amount={(
+                                    <Fiat
+                                      token={chopPairs[token.address]}
+                                      amount={ONE_BN}
+                                      chop={false}
+                                    />
+                                  )}
+                                  subtitle={`The current price of ${chopPairs[token.address].symbol}.`}
+                                />
+                              </Box>
+                              <Stack display={{ xs: 'none', md: 'flex' }} alignItems="center" justifyContent="center">=</Stack>
+                            </Stack>
                           </>
                       ) : ''}>
                         <Typography color="black">
-                          <Stack direction="row" gap={0.3}>
+                          <Row gap={0.3}>
                             <Fiat
                               token={token}
                               amount={deposited?.amount}
@@ -250,10 +279,10 @@ const Whitelist : React.FC<{
                             {isUnripe ? (
                               <Typography display="inline" color={BeanstalkPalette.washedRed}>*</Typography>
                             ) : null}
-                          </Stack>
+                          </Row>
                         </Typography>
                       </Tooltip>
-                      <Stack display={{ xs: 'none', md: 'block' }} sx={{ width: ARROW_CONTAINER_WIDTH, }} alignItems="center">
+                      <Stack display={{ xs: 'none', md: 'block' }} sx={{ width: ARROW_CONTAINER_WIDTH }} alignItems="center">
                         <ArrowRightIcon />
                       </Stack>
                     </Stack>

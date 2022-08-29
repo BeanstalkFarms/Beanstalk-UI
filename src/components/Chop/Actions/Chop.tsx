@@ -72,7 +72,7 @@ const ChopForm: React.FC<
 
   /// Chop Penalty  = 99% <-> Chop Rate     = 0.01
   const chopPenalty = useChopPenalty(inputToken.address);
-  const chopRates   = useSelector<AppState, AppState['_bean']['unripe']['chopRates']>((_state) => _state._bean.unripe.chopRates);
+  const chopRates   = useSelector<AppState, AppState['_bean']['unripe']['chopPenalties']>((_state) => _state._bean.unripe.chopPenalties);
   const amountOut   = state.amount?.multipliedBy(chopRates[inputToken.address] || ZERO_BN);
 
   ///
