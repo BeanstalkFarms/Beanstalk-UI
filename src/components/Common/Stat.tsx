@@ -16,7 +16,7 @@ export type StatProps = {
   /**  */
   amountTooltip?: JSX.Element | string;
   /** Subtext shown below the statistic (ex. "Season X") */
-  subtitle?: string;
+  subtitle?: JSX.Element | string;
   /** Typography variant to use (default: h1) */
   variant?: TypographyProps['variant'];
   /** Typography styles */
@@ -50,7 +50,7 @@ const Stat: React.FC<StatProps> = ({
         <Typography variant="body1">
           {title}
           {titleTooltip && (
-            <Tooltip title={titleTooltip} placement="top">
+            <Tooltip title={titleTooltip} placement="right">
               <HelpOutlineIcon
                 sx={{
                   display: 'inline',

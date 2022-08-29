@@ -90,6 +90,12 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       icon: aboutIcon
     },
     {
+      path: 'disclosures',
+      title: 'Disclosures',
+      href: 'https://docs.bean.money/disclosures',
+      icon: docsIcon
+    },
+    {
       path: 'discord',
       href: 'https://discord.gg/beanstalk',
       title: 'Discord',

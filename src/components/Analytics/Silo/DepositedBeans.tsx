@@ -9,6 +9,7 @@ const getValue = (season: SnapshotData<SeasonalDepositedBeansQuery>) => toTokenU
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const StatProps = {
   title: 'Deposited Beans',
+  titleTooltip: 'The total number of Deposited Beans.',
   gap: 0.5,
 };
 const queryConfig = {

@@ -6,6 +6,9 @@ import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdow
 import { PODS, SEEDS, STALK, SPROUTS } from '~/constants/tokens';
 import { AppState } from '~/state';
 import StatsCard, { StatItem } from '~/components/Common/StatsCard';
+import PageHeader from '~/components/Common/PageHeader';
+import GuideButton from '~/components/Common/Guide/GuideButton';
+import { HOW_TO_UNDERSTAND_BALANCES } from '~/util';
 
 const BalancesPage: React.FC = () => {
   /// State
@@ -51,6 +54,19 @@ const BalancesPage: React.FC = () => {
   return (
     <Container maxWidth="lg">
       <Stack gap={2}>
+        <PageHeader
+          title="Balances"
+          description="View your Beanstalk assets"
+          href="https://docs.bean.money/additional-resources/asset-states"
+          control={
+            <GuideButton
+              title="The Farmers' Almanac: Balances Guides"
+              guides={[
+                HOW_TO_UNDERSTAND_BALANCES,
+              ]}
+            />
+          }
+      />
         <Card sx={{ p: 2 }}>
           <TotalBalanceCard 
             breakdown={breakdown}

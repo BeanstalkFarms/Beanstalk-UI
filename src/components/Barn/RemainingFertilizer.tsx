@@ -71,7 +71,7 @@ const RemainingFertilizer: React.FC = () => {
             </Stack>
             <Stack gap={0.5}>
               <Tooltip
-                title="The interest rate on Fertilizer. The Humidity decreases 0.5% every Season until 20% Humidity is reached. The Humidity determines how many Sprouts come with Fertilizer."
+                title="The interest rate on Fertilizer. The Humidity determines how many Sprouts come with Fertilizer."
                 placement="bottom"
               >
                 <Typography>
@@ -84,15 +84,6 @@ const RemainingFertilizer: React.FC = () => {
               <Stack direction="row" alignItems="center" gap={1}>
                 <Typography variant="bodyLarge">
                   {displayFullBN(humidity.multipliedBy(100))}%
-                </Typography>
-                <Typography
-                  variant="bodySmall"
-                  color={BeanstalkPalette.trueRed}
-                >
-                  {nextDecreaseAmount.eq(0)
-                    ? null
-                    : displayFullBN(nextDecreaseAmount.multipliedBy(-100))}
-                  % {nextDecreaseTimeString}
                 </Typography>
               </Stack>
             </Stack>

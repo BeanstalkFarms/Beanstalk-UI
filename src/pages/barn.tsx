@@ -5,7 +5,7 @@ import RemainingFertilizer from '~/components/Barn/RemainingFertilizer';
 import MyFertilizer from '~/components/Barn/MyFertilizer';
 import BarnActions from '~/components/Barn/Actions';
 import GuideButton from '~/components/Common/Guide/GuideButton';
- import { HOW_TO_BUY_FERTILIZER, HOW_TO_RINSE_SPROUTS } from '~/util/Guides';
+ import { HOW_TO_BUY_FERTILIZER, HOW_TO_RINSE_SPROUTS, HOW_TO_TRANSFER_FERTILIZER, HOW_TO_TRADE_FERTILIZER } from '~/util/Guides';
 
 const Barn: React.FC = () => (
   <Container maxWidth="sm">
@@ -20,7 +20,9 @@ const Barn: React.FC = () => (
             title="The Farmers' Almanac: Barn Guides"
             guides={[
               HOW_TO_BUY_FERTILIZER,
-              HOW_TO_RINSE_SPROUTS
+              HOW_TO_RINSE_SPROUTS,
+              HOW_TO_TRANSFER_FERTILIZER, 
+              HOW_TO_TRADE_FERTILIZER,
             ]}
           />
         }

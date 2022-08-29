@@ -9,6 +9,7 @@ const getValue = (season: SnapshotData<SeasonalStalkQuery>) => toTokenUnitsBN(se
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const StatProps = {
   title: 'Stalk',
+  titleTooltip: 'The total number of Stalk.',
   gap: 0.5,
 };
 const queryConfig = {

@@ -11,6 +11,7 @@ const getValue = (season: Season) => parseFloat(season.price);
 const formatValue = (value: number) => `$${value.toFixed(4)}`;
 const StatProps = {
   title: 'Bean Price',
+  titleTooltip: 'The price at the end of every Season/day.',
   gap: 0.25,
   color: 'primary',
   sx: { ml: 0 },

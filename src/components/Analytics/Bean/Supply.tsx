@@ -14,6 +14,7 @@ const useStatProps = () => {
   const isTiny = useMediaQuery(theme.breakpoints.down('md'));
   return {
     title: isTiny ? 'Supply' : 'Bean Supply',
+    titleTooltip: 'The total Bean supply at the end of every Season/day.',
     gap: 0.25,
     color: 'primary',
     sx: { ml: 0 },

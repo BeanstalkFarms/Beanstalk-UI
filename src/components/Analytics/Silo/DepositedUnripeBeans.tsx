@@ -9,6 +9,7 @@ const getValue = (season: SnapshotData<SeasonalDepositedUnripeBeansQuery>) => to
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const StatProps = {
   title: 'Deposited Unripe Beans',
+  titleTooltip: 'The total number of Deposited Unripe Beans.',
   gap: 0.5,
 };
 const queryConfig = {

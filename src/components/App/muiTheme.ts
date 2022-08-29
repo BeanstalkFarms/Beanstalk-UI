@@ -64,6 +64,12 @@ declare module '@mui/material/Typography' {
   }
 }
 
+declare module '@mui/material/Tooltip' {
+  interface TooltipProps {
+    variant?: 'wide';
+  }
+}
+
 // --------------------------------------------------
 
 const BASE_FONT_SIZE = 16;
@@ -367,7 +373,16 @@ let muiTheme = createTheme({
       defaultProps: {
         enterTouchDelay: 0,
         leaveTouchDelay: 1000000,
+        onClick: (e) => e.stopPropagation(),
       },
+      variants: [
+        {
+          props: {
+            variant: 'wide'
+          },
+          style: {}
+        }
+      ],
       styleOverrides: {
         tooltip: sx({
           typography: 'body1',

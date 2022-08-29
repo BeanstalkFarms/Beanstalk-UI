@@ -218,11 +218,11 @@ const SelectedPointPopover : React.FC<{
         <StatHorizontal label="Price per Pod">
           <Row gap={0.25}><TokenIcon token={BEAN[1]} /> {displayFullBN(data.pricePerPod, 4, 2)}</Row>
         </StatHorizontal>
-        <StatHorizontal label="# of Pods Listed">
+        <StatHorizontal label="Amount">
           <Row gap={0.25}><TokenIcon token={PODS} /> {displayFullBN(data.remainingAmount, 2, 0)}</Row>
         </StatHorizontal>
         <Button component={RouterLink} to={`/market/listing/${data.id}`} variant="contained" color="primary">
-          Buy
+          Fill
         </Button>
       </Stack>
     );
@@ -249,11 +249,11 @@ const SelectedPointPopover : React.FC<{
         <StatHorizontal label="Price per Pod">
           <Row gap={0.25}><TokenIcon token={BEAN[1]} /> {displayFullBN(data.pricePerPod, 4, 2)}</Row>
         </StatHorizontal>
-        <StatHorizontal label="Pods Requested">
+        <StatHorizontal label="Amount">
           <Row gap={0.25}><TokenIcon token={PODS} /> {displayFullBN(data.remainingAmount, 2, 0)}</Row>
         </StatHorizontal>
         <Button component={RouterLink} to={`/market/order/${data.id}`} variant="contained" color="primary">
-          Sell
+          Fill
         </Button>
       </Stack>
     );
