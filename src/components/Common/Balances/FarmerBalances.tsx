@@ -65,7 +65,7 @@ const FarmerBalances: React.FC<{
       }, []).sort((a, b) => b.value - a.value);
     }
     return availableStates.map((id) => ({
-      label: STATE_CONFIG[id][0],
+      label: STATE_CONFIG[id][0].length === 2 ? STATE_CONFIG[id][0][1] : STATE_CONFIG[id][0],
       value: breakdown.states[id as keyof typeof breakdown.states].value.toNumber(),
       color: STATE_CONFIG[id][1]
     } as PieDataPoint));
@@ -118,7 +118,12 @@ const FarmerBalances: React.FC<{
         <Grid item xs={12} md={4}>
           <Box display="flex" justifyContent="center" sx={{ height: 235, py: { xs: 1, md: 0 }, px: 1 }}>
             <ResizablePieChart
-              title={hoverState ? STATE_CONFIG[hoverState][0] : `All ${assetLabel}s`}
+              title={
+                hoverState
+                  ? (STATE_CONFIG[hoverState][0].length === 2)
+                    ? STATE_CONFIG[hoverState][0][1]
+                    : STATE_CONFIG[hoverState][0]
+                  : `All ${assetLabel}s`}
               data={breakdown.totalValue.gt(0) ? pieChartData : undefined}
             />
           </Box>
@@ -139,7 +144,7 @@ const FarmerBalances: React.FC<{
           ) : (
             <Stack gap={1}>
               <Typography variant="h4" sx={{ display: { xs: 'none', md: 'block' }, mx: 0.75 }}>
-                {STATE_CONFIG[hoverState][0]} {assetLabel}s
+                {STATE_CONFIG[hoverState][0].length === 2 ? STATE_CONFIG[hoverState][0][1] : STATE_CONFIG[hoverState][0]} {assetLabel}s
               </Typography>
               <Box>
                 {pieChartData.map((dp) => {

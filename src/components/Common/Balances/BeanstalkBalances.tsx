@@ -60,7 +60,11 @@ const BeanstalkBalances: React.FC<{
           const value = thisAddress?.byState[state].value.toNumber();
           prev.push({
             state: state,
-            label: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][0],
+            // label: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][0],
+            label: (STATE_CONFIG[state][0].length === 2)
+              // farmer & beanstalk balances sometimes use different labels
+              ? STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][0][0]
+              : STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][0],
             value,
             color: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][1],
           });

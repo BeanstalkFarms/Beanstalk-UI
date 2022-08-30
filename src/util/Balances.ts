@@ -1,6 +1,6 @@
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 
-export const STATE_CONFIG: { [key: string]: [name: string | string[], color: string, tooltip: string] } = {
+export const STATE_CONFIG: { [key: string]: [name: any, color: string, tooltip: string] } = {
   // Silo
   deposited:    ['Deposited', BeanstalkPalette.logoGreen, 'Assets that are Deposited in the Silo.'],
   //             [beanstalk balances, farmer balances ]
