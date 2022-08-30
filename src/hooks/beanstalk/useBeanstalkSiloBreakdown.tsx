@@ -15,7 +15,7 @@ const TOKEN_STATE = [
   'pooled',
   'deposited',
   'withdrawn',
-  'farmPlusCirculating',
+  'farmable',
   'ripe',
   'budget'
 ] as const;
@@ -80,12 +80,11 @@ export default function useBeanstalkSiloBreakdown() {
   const WHITELIST = useWhitelist();
   const WHITELIST_ADDRS = useMemo(() => Object.keys(WHITELIST), [WHITELIST]);
 
-  //
+  // 
   const siloBalances = useSelector<AppState, AppState['_beanstalk']['silo']['balances']>((state) => state._beanstalk.silo.balances);
   const getUSD = useSiloTokenToFiat();
 
   return useMemo(() =>
-    // console.debug('[useBeanstalkSiloBreakdownOLD] running reducer');
      WHITELIST_ADDRS.reduce((prev, address) => {
       const TOKEN        = WHITELIST[address];
       const siloBalance  = siloBalances[address];
@@ -98,15 +97,15 @@ export default function useBeanstalkSiloBreakdown() {
           pooled:      siloBalance.pooled ? siloBalance.pooled?.amount : undefined,
           ripe:        siloBalance.ripe ? siloBalance.ripe?.amount : undefined,
           budget:      siloBalance.budget ? siloBalance.budget?.amount : undefined,
-          farmPlusCirculating:       siloBalance.farmPlusCirculating ? siloBalance.farmPlusCirculating?.amount : undefined,
+          farmable:    siloBalance.farmable ? siloBalance.farmable?.amount : undefined,
         };
         const usdValueByState = {
           deposited:   getUSD(TOKEN, siloBalance.deposited?.amount),
           withdrawn:   getUSD(TOKEN, siloBalance.withdrawn?.amount),
-          pooled:      siloBalance.pooled ? getUSD(TOKEN, siloBalance.pooled?.amount) : undefined,
-          ripe:        siloBalance.ripe ? getUSD(TOKEN, siloBalance.ripe?.amount) : undefined,
-          budget:      siloBalance.budget ? getUSD(TOKEN, siloBalance.budget?.amount) : undefined,
-          farmPlusCirculating:      siloBalance.farmPlusCirculating ? getUSD(TOKEN, siloBalance.farmPlusCirculating?.amount) : undefined,
+          pooled:      siloBalance.pooled   ? getUSD(TOKEN, siloBalance.pooled?.amount) : undefined,
+          ripe:        siloBalance.ripe     ? getUSD(TOKEN, siloBalance.ripe?.amount) : undefined,
+          budget:      siloBalance.budget   ? getUSD(TOKEN, siloBalance.budget?.amount) : undefined,
+          farmable:    siloBalance.farmable ? getUSD(TOKEN, siloBalance.farmable?.amount) : undefined,
         };
 
         // Aggregate value of all states.

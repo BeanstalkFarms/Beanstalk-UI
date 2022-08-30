@@ -1,12 +1,11 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
 import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/PieChart';
-import { displayBN, displayFullBN, getChainConstant } from '~/util';
+import { displayBN, displayFullBN } from '~/util';
 import useBeanstalkSiloBreakdown from '~/hooks/beanstalk/useBeanstalkSiloBreakdown';
 import useWhitelist from '~/hooks/beanstalk/useWhitelist';
 import { STATE_CONFIG, STATE_IDS } from '~/util/Balances';
 import TokenRow from '~/components/Common/Balances/TokenRow';
-import { UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
 
 // ------------------------------------------------------
 
@@ -20,8 +19,6 @@ const BeanstalkBalances: React.FC<{
 }) => {
   // Constants
   const WHITELIST = useWhitelist();
-  const urBean = getChainConstant(UNRIPE_BEAN);
-  const urBean3CRV = getChainConstant(UNRIPE_BEAN_CRV3);
 
   // Drilldown against a State of Token (DEPOSITED, WITHDRAWN, etc.)
   const [hoverAddress, setHoverAddress] = useState<string | null>(null);
@@ -58,15 +55,16 @@ const BeanstalkBalances: React.FC<{
         const thisAddress = breakdown.tokens[hoverAddress as keyof typeof breakdown.tokens];
         return Object.keys(thisAddress?.byState).reduce<PieDataPoint[]>((prev, state, index) => {
           const value = thisAddress?.byState[state].value.toNumber();
+          const stateId = STATE_IDS[index];
           prev.push({
             state: state,
             // label: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][0],
-            label: (STATE_CONFIG[state][0].length === 2)
+            label: STATE_IDS[index] === 'withdrawn'
               // farmer & beanstalk balances sometimes use different labels
-              ? STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][0][0]
-              : STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][0],
+              ? 'Withdrawn & Circulating'
+              : STATE_CONFIG[stateId][0],
             value,
-            color: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][1],
+            color: STATE_CONFIG[stateId][1],
           });
           return prev;
         }, []);
@@ -91,15 +89,11 @@ const BeanstalkBalances: React.FC<{
           {availableTokens.map((address) => (
             <TokenRow
               key={address}
-              label={`${WHITELIST[address].name}`}
+              label={WHITELIST[address].name}
               color={WHITELIST[address].color}
               showColor={!hoverAddress}
-              amount={
-                (WHITELIST[address] === urBean || WHITELIST[address] === urBean3CRV)
-                  ? '-'
-                  : `${displayBN(breakdown.tokens[address as keyof typeof breakdown.tokens].amount)}`
-              }
-              token={(WHITELIST[address] === urBean || WHITELIST[address] === urBean3CRV) ? undefined : WHITELIST[address]}
+              token={WHITELIST[address]}
+              amount={displayBN(breakdown.tokens[address as keyof typeof breakdown.tokens].amount)}
               isFaded={hoverAddress !== null && hoverAddress !== address}
               isSelected={hoverAddress === address}
               onMouseOver={onMouseOver(address)}
@@ -115,7 +109,11 @@ const BeanstalkBalances: React.FC<{
       <Grid item xs={12} md={4}>
         <Box display="flex" justifyContent="center" sx={{ height: 235, py: { xs: 1, md: 0 }, px: 1 }}>
           <ResizablePieChart
-            title={hoverAddress ? WHITELIST[hoverAddress].name : `All ${assetLabel}s`}
+            title={(
+              hoverAddress
+                ? WHITELIST[hoverAddress].name 
+                : `All ${assetLabel}s`
+            )}
             data={breakdown.totalValue.gt(0) ? pieChartData : undefined}
           />
         </Box>
@@ -129,7 +127,7 @@ const BeanstalkBalances: React.FC<{
         {hoverAddress === null ? (
           <Stack alignItems="center" justifyContent="center" sx={{ pt: 5, pb: 5 }}>
             <Typography color="text.secondary">
-              Hover over a state to see breakdown
+              Hover over a {assetLabel.toLowerCase()} to see breakdown
             </Typography>
           </Stack>
         ) : (
@@ -145,9 +143,9 @@ const BeanstalkBalances: React.FC<{
                   <TokenRow
                     key={state}
                     label={
-                      (STATE_CONFIG[state][0].length === 2)
+                      (state === 'withdrawn')
                         // farmer & beanstalk balances sometimes use different labels
-                        ? STATE_CONFIG[state][0][0]
+                        ? 'Withdrawn & Circulating'
                         : `${STATE_CONFIG[state][0]} ${assetLabel}s`
                     }
                     color={dp.color}

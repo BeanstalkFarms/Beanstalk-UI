@@ -55,17 +55,18 @@ const FarmerBalances: React.FC<{
       const thisState = breakdown.states[hoverState as keyof typeof breakdown.states];
       return Object.keys(thisState.byToken).reduce<PieDataPoint[]>((prev, addr, index) => {
         const value = thisState.byToken[addr].value.toNumber();
+        const stateId = STATE_IDS[index];
         prev.push({
           tokenAddress: addr,
           label: whitelist[addr].name,
           value,
-          color: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][1],
+          color: STATE_CONFIG[stateId][1],
         });
         return prev;
       }, []).sort((a, b) => b.value - a.value);
     }
     return availableStates.map((id) => ({
-      label: STATE_CONFIG[id][0].length === 2 ? STATE_CONFIG[id][0][1] : STATE_CONFIG[id][0],
+      label: STATE_CONFIG[id][0],
       value: breakdown.states[id as keyof typeof breakdown.states].value.toNumber(),
       color: STATE_CONFIG[id][1]
     } as PieDataPoint));
@@ -89,12 +90,7 @@ const FarmerBalances: React.FC<{
             {availableStates.map((id) => (
               <TokenRow
                 key={id}
-                label={
-                  (STATE_CONFIG[id][0].length === 2)
-                    // farmer & beanstalk balances sometimes use different labels
-                    ? STATE_CONFIG[id][0][1]
-                    : `${STATE_CONFIG[id][0]} ${assetLabel}s`
-                }
+                label={`${STATE_CONFIG[id][0]} ${assetLabel}s`}
                 value={
                   <Fiat
                     value={breakdown.states[id as keyof typeof breakdown.states].value}
@@ -120,9 +116,7 @@ const FarmerBalances: React.FC<{
             <ResizablePieChart
               title={
                 hoverState
-                  ? (STATE_CONFIG[hoverState][0].length === 2)
-                    ? STATE_CONFIG[hoverState][0][1]
-                    : STATE_CONFIG[hoverState][0]
+                  ? STATE_CONFIG[hoverState][0]
                   : `All ${assetLabel}s`}
               data={breakdown.totalValue.gt(0) ? pieChartData : undefined}
             />
@@ -144,7 +138,7 @@ const FarmerBalances: React.FC<{
           ) : (
             <Stack gap={1}>
               <Typography variant="h4" sx={{ display: { xs: 'none', md: 'block' }, mx: 0.75 }}>
-                {STATE_CONFIG[hoverState][0].length === 2 ? STATE_CONFIG[hoverState][0][1] : STATE_CONFIG[hoverState][0]} {assetLabel}s
+                {STATE_CONFIG[hoverState][0]} {assetLabel}s
               </Typography>
               <Box>
                 {pieChartData.map((dp) => {

@@ -145,7 +145,7 @@ export const useFetchBeanstalkSilo = () => {
 
           // Farm + Circulating
           if (beanSupply && beanSupply !== NEW_BN) {
-            agg[curr.token].farmPlusCirculating = {
+            agg[curr.token].farmable = {
               amount: beanSupply
                 .minus(beansInMultiSig)
                 .minus(totalPooledBeans)
@@ -159,7 +159,7 @@ export const useFetchBeanstalkSilo = () => {
 
         // Farm + Circulating for Unripe Tokens
         if (WHITELIST[curr.token] === urBean || WHITELIST[curr.token] === urBean3CRV) {
-          agg[curr.token].farmPlusCirculating = {
+          agg[curr.token].farmable = {
             amount: unripeTokenState[curr.token]?.supply
               .minus(curr.deposited)
               .minus(curr.withdrawn)
@@ -168,7 +168,7 @@ export const useFetchBeanstalkSilo = () => {
 
         // Farm + Circulating for LP Tokens
         if (poolState[curr.token]) {
-          agg[curr.token].farmPlusCirculating = {
+          agg[curr.token].farmable = {
             amount: poolState[curr.token].supply
               .minus(curr.deposited)
               .minus(curr.withdrawn)

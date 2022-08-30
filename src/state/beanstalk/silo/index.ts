@@ -28,7 +28,7 @@ export type BeanstalkSiloBalance = {
     amount: BigNumber;
   }
   /** Total token supply minus all the above categories. */
-  farmPlusCirculating?: {
+  farmable?: {
     amount: BigNumber;
   }
 }
