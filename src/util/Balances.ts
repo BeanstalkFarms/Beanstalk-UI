@@ -1,5 +1,6 @@
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 
+/// BEANSTALK BALANCES
 export const BEANSTALK_STATE_CONFIG: { [key: string]: [name: string, color: string, tooltip: string] } = {
   // Silo
   deposited:    ['Deposited', BeanstalkPalette.logoGreen, 'Assets that are Deposited in the Silo.'],
@@ -17,6 +18,7 @@ export const BEANSTALK_STATE_CONFIG: { [key: string]: [name: string, color: stri
 export type BeanstalkStateID = keyof typeof BEANSTALK_STATE_CONFIG;
 export const BEANSTALK_STATE_IDS = Object.keys(BEANSTALK_STATE_CONFIG) as BeanstalkStateID[];
 
+/// FARMER BALANCES
 export const FARMER_STATE_CONFIG: { [key: string]: [name: string, color: string, tooltip: string] } = {
   // Silo
   deposited:    ['Deposited', BeanstalkPalette.logoGreen, 'Assets that are Deposited in the Silo.'],
