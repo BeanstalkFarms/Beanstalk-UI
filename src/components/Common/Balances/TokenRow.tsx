@@ -1,11 +1,11 @@
 import React from 'react';
-import { Stack, Typography, Box, Tooltip } from '@mui/material';
+import { Typography, Tooltip } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { Token } from '~/classes';
 import TokenIcon from '../TokenIcon';
-
-// ------------------------------------------------------
+import Dot from '~/components/Common/Dot';
+import Row from '~/components/Common/Row';
 
 const TokenRow: React.FC<{
   /* Label */
@@ -34,78 +34,75 @@ const TokenRow: React.FC<{
   // TODO: Refactor
   assetStates?: boolean;
 }> = ({
-        label,
-        color,
-        showColor,
-        token,
-        amount,
-        value,
-        tooltip,
-        assetStates = false,
-        isFaded = false,
-        isSelected = false,
-        onMouseOver,
-        onMouseOut,
-        onClick
-      }) =>
-  (
-    <Stack
-      direction="row"
-      justifyContent="space-between"
-      alignItems="flex-start"
-      sx={{
-        cursor: onMouseOver ? 'pointer' : 'inherit',
-        py: 0.75,
-        px: 0.75,
-        opacity: isFaded ? 0.3 : 1,
-        outline: isSelected ? `1px solid ${BeanstalkPalette.blue}` : null,
-        borderRadius: 1,
-      }}
-      onMouseOver={onMouseOver}
-      onFocus={onMouseOver}
-      onMouseOut={onMouseOut}
-      onBlur={onMouseOut}
-      onClick={onClick}
-    >
-      {/* 5px gap between color and typography; shift circle back width+gap px */}
-      <Stack direction="row" gap="5px" alignItems="center">
-        {color && (
-          <Box sx={{
-            width: 8,
-            height: 8,
-            borderRadius: 8,
-            backgroundColor: showColor ? color : 'transparent',
+  label,
+  color,
+  showColor,
+  token,
+  amount,
+  value,
+  tooltip,
+  assetStates = false,
+  isFaded = false,
+  isSelected = false,
+  onMouseOver,
+  onMouseOut,
+  onClick
+}) => (
+  <Row
+    alignItems="flex-start"
+    justifyContent="space-between"
+    sx={{
+      cursor: onMouseOver ? 'pointer' : 'inherit',
+      py: 0.75,
+      px: 0.75,
+      opacity: isFaded ? 0.3 : 1,
+      outline: isSelected ? `1px solid ${BeanstalkPalette.blue}` : null,
+      borderRadius: 1,
+    }}
+    onMouseOver={onMouseOver}
+    onFocus={onMouseOver}
+    onMouseOut={onMouseOut}
+    onBlur={onMouseOut}
+    onClick={onClick}
+  >
+    {/* 5px gap between color and typography; shift circle back width+gap px */}
+    <Row gap={0.5}>
+      {color && (
+        <Dot
+          color={showColor ? color : 'transparent'}
+          sx={{
             mt: '-2px',
             ml: '-13px'
-          }} />
+          }}
+        />
+      )}
+      <Typography variant="body1" color="text.secondary" sx={token ? { display: 'block' } : undefined}>
+        {label}
+      </Typography>
+      {assetStates && (
+        <Tooltip title={tooltip || ''} placement="top">
+          <HelpOutlineIcon
+            sx={{ color: 'text.secondary', fontSize: '14px' }}
+          />
+        </Tooltip>
+      )}
+    </Row>
+    <Tooltip title={!assetStates ? tooltip || '' : ''} placement="top">
+      <Row gap={0.5}>
+        {token && <TokenIcon token={token} />}
+        {amount && (
+          <Typography variant="body1" textAlign="right">
+            {amount}
+          </Typography>
         )}
-        <Typography variant="body1" color="text.secondary" sx={token ? { display: 'block' } : undefined}>
-          {label}
-        </Typography>
-        {(assetStates) && (
-          <Tooltip title={tooltip || ''} placement="top">
-            <HelpOutlineIcon
-              sx={{ color: 'text.secondary', fontSize: '14px' }}
-            />
-          </Tooltip>
+        {value && (
+          <Typography variant="body1" textAlign="right" display="block">
+            {value}
+          </Typography>
         )}
-      </Stack>
-      <Tooltip title={!assetStates ? tooltip || '' : ''} placement="top">
-        <Stack direction="row" alignItems="center" gap={0.5}>
-          {token && <TokenIcon token={token} />}
-          {amount && (
-            <Typography variant="body1" textAlign="right">
-              {amount}
-            </Typography>
-          )}
-          {value && (
-            <Typography variant="body1" textAlign="right" display="block">
-              {value}
-            </Typography>
-          )}
-        </Stack>
-      </Tooltip>
-    </Stack>
-  );
+      </Row>
+    </Tooltip>
+  </Row>
+);
 
 export default TokenRow;

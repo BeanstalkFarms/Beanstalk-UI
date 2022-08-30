@@ -6,19 +6,47 @@ import { AppState } from '~/state';
 import useSiloTokenToFiat from './useSiloTokenToFiat';
 import useWhitelist from './useWhitelist';
 import { BeanstalkSiloBalance } from '~/state/beanstalk/silo';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 // -----------------
 // Types and Helpers
 // -----------------
 
-const TOKEN_STATE = [
-  'pooled',
-  'deposited',
-  'withdrawn',
-  'farmable',
-  'ripe',
-  'budget'
-] as const;
+export const STATE_CONFIG = {
+  pooled: [
+    'Pooled',
+    '#8CB4CF',
+    (name: string) => `${name} in all liquidity pools.`
+  ],
+  deposited: [
+    'Deposited',
+    BeanstalkPalette.logoGreen, 
+    (name: string) => `${name} that are Deposited in the Silo.`
+  ],
+  withdrawn: [
+    'Withdrawn',
+    '#E17E76', 
+    (name: string) => `${name} being Withdrawn from the Silo. At the end of the current Season, Withdrawn assets become Claimable.`
+  ],
+  farmable: [
+    'Farm & Circulating',
+    BeanstalkPalette.lightBlue, 
+    (name: string) => `Farm ${name} are stored in Beanstalk. Circulating ${name} are in Farmers' wallets.`,
+  ],
+  ripe: [
+    'Ripe',
+    '#DFB385', 
+    (name: string) => `${name} minted as Fertilizer is sold. Ripe assets are the assets underlying Unripe assets.`
+  ],
+  budget: [
+    'Budget',
+    BeanstalkPalette.supportGreen,
+    (name: string) => `${name} in the BFM and BSM wallets.`,
+  ],
+} as const;
+
+export type StateID = keyof typeof STATE_CONFIG;
+export const TOKEN_STATE = Object.keys(STATE_CONFIG) as StateID[];
 
 export type SiloTokenState = {
   [state: string]: {
@@ -37,21 +65,20 @@ export type SiloTokenBreakdown = {
 const _initState = (tokenAddresses: string[], siloBalances: TokenMap<BeanstalkSiloBalance>) => tokenAddresses.reduce<SiloTokenBreakdown['tokens']>((prev, address) => {
   if (siloBalances && siloBalances[address]) {
     prev[address] = {
-      value: new BigNumber(0),
-      amount: new BigNumber(0),
+      value:  ZERO_BN,
+      amount: ZERO_BN,
       byState: TOKEN_STATE
         // Don't show every state for every token
         .filter((state) => siloBalances[address][state] !== undefined)
-        .reduce<SiloTokenState>(
-        (_prev, state) => {
+        .reduce<SiloTokenState>((_prev, state) => {
           _prev[state] = {
-            value: new BigNumber(0),
-            amount: new BigNumber(0),
+            value:  ZERO_BN,
+            amount: ZERO_BN,
           };
           return _prev;
         },
-        {},
-      ),
+        {}
+      )
     };
   }
   return prev;
@@ -60,6 +87,7 @@ const _initState = (tokenAddresses: string[], siloBalances: TokenMap<BeanstalkSi
 // -----------------
 // Hooks
 // -----------------
+
 /**
  * Breakdown the state of Silo Tokens.
  *
@@ -74,7 +102,6 @@ const _initState = (tokenAddresses: string[], siloBalances: TokenMap<BeanstalkSi
  * - ripe
  * - budget
  */
-
 export default function useBeanstalkSiloBreakdown() {
   // Constants
   const WHITELIST = useWhitelist();
@@ -94,9 +121,9 @@ export default function useBeanstalkSiloBreakdown() {
         const amountByState = {
           deposited:   siloBalance.deposited?.amount,
           withdrawn:   siloBalance.withdrawn?.amount,
-          pooled:      siloBalance.pooled ? siloBalance.pooled?.amount : undefined,
-          ripe:        siloBalance.ripe ? siloBalance.ripe?.amount : undefined,
-          budget:      siloBalance.budget ? siloBalance.budget?.amount : undefined,
+          pooled:      siloBalance.pooled   ? siloBalance.pooled?.amount : undefined,
+          ripe:        siloBalance.ripe     ? siloBalance.ripe?.amount : undefined,
+          budget:      siloBalance.budget   ? siloBalance.budget?.amount : undefined,
           farmable:    siloBalance.farmable ? siloBalance.farmable?.amount : undefined,
         };
         const usdValueByState = {
