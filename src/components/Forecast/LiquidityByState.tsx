@@ -14,6 +14,7 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
   const beanstalkBarn = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
+  const totalBeanSupply = useSelector<AppState, AppState['_bean']['token']['supply']>((state) => state._bean.token.supply);
 
   /// Total Balances
   const STAT_ITEMS: StatItem[] = [
@@ -46,8 +47,9 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
   return (
     <Card sx={{ p: 2, width: '100%', ...sx }}>
       <Stat
-        title="Beanstalk Assets"
-        amount={displayUSD(breakdown.totalValue.abs())}
+        title="Total Bean Supply"
+        amount={displayUSD(totalBeanSupply)}
+        // amount={displayUSD(breakdown.totalValue.abs())}
         amountIcon={undefined}
         gap={0.25}
         sx={{ ml: 0 }}

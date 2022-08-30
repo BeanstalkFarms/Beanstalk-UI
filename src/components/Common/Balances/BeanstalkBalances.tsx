@@ -1,12 +1,21 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
 import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/PieChart';
-import { displayFullBN } from '~/util';
+import { displayFullBN, getChainConstant } from '~/util';
 import Fiat from '../Fiat';
 import useBeanstalkSiloBreakdown2 from '~/hooks/beanstalk/useBeanstalkSiloBreakdown2';
 import useWhitelist from '~/hooks/beanstalk/useWhitelist';
 import { STATE_CONFIG, STATE_IDS } from '~/util/Balances';
 import TokenRow from '~/components/Common/Balances/TokenRow';
+import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
+
+// TODO: is there a better way to define these tooltips?
+const whitelistTooltips: { [address: string]: string;} = {
+  [BEAN[1].address]: 'BEAN tooltip',
+  [BEAN_CRV3_LP[1].address]: 'BEAN_CRV3_LP tooltip',
+  [UNRIPE_BEAN[1].address]: 'UNRIPE_BEAN tooltip',
+  [UNRIPE_BEAN_CRV3[1].address]: 'UNRIPE_BEAN_CRV3 tooltip',
+};
 
 // ------------------------------------------------------
 
@@ -21,7 +30,8 @@ const BeanstalkBalances: React.FC<{
    }) => {
     // Constants
     const WHITELIST = useWhitelist();
-    console.log('BREAK 1');
+    const urBean = getChainConstant(UNRIPE_BEAN);
+    const urBean3CRV = getChainConstant(UNRIPE_BEAN_CRV3);
 
     // Drilldown against a State of Token (DEPOSITED, WITHDRAWN, etc.)
     const [hoverAddress, setHoverAddress] = useState<string | null>(null);
@@ -34,7 +44,6 @@ const BeanstalkBalances: React.FC<{
         setAllow(true);
       }
     }, [allowNewHoverState]);
-    console.log('BREAK 2');
 
     const onMouseOver = useCallback((address: string) => (
       allowNewHoverState ? () => setHoverAddress(address) : undefined
@@ -49,7 +58,6 @@ const BeanstalkBalances: React.FC<{
         setAllow(false);
       }
     }, [allowNewHoverState]);
-    console.log('BREAK 3');
 
     const availableTokens = Object.keys(breakdown.tokens);
 
@@ -76,7 +84,6 @@ const BeanstalkBalances: React.FC<{
         color: WHITELIST[address].color
       } as PieDataPoint));
     }, [hoverAddress, availableTokens, breakdown, WHITELIST]);
-    console.log('BREAK 4');
 
     return (
       <div>
@@ -95,16 +102,21 @@ const BeanstalkBalances: React.FC<{
                   color={WHITELIST[address].color}
                   showColor={!hoverAddress}
                   value={
-                    <Fiat
-                      value={breakdown.tokens[address as keyof typeof breakdown.tokens].value}
-                      amount={breakdown.tokens[address as keyof typeof breakdown.tokens].value}
-                      token={WHITELIST[address]}
-                    />
+                    // don't show value for unripe assets
+                    (WHITELIST[address] === urBean || WHITELIST[address] === urBean3CRV)
+                      ? '-'
+                      : (<Fiat
+                          value={breakdown.tokens[address as keyof typeof breakdown.tokens].value}
+                          amount={breakdown.tokens[address as keyof typeof breakdown.tokens].value}
+                          token={WHITELIST[address]}
+                        />)
                   }
                   isFaded={hoverAddress !== null && hoverAddress !== address}
                   isSelected={hoverAddress === address}
                   onMouseOver={onMouseOver(address)}
                   onClick={onClick(address)}
+                  assetStates
+                  tooltip={whitelistTooltips[address]}
                 />
               ))}
             </Stack>

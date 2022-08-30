@@ -170,7 +170,7 @@ export const useFetchBeanstalkSilo = () => {
             amount: poolState[curr.token].supply
               .minus(curr.deposited)
               .minus(curr.withdrawn)
-              .minus(curr.ripe || ZERO_BN)
+              .minus(curr.ripe)
           };
         }
 

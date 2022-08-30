@@ -31,6 +31,7 @@ const TokenRow: React.FC<{
   /* Display a tooltip when hovering over the value */
   tooltip?: string | JSX.Element;
   /* Include tooltips about asset states (Deposited, Withdrawn, etc.) */
+  // TODO: Refactor
   assetStates?: boolean;
 }> = ({
         label,
