@@ -4,7 +4,7 @@ import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/PieC
 import { displayBN, displayFullBN, getChainConstant } from '~/util';
 import useBeanstalkSiloBreakdown from '~/hooks/beanstalk/useBeanstalkSiloBreakdown';
 import useWhitelist from '~/hooks/beanstalk/useWhitelist';
-import { STATE_CONFIG, STATE_IDS } from '~/util/Balances';
+import { BEANSTALK_STATE_CONFIG, BEANSTALK_STATE_IDS } from '~/util/Balances';
 import TokenRow from '~/components/Common/Balances/TokenRow';
 import { UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
 
@@ -60,9 +60,9 @@ const BeanstalkBalances: React.FC<{
           const value = thisAddress?.byState[state].value.toNumber();
           prev.push({
             state: state,
-            label: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][0],
+            label: BEANSTALK_STATE_CONFIG[BEANSTALK_STATE_IDS[index % BEANSTALK_STATE_IDS.length]][0],
             value,
-            color: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][1],
+            color: BEANSTALK_STATE_CONFIG[BEANSTALK_STATE_IDS[index % BEANSTALK_STATE_IDS.length]][1],
           });
           return prev;
         }, []);
@@ -140,13 +140,13 @@ const BeanstalkBalances: React.FC<{
                 return (
                   <TokenRow
                     key={state}
-                    label={`${STATE_CONFIG[state][0]}`}
+                    label={`${BEANSTALK_STATE_CONFIG[state][0]}`}
                     color={dp.color}
                     showColor={tokenState?.amount.gt(0)}
                     isFaded={false}
                     amount={`${displayFullBN(tokenState?.amount, 2)}`}
                     assetStates
-                    tooltip={STATE_CONFIG[state][2]}
+                    tooltip={BEANSTALK_STATE_CONFIG[state][2]}
                   />
                 );
               })}

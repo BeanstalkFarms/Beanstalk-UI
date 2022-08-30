@@ -2,10 +2,12 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
 import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/PieChart';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
-import useBeanstalkSiloBreakdownOLD from '~/hooks/beanstalk/useBeanstalkSiloBreakdownOLD';
 import { displayFullBN, displayUSD } from '~/util';
 import Fiat from '../Fiat';
-import { STATE_CONFIG, STATE_IDS, StateID } from '~/util/Balances';
+import {
+  FARMER_STATE_CONFIG,
+  FARMER_STATE_IDS, FarmerStateID
+} from '~/util/Balances';
 import TokenRow from '~/components/Common/Balances/TokenRow';
 
 // ------------------------------------------------------
@@ -13,7 +15,6 @@ import TokenRow from '~/components/Common/Balances/TokenRow';
 const FarmerBalances: React.FC<{
   breakdown: (
     ReturnType<typeof useFarmerBalancesBreakdown>
-    | ReturnType<typeof useBeanstalkSiloBreakdownOLD>
   );
   /* */
   assetLabel?: 'Balance' | 'Asset';
@@ -24,7 +25,7 @@ const FarmerBalances: React.FC<{
   assetLabel = 'Balance'
 }) => {
   // Drilldown against a State of Token (DEPOSITED, WITHDRAWN, etc.)
-  const [hoverState, setHoverState] = useState<StateID | null>(null);
+  const [hoverState, setHoverState] = useState<FarmerStateID | null>(null);
   const [allowNewHoverState, setAllow] = useState<boolean>(true);
 
   // Drilldown handlers
@@ -35,11 +36,11 @@ const FarmerBalances: React.FC<{
     }
   }, [allowNewHoverState]);
 
-  const onMouseOver = useCallback((v: StateID) => (
+  const onMouseOver = useCallback((v: FarmerStateID) => (
     allowNewHoverState ? () => setHoverState(v) : undefined
   ), [allowNewHoverState]);
 
-  const onClick = useCallback((v: StateID) => () => {
+  const onClick = useCallback((v: FarmerStateID) => () => {
     if (!allowNewHoverState) {
       setHoverState(v);
       setAllow(true);
@@ -61,15 +62,15 @@ const FarmerBalances: React.FC<{
           tokenAddress: addr,
           label: whitelist[addr].name,
           value,
-          color: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][1],
+          color: FARMER_STATE_CONFIG[FARMER_STATE_IDS[index % FARMER_STATE_IDS.length]][1],
         });
         return prev;
       }, []).sort((a, b) => b.value - a.value);
     }
     return availableStates.map((id) => ({
-      label: STATE_CONFIG[id][0],
+      label: FARMER_STATE_CONFIG[id][0],
       value: breakdown.states[id as keyof typeof breakdown.states].value.toNumber(),
-      color: STATE_CONFIG[id][1]
+      color: FARMER_STATE_CONFIG[id][1]
     } as PieDataPoint));
   }, [
     hoverState,
@@ -91,7 +92,7 @@ const FarmerBalances: React.FC<{
             {availableStates.map((id) => (
               <TokenRow
                 key={id}
-                label={`${STATE_CONFIG[id][0]} ${assetLabel}s`}
+                label={`${FARMER_STATE_CONFIG[id][0]} ${assetLabel}s`}
                 value={
                   <Fiat
                     value={breakdown.states[id as keyof typeof breakdown.states].value}
@@ -103,7 +104,7 @@ const FarmerBalances: React.FC<{
                 onMouseOver={onMouseOver(id)}
                 onClick={onClick(id)}
                 assetStates
-                tooltip={`${STATE_CONFIG[id][2]}`}
+                tooltip={`${FARMER_STATE_CONFIG[id][2]}`}
               />
             ))}
           </Stack>
@@ -115,7 +116,7 @@ const FarmerBalances: React.FC<{
         <Grid item xs={12} md={4}>
           <Box display="flex" justifyContent="center" sx={{ height: 235, py: { xs: 1, md: 0 }, px: 1 }}>
             <ResizablePieChart
-              title={hoverState ? STATE_CONFIG[hoverState][0] : `All ${assetLabel}s`}
+              title={hoverState ? FARMER_STATE_CONFIG[hoverState][0] : `All ${assetLabel}s`}
               data={breakdown.totalValue.gt(0) ? pieChartData : undefined}
             />
           </Box>
@@ -136,7 +137,7 @@ const FarmerBalances: React.FC<{
           ) : (
             <Stack gap={1}>
               <Typography variant="h4" sx={{ display: { xs: 'none', md: 'block' }, mx: 0.75 }}>
-                {STATE_CONFIG[hoverState][0]} {assetLabel}s
+                {FARMER_STATE_CONFIG[hoverState][0]} {assetLabel}s
               </Typography>
               <Box>
                 {pieChartData.map((dp) => {
