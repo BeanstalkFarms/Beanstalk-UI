@@ -2,7 +2,7 @@ import React from 'react';
 import { CardProps, Card } from '@mui/material';
 import { useSelector } from 'react-redux';
 import Stat from '../Common/Stat';
-import { displayUSD } from '../../util';
+import { displayFullBN } from '../../util';
 import StatsCard, { StatItem } from '~/components/Common/StatsCard';
 import { SEEDS, SPROUTS, STALK, PODS } from '~/constants/tokens';
 import { AppState } from '~/state';
@@ -47,10 +47,9 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
   return (
     <Card sx={{ p: 2, width: '100%', ...sx }}>
       <Stat
-        title="Total Bean Supply"
-        amount={displayUSD(totalBeanSupply)}
-        // amount={displayUSD(breakdown.totalValue.abs())}
-        amountIcon={undefined}
+        title="Bean Supply"
+        amount={displayFullBN(totalBeanSupply, 2)}
+        // amountIcon={<TokenIcon token={BEAN[1]} />}
         gap={0.25}
         sx={{ ml: 0 }}
       />
