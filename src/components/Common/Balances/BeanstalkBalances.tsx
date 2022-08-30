@@ -1,21 +1,12 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
 import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/PieChart';
-import { displayFullBN, getChainConstant } from '~/util';
-import Fiat from '../Fiat';
+import { displayBN, displayFullBN, getChainConstant } from '~/util';
 import useBeanstalkSiloBreakdown from '~/hooks/beanstalk/useBeanstalkSiloBreakdown';
 import useWhitelist from '~/hooks/beanstalk/useWhitelist';
 import { STATE_CONFIG, STATE_IDS } from '~/util/Balances';
 import TokenRow from '~/components/Common/Balances/TokenRow';
-import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
-
-// TODO: is there a better way to define these tooltips?
-const whitelistTooltips: { [address: string]: string;} = {
-  [BEAN[1].address]: 'BEAN tooltip',
-  [BEAN_CRV3_LP[1].address]: 'BEAN_CRV3_LP tooltip',
-  [UNRIPE_BEAN[1].address]: 'UNRIPE_BEAN tooltip',
-  [UNRIPE_BEAN_CRV3[1].address]: 'UNRIPE_BEAN_CRV3 tooltip',
-};
+import { UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
 
 // ------------------------------------------------------
 
@@ -99,24 +90,16 @@ const BeanstalkBalances: React.FC<{
               label={`${WHITELIST[address].name}`}
               color={WHITELIST[address].color}
               showColor={!hoverAddress}
-              value={
-                // don't show value for unripe assets
+              amount={
                 (WHITELIST[address] === urBean || WHITELIST[address] === urBean3CRV)
                   ? '-'
-                  : (
-                    <Fiat
-                      value={breakdown.tokens[address as keyof typeof breakdown.tokens].value}
-                      amount={breakdown.tokens[address as keyof typeof breakdown.tokens].value}
-                      token={WHITELIST[address]}
-                    />
-                  )
+                  : `${displayBN(breakdown.tokens[address as keyof typeof breakdown.tokens].amount)}`
               }
+              token={(WHITELIST[address] === urBean || WHITELIST[address] === urBean3CRV) ? undefined : WHITELIST[address]}
               isFaded={hoverAddress !== null && hoverAddress !== address}
               isSelected={hoverAddress === address}
               onMouseOver={onMouseOver(address)}
               onClick={onClick(address)}
-              assetStates
-              tooltip={whitelistTooltips[address]}
             />
           ))}
         </Stack>
@@ -159,9 +142,9 @@ const BeanstalkBalances: React.FC<{
                     key={state}
                     label={`${STATE_CONFIG[state][0]}`}
                     color={dp.color}
-                    showColor={tokenState?.value.gt(0)}
+                    showColor={tokenState?.amount.gt(0)}
                     isFaded={false}
-                    amount={`${displayFullBN(tokenState?.value, 2)}`}
+                    amount={`${displayFullBN(tokenState?.amount, 2)}`}
                     assetStates
                     tooltip={STATE_CONFIG[state][2]}
                   />

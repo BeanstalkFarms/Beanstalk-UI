@@ -22,7 +22,10 @@ const TOKEN_STATE = [
 
 export type SiloTokenState = {
   [state: string]: {
+    /** USD value. */
     value: BigNumber;
+    /** Token amount. */
+    amount: BigNumber;
   }
 }
 
@@ -43,6 +46,7 @@ const _initState = (tokenAddresses: string[], siloBalances: TokenMap<BeanstalkSi
         (_prev, state) => {
           _prev[state] = {
             value: new BigNumber(0),
+            amount: new BigNumber(0),
           };
           return _prev;
         },
@@ -129,6 +133,7 @@ export default function useBeanstalkSiloBreakdown() {
         TOKEN_STATE.forEach((s) => {
           if (usdValueByState[s] !== undefined) {
             prev.tokens[address].byState[s].value = prev.tokens[address].byState[s].value.plus(usdValueByState[s] as BigNumber);
+            prev.tokens[address].byState[s].amount = prev.tokens[address].byState[s].amount.plus(amountByState[s] as BigNumber);
           }
         });
       }
