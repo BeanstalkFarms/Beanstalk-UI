@@ -46,7 +46,7 @@ export const STATE_CONFIG = {
 } as const;
 
 export type StateID = keyof typeof STATE_CONFIG;
-export const TOKEN_STATE = Object.keys(STATE_CONFIG) as StateID[];
+export const STATE_IDS = Object.keys(STATE_CONFIG) as StateID[];
 
 export type SiloTokenState = {
   [state: string]: {
@@ -67,7 +67,7 @@ const _initState = (tokenAddresses: string[], siloBalances: TokenMap<BeanstalkSi
     prev[address] = {
       value:  ZERO_BN,
       amount: ZERO_BN,
-      byState: TOKEN_STATE
+      byState: STATE_IDS
         // Don't show every state for every token
         .filter((state) => siloBalances[address][state] !== undefined)
         .reduce<SiloTokenState>((_prev, state) => {
@@ -139,24 +139,24 @@ export default function useBeanstalkSiloBreakdown() {
         prev.totalValue = (
           prev.totalValue
             .plus(
-              TOKEN_STATE.reduce((p, c) => p.plus(usdValueByState[c] || ZERO_BN), ZERO_BN)
+              STATE_IDS.reduce((p, c) => p.plus(usdValueByState[c] || ZERO_BN), ZERO_BN)
             )
         );
 
         // Aggregate amounts of each Token
         prev.tokens[address].amount = prev.tokens[address].amount.plus(
-          TOKEN_STATE.reduce((p, c) => p.plus(
+          STATE_IDS.reduce((p, c) => p.plus(
             amountByState[c] || ZERO_BN), ZERO_BN
           )
         );
         prev.tokens[address].value = prev.tokens[address].value.plus(
-          TOKEN_STATE.reduce((p, c) => p.plus(
+          STATE_IDS.reduce((p, c) => p.plus(
             usdValueByState[c] || ZERO_BN), ZERO_BN
           )
         );
 
         // Aggregate amounts of each State
-        TOKEN_STATE.forEach((s) => {
+        STATE_IDS.forEach((s) => {
           if (usdValueByState[s] !== undefined) {
             prev.tokens[address].byState[s].value = prev.tokens[address].byState[s].value.plus(usdValueByState[s] as BigNumber);
             prev.tokens[address].byState[s].amount = prev.tokens[address].byState[s].amount.plus(amountByState[s] as BigNumber);

@@ -2,16 +2,14 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
 import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/PieChart';
 import { displayBN, displayFullBN } from '~/util';
-import useBeanstalkSiloBreakdown, { StateID, STATE_CONFIG } from '~/hooks/beanstalk/useBeanstalkSiloBreakdown';
+import useBeanstalkSiloBreakdown, { StateID, STATE_CONFIG } from '~/hooks/beanstalk/useBeanstalkBalancesBreakdown';
 import useWhitelist from '~/hooks/beanstalk/useWhitelist';
 import TokenRow from '~/components/Common/Balances/TokenRow';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import { BEAN } from '~/constants/tokens';
 
-// ------------------------------------------------------
-
 const BeanstalkBalances: React.FC<{
-  breakdown: (ReturnType<typeof useBeanstalkSiloBreakdown>);
+  breakdown: ReturnType<typeof useBeanstalkSiloBreakdown>;
 }> = ({
   breakdown,
 }) => {
@@ -48,7 +46,7 @@ const BeanstalkBalances: React.FC<{
   //
   const availableTokens = Object.keys(breakdown.tokens);
   const hoverToken = hoverAddress ? WHITELIST[hoverAddress] : undefined;
-  const assetLabel = hoverToken?.symbol || 'Token';
+  const assetLabel = hoverToken?.name || 'Token';
 
   // Compile Pie chart data
   const pieChartData = useMemo(() => {
@@ -138,8 +136,7 @@ const BeanstalkBalances: React.FC<{
                     showColor={tokenState.amount.gt(0)}
                     isFaded={false}
                     amount={displayFullBN(tokenState.amount, 2, 2)}
-                    assetStates
-                    tooltip={STATE_CONFIG[state][2](
+                    labelTooltip={STATE_CONFIG[state][2](
                       hoverToken === Bean
                         ? 'Beans'
                         : hoverToken.symbol

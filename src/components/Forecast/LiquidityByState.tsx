@@ -7,7 +7,7 @@ import StatsCard, { StatItem } from '~/components/Common/StatsCard';
 import { SEEDS, SPROUTS, STALK, PODS } from '~/constants/tokens';
 import { AppState } from '~/state';
 import BeanstalkBalances from '~/components/Common/Balances/BeanstalkBalances';
-import useBeanstalkSiloBreakdown from '~/hooks/beanstalk/useBeanstalkSiloBreakdown';
+import useBeanstalkSiloBreakdown from '~/hooks/beanstalk/useBeanstalkBalancesBreakdown';
 
 const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
   const breakdown = useBeanstalkSiloBreakdown();
@@ -49,14 +49,10 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
       <Stat
         title="Bean Supply"
         amount={displayFullBN(totalBeanSupply, 2)}
-        // amountIcon={<TokenIcon token={BEAN[1]} />}
         gap={0.25}
         sx={{ ml: 0 }}
       />
-      <BeanstalkBalances
-        breakdown={breakdown}
-        assetLabel="Token"
-      />
+      <BeanstalkBalances breakdown={breakdown} />
       <StatsCard stats={STAT_ITEMS} />
     </Card>
   );

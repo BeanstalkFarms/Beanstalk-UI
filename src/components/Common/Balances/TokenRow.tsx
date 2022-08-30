@@ -10,6 +10,8 @@ import Row from '~/components/Common/Row';
 const TokenRow: React.FC<{
   /* Label */
   label: string;
+  /* Display a tooltip when hovering over the label */
+  labelTooltip?: string | JSX.Element;
   /* Matches color shown in pie chart */
   color?: string;
   /* */
@@ -18,6 +20,8 @@ const TokenRow: React.FC<{
   token?: Token;
   /* The amount of Token */
   amount?: string | JSX.Element;
+  /* Display a tooltip when hovering over the amount */
+  amountTooltip?: string | JSX.Element;
   /* The USD value of the amount of Token */
   value?: string | JSX.Element;
   /* Fade this row out when others are selected */
@@ -28,20 +32,15 @@ const TokenRow: React.FC<{
   onMouseOver?: () => void;
   onMouseOut?: () => void;
   onClick?: () => void;
-  /* Display a tooltip when hovering over the value */
-  tooltip?: string | JSX.Element;
-  /* Include tooltips about asset states (Deposited, Withdrawn, etc.) */
-  // TODO: Refactor
-  assetStates?: boolean;
 }> = ({
   label,
+  labelTooltip,
   color,
   showColor,
   token,
   amount,
+  amountTooltip,
   value,
-  tooltip,
-  assetStates = false,
   isFaded = false,
   isSelected = false,
   onMouseOver,
@@ -79,28 +78,30 @@ const TokenRow: React.FC<{
       <Typography variant="body1" color="text.secondary" sx={token ? { display: 'block' } : undefined}>
         {label}
       </Typography>
-      {assetStates && (
-        <Tooltip title={tooltip || ''} placement="top">
+      {labelTooltip && (
+        <Tooltip title={labelTooltip} placement="top">
           <HelpOutlineIcon
             sx={{ color: 'text.secondary', fontSize: '14px' }}
           />
         </Tooltip>
       )}
     </Row>
-    <Tooltip title={!assetStates ? tooltip || '' : ''} placement="top">
-      <Row gap={0.5}>
-        {token && <TokenIcon token={token} />}
-        {amount && (
-          <Typography variant="body1" textAlign="right">
-            {amount}
-          </Typography>
-        )}
-        {value && (
-          <Typography variant="body1" textAlign="right" display="block">
-            {value}
-          </Typography>
-        )}
-      </Row>
+    <Tooltip title={amountTooltip || ''} placement="right">
+      <div>
+        <Row gap={0.5}>
+          {token && <TokenIcon token={token} />}
+          {amount && (
+            <Typography variant="body1" textAlign="right">
+              {amount}
+            </Typography>
+          )}
+          {value && (
+            <Typography variant="body1" textAlign="right" display="block">
+              {value}
+            </Typography>
+          )}
+        </Row>
+      </div>
     </Tooltip>
   </Row>
 );
