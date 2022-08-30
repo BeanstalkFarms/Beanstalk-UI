@@ -56,7 +56,6 @@ const _initState = (tokenAddresses: string[], siloBalances: TokenMap<BeanstalkSi
 // -----------------
 // Hooks
 // -----------------
-
 /**
  * Breakdown the state of Silo Tokens.
  *
@@ -64,12 +63,15 @@ const _initState = (tokenAddresses: string[], siloBalances: TokenMap<BeanstalkSi
  * of that token for each of its states.
  *
  * A token's state can be:
+ * - pooled
  * - deposited
- * - withdrawn
- * - circulating
- * - claimable
+ * - withdrawn & claimable
+ * - farm & circulating
+ * - ripe
+ * - budget
  */
-export default function useBeanstalkSiloBreakdown2() {
+
+export default function useBeanstalkSiloBreakdown() {
   // Constants
   const WHITELIST = useWhitelist();
   const WHITELIST_ADDRS = useMemo(() => Object.keys(WHITELIST), [WHITELIST]);
@@ -79,7 +81,7 @@ export default function useBeanstalkSiloBreakdown2() {
   const getUSD = useSiloTokenToFiat();
 
   return useMemo(() =>
-    // console.debug('[useBeanstalkSiloBreakdown] running reducer');
+    // console.debug('[useBeanstalkSiloBreakdownOLD] running reducer');
      WHITELIST_ADDRS.reduce((prev, address) => {
       const TOKEN        = WHITELIST[address];
       const siloBalance  = siloBalances[address];

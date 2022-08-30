@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Stack, Typography, Grid, Box } from '@mui/material';
 import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/PieChart';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
-import useBeanstalkSiloBreakdown from '~/hooks/beanstalk/useBeanstalkSiloBreakdown';
+import useBeanstalkSiloBreakdownOLD from '~/hooks/beanstalk/useBeanstalkSiloBreakdownOLD';
 import { displayFullBN, displayUSD } from '~/util';
 import Fiat from '../Fiat';
 import { STATE_CONFIG, STATE_IDS, StateID } from '~/util/Balances';
@@ -13,7 +13,7 @@ import TokenRow from '~/components/Common/Balances/TokenRow';
 const FarmerBalances: React.FC<{
   breakdown: (
     ReturnType<typeof useFarmerBalancesBreakdown>
-    | ReturnType<typeof useBeanstalkSiloBreakdown>
+    | ReturnType<typeof useBeanstalkSiloBreakdownOLD>
   );
   /* */
   assetLabel?: 'Balance' | 'Asset';

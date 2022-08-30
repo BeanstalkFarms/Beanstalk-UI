@@ -3,7 +3,7 @@ import { Stack, Typography, Grid, Box } from '@mui/material';
 import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/PieChart';
 import { displayFullBN, getChainConstant } from '~/util';
 import Fiat from '../Fiat';
-import useBeanstalkSiloBreakdown2 from '~/hooks/beanstalk/useBeanstalkSiloBreakdown2';
+import useBeanstalkSiloBreakdown from '~/hooks/beanstalk/useBeanstalkSiloBreakdown';
 import useWhitelist from '~/hooks/beanstalk/useWhitelist';
 import { STATE_CONFIG, STATE_IDS } from '~/util/Balances';
 import TokenRow from '~/components/Common/Balances/TokenRow';
@@ -20,7 +20,7 @@ const whitelistTooltips: { [address: string]: string;} = {
 // ------------------------------------------------------
 
 const BeanstalkBalances: React.FC<{
-  breakdown: (ReturnType<typeof useBeanstalkSiloBreakdown2>);
+  breakdown: (ReturnType<typeof useBeanstalkSiloBreakdown>);
   /* */
   assetLabel?: 'Token';
 }> =

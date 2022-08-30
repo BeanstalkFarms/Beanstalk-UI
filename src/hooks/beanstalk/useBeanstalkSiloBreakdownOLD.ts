@@ -57,7 +57,7 @@ const _initState = (tokenAddresses: string[]) => ({
  *
  * First we break things down by state, then by type of token.
  */
-export default function useBeanstalkSiloBreakdown() {
+export default function useBeanstalkSiloBreakdownOLD() {
   // Constants
   const WHITELIST = useWhitelist();
   const WHITELIST_ADDRS = useMemo(() => Object.keys(WHITELIST), [WHITELIST]);
@@ -67,7 +67,7 @@ export default function useBeanstalkSiloBreakdown() {
   const getUSD = useSiloTokenToFiat();
 
   return useMemo(() => 
-    // console.debug('[useBeanstalkSiloBreakdown] running reducer');
+    // console.debug('[useBeanstalkSiloBreakdownOLD] running reducer');
      WHITELIST_ADDRS.reduce((prev, address) => {
       const TOKEN        = WHITELIST[address];
       const siloBalance  = siloBalances[address];
