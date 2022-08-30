@@ -6,7 +6,7 @@ import strip from '@rollup/plugin-strip';
 import analyze from 'rollup-plugin-analyzer';
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ command, mode }) => ({
   test: {
     globals: true,
   },
@@ -29,7 +29,7 @@ export default defineConfig({
     ],
   },
   build: {
-    sourcemap: false,
+    sourcemap: command === 'serve',
     reportCompressedSize: true,
     rollupOptions: {
       plugins: [
@@ -40,4 +40,4 @@ export default defineConfig({
       ]
     }
   }
-});
+}));

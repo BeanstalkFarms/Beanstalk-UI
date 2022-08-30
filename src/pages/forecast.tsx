@@ -10,6 +10,7 @@ import LiquidityOverTime from '~/components/Forecast/LiquidityOverTime';
 import Price from '~/components/Analytics/Bean/Price';
 import PodRate from '~/components/Analytics/Field/PodRate';
 import LiquidityByState from '~/components/Forecast/LiquidityByState';
+import MarketCap from '~/components/Analytics/Bean/MarketCap';
 
 const ForecastPage: React.FC = () => (
   <Container maxWidth="lg">
@@ -27,6 +28,9 @@ const ForecastPage: React.FC = () => (
         </Card> 
       </Stack>
       <LiquidityOverTime />
+      <Card sx={{ pt: 2 }}>
+        <MarketCap height={250} />
+      </Card>
       <LiquidityByState /> 
     </Stack>
   </Container>

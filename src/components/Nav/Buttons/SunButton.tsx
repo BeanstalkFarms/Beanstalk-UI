@@ -18,7 +18,7 @@ import usePrice from '~/hooks/beanstalk/usePrice';
 import useSeason from '~/hooks/beanstalk/useSeason';
 import { toTokenUnitsBN } from '~/util';
 import { BEAN } from '~/constants/tokens';
-import { NEW_BN, ZERO_BN } from '~/constants';
+import { NEW_BN } from '~/constants';
 import { AppState } from '~/state';
 import FolderMenu from '../FolderMenu';
 import SeasonCard from '../../Sun/SeasonCard';
@@ -64,10 +64,10 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       data.fields.forEach((_f) => {
         // fixme: need intermediate type?
         // @ts-ignore
-        merged[_f.season] = { ...castField(_f) };
+        if (_f) merged[_f.season] = { ...castField(_f) };
       });
       data.seasons.forEach((_s) => {
-        merged[_s.season] = { ...merged[_s.season], ...castSeason(_s) };
+        if (_s) merged[_s.season] = { ...merged[_s.season], ...castSeason(_s) };
       });
 
       // Sort latest season first and return as array
@@ -118,33 +118,22 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         }}
       >
         {/* table header */}
-        <Box
-          display="flex"
-          sx={{
-            px: 1, // 1 + 2 from Table Body
-          }}
-        >
+        <Box px={1}>
           <Grid container>
             <Grid item xs={1.5} md={1.25}>
-              <Stack alignItems="flex-start">
-                <Typography color="text.primary" variant="bodySmall">
-                  Season
-                </Typography>
-              </Stack>
+              <Typography color="text.primary" variant="bodySmall">
+                Season
+              </Typography>
             </Grid>
-            <Grid item xs={3} md={2}>
-              <Stack alignItems="flex-end">
-                <Typography color="text.primary" variant="bodySmall">
-                  New Beans
-                </Typography>
-              </Stack>
+            <Grid item xs={3} md={2} textAlign="right">
+              <Typography color="text.primary" variant="bodySmall">
+                New Beans
+              </Typography>
             </Grid>
-            <Grid item xs={3} md={2}>
-              <Stack alignItems="flex-end">
-                <Typography color="text.primary" variant="bodySmall">
-                  Soil
-                </Typography>
-              </Stack>
+            <Grid item xs={3} md={2} textAlign="right">
+              <Typography color="text.primary" variant="bodySmall">
+                Soil
+              </Typography>
             </Grid>
             <Grid item xs={4} md={2.75}>
               <Stack alignItems="flex-end">
@@ -153,19 +142,15 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
                 </Typography>
               </Stack>
             </Grid>
-            <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
-              <Stack alignItems="flex-end">
-                <Typography color="text.primary" variant="bodySmall">
-                  Pod Rate
-                </Typography>
-              </Stack>
+            <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }} textAlign="right">
+              <Typography color="text.primary" variant="bodySmall">
+                Pod Rate
+              </Typography>
             </Grid>
-            <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
-              <Stack alignItems="flex-end">
-                <Typography color="text.primary" variant="bodySmall">
-                  Delta Demand
-                </Typography>
-              </Stack>
+            <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }} textAlign="right">
+              <Typography color="text.primary" variant="bodySmall">
+                Delta Demand
+              </Typography>
             </Grid>
           </Grid>
         </Box>
@@ -181,9 +166,9 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
           isNew
         />
         {bySeason.map((s, i) => {
-          const deltaTemperature = bySeason[i + 1] 
-            ? s.temperature?.minus(bySeason[i + 1].temperature)
-            : ZERO_BN;
+          const deltaTemperature = (bySeason[i + 1]?.temperature && s.temperature)
+            ? s.temperature.minus(bySeason[i + 1].temperature)
+            : undefined;
           return (
             <SeasonCard
               key={s.season.toString()}

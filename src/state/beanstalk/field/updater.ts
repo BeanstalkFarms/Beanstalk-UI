@@ -34,6 +34,7 @@ export const useFetchBeanstalkField = () => {
           startSoil: tokenResult(BEAN)(_weather.startSoil),
           yield: bigNumberResult(_weather.yield),
         })),
+        // beanstalk.totalHarvested().then(tokenResult(BEAN))
       ] as const);
 
       console.debug('[beanstalk/field/useBeanstalkField] RESULT');

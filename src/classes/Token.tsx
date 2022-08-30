@@ -27,7 +27,7 @@ export default abstract class Token {
   /**
    * The symbol of the currency, i.e. a short textual non-unique identifier
    */
-  public readonly symbol?: string;
+  public readonly symbol: string;
 
   /**
    * The name of the currency, i.e. a descriptive textual non-unique identifier
@@ -38,6 +38,11 @@ export default abstract class Token {
    * The name of the currency, i.e. a descriptive textual non-unique identifier
    */
   public readonly logo?: string;
+
+  /**
+   *
+   */
+  public readonly color?: string;
 
   /**
    * The name of the currency, i.e. a descriptive textual non-unique identifier
@@ -78,6 +83,7 @@ export default abstract class Token {
       name: string,
       symbol: string,
       logo: string,
+      color?: string,
       displayDecimals?: number,
       isLP?: boolean;
     },
@@ -94,6 +100,7 @@ export default abstract class Token {
     this.symbol = metadata.symbol;
     this.name = metadata.name;
     this.logo = metadata.logo;
+    this.color = metadata.color;
     this.displayDecimals = metadata.displayDecimals || 2;
     this.isLP = metadata.isLP || false;
     this.rewards = rewards;

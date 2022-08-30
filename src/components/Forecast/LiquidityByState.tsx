@@ -2,20 +2,19 @@ import React from 'react';
 import { CardProps, Card } from '@mui/material';
 import { useSelector } from 'react-redux';
 import Stat from '../Common/Stat';
-import { displayUSD } from '../../util';
-import SiloBalances from '../Common/SiloBalances';
-import useWhitelist from '../../hooks/beanstalk/useWhitelist';
-import useBeanstalkSiloBreakdown from '../../hooks/beanstalk/useBeanstalkSiloBreakdown';
+import { displayFullBN } from '../../util';
 import StatsCard, { StatItem } from '~/components/Common/StatsCard';
 import { SEEDS, SPROUTS, STALK, PODS } from '~/constants/tokens';
 import { AppState } from '~/state';
+import BeanstalkBalances from '~/components/Common/Balances/BeanstalkBalances';
+import useBeanstalkSiloBreakdown from '~/hooks/beanstalk/useBeanstalkBalancesBreakdown';
 
 const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
   const breakdown = useBeanstalkSiloBreakdown();
-  const whitelist = useWhitelist();
-  const beanstalkSilo  = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
+  const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
-  const beanstalkBarn  = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
+  const beanstalkBarn = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
+  const totalBeanSupply = useSelector<AppState, AppState['_bean']['token']['supply']>((state) => state._bean.token.supply);
 
   /// Total Balances
   const STAT_ITEMS: StatItem[] = [
@@ -48,17 +47,12 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
   return (
     <Card sx={{ p: 2, width: '100%', ...sx }}>
       <Stat
-        title="Beanstalk Assets"
-        amount={displayUSD(breakdown.totalValue.abs())}
-        amountIcon={undefined}
+        title="Bean Supply"
+        amount={displayFullBN(totalBeanSupply, 2)}
         gap={0.25}
         sx={{ ml: 0 }}
       />
-      <SiloBalances
-        breakdown={breakdown}
-        whitelist={whitelist}
-        assetLabel="Asset"
-      />
+      <BeanstalkBalances breakdown={breakdown} />
       <StatsCard stats={STAT_ITEMS} />
     </Card>
   );
