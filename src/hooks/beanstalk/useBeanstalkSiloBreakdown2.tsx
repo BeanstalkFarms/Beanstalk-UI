@@ -12,12 +12,12 @@ import { BeanstalkSiloBalance } from '~/state/beanstalk/silo';
 // -----------------
 
 const TOKEN_STATE = [
+  'pooled',
   'deposited',
   'withdrawn',
-  'pooled',
+  'farmPlusCirculating',
   'ripe',
-  'budget',
-  'farmPlusCirculating'
+  'budget'
 ] as const;
 
 export type SiloTokenState = {

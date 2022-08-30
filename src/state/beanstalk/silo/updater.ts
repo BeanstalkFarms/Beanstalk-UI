@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BEAN_TO_SEEDS, BEAN_TO_STALK, NEW_BN, ONE_BN, TokenMap, ZERO_BN } from '~/constants';
+import { BEAN_TO_SEEDS, BEAN_TO_STALK, ONE_BN, TokenMap, ZERO_BN } from '~/constants';
 import { bigNumberResult } from '~/util/Ledger';
 import { tokenResult, toStringBaseUnitBN } from '~/util';
 import { BEAN, BEAN_CRV3_LP, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
@@ -144,7 +144,7 @@ export const useFetchBeanstalkSilo = () => {
           agg[curr.token].pooled = { amount: totalPooledBeans };
 
           // Farm + Circulating
-          if (beanSupply && beanSupply !== NEW_BN) {
+          if (beanSupply) {
             agg[curr.token].farmPlusCirculating = {
               amount: beanSupply
                 .minus(beansInMultiSig)

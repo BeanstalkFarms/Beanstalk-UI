@@ -75,7 +75,7 @@ const BeanstalkBalances: React.FC<{
               color: STATE_CONFIG[STATE_IDS[index % STATE_IDS.length]][1],
             });
             return prev;
-          }, []).sort((a, b) => b.value - a.value);
+          }, []);
         }
       }
       return availableTokens.map((address) => ({
