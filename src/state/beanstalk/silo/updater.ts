@@ -144,15 +144,17 @@ export const useFetchBeanstalkSilo = () => {
           agg[curr.token].pooled = { amount: totalPooledBeans };
 
           // Farm + Circulating
-          agg[curr.token].farmPlusCirculating = {
-            amount: beanSupply
-              .minus(beansInMultiSig)
-              .minus(totalPooledBeans)
-              .minus(curr.ripe)
-              .minus(curr.deposited)
-              .minus(curr.withdrawn)
+          if (beanSupply) {
+            agg[curr.token].farmPlusCirculating = {
+              amount: beanSupply
+                .minus(beansInMultiSig)
+                .minus(totalPooledBeans)
+                .minus(curr.ripe)
+                .minus(curr.deposited)
+                .minus(curr.withdrawn)
               // TODO: subtract claimable
-          };
+            };
+          }
         }
 
         // Farm + Circulating for Unripe Tokens
