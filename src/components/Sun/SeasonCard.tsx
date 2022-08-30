@@ -1,19 +1,20 @@
 import React from 'react';
-import { Stack, Typography, Box, Grid } from '@mui/material';
+import { Typography, Box, Grid } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import rainySeasonIcon from '~/img/beanstalk/sun/rainy-season.svg';
 import drySeasonIcon from '~/img/beanstalk/sun/dry-season.svg';
 import { displayBN, displayFullBN } from '../../util';
 import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
 import { BEAN } from '~/constants/tokens';
+import Row from '~/components/Common/Row';
 
 export interface SeasonCardProps {
   season: BigNumber;
   price: BigNumber;
   rewardBeans: BigNumber;
   newSoil: BigNumber;
-  temperature: BigNumber;
-  deltaTemperature: BigNumber;
+  temperature: BigNumber | undefined;
+  deltaTemperature: BigNumber | undefined;
   podRate: BigNumber;
   deltaDemand: BigNumber | undefined;
   isNew?: boolean;
@@ -27,7 +28,7 @@ const SeasonCard: React.FC<SeasonCardProps> = ({
   temperature,
   deltaTemperature,
   deltaDemand,
-  isNew
+  isNew = false
 }) => (
   <div>
     <Box sx={{ '&:hover > .test': { display: 'block' }, overflow: 'hidden', position: 'relative' }}>
@@ -49,11 +50,11 @@ const SeasonCard: React.FC<SeasonCardProps> = ({
             backdropFilter: 'blur(6px)',
           }}
         >
-          <Stack direction="row" alignItems="center" justifyContent="center" height="100%">
+          <Row justifyContent="center" height="100%">
             <Typography pl={1} color="gray" fontSize={FontSize.sm} textAlign="left">
               The forecast for Season {season.toString()} is based on data in the current Season.
             </Typography>
-          </Stack>
+          </Row>
         </Box>
       )}
       <Box
@@ -66,82 +67,64 @@ const SeasonCard: React.FC<SeasonCardProps> = ({
           animationIterationCount: 'infinite',
         }}
       >
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Grid container>
-            {/* Season */}
-            <Grid item xs={1.5} md={1.25}>
-              <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing="5px">
-                {(rewardBeans.lte(0)) ? (
-                  <img src={drySeasonIcon} height={IconSize.small} alt="" />
-                ) : (
-                  <img src={rainySeasonIcon} height={IconSize.small} alt="" />
-                )}
-                <Typography color="text.primary" variant="bodySmall">
-                  {season?.toString() || '?'}
-                </Typography>
-              </Stack>
-            </Grid>
-            {/* New Beans */}
-            <Grid item xs={3} md={2}>
-              <Stack alignItems="flex-end" justifyContent="center">
-                <Typography variant="bodySmall">
-                  {rewardBeans ? `+ ${displayBN(rewardBeans)}` : '?'}
-                </Typography>
-              </Stack>
-            </Grid>
-            {/* Soil */}
-            <Grid item xs={3} md={2}>
-              <Stack direction="row" justifyContent="flex-end" alignItems="center">
-                <Typography
-                  variant="bodySmall"
-                >
-                  {!isNew} {displayFullBN(newSoil, BEAN[1].displayDecimals, BEAN[1].displayDecimals)}
-                </Typography>
-              </Stack>
-            </Grid>
-            {/* Temperature */}
-            <Grid item xs={4.5} md={2.75}>
-              <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={0.5}>
-                <Typography variant="bodySmall">
-                  {temperature ? `${displayBN(temperature)}%` : '?'}
-                </Typography>
-                <Typography
-                  variant="bodySmall"
-                  display="flex"
-                  flexDirection="row"
-                  alignItems="center"
-                  justifyContent="end"
-                  sx={{
-                    color: 'gray',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  (&nbsp;{deltaTemperature.lt(0) ? '-' : '+'}{deltaTemperature.abs().toString()}%&nbsp;)
-                </Typography>
-              </Stack>
-            </Grid>
-            {/* Pod Rate */}
-            <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
-              <Stack alignItems="flex-end" justifyContent="center">
-                <Typography color="text.primary" variant="bodySmall">
-                  {podRate?.gt(0) ? `${displayBN(podRate.times(100))}%` : '-'}
-                </Typography>
-              </Stack>
-            </Grid>
-            {/* Delta Demand */}
-            <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }}>
-              <Stack alignItems="flex-end" justifyContent="center">
-                <Typography variant="bodySmall">
-                  {deltaDemand 
-                    ? (deltaDemand.lt(-10_000 / 100) || deltaDemand.gt(10_000 / 100)) 
-                      ? `${deltaDemand.lt(0) ? '-' : ''}∞`
-                      : `${displayBN(deltaDemand.div(100), true)}%`
-                    : '-'}
-                </Typography>
-              </Stack>
-            </Grid>
+        <Grid container>
+          {/* Season */}
+          <Grid item xs={1.5} md={1.25}>
+            <Row justifyContent="flex-start" spacing={0.5}>
+              {(rewardBeans.lte(0)) ? (
+                <img src={drySeasonIcon} height={IconSize.small} alt="" />
+              ) : (
+                <img src={rainySeasonIcon} height={IconSize.small} alt="" />
+              )}
+              <Typography color="text.primary" variant="bodySmall">
+                {season?.toString() || '-'}
+              </Typography>
+            </Row>
           </Grid>
-        </Stack>
+          {/* New Beans */}
+          <Grid item xs={3} md={2} textAlign="right">
+            <Typography variant="bodySmall">
+              {rewardBeans ? `+ ${displayBN(rewardBeans)}` : '-'}
+            </Typography>
+          </Grid>
+          {/* Soil */}
+          <Grid item xs={3} md={2} textAlign="right">
+            <Typography variant="bodySmall">
+              {newSoil ? displayFullBN(newSoil, BEAN[1].displayDecimals, BEAN[1].displayDecimals) : '-'}
+            </Typography>
+          </Grid>
+          {/* Temperature */}
+          <Grid item xs={4.5} md={2.75}>
+            <Row justifyContent="flex-end" spacing={0.5}>
+              <Typography variant="bodySmall">
+                {temperature ? `${displayBN(temperature)}%` : '-'}
+              </Typography>
+              <Typography
+                variant="bodySmall"
+                color="gray"
+                sx={{ whiteSpace: 'nowrap' }}
+              >
+                (&nbsp;{deltaTemperature && deltaTemperature.lt(0) ? '-' : '+'}{deltaTemperature?.abs().toString() || '0'}%&nbsp;)
+              </Typography>
+            </Row>
+          </Grid>
+          {/* Pod Rate */}
+          <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }} textAlign="right">              
+            <Typography color="text.primary" variant="bodySmall">
+              {podRate?.gt(0) ? `${displayBN(podRate.times(100))}%` : '-'}
+            </Typography>
+          </Grid>
+          {/* Delta Demand */}
+          <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }} textAlign="right">
+            <Typography variant="bodySmall">
+              {deltaDemand 
+                ? (deltaDemand.lt(-10_000 / 100) || deltaDemand.gt(10_000 / 100)) 
+                  ? `${deltaDemand.lt(0) ? '-' : ''}∞`
+                  : `${displayBN(deltaDemand.div(100), true)}%`
+                : '-'}
+            </Typography>
+          </Grid>
+        </Grid>
       </Box>
     </Box>
   </div>
