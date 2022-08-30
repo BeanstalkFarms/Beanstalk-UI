@@ -25,7 +25,6 @@ export const useFetchPools = () => {
           console.debug('[bean/pools/useGetPools] FETCH', beanstalkPriceContract.address, chainId);
           const Pools = getChainConstant(ALL_POOLS, chainId);
           const Bean  = getChainConstant(BEAN, chainId);
-          console.debug('Bean', Bean);
 
           // FIXME: find regression with Bean.totalSupply()
           const beanErc20 = ERC20__factory.connect(Bean.address, provider);

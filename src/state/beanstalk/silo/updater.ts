@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BEAN_TO_SEEDS, BEAN_TO_STALK, NEW_BN, ONE_BN, TokenMap, ZERO_BN } from '~/constants';
+import { BEAN_TO_SEEDS, BEAN_TO_STALK, MULTISIGS, NEW_BN, ONE_BN, TokenMap, ZERO_BN } from '~/constants';
 import { bigNumberResult } from '~/util/Ledger';
 import { tokenResult, toStringBaseUnitBN } from '~/util';
 import { BEAN, BEAN_CRV3_LP, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
@@ -35,13 +35,6 @@ export const useFetchBeanstalkSilo = () => {
     if (beanstalk) {
       console.debug('[beanstalk/silo/useBeanstalkSilo] FETCH: whitelist = ', WHITELIST);
 
-      const multiSigs = [
-        // Beanstalk Farms Multi-sig (BFM)
-        '0x21DE18B6A8f78eDe6D16C50A167f6B222DC08DF7',
-        // Bean Sprout Multi-sig (BSM)
-        '0xb7ab3f0667eFF5e2299d39C23Aa0C956e8982235'
-      ];
-
       const [
         // 0
         stalkTotal,
@@ -60,8 +53,8 @@ export const useFetchBeanstalkSilo = () => {
         beanstalk.totalSeeds().then(tokenResult(SEEDS)),  // 
         beanstalk.totalRoots().then(bigNumberResult),     //
         beanstalk.totalEarnedBeans().then(tokenResult(BEAN)),
-        beanstalk.getBalance(multiSigs[0], BEAN[1].address).then(tokenResult(BEAN)),
-        beanstalk.getBalance(multiSigs[1], BEAN[1].address).then(tokenResult(BEAN)),
+        beanstalk.getBalance(MULTISIGS[0], BEAN[1].address).then(tokenResult(BEAN)),
+        beanstalk.getBalance(MULTISIGS[1], BEAN[1].address).then(tokenResult(BEAN)),
         // 4
         Promise.all(
           Object.keys(WHITELIST).map((addr) => (
@@ -69,8 +62,7 @@ export const useFetchBeanstalkSilo = () => {
               // FIXME: duplicate tokenResult optimization
               beanstalk.getTotalDeposited(addr).then(tokenResult(WHITELIST[addr])),
               beanstalk.getTotalWithdrawn(addr).then(tokenResult(WHITELIST[addr])),
-              // BEAN will always have a fixed BDV of 1,
-              // skip to save a network request
+              // BEAN will always have a fixed BDV of 1, skip to save a network request
               WHITELIST[addr] === Bean 
                 ? ONE_BN
                 : beanstalk
@@ -82,11 +74,11 @@ export const useFetchBeanstalkSilo = () => {
                       throw err;
                     }),
               // Only Bean and Bean:3CRV have Ripe tokens
-              WHITELIST[addr] === Bean || WHITELIST[addr] === Bean3CRV
-                ? WHITELIST[addr] === Bean
-                  ? beanstalk.getTotalUnderlying(UNRIPE_BEAN[1].address).then(tokenResult(WHITELIST[addr]))
-                  : beanstalk.getTotalUnderlying(UNRIPE_BEAN_CRV3[1].address).then(tokenResult(WHITELIST[addr]))
-                : ZERO_BN
+              WHITELIST[addr] === Bean
+                ? beanstalk.getTotalUnderlying(UNRIPE_BEAN[1].address).then(tokenResult(WHITELIST[addr]))
+                : WHITELIST[addr] === Bean3CRV
+                  ? beanstalk.getTotalUnderlying(UNRIPE_BEAN_CRV3[1].address).then(tokenResult(WHITELIST[addr]))
+                  : ZERO_BN
             ]).then((data) => ({
               token: addr.toLowerCase(),
               deposited: data[0],
@@ -133,6 +125,7 @@ export const useFetchBeanstalkSilo = () => {
 
           // Pooled Beans
           const POOL_ADDRESSES = Object.keys(ALL_POOLS[chainId]);
+
           // sum the bean reserves for each pool
           const totalPooledBeans = POOL_ADDRESSES.reduce((prev, poolAddr) => {
             const reserves = poolState[poolAddr]?.reserves;
@@ -152,7 +145,7 @@ export const useFetchBeanstalkSilo = () => {
                 .minus(curr.ripe)
                 .minus(curr.deposited)
                 .minus(curr.withdrawn)
-              // TODO: subtract claimable
+                // TODO: subtract claimable
             };
           }
         }
