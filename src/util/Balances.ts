@@ -8,10 +8,10 @@ export const BEANSTALK_STATE_CONFIG: { [key: string]: [name: string, color: stri
   // Farm
   farm:         ['Farm', '#F2E797', 'Assets stored in Beanstalk. Farm assets can be used in transactions on the Farm.'],
   circulating:  ['Circulating', BeanstalkPalette.lightBlue, 'Beanstalk assets in your wallet.'],
-  pooled:       ['Pooled', BeanstalkPalette.grey, 'Total Beans across all pools.'],
-  ripe:         ['Ripe', BeanstalkPalette.washedRed, 'Total underlying.'],
-  budget:       ['Budget', BeanstalkPalette.brown, 'Total Beans in the BFM and BSM multi-sig wallets.'],
-  farmPlusCirculating:        ['Farm & Circulating', BeanstalkPalette.darkBlue, 'Total farm and circulating Beans.']
+  pooled:       ['Pooled', BeanstalkPalette.grey, 'Beans in all liquidity pools.'],
+  ripe:         ['Ripe', BeanstalkPalette.washedRed, 'Assets minted as Fertilizer is sold. Ripe assets are the assets underlying Unripe assets.'],
+  budget:       ['Budget', BeanstalkPalette.brown, 'Beans in the BFM and BSM wallets.'],
+  farmPlusCirculating:        ['Farm & Circulating', BeanstalkPalette.darkBlue, 'Farm assets are stored in Beanstalk. Circulating assets are in Farmers\' wallets.']
 };
 
 export type BeanstalkStateID = keyof typeof BEANSTALK_STATE_CONFIG;
