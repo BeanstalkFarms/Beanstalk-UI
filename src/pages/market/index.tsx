@@ -26,10 +26,10 @@ const PodMarketPage: React.FC = () => {
           description="Trade the Beanstalk-native debt asset"
           href="https://docs.bean.money/farm/market#the-pod-market"
           OuterStackProps={{
-            alignItems: 'end'
+            // alignItems: 'end'
           }}
           control={
-            <Stack direction="row" alignItems="center" gap={1}>
+            <Stack direction={{ xs: 'row-reverse', md: 'row' }} justifyContent={{ xs: 'flex-end', md: 'flex-start' }} alignItems="center" gap={1}>
               <GuideButton
                 title="The Farmers' Almanac: Market Guides"
                 guides={[
