@@ -8,3 +8,7 @@ export const resetBeanstalkGovernance = createAction(
 export const updateActiveProposals = createAction<BeanstalkGovernance['activeProposals']>(
   'beanstalk/governance/updateActiveProposals'
 );
+
+export const updateMultisigBalances = createAction<BeanstalkGovernance['multisigBalances']>(
+  'beanstalk/governance/updateMultisigBalances'
+);

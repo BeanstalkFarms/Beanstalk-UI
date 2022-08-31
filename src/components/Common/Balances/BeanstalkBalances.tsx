@@ -28,7 +28,7 @@ const BeanstalkBalances: React.FC<{
       setAllow(true);
     }
   }, [allowNewHoverState]);
-
+  
   const onMouseOver = useCallback((address: string) => (
     allowNewHoverState ? () => setHoverAddress(address) : undefined
   ), [allowNewHoverState]);
@@ -52,22 +52,25 @@ const BeanstalkBalances: React.FC<{
   const pieChartData = useMemo(() => {
     if (hoverAddress && breakdown.tokens[hoverAddress]) {
       const thisAddress = breakdown.tokens[hoverAddress];
-      return Object.keys(thisAddress?.byState).reduce<PieDataPoint[]>((prev, state, index) => {
-        const value = thisAddress?.byState[state].value.toNumber();
-        prev.push({
-          // Required for PieChart
-          label: STATE_CONFIG[state as StateID][0],
-          value,
-          color: STATE_CONFIG[state as StateID][1],
-          // Additional
-          state: state,
-        });
+      if (!thisAddress?.byState) return [];
+      return Object.keys(thisAddress.byState).reduce<PieDataPoint[]>((prev, state) => {
+        const amount = thisAddress.byState[state].amount;
+        if (amount) {
+          prev.push({
+            // Required for PieChart
+            label: STATE_CONFIG[state as StateID][0],
+            value: amount.toNumber(),
+            color: STATE_CONFIG[state as StateID][1],
+            // Additional
+            state: state,
+          });
+        }
         return prev;
       }, []);
     }
     return availableTokens.map((address) => ({
       label: WHITELIST[address].name,
-      value: breakdown?.tokens[address]?.value?.toNumber(),
+      value: breakdown.tokens[address]?.amount?.toNumber(),
       color: WHITELIST[address].color
     } as PieDataPoint));
   }, [hoverAddress, availableTokens, breakdown, WHITELIST]);
@@ -128,6 +131,7 @@ const BeanstalkBalances: React.FC<{
               {pieChartData.map((dp) => {
                 const state = dp.state as StateID;
                 const tokenState = breakdown.tokens[hoverAddress].byState[state];
+                if (!tokenState.amount) return null;
                 return (
                   <TokenRow
                     key={state}
