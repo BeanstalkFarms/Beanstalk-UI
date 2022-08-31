@@ -56,7 +56,10 @@ const BeanstalkBalances: React.FC<{
         const value = thisAddress?.byState[state].value.toNumber();
         prev.push({
           // Required for PieChart
-          label: STATE_CONFIG[state as StateID][0],
+          label: STATE_CONFIG[state as StateID][0] === 'Withdrawn'
+              // farmer & beanstalk balances sometimes use different labels
+              ? 'Withdrawn & Circulating'
+              : STATE_CONFIG[state as StateID][0],
           value,
           color: STATE_CONFIG[state as StateID][1],
           // Additional
@@ -131,7 +134,7 @@ const BeanstalkBalances: React.FC<{
                 return (
                   <TokenRow
                     key={state}
-                    label={STATE_CONFIG[state][0]}
+                    label={dp.label}
                     color={dp.color}
                     showColor={tokenState.amount.gt(0)}
                     isFaded={false}
