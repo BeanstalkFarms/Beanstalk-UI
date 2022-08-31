@@ -1,7 +1,6 @@
-import { Box, Card, Chip, Stack, styled, Tab, TabProps, Tabs } from '@mui/material';
+import { Box, Card, Stack, Tabs } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import React from 'react';
-import { Token } from 'graphql';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import { AppState } from '~/state';
 
@@ -14,42 +13,9 @@ import TokenIcon from '~/components/Common/TokenIcon';
 import { SEEDS, STALK } from '~/constants/tokens';
 import Fiat from '~/components/Common/Fiat';
 import { displayBN } from '~/util';
-
-const Label : React.FC<{ name: string; token?: Token }> = ({ name, token, children }) => (
-  <Stack direction="row" alignItems="center" gap={0.2}>
-    {name}&nbsp;
-    {/* <Typography variant="h4">{children}</Typography> */}
-    <Chip label={children} size="small" />
-  </Stack>
-); 
-
-const StyledTab = styled((props: TabProps) => (
-  <Tab disableRipple {...props} />
-))(({ theme }) => ({
-  root: {
-    opacity: 1,
-  },
-  '&:hover': {
-    cursor: 'pointer'
-  },
-  '& .MuiChip-label': {
-    opacity: 0.7
-  },
-  '&.Mui-selected .MuiChip-root': {
-    // backgroundColor: BeanstalkPalette.lightGrey
-  },
-  '&:hover .MuiChip-label, &.Mui-selected .MuiChip-label': {
-    opacity: 1,
-  },
-  '& .MuiChip-root:hover': {
-    cursor: 'pointer'
-  }
-}));
-
-// ------------------------------------------------
+import { ChipLabel, StyledTab } from '~/components/Common/Tabs';
 
 const SLUGS = ['deposits', 'stalk'];
-
 const Overview: React.FC<{
   farmerSilo:     AppState['_farmer']['silo'];
   beanstalkSilo:  AppState['_beanstalk']['silo'];
@@ -72,19 +38,19 @@ const Overview: React.FC<{
         {/* Tabs */}
         <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0 }}>
           <StyledTab label={
-            <Label name="Deposits">
+            <ChipLabel name="Deposits">
               <Fiat value={breakdown.states.deposited.value} amount={breakdown.states.deposited.value} truncate />
-            </Label>
+            </ChipLabel>
           } />
           <StyledTab label={
-            <Label name="Stalk">
+            <ChipLabel name="Stalk">
               <Stack direction="row" alignItems="center"><TokenIcon token={STALK} /> {displayBN(farmerSilo.stalk.active)}</Stack>
-            </Label>
+            </ChipLabel>
           } />
           <StyledTab label={
-            <Label name="Seeds">
+            <ChipLabel name="Seeds">
               <Stack direction="row" alignItems="center"><TokenIcon token={SEEDS} /> {displayBN(farmerSilo.seeds.active)}</Stack>
-            </Label>
+            </ChipLabel>
           } />
         </Tabs>
         {/* "Windows" (time range selector) */}

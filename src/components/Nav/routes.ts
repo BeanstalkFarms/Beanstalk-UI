@@ -7,6 +7,8 @@ import swapIcon from '~/img/nav-icons/trade.svg';
 import twitterIcon from '~/img/nav-icons/twitter.svg';
 import duneIcon from '~/img/nav-icons/dune.svg';
 import docsIcon from '~/img/nav-icons/docs.svg';
+import disclosuresIcon from '~/img/nav-icons/disclosures.svg';
+import analyticsIcon from '~/img/nav-icons/analytics.svg';
 
 export type RouteData = {
   /** If set, link to this internal path. */
@@ -45,12 +47,12 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       title: 'Barn',
     },
     {
-      path: '/market',
-      title: 'Market',
+      path: '/balances',
+      title: 'Balances',
     },
     {
-      path: '/analytics',
-      title: 'Analytics',
+      path: '/market',
+      title: 'Market',
     },
   ],
   // More Menu
@@ -65,6 +67,12 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       path: 'swap',
       title: 'Swap',
       icon: swapIcon,
+      small: true
+    },
+    {
+      path: '/analytics',
+      title: 'Analytics',
+      icon: analyticsIcon,
       small: true
     },
     {
@@ -93,7 +101,7 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       path: 'disclosures',
       title: 'Disclosures',
       href: 'https://docs.bean.money/disclosures',
-      icon: docsIcon
+      icon: disclosuresIcon
     },
     {
       path: 'discord',

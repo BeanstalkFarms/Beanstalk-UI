@@ -30,6 +30,7 @@ import { ERC20Token, NativeToken, BeanstalkToken } from '~/classes/Token';
 import { SupportedChainId } from './chains';
 import { ChainConstant } from '.';
 import { BEAN_CRV3_ADDRESSES, CRV3_ADDRESSES, DAI_ADDRESSES, LUSD_ADDRESSES, USDC_ADDRESSES, USDT_ADDRESSES, UNRIPE_BEAN_ADDRESSES, UNRIPE_BEAN_CRV3_ADDRESSES, BEAN_ADDRESSES } from './addresses';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 // ----------------------------------------
 // Types + Utilities
@@ -151,6 +152,7 @@ export const BEAN = {
       name: 'Bean',
       symbol: 'BEAN',
       logo: beanCircleLogoUrl,
+      color: BeanstalkPalette.logoGreen
     },
     {
       stalk: 1,
@@ -283,6 +285,7 @@ export const BEAN_CRV3_LP = {
       symbol: 'BEAN:3CRV',
       logo: beanCrv3LpLogoUrl,
       isLP: true,
+      color: '#DFB385'
     },
     {
       stalk: 1,
@@ -305,6 +308,7 @@ export const UNRIPE_BEAN = {
       symbol: 'urBEAN',
       logo: unripeBeanLogoUrl,
       displayDecimals: 2,
+      color: '#ECBCB3'
     },
     {
       stalk: 1,
@@ -323,6 +327,7 @@ export const UNRIPE_BEAN_CRV3 = {
       symbol: 'urBEAN3CRV',
       logo: unripeBeanCrv3LogoUrl,
       displayDecimals: 2,
+      color: BeanstalkPalette.lightBlue
     },
     {
       stalk: 1,

@@ -2,6 +2,10 @@ import React from 'react';
 
 export const EXAMPLE_TOOLTIP = '';
 
+export const WHITELIST_TOOLTIPS: { [key: string]: any | React.ReactElement; } = {
+  BEAN: ''
+};
+
 /** Pod Marketplace specific tooltips */
 export const POD_MARKET_TOOLTIPS: { [key: string]: any | React.ReactElement } = {
   start: 'The start index in this Plot that you would like to List.',

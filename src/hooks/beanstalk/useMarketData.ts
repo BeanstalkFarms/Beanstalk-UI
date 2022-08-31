@@ -11,8 +11,8 @@ const useMarketData = () => {
   const harvestableIndex = useHarvestableIndex();
   
   /// Queries
-  const listingsQ = usePodListings({ variables: { status: 'active', } });
-  const ordersQ   = useAllPodOrdersQuery({ variables: { status: 'active' } });
+  const listingsQ = usePodListings({ variables: { status: 'active', }, fetchPolicy: 'cache-and-network', nextFetchPolicy: 'cache-first', notifyOnNetworkStatusChange: true });
+  const ordersQ   = useAllPodOrdersQuery({ variables: { status: 'active' }, fetchPolicy: 'cache-and-network', nextFetchPolicy: 'cache-first', notifyOnNetworkStatusChange: true  });
   
   /// Cast query data to BigNumber, etc.
   const listings = useCastApolloQuery<PodListing>(listingsQ, 'podListings', (_listing) => castPodListing(_listing, harvestableIndex));

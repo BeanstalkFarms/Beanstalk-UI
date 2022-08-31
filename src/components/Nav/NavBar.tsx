@@ -2,7 +2,6 @@ import React from 'react';
 import {
   AppBar,
   Box,
-  Stack,
 } from '@mui/material';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import WalletButton from '~/components/Common/Connection/WalletButton';
@@ -14,6 +13,7 @@ import AboutButton from './Buttons/AboutButton';
 import ROUTES from './routes';
 import HoverMenu from './HoverMenu';
 import { NAV_BORDER_HEIGHT, NAV_ELEM_HEIGHT, NAV_HEIGHT } from '~/hooks/app/usePageDimensions';
+import Row from '~/components/Common/Row';
 
 const NavBar: React.FC<{}> = ({ children }) => (
   <AppBar
@@ -28,21 +28,17 @@ const NavBar: React.FC<{}> = ({ children }) => (
     }}
   >
     {children}
-    <Stack
-      direction="row"
-      alignItems="center"
+    <Row
       justifyContent="space-between"
       height={`${NAV_HEIGHT}px`}
       px={1}
       gap={1}
     >
       {/* Desktop: Left Side */}
-      <Stack direction="row" alignItems="center" sx={{ flex: 1 }} height="100%" gap={1}>
+      <Row sx={{ flex: 1 }} height="100%" gap={1}>
         <PriceButton sx={{ height: NAV_ELEM_HEIGHT }} />
         <SunButton sx={{ height: NAV_ELEM_HEIGHT }} />
-        <Stack
-          direction="row"
-          alignItems="center"
+        <Row
           sx={{ display: { lg: 'flex', xs: 'none' } }}
           height="100%"
         >
@@ -57,23 +53,18 @@ const NavBar: React.FC<{}> = ({ children }) => (
           <HoverMenu items={ROUTES.more}>
             More
           </HoverMenu>
-        </Stack>
-      </Stack>
+        </Row>
+      </Row>
       {/* Desktop: Right Side */}
-      <Stack
-        direction="row"
-        justifyContent="flex-end"
-        alignItems="center"
-        gap={1}
-        >
+      <Row justifyContent="flex-end" gap={1}>
         <Box sx={{ display: { sm: 'block', xs: 'none' } }}>
           <NetworkButton sx={{ height: NAV_ELEM_HEIGHT }} />
         </Box>
         <WalletButton sx={{ height: NAV_ELEM_HEIGHT }} />
         <AboutButton sx={{ height: NAV_ELEM_HEIGHT }} />
-      </Stack>
-    </Stack>
+      </Row>
+    </Row>
   </AppBar>
-  );
+);
 
 export default NavBar;
