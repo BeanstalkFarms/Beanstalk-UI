@@ -10,9 +10,8 @@ import Row from '~/components/Common/Row';
 
 export interface SeasonCardProps {
   season: BigNumber;
-  price: BigNumber;
-  rewardBeans: BigNumber;
-  newSoil: BigNumber;
+  rewardBeans: BigNumber | undefined;
+  newSoil: BigNumber | undefined;
   temperature: BigNumber | undefined;
   deltaTemperature: BigNumber | undefined;
   podRate: BigNumber;
@@ -71,7 +70,7 @@ const SeasonCard: React.FC<SeasonCardProps> = ({
           {/* Season */}
           <Grid item xs={1.5} md={1.25}>
             <Row justifyContent="flex-start" spacing={0.5}>
-              {(rewardBeans.lte(0)) ? (
+              {(rewardBeans && rewardBeans.lte(0)) ? (
                 <img src={drySeasonIcon} height={IconSize.small} alt="" />
               ) : (
                 <img src={rainySeasonIcon} height={IconSize.small} alt="" />
