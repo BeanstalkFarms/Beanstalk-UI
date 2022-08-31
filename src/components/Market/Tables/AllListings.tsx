@@ -46,7 +46,7 @@ const AllListings : React.FC<{ data: ReturnType<typeof useMarketData> }> = ({ da
   return (
     <MarketBaseTable
       columns={columns}
-      rows={data.listings}
+      rows={data.listings || []}
       loading={data.loading}
       maxRows={8}
       onRowClick={handleClick}

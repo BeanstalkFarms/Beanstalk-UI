@@ -4,6 +4,7 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import React from 'react';
 import EastIcon from '@mui/icons-material/East';
 import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
+import Row from '~/components/Common/Row';
 
 const PageHeader : React.FC<{
   /** The Field: The Decentralized Credit Facility */
@@ -18,7 +19,7 @@ const PageHeader : React.FC<{
   OuterStackProps?: MuiStackProps;
 } & Omit<LinkProps, 'title'>> = (props) => (
   <Stack direction={{ md: 'row', xs: 'column' }} justifyContent="space-between" gap={1} {...props.OuterStackProps}>
-    <Stack direction="row" alignItems="center" gap={1.5}>
+    <Row gap={1.5}>
       {/* Back button */}
       {props.returnPath && (
         <Button
@@ -33,10 +34,10 @@ const PageHeader : React.FC<{
             }
         }}
         >
-          <Stack direction="row" gap={0.5} alignItems="center">
+          <Row gap={0.5}>
             <KeyboardBackspaceIcon sx={{ width: IconSize.small }} height="auto" />
             <Typography variant="h4">Back</Typography>
-          </Stack>
+          </Row>
         </Button>
       )}
       {/* Title */}
@@ -76,7 +77,7 @@ const PageHeader : React.FC<{
           </Box>
         )}
       </Stack>
-    </Stack>
+    </Row>
     {props.control && <Box>{props.control}</Box>}
   </Stack>
 );

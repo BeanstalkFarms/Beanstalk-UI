@@ -156,7 +156,6 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
         </Box>
         <SeasonCard
           season={season.plus(1)}
-          price={price}
           rewardBeans={peg.rewardBeans}
           newSoil={peg.soilStart}
           podRate={NEW_BN}
@@ -174,7 +173,6 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
               key={s.season.toString()}
               season={s.season}
               // Season
-              price={s.price}
               rewardBeans={s.rewardBeans}
               // Field
               temperature={s.temperature}

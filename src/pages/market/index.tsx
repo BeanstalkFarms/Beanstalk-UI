@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Stack, Tab, Typography } from '@mui/material';
+import { Box, CircularProgress, Container, Stack, Typography } from '@mui/material';
 import PageHeader from '~/components/Common/PageHeader';
 import useTabs from '~/hooks/display/useTabs';
 import AllListings from '~/components/Market/Tables/AllListings';
@@ -10,6 +10,8 @@ import MarketGraph from '~/components/Market/MarketGraph';
 import { Module, ModuleContent, ModuleHeader, ModuleTabs } from '~/components/Common/Module';
 import GuideButton from '~/components/Common/Guide/GuideButton';
 import { HOW_TO_BUY_PODS, HOW_TO_SELL_PODS } from '~/util';
+import Centered from '~/components/Common/ZeroState/Centered';
+import { ChipLabel, StyledTab } from '~/components/Common/Tabs';
 
 const SLUGS = ['buy', 'sell'];
 const PodMarketPage: React.FC = () => {
@@ -24,10 +26,10 @@ const PodMarketPage: React.FC = () => {
           description="Trade the Beanstalk-native debt asset"
           href="https://docs.bean.money/farm/market#the-pod-market"
           OuterStackProps={{
-            alignItems: 'end'
+            // alignItems: 'end'
           }}
           control={
-            <Stack direction="row" alignItems="center" gap={1}>
+            <Stack direction={{ xs: 'row-reverse', md: 'row' }} justifyContent={{ xs: 'flex-end', md: 'flex-start' }} alignItems="center" gap={1}>
               <GuideButton
                 title="The Farmers' Almanac: Market Guides"
                 guides={[
@@ -47,7 +49,7 @@ const PodMarketPage: React.FC = () => {
             <Typography variant="h4">Overview</Typography>
           </ModuleHeader>
           <Box sx={{ width: '100%', height: '400px', position: 'relative', overflow: 'visible' }}>
-            {data.listings !== undefined && data.orders !== undefined ? (
+            {data.loading === false && data.listings !== undefined && data.orders !== undefined ? (
               <MarketGraph
                 listings={data.listings}
                 orders={data.orders}
@@ -56,20 +58,27 @@ const PodMarketPage: React.FC = () => {
                 harvestableIndex={data.harvestableIndex}
               />
             ) : (
-              'Loading'
+              <Centered>
+                <CircularProgress variant="indeterminate" />
+              </Centered>
             )}
           </Box>
-          {/* <Box>
-            <pre>{JSON.stringify(data, null, 2)}</pre>
-          </Box> */}
         </Module>
         {/**
           * Buy Now and Sell Now
           */}
         <Module>
           <ModuleTabs value={tab} onChange={handleChangeTab}>
-            <Tab label="Buy Now" />
-            <Tab label="Sell Now" />
+            <StyledTab label={
+              <ChipLabel name="Buy Now">
+                {data.listings?.length || 0}
+              </ChipLabel>
+            } />
+            <StyledTab label={
+              <ChipLabel name="Sell Now">
+                {data.orders?.length || 0}
+              </ChipLabel>
+            } />
           </ModuleTabs>
           <ModuleContent>
             {tab === 0 && <AllListings data={data} />}

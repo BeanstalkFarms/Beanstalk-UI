@@ -12,8 +12,8 @@ export default function useCastApolloQuery<T>(
   key: string,
   cast: (elem: any) => T
 ) {
-  return useMemo<T[]>(() => {
-    if (query.loading || !query.data?.[key]) return [];
+  return useMemo<T[] | undefined>(() => {
+    if (query.loading || !query.data?.[key]) return undefined;
     return query.data[key].map(cast);
   }, [
     query.data, 
