@@ -187,7 +187,7 @@ const Whitelist : React.FC<{
                               {/* <Stack alignItems="center" justifyContent="center">×</Stack> */}
                               <Box sx={{ px: 1, py: 0.5, maxWidth: 215 }}>
                                 <Stat
-                                  title={<Row gap={0.5}><TokenIcon token={underlyingToken!} /> Underlying {underlyingToken!.symbol}</Row>}
+                                  title={<Row gap={0.5}><TokenIcon token={underlyingToken!} /> Ripe {underlyingToken!.symbol}</Row>}
                                   gap={0.25}
                                   variant="h4"
                                   amount={(
@@ -324,7 +324,7 @@ const Whitelist : React.FC<{
                     * Cell: My Deposits
                     */}
                   <Grid item md={1.5} xs={5}>
-                    <Stack direction="row" alignItems="center" justifyContent="flex-end">
+                    <Row justifyContent="flex-end">
                       <Tooltip
                         placement="left"
                         componentsProps={TOOLTIP_COMPONENT_PROPS}
@@ -391,7 +391,7 @@ const Whitelist : React.FC<{
                       <Stack display={{ xs: 'none', md: 'block' }} sx={{ width: ARROW_CONTAINER_WIDTH }} alignItems="center">
                         <ArrowRightIcon />
                       </Stack>
-                    </Stack>
+                    </Row>
                   </Grid>
                 </Grid>
               </Button>
