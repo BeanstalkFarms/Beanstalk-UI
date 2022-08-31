@@ -181,9 +181,15 @@ const Graph: React.FC<GraphProps> = (props) => {
     if (isTWAP) {
       const yMin = min(_data, getY);
       const yMax = max(_data, getY);
-      const biggestDifference = Math.max(Math.abs(1 - (yMin as number)), Math.abs(1 - (yMax as number)));
+      const biggestDifference = Math.max(
+        Math.abs(1 - (yMin as number)),
+        Math.abs(1 - (yMax as number))
+      );
       yScale = scaleLinear<number>({
-        domain: [1 - biggestDifference, 1 + biggestDifference],
+        domain: [
+          Math.max(1 - biggestDifference, 0),  // TWAP can't go below zero
+          1 + biggestDifference
+        ],
       });
     } 
     
