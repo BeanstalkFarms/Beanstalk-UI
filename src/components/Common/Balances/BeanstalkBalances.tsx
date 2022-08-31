@@ -58,7 +58,7 @@ const BeanstalkBalances: React.FC<{
           // Required for PieChart
           label: STATE_CONFIG[state as StateID][0] === 'Withdrawn'
               // farmer & beanstalk balances sometimes use different labels
-              ? 'Withdrawn & Circulating'
+              ? 'Withdrawn & Claimable'
               : STATE_CONFIG[state as StateID][0],
           value,
           color: STATE_CONFIG[state as StateID][1],
