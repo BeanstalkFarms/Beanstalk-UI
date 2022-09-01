@@ -19,7 +19,7 @@ import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { IMPERSONATED_ACCOUNT, trimAddress } from '~/util';
 import useChainConstant from '~/hooks/chain/useChainConstant';
-import balancesIcon from '~/img/nav-icons/balances.svg';
+import gearIcon from '~/img/nav-icons/gear.svg';
 import historyIcon from '~/img/nav-icons/history.svg';
 import etherscanIcon from '~/img/nav-icons/etherscan.svg';
 import disconnectIcon from '~/img/nav-icons/disconnect.svg';
@@ -32,6 +32,8 @@ import WalletDialog from './WalletDialog';
 import DropdownIcon from '~/components/Common/DropdownIcon';
 import PickBeansDialog from '~/components/Farmer/Unripe/PickDialog';
 import AddressIcon from '~/components/Common/AddressIcon';
+import useGlobal from '~/hooks/app/useSettingsDialog';
+import Row from '~/components/Common/Row';
 
 const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props }) => {
   const account = useAccount();
@@ -53,6 +55,9 @@ const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
 
   /// Dialog: Pick Unripe Beans
   const [picking, showPick, hidePick] = useToggle(toggleMenuAnchor);
+
+  /// Dialog: Settings
+  const [_, setSettingsOpen] = useGlobal('showSettings');
 
   /// Display: Not Connected
   if (!account || !activeChain?.id) {
@@ -81,27 +86,26 @@ const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
 
   const menu = (
     <MenuList sx={{ minWidth: 250 }} component={Card}>
-      <MenuItem
-        component={RouterLink}
-        to="/balances"
-        onClick={toggleMenuAnchor}
-      >
+      <MenuItem onClick={() => {
+        toggleMenuAnchor();
+        setSettingsOpen(true);
+      }}>
         <ListItemText>
-          <Stack direction="row" gap={1} alignItems="center">
-            <img src={balancesIcon} alt="Balances" width={20} />
+          <Row gap={1}>
+            <img src={gearIcon} alt="Settings" width={20} />
             <Typography variant="body1" color="text.primary">
-              Balances
+              Settings
             </Typography>
-          </Stack>
+          </Row>
         </ListItemText>
       </MenuItem>
       <MenuItem component={RouterLink} to="/history" onClick={toggleMenuAnchor}>
-        <Stack direction="row" gap={1} alignItems="center">
+        <Row gap={1}>
           <img src={historyIcon} alt="History" width={20} />
           <Typography variant="body1" color="text.primary">
             History
           </Typography>
-        </Stack>
+        </Row>
       </MenuItem>
       <MenuItem
         component="a"
@@ -109,18 +113,13 @@ const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
         target="_blank"
         rel="noreferrer"
       >
-        <Stack
-          sx={{ width: '100%' }}
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <Stack direction="row" gap={1} alignItems="center">
+        <Row sx={{ width: '100%' }} justifyContent="space-between">
+          <Row gap={1}>
             <img src={etherscanIcon} alt="Etherscan" width={20} />
             <Typography variant="body1" color="text.primary">
               View on Etherscan
             </Typography>
-          </Stack>
+          </Row>
           <ArrowForwardIcon
             sx={{
               transform: 'rotate(-45deg)',
@@ -128,15 +127,15 @@ const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
               color: 'text.secondary',
             }}
           />
-        </Stack>
+        </Row>
       </MenuItem>
       <MenuItem onClick={() => disconnect()}>
-        <Stack direction="row" gap={1} alignItems="center">
+        <Row gap={1}>
           <img src={disconnectIcon} alt="Disconnect" width={20} />
           <Typography variant="body1" color="text.primary">
             Disconnect Wallet
           </Typography>
-        </Stack>
+        </Row>
       </MenuItem>
       <Divider sx={{ mx: 1 }} />
       <Box sx={{ px: 1, pb: 0.25 }}>
@@ -153,9 +152,9 @@ const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
             },
           }}
         >
-          <Stack direction="row" alignItems="center">
+          <Row>
             <Typography variant="h4">Pick Unripe Assets</Typography>
-          </Stack>
+          </Row>
         </Button>
       </Box>
       <Box sx={{ px: 1, pt: 0.75, pb: 0.25 }}>
