@@ -4,13 +4,13 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import MoreDropdown from '~/components/Market/MoreDropdown';
+import MoreDropdown from '~/components/Market/Pods/MoreDropdown';
 
 const CreateButtons: React.FC = () => (
   <Stack direction="row" gap={1} alignItems="end" height="100%">
     <MoreDropdown />
     <Button
-      href="#/market/create"
+      href="#/market/pods/create"
       color="primary"
       variant="contained"
       sx={{ py: 1 }}

@@ -6,50 +6,50 @@ import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import COLUMNS from '~/components/Common/Table/cells';
 import MarketBaseTable from './Base';
-import AuthEmptyState from '../../Common/ZeroState/AuthEmptyState';
-import TablePagination from '../../Common/TablePagination';
+import AuthEmptyState from '../../../Common/ZeroState/AuthEmptyState';
+import TablePagination from '../../../Common/TablePagination';
 import { AppState } from '~/state';
 
 const components = {
   NoRowsOverlay() {
     return (
-      <AuthEmptyState message="Your Orders will appear here." />
+      <AuthEmptyState message="You Listings will appear here." />
     );
   },
   Pagination: TablePagination,
 };
 
-const MyOrdersTable : React.FC<{}> = () => {
+const MyListingsTable : React.FC<{}> = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  /// Data
-  const orders = useSelector<AppState, AppState['_farmer']['market']['orders']>((state) => state._farmer.market.orders);
-  const rows   = useMemo(() => Object.values(orders),   [orders]);
 
-  console.debug('Orders', orders);
+  /// Data
+  const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
+  const listings       = useSelector<AppState, AppState['_farmer']['market']['listings']>((state) => state._farmer.market.listings);
+  const rows           = useMemo(() => Object.values(listings), [listings]);
 
   /// Navigation
   const navigate = useNavigate();
   const handleClick = useCallback((params: GridRowParams) => {
-    navigate(`/market/order/${params.row.id}`);
+    navigate(`/market/pods/listing/${params.row.id}`);
   }, [navigate]);
 
   /// Data Grid setup
   const columns: DataGridProps['columns'] = !isMobile
     ? [
-      COLUMNS.orderId(1),
-      COLUMNS.maxPlaceInLine(1),
+      COLUMNS.listingId(1),
+      COLUMNS.plotIndex(beanstalkField.harvestableIndex, 1),
       COLUMNS.pricePerPod(1),
       COLUMNS.numPodsActive(1),
+      COLUMNS.expiry(beanstalkField.harvestableIndex, 1),
       COLUMNS.progress,
-      // FIXME: add cancel
       COLUMNS.rightChevron,
     ]
     : [
-      COLUMNS.orderId(0.25),
-      COLUMNS.maxPlaceInLine(1.8),
-      COLUMNS.pricePerPod(1.5),
-      COLUMNS.numPods(1.5),
+      COLUMNS.listingId(0.7),
+      COLUMNS.plotIndex(beanstalkField.harvestableIndex, 1),
+      COLUMNS.pricePerPod(1),
+      COLUMNS.numPodsActive(1),
     ];
   
   return (
@@ -58,9 +58,10 @@ const MyOrdersTable : React.FC<{}> = () => {
       rows={rows}
       maxRows={8}
       onRowClick={handleClick}
+      disableVirtualization={rows.length === 0}
       components={components}
     />
   );
 };
 
-export default MyOrdersTable;
+export default MyListingsTable;

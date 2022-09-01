@@ -10,11 +10,11 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
-import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
+import PageHeaderSecondary from '../../../components/Common/PageHeaderSecondary';
 import useTabs from '~/hooks/display/useTabs';
 import AddressIcon from '~/components/Common/AddressIcon';
-import MyOrdersTable from '~/components/Market/Tables/MyOrders';
-import MyListingsTable from '~/components/Market/Tables/MyListings';
+import MyOrdersTable from '~/components/Market/Pods/Tables/MyOrders';
+import MyListingsTable from '~/components/Market/Pods/Tables/MyListings';
 
 const SLUGS = ['orders', 'listings'];
 const MarketAccountPage: React.FC = () => {
@@ -29,7 +29,7 @@ const MarketAccountPage: React.FC = () => {
     <Container maxWidth="lg">
       <Stack spacing={2}>
         <PageHeaderSecondary
-          returnPath="/market"
+          returnPath="/market/pods"
           title={(
             <Stack direction="row" gap={1} alignItems="center">
               <AddressIcon />
@@ -51,7 +51,7 @@ const MarketAccountPage: React.FC = () => {
             {tab === 0 && (
               <Button
                 component={Link}
-                to="/market/create"
+                to="/market/pods/create"
                 size="small"
                 color="primary"
                 variant="text"
@@ -63,7 +63,7 @@ const MarketAccountPage: React.FC = () => {
             {tab === 1 && (
               <Button
                 component={Link}
-                to="/market/create"
+                to="/market/pods/create"
                 size="small"
                 color="primary"
                 variant="text"

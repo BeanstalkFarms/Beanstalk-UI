@@ -20,7 +20,7 @@ const InputPropsRight = { endAdornment: 'End' };
 const PlotInputField : React.FC<{
   /** All plots that are selectable via the input field */
   plots: PlotMap<BigNumber>,
-  /** The maximum number of pods that can be entered into the input */
+  /** The maximum number of Pods that can be entered into the input */
   max?: BigNumber;
   /** */
   disabledAdvanced?: boolean;
@@ -43,7 +43,7 @@ const PlotInputField : React.FC<{
   const harvestableIndex = useHarvestableIndex();
   
   /// Find the currently selected plot from form state.
-  /// If selected, grab the number of pods from the farmer's field state.
+  /// If selected, grab the number of Pods from the farmer's field state.
   const plot = values.plot;
   const [numPods, numPodsFloat] = useMemo(
     () => {

@@ -25,8 +25,8 @@ import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 
 import { PodOrder } from '~/state/farmer/market';
-import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
-import { ActionType } from '../../../util/Actions';
+import StyledAccordionSummary from '../../../Common/Accordion/AccordionSummary';
+import { ActionType } from '../../../../util/Actions';
 
 export type FillOrderFormValues = {
   plot: PlotFragment;
@@ -205,14 +205,14 @@ const FillOrder: React.FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
         },
         Bean.stringify(index),    // index of plot to sell
         Bean.stringify(start),    // start index within plot
-        Bean.stringify(amount),   // amount of pods to sell
+        Bean.stringify(amount),   // amount of Pods to sell
         values.destination,
       );
       txToast.confirming(txn);
 
       const receipt = await txn.wait();
       await Promise.all([
-        refetchFarmerField(),     // refresh plots; decrement pods
+        refetchFarmerField(),     // refresh plots; decrement Pods
         refetchFarmerBalances(),  // increment balance of BEAN received
       ]);  
       txToast.success(receipt);

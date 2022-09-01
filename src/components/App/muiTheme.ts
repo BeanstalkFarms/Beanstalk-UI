@@ -99,10 +99,12 @@ export const BeanstalkPalette = {
   white: '#fff',
   black: '#333',
   // Reds
+  red: '#DA2C38',
   washedRed: '#c35f42',
   mediumRed: lighten('#c35f42', 0.55),
   hoverRed: '#fef9f8',
   trueRed: '#AE2D20',
+  lightestRed: '#FBEAEB',
   // Yellow
   yellow: '#f0df6a',
   lightYellow: '#FDF4E7',

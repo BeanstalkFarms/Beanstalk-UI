@@ -19,10 +19,10 @@ query {
       numSowers # ** number of unique sowers
       numSows   # number of unique sow txns
       sownBeans # number of beans sown
-      newPods   # pods minted this season
-      pods      # ** total outsanding pods
-      harvestablePods # pods that are now harvestable
-      harvestedPods   # pods that were harvested last season
+      newPods   # Pods minted this season
+      pods      # ** total outsanding Pods
+      harvestablePods # Pods that are now harvestable
+      harvestedPods   # Pods that were harvested last season
       newSoil   # 
       podRate   # **
 
@@ -105,7 +105,7 @@ query {
       ) {
         id      # the ID of a listing is the `index` of the Plot
         index   # The absolute index of the listed Plot in the Pod Line.
-        start   # The difference in index of where the listing starts selling pods from and where the plot starts
+        start   # The difference in index of where the listing starts selling Pods from and where the plot starts
         pricePerPod
         maxHarvestableIndex
         totalAmount

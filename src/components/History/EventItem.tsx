@@ -150,7 +150,7 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
     // moved to the subgraph.
     case 'PodOrderFilled': {
       const values = event.args;
-      // const pods = toTokenUnitsBN(values.amount, BEAN.decimals);
+      // const Pods = toTokenUnitsBN(values.amount, BEAN.decimals);
       if (values?.to.toString().toLowerCase() === account) {
         // My Pod Order was "Filled".
         // I lose Beans, gain the Plot.

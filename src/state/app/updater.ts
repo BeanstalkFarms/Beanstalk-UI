@@ -52,7 +52,7 @@ export default function AppUpdater() {
     navigate('/barn');
   }, {}, [navigate]);
   useHotkeys('opt+t, alt+t', () => {
-    navigate('/market');
+    navigate('/market/pods');
   }, {}, [navigate]);
   useHotkeys('opt+a, alt+a', () => {
     navigate('/analytics');
