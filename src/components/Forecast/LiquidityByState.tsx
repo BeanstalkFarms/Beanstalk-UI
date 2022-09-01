@@ -1,5 +1,5 @@
 import React from 'react';
-import { CardProps, Card } from '@mui/material';
+import { CardProps, Card, CircularProgress } from '@mui/material';
 import { useSelector } from 'react-redux';
 import Stat from '../Common/Stat';
 import { displayFullBN } from '../../util';
@@ -8,6 +8,7 @@ import { SEEDS, SPROUTS, STALK, PODS } from '~/constants/tokens';
 import { AppState } from '~/state';
 import BeanstalkBalances from '~/components/Common/Balances/BeanstalkBalances';
 import useBeanstalkSiloBreakdown from '~/hooks/beanstalk/useBeanstalkBalancesBreakdown';
+import { NEW_BN } from '~/constants';
 
 const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
   const breakdown = useBeanstalkSiloBreakdown();
@@ -48,7 +49,7 @@ const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
     <Card sx={{ p: 2, width: '100%', ...sx }}>
       <Stat
         title="Bean Supply"
-        amount={displayFullBN(totalBeanSupply, 2)}
+        amount={totalBeanSupply !== NEW_BN ? displayFullBN(totalBeanSupply, 2) : <CircularProgress variant="indeterminate" size="1.2em" thickness={4} />}
         gap={0.25}
         sx={{ ml: 0 }}
       />

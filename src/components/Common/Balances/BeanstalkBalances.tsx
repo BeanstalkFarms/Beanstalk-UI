@@ -16,18 +16,23 @@ const BeanstalkBalances: React.FC<{
   // Constants
   const WHITELIST = useWhitelist();
   const Bean = useChainConstant(BEAN);
+  const availableTokens = useMemo(() => Object.keys(breakdown.tokens), [breakdown.tokens]);
 
   // Drilldown against a State of Token (DEPOSITED, WITHDRAWN, etc.)
-  const [hoverAddress, setHoverAddress] = useState<(keyof typeof breakdown.tokens) | null>(null);
-  const [allowNewHoverState, setAllow] = useState<boolean>(true);
+  const [hoverAddress, setHoverAddress] = useState<keyof typeof breakdown.tokens>(availableTokens[0]);
+  const allowNewHoverState = true;
+
+  ///
+  useMemo(() => {
+    setHoverAddress(availableTokens[0]);
+  }, [availableTokens]);
 
   // Drilldown handlers
   const onMouseOutContainer = useCallback(() => {
     if (!allowNewHoverState) {
-      setHoverAddress(null);
-      setAllow(true);
+      setHoverAddress(availableTokens[0]);
     }
-  }, [allowNewHoverState]);
+  }, [allowNewHoverState, availableTokens]);
   
   const onMouseOver = useCallback((address: string) => (
     allowNewHoverState ? () => setHoverAddress(address) : undefined
@@ -36,15 +41,12 @@ const BeanstalkBalances: React.FC<{
   const onClick = useCallback((address: string) => () => {
     if (!allowNewHoverState) {
       setHoverAddress(address);
-      setAllow(true);
     } else {
-      setHoverAddress(null);
-      setAllow(false);
+      setHoverAddress(availableTokens[0]);
     }
-  }, [allowNewHoverState]);
+  }, [allowNewHoverState, availableTokens]);
 
   //
-  const availableTokens = Object.keys(breakdown.tokens);
   const hoverToken = hoverAddress ? WHITELIST[hoverAddress] : undefined;
   const assetLabel = hoverToken?.name || 'Token';
 
@@ -68,12 +70,8 @@ const BeanstalkBalances: React.FC<{
         return prev;
       }, []);
     }
-    return availableTokens.map((address) => ({
-      label: WHITELIST[address].name,
-      value: breakdown.tokens[address]?.amount?.toNumber(),
-      color: WHITELIST[address].color
-    } as PieDataPoint));
-  }, [hoverAddress, availableTokens, breakdown, WHITELIST]);
+    return [];
+  }, [hoverAddress, breakdown]);
 
   return (
     <Grid container direction="row" alignItems="center" sx={{ mb: 4, mt: { md: 0, xs: 0 }, minHeight: 300 }} rowSpacing={2}>
