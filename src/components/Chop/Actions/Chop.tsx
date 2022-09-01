@@ -36,7 +36,7 @@ import { UNRIPE_BEAN, UNRIPE_BEAN_CRV3, UNRIPE_TOKENS } from '~/constants/tokens
 import { ZERO_BN } from '~/constants';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { AppState } from '~/state';
-import useUnripeUnderlying from '~/hooks/beanstalk/useUnripeUnderlying';
+import useUnripeUnderlyingMap from '~/hooks/beanstalk/useUnripeUnderlying';
 
 type ChopFormValues = FormState & {
   destination: FarmToMode | undefined;
@@ -55,7 +55,7 @@ const ChopForm: React.FC<
 }) => {
   const erc20TokenMap = useTokenMap<ERC20Token | NativeToken>(UNRIPE_TOKENS);
   const [isTokenSelectVisible, showTokenSelect, hideTokenSelect] = useToggle();
-  const unripeUnderlying = useUnripeUnderlying();
+  const unripeUnderlying = useUnripeUnderlyingMap();
 
   /// Derived values
   const state          = values.tokens[0];

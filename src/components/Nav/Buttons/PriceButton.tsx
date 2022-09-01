@@ -62,7 +62,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       onOpen={refetchPools}
       startIcon={startIcon}
       buttonContent={
-        <>${displayBeanPrice(beanPrice, isMobile ? 2 : 4)}</>
+        <>${displayBeanPrice(beanPrice.gt(0) ? beanPrice : ZERO_BN, isMobile ? 2 : 4)}</>
       }
       drawerContent={
         <Stack sx={{ p: 2 }} gap={1}>

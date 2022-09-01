@@ -16,7 +16,7 @@ import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import useSetting from '~/hooks/app/useSetting';
 import Row from '~/components/Common/Row';
 import Stat from '~/components/Common/Stat';
-import useUnripeUnderlying from '~/hooks/beanstalk/useUnripeUnderlying';
+import useUnripeUnderlyingMap from '~/hooks/beanstalk/useUnripeUnderlying';
 
 const ARROW_CONTAINER_WIDTH = 20;
 const TOOLTIP_COMPONENT_PROPS = {
@@ -51,7 +51,7 @@ const Whitelist : React.FC<{
   const BeanCrv3      = getChainToken(BEAN_CRV3_LP);
   const urBean        = getChainToken(UNRIPE_BEAN);
   const urBeanCrv3    = getChainToken(UNRIPE_BEAN_CRV3);
-  const unripeUnderlyingTokens = useUnripeUnderlying();
+  const unripeUnderlyingTokens = useUnripeUnderlyingMap();
 
   /// State
   const getBDV        = useBDV();
