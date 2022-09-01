@@ -2,11 +2,13 @@ import { createReducer } from '@reduxjs/toolkit';
 import { BeanstalkGovernance } from '.';
 import {
   resetBeanstalkGovernance,
-  updateActiveProposals
+  updateActiveProposals,
+  updateMultisigBalances
 } from './actions';
 
 const initialState : BeanstalkGovernance = {
-  activeProposals: []
+  activeProposals: [],
+  multisigBalances: {}
 };
 
 export default createReducer(initialState, (builder) =>
@@ -14,5 +16,8 @@ export default createReducer(initialState, (builder) =>
     .addCase(resetBeanstalkGovernance, () => initialState)
     .addCase(updateActiveProposals, (state, { payload }) => {
       state.activeProposals = payload;
+    })
+    .addCase(updateMultisigBalances, (state, { payload }) => {
+      state.multisigBalances = payload;
     })
 );

@@ -83,7 +83,7 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
   ///
   const { loading, error, data } = useSeasonsQuery<T>(document, tabState[1], queryConfig);
   const series = useMemo(() => {
-    console.debug(`[SeasonPlot] Building series with ${data?.seasons.length || 0} data points`);
+    console.debug(`[SeasonPlot] Building series with ${data?.seasons.length || 0} data points`, data);
     if (data) {
       const lastIndex = data.seasons.length - 1;
       const baseData  = data.seasons.reduce<SeasonDataPoint[]>(
@@ -102,10 +102,13 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
               value: getValue(curr),
             });
           }
+          
           return prev;
         },
         []
       );
+
+      console.debug('[SeasonPlot] made baseData', baseData);
 
       return baseData.sort(sortSeasons); // FIXME: mapsort
     }
@@ -149,7 +152,11 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
       <Stack direction="row" justifyContent="space-between" sx={{ px: 2 }}>
         <Stat
           {...statProps}
-          amount={formatValue(displayValue !== undefined ? displayValue : defaultValue)}
+          amount={
+            loading 
+              ? <CircularProgress variant="indeterminate" size="1.18em" thickness={5} />
+              : formatValue(displayValue !== undefined ? displayValue : defaultValue)
+          }
           subtitle={`Season ${(displaySeason !== undefined ? displaySeason : defaultSeason).toFixed()}`}
         />
         <Stack alignItems="right">

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
   Box,
   Button,
@@ -23,6 +23,7 @@ import NavDrawer from '../NavDrawer';
 import ROUTES from '../routes';
 import MenuItem from '../MenuItem';
 import SettingsDialog from '~/components/Nav/SettingsDialog';
+import useGlobal from '~/hooks/app/useGlobal';
 
 const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
   /// Theme
@@ -40,16 +41,11 @@ const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
   const [open, show, hide] = useToggle(toggleAnchor, toggleAnchor);
 
   /// Settings
-  const [settingsOpen, showSettings, hideSettings] = useToggle();
-  const onOpenSettings = useCallback((e: any) => {
+  const [settingsOpen, setSettingsOpen] = useGlobal('showSettings');
+  useHotkeys('ctrl+, cmd+,', (e) => {
     e.preventDefault();
-    hide();
-    showSettings(true);
-  }, [showSettings, hide]);
-  useHotkeys('cmd+,', (e) => {
-    e.preventDefault();
-    settingsOpen ? hideSettings() : showSettings();
-  }, {}, [settingsOpen]);
+    setSettingsOpen(!settingsOpen);
+  }, { }, [settingsOpen]);
 
   /// Content
   const menuContent = (
@@ -92,7 +88,7 @@ const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
 
   return (
     <>
-      <SettingsDialog open={settingsOpen} onClose={hideSettings} />
+      <SettingsDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       {/**
        * Nav Drawer
        * ----------

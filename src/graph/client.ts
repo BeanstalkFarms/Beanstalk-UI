@@ -1,13 +1,14 @@
 import { ApolloClient, ApolloLink, FieldPolicy, HttpLink, InMemoryCache } from '@apollo/client';
 import { LocalStorageWrapper, persistCacheSync } from 'apollo3-cache-persist';
-import { SupportedChainId , BEANSTALK_SUBGRAPH_ADDRESSES, BEAN_SUBGRAPH_ADDRESSES } from '~/constants';
+import { SGEnvironments, SUBGRAPH_ENVIRONMENTS } from '~/graph/endpoints';
+import store from '~/state';
 
 /// ///////////////////////// Field policies ////////////////////////////
 
-const mergeUsingSeasons: FieldPolicy = {
+const mergeUsingSeasons: (keyArgs: string[]) => FieldPolicy = (keyArgs) => ({
   // Don't cache separate results based on
   // any of this field's arguments.
-  keyArgs: false,
+  keyArgs,
 
   /**
    */
@@ -15,7 +16,7 @@ const mergeUsingSeasons: FieldPolicy = {
     const first = args?.first;
     const startSeason = args?.where?.season_lte; // could be larger than the biggest season
 
-    console.debug(`[ApolloClient/seasons/read] read first = ${first} startSeason = ${startSeason} for ${existing?.length || 0} existing items`, existing);
+    console.debug(`[apollo/client/read@seasons] read first = ${first} startSeason = ${startSeason} for ${existing?.length || 0} existing items`, existing);
 
     if (!existing) return;
 
@@ -50,7 +51,7 @@ const mergeUsingSeasons: FieldPolicy = {
         existing.length - 1,         // clamp to last index
       );
 
-      console.debug('[ApolloClient/seasons/read] READ:');
+      console.debug('[apollo/client/read@seasons] READ:');
       console.debug(`| left:  index = ${left}, season = ${readField('season', existing[left])}`);
       console.debug(`| right: index = ${right}, season = ${readField('season', existing[right])}`);
       console.debug(`| existing.length = ${existing.length}`);
@@ -69,8 +70,8 @@ const mergeUsingSeasons: FieldPolicy = {
 
     return dataset;
   },
-  merge(existing = [], incoming, { args, readField }) {
-    console.debug('[ApolloClient] init merge: ', existing, incoming, args);
+  merge(existing = [], incoming, { fieldName, args, readField }) {
+    console.debug(`[apollo/client/merge@seasons] ${fieldName}(${JSON.stringify(args)}): Merging ${incoming?.length || 0} incoming data points into ${existing?.length || 0} existing data points.`, { existing, incoming, args });
 
     // Slicing is necessary because the existing data is
     // immutable, and frozen in development.
@@ -90,7 +91,7 @@ const mergeUsingSeasons: FieldPolicy = {
 
     merged = merged.reverse();
 
-    console.debug('[ApolloClient] merge: finalize', merged);
+    console.debug(`[apollo/client/merge@seasons] ${fieldName}(${JSON.stringify(args)}:) Merged into ${merged.length} points.`, { merged });
 
     // We complete operations on the array in ascending order,
     // but reverse it before saving back to the cache.
@@ -99,7 +100,7 @@ const mergeUsingSeasons: FieldPolicy = {
     // return merged.reverse();
     return merged;
   },
-};
+});
 
 /// ///////////////////////// Cache Persistence ////////////////////////////
 
@@ -107,11 +108,11 @@ const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
-        seasons: mergeUsingSeasons,
-        fieldHourlySnapshots: mergeUsingSeasons,
-        beanHourlySnapshots: mergeUsingSeasons,
-        siloAssetHourlySnapshots: mergeUsingSeasons,
-        siloHourlySnapshots: mergeUsingSeasons,
+        seasons: mergeUsingSeasons([]),
+        fieldHourlySnapshots: mergeUsingSeasons([]),
+        beanHourlySnapshots: mergeUsingSeasons([]),
+        siloAssetHourlySnapshots: mergeUsingSeasons(['$siloAsset']),
+        siloHourlySnapshots: mergeUsingSeasons([]),
       }
     }
   }
@@ -128,22 +129,20 @@ try {
 
 /// ///////////////////////// Links ////////////////////////////
 
+export const sgEnvKey = store.getState().app.settings.subgraphEnv || SGEnvironments.BF_PROD;
+export const sgEnv = SUBGRAPH_ENVIRONMENTS[sgEnvKey] || SUBGRAPH_ENVIRONMENTS[SGEnvironments.BF_PROD];
+
 const beanstalkLink = new HttpLink({
-  uri: BEANSTALK_SUBGRAPH_ADDRESSES[SupportedChainId.MAINNET],
+  uri: sgEnv.subgraphs.beanstalk,
 });
 
 const beanLink = new HttpLink({
-  uri: BEAN_SUBGRAPH_ADDRESSES[SupportedChainId.MAINNET],
+  uri: sgEnv.subgraphs.bean,
 });
 
 const snapshotLink = new HttpLink({
   uri: 'https://hub.snapshot.org/graphql',
 });
-
-// const beanV1Link = new HttpLink({
-//   //    https://thegraph.com/explorer/subgraph?id=CsmWTbztr1EQcRYmgqUYpSaVc8exTnVmhUxsaswvkbjG&view=Overview
-//   uri: 'https://gateway.thegraph.com/api/fe672ef9fcdfb617c4d7755f36a31131/subgraphs/id/CsmWTbztr1EQcRYmgqUYpSaVc8exTnVmhUxsaswvkbjG'
-// });
 
 /// ///////////////////////// Client ////////////////////////////
 

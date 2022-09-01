@@ -15,22 +15,6 @@ export type BeanstalkSiloBalance = {
     /** The total amount of this Token currently in the Withdrawn state. */
     amount: BigNumber;
   };
-  /** The amount of Beans across all pools. */
-  pooled?: {
-    amount: BigNumber;
-  };
-  /** Total underlying. Only applies to BEAN and BEAN:3CRV. */
-  ripe?: {
-    amount: BigNumber;
-  };
-  /** Number of Beans in BFM & BSM multi-sig wallets. */
-  budget?: {
-    amount: BigNumber;
-  }
-  /** Total token supply minus all the above categories. */
-  farmable?: {
-    amount: BigNumber;
-  }
 }
 
 /**

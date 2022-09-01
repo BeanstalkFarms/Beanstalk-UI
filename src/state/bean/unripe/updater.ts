@@ -8,13 +8,13 @@ import { AddressMap, ONE_BN } from '~/constants';
 import { UNRIPE_TOKENS } from '~/constants/tokens';
 import { resetUnripe, updateUnripe } from './actions';
 import { UnripeToken } from '~/state/bean/unripe';
-import useUnripeUnderlying from '~/hooks/beanstalk/useUnripeUnderlying';
+import useUnripeUnderlyingMap from '~/hooks/beanstalk/useUnripeUnderlying';
 
 export const useUnripe = () => {
   const dispatch = useDispatch();
   const beanstalk = useBeanstalkContract();
   const unripeTokens = useTokenMap(UNRIPE_TOKENS);
-  const unripeUnderlyingTokens = useUnripeUnderlying();
+  const unripeUnderlyingTokens = useUnripeUnderlyingMap(); // [unripe token address] => Ripe Token
 
   const fetch = useCallback(async () => {
     if (beanstalk) {

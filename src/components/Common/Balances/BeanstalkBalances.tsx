@@ -16,19 +16,24 @@ const BeanstalkBalances: React.FC<{
   // Constants
   const WHITELIST = useWhitelist();
   const Bean = useChainConstant(BEAN);
+  const availableTokens = useMemo(() => Object.keys(breakdown.tokens), [breakdown.tokens]);
 
   // Drilldown against a State of Token (DEPOSITED, WITHDRAWN, etc.)
-  const [hoverAddress, setHoverAddress] = useState<(keyof typeof breakdown.tokens) | null>(null);
-  const [allowNewHoverState, setAllow] = useState<boolean>(true);
+  const [hoverAddress, setHoverAddress] = useState<keyof typeof breakdown.tokens>(availableTokens[0]);
+  const allowNewHoverState = true;
+
+  ///
+  useMemo(() => {
+    setHoverAddress(availableTokens[0]);
+  }, [availableTokens]);
 
   // Drilldown handlers
   const onMouseOutContainer = useCallback(() => {
     if (!allowNewHoverState) {
-      setHoverAddress(null);
-      setAllow(true);
+      setHoverAddress(availableTokens[0]);
     }
-  }, [allowNewHoverState]);
-
+  }, [allowNewHoverState, availableTokens]);
+  
   const onMouseOver = useCallback((address: string) => (
     allowNewHoverState ? () => setHoverAddress(address) : undefined
   ), [allowNewHoverState]);
@@ -36,15 +41,12 @@ const BeanstalkBalances: React.FC<{
   const onClick = useCallback((address: string) => () => {
     if (!allowNewHoverState) {
       setHoverAddress(address);
-      setAllow(true);
     } else {
-      setHoverAddress(null);
-      setAllow(false);
+      setHoverAddress(availableTokens[0]);
     }
-  }, [allowNewHoverState]);
+  }, [allowNewHoverState, availableTokens]);
 
   //
-  const availableTokens = Object.keys(breakdown.tokens);
   const hoverToken = hoverAddress ? WHITELIST[hoverAddress] : undefined;
   const assetLabel = hoverToken?.name || 'Token';
 
@@ -52,25 +54,24 @@ const BeanstalkBalances: React.FC<{
   const pieChartData = useMemo(() => {
     if (hoverAddress && breakdown.tokens[hoverAddress]) {
       const thisAddress = breakdown.tokens[hoverAddress];
-      return Object.keys(thisAddress?.byState).reduce<PieDataPoint[]>((prev, state, index) => {
-        const value = thisAddress?.byState[state].value.toNumber();
-        prev.push({
-          // Required for PieChart
-          label: STATE_CONFIG[state as StateID][0],
-          value,
-          color: STATE_CONFIG[state as StateID][1],
-          // Additional
-          state: state,
-        });
+      if (!thisAddress?.byState) return [];
+      return Object.keys(thisAddress.byState).reduce<PieDataPoint[]>((prev, state) => {
+        const amount = thisAddress.byState[state].amount;
+        if (amount) {
+          prev.push({
+            // Required for PieChart
+            label: STATE_CONFIG[state as StateID][0],
+            value: amount.toNumber(),
+            color: STATE_CONFIG[state as StateID][1],
+            // Additional
+            state: state,
+          });
+        }
         return prev;
       }, []);
     }
-    return availableTokens.map((address) => ({
-      label: WHITELIST[address].name,
-      value: breakdown?.tokens[address]?.value?.toNumber(),
-      color: WHITELIST[address].color
-    } as PieDataPoint));
-  }, [hoverAddress, availableTokens, breakdown, WHITELIST]);
+    return [];
+  }, [hoverAddress, breakdown]);
 
   return (
     <Grid container direction="row" alignItems="center" sx={{ mb: 4, mt: { md: 0, xs: 0 }, minHeight: 300 }} rowSpacing={2}>
@@ -128,10 +129,11 @@ const BeanstalkBalances: React.FC<{
               {pieChartData.map((dp) => {
                 const state = dp.state as StateID;
                 const tokenState = breakdown.tokens[hoverAddress].byState[state];
+                if (!tokenState.amount) return null;
                 return (
                   <TokenRow
                     key={state}
-                    label={STATE_CONFIG[state][0]}
+                    label={dp.label}
                     color={dp.color}
                     showColor={tokenState.amount.gt(0)}
                     isFaded={false}
