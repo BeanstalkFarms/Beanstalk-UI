@@ -84,7 +84,7 @@ export type PodListing = {
   index: BigNumber;
 
   /**
-   * The difference in index of where the listing starts selling pods from and where the plot starts
+   * The difference in index of where the listing starts selling Pods from and where the plot starts
    * @decimals 6
    */
   start: BigNumber;

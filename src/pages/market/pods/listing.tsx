@@ -8,10 +8,10 @@ import {
   Typography,
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import FillListing from '~/components/Market/Actions/FillListing';
-import ListingDetails from '~/components/Market/Cards/ListingDetails';
+import FillListing from '~/components/Market/Pods/Actions/FillListing';
+import ListingDetails from '~/components/Market/Pods/Cards/ListingDetails';
 import PageHeaderSecondary from '~/components/Common/PageHeaderSecondary';
-import CancelListing from '~/components/Market/Actions/CancelListing';
+import CancelListing from '~/components/Market/Pods/Actions/CancelListing';
 import GenericZero from '~/components/Common/ZeroState/GenericZero';
 import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import usePodListing from '~/hooks/beanstalk/usePodListing';
@@ -75,7 +75,7 @@ const ListingPage: React.FC = () => {
               </Typography>
             </Stack>
           )}
-          returnPath="/market"
+          returnPath="/market/pods"
         />
         {/* Details Card */}
         <Card sx={{ p: 1 }}>

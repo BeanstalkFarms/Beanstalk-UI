@@ -50,6 +50,9 @@ const NavBar: React.FC<{}> = ({ children }) => (
               tag={item.tag}
             />
           ))}
+          <HoverMenu items={ROUTES.market}>
+            Market
+          </HoverMenu>
           <HoverMenu items={ROUTES.more}>
             More
           </HoverMenu>

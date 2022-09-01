@@ -10,7 +10,7 @@ import {
 import useAnchor from '~/hooks/display/useAnchor';
 import DropdownIcon from '~/components/Common/DropdownIcon';
 import ROUTES from '~/components/Nav/routes';
-import MenuItem from '../Nav/MenuItem';
+import MenuItem from '../../Nav/MenuItem';
 
 // -----------------------------------------------------------------
 
@@ -21,8 +21,8 @@ const MoreDropdown: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
   
   const menu = (
     <MenuList sx={{ zIndex: 3000 }} component={Card}>
-      {ROUTES.market.map((item) => {
-        if (item.path !== ROUTES.market[0].path) {
+      {ROUTES.podMarket.map((item) => {
+        if (item.path !== ROUTES.podMarket[0].path) {
           return (
             <MenuItem key={item.path} item={item} onClick={toggleMenuAnchor} />
           );

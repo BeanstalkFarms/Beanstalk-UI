@@ -15,7 +15,7 @@ const AllListings : React.FC<{ data: ReturnType<typeof useMarketData> }> = ({ da
   /// Navigation
   const navigate = useNavigate();
   const handleClick = useCallback((params: GridRowParams) => {
-    navigate(`/market/listing/${params.row.id.toString()}`);
+    navigate(`/market/pods/listing/${params.row.id.toString()}`);
   }, [navigate]);
 
   /// Data Grid setup

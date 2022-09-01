@@ -37,8 +37,8 @@ import { BEAN, ETH, PODS, WETH } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
 import { PodListing } from '~/state/farmer/market';
 import { optimizeFromMode } from '~/util/Farm';
-import TokenIcon from '../../Common/TokenIcon';
-import { IconSize } from '../../App/muiTheme';
+import TokenIcon from '../../../Common/TokenIcon';
+import { IconSize } from '../../../App/muiTheme';
 
 export type FillListingFormValues = FormState & {
   settings: SlippageSettingsFragment;
@@ -421,7 +421,7 @@ const FillListing : React.FC<{
       
       const receipt = await txn.wait();
       await Promise.all([
-        refetchFarmerField(),     // refresh plots; increment pods
+        refetchFarmerField(),     // refresh plots; increment Pods
         refetchFarmerBalances(),  // decrement balance of tokenIn
         // FIXME: refresh listings
       ]);  

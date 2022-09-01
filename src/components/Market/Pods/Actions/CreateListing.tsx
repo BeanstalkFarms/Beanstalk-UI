@@ -29,8 +29,8 @@ import { FarmToMode } from '~/lib/Beanstalk/Farm';
 
 import { BEAN, PODS } from '~/constants/tokens';
 import { ONE_BN, ZERO_BN } from '~/constants';
-import FieldWrapper from '../../Common/Form/FieldWrapper';
-import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
+import FieldWrapper from '../../../Common/Form/FieldWrapper';
+import { POD_MARKET_TOOLTIPS } from '../../../../constants/tooltips';
 
 export type CreateListingFormValues = {
   plot:        PlotFragment
