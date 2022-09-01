@@ -5,7 +5,6 @@ import { Button,
   Stack, Typography
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-import Wells from '~/components/Market/Wells/Wells';
 import PageHeaderSecondary from '~/components/Common/PageHeaderSecondary';
 import WhitelistBadge from '~/components/Market/Wells/WhitelistBadge';
 import Row from '~/components/Common/Row';
@@ -13,6 +12,7 @@ import { BeanstalkPalette } from '~/components/App/muiTheme';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN, STALK } from '~/constants/tokens';
 import WellCharts from '~/components/Market/Wells/Charts';
+import WellActivity from '~/components/Market/Wells/Tables';
 
 const WellPage: React.FC = () => (
   <Container maxWidth="lg">
@@ -94,7 +94,7 @@ const WellPage: React.FC = () => (
           <WellCharts />
         </Grid>
       </Grid>
-      <Wells />
+      <WellActivity />
     </Stack>
   </Container>
 );
