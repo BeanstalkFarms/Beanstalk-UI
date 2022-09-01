@@ -9,8 +9,6 @@ const StatProps = {
   title: 'Market Cap',
   titleTooltip: 'The USD value of the total Bean supply at the end of every Season/day.',
   gap: 0.25,
-  color: 'primary',
-  sx: { ml: 0 },
 };
 
 const MarketCap: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => {

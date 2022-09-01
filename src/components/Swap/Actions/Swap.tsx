@@ -3,7 +3,6 @@ import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ethers } from 'ethers';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import toast from 'react-hot-toast';
 import {
   FormApprovingState, FormTokenState,
@@ -38,9 +37,9 @@ import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import { optimizeFromMode } from '~/util/Farm';
 import copy from '~/constants/copy';
-import IconWrapper from '~/components/Common/IconWrapper';
 import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
 import { ActionType } from '~/util/Actions';
+import WarningIcon from '~/components/Common/Alert/WarningIcon';
 
 /// ---------------------------------------------------------------
 
@@ -74,12 +73,6 @@ const QUOTE_SETTINGS = {
 };
 
 const Quoting = <CircularProgress variant="indeterminate" size="small" sx={{ width: 14, height: 14 }} />;
-
-const AlertIcon = (
-  <IconWrapper boxSize={IconSize.medium}>
-    <WarningAmberIcon sx={{ fontSize: IconSize.small }} />
-  </IconWrapper>
-);
 
 /// ---------------------------------------------------------------
 
@@ -414,7 +407,7 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
         </>
         {/* Warnings */}
         {ethModeCheck === false ? (
-          <Alert variant="standard" color="warning" icon={AlertIcon}>
+          <Alert variant="standard" color="warning" icon={<WarningIcon />}>
             ETH can only be delivered to your Circulating Balance.&nbsp;
             <Link
               onClick={() => {
@@ -428,7 +421,7 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
           </Alert>
         ) : null}
         {pathwayCheck === false ? (
-          <Alert variant="standard" color="warning" icon={AlertIcon}>
+          <Alert variant="standard" color="warning" icon={<WarningIcon />}>
             Swapping from {tokenIn.symbol} to {tokenOut.symbol} is currently unsupported.
           </Alert>
         ) : null}
@@ -436,7 +429,7 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
           * After the upgrade to `handleChangeModeIn` / `handleChangeModeOut`
           * this should never be true. */}
         {diffModeCheck === false ? (
-          <Alert variant="standard" color="warning" icon={AlertIcon}>
+          <Alert variant="standard" color="warning" icon={<WarningIcon />}>
             Please choose a different source or destination.
           </Alert>
         ) : null}
@@ -446,7 +439,7 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
           * show a message and prompt them to use `max`.
           */}
         {(!noBalance && !enoughBalanceCheck) ? (
-          <Alert variant="standard" color="warning" icon={AlertIcon}>
+          <Alert variant="standard" color="warning" icon={<WarningIcon />}>
             Not enough {tokenIn.symbol}{tokensMatch ? ` in your ${copy.MODES[modeIn]}` : ''} to execute this transaction.&nbsp;
             <Link
               onClick={handleMax}

@@ -13,8 +13,6 @@ const StatProps = {
   title: 'Bean Price',
   titleTooltip: 'The price at the end of every Season/day.',
   gap: 0.25,
-  color: 'primary',
-  sx: { ml: 0 },
 };
 const LineChartProps = {
   isTWAP: true,

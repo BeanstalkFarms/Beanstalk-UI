@@ -28,7 +28,7 @@ const useTabs = (
   }, [slugs]);
 
   /// Init state
-  const [tab, setTab]   = useState(getTabIndex(params.get(key)));
+  const [tab, setTab] = useState(getTabIndex(params.get(key)));
 
   /// Setup tab state
   const handleChangeTab = useCallback((event: SyntheticEvent, newIndex: number) => {

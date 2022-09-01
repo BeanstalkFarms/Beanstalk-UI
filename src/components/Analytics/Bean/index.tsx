@@ -11,7 +11,7 @@ import Liquidity from '~/components/Analytics/Bean/Liquidity';
 
 const SLUGS = ['price', 'volume', 'liquidity', 'mktcap', 'supply', 'crosses'];
 const BeanAnalytics: React.FC<{}> = () => {
-  const [tab, handleChangeTab] = useTabs(SLUGS, 'bean');
+  const [tab, handleChangeTab] = useTabs();
 
   return (
     <Card>

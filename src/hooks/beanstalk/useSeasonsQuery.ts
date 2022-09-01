@@ -68,27 +68,30 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
       try {
         if (range !== SeasonRange.ALL) {
           // data.seasons is sorted by season, descending.
+          const variables = {
+            ...queryConfig?.variables,
+            first: SEASON_RANGE_TO_COUNT[range],
+            season_lte: 999999999
+          };
+          console.debug('[useSeasonsQuery] run', { variables });
           await get({
             ...queryConfig,
-            variables: {
-              ...queryConfig?.variables,
-              first: SEASON_RANGE_TO_COUNT[range],
-              season_lte: 999999999
-            },
+            variables,
             fetchPolicy: 'cache-first',
           });
         } else {
-          // Initialize Season data with a call to the first
-          // set of Seasons.
+          // Initialize Season data with a call to the first set of Seasons.
+          const variables = {
+            ...queryConfig?.variables,
+            first: undefined,
+            season_lte: 999999999
+          };
+          console.debug('[useSeasonsQuery] run', { variables });
+
           const init = await get({
             ...queryConfig,
-            variables: {
-              ...queryConfig?.variables,
-              first: undefined,
-              season_lte: 999999999
-            },
+            variables,
           });
-
           console.debug('[useSeasonsQuery] init: data = ', init.data);
 
           if (!init.data) {
@@ -124,17 +127,17 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
               0, // always at least 0
               latestSubgraphSeason - i * PAGE_SIZE,
             );
-            const variables = {
+            const thisVariables = {
               ...queryConfig?.variables,
               first: season < 1000 ? (season - 1) : 1000,
               season_lte: season,
             };
-            console.debug(`[useSeasonsQuery] get: ${season} -> ${Math.max(season - 1000, 2)}`, variables);
+            console.debug(`[useSeasonsQuery] get: ${season} -> ${Math.max(season - 1000, 2)}`,  { variables: thisVariables });
             promises.push(
               apolloClient.query({
                 ...queryConfig,
                 query: document,
-                variables,
+                variables: thisVariables,
                 notifyOnNetworkStatusChange: true,
               }).then((r) => {
                 console.debug(`[useSeasonsQuery] get: ${season} -> ${Math.max(season - 1000, 2)} =`, r.data);

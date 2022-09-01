@@ -46,10 +46,10 @@ const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
     hide();
     showSettings(true);
   }, [showSettings, hide]);
-  useHotkeys('cmd+,', (e) => {
+  useHotkeys('ctrl+, cmd+,', (e) => {
     e.preventDefault();
     settingsOpen ? hideSettings() : showSettings();
-  }, {}, [settingsOpen]);
+  }, { }, [settingsOpen]);
 
   /// Content
   const menuContent = (

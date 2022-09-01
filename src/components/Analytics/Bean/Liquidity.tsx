@@ -9,8 +9,6 @@ const StatProps = {
   title: 'Liquidity',
   titleTooltip: 'The USD value of the BEAN:3CRV pool at the end of every Season/day.',
   gap: 0.25,
-  color: 'primary',
-  sx: { ml: 0 },
 };
 const queryConfig = {
   variables: { season_gt: 6073 },

@@ -14,6 +14,11 @@ export const getEventCacheId = (
   cacheId: EventCacheName
 ) => `${chainId}-${account.toLowerCase()}-${cacheId}`;
 
+export const clearApolloCache = () => {
+  localStorage.removeItem('apollo-cache-persist');
+  window?.location.reload();
+};
+
 /**
  * Load Redux state from localStorage.
  * @unused

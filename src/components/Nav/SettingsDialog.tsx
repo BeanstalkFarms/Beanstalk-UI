@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { StyledDialog, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
 import useSetting from '~/hooks/app/useSetting';
 import { setNextSunrise, setRemainingUntilSunrise } from '~/state/beanstalk/sun/actions';
+import { clearApolloCache } from '~/util';
 
 const Split : React.FC = ({ children }) => (
   <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -38,8 +39,7 @@ const SettingsDialog : React.FC<{ open: boolean; onClose?: () => void; }> = ({ o
 
   /// Cache
   const clearCache = useCallback(() => {
-    localStorage.removeItem('apollo-cache-persist');
-    window.location.reload();
+    clearApolloCache();
   }, []);
 
   /// Dev Controls
