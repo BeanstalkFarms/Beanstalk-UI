@@ -40,11 +40,11 @@ import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN, parseError, displayT
 import { AppState } from '~/state';
 import { BEAN, ETH, PODS, WETH } from '~/constants/tokens';
 import { ONE_BN, ZERO_BN } from '~/constants';
-import { POD_MARKET_TOOLTIPS } from '../../../constants/tooltips';
-import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
-import SliderField from '../../Common/Form/SliderField';
-import FieldWrapper from '../../Common/Form/FieldWrapper';
-import IconWrapper from '../../Common/IconWrapper';
+import { POD_MARKET_TOOLTIPS } from '../../../../constants/tooltips';
+import { BeanstalkPalette, IconSize } from '../../../App/muiTheme';
+import SliderField from '../../../Common/Form/SliderField';
+import FieldWrapper from '../../../Common/Form/FieldWrapper';
+import IconWrapper from '../../../Common/IconWrapper';
 
 export type CreateOrderFormValues = {
   placeInLine: BigNumber | null;

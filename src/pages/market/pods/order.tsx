@@ -7,15 +7,15 @@ import {
   Stack, Typography,
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import CancelOrder from '~/components/Market/Actions/CancelOrder';
+import CancelOrder from '~/components/Market/Pods/Actions/CancelOrder';
 import GenericZero from '~/components/Common/ZeroState/GenericZero';
 import usePodOrder from '~/hooks/beanstalk/usePodOrder';
 import useAccount from '~/hooks/ledger/useAccount';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { bigNumberResult, Source } from '~/util';
-import FillOrder from '../../components/Market/Actions/FillOrder';
-import OrderDetails from '../../components/Market/Cards/OrderDetails';
-import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
+import FillOrder from '../../../components/Market/Pods/Actions/FillOrder';
+import OrderDetails from '../../../components/Market/Pods/Cards/OrderDetails';
+import PageHeaderSecondary from '../../../components/Common/PageHeaderSecondary';
 import { Module, ModuleContent, ModuleHeader } from '~/components/Common/Module';
 import Row from '~/components/Common/Row';
 
@@ -74,7 +74,7 @@ const OrderPage: React.FC = () => {
               </Typography>
             </Row>
           )}
-          returnPath="/market"
+          returnPath="/market/pods"
         />
         <Card sx={{ p: 1 }}>
           <Box p={1}>

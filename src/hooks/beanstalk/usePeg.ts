@@ -151,7 +151,7 @@ const usePeg = () => {
     field.weather.yield,  // current temperature
     // POD RATE AS DECIMAL
     // 100% = 1
-    podRate.div(100),     // current pod rate (unharvestable pods / bean supply)
+    podRate.div(100),     // current pod rate (unharvestable Pods / bean supply)
     bean.deltaB, // current deltaB via beanstalk.totalDeltaB()
   );
 

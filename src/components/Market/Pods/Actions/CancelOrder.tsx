@@ -81,7 +81,7 @@ const CancelOrder : React.FC<{
           refetchFarmerBalances(),  // refresh Beans
         ]);
         txToast.success(receipt);
-        navigate('/market/account');
+        navigate('/market/pods/account');
       } catch (err) {
         console.error(err);
       } finally {

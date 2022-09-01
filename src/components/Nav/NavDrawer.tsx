@@ -24,6 +24,7 @@ const NavDrawer: React.FC<{
   hideDrawer
 }) => {
     const [openMore, showMore, hideMore] = useToggle();
+    const [openMarket, showMarket, hideMarket] = useToggle();
     // Constants
     const chainInfo = useChainConstant(CHAIN_INFO);
     const beanstalkAddress = useChainConstant(BEANSTALK_ADDRESSES);
@@ -64,6 +65,26 @@ const NavDrawer: React.FC<{
                 />
               </Box>
             ))}
+            {/* Market Dropdown */}
+            <Box key="more" sx={{ borderBottom: 2, borderColor: BeanstalkPalette.lightBlue }}>
+              <MenuItemMobile
+                item={{ title: 'Market', path: '#' }}
+                onClick={openMarket ? hideMarket : showMarket}
+                endAdornment={<DropdownIcon open={openMarket} sx={{ color: 'text.secondary', height: IconSize.small }} />}
+              />
+              {/* Only show dropdown if openMore === true */}
+              <Stack display={openMarket ? 'block' : 'none'}>
+                <Box sx={{ pl: 0.5 }}>
+                  {ROUTES.market.map((item) => (
+                    <MenuItemMobile
+                      key={item.path}
+                      item={item}
+                      onClick={hideDrawer}
+                    />
+                  ))}
+                </Box>
+              </Stack>
+            </Box>
             {/* More Dropdown */}
             <Box key="more" sx={{ borderBottom: 2, borderColor: BeanstalkPalette.lightBlue }}>
               <MenuItemMobile

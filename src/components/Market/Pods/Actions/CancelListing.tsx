@@ -40,7 +40,7 @@ const CancelListing : React.FC<{ id: string }> = ({ id }) => {
           refetchFarmerMarket(),
         ]);
         txToast.success(receipt);
-        navigate('/market/account');
+        navigate('/market/pods/account');
       } catch (err) {
         console.error(err);
       } finally {

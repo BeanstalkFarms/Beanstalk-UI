@@ -24,14 +24,14 @@ import ForecastPage from '~/pages/forecast';
 import Barn from '~/pages/barn';
 import TransactionHistoryPage from '~/pages/history';
 import BalancesPage from '~/pages/balances';
-import PodMarketPage from '~/pages/market';
+import PodMarketPage from '~/pages/market/pods';
 import NFTPage from '~/pages/nft';
 import ChopPage from '~/pages/chop';
-import MarketAccountPage from '~/pages/market/account';
-import MarketActivityPage from '~/pages/market/activity';
-import CreatePage from '~/pages/market/create';
-import OrderPage from '~/pages/market/order';
-import ListingPage from '~/pages/market/listing';
+import MarketAccountPage from '~/pages/market/pods/account';
+import MarketActivityPage from '~/pages/market/pods/activity';
+import CreatePage from '~/pages/market/pods/create';
+import OrderPage from '~/pages/market/pods/order';
+import ListingPage from '~/pages/market/pods/listing';
 import SwapPage from '~/pages/swap';
 import AnalyticsPage from '~/pages/analytics';
 import GovernancePage from '~/pages/governance';
@@ -44,6 +44,8 @@ import { BeanstalkPalette } from './muiTheme';
 import './App.css';
 import PageNotFound from '~/pages/error/404';
 import { sgEnvKey } from '~/graph/client';
+import WellHomePage from '~/pages/market/wells';
+import WellPage from '~/pages/market/wells/well';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -143,12 +145,19 @@ export default function App() {
           <Route path="/field" element={<FieldPage />} />
           <Route path="/governance" element={<GovernancePage />} />
           <Route path="/history" element={<TransactionHistoryPage />} />
-          <Route path="/market" element={<PodMarketPage />} />
-          <Route path="/market/account" element={<MarketAccountPage />} />
-          <Route path="/market/activity" element={<MarketActivityPage />} />
-          <Route path="/market/create" element={<CreatePage />} />
-          <Route path="/market/order/:id" element={<OrderPage />} />
-          <Route path="/market/listing/:id" element={<ListingPage />} />
+
+          {/* Pod Market */}
+          <Route path="/market/pods" element={<PodMarketPage />} />
+          <Route path="/market/pods/account" element={<MarketAccountPage />} />
+          <Route path="/market/pods/activity" element={<MarketActivityPage />} />
+          <Route path="/market/pods/create" element={<CreatePage />} />
+          <Route path="/market/pods/order/:id" element={<OrderPage />} />
+          <Route path="/market/pods/listing/:id" element={<ListingPage />} />
+
+          {/* DEX */}
+          <Route path="/market/wells" element={<WellHomePage />} />
+          <Route path="/market/wells/:id" element={<WellPage />} />
+
           <Route path="/nft" element={<NFTPage />} />
           <Route path="/governance/:id" element={<ProposalPage />} />
           <Route path="/silo" element={<SiloPage />} />

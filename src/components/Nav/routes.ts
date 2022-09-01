@@ -25,7 +25,7 @@ export type RouteData = {
   small?: boolean;
 }
 
-type RouteKeys = 'top' | 'market' | 'more' | 'additional' // | 'analytics'
+type RouteKeys = 'top' | 'market' | 'podMarket' | 'more' | 'additional' // | 'analytics'
 
 const ROUTES : { [key in RouteKeys] : RouteData[] } = {
   // Main Navigation
@@ -49,10 +49,21 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
     {
       path: '/balances',
       title: 'Balances',
+    }
+  ],
+  // Market Menu
+  market: [
+    {
+      path: '/market/pods',
+      title: 'Pods',
+      icon: beanNFTIcon,
+      small: true
     },
     {
-      path: '/market',
-      title: 'Market',
+      path: '/market/wells',
+      title: 'Wells',
+      icon: swapIcon,
+      small: true
     },
   ],
   // More Menu
@@ -128,18 +139,18 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       icon: duneIcon
     },
   ],
-  // Market Menu
-  market: [
+  // Pod Market Menu
+  podMarket: [
     {
-      path: '/market',
+      path: '/market/pods',
       title: 'Pod Market',
     },
     {
-      path: '/market/account',
+      path: '/market/pods/account',
       title: 'My Orders / Listings',
     },
     {
-      path: '/market/activity',
+      path: '/market/pods/activity',
       title: 'Marketplace Activity',
     },
   ],

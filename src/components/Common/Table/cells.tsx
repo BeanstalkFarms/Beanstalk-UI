@@ -9,8 +9,8 @@ import { ZERO_BN } from '~/constants';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 import TokenIcon from '../TokenIcon';
 import AddressIcon from '../AddressIcon';
-import EntityIcon from '~/components/Market/EntityIcon';
 import Row from '~/components/Common/Row';
+import EntityIcon from '~/components/Market/Pods/EntityIcon';
 
 const basicCell = (params : GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
 

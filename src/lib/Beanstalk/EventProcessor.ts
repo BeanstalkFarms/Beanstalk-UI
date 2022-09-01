@@ -225,7 +225,7 @@ export default class EventProcessor {
       // PlotTransfer   [56789)
       //                 15    20
       //
-      // PlotTransfer(from=0x, to=0x, id=15, pods=5)
+      // PlotTransfer(from=0x, to=0x, id=15, Pods=5)
       // This means we send Pods: 15, 16, 17, 18, 19
       // 
       // However this Plot doesn't exist yet in our
@@ -292,7 +292,7 @@ export default class EventProcessor {
             //  startIndex      = 10
             //  endIndex        = 20
             //
-            // PlotTransfer(from=0x, to=0x, id=15, pods=3)
+            // PlotTransfer(from=0x, to=0x, id=15, Pods=3)
             // This means we send Pods: 15, 16, 17.
             // ----------------------------------------
             if (!transferIndex.isEqualTo(endIndex)) {
@@ -354,7 +354,7 @@ export default class EventProcessor {
       }
     });
     
-    // FIXME: "unharvestable pods" are just Pods,
+    // FIXME: "unharvestable Pods" are just Pods,
     // but we can't reuse "plots" in the same way.
     return {
       pods,
