@@ -4,10 +4,10 @@ import { AppState } from '~/state';
 import { Settings } from '~/state/app';
 import { updateSetting } from '~/state/app/actions';
 
-const useSetting = (key: keyof Settings) => {
+const useSetting = <T extends keyof Settings>(key: T) => {
   const dispatch = useDispatch();
-  const value  = useSelector<AppState, AppState['app']['settings'][typeof key]>((state) => state.app.settings[key]);
-  const update = useCallback((_value: Settings[typeof key]) => {
+  const value  = useSelector<AppState, AppState['app']['settings'][T]>((state) => state.app.settings[key]);
+  const update = useCallback((_value: Settings[T]) => {
     dispatch(
       updateSetting({
         key,

@@ -24,8 +24,10 @@ const store = configureStore({
   preloadedState: undefined
 });
 
+export const save = () => saveState(store.getState());
+
 store.subscribe(throttle(() => {
-  saveState(store.getState());
+  save();
 }, 1000));
 
 export default store;

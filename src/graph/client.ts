@@ -140,11 +140,6 @@ const snapshotLink = new HttpLink({
   uri: 'https://hub.snapshot.org/graphql',
 });
 
-// const beanV1Link = new HttpLink({
-//   //    https://thegraph.com/explorer/subgraph?id=CsmWTbztr1EQcRYmgqUYpSaVc8exTnVmhUxsaswvkbjG&view=Overview
-//   uri: 'https://gateway.thegraph.com/api/fe672ef9fcdfb617c4d7755f36a31131/subgraphs/id/CsmWTbztr1EQcRYmgqUYpSaVc8exTnVmhUxsaswvkbjG'
-// });
-
 /// ///////////////////////// Client ////////////////////////////
 
 export const apolloClient = new ApolloClient({
