@@ -23,7 +23,7 @@ import NavDrawer from '../NavDrawer';
 import ROUTES from '../routes';
 import MenuItem from '../MenuItem';
 import SettingsDialog from '~/components/Nav/SettingsDialog';
-import useGlobal from '~/hooks/app/useSettingsDialog';
+import useGlobal from '~/hooks/app/useGlobal';
 
 const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
   /// Theme

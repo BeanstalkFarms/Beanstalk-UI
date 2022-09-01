@@ -25,7 +25,7 @@ export const clearApolloCache = () => {
  */
 export const loadState = () => {
   try {
-    const serializedState = localStorage.getItem('state');
+    const serializedState = localStorage.getItem('beanstalk.s');
     if (serializedState === null) {
       return undefined;
     }
@@ -42,12 +42,14 @@ export const loadState = () => {
  * @param state 
  */
 export const saveState = (state: any) => {
-  try {
-    const serializedState = JSON.stringify(state);
-    localStorage.setItem('state', serializedState);
-  } catch (err) {
-    // pass
-    console.warn('Failed to save state');
+  if (state.app.settings) {
+    try {
+      const serializedState = JSON.stringify({ app: { settings: state.app.settings } });
+      localStorage.setItem('beanstalk.s', serializedState);
+    } catch (err) {
+      // pass
+      console.warn('Failed to save state');
+    }
   }
 };
 

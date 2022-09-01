@@ -32,7 +32,7 @@ import WalletDialog from './WalletDialog';
 import DropdownIcon from '~/components/Common/DropdownIcon';
 import PickBeansDialog from '~/components/Farmer/Unripe/PickDialog';
 import AddressIcon from '~/components/Common/AddressIcon';
-import useGlobal from '~/hooks/app/useSettingsDialog';
+import useGlobal from '~/hooks/app/useGlobal';
 import Row from '~/components/Common/Row';
 
 const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props }) => {

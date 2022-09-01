@@ -1,12 +1,13 @@
 import { createReducer } from '@reduxjs/toolkit';
+import { persistedState } from '~/state/persist';
 import { App } from '.';
-import { setEthPrices, setGlobal, updateSetting,
-} from './actions';
+import { setEthPrices, setGlobal, updateSetting } from './actions';
 
 export const initialState: App = {
   ethPrices: null,
   settings: { 
     denomination: 'usd',
+    ...persistedState?.app?.settings
   },
   globals: {
     showSettings: false,
