@@ -1,6 +1,7 @@
 import { ApolloClient, ApolloLink, FieldPolicy, HttpLink, InMemoryCache } from '@apollo/client';
 import { LocalStorageWrapper, persistCacheSync } from 'apollo3-cache-persist';
-import { SupportedChainId , BEANSTALK_SUBGRAPH_ADDRESSES, BEAN_SUBGRAPH_ADDRESSES } from '~/constants';
+import { SGEnvironments, SUBGRAPH_ENVIRONMENTS } from '~/graph/endpoints';
+import store from '~/state';
 
 /// ///////////////////////// Field policies ////////////////////////////
 
@@ -128,12 +129,15 @@ try {
 
 /// ///////////////////////// Links ////////////////////////////
 
+export const sgEnvKey = store.getState().app.settings.subgraphEnv || SGEnvironments.BF_PROD;
+export const sgEnv = SUBGRAPH_ENVIRONMENTS[sgEnvKey] || SUBGRAPH_ENVIRONMENTS[SGEnvironments.BF_PROD];
+
 const beanstalkLink = new HttpLink({
-  uri: BEANSTALK_SUBGRAPH_ADDRESSES[SupportedChainId.MAINNET],
+  uri: sgEnv.subgraphs.beanstalk,
 });
 
 const beanLink = new HttpLink({
-  uri: BEAN_SUBGRAPH_ADDRESSES[SupportedChainId.MAINNET],
+  uri: sgEnv.subgraphs.bean,
 });
 
 const snapshotLink = new HttpLink({

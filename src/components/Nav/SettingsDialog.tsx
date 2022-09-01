@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { FontSize } from '~/components/App/muiTheme';
 import { StyledDialog, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
 import Row from '~/components/Common/Row';
-import { SGEnvironments, BEANSTALK_SUBGRAPH_ENDPOINTS } from '~/graph/endpoints';
+import { SGEnvironments, SUBGRAPH_ENVIRONMENTS } from '~/graph/endpoints';
 import useSetting from '~/hooks/app/useSetting';
 import { save } from '~/state';
 import { setNextSunrise, setRemainingUntilSunrise } from '~/state/beanstalk/sun/actions';
@@ -91,7 +91,7 @@ const SettingsDialog : React.FC<{ open: boolean; onClose?: () => void; }> = ({ o
                 >
                   {Object.values(SGEnvironments).map((value) => (
                     <MenuItem key={value} value={value}>
-                      {BEANSTALK_SUBGRAPH_ENDPOINTS[value as SGEnvironments]?.name || 'Unknown'}
+                      {SUBGRAPH_ENVIRONMENTS[value as SGEnvironments]?.name || 'Unknown'}
                     </MenuItem>
                   ))}
                 </Select>

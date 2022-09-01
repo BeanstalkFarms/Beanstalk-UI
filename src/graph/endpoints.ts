@@ -1,40 +1,61 @@
 export enum SGEnvironments {
-  THEGRAPH_PROD = 'thegraph-prod',
-  THEGRAPH_DEV = 'thegraph-dev',
-  THEGRAPH_TEST = 'thegraph-test',
   BF_PROD = 'bf-prod',
   BF_DEV = 'bf-dev',
   BF_TEST = 'bf-test',
+  THEGRAPH_PROD = 'thegraph-prod',
+  THEGRAPH_DEV = 'thegraph-dev',
+  THEGRAPH_TEST = 'thegraph-test',
 }
 
 type SGEnvironment = {
   name: string;
-  url: string;
+  subgraphs: {
+    beanstalk: string;
+    bean: string;
+  }
 }
 
-export const BEANSTALK_SUBGRAPH_ENDPOINTS : Record<SGEnvironments, SGEnvironment> = {
+export const SUBGRAPH_ENVIRONMENTS : Record<SGEnvironments, SGEnvironment> = {
   [SGEnvironments.BF_PROD]:       {
     name: 'Beanstalk Farms / Production',
-    url: 'https://graph.node.bean.money/subgraphs/name/beanstalk',
+    subgraphs: {
+      beanstalk: 'https://graph.node.bean.money/subgraphs/name/beanstalk',
+      bean: 'https://api.thegraph.com/subgraphs/name/cujowolf/bean'
+    },
   },
   [SGEnvironments.BF_DEV]:        {
     name: 'Beanstalk Farms / Development',
-    url: 'https://graph.node.bean.money/subgraphs/name/beanstalk-dev',
+    subgraphs: {
+      beanstalk: 'https://graph.node.bean.money/subgraphs/name/beanstalk-dev',
+      bean: 'https://api.thegraph.com/subgraphs/name/cujowolf/bean',
+    }
   },
   [SGEnvironments.BF_TEST]:       {
     name: 'Beanstalk Farms / Test',
-    url: 'https://graph.node.bean.money/subgraphs/name/beanstalk-testing',
+    subgraphs: {
+      beanstalk: 'https://graph.node.bean.money/subgraphs/name/beanstalk-testing',
+      bean: 'https://api.thegraph.com/subgraphs/name/cujowolf/bean'
+    }
   },
   [SGEnvironments.THEGRAPH_PROD]: {
     name: 'The Graph / Production',
-    url: 'https://api.thegraph.com/subgraphs/name/cujowolf/beanstalk',
+    subgraphs: {
+      beanstalk: 'https://api.thegraph.com/subgraphs/name/cujowolf/beanstalk',
+      bean: 'https://api.thegraph.com/subgraphs/name/cujowolf/bean'
+    }
   },
   [SGEnvironments.THEGRAPH_DEV]:  {
     name: 'The Graph / Development',
-    url: 'https://api.thegraph.com/subgraphs/name/cujowolf/beanstalk-dev'
+    subgraphs: {
+      beanstalk: 'https://api.thegraph.com/subgraphs/name/cujowolf/beanstalk-dev',
+      bean: 'https://api.thegraph.com/subgraphs/name/cujowolf/bean'
+    }
   },
   [SGEnvironments.THEGRAPH_TEST]: {
     name: 'The Graph / Test',
-    url: 'https://api.thegraph.com/subgraphs/name/cujowolf/beanstalk-testing',
+    subgraphs: {
+      beanstalk: 'https://api.thegraph.com/subgraphs/name/cujowolf/beanstalk-testing',
+      bean: 'https://api.thegraph.com/subgraphs/name/cujowolf/bean'
+    }
   },
 };
