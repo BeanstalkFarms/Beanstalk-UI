@@ -20,21 +20,21 @@ export const SUBGRAPH_ENVIRONMENTS : Record<SGEnvironments, SGEnvironment> = {
     name: 'Beanstalk Farms / Production',
     subgraphs: {
       beanstalk: 'https://graph.node.bean.money/subgraphs/name/beanstalk',
-      bean: 'https://api.thegraph.com/subgraphs/name/cujowolf/bean'
+      bean: 'https://graph.node.bean.money/subgraphs/name/bean'
     },
   },
   [SGEnvironments.BF_DEV]:        {
     name: 'Beanstalk Farms / Development',
     subgraphs: {
       beanstalk: 'https://graph.node.bean.money/subgraphs/name/beanstalk-dev',
-      bean: 'https://api.thegraph.com/subgraphs/name/cujowolf/bean',
+      bean: 'https://graph.node.bean.money/subgraphs/name/bean-dev'
     }
   },
   [SGEnvironments.BF_TEST]:       {
     name: 'Beanstalk Farms / Test',
     subgraphs: {
       beanstalk: 'https://graph.node.bean.money/subgraphs/name/beanstalk-testing',
-      bean: 'https://api.thegraph.com/subgraphs/name/cujowolf/bean'
+      bean: 'https://graph.node.bean.money/subgraphs/name/bean-testing'
     }
   },
   [SGEnvironments.THEGRAPH_PROD]: {
