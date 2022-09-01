@@ -1,7 +1,7 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { Box, CssBaseline } from '@mui/material';
+import { Box, CssBaseline, Typography } from '@mui/material';
 import { ToastBar, Toaster } from 'react-hot-toast';
 import pageBackground from '~/img/theme/bg-mainnet.png';
 import NavBar from '~/components/Nav/NavBar';
@@ -43,6 +43,7 @@ import useBanner from '~/hooks/app/useBanner';
 import { BeanstalkPalette } from './muiTheme';
 import './App.css';
 import PageNotFound from '~/pages/error/404';
+import { sgEnvKey } from '~/graph/client';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -85,29 +86,29 @@ export default function App() {
       <CssBaseline />
       <AppUpdater />
       {/* -----------------------
-       * Bean Updaters
-       * ----------------------- */}
+        * Bean Updaters
+        * ----------------------- */}
       <PoolsUpdater />
       <UnripeUpdater />
       {/* -----------------------
-       * Beanstalk Updaters
-       * ----------------------- */}
+        * Beanstalk Updaters
+        * ----------------------- */}
       <BarnUpdater />
       <FieldUpdater />
       <SiloUpdater />
       <SunUpdater />
       <GovernanceUpdater />
       {/* -----------------------
-       * Farmer Updaters
-       * ----------------------- */}
+        * Farmer Updaters
+        * ----------------------- */}
       <FarmerFieldUpdater />
       <FarmerBalancesUpdater />
       <FarmerBarnUpdater />
       <FarmerMarketUpdater />
       <FarmerSiloUpdater />
       {/* -----------------------
-       * Content
-       * ----------------------- */}
+        * Content
+        * ----------------------- */}
       <NavBar>{banner}</NavBar>
       <CustomToaster
         navHeight={navHeight}
@@ -156,6 +157,11 @@ export default function App() {
           <Route path="/404" element={<PageNotFound />} />
           <Route path="*" element={<Navigate replace to="/404" />} />
         </Routes>
+        <Box sx={{ position: 'fixed', bottom: 0, right: 0, pr: 1, pb: 0.4, opacity: 0.6, display: { xs: 'none', lg: 'block' } }}>
+          <Typography fontSize="small">
+            v{import.meta.env.VITE_VERSION || '0.0.0'} &middot; {sgEnvKey}
+          </Typography>
+        </Box>
       </Box>
     </>
   );

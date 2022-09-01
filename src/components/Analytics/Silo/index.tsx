@@ -1,4 +1,4 @@
-import { Card, Tab, Tabs } from '@mui/material';
+import { Alert, Box, Card, Link, Tab, Tabs, Typography } from '@mui/material';
 import React from 'react';
 // import DepositedBeans from './DepositedBeans';
 // import DepositedBean3CRV from './DepositedBean3Crv';
@@ -7,13 +7,19 @@ import React from 'react';
 // import Stalk from './Stalk';
 // import Seeds from './Seeds';
 import useTabs from '~/hooks/display/useTabs';
-import Soon from '~/components/Common/ZeroState/Soon';
+import Stalk from '~/components/Analytics/Silo/Stalk';
+import Seeds from '~/components/Analytics/Silo/Seeds';
+import DepositedAsset from '~/components/Analytics/Silo/DepositedAsset';
+import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
+import { BEANSTALK_ADDRESSES } from '~/constants';
+import WarningIcon from '~/components/Common/Alert/WarningIcon';
+import { clearApolloCache } from '~/util';
 
 const SLUGS = [
   'deposited_bean',
-  'withdrawn_bean',
+  // 'withdrawn_bean',
   'deposited_lp',
-  'withdrawn_lp',
+  // 'withdrawn_lp',
   'deposited_urbean',
   'deposited_urlp',
   'stalk',
@@ -21,7 +27,7 @@ const SLUGS = [
 ];
 
 const SiloAnalytics: React.FC<{}> = () => {
-  const [tab, handleChangeTab] = useTabs(SLUGS, 'silo');
+  const [tab, handleChangeTab] = useTabs();
   return (
     <Card>
       <Tabs value={tab} onChange={handleChangeTab} sx={{ px: 2, pt: 2, pb: 1.5 }}>
@@ -32,18 +38,18 @@ const SiloAnalytics: React.FC<{}> = () => {
         <Tab label="Stalk" />
         <Tab label="Seeds" />
       </Tabs>
-      {/* {tab === 0 && <DepositedBeans height={300} />}
-      {tab === 1 && <DepositedBean3CRV height={300} />}
-      {tab === 2 && <DepositedUnripeBeans height={300} />}
-      {tab === 3 && <DepositedUnripeBean3CRV height={300} />}
+      <Box px={1} mb={1.5}>
+        <Alert variant="standard" color="warning" icon={<WarningIcon />}>
+          Silo analytics are under active development. Data shown may be incorrect.<br />
+          <Typography fontSize="small">Graphs not working? <Link href="#/analytics" underline="hover" onClick={() => clearApolloCache()}>Clear cache</Link></Typography>
+        </Alert>
+      </Box>
+      {tab === 0 && <DepositedAsset asset={BEAN[1]} account={BEANSTALK_ADDRESSES[1]} height={300} />}
+      {tab === 1 && <DepositedAsset asset={BEAN_CRV3_LP[1]} account={BEANSTALK_ADDRESSES[1]} height={300} />}
+      {tab === 2 && <DepositedAsset asset={UNRIPE_BEAN[1]} account={BEANSTALK_ADDRESSES[1]} height={300} />}
+      {tab === 3 && <DepositedAsset asset={UNRIPE_BEAN_CRV3[1]} account={BEANSTALK_ADDRESSES[1]} height={300} />}
       {tab === 4 && <Stalk height={300} />}
-      {tab === 5 && <Seeds height={300} />} */}
-      {tab === 0 && <Soon />}
-      {tab === 1 && <Soon />}
-      {tab === 2 && <Soon />}
-      {tab === 3 && <Soon />}
-      {tab === 4 && <Soon />}
-      {tab === 5 && <Soon />}
+      {tab === 5 && <Seeds height={300} />}
     </Card>
   );
 };

@@ -12,7 +12,7 @@ import RRoR from './RRoR';
 
 const SLUGS = ['rror', 'weather', 'pods', 'podrate', 'sown', 'harvested', 'sowers'];
 const FieldAnalytics: React.FC<{}> = () => {
-  const [tab, handleChangeTab] = useTabs(SLUGS, 'field');
+  const [tab, handleChangeTab] = useTabs();
   return (
     <Card>
       <Tabs value={tab} onChange={handleChangeTab} sx={{ px: 2, pt: 2, pb: 1.5 }}>

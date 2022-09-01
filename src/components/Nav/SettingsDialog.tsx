@@ -1,15 +1,20 @@
-import { Box, Button, ButtonGroup, Stack, Typography } from '@mui/material';
+import { Box, Button, ButtonGroup, MenuItem, Select, Stack, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+import { FontSize } from '~/components/App/muiTheme';
 import { StyledDialog, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
+import Row from '~/components/Common/Row';
+import { SGEnvironments, SUBGRAPH_ENVIRONMENTS } from '~/graph/endpoints';
 import useSetting from '~/hooks/app/useSetting';
+import { save } from '~/state';
 import { setNextSunrise, setRemainingUntilSunrise } from '~/state/beanstalk/sun/actions';
+import { clearApolloCache } from '~/util';
 
 const Split : React.FC = ({ children }) => (
-  <Stack direction="row" alignItems="center" justifyContent="space-between">
+  <Row justifyContent="space-between" gap={1}>
     {children}
-  </Stack>
+  </Row>
 );
 
 const buttonStyle = {
@@ -32,15 +37,27 @@ const buttonProps = <T extends any>(curr: T, set: (v: any) => void, v: T) => {
   };
 };
 
+const SelectInputProps = {
+  sx: {
+    py: 0.5,
+    fontSize: FontSize.base
+  }
+};
+
 const SettingsDialog : React.FC<{ open: boolean; onClose?: () => void; }> = ({ open, onClose }) => {
   const [denomination, setDenomination] = useSetting('denomination');
+  const [subgraphEnv, setSubgraphEnv]   = useSetting('subgraphEnv');
   const dispatch = useDispatch();
 
   /// Cache
   const clearCache = useCallback(() => {
-    localStorage.removeItem('apollo-cache-persist');
-    window.location.reload();
+    clearApolloCache();
   }, []);
+  const updateSubgraphEnv = useCallback((env: SGEnvironments) => {
+    setSubgraphEnv(env);
+    save();
+    clearApolloCache();
+  }, [setSubgraphEnv]);
 
   /// Dev Controls
   const setSeasonTimer = useCallback(() => {
@@ -62,6 +79,23 @@ const SettingsDialog : React.FC<{ open: boolean; onClose?: () => void; }> = ({ o
                 <Button {...buttonStyle} {...buttonProps(denomination, setDenomination, 'usd')}>{denomination === 'usd' ? '✓ ' : undefined}USD</Button>
                 <Button {...buttonStyle} {...buttonProps(denomination, setDenomination, 'bdv')}>{denomination === 'bdv' ? '✓ ' : undefined}BDV</Button>
               </ButtonGroup>
+            </Split>
+            <Split>
+              <Typography color="gray">Subgraph</Typography>
+              <Box>
+                <Select
+                  value={subgraphEnv || SGEnvironments.BF_PROD}
+                  size="small"
+                  onChange={(e) => updateSubgraphEnv(e.target.value as SGEnvironments)}
+                  inputProps={SelectInputProps}
+                >
+                  {Object.values(SGEnvironments).map((value) => (
+                    <MenuItem key={value} value={value}>
+                      {SUBGRAPH_ENVIRONMENTS[value as SGEnvironments]?.name || 'Unknown'}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Box>
             </Split>
             <Split>
               <Typography color="gray">Clear cache</Typography>
