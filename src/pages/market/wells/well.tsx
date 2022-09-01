@@ -5,34 +5,21 @@ import { Button,
   Stack, Typography
 } from '@mui/material';
 import { Link } from 'react-router-dom';
+import Wells from '~/components/Market/Wells/Wells';
 import PageHeaderSecondary from '~/components/Common/PageHeaderSecondary';
 import WhitelistBadge from '~/components/Market/Wells/WhitelistBadge';
 import Row from '~/components/Common/Row';
-import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN, STALK } from '~/constants/tokens';
 import WellCharts from '~/components/Market/Wells/Charts';
-import WellActivity from '~/components/Market/Wells/Tables';
-import WellButtons from '~/components/Market/Wells/WellButtons';
-import beanIcon from '~/img/tokens/bean-logo-circled.svg';
-import ethIcon from '~/img/tokens/eth-logo-circled.svg';
 
 const WellPage: React.FC = () => (
   <Container maxWidth="lg">
     <Stack gap={2}>
       <PageHeaderSecondary
-        title={
-          <Row gap={1}>
-            <Row gap={0.2}>
-              <img alt="" src={beanIcon} height={IconSize.medium} />
-              <img alt="" src={ethIcon} height={IconSize.medium} />
-            </Row>
-            <Typography variant="h2" textAlign="center" sx={{ verticalAlign: 'middle' }}>BEAN:ETH</Typography>
-          </Row>
-        }
+        title="BEAN:ETH"
         returnPath="/market/wells"
-        alignTitle="left"
-        control={<WellButtons />}
       />
       <Grid container spacing={2}>
         <Grid item xs={12} md={6} lg={4}>
@@ -107,7 +94,7 @@ const WellPage: React.FC = () => (
           <WellCharts />
         </Grid>
       </Grid>
-      <WellActivity />
+      <Wells />
     </Stack>
   </Container>
 );

@@ -9,9 +9,9 @@ import { BEAN, PODS } from '~/constants/tokens';
 import FarmerChip from '~/components/Common/FarmerChip';
 import podOrderIcon from '~/img/beanstalk/pod-order-icon.svg';
 import StatHorizontal from '~/components/Common/StatHorizontal';
-import Row from '~/components/Common/Row';
 import { displayBN, displayFullBN } from '../../../../util';
 import { IconSize } from '../../../App/muiTheme';
+import Row from '~/components/Common/Row';
 
 export type OrderDetailsProps = {
   podOrder: PodOrder | undefined;
