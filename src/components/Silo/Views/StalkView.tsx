@@ -29,6 +29,8 @@ const StalkView: React.FC<TabData> = ({ current, series, season }) => {
   );
   useEffect(() => setDisplayValue(current), [current]);
 
+  console.log('STALK OWNERSHIP', displayValue[1].toNumber());
+
   return (
     <>
       <Row gap={4} sx={{ px: 2 }}>
