@@ -27,7 +27,7 @@ export const STATE_CONFIG = {
     (name: string) => `${name} that are Deposited in the Silo.`
   ],
   withdrawn: [
-    'Withdrawn',
+    'Withdrawn & Claimable',
     '#E17E76', 
     (name: string) => `${name} being Withdrawn from the Silo. At the end of the current Season, Withdrawn assets become Claimable.`
   ],
