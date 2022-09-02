@@ -3,13 +3,16 @@ import { Box, Chip, LinearProgress, Stack, Tooltip, Typography } from '@mui/mate
 import { GridColumns, GridRenderCellParams, GridValueFormatterParams } from '@mui/x-data-grid';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import BigNumber from 'bignumber.js';
-import { displayBN, displayFullBN, MaxBN } from '~/util';
+import { displayBN, displayFullBN, MaxBN, trimAddress } from '~/util';
 import { BEAN, PODS } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 import TokenIcon from '../TokenIcon';
 import AddressIcon from '../AddressIcon';
 import EntityIcon from '~/components/Market/Pods/EntityIcon';
+import { WellActivityData } from '~/components/Market/Wells/Tables';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
+import { Token } from '~/classes';
 
 const basicCell = (params : GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
 
@@ -48,7 +51,7 @@ const COLUMNS = {
   } as GridColumns[number],
 
   ///
-  /// Market
+  /// Pod Market
   ///
   numPods: (flex: number) => ({
     field: 'totalAmount',
@@ -297,6 +300,70 @@ const COLUMNS = {
       </Tooltip>
     )
   } as GridColumns[number]),
+
+  ///
+  /// DEX
+  ///
+  ///
+  label: (flex: number) => ({
+    field: 'label',
+    headerName: 'Type',
+    flex: flex,
+    align: 'left',
+    headerAlign: 'left',
+    renderCell: (params: GridRenderCellParams<any, WellActivityData>) => (
+      <Typography>
+        {params.row.label}
+      </Typography>
+    )
+  }) as GridColumns[number],
+  tokenAmount: (column: string, token: Token, flex: number) => ({
+    field: column,
+    headerName: 'Token Amount',
+    flex: flex,
+    align: 'left',
+    headerAlign: 'left',
+    renderCell: (params: GridRenderCellParams<any, WellActivityData>) => (
+      <Typography>
+        {displayBN(params.row.tokenAmount0)} {token.symbol}
+      </Typography>
+    )
+  }) as GridColumns[number],
+  totalValue: (flex: number) => ({
+    field: 'totalValue',
+    headerName: 'Total Value',
+    flex: flex,
+    align: 'left',
+    headerAlign: 'left',
+    renderCell: (params: GridRenderCellParams<any, WellActivityData>) => (
+      <Typography>
+        {displayBN(params.row.totalValue)}
+      </Typography>
+    )
+  }) as GridColumns[number],
+  account: (flex: number) => ({
+    field: 'account',
+    headerName: 'Account',
+    flex: flex,
+    align: 'right',
+    headerAlign: 'right',
+    renderCell: (params: GridRenderCellParams<any, WellActivityData>) => (
+      <Typography color={BeanstalkPalette.logoGreen}>
+        {trimAddress(params.row.account)}
+      </Typography>
+    )
+  }) as GridColumns[number],
+
+  time: (flex: number) => ({
+    field: 'time',
+    headerName: 'Time',
+    flex: flex,
+    align: 'right',
+    headerAlign: 'right',
+    renderCell: (params: GridRenderCellParams<any, WellActivityData>) => (
+      <Typography>{params.row.time}</Typography>
+    )
+  }) as GridColumns[number],
 
   ///
   /// Extras

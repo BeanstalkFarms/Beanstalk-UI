@@ -23,6 +23,8 @@ const Overview: React.FC<{
   season:         BigNumber;
 }> = ({ farmerSilo, beanstalkSilo, breakdown, season }) => {
   const [tab, handleChange] = useTabs(SLUGS, 'view');
+  console.log('STALK OWN', farmerSilo.stalk.active.div(beanstalkSilo.stalk.total).toNumber());
+  console.log('ACTIVE', farmerSilo.stalk.active.toNumber());
   return (
     <Card>
       {/* FIXME: sizing between deposits tab and Total Silo Deposits */}

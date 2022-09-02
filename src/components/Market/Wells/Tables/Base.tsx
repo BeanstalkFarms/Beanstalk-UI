@@ -40,11 +40,12 @@ const wellTableBaseStyle = {
       border: 'none',
     },
     '& .MuiDataGrid-row': {
-      border: 1,
+      // border: 1,
+      // borderTop: 1,
+      borderBottom: 1,
       borderColor: BeanstalkPalette.blue,
-      borderRadius: 1,
-      py: 2.4,
-      mb: 0.8,
+      py: 2.8,
+      // mb: 0.8,
       alignItems: 'center',
       cursor: 'pointer',
       width: 'calc(100% - 2.5px)',
@@ -60,7 +61,8 @@ const wellTableBaseStyle = {
     },
     '& .MuiDataGrid-columnHeaders': {
       outline: 'none',
-      border: 'none',
+      borderBottom: 1,
+      borderColor: BeanstalkPalette.blue,
       fontSize: '18px',
       color: '#000000'
     },
