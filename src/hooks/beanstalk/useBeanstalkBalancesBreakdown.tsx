@@ -8,7 +8,7 @@ import useWhitelist from './useWhitelist';
 import { BeanstalkSiloBalance } from '~/state/beanstalk/silo';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
-import { BEAN } from '~/constants/tokens';
+import { BEAN, BEAN_CRV3_LP } from '~/constants/tokens';
 import useUnripeUnderlyingMap from '~/hooks/beanstalk/useUnripeUnderlying';
 
 // -----------------
@@ -20,6 +20,11 @@ export const STATE_CONFIG = {
     'Pooled',
     '#8CB4CF',
     (name: string) => `${name} in all liquidity pools.`
+  ],
+  ripePooled: [
+    'Ripe Pooled',
+    '#a09f6a',
+    (name: string) => `${name} minted from Fertilizer being sold that are stored in liquidity pools.`
   ],
   deposited: [
     'Deposited',
@@ -121,6 +126,7 @@ export default function useBeanstalkSiloBreakdown() {
 
   const getChainToken = useGetChainToken();
   const Bean = getChainToken(BEAN);
+  const Bean3CRV = getChainToken(BEAN_CRV3_LP);
   const unripeToRipe = useUnripeUnderlyingMap('unripe');
   const ripeToUnripe = useUnripeUnderlyingMap('ripe');
 
@@ -132,6 +138,7 @@ export default function useBeanstalkSiloBreakdown() {
       // Ensure we've loaded a Silo Balance for this token.
       if (siloBalance) {
         let ripe;
+        let ripePooled;
         let budget;
         let pooled;
         let farmable;
@@ -157,11 +164,22 @@ export default function useBeanstalkSiloBreakdown() {
         // Handle: BEAN
         if (TOKEN === Bean) {
           budget = Object.values(multisigBalances).reduce((_prev, curr) => _prev.plus(curr), ZERO_BN);
-          pooled = Object.values(poolState).reduce((_prev, curr) => _prev.plus(curr.reserves[0]), ZERO_BN);
+          // const pooled = Object.values(poolState).reduce((_prev, curr) => _prev.plus(curr.reserves[0]), ZERO_BN);
+          const totalPooled = Object.values(poolState).reduce((_prev, curr) => _prev.plus(curr.reserves[0]), ZERO_BN);
+
+          // Ripe Pooled = BEAN:3crv_RESERVES * (Ripe BEAN:3CRV / BEAN:3CRV Token Supply)
+          // TODO: can we reduce this duplicate code?
+          ripePooled = new BigNumber(totalPooled)
+            .multipliedBy(
+              new BigNumber(unripeTokenState[ripeToUnripe[Bean3CRV.address].address].underlying)
+                .div(new BigNumber(poolState[Bean3CRV.address].supply))
+          );
+          pooled = new BigNumber(totalPooled).minus(ripePooled);
+
           farmable = (
             beanSupply
               .minus(budget)
-              .minus(pooled)
+              .minus(totalPooled)
               .minus(ripe || ZERO_BN)
               .minus(siloBalance.deposited.amount)
               .minus(siloBalance.withdrawn.amount)
@@ -182,6 +200,7 @@ export default function useBeanstalkSiloBreakdown() {
           deposited:   siloBalance.deposited?.amount,
           withdrawn:   siloBalance.withdrawn?.amount,
           pooled:      pooled,
+          ripePooled: ripePooled,
           ripe:        ripe,
           budget:      budget,
           farmable:    farmable,
@@ -190,6 +209,7 @@ export default function useBeanstalkSiloBreakdown() {
           deposited:   getUSD(TOKEN, siloBalance.deposited.amount),
           withdrawn:   getUSD(TOKEN, siloBalance.withdrawn.amount),
           pooled:      pooled   ? getUSD(TOKEN, pooled) : undefined,
+          ripePooled:  ripePooled   ? getUSD(TOKEN, ripePooled) : undefined,
           ripe:        ripe     ? getUSD(TOKEN, ripe) : undefined,
           budget:      budget   ? getUSD(TOKEN, budget) : undefined,
           farmable:    farmable ? getUSD(TOKEN, farmable) : undefined,
@@ -231,5 +251,5 @@ export default function useBeanstalkSiloBreakdown() {
       /** */
       tokens: _initState(WHITELIST_ADDRS, siloBalances),
     }),
-  [WHITELIST_ADDRS, siloBalances, WHITELIST, ripeToUnripe, unripeToRipe, Bean, poolState, getUSD, unripeTokenState, multisigBalances, beanSupply]);
+  [WHITELIST_ADDRS, siloBalances, WHITELIST, ripeToUnripe, unripeToRipe, Bean, Bean3CRV, poolState, getUSD, unripeTokenState, multisigBalances, beanSupply]);
 }
