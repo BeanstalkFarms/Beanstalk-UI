@@ -1,12 +1,12 @@
 import React from 'react';
-import { Box, Button, Card, Divider, Grid, Link, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Card, Chip, Divider, Grid, Link, Stack, Tooltip, Typography } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Link as RouterLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Pool, Token } from '~/classes';
 import { AppState } from '~/state';
 import TokenIcon from '~/components/Common/TokenIcon';
-import { BEAN, BEAN_CRV3_LP, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
+import { BEAN, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
 import { AddressMap, ONE_BN, ZERO_BN } from '~/constants';
 import { displayFullBN, displayTokenAmount } from '~/util/Tokens';
 import useBDV from '~/hooks/beanstalk/useBDV';
@@ -48,7 +48,6 @@ const Whitelist : React.FC<{
   /// Chain
   const getChainToken = useGetChainToken();
   const Bean          = getChainToken(BEAN);
-  const BeanCrv3      = getChainToken(BEAN_CRV3_LP);
   const urBean        = getChainToken(UNRIPE_BEAN);
   const urBeanCrv3    = getChainToken(UNRIPE_BEAN_CRV3);
   const unripeUnderlyingTokens = useUnripeUnderlyingMap();
@@ -72,17 +71,36 @@ const Whitelist : React.FC<{
         }}
       >
         <Grid container alignItems="flex-end">
-          <Grid item md={3} xs={4}>
+          <Grid item md={2.5} xs={4}>
             <Typography color="gray">Token</Typography>
           </Grid>
-          <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
+          <Grid item md={3} xs={0} display={{ xs: 'none', md: 'block' }}>
             <Tooltip title="Stalk and Seeds earned for each 1 Bean Denominated Value (BDV) Deposited in the Silo.">
-              <Typography color="gray">
-                Rewards
-              </Typography>
+              <span>
+                <Row gap={0.25}> 
+                  <Typography color="gray">
+                    Rewards
+                  </Typography>
+                  &nbsp;
+                  <Chip
+                    variant="filled"
+                    color="primary"
+                    label="vAPY"
+                    onClick={undefined}
+                    size="small"
+                  />
+                  <Chip
+                    variant="filled"
+                    color="secondary"
+                    label="Stalk APY"
+                    onClick={undefined}
+                    size="small"
+                  />
+                </Row>
+              </span>
             </Tooltip>
           </Grid>
-          <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
+          <Grid item md={1.5} xs={0} display={{ xs: 'none', md: 'block' }}>
             <Tooltip title="Total Value Deposited in the Silo.">
               <Typography color="gray">TVD</Typography>
             </Tooltip>
@@ -104,7 +122,7 @@ const Whitelist : React.FC<{
           </Grid>
         </Grid>
       </Box>
-      <Stack gap={1} sx={{ p: 1 }}>
+      <Stack gap={1} p={1}>
         {config.whitelist.map((token) => {
           const deposited   = farmerSilo.balances[token.address]?.deposited;
           const isUnripe    = token === urBean || token === urBeanCrv3;
@@ -134,7 +152,7 @@ const Whitelist : React.FC<{
                   {/**
                     * Cell: Token
                     */}
-                  <Grid item md={3} xs={7}>
+                  <Grid item md={2.5} xs={7}>
                     <Row gap={1}>
                       <img
                         src={token.logo}
@@ -150,19 +168,42 @@ const Whitelist : React.FC<{
                   {/** 
                     * Cell: Rewards
                     */}
-                  <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
-                    <Tooltip placement="right" title={<>1 {token.symbol} = {displayFullBN(getBDV(token))} BDV</>}>
-                      <Typography display="inline" color="black">
-                        <TokenIcon token={STALK} />{token.rewards?.stalk} &nbsp;
-                        <TokenIcon token={SEEDS} style={{ marginTop: 1.5 }} />{token.rewards?.seeds}
-                      </Typography>
-                    </Tooltip>
+                  <Grid item md={3} xs={0} display={{ xs: 'none', md: 'block' }}>
+                    <Row gap={0.75}>
+                      <Tooltip placement="right" title={<>1 {token.symbol} = {displayFullBN(getBDV(token))} BDV</>}>
+                        <Typography display="inline" color="black">
+                          <TokenIcon token={STALK} />{token.rewards?.stalk}{' '}
+                          <TokenIcon token={SEEDS} style={{ marginTop: 1.5 }} />{token.rewards?.seeds}
+                        </Typography>
+                      </Tooltip>
+                      <Row gap={0.25}>
+                        <Tooltip placement="right" title={<>The Variable APY uses a moving average of Bean seignorage minted to the Silo during prior Seasons to estimate a future rate of return. <Link underline="hover">Learn more</Link></>}>
+                          <Chip
+                            variant="filled"
+                            color="primary"
+                            label="205.35%"
+                            onClick={undefined}
+                            size="small"
+                          />
+                        </Tooltip>
+                        <Tooltip placement="right" title={<>The Stalk APY estimates growth in Stalk for depositing {token.name}.</>}>
+                          <Chip
+                            variant="filled"
+                            color="secondary"
+                            label="265.49%"
+                            onClick={undefined}
+                            size="small"
+                            sx={{ display: { lg: 'inherit', xs: 'none' } }}
+                          />
+                        </Tooltip>
+                      </Row>
+                    </Row>
                   </Grid>
 
                   {/**
                     * Cell: TVD
                     */}
-                  <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
+                  <Grid item md={1.5} xs={0} display={{ xs: 'none', md: 'block' }}>
                     <Tooltip
                       placement="right"
                       componentsProps={TOOLTIP_COMPONENT_PROPS}
@@ -170,21 +211,7 @@ const Whitelist : React.FC<{
                         isUnripe ? (
                           <Stack gap={0.5}>
                             <Stack direction={{ xs: 'column', md: 'row' }} gap={{ xs: 0, md: 1 }} alignItems="stretch">
-                              <Stack display={{ xs: 'none', md: 'flex' }} alignItems="center" justifyContent="center">=</Stack>
-                              {/* <Box sx={{ px: 1, py: 0.5, maxWidth: 215, }}>
-                                <Stat
-                                  title={<Row gap={0.5}><TokenIcon token={token} /> Total Deposited {token.symbol}</Row>}
-                                  gap={0.25}
-                                  variant="h4"
-                                  amount={displayTokenAmount(beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN, token, { showName: false })}
-                                  subtitle={
-                                    <>
-                                      The total number of {token.symbol} Deposited in the Silo.
-                                    </>
-                                  }
-                                />
-                              </Box> */}
-                              {/* <Stack alignItems="center" justifyContent="center">×</Stack> */}
+                              <Row display={{ xs: 'none', md: 'flex' }}>=</Row>
                               <Box sx={{ px: 1, py: 0.5, maxWidth: 215 }}>
                                 <Stat
                                   title={<Row gap={0.5}><TokenIcon token={underlyingToken!} /> Ripe {underlyingToken!.symbol}</Row>}
@@ -200,7 +227,7 @@ const Whitelist : React.FC<{
                                   subtitle={`The ${denomination.toUpperCase()} value of the ${underlyingToken!.symbol} underlying all ${token.symbol}.`}
                                 />
                               </Box>
-                              <Stack alignItems="center" justifyContent="center">×</Stack>
+                              <Row>×</Row>
                               <Box sx={{ px: 1, py: 0.5,  maxWidth: 245 }}>
                                 <Stat
                                   title="% Deposited"
@@ -216,7 +243,7 @@ const Whitelist : React.FC<{
                               </Box>
                             </Stack>
                             <Divider />
-                            <Box sx={{ pl: { xs: 0, md:  2.7 } }}>
+                            <Box sx={{ pl: { xs: 0, md: 2.7 } }}>
                               <Typography variant="bodySmall" color="gray" textAlign="left">
                                 Total Amount Deposited: {displayFullBN(beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN, token.displayDecimals)} {token.symbol}<br />
                                 Total Supply: {displayFullBN(unripeTokens[token.address]?.supply || ZERO_BN)} {token.symbol}<br />
@@ -225,7 +252,7 @@ const Whitelist : React.FC<{
                           </Stack>
                         ) : (
                           <Stack direction={{ xs: 'column', md: 'row' }} gap={{ xs: 0, md: 1 }} alignItems="stretch">
-                            <Stack display={{ xs: 'none', md: 'flex' }} alignItems="center" justifyContent="center">=</Stack>
+                            <Row display={{ xs: 'none', md: 'flex' }}>=</Row>
                             <Box sx={{ px: 1, py: 0.5, maxWidth: 245 }}>
                               <Stat
                                 title={<Row gap={0.5}><TokenIcon token={token} /> Total Deposited {token.symbol}</Row>}
@@ -239,7 +266,7 @@ const Whitelist : React.FC<{
                                 }
                               />
                             </Box>
-                            <Stack alignItems="center" justifyContent="center">×</Stack>
+                            <Row>×</Row>
                             <Box sx={{ px: 1, py: 0.5 }}>
                               <Stat
                                 title={`${token.symbol} Price`}
@@ -330,7 +357,7 @@ const Whitelist : React.FC<{
                         componentsProps={TOOLTIP_COMPONENT_PROPS}
                         title={isUnripe ? (
                           <Stack direction={{ xs: 'column', md: 'row' }} gap={{ xs: 0, md: 1 }} alignItems="stretch">
-                            <Box sx={{ px: 1, py: 0.5, backgroundColor: 'transparent' }}>
+                            <Box sx={{ px: 1, py: 0.5 }}>
                               <Stat
                                 title={<Row gap={0.5}><TokenIcon token={token} /> {token.symbol}</Row>}
                                 gap={0.25}
@@ -343,8 +370,8 @@ const Whitelist : React.FC<{
                                 }
                               />
                             </Box>
-                            <Stack alignItems="center" justifyContent="center">×</Stack>
-                            <Box sx={{ px: 1, py: 0.5,  maxWidth: 215 }}>
+                            <Row>×</Row>
+                            <Box sx={{ px: 1, py: 0.5, maxWidth: 215 }}>
                               <Stat
                                 title="Chop Rate"
                                 gap={0.25}
@@ -357,7 +384,7 @@ const Whitelist : React.FC<{
                                 }
                               />
                             </Box>
-                            <Stack alignItems="center" justifyContent="center">×</Stack>
+                            <Row>×</Row>
                             <Box sx={{ px: 1, py: 0.5, maxWidth: 215 }}>
                               <Stat
                                 title={`${unripeUnderlyingTokens[token.address]} Price`}
