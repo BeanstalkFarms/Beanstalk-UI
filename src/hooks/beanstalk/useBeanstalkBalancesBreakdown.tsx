@@ -21,11 +21,6 @@ export const STATE_CONFIG = {
     '#8CB4CF',
     (name: string) => `${name} in all liquidity pools.`
   ],
-  ripePooled: [
-    'Ripe Pooled',
-    '#a09f6a',
-    (name: string) => `${name} minted from Fertilizer being sold that are stored in liquidity pools.`
-  ],
   deposited: [
     'Deposited',
     BeanstalkPalette.logoGreen, 
@@ -41,15 +36,20 @@ export const STATE_CONFIG = {
     BeanstalkPalette.lightBlue, 
     (name: string) => `Farm ${name} are stored in Beanstalk. Circulating ${name} are in Farmers' wallets.`,
   ],
+  budget: [
+    'Budget',
+    BeanstalkPalette.supportGreen,
+    (name: string) => `${name} in the BFM and BSM wallets.`,
+  ],
   ripe: [
     'Ripe',
     '#DFB385', 
     (name: string) => `${name} minted as Fertilizer is sold. Ripe assets are the assets underlying Unripe assets.`
   ],
-  budget: [
-    'Budget',
-    BeanstalkPalette.supportGreen,
-    (name: string) => `${name} in the BFM and BSM wallets.`,
+  ripePooled: [
+    'Ripe Pooled',
+    '#c07a30',
+    (name: string) => `${name} that make up Ripe BEAN:3CRV.`
   ],
 } as const;
 
@@ -172,8 +172,8 @@ export default function useBeanstalkSiloBreakdown() {
           ripePooled = new BigNumber(totalPooled)
             .multipliedBy(
               new BigNumber(unripeTokenState[ripeToUnripe[Bean3CRV.address].address].underlying)
-                .div(new BigNumber(poolState[Bean3CRV.address].supply))
-          );
+                .div(new BigNumber(poolState[Bean3CRV.address]?.supply))
+            );
           pooled = new BigNumber(totalPooled).minus(ripePooled);
 
           farmable = (
