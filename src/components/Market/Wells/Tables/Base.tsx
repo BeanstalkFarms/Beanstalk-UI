@@ -16,7 +16,8 @@ const wellTableBaseStyle = {
     },
     '& .MuiDataGrid-columnHeaderTitle': {
       fontWeight: 500,
-      fontSize: FontSize.base
+      fontSize: FontSize.base,
+      color: 'gray'
     },
     '& .MuiDataGrid-columnHeader:focus': {
       outline: 'none'
@@ -61,7 +62,7 @@ const wellTableBaseStyle = {
     },
     '& .MuiDataGrid-columnHeaders': {
       outline: 'none',
-      borderBottom: 1,
+      borderBottom: 2,
       borderColor: BeanstalkPalette.blue,
       fontSize: '18px',
       color: '#000000'
