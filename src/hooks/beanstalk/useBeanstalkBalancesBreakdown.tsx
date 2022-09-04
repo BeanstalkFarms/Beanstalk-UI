@@ -19,7 +19,7 @@ export const STATE_CONFIG = {
   pooled: [
     'Pooled',
     '#8CB4CF',
-    (name: string) => `${name} in all liquidity pools.`
+    (name: string) => `${name} in all liquidity pools. Does not include Beans that make up Ripe BEAN:3CRV.`
   ],
   deposited: [
     'Deposited',
@@ -29,7 +29,7 @@ export const STATE_CONFIG = {
   withdrawn: [
     'Withdrawn & Claimable',
     '#E17E76', 
-    (name: string) => `${name} being Withdrawn from the Silo. At the end of the current Season, Withdrawn assets become Claimable.`
+    (name: string) => `${name} being Withdrawn from the Silo. At the end of the current Season, Withdrawn ${name} become Claimable.`
   ],
   farmable: [
     'Farm & Circulating',
@@ -39,17 +39,17 @@ export const STATE_CONFIG = {
   budget: [
     'Budget',
     BeanstalkPalette.supportGreen,
-    (name: string) => `${name} in the BFM and BSM wallets.`,
+    (name: string) => `Circulating ${name} in the Beanstalk Farms and Bean Sprout multisig wallets.`,
   ],
   ripe: [
     'Ripe',
     '#DFB385', 
-    (name: string) => `${name} minted as Fertilizer is sold. Ripe assets are the assets underlying Unripe assets.`
+    (name: string) => `${name} minted as the percentage of Fertilizer sold increases. Ripe ${name} are the ${name} underlying Unripe ${name}. ${name === 'Beans' ? 'Does not include Beans that make up Ripe BEAN:3CRV.' : ''}`
   ],
   ripePooled: [
     'Ripe Pooled',
     '#c07a30',
-    (name: string) => `${name} that make up Ripe BEAN:3CRV.`
+    (name: string) => `Pooled ${name} that make up Ripe BEAN:3CRV.`
   ],
 } as const;
 
