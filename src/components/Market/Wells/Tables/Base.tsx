@@ -51,7 +51,7 @@ const wellTableBaseStyle = {
       cursor: 'pointer',
       width: 'calc(100% - 2.5px)',
       '&:hover': {
-        background: BeanstalkPalette.lightestBlue
+        background: 'transparent'
       }
     },
     '& .MuiDataGrid-footerContainer': {

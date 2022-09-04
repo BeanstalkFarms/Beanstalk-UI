@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Chip, LinearProgress, Tooltip, Typography } from '@mui/material';
+import { Box, Chip, LinearProgress, Link, Tooltip, Typography } from '@mui/material';
 import { GridColumns, GridRenderCellParams, GridValueFormatterParams } from '@mui/x-data-grid';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import BigNumber from 'bignumber.js';
@@ -12,7 +12,6 @@ import AddressIcon from '../AddressIcon';
 import Row from '~/components/Common/Row';
 import EntityIcon from '~/components/Market/Pods/EntityIcon';
 import { WellActivityData } from '~/components/Market/Wells/Tables';
-import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { Token } from '~/classes';
 
 const basicCell = (params : GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
@@ -313,9 +312,11 @@ const COLUMNS = {
     align: 'left',
     headerAlign: 'left',
     renderCell: (params: GridRenderCellParams<any, WellActivityData>) => (
-      <Typography>
-        {params.row.label}
-      </Typography>
+      <Link>
+        <Typography>
+          {params.row.label}
+        </Typography>
+      </Link>
     )
   }) as GridColumns[number],
   tokenAmount: (column: string, token: Token, flex: number) => ({
@@ -349,9 +350,11 @@ const COLUMNS = {
     align: 'right',
     headerAlign: 'right',
     renderCell: (params: GridRenderCellParams<any, WellActivityData>) => (
-      <Typography color={BeanstalkPalette.logoGreen}>
-        {trimAddress(params.row.account)}
-      </Typography>
+      <Link>
+        <Typography>
+          {trimAddress(params.row.account)}
+        </Typography>
+      </Link>
     )
   }) as GridColumns[number],
 
