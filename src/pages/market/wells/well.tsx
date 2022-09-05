@@ -13,6 +13,7 @@ import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN, STALK } from '~/constants/tokens';
 import WellCharts from '~/components/Market/Wells/Charts';
 import WellActivity from '~/components/Market/Wells/Tables';
+import { Module } from '~/components/Common/Module';
 
 const WellPage: React.FC = () => (
   <Container maxWidth="lg">
@@ -94,6 +95,7 @@ const WellPage: React.FC = () => (
           <WellCharts />
         </Grid>
       </Grid>
+      <Module sx={{ p: 2 }} />
       <WellActivity />
     </Stack>
   </Container>

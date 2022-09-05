@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tab, useMediaQuery } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 
 import { DataGridProps } from '@mui/x-data-grid';
 import { useTheme } from '@mui/material/styles';
@@ -9,7 +9,7 @@ import { PodListing } from '~/state/farmer/market';
 import COLUMNS from '~/components/Common/Table/cells';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
 import WellBaseTable from '~/components/Market/Wells/Tables/Base';
-import { Module, ModuleContent, ModuleTabs } from '~/components/Common/Module';
+import { Module, ModuleContent } from '~/components/Common/Module';
 import { BEAN, PODS } from '~/constants/tokens';
 
 // TODO: dummy type
@@ -39,7 +39,7 @@ const WellActivity: React.FC<{}> = () => {
       // COLUMNS.pricePerPod(1),
       // // amount
       // maxHarvestableIndex
-      COLUMNS.label(2.5),
+      COLUMNS.label(2.5, tab, handleChangeTab),
       COLUMNS.totalValue(1),
       COLUMNS.tokenAmount('tokenAmount0', BEAN[1], 1),
       COLUMNS.tokenAmount('tokenAmount1', PODS, 1),
@@ -59,13 +59,13 @@ const WellActivity: React.FC<{}> = () => {
   }));
 
   return (
-    <Module>
-      <ModuleTabs value={tab} onChange={handleChangeTab}>
-        <Tab label="All" />
-        <Tab label="Swaps" />
-        <Tab label="Adds" />
-        <Tab label="Removes" />
-      </ModuleTabs>
+    <Module sx={{ py: 2, px: 1 }}>
+      {/* <ModuleTabs value={tab} onChange={handleChangeTab}> */}
+      {/*  <Tab label="All" /> */}
+      {/*  <Tab label="Swaps" /> */}
+      {/*  <Tab label="Adds" /> */}
+      {/*  <Tab label="Removes" /> */}
+      {/* </ModuleTabs> */}
       <ModuleContent>
         <WellBaseTable
           columns={columns}
