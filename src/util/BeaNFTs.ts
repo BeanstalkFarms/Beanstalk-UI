@@ -6,11 +6,14 @@ export enum ClaimStatus {
 }
 
 export type Nft = {
+  /** The BeaNFT number (eg: BeaNFT 1634 */
   id: number;
+  /** ETH address of owner. */
   account: string;
+  /** Winter or Genesis */
   subcollection: string;
+  /** */
   imageIpfsHash?: string;
-  
   /** 0 => claimed, 1 => unclaimed  */
   claimed?: ClaimStatus;
 
@@ -23,9 +26,14 @@ export type Nft = {
 }
 
 /** Maps an NFT collection to its ETH address. */
-export const COLLECTIONS: {[c: string]: string} = {
+export const COLLECTION_ADDRESS: {[c: string]: string} = {
   Genesis: BEANFT_GENESIS_ADDRESSES[1],
   Winter:  BEANFT_WINTER_ADDRESSES[1]
+};
+
+export const ADDRESS_COLLECTION: {[c: string]: string} = {
+  [BEANFT_GENESIS_ADDRESSES[1]]: COLLECTION_ADDRESS.Genesis,
+  [BEANFT_WINTER_ADDRESSES[1]]: COLLECTION_ADDRESS.Winter
 };
 
 export async function loadNFTs(account: string) {
