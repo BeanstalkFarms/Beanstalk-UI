@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Dialog, Link } from '@mui/material';
 import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
-import { ClaimStatus, COLLECTIONS, Nft } from '../../util/BeaNFTs';
+import { ClaimStatus, COLLECTION_ADDRESS, Nft } from '../../util/BeaNFTs';
 import NFTImage from './NFTImage';
 
 export interface NFTDialogProps {
@@ -32,7 +32,7 @@ const NFTDialog: React.FC<NFTDialogProps> = ({
         {nft.claimed === 0 ? (
           <Link
             href={
-            `https://opensea.io/assets/ethereum/${COLLECTIONS[nft.subcollection]}/${nft.id}`
+            `https://opensea.io/assets/ethereum/${COLLECTION_ADDRESS[nft.subcollection]}/${nft.id}`
           }
             target="_blank"
             rel="noreferrer">
