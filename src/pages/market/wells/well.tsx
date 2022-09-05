@@ -16,6 +16,7 @@ import WellActivity from '~/components/Market/Wells/Tables';
 import WellButtons from '~/components/Market/Wells/WellButtons';
 import beanIcon from '~/img/tokens/bean-logo-circled.svg';
 import ethIcon from '~/img/tokens/eth-logo-circled.svg';
+import { Module } from '~/components/Common/Module';
 
 const WellPage: React.FC = () => (
   <Container maxWidth="lg">
@@ -107,6 +108,7 @@ const WellPage: React.FC = () => (
           <WellCharts />
         </Grid>
       </Grid>
+      <Module sx={{ p: 2 }} />
       <WellActivity />
     </Stack>
   </Container>

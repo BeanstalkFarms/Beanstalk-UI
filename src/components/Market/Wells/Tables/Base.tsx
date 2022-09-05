@@ -65,7 +65,17 @@ const wellTableBaseStyle = {
       borderBottom: 2,
       borderColor: BeanstalkPalette.blue,
       fontSize: '18px',
-      color: '#000000'
+      color: '#000000',
+      '&:hover' : {
+        outline: 'none !important'
+      }
+    },
+    '& .MuiDataGrid-columnHeader': {
+      outline: 'none',
+      border: 'none'
+    },
+    '& .MuiDataGrid-columnHeaderTitleContainer': {
+      outline: 'none',
     },
     '& .MuiDataGrid-virtualScrollerRenderZone :hover': {
       // backgroundColor: "transparent"
