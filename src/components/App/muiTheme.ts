@@ -621,7 +621,7 @@ let muiTheme = createTheme({
             color: 'secondary'
           },
           style: sx({
-            color: 'text', // BeanstalkPalette.darkBlue,
+            color: BeanstalkPalette.darkBlue,
             backgroundColor: BeanstalkPalette.lightestBlue,
           })
         }

@@ -85,14 +85,14 @@ const Whitelist : React.FC<{
                   <Chip
                     variant="filled"
                     color="primary"
-                    label="vAPY"
+                    label={<Row gap={0.5}><TokenIcon token={BEAN[1]} /> vAPY</Row>}
                     onClick={undefined}
                     size="small"
                   />
                   <Chip
                     variant="filled"
                     color="secondary"
-                    label="Stalk APY"
+                    label={<Row gap={0.5}><TokenIcon token={STALK} /> vAPY</Row>}
                     onClick={undefined}
                     size="small"
                   />
