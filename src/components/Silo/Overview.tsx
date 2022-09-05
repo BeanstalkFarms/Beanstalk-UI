@@ -14,6 +14,7 @@ import { SEEDS, STALK } from '~/constants/tokens';
 import Fiat from '~/components/Common/Fiat';
 import { displayBN } from '~/util';
 import { ChipLabel, StyledTab } from '~/components/Common/Tabs';
+import { ZERO_BN } from '~/constants';
 
 const SLUGS = ['deposits', 'stalk'];
 const Overview: React.FC<{
@@ -73,7 +74,10 @@ const Overview: React.FC<{
         <StalkView
           current={[
             farmerSilo.stalk.active,
-            farmerSilo.stalk.active.div(beanstalkSilo.stalk.total),
+            // Show zero while these data points are loading
+            (farmerSilo.stalk.active?.gt(0) && beanstalkSilo.stalk.total?.gt(0))
+              ? farmerSilo.stalk.active.div(beanstalkSilo.stalk.total)
+              : ZERO_BN,
           ]}
           series={[
             mockDepositData,
