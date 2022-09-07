@@ -18,6 +18,7 @@ import Row from '~/components/Common/Row';
 import Stat from '~/components/Common/Stat';
 import useUnripeUnderlyingMap from '~/hooks/beanstalk/useUnripeUnderlying';
 import useAPY from '~/hooks/beanstalk/useAPY';
+import stalkIconBlue from '~/img/beanstalk/stalk-icon-blue.svg';
 
 const ARROW_CONTAINER_WIDTH = 20;
 const TOOLTIP_COMPONENT_PROPS = {
@@ -115,7 +116,7 @@ const Whitelist : React.FC<{
                     <Chip
                       variant="filled"
                       color="secondary"
-                      label={<Row gap={0.5}><TokenIcon token={STALK} /> vAPY</Row>}
+                      label={<Row gap={0.5}><TokenIcon token={{ symbol: 'Stalk', logo: stalkIconBlue } as Token} /> vAPY</Row>}
                       onClick={undefined}
                       size="small"
                     />
@@ -224,9 +225,9 @@ const Whitelist : React.FC<{
                           componentsProps={TOOLTIP_COMPONENT_PROPS}
                           title={
                             <Row gap={0}>
-                              <Box sx={{ px: 1, py: 0.5, maxWidth: 215 }}>
+                              <Box sx={{ px: 1, py: 0.5, maxWidth: 245 }}>
                                 <Stat
-                                  title="Beans per Season"
+                                  title={<Row gap={0.5}><TokenIcon token={BEAN[1]} /> Beans per Season</Row>}
                                   gap={0.25}
                                   variant="h4"
                                   amount={(
