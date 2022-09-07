@@ -38,7 +38,8 @@ const SiloAnalytics: React.FC<{}> = () => {
         <Tab label="Deposited urBEAN3CRV" />
         <Tab label="Stalk" />
         <Tab label="Seeds" />
-        <Tab label="vAPY" />
+        <Tab label="Bean vAPY" />
+        <Tab label="LP vAPY" />
       </Tabs>
       <Box px={1} mb={1.5}>
         <Alert variant="standard" color="warning" icon={<WarningIcon />}>
@@ -52,7 +53,8 @@ const SiloAnalytics: React.FC<{}> = () => {
       {tab === 3 && <DepositedAsset asset={UNRIPE_BEAN_CRV3[1]} account={BEANSTALK_ADDRESSES[1]} height={300} />}
       {tab === 4 && <Stalk height={300} />}
       {tab === 5 && <Seeds height={300} />}
-      {tab === 6 && <APY height={300} />}
+      {tab === 6 && <APY height={300} metric="Bean" />}
+      {tab === 7 && <APY height={300} metric="LP" />}
     </Card>
   );
 };
