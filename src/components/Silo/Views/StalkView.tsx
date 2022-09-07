@@ -34,7 +34,7 @@ const StalkView: React.FC<TabData> = ({ current, series, season }) => {
         <Stat
           title="Stalk Balance"
           titleTooltip="Stalk is the governance token of the Beanstalk DAO. Stalk entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
-          subtitle={`Season ${displayBN(season)}`}
+          subtitle={`Season ${season.toString()}`}
           amount={displayBN(displayValue[0])}
           color="primary"
           sx={{ minWidth: 180, ml: 0 }}

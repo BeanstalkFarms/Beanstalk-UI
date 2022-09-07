@@ -34,7 +34,7 @@ const SeedsView: React.FC<TabData> = ({ current, series, season }) => {
         <Stat
           title="Seed Balance"
           titleTooltip="Seeds are illiquid tokens that yield 1/10,000 Stalk each Season."
-          subtitle={`Season ${displayBN(season)}`}
+          subtitle={`Season ${season.toString()}`}
           amount={displayBN(displayValue[0])}
           color="primary"
           sx={{ minWidth: 180, ml: 0 }}
