@@ -39,12 +39,8 @@ const BeanstalkBalances: React.FC<{
   ), [allowNewHoverState]);
 
   const onClick = useCallback((address: string) => () => {
-    if (!allowNewHoverState) {
-      setHoverAddress(address);
-    } else {
-      setHoverAddress(availableTokens[0]);
-    }
-  }, [allowNewHoverState, availableTokens]);
+    setHoverAddress(address);
+  }, []);
 
   //
   const hoverToken = hoverAddress ? WHITELIST[hoverAddress] : undefined;
