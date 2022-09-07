@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Card, Chip, Divider, Grid, Link, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Card, Chip, CircularProgress, Divider, Grid, Link, Stack, Tooltip, Typography } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Link as RouterLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -17,6 +17,7 @@ import useSetting from '~/hooks/app/useSetting';
 import Row from '~/components/Common/Row';
 import Stat from '~/components/Common/Stat';
 import useUnripeUnderlyingMap from '~/hooks/beanstalk/useUnripeUnderlying';
+import useAPY from '~/hooks/beanstalk/useAPY';
 
 const ARROW_CONTAINER_WIDTH = 20;
 const TOOLTIP_COMPONENT_PROPS = {
@@ -53,6 +54,8 @@ const Whitelist : React.FC<{
   const unripeUnderlyingTokens = useUnripeUnderlyingMap();
 
   /// State
+  const apyQuery      = useAPY();
+  const latestYield   = apyQuery.data;
   const getBDV        = useBDV();
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
   const unripeTokens  = useSelector<AppState, AppState['_bean']['unripe']>((state) => state._bean.unripe);
@@ -96,6 +99,9 @@ const Whitelist : React.FC<{
                     onClick={undefined}
                     size="small"
                   />
+                  {(apyQuery.loading) && (
+                    <CircularProgress variant="indeterminate" size={12} thickness={4} sx={{ ml: 0.5 }} />
+                  )}
                 </Row>
               </span>
             </Tooltip>
@@ -124,8 +130,22 @@ const Whitelist : React.FC<{
       </Box>
       <Stack gap={1} p={1}>
         {config.whitelist.map((token) => {
-          const deposited   = farmerSilo.balances[token.address]?.deposited;
-          const isUnripe    = token === urBean || token === urBeanCrv3;
+          const deposited = farmerSilo.balances[token.address]?.deposited;
+          const isUnripe = token === urBean || token === urBeanCrv3;
+          
+          // APYs
+          const seeds = token.getSeeds();
+          const apys = (
+            latestYield ? 
+              seeds.eq(2)
+              ? latestYield.bySeeds['2']
+              : seeds.eq(4)
+              ? latestYield.bySeeds['4']
+              : null
+            : null
+          );
+
+          // Unripe data
           const underlyingToken = isUnripe ? (
             unripeUnderlyingTokens[token.address]
           ) : null;
@@ -133,6 +153,7 @@ const Whitelist : React.FC<{
             (beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN)
               .div(unripeTokens[token.address]?.supply || ONE_BN)
           ) : ONE_BN;
+
           return (
             <Box key={`${token.address}-${token.chainId}`}>
               <Button
@@ -181,7 +202,7 @@ const Whitelist : React.FC<{
                           <Chip
                             variant="filled"
                             color="primary"
-                            label="205.35%"
+                            label={apys ? `${apys.bean.times(100).toFixed(1)}%` : '0.00%'}
                             onClick={undefined}
                             size="small"
                           />
@@ -190,7 +211,7 @@ const Whitelist : React.FC<{
                           <Chip
                             variant="filled"
                             color="secondary"
-                            label="265.49%"
+                            label={apys ? `${apys.stalk.times(100).toFixed(1)}%` : '0.00%'}
                             onClick={undefined}
                             size="small"
                             sx={{ display: { lg: 'inherit', xs: 'none' } }}
