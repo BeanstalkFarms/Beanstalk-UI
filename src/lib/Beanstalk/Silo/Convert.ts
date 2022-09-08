@@ -53,7 +53,7 @@ export function selectCratesToConvert(
     const crateAmountToRemove = (
       totalAmountConverted.plus(crate.amount).isLessThanOrEqualTo(fromAmount)
         ? crate.amount                            // remove the entire crate
-        : fromAmount.minus(totalAmountConverted)    // remove the remaining amount
+        : fromAmount.minus(totalAmountConverted)  // remove the remaining amount
     );
     const elapsedSeasons      = currentSeason.minus(crate.season);      // 
     const cratePctToRemove    = crateAmountToRemove.div(crate.amount);  // (0, 1]
@@ -64,7 +64,7 @@ export function selectCratesToConvert(
     //  'base stalk' associated with the initial deposit is forfeited
     //  'accrued stalk' earned from Seeds over time is forfeited.
     const baseStalkToRemove     = fromToken.getStalk(crateBDVToRemove); // more or less, BDV * 1
-    const accruedStalkToRemove  = crateSeedsToRemove.times(elapsedSeasons).times(0.00001); // FIXME: use constant
+    const accruedStalkToRemove  = crateSeedsToRemove.times(elapsedSeasons).times(0.0001);
     const crateStalkToRemove    = baseStalkToRemove.plus(accruedStalkToRemove);
 
     // Update totals
