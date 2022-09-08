@@ -1,9 +1,10 @@
 import React from 'react';
-import { Box, Button, ButtonProps, InputAdornment, Stack, Typography } from '@mui/material';
+import { Box, Button, ButtonProps, InputAdornment, Typography } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { makeStyles } from '@mui/styles';
 import Token from '~/classes/Token';
 import { IconSize } from '../../App/muiTheme';
+import Row from '~/components/Common/Row';
 
 const useStyles = makeStyles(() => ({
   pill: {
@@ -58,7 +59,7 @@ const TokenAdornment : React.FC<
         onClick={onClick}
         {...props}
       >
-        <Stack direction="row" alignItems="center" gap={0.5}>
+        <Row gap={0.5}>
           {token.logo ? <img src={token.logo} alt="" className={classes.tokenIcon} /> : null}
           {buttonLabel ? (
             <Box className={classes.tokenName}><Typography variant="bodyMedium" fontWeight="fontWeightRegular">{buttonLabel}</Typography></Box>
@@ -74,7 +75,7 @@ const TokenAdornment : React.FC<
               }}
             />
           )}
-        </Stack>
+        </Row>
       </Button>
     </InputAdornment>
   );

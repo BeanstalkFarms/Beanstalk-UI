@@ -8,6 +8,7 @@ import { SupportedChainId } from '~/constants/chains';
 import { Event } from '~/lib/Beanstalk/EventProcessor';
 import TokenIcon from '../Common/TokenIcon';
 import useTokenMap from '../../hooks/chain/useTokenMap';
+import Row from '~/components/Common/Row';
 
 export interface EventItemProps {
   event: Event;
@@ -25,7 +26,7 @@ const TokenDisplay: React.FC<{
 }> = (props) => (
   <div>
     {props.input ? (
-      <Stack direction="row" gap={0.3} alignItems="center">
+      <Row gap={0.3}>
         <Typography variant="body1" style={{ color: props.color }}>
           {props.color === 'red' ? '-' : '+'}
         </Typography>
@@ -33,7 +34,7 @@ const TokenDisplay: React.FC<{
         <Typography variant="body1" style={{ color: props.color }}>
           {`${displayBN(props.input[0])}`}
         </Typography>
-      </Stack>
+      </Row>
     ) : null}
   </div>
 );
@@ -192,12 +193,12 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
   return (
     <>
       <Box py={1}>
-        <Stack direction="row" gap={0.2} justifyContent="space-between">
+        <Row gap={0.2} justifyContent="space-between">
           <Stack direction="column">
             {/* Event title */}
             <Typography variant="h4">{eventTitle}</Typography>
             {/* Timestamps */}
-            <Stack direction="row">
+            <Row>
               <Link color="text.secondary" sx={{ textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }} href={`https://etherscan.io/tx/${event.transactionHash}`} target="_blank" rel="noreferrer">
                 {/* {event?.args?.season ? ( */}
                 {/*  <Typography color="text.secondary">Season {event.args?.season.toString()}</Typography> */}
@@ -206,13 +207,13 @@ const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
                 {/* )} */}
                 <Typography color="text.secondary">{`Block ${event.blockNumber}`}</Typography>
               </Link>
-            </Stack>
+            </Row>
           </Stack>
           <Stack direction="column" alignItems="flex-end">
             {amountOut}
             {amountIn}
           </Stack>
-        </Stack>
+        </Row>
       </Box>
       <Divider />
     </>

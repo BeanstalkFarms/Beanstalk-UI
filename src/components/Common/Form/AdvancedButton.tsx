@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, ButtonProps, Stack, Typography } from '@mui/material';
+import { Button, ButtonProps, Typography } from '@mui/material';
 import DropdownIcon from '../DropdownIcon';
+import Row from '~/components/Common/Row';
 
 const AdvancedButton : React.FC<{ 
   open: boolean;
@@ -16,14 +17,14 @@ const AdvancedButton : React.FC<{
     size="small"
     {...props}
   >
-    <Stack direction="row" alignItems="center" gap={0.5}>
+    <Row gap={0.5}>
       <Typography fontSize="bodySmall">Advanced</Typography>
       <DropdownIcon
         open={open}
         sx={{ fontSize: 18 }}
         mode="right-rotate"
       />
-    </Stack>
+    </Row>
   </Button>
 );
 

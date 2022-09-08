@@ -2,13 +2,13 @@ import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   ListItemText,
-  MenuItem as MuiMenuItem,
-  Stack, Tooltip,
+  MenuItem as MuiMenuItem, Tooltip,
   Typography,
 } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { RouteData } from './routes';
 import { FontSize, IconSize } from '../App/muiTheme';
+import Row from '~/components/Common/Row';
 
 const MenuItem : React.FC<{
   item: RouteData;
@@ -31,18 +31,18 @@ const MenuItem : React.FC<{
     {item.disabled ? (
       <Tooltip title={<>{item.title} will be available upon Unpause</>}>
         <span>
-          <Stack direction="row" gap={1} alignItems="center">
+          <Row gap={1}>
             {item.icon && <img src={item.icon} alt={item.title} width={IconSize.small} />}
             <Typography variant="body1">{item.title}</Typography>
-          </Stack>
+          </Row>
         </span>
       </Tooltip>
       ) : (
         <ListItemText>
-          <Stack direction="row" gap={1} alignItems="center">
+          <Row gap={1}>
             {item.icon && <img src={item.icon} alt={item.title} width={IconSize.small} />}
             <Typography variant="body1">{item.title}</Typography>
-          </Stack>
+          </Row>
         </ListItemText>
       )}
     {item.href ? (

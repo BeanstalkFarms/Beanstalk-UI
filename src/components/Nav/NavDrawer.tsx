@@ -14,6 +14,7 @@ import DropdownIcon from '../Common/DropdownIcon';
 import useToggle from '../../hooks/display/useToggle';
 import useChainConstant from '../../hooks/chain/useChainConstant';
 import { BEANSTALK_ADDRESSES, CHAIN_INFO } from '../../constants';
+import Row from '~/components/Common/Row';
 
 const NavDrawer: React.FC<{
   open: boolean;
@@ -42,7 +43,7 @@ const NavDrawer: React.FC<{
       >
         <Box position="fixed" sx={{ backgroundColor: '#f7fafe', width: '100%', height: '100%', top: 0, overflowY: 'scroll' }}>
           {/* Beanstalk Logo & Close Button */}
-          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 1.5 }}>
+          <Row alignItems="center" justifyContent="space-between" sx={{ p: 1.5 }}>
             <Box>
               <Link href="/" display="flex" alignItems="center">
                 <img src={beanstalkLogo} alt="" width={IconSize.large} />
@@ -51,7 +52,7 @@ const NavDrawer: React.FC<{
             <IconButton aria-label="close" onClick={hideDrawer} sx={{ mr: -0.8 }}>
               <CloseIcon sx={{ color: BeanstalkPalette.black, fontSize: 35 }} />
             </IconButton>
-          </Stack>
+          </Row>
           {/* Items */}
           <List sx={{ mt: 1, fontSize: 22 }}>
             {/* Individual Items */}
@@ -91,7 +92,7 @@ const NavDrawer: React.FC<{
                     color="secondary"
                     sx={{ py: 0.9, zIndex: 3000 }}
                   >
-                    <Stack direction="row" alignItems="center" spacing={1}>
+                    <Row alignItems="center" spacing={1}>
                       <ListItemText>
                         <Typography variant="h4">
                           Contract: {beanstalkAddress.slice(0, 6)}...
@@ -102,7 +103,7 @@ const NavDrawer: React.FC<{
                           sx={{ transform: 'rotate(-45deg)', fontSize: 12 }}
                         />
                       </Typography>
-                    </Stack>
+                    </Row>
                   </Button>
                 </Box>
               </Stack>

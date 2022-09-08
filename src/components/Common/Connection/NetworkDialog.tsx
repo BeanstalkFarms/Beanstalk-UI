@@ -7,6 +7,7 @@ import { SWITCH_NETWORK_ERRORS } from '~/constants/wallets';
 import { SupportedChainId, TESTNET_RPC_ADDRESSES } from '~/constants';
 import { ETH } from '~/constants/tokens';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
+import Row from '~/components/Common/Row';
 
 const NetworkDialog: React.FC<{
   open: boolean;
@@ -67,7 +68,7 @@ const NetworkDialog: React.FC<{
                 borderColor: grey[300]
               }}
             >
-              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }} gap={3}>
+              <Row justifyContent="space-between" sx={{ width: '100%' }} gap={3}>
                 <Typography color="text.primary" sx={{ fontSize: 20 }}>
                   {chain.name}
                 </Typography>
@@ -78,7 +79,7 @@ const NetworkDialog: React.FC<{
                 ) : (
                   <img src={ETH[chain.id as keyof typeof ETH]?.logo || ETH[SupportedChainId.MAINNET].logo} alt="" style={{ height: 35 }} />
                 )}
-              </Stack>
+              </Row>
             </Button>
           ))}
           {error && (

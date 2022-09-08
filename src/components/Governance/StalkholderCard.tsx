@@ -9,6 +9,7 @@ import AddressIcon from '~/components/Common/AddressIcon';
 import { IconSize } from '~/components/App/muiTheme';
 import { STALK } from '~/constants/tokens';
 import TokenIcon from '~/components/Common/TokenIcon';
+import Row from '~/components/Common/Row';
 
 const StalkholderCard : React.FC = () => {
   const account       = useAccount();
@@ -17,20 +18,20 @@ const StalkholderCard : React.FC = () => {
   return (
     <Card sx={{ position: 'sticky', top: 120, p: 2 }}>
       <Stack gap={1}>
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Row justifyContent="space-between">
           <Typography variant="h4">Stalkholder</Typography>
           {account && (
-            <Stack direction="row" alignItems="center" gap={0.3}>
+            <Row gap={0.3}>
               <AddressIcon address={account} size={IconSize.xs} />
               <Typography variant="body1">{trimAddress(account)}</Typography>
-            </Stack>
+            </Row>
           )}
-        </Stack>
+        </Row>
         {account ? (
-          <Stack direction="row" alignItems="center" gap={0.5}>
+          <Row gap={0.5}>
             <TokenIcon token={STALK} style={{ height: IconSize.small }} />
             <Typography variant="bodyLarge">{displayBN(farmerSilo.stalk.active)} STALK</Typography>
-          </Stack>
+          </Row>
         ) : (
           <Box height={{ xs: 100, md: 150 }}>
             <AuthEmptyState message="Your Stalk will appear here." />

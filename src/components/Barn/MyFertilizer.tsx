@@ -23,6 +23,7 @@ import { AppState } from '~/state';
 import TokenIcon from '../Common/TokenIcon';
 import { FontSize } from '../App/muiTheme';
 import { FertilizerBalance } from '~/state/farmer/barn';
+import Row from '~/components/Common/Row';
 
 enum TabState {
   ACTIVE = 0,
@@ -57,8 +58,7 @@ const MyFertilizer: React.FC = () => {
       <Stack sx={{ p: 2 }} gap={1}>
         <Typography variant="h4">Fertilizer</Typography>
         <Stack gap={1}>
-          <Stack
-            direction="row"
+          <Row
             alignItems="center"
             justifyContent="space-between"
           >
@@ -73,17 +73,16 @@ const MyFertilizer: React.FC = () => {
                 />
               </Typography>
             </Tooltip>
-            <Stack direction="row" alignItems="center" gap={0.2}>
+            <Row alignItems="center" gap={0.2}>
               <TokenIcon token={SPROUTS} />
               <Typography>
                 {displayFullBN(
                   MaxBN(farmerBarn.unfertilizedSprouts, ZERO_BN), SPROUTS.displayDecimals
                 )}
               </Typography>
-            </Stack>
-          </Stack>
-          <Stack
-            direction="row"
+            </Row>
+          </Row>
+          <Row
             alignItems="center"
             justifyContent="space-between"
           >
@@ -98,22 +97,21 @@ const MyFertilizer: React.FC = () => {
                 />
               </Typography>
             </Tooltip>
-            <Stack direction="row" alignItems="center" gap={0.2}>
+            <Row alignItems="center" gap={0.2}>
               <TokenIcon token={RINSABLE_SPROUTS} />
               <Typography>
                 {displayFullBN(
                   MaxBN(farmerBarn.fertilizedSprouts, ZERO_BN), RINSABLE_SPROUTS.displayDecimals
                 )}
               </Typography>
-            </Stack>
-          </Stack>
+            </Row>
+          </Row>
         </Stack>
       </Stack>
       <Divider />
       {/* Fertilizers */}
       <Stack sx={{ px: 2, pb: 2, pt: 1 }} spacing={0}>
-        <Stack
-          direction="row"
+        <Row
           justifyContent="space-between"
           alignItems="center"
           sx={{ pt: 1, pb: 2 }}
@@ -122,7 +120,7 @@ const MyFertilizer: React.FC = () => {
             <Tab label="Active" />
             <Tab label="Used" />
           </Tabs>
-        </Stack>
+        </Row>
         <Box>
           {filteredBalances.length > 0 ? (
             <Grid container spacing={3}>

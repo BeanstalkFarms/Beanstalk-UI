@@ -18,6 +18,7 @@ import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTit
 import TransactionToast from '../TxnToast';
 import { FormState, FormTokenState } from '.';
 import WalletButton from '../Connection/WalletButton';
+import Row from '~/components/Common/Row';
 
 const CONTRACT_NAMES : { [address: string] : string } = {
   [BEANSTALK_ADDRESSES[SupportedChainId.MAINNET]]: 'Beanstalk',
@@ -180,12 +181,12 @@ const SmartSubmitButton : React.FC<{
           TransitionProps={{}}
         >
           <StyledDialogTitle id="customized-dialog-title" sx={{ fontSize: 20 }} onClose={handleClose}>
-            <Stack direction="row" alignItems="center" gap={1}>
+            <Row gap={1}>
               <img src={nextApprovalToken.logo} style={{ height: '1.5em' }} alt={nextApprovalToken.symbol} />
               <span>
                 Approve {nextApprovalToken.symbol}
               </span>
-            </Stack>
+            </Row>
           </StyledDialogTitle>
           <StyledDialogContent>
             <Stack gap={1} sx={{ pt: 1 }}>

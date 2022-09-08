@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import {
-  Stack,
   Typography,
   ListItem,
   ListItemButton,
@@ -18,6 +17,7 @@ import useFarmerListings from '~/hooks/farmer/useFarmerListings';
 import { BeanstalkPalette, FontSize, IconSize } from '~/components/App/muiTheme';
 import { displayBN, displayFullBN, toStringBaseUnitBN , PlotMap } from '~/util';
 import podIcon from '~/img/beanstalk/pod-icon.svg';
+import Row from '~/components/Common/Row';
 
 const useStyles = makeStyles(() => ({
   tokenLogo: {
@@ -83,8 +83,8 @@ const PlotSelect: React.FC<PlotSelectProps> = ({
         }}
       >
         <ListItemButton disableRipple>
-          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }}>
-            <Stack direction="row" justifyContent="center">
+          <Row justifyContent="space-between" sx={{ width: '100%' }}>
+            <Row justifyContent="center">
               <ListItemIcon sx={{ pr: 1 }}>
                 <img src={podIcon} alt="" className={classes.tokenLogo} />
               </ListItemIcon>
@@ -97,13 +97,13 @@ const PlotSelect: React.FC<PlotSelectProps> = ({
                 )}
                 sx={{ my: 0 }}
               />
-            </Stack>
+            </Row>
             {plots[index] ? (
               <Typography variant="bodyLarge">
                 {displayFullBN(plots[index], PODS.displayDecimals)}
               </Typography>
               ) : null}
-          </Stack>
+          </Row>
         </ListItemButton>
       </ListItem>
     );
