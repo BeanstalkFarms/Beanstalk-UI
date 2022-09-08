@@ -77,7 +77,7 @@ const RewardsBar: React.FC<RewardsBarProps & { compact?: boolean }> = (
         <RewardItem
           title="Plantable Seeds"
           tooltip="Seeds earned in conjuction with Earned Beans. Plantable Seeds must be Planted in order to grow Stalk."
-          amount={seeds.plantable}
+          amount={seeds.earned}
           icon={seedIcon}
           compact={compact}
           isClaimable={selectedActionIncludes(ClaimRewardsAction.PLANT_AND_MOW)}
