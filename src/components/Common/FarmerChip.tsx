@@ -1,7 +1,8 @@
 import React from 'react';
-import { Button, Stack, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { IconSize } from '~/components/App/muiTheme';
 import AddressIcon from './AddressIcon';
+import Row from '~/components/Common/Row';
 
 const FarmerChip : React.FC<{ account: string }> = ({ account }) => (
   <Button
@@ -16,7 +17,7 @@ const FarmerChip : React.FC<{ account: string }> = ({ account }) => (
     target="_blank"
     rel="noreferrer"
   >
-    <Stack direction="row" alignItems="center" gap={0.5}>
+    <Row gap={0.5}>
       <AddressIcon
         address={account}
         size={IconSize.small}
@@ -24,7 +25,7 @@ const FarmerChip : React.FC<{ account: string }> = ({ account }) => (
       <Typography>
         {account.substring(0, 6)}
       </Typography>
-    </Stack>  
+    </Row>  
   </Button>
 );
 

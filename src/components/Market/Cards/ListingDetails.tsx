@@ -9,6 +9,7 @@ import StatHorizontal from '~/components/Common/StatHorizontal';
 import { BEAN, PODS } from '~/constants/tokens';
 import { displayBN } from '~/util';
 import { PodListing } from '~/state/farmer/market';
+import Row from '~/components/Common/Row';
 
 const ListingDetails: React.FC<{
   podListing: PodListing;
@@ -18,13 +19,13 @@ const ListingDetails: React.FC<{
   harvestableIndex
 }) => (
   <Stack gap={2}>
-    <Stack direction="row" alignItems="center" gap={1}>
+    <Row gap={1}>
       <img src={podListingIcon} style={{ width: IconSize.medium, height: IconSize.medium }} alt="Pod Listing" />
       <Typography variant="h4">Pod Listing</Typography>
       <Box sx={{ flex: 1, textAlign: 'right' }}>
         <FarmerChip account={podListing.account} />
       </Box>
-    </Stack>
+    </Row>
     <Stack gap={1}>
       <StatHorizontal label="Place in Line" labelTooltip="The Place in Line of the first Pod in this Listing.">
         <Typography>{displayBN(podListing.index.minus(harvestableIndex))}</Typography>

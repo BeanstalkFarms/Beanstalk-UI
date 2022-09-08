@@ -9,6 +9,7 @@ import { FarmerSiloRewards } from '~/state/farmer/silo';
 import RewardItem from './RewardItem';
 import { ClaimRewardsAction } from '../../lib/Beanstalk/Farm';
 import { hoverMap } from '../../constants/silo';
+import Row from '~/components/Common/Row';
 
 export type RewardsBarProps = {
   beans: FarmerSiloRewards['beans'];
@@ -50,7 +51,7 @@ const RewardsBar: React.FC<RewardsBarProps & { compact?: boolean }> = (
   return (
     <Stack direction={{ lg: 'row', xs: 'column' }} columnGap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }} rowGap={1.5}>
       {/* Earned */}
-      <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
+      <Row gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
         <RewardItem
           title="Earned Beans"
           tooltip="The number of Beans earned since your last Plant. Upon Plant, Earned Beans are Deposited in the current Season."
@@ -67,13 +68,13 @@ const RewardsBar: React.FC<RewardsBarProps & { compact?: boolean }> = (
           compact={compact}
           isClaimable={action !== ClaimRewardsAction.MOW}
         />
-      </Stack>
+      </Row>
       {/* Divider */}
       <Box display={{ xs: 'block', lg: compact ? 'none' : 'block' }}>
         <Divider orientation="vertical" />
       </Box>
       {/* Grown */}
-      <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
+      <Row gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
         <RewardItem
           title="Plantable Seeds"
           tooltip="Seeds earned in conjuction with Earned Beans. Plantable Seeds must be Planted in order to grow Stalk."
@@ -90,12 +91,12 @@ const RewardsBar: React.FC<RewardsBarProps & { compact?: boolean }> = (
           compact={compact}
           isClaimable={selectedActionIncludes(ClaimRewardsAction.MOW)}
         />
-      </Stack>
+      </Row>
       <Box display={{ xs: 'block', lg: compact ? 'none' : 'block' }}>
         <Divider orientation="vertical" />
       </Box>
       {/* Revitalized */}
-      <Stack direction="row" gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
+      <Row gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
         <RewardItem
           title="Revitalized Stalk"
           tooltip="Stalk that have vested for pre-exploit Silo Members. Revitalized Stalk are minted as the percentage of Fertilizer sold increases. Revitalized Stalk does not contribute to Stalk ownership until Enrooted."
@@ -112,7 +113,7 @@ const RewardsBar: React.FC<RewardsBarProps & { compact?: boolean }> = (
           compact={compact}
           isClaimable={hideRevitalized ? false : selectedActionIncludes(ClaimRewardsAction.ENROOT_AND_MOW)}
         />
-      </Stack>
+      </Row>
     </Stack>
   );
 };

@@ -10,6 +10,7 @@ import useAccount from '~/hooks/ledger/useAccount';
 import ProposalStats from '~/components/Governance/Proposals/ProposalStats';
 import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
 import { Proposal } from '~/util/Governance';
+import Row from '~/components/Common/Row';
 
 const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
   /// State
@@ -56,10 +57,10 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
           </Typography>
           {/* Sshow if user has voted */}
           {(account && voteData?.votes?.length) ? (
-            <Stack direction="row" alignItems="center" gap={0.5}>
+            <Row gap={0.5}>
               <CheckIcon sx={{ color: BeanstalkPalette.logoGreen, width: IconSize.small }} />
               <Typography variant="body1">Voted</Typography>
-            </Stack>
+            </Row>
           ) : null}
         </Stack>
         {/* Bottom row */}

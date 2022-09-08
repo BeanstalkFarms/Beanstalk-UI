@@ -20,13 +20,14 @@ import { SupportedChainId } from '~/constants/chains';
 import { BEAN, PODS, SEEDS, SPROUTS, STALK, USDC } from '~/constants/tokens';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import AddressIcon from '~/components/Common/AddressIcon';
+import Row from '~/components/Common/Row';
 
 // -----------------------------------------------------------------------
 
 const IconRow : React.FC<{ spacing?: number }> = ({ children, spacing = 0.75 }) => (
-  <Stack direction="row" alignItems="center" sx={{ height: '100%' }} spacing={spacing}>
+  <Row sx={{ height: '100%' }} spacing={spacing}>
     {children}
-  </Stack>
+  </Row>
 );
 const ActionTokenImage : React.FC<{ token: Token }> = ({ token }) => (
   <img
@@ -63,11 +64,11 @@ const SwapStep : React.FC<{ actions: SwapAction[] }> = ({ actions }) => {
     }
   });
   return (
-    <Stack direction="row" alignItems="center" sx={{ height: '100%' }} spacing={0.33}>
+    <Row sx={{ height: '100%' }} spacing={0.33}>
       {data.in.elems}
       <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
       {data.out.elems}
-    </Stack>
+    </Row>
   );
 };
 
@@ -378,10 +379,8 @@ const TxnPreview : React.FC<{
           }}>
             {/* Distribute content equally spaced
               * across the entire container */}
-            <Stack
-              direction="row"
+            <Row
               justifyContent="space-between"
-              alignItems="center"
               sx={{
                 height: '100%' // of TXN_PREVIEW_HEIGHT
               }}
@@ -396,7 +395,7 @@ const TxnPreview : React.FC<{
                   />
                 ) : null
               ))}
-            </Stack>
+            </Row>
           </Box>
         </Box>
       ) : null}

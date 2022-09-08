@@ -34,6 +34,7 @@ import { ZERO_BN } from '~/constants';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { AppState } from '~/state';
 import useUnripeUnderlyingMap from '~/hooks/beanstalk/useUnripeUnderlying';
+import Row from '~/components/Common/Row';
 
 type ChopFormValues = FormState & {
   destination: FarmToMode | undefined;
@@ -120,7 +121,7 @@ const ChopForm: React.FC<
           <FarmModeField
             name="destination"
           />
-          <Stack direction="row" justifyContent="space-between" px={0.5}>
+          <Row justifyContent="space-between" px={0.5}>
             <Typography variant="body1" color="gray">Chop Penalty</Typography>
             {!unripeTokens[inputToken.address] ? (
               <CircularProgress size={16} thickness={5} sx={{ color: BeanstalkPalette.washedRed }} />
@@ -129,7 +130,7 @@ const ChopForm: React.FC<
                 {displayFullBN(chopPenalty, 5)}%
               </Typography>
             )}
-          </Stack>
+          </Row>
         </Stack>
         {isSubmittable ? (
           <>

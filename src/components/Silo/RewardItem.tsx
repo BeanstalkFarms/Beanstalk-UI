@@ -1,8 +1,9 @@
-import { Typography, Tooltip, Box, Stack } from '@mui/material';
+import { Typography, Tooltip, Box } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import React from 'react';
 import BigNumber from 'bignumber.js';
 import { displayFullBN } from '../../util';
+import Row from '~/components/Common/Row';
 
 export type RewardItemProps = {
   title: string;
@@ -32,14 +33,14 @@ const RewardItem: React.FC<RewardItemProps> = ({
         />
       </Typography>
     </Tooltip>
-    <Stack direction="row" gap={0.4} alignItems="center">
+    <Row gap={0.4}>
       {icon && <img src={icon} alt="" height="16px" />}
       {amount && (
         <Typography variant="h4">
           {amount.lt(0) ? '-' : displayFullBN(amount, 2)}
         </Typography>
       )}
-    </Stack>
+    </Row>
   </Box>
 );
 

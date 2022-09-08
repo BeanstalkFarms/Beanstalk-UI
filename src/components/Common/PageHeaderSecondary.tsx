@@ -3,6 +3,7 @@ import { Box, Button, Stack, Typography } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import React from 'react';
 import { BeanstalkPalette, IconSize } from '../App/muiTheme';
+import Row from '~/components/Common/Row';
 
 const PageHeader : React.FC<{
   /** The Field: The Decentralized Credit Facility */
@@ -22,7 +23,7 @@ const PageHeader : React.FC<{
   };
   return (
     <Box>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" gap={0.5}>
+      <Row justifyContent="space-between" gap={0.5}>
         <Stack sx={{ width: 70, justifyContent: 'start' }}>
           <Button
             {...buttonProps}
@@ -38,10 +39,10 @@ const PageHeader : React.FC<{
               }
             }}
           >
-            <Stack direction="row" gap={0.5} alignItems="center" height="100%">
+            <Row gap={0.5} height="100%">
               <KeyboardBackspaceIcon sx={{ width: IconSize.small }} height="auto" />
               <Typography variant="h4">Back</Typography>
-            </Stack>
+            </Row>
           </Button>
         </Stack>
         {props.title && (
@@ -65,7 +66,7 @@ const PageHeader : React.FC<{
         <Box sx={{ width: 70 }} display="flex" justifyContent="end">
           {props.control ? (props.control) : null}
         </Box>
-      </Stack>
+      </Row>
     </Box>
   );
 };

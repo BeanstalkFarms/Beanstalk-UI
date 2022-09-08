@@ -11,6 +11,7 @@ import podOrderIcon from '~/img/beanstalk/pod-order-icon.svg';
 import StatHorizontal from '~/components/Common/StatHorizontal';
 import { displayBN, displayFullBN } from '../../../util';
 import { IconSize } from '../../App/muiTheme';
+import Row from '~/components/Common/Row';
 
 export type OrderDetailsProps = {
   podOrder: PodOrder | undefined;
@@ -22,13 +23,13 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
   if (!podOrder) return null;
   return (
     <Stack gap={2}>
-      <Stack direction="row" alignItems="center" gap={1}>
+      <Row gap={1}>
         <img src={podOrderIcon} style={{ width: IconSize.medium, height: IconSize.medium }} alt="Pod Order" />
         <Typography variant="h4">Pod Order</Typography>
         <Box sx={{ flex: 1, textAlign: 'right' }}>
           <FarmerChip account={podOrder.account} />
         </Box>
-      </Stack>
+      </Row>
       <Stack gap={1}>
         <StatHorizontal label="Place in Line" labelTooltip="Pods within this range can be used to Fill this Order.">
           <Tooltip title={(

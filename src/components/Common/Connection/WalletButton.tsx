@@ -11,7 +11,6 @@ import {
   Menu,
   MenuItem,
   MenuList,
-  Stack,
   Typography,
   useMediaQuery,
 } from '@mui/material';
@@ -171,9 +170,9 @@ const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
             },
           }}
         >
-          <Stack direction="row" alignItems="center">
+          <Row alignItems="center">
             <Typography variant="h4">Chop Unripe Assets</Typography>
-          </Stack>
+          </Row>
         </Button>
       </Box>
     </MenuList>

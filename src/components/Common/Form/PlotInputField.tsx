@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import { useFormikContext } from 'formik';
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import useToggle from '~/hooks/display/useToggle';
 import { displayBN, MaxBN, MinBN , PlotMap } from '~/util';
 import PlotSelectDialog from '~/components/Field/PlotSelectDialog';
@@ -12,6 +12,7 @@ import { ZERO_BN } from '~/constants';
 import { PlotFragment, PlotSettingsFragment, TokenAdornment, TokenInputField } from '.';
 import AdvancedButton from './AdvancedButton';
 import SliderField from './SliderField';
+import Row from '~/components/Common/Row';
 
 const SLIDER_FIELD_KEYS = ['plot.start', 'plot.end'];
 const InputPropsLeft  = { endAdornment: 'Start' };
@@ -62,10 +63,10 @@ const PlotInputField : React.FC<{
         onClick={showDialog}
         buttonLabel={(
           plot.index ? (
-            <Stack direction="row" alignItems="center" gap={0.75}>
+            <Row gap={0.75}>
               <Typography display="inline" fontSize={16}>@</Typography>
               {displayBN(new BigNumber(plot.index).minus(harvestableIndex))}
-            </Stack>
+            </Row>
           ) : 'Select Plot'
         )}
       />

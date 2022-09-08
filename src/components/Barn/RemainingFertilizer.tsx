@@ -10,6 +10,7 @@ import { displayFullBN } from '~/util';
 import FertilizerImage from './FertilizerImage';
 import { BeanstalkPalette, FontSize } from '../App/muiTheme';
 import useFertilizerProgress from '../../hooks/beanstalk/useFertilizerProgress';
+import Row from '~/components/Common/Row';
 
 const RemainingFertilizer: React.FC = () => {
   const [humidity, nextDecreaseAmount] = useHumidity();
@@ -50,7 +51,7 @@ const RemainingFertilizer: React.FC = () => {
                 </Typography>
               </Tooltip>
 
-              <Stack direction="row" gap={1} alignItems="center">
+              <Row gap={1} alignItems="center">
                 <Typography
                   display="inline-block"
                   variant="bodyLarge"
@@ -67,7 +68,7 @@ const RemainingFertilizer: React.FC = () => {
                     {displayFullBN(progress.multipliedBy(100), 2)}% Purchased
                   </Typography>
                 ) : null}
-              </Stack>
+              </Row>
             </Stack>
             <Stack gap={0.5}>
               <Tooltip
@@ -81,11 +82,11 @@ const RemainingFertilizer: React.FC = () => {
                   />
                 </Typography>
               </Tooltip>
-              <Stack direction="row" alignItems="center" gap={1}>
+              <Row alignItems="center" gap={1}>
                 <Typography variant="bodyLarge">
                   {displayFullBN(humidity.multipliedBy(100))}%
                 </Typography>
-              </Stack>
+              </Row>
             </Stack>
           </Stack>
         </Stack>

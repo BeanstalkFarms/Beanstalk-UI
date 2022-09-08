@@ -1,5 +1,6 @@
-import { Stack, StackProps } from '@mui/material';
+import { StackProps } from '@mui/material';
 import React from 'react';
+import Row from '~/components/Common/Row';
 
 const OutputField : React.FC<{
   isNegative?: boolean;
@@ -11,7 +12,7 @@ const OutputField : React.FC<{
   sx,
   ...props
 }) => (
-  <Stack
+  <Row
     sx={{
       backgroundColor: isNegative ? '#FFE5DF' : '#F6FAFE',
       borderRadius: 1,
@@ -21,13 +22,12 @@ const OutputField : React.FC<{
       height: '70px',
       ...sx
     }}
-    direction="row"
     alignItems="center"
     justifyContent="space-between"
     {...props}
     >
     {children}
-  </Stack>
+  </Row>
 );
 
 export default OutputField;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Chip, LinearProgress, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Chip, LinearProgress, Tooltip, Typography } from '@mui/material';
 import { GridColumns, GridRenderCellParams, GridValueFormatterParams } from '@mui/x-data-grid';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import BigNumber from 'bignumber.js';
@@ -10,6 +10,7 @@ import { PodListing, PodOrder } from '~/state/farmer/market';
 import TokenIcon from '../TokenIcon';
 import AddressIcon from '../AddressIcon';
 import EntityIcon from '~/components/Market/EntityIcon';
+import Row from '~/components/Common/Row';
 
 const basicCell = (params : GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
 
@@ -66,12 +67,12 @@ const COLUMNS = {
             Total Value: {displayFullBN((params.value as BigNumber).times(params.row.pricePerPod), BEAN[1].displayDecimals)} BEAN
           </>
       }>
-        <Stack direction="row" gap={0.3} alignItems="center">
+        <Row gap={0.3}>
           <TokenIcon token={PODS} />
           <Typography>
             {displayBN(params.value)}
           </Typography>
-        </Stack>
+        </Row>
       </Tooltip>
     ),
   }) as GridColumns[number],
@@ -93,12 +94,12 @@ const COLUMNS = {
       <Tooltip
         placement="right"
         title="">
-        <Stack direction="row" gap={1} alignItems="center">
+        <Row gap={1}>
           <EntityIcon type="listing" />
           <Typography display={{ xs: 'none', md: 'block' }}>
             #{params.row.id}
           </Typography>
-        </Stack>
+        </Row>
       </Tooltip>
     )
   }) as GridColumns[number],
@@ -120,12 +121,12 @@ const COLUMNS = {
       <Tooltip
         placement="right"
         title="">
-        <Stack direction="row" gap={1} alignItems="center">
+        <Row gap={1}>
           <EntityIcon type="order" />
           <Typography display={{ xs: 'none', md: 'block' }}>
             {params.row.id.substring(0, 8)}
           </Typography>
-        </Stack>
+        </Row>
       </Tooltip>
     )
   }) as GridColumns[number],
@@ -147,12 +148,12 @@ const COLUMNS = {
             Total Value: {displayFullBN((params.value as BigNumber).times(params.row.pricePerPod), BEAN[1].displayDecimals)} BEAN
           </>
       }>
-        <Stack direction="row" gap={0.3} alignItems="center">
+        <Row gap={0.3}>
           <TokenIcon token={PODS} />
           <Typography>
             {displayBN(params.row.remainingAmount)}
           </Typography>
-        </Stack>
+        </Row>
       </Tooltip>
 
     )
@@ -166,7 +167,7 @@ const COLUMNS = {
     renderCell: (params: GridRenderCellParams<any, PodListing | PodOrder>) => {
       const progress = params.row.filledAmount.div(params.row.totalAmount).times(100);
       return (
-        <Stack gap={1} direction="row" width="100%" alignItems="center">
+        <Row gap={1} width="100%">
           <Box sx={{ flex: 1 }}>
             <LinearProgress
               variant="determinate"
@@ -177,7 +178,7 @@ const COLUMNS = {
           <Typography fontSize="bodySmall" color="gray">
             {progress.toFixed(1)}%
           </Typography>
-        </Stack>
+        </Row>
       );
     },
   } as GridColumns[number],
@@ -189,12 +190,12 @@ const COLUMNS = {
     headerAlign: 'left',
     flex: flex,
     renderCell: (params: GridRenderCellParams<any, PodListing | PodOrder>) => (
-      <Stack direction="row" gap={0.3} alignItems="center">
+      <Row gap={0.3}>
         <TokenIcon token={BEAN[1]} />
         <Typography>
           {displayFullBN(params.value)}
         </Typography>
-      </Stack>
+      </Row>
     ),
   }) as GridColumns[number],
 

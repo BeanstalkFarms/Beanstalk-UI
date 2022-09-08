@@ -1,9 +1,10 @@
 import React from 'react';
-import { MenuItem, Stack, StackProps, Typography } from '@mui/material';
+import { MenuItem, StackProps, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { RouteData } from './routes';
 import { FontSize } from '../App/muiTheme';
+import Row from '~/components/Common/Row';
 
 /**
  * Use for mobile nav.
@@ -34,7 +35,7 @@ const NavItemMobile: React.FC<{
     onClick={onClick}
     disableRipple
   >
-    <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={0.5} width="100%">
+    <Row justifyContent="space-between" spacing={0.5} width="100%">
       <Typography sx={{ fontSize: item.small ? FontSize.lg : FontSize['2xl'] }} variant="body1" color="text.secondary">
         {item.title}
       </Typography>
@@ -48,7 +49,7 @@ const NavItemMobile: React.FC<{
           {endAdornment}
         </>
       )}
-    </Stack>
+    </Row>
   </MenuItem>
 );
 

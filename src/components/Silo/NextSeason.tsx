@@ -5,14 +5,15 @@ import { BEAN, STALK } from '~/constants/tokens';
 import AccordionWrapper from '~/components/Common/Accordion/AccordionWrapper';
 import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
 import TokenIcon from '~/components/Common/TokenIcon';
+import Row from '~/components/Common/Row';
 
 // ---------------------------------------------------------------
 
 const Stat : React.FC<{ name: string }> = ({ children, name }) => (
-  <Stack direction="row" justifyContent="space-between">
+  <Row justifyContent="space-between">
     <Typography variant="h4">{name}</Typography>
     <Typography variant="h4" textAlign="right">{children}</Typography>
-  </Stack>
+  </Row>
 );
 
 const StatColumn : React.FC<{
@@ -25,10 +26,10 @@ const StatColumn : React.FC<{
 }) => (
   <Grid item xs={6}>
     <Stack gap={1}>
-      <Stack direction="row" justifyContent="space-between">
+      <Row justifyContent="space-between">
         <Typography variant="h3">{title}</Typography>
-        <Stack direction="row" alignItems="center">{icon}</Stack>
-      </Stack>
+        <Row>{icon}</Row>
+      </Row>
       {children}
     </Stack>
   </Grid>
@@ -79,12 +80,12 @@ const NextSeason : React.FC<{ title: string | JSX.Element }> = ({ title }) => (
               title="My New Earned Beans"
               icon={(
                 <>
-                  <Stack direction="row" gap={0.3}>
+                  <Row gap={0.3}>
                     <TokenIcon token={BEAN[SupportedChainId.MAINNET]} />
                     <Typography variant="h3">
                       244.33
                     </Typography>
-                  </Stack>
+                  </Row>
                 </>
               )}
             />
@@ -92,12 +93,12 @@ const NextSeason : React.FC<{ title: string | JSX.Element }> = ({ title }) => (
               title="My New Earned Stalk"
               icon={(
                 <>
-                  <Stack direction="row" gap={0.3}>
+                  <Row gap={0.3}>
                     <TokenIcon token={STALK} />
                     <Typography variant="h3">
                       244.33
                     </Typography>
-                  </Stack>
+                  </Row>
                 </>
               )}
             />
