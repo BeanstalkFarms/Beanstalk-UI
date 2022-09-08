@@ -7,6 +7,7 @@ import { StyledDialog, StyledDialogContent, StyledDialogTitle } from '~/componen
 import Row from '~/components/Common/Row';
 import { SGEnvironments, SUBGRAPH_ENVIRONMENTS } from '~/graph/endpoints';
 import useSetting from '~/hooks/app/useSetting';
+import useFarmerSiloBalances from '~/hooks/farmer/useFarmerSiloBalances';
 import { save } from '~/state';
 import { setNextSunrise, setRemainingUntilSunrise } from '~/state/beanstalk/sun/actions';
 import { clearApolloCache } from '~/util';
@@ -48,6 +49,7 @@ const SettingsDialog : React.FC<{ open: boolean; onClose?: () => void; }> = ({ o
   const [denomination, setDenomination] = useSetting('denomination');
   const [subgraphEnv, setSubgraphEnv]   = useSetting('subgraphEnv');
   const dispatch = useDispatch();
+  const siloBalances = useFarmerSiloBalances();
 
   /// Cache
   const clearCache = useCallback(() => {
@@ -65,6 +67,26 @@ const SettingsDialog : React.FC<{ open: boolean; onClose?: () => void; }> = ({ o
     dispatch(setNextSunrise(_next));
     dispatch(setRemainingUntilSunrise(_next.diffNow()));
   }, [dispatch]);
+  const exportDepositsCSV = useCallback(() => {
+    const rows = Object.keys(siloBalances).reduce((prev, curr) => {
+      prev.push(
+        ...siloBalances[curr].deposited.crates.map((crate) => ([
+          curr,
+          crate.amount,
+          crate.bdv,
+          crate.season,
+          crate.stalk,
+          crate.seeds,
+        ]))
+      );
+      return prev;
+    }, [['Token', 'Amount', 'BDV', 'Season', 'Stalk', 'Seeds']] as any[]);
+    window.open(
+      encodeURI(
+        `data:text/csv;charset=utf-8,${rows.map((r) => r.join(',')).join('\n')}`
+      )
+    );
+  }, [siloBalances]);
 
   return (
     <StyledDialog open={open} onClose={onClose}>
@@ -120,13 +142,19 @@ const SettingsDialog : React.FC<{ open: boolean; onClose?: () => void; }> = ({ o
             </Split>
           </Stack>
           {import.meta.env.DEV ? (
-            <Stack gap={1}>
-              <Typography variant="h4">Dev Controls</Typography>
-              <Split>
-                <Typography color="gray">Set season timer</Typography>
-                <Button {...buttonStyle} onClick={setSeasonTimer}>in 5s</Button>
-              </Split>
-            </Stack>
+            <>
+              <Stack gap={1}>
+                <Typography variant="h4">Dev Controls</Typography>
+                <Split>
+                  <Typography color="gray">Set season timer</Typography>
+                  <Button {...buttonStyle} onClick={setSeasonTimer}>in 5s</Button>
+                </Split>
+                <Split>
+                  <Typography color="gray">Export deposits</Typography>
+                  <Button {...buttonStyle} onClick={exportDepositsCSV}>Export</Button>
+                </Split>
+              </Stack>
+            </>
           ) : null}
         </Stack>
       </StyledDialogContent>

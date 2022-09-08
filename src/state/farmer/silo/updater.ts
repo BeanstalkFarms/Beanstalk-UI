@@ -11,7 +11,6 @@ import useAccount from '~/hooks/ledger/useAccount';
 import EventProcessor from '~/lib/Beanstalk/EventProcessor';
 import useWhitelist from '~/hooks/beanstalk/useWhitelist';
 import useSeason from '~/hooks/beanstalk/useSeason';
-import useEventParsingParams from '~/hooks/ledger/useEventParsingParams';
 import { DepositCrate } from '.';
 import { EventCacheName } from '../events2';
 import useEvents, { GetQueryFilters } from '../events2/updater';
@@ -30,47 +29,42 @@ export const useFetchFarmerSilo = () => {
   const whitelist = useWhitelist();
   const season    = useSeason();
 
-  const b = beanstalk;
-
-  /// v1
-  const eventParsingParameters  = useEventParsingParams();
-
   /// Events
   const getQueryFilters = useCallback<GetQueryFilters>(
     (_account, fromBlock, toBlock,) => ([
       // Silo (Generalized v2)
-      b.queryFilter(
-        b.filters.AddDeposit(_account),
+      beanstalk.queryFilter(
+        beanstalk.filters.AddDeposit(_account),
         fromBlock || blocks.BEANSTALK_GENESIS_BLOCK,
         toBlock   || 'latest',
       ),
-      b.queryFilter(
-        b.filters.AddWithdrawal(_account),
+      beanstalk.queryFilter(
+        beanstalk.filters.AddWithdrawal(_account),
         fromBlock || blocks.BEANSTALK_GENESIS_BLOCK,
         toBlock   || 'latest',
       ),
-      b.queryFilter(
-        b.filters.RemoveWithdrawal(_account),
+      beanstalk.queryFilter(
+        beanstalk.filters.RemoveWithdrawal(_account),
         fromBlock || blocks.BEANSTALK_GENESIS_BLOCK,
         toBlock   || 'latest',
       ),
-      b.queryFilter(
-        b.filters.RemoveWithdrawals(_account),
+      beanstalk.queryFilter(
+        beanstalk.filters.RemoveWithdrawals(_account),
         fromBlock || blocks.BEANSTALK_GENESIS_BLOCK,
         toBlock   || 'latest',
       ),
-      b.queryFilter(
-        b.filters.RemoveDeposit(_account),
+      beanstalk.queryFilter(
+        beanstalk.filters.RemoveDeposit(_account),
         fromBlock || blocks.BEANSTALK_GENESIS_BLOCK,
         toBlock   || 'latest',
       ),
-      b.queryFilter(
-        b.filters.RemoveDeposits(_account),
+      beanstalk.queryFilter(
+        beanstalk.filters.RemoveDeposits(_account),
         fromBlock || blocks.BEANSTALK_GENESIS_BLOCK,
         toBlock   || 'latest',
       ),
     ]),
-    [b, blocks.BEANSTALK_GENESIS_BLOCK]
+    [beanstalk, blocks.BEANSTALK_GENESIS_BLOCK]
   );
   
   const [fetchSiloEvents] = useEvents(EventCacheName.SILO, getQueryFilters);
@@ -80,7 +74,6 @@ export const useFetchFarmerSilo = () => {
     beanstalk
     && account
     && fetchSiloEvents
-    && eventParsingParameters
   );
 
   /// Handlers
@@ -114,12 +107,12 @@ export const useFetchFarmerSilo = () => {
       //   grownStalkBalance.toString(),
       // ]);
 
-      /// stalk + earnedStalk
-      const activeStalkBalance    = stalkBalance;
+      /// stalk + earnedStalk (bundled together at the contract level)
+      const activeStalkBalance = stalkBalance;
       /// earnedStalk (this is already included in activeStalk)
-      const earnedStalkBalance    = earnedBeanBalance.times(BEAN_TO_STALK);
+      const earnedStalkBalance = earnedBeanBalance.times(BEAN_TO_STALK);
       /// earnedSeed  (aka plantable seeds)
-      const plantableSeedBalance  = earnedBeanBalance.times(BEAN_TO_SEEDS);
+      const earnedSeedBalance  = earnedBeanBalance.times(BEAN_TO_SEEDS);
       
       // total:   active & inactive
       // active:  owned, actively earning other silo assets
@@ -136,9 +129,9 @@ export const useFetchFarmerSilo = () => {
           total:  activeStalkBalance.plus(grownStalkBalance),
         },
         seeds: {
-          active:    seedBalance,
-          plantable: plantableSeedBalance,
-          total:     seedBalance.plus(plantableSeedBalance),
+          active: seedBalance,
+          earned: earnedSeedBalance,
+          total:  seedBalance.plus(earnedSeedBalance),
         },
         roots: {
           total: rootBalance,

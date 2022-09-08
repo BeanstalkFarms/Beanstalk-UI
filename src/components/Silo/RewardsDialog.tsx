@@ -263,7 +263,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
       [ClaimRewardsAction.PLANT_AND_MOW]: {
         estimateGas: () => beanstalk.estimateGas.plant(),
         execute:     () => beanstalk.plant(),
-        enabled:     farmerSilo.seeds.plantable.gt(0),
+        enabled:     farmerSilo.seeds.earned.gt(0),
       },
       [ClaimRewardsAction.ENROOT_AND_MOW]: {
         estimateGas: () => beanstalk.estimateGas.farm([
@@ -280,7 +280,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
         ]),
         enabled: (
           farmerSilo.stalk.grown.gt(0)
-          || farmerSilo.seeds.plantable.gt(0)
+          || farmerSilo.seeds.earned.gt(0)
           || enrootData.length > 0
         ),
       },
@@ -324,7 +324,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
         ]),
         enabled: (
           farmerSilo.stalk.grown.gt(0)
-          || farmerSilo.seeds.plantable.gt(0)
+          || farmerSilo.seeds.earned.gt(0)
           || enrootData.length > 0
         ),
       },
@@ -346,7 +346,7 @@ const RewardsDialog: React.FC<RewardsBarProps & {
       {}
     ));
     setGas(_gas);
-  }, [account, beanstalk, farmerSilo.seeds.plantable, farmerSilo.stalk.grown, getBDV, signer, siloBalances, unripeTokens]);
+  }, [account, beanstalk, farmerSilo.seeds.earned, farmerSilo.stalk.grown, getBDV, signer, siloBalances, unripeTokens]);
 
   useTimedRefresh(estimateGas, 20 * 1000, open);
 
