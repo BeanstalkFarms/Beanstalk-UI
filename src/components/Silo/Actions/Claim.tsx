@@ -394,7 +394,6 @@ const Claim : React.FC<{
               farm={farm}
               {...formikProps}
             />
-            <pre>{JSON.stringify(siloBalance, null, 2)}</pre>
           </Stack>
         </>
       )}
