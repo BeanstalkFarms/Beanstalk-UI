@@ -56,7 +56,9 @@ const SiloActions : React.FC<{
             />
           ) : null}
           {tab === 2 ? (
-            <Transfer token={props.token} />
+            <Transfer
+              token={props.token}
+            />
           ) : null}
           {tab === 3 ? (
             <Withdraw
@@ -75,13 +77,13 @@ const SiloActions : React.FC<{
       <Box sx={{ display: tab <= 2 ? 'block' : 'none' }}>
         <Deposits
           token={props.token}
-          balance={props.siloBalance}
+          siloBalance={props.siloBalance}
         />
       </Box>
       <Box sx={{ display: tab >= 3 ? 'block' : 'none' }}>
         <Withdrawals
           token={props.token}
-          balance={props.siloBalance}
+          siloBalance={props.siloBalance}
         />
       </Box>
     </>

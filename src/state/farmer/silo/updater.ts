@@ -70,10 +70,11 @@ export const useFetchFarmerSilo = () => {
   const [fetchSiloEvents] = useEvents(EventCacheName.SILO, getQueryFilters);
   
   ///
-  const initialized = (
+  const initialized = !!(
     beanstalk
     && account
     && fetchSiloEvents
+    && season?.gt(0)
   );
 
   /// Handlers
@@ -175,7 +176,6 @@ export const useFetchFarmerSilo = () => {
     dispatch,
     fetchSiloEvents,
     beanstalk,
-    // v2
     season,
     whitelist,
     account,
@@ -187,7 +187,7 @@ export const useFetchFarmerSilo = () => {
     dispatch(resetFarmerSilo());
   }, [dispatch]);
 
-  return [fetch, Boolean(initialized), clear] as const;
+  return [fetch, initialized, clear] as const;
 };
 
 // -- Updater

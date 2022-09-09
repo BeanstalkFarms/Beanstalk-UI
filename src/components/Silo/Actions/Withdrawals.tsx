@@ -15,10 +15,10 @@ type RowData = WithdrawalCrate & { id: BigNumber };
 
 const Withdrawals : React.FC<{
   token: Token;
-  balance: FarmerSiloBalance | undefined;
+  siloBalance: FarmerSiloBalance | undefined;
 }> = ({
   token,
-  balance,
+  siloBalance,
 }) => {
   const getUSD = useSiloTokenToFiat();
   const currentSeason = useSeason();
@@ -26,17 +26,17 @@ const Withdrawals : React.FC<{
 
   const rows : RowData[] = useMemo(() => {
     const data : RowData[] = [];
-    if (balance) {
-      if (balance.claimable.amount.gt(0)) {
+    if (siloBalance) {
+      if (siloBalance.claimable.amount.gt(0)) {
         data.push({
           id: currentSeason,
-          amount: balance.claimable.amount,
+          amount: siloBalance.claimable.amount,
           season: currentSeason,
         });
       }
-      if (balance.withdrawn?.crates?.length > 0) {
+      if (siloBalance.withdrawn?.crates?.length > 0) {
         data.push(
-          ...(balance.withdrawn.crates.map((crate) => ({
+          ...(siloBalance.withdrawn.crates.map((crate) => ({
             id: crate.season,
             ...crate
           })))
@@ -45,7 +45,7 @@ const Withdrawals : React.FC<{
     }
     return data;
   }, [
-    balance,
+    siloBalance,
     currentSeason,
   ]);
 
@@ -89,7 +89,7 @@ const Withdrawals : React.FC<{
     currentSeason
   ]);
 
-  const amount = balance?.withdrawn.amount;
+  const amount = siloBalance?.withdrawn.amount;
   const state = !account ? 'disconnected' : !currentSeason ? 'loading' : 'ready';
 
   return (
