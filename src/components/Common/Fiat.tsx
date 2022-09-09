@@ -1,6 +1,5 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
-import { Stack } from '@mui/material';
 import logo from '~/img/tokens/bean-logo.svg';
 import { Token } from '~/classes';
 import useSiloTokenToFiat from '~/hooks/beanstalk/useSiloTokenToFiat';
@@ -8,6 +7,7 @@ import useSetting from '~/hooks/app/useSetting';
 import usePrice from '~/hooks/beanstalk/usePrice';
 import { displayBN, displayFullBN } from '~/util';
 import { ZERO_BN } from '~/constants';
+import Row from '~/components/Common/Row';
 
 const Fiat : React.FC<{
   /* usd value of `amount`. if defined, overrides siloTokenToFiat */
@@ -43,7 +43,7 @@ const Fiat : React.FC<{
     ? displayBN(value, allowNegative)
     : displayFullBN(value, 2, 2);
   return (
-    <Stack display="inline-flex" direction="row" alignItems="center" sx={{ verticalAlign: 'top', position: 'relative', }}>
+    <Row display="inline-flex" sx={{ verticalAlign: 'top', position: 'relative', }}>
       {denomination === 'bdv' ? (
         <>
           <img
@@ -63,7 +63,7 @@ const Fiat : React.FC<{
           </span>
         </>
       )}
-    </Stack>
+    </Row>
   );
 };
 

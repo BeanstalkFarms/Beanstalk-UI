@@ -14,6 +14,7 @@ import {
 import { grey } from '@mui/material/colors';
 import { CONNECT_WALLET_ERRORS, CONNECTOR_LOGOS } from '~/constants/wallets';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
+import Row from '~/components/Common/Row';
 
 // -----------------------------------------------------------------
 
@@ -54,7 +55,7 @@ const WalletDialog: React.FC<{
                   borderColor: grey[300]
                 }}
               >
-                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }} gap={3}>
+                <Row justifyContent="space-between" sx={{ width: '100%' }} gap={3}>
                   <Typography color="text.primary" sx={{ fontSize: 20 }}>
                     {isConnecting && (connector.id === pendingConnector?.id)
                       ? <CircularProgress variant="indeterminate" color="primary" size={20} />
@@ -63,7 +64,7 @@ const WalletDialog: React.FC<{
                   {CONNECTOR_LOGOS[connector.name] && (
                     <img src={CONNECTOR_LOGOS[connector.name]} alt="" style={{ height: 35 }} />
                   )}
-                </Stack>
+                </Row>
               </Button>
             ) : null
           ))}

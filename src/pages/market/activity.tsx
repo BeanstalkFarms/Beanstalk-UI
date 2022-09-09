@@ -13,6 +13,7 @@ import beanIcon from '~/img/tokens/bean-logo-circled.svg';
 import ActivityTable from '~/components/Market/Tables/Activity';
 import { displayBN, displayFullBN } from '~/util';
 import PageHeaderSecondary from '~/components/Common/PageHeaderSecondary';
+import Row from '~/components/Common/Row';
 
 const columns: DataGridProps['columns'] = [
   {
@@ -33,10 +34,10 @@ const columns: DataGridProps['columns'] = [
     headerAlign: 'left',
     valueFormatter: (params) => `${displayFullBN(params.value as BigNumber, 2)}`,
     renderCell: (params) => (
-      <Stack direction="row" gap={0.3} alignItems="center">
+      <Row gap={0.3}>
         <Typography>{displayBN(params.value)}</Typography>
         <img src={podIcon} alt="Pod Icon" height="18px" />
-      </Stack>
+      </Row>
     ) ,
   },
   {
@@ -60,10 +61,10 @@ const columns: DataGridProps['columns'] = [
     headerAlign: 'right',
     valueFormatter: (params) => `${displayFullBN(params.value as BigNumber, 2)}`,
     renderCell: (params) => (
-      <Stack direction="row" gap={0.3} alignItems="center">
+      <Row gap={0.3}>
         <Typography>{displayBN(params.value)}</Typography>
         <img src={beanIcon} alt="Bean Icon" height="18px" />
-      </Stack>
+      </Row>
     ),
   },
   {
@@ -75,10 +76,10 @@ const columns: DataGridProps['columns'] = [
     headerAlign: 'right',
     valueFormatter: (params) => `${displayFullBN(params.value as BigNumber, 2)}`,
     renderCell: (params) => (
-      <Stack direction="row" gap={0.3} alignItems="center">
+      <Row gap={0.3}>
         <Typography>{displayBN(params.value)}</Typography>
         <img src={beanIcon} alt="Bean Icon" height="18px" />
-      </Stack>
+      </Row>
     ),
   },
 ];

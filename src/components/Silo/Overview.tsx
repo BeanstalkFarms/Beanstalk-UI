@@ -1,4 +1,4 @@
-import { Box, Card, Stack, Tabs } from '@mui/material';
+import { Box, Card, Tabs } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import React from 'react';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
@@ -15,6 +15,7 @@ import Fiat from '~/components/Common/Fiat';
 import { displayBN } from '~/util';
 import { ChipLabel, StyledTab } from '~/components/Common/Tabs';
 import { ZERO_BN } from '~/constants';
+import Row from '~/components/Common/Row';
 
 const SLUGS = ['deposits', 'stalk'];
 const Overview: React.FC<{
@@ -27,8 +28,7 @@ const Overview: React.FC<{
   return (
     <Card>
       {/* FIXME: sizing between deposits tab and Total Silo Deposits */}
-      <Stack
-        direction="row"
+      <Row
         justifyContent="space-between"
         sx={{
           px: 2,
@@ -45,12 +45,12 @@ const Overview: React.FC<{
           } />
           <StyledTab label={
             <ChipLabel name="Stalk">
-              <Stack direction="row" alignItems="center"><TokenIcon token={STALK} /> {displayBN(farmerSilo.stalk.active)}</Stack>
+              <Row alignItems="center"><TokenIcon token={STALK} /> {displayBN(farmerSilo.stalk.active)}</Row>
             </ChipLabel>
           } />
           <StyledTab label={
             <ChipLabel name="Seeds">
-              <Stack direction="row" alignItems="center"><TokenIcon token={SEEDS} /> {displayBN(farmerSilo.seeds.active)}</Stack>
+              <Row alignItems="center"><TokenIcon token={SEEDS} /> {displayBN(farmerSilo.seeds.active)}</Row>
             </ChipLabel>
           } />
         </Tabs>
@@ -58,7 +58,7 @@ const Overview: React.FC<{
         <Box sx={{ display: 'none' }}>
           {/* <TimeTabs tab={timeTab} setState={handleChangeTimeTab} /> */}
         </Box>
-      </Stack>
+      </Row>
       <Box sx={{ display: tab === 0 ? 'block' : 'none' }}>
         <DepositsView
           current={[

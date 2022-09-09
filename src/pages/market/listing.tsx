@@ -18,6 +18,7 @@ import usePodListing from '~/hooks/beanstalk/usePodListing';
 import useAccount from '~/hooks/ledger/useAccount';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { bigNumberResult, Source } from '~/util';
+import Row from '~/components/Common/Row';
 
 const ListingPage: React.FC = () => {
   const account = useAccount();
@@ -69,11 +70,11 @@ const ListingPage: React.FC = () => {
       <Stack spacing={2}>
         <PageHeaderSecondary
           title={(
-            <Stack direction="row" gap={0.5} alignItems="center">
+            <Row gap={0.5}>
               <Typography variant="h2">
                 Listing #{listing.id}
               </Typography>
-            </Stack>
+            </Row>
           )}
           returnPath="/market"
         />

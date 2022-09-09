@@ -1,9 +1,10 @@
 import React from 'react';
-import { AccordionSummary, Stack, Typography } from '@mui/material';
+import { AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import splitArrowsIcon from '~/img/interface/split-arrows.svg';
 import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
 import IconWrapper from '../IconWrapper';
+import Row from '~/components/Common/Row';
 
 const StyledAccordionSummary : React.FC<{
   title: string | JSX.Element;
@@ -23,7 +24,7 @@ const StyledAccordionSummary : React.FC<{
         }}
       />
     )}>
-    <Stack direction="row" alignItems="center">
+    <Row>
       <IconWrapper boxSize={IconSize.medium}>
         {icon || <img alt="" src={splitArrowsIcon} height={IconSize.xs} />}
       </IconWrapper>
@@ -37,7 +38,7 @@ const StyledAccordionSummary : React.FC<{
       >
         {title}
       </Typography>
-    </Stack>
+    </Row>
   </AccordionSummary>
 );
 

@@ -15,6 +15,7 @@ import AuthEmptyState from '~/components/Common/ZeroState/AuthEmptyState';
 import PageHeader from '~/components/Common/PageHeader';
 import GuideButton from '~/components/Common/Guide/GuideButton';
 import { HOW_TO_MINT_BEANFTS } from '~/util/Guides';
+import Row from '~/components/Common/Row';
 
 const SLUGS = ['genesis', 'winter'];
 const NFTPage: React.FC = () => {
@@ -249,7 +250,7 @@ const NFTPage: React.FC = () => {
         />
         <Card sx={{ p: 2 }}>
           <Stack gap={1.5}>
-            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ px: 0.5 }}>
+            <Row justifyContent="space-between" alignItems="center" sx={{ px: 0.5 }}>
               <Tabs value={tab} onChange={handleChangeTab} sx={{ minHeight: 0 }}>
                 <Tab label={`Genesis (${genesisNFTs === null ? 0 : genesisNFTs?.length})`} />\
                 <Tab label={`Winter (${winterNFTs === null ? 0 : winterNFTs?.length})`} />
@@ -265,7 +266,7 @@ const NFTPage: React.FC = () => {
                   {isMobile ? 'Mint all' : 'Mint All Winter'}
                 </Button>
               )}
-            </Stack>
+            </Row>
             {/* Zero state when not logged in */}
             {account === undefined ? (
               <Box height={300}>

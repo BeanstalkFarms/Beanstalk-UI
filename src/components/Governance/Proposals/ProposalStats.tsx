@@ -1,10 +1,11 @@
 import React from 'react';
-import { Link, Stack, Typography } from '@mui/material';
+import { Link, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { getDateMessage, Proposal } from '~/util/Governance';
 import { displayBN } from '~/util';
 import Dot from '~/components/Common/Dot';
 import { ZERO_BN } from '~/constants';
+import Row from '~/components/Common/Row';
 
 const ProposalStats: React.FC<{
   proposal: Proposal;
@@ -17,14 +18,14 @@ const ProposalStats: React.FC<{
   totalStalk,
   showLink = false,
 }) => (
-  <Stack direction="row" alignItems="center" justifyContent="space-between" width="100%">
-    <Stack direction="row" alignItems="center" gap={2}>
-      <Stack direction="row" alignItems="center" gap={0.5}>
+  <Row justifyContent="space-between" width="100%">
+    <Row gap={2}>
+      <Row gap={0.5}>
         <Dot color={proposal.state === 'active' ? 'primary.main' : 'gray'} />
         <Typography variant="body1">
           {proposal.state.charAt(0).toUpperCase() + proposal.state.slice(1)}
         </Typography>
-      </Stack>
+      </Row>
       <Typography variant="body1">
         {getDateMessage(proposal.end)}
       </Typography>
@@ -38,10 +39,10 @@ const ProposalStats: React.FC<{
           View on Snapshot
         </Link>
       )}
-    </Stack>
+    </Row>
     {/* if there is time remaining... */}
     {(differenceInTime && differenceInTime > 0 && totalStalk) && (
-      <Stack direction="row" alignItems="center" gap={0.5} display={{ xs: 'none', md: 'block' }}>
+      <Row gap={0.5} display={{ xs: 'none', md: 'block' }}>
         {proposal.space.id === 'wearebeansprout.eth' ? (
           <Typography textAlign={{ xs: 'center', md: 'left' }} variant="body1">
             {displayBN(new BigNumber(proposal.scores_total ? proposal.scores_total : ZERO_BN).div(totalStalk).multipliedBy(100))}% of Stalk voted
@@ -51,9 +52,9 @@ const ProposalStats: React.FC<{
             {displayBN(new BigNumber(proposal.scores[0] ? proposal.scores[0] : ZERO_BN).div(totalStalk).multipliedBy(100))}% of Stalk voted For
           </Typography>
         )}
-      </Stack>
+      </Row>
     )}  
-  </Stack>
+  </Row>
 );
 
 export default ProposalStats;

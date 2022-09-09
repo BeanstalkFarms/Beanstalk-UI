@@ -4,6 +4,7 @@ import BigNumber from 'bignumber.js';
 import Stat from '../../Common/Stat';
 import { displayBN } from '../../../util';
 import { BeanstalkPalette } from '../../App/muiTheme';
+import Row from '~/components/Common/Row';
 
 export type AmountRaisedProps = {
   totalRaised: BigNumber;
@@ -18,7 +19,7 @@ const AmountRaisedCard: React.FC<AmountRaisedProps> =
     return (
       <Card sx={{ p: 2 }}>
         <Stack gap={1.3}>
-          <Stack direction="row" justifyContent="space-between" alignItems="end">
+          <Row justifyContent="space-between" alignItems="end">
             <Stat
               title="Total Recapitalization (Amount raised)"
               amount={`${displayBN(percentageRaised)}%`}
@@ -26,7 +27,7 @@ const AmountRaisedCard: React.FC<AmountRaisedProps> =
             <Typography variant="h1">
               ${displayBN(totalRaised)}/${displayBN(startingAmount)}
             </Typography>
-          </Stack>
+          </Row>
           <LinearProgress
             variant="determinate"
             value={12}

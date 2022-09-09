@@ -1,7 +1,8 @@
 import React from 'react';
 import { Field, FieldProps } from 'formik';
-import { Stack, Switch, Typography } from '@mui/material';
+import { Switch, Typography } from '@mui/material';
 import { Box } from '@mui/system';
+import Row from '~/components/Common/Row';
 
 const SettingSwitch : React.FC<{
   name: string;
@@ -12,7 +13,7 @@ const SettingSwitch : React.FC<{
 }) => (
   <Field name={name}>
     {(fieldProps: FieldProps) => (
-      <Stack direction="row" gap={5} alignItems="center" justifyContent="space-between">
+      <Row gap={5} justifyContent="space-between">
         <Typography color="text.secondary">{label}</Typography>
         <Box>
           <Switch
@@ -20,7 +21,7 @@ const SettingSwitch : React.FC<{
             checked={fieldProps.field.value === true}
           />
         </Box>
-      </Stack>
+      </Row>
     )}
   </Field>
 );

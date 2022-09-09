@@ -4,6 +4,7 @@ import { Stack, Typography } from '@mui/material';
 import { displayBN } from '~/util';
 import { SPROUTS, RINSABLE_SPROUTS } from '~/constants/tokens';
 import TokenIcon from '../Common/TokenIcon';
+import Row from '~/components/Common/Row';
 
 export type FertilizerTooltip = {
   name?: string;
@@ -25,20 +26,20 @@ export const MY_FERTILIZER: FertilizerTooltip = {
   fertilizer: '1 FERT = 1 USDC put into the Barn Raise.',
   reward: (fertilized: BigNumber, unfertilized: BigNumber) => ((
     <Stack width={200}>
-      <Stack direction="row" justifyContent="space-between">
+      <Row justifyContent="space-between">
         <Typography>Sprouts:</Typography>
-        <Stack direction="row" alignItems="center" gap={0.2}>
+        <Row alignItems="center" gap={0.2}>
           <TokenIcon token={SPROUTS} style={{ width: '14px' }} />
           <Typography>{displayBN(unfertilized)}</Typography>
-        </Stack>
-      </Stack>
-      <Stack direction="row" justifyContent="space-between">
+        </Row>
+      </Row>
+      <Row justifyContent="space-between">
         <Typography>Rinsable Sprouts:</Typography>
-        <Stack direction="row" alignItems="center" gap={0.2}>
+        <Row alignItems="center" gap={0.2}>
           <TokenIcon token={RINSABLE_SPROUTS} style={{ width: '14px' }} />
           <Typography>{displayBN(fertilized)}</Typography>
-        </Stack>
-      </Stack>
+        </Row>
+      </Row>
     </Stack>
   ))
 };

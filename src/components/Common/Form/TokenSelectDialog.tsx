@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Typography, Link } from '@mui/material';
+import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, Link } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
 import Token from '~/classes/Token';
@@ -9,6 +9,7 @@ import { ZERO_BN } from '~/constants';
 import { FarmerBalances } from '~/state/farmer/balances';
 import { FarmerSilo } from '~/state/farmer/silo';
 import { BeanstalkPalette, FontSize, IconSize } from '../../App/muiTheme';
+import Row from '~/components/Common/Row';
 
 const useStyles = makeStyles(() => ({
   tokenLogo: {
@@ -165,9 +166,9 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
             >
               <ListItemButton disableRipple>
                 {/* Top-level button stack */}
-                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ width: '100%' }}>
+                <Row justifyContent="space-between" sx={{ width: '100%' }}>
                   {/* Icon & text left side */}
-                  <Stack direction="row" justifyContent="center" alignItems="center" gap={0}>
+                  <Row justifyContent="center" gap={0}>
                     <ListItemIcon>
                       <img src={_token.logo} alt="" className={classes.tokenLogo} />
                     </ListItemIcon>
@@ -176,14 +177,14 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
                       secondary={_token.name}
                       sx={{ my: 0 }}
                     />
-                  </Stack>
+                  </Row>
                   {/* Balances right side */}
                   {_balances ? (
                     <Typography variant="bodyLarge">
                       {displayBN(getBalance(_token.address))}
                     </Typography>
                   ) : null}
-                </Stack>
+                </Row>
               </ListItemButton>
             </ListItem>
           )) : null}

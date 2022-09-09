@@ -11,6 +11,7 @@ import { TabData } from '~/components/Silo/Views';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { SEEDS, STALK } from '~/constants/tokens';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
+import Row from '~/components/Common/Row';
 
 const SeedsView: React.FC<TabData> = ({ current, series, season }) => {
   // Display value is an array [stalk, pct]
@@ -30,7 +31,7 @@ const SeedsView: React.FC<TabData> = ({ current, series, season }) => {
 
   return (
     <>
-      <Stack direction="row" gap={4} sx={{ px: 2 }}>
+      <Row gap={4} sx={{ px: 2 }}>
         <Stat
           title="Seed Balance"
           titleTooltip="Seeds are illiquid tokens that yield 1/10,000 Stalk each Season."
@@ -41,7 +42,7 @@ const SeedsView: React.FC<TabData> = ({ current, series, season }) => {
           amountIcon={undefined}
           gap={0.25}
         />
-      </Stack>
+      </Row>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
         {!account ? (
           <BlurComponent>

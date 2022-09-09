@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 /* @ts-ignore */
 import { Stack, Tooltip, Typography } from '@mui/material';
 import { PlotMap, displayBN } from '~/util';
+import Row from '~/components/Common/Row';
 
 type GraphProps = {
   width: number;
@@ -85,14 +86,14 @@ const PodLineChart: React.FC<GraphProps> = withTooltip(({
           key={key}
           title={(
             <Stack width={150}>
-              <Stack direction="row" gap={1} justifyContent="space-between">
+              <Row gap={1} justifyContent="space-between">
                 <Typography>Place in line:</Typography>
                 <Typography>{displayBN(new BigNumber(key).minus(harvestableIndex))}</Typography>
-              </Stack>
-              <Stack direction="row" gap={1} justifyContent="space-between">
+              </Row>
+              <Row gap={1} justifyContent="space-between">
                 <Typography>Num Pods:</Typography>
                 <Typography>{displayBN(new BigNumber(farmerPlots[key]))}</Typography>
-              </Stack>
+              </Row>
             </Stack>
           )}
         >

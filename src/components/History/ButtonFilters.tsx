@@ -2,6 +2,7 @@
 import React from 'react';
 import {Box, Stack, Typography} from '@mui/material';
 import {makeStyles} from '@mui/styles';
+import Row from "~/components/Common/Row";
 
 const useStyles = makeStyles(() => ({}))
 
@@ -22,7 +23,7 @@ export interface ButtonTabsProps {
 const ButtonFilters: React.FC<ButtonTabsProps> = ({title}) => {
   const classes = useStyles();
   return (
-    <Stack direction="row" gap={1}>
+    <Row gap={1}>
       <Box sx={{...buttonStyle}}>
         <Typography>Silo</Typography>
       </Box>
@@ -32,7 +33,7 @@ const ButtonFilters: React.FC<ButtonTabsProps> = ({title}) => {
       <Box sx={{...buttonStyle}}>
         <Typography>Other</Typography>
       </Box>
-    </Stack>
+    </Row>
   );
 };
 

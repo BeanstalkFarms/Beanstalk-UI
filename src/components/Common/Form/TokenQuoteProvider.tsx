@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import { CircularProgress, Stack, Typography } from '@mui/material';
+import { CircularProgress, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
 import BigNumber from 'bignumber.js';
 import TokenInputField, { TokenInputProps } from '~/components/Common/Form/TokenInputField';
@@ -8,6 +8,7 @@ import useQuote, { QuoteHandler, QuoteSettings } from '~/hooks/ledger/useQuote';
 import { ERC20Token, NativeToken } from '~/classes/Token';
 import { displayFullBN } from '~/util/Tokens';
 import { FormState, FormTokenState } from '.';
+import Row from '~/components/Common/Row';
 
 type TokenQuoteProviderCustomProps = {
   /** Field name */
@@ -124,7 +125,7 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
   // when the user switches selected tokens.
   const Quote = useMemo(() => (
     hideQuote ? undefined : (
-      <Stack direction="row" alignItems="center" gap={0.5} sx={{ display: { xs: 'none', md: 'flex' } }}>
+      <Row gap={0.5} sx={{ display: { xs: 'none', md: 'flex' } }}>
         {state.amountOut && (
           <Typography variant="body1">
             ≈ {displayFullBN(state.amountOut, tokenOut.displayDecimals)} {tokenOut.symbol}
@@ -133,7 +134,7 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
         {quoting && (
           <CircularProgress variant="indeterminate" size="small" sx={{ width: 14, height: 14 }} />
         )}
-      </Stack>
+      </Row>
     )
   ), [
     state.amountOut,

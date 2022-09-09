@@ -39,6 +39,7 @@ import { PodListing } from '~/state/farmer/market';
 import { optimizeFromMode } from '~/util/Farm';
 import TokenIcon from '../../Common/TokenIcon';
 import { IconSize } from '../../App/muiTheme';
+import Row from '~/components/Common/Row';
 
 export type FillListingFormValues = FormState & {
   settings: SlippageSettingsFragment;
@@ -188,7 +189,7 @@ const FillListingForm : React.FC<
                 </>
               )}
               override={(
-                <Stack direction="row" alignItems="center" gap={0.5}>
+                <Row gap={0.5}>
                   <TokenIcon
                     token={PODS}
                     style={{
@@ -198,8 +199,7 @@ const FillListingForm : React.FC<
                   <Typography variant="bodyMedium">
                     {PODS.symbol} @ {displayBN(placeInLine)}
                   </Typography>
-
-                </Stack>
+                </Row>
               )}
             />
             <Box>

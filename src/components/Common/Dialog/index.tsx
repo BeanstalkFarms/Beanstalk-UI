@@ -1,9 +1,10 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Stack, DialogTitleProps, Typography } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton, DialogTitleProps, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { styled } from '@mui/styles';
 import { FontSize, IconSize } from '../../App/muiTheme';
+import Row from '~/components/Common/Row';
 
 export const StyledDialog = styled(Dialog)(() => ({
   '& .MuiDialogContent-root': {},
@@ -32,7 +33,7 @@ export const StyledDialogTitle : React.FC<{
     }}
     {...props}
   >
-    <Stack direction="row" justifyContent="space-between" alignItems="center">
+    <Row justifyContent="space-between">
       {onBack ? (
         <IconButton
           aria-label="close"
@@ -60,7 +61,7 @@ export const StyledDialogTitle : React.FC<{
           <CloseIcon sx={{ fontSize: FontSize.base }} />
         </IconButton>
       ) : null}
-    </Stack>
+    </Row>
   </DialogTitle>
 );
 

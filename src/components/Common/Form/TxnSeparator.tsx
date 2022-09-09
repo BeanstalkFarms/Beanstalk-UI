@@ -1,12 +1,13 @@
 import React from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Stack, StackProps } from '@mui/material';
+import { StackProps } from '@mui/material';
 import { IconSize } from '../../App/muiTheme';
+import Row from '~/components/Common/Row';
 
 const TxnSeparator : React.FC<StackProps> = ({ ...props }) => (
-  <Stack direction="row" justifyContent="center" {...props}>
+  <Row justifyContent="center" {...props}>
     <ExpandMoreIcon color="secondary" width={IconSize.xs} />
-  </Stack>
+  </Row>
 );
 
 export default TxnSeparator;

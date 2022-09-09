@@ -40,6 +40,7 @@ import copy from '~/constants/copy';
 import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
 import { ActionType } from '~/util/Actions';
 import WarningIcon from '~/components/Common/Alert/WarningIcon';
+import Row from '~/components/Common/Row';
 
 /// ---------------------------------------------------------------
 
@@ -362,11 +363,11 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
             />
           ) : null}
         </>
-        <Stack direction="row" justifyContent="center" mt={-1}>
+        <Row justifyContent="center" mt={-1}>
           <IconButton onClick={handleReverse} size="small">
             <ExpandMoreIcon color="secondary" width={IconSize.xs} />
           </IconButton>
-        </Stack>
+        </Row>
         {/* Output */}
         <>
           <TokenInputField

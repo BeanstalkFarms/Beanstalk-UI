@@ -1,13 +1,13 @@
 import React from 'react';
 import {
   Button,
-  Stack,
   Typography,
 } from '@mui/material';
 import MoreDropdown from '~/components/Market/MoreDropdown';
+import Row from '~/components/Common/Row';
 
 const CreateButtons: React.FC = () => (
-  <Stack direction="row" gap={1} alignItems="end" height="100%">
+  <Row gap={1} alignItems="end" height="100%">
     <MoreDropdown />
     <Button
       href="#/market/create"
@@ -17,6 +17,6 @@ const CreateButtons: React.FC = () => (
     >
       <Typography variant="h4">Create New</Typography>
     </Button>
-  </Stack>
+  </Row>
 );
 export default CreateButtons;

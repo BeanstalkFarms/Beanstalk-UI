@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { FontSize } from '~/components/App/muiTheme';
+import Row from '~/components/Common/Row';
 
 const GAP = 2;
 
@@ -72,11 +73,11 @@ const DescriptionButton : React.FC<ButtonProps & {
     }}
     {...props}
   >
-    <Stack direction="row" gap={0.5} justifyContent="space-between" alignItems="center" {...StackProps}>
+    <Row gap={0.5} justifyContent="space-between" {...StackProps}>
       {/* Icon + Title */}
       <Stack gap={0.5}>
         <Tooltip title={titleTooltip || ''} placement="top" sx={{ pointerEvents: 'all' }}>
-          <Stack direction="row" gap={0.25} alignItems="center">
+          <Row gap={0.25}>
             {icon && (
               <>
                 {icon}&nbsp;
@@ -93,7 +94,7 @@ const DescriptionButton : React.FC<ButtonProps & {
                 </>
               )}
             </Typography>
-          </Stack>
+          </Row>
         </Tooltip>
         {/* Description */}
         {description && (
@@ -107,7 +108,7 @@ const DescriptionButton : React.FC<ButtonProps & {
           {tag}
         </Box>
       )}
-    </Stack>
+    </Row>
   </Button>
 );
 

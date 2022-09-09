@@ -1,7 +1,8 @@
 import React from 'react';
 import { Field, FieldProps } from 'formik';
-import { Stack, TextField, Typography } from '@mui/material';
+import { TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
+import Row from '~/components/Common/Row';
 
 const SettingInput : React.FC<{
   name: string;
@@ -14,7 +15,7 @@ const SettingInput : React.FC<{
 }) => (
   <Field name={name}>
     {(fieldProps: FieldProps) => (
-      <Stack direction="row" gap={5} alignItems="center" justifyContent="space-between">
+      <Row gap={5} justifyContent="space-between">
         <Typography variant="body1">{label}</Typography>
         <Box>
           <TextField
@@ -34,7 +35,7 @@ const SettingInput : React.FC<{
             {...fieldProps.field}
             />
         </Box>
-      </Stack>
+      </Row>
       )}
   </Field>
   );

@@ -13,6 +13,7 @@ import useAppFlag from '~/hooks/app/useAppFlag';
 import useToggle from '~/hooks/display/useToggle';
 import { getDateCountdown } from '~/util/Time';
 import { getProposalTag } from '~/util/Governance';
+import Row from '~/components/Common/Row';
 
 const NewProposalsDialog: React.FC = () => {
   /// Local state
@@ -58,21 +59,21 @@ const NewProposalsDialog: React.FC = () => {
       </StyledDialogTitle>
       <StyledDialogContent sx={{ px: 2, pt: 1, pb: 1 }}>
         <Box display="flex" alignItems="center" justifyContent="center" py={3}>
-          <Stack direction="row" alignItems="center" gap={0.3}>
+          <Row gap={0.3}>
             <TokenIcon token={STALK} style={{ height: IconSize.small }} />
             <Typography variant="bodyLarge" textAlign="center">
               {displayBN(farmerSilo.stalk.active)} STALK
             </Typography>
-          </Stack>
+          </Row>
         </Box>
         <Stack gap={0.5}>
           {unseenProposals.map((p) => (
-            <Stack key={p.id} alignItems="flex-start" direction="row" justifyContent="space-between">
+            <Row key={p.id} alignItems="flex-start" justifyContent="space-between">
               <Typography>{p.title}</Typography>
               <Typography variant="body2" whiteSpace="nowrap" fontWeight="bold">
                 Ends {getDateCountdown(p.end * 1000)[0]}
               </Typography>
-            </Stack>
+            </Row>
           ))}
         </Stack>
       </StyledDialogContent>

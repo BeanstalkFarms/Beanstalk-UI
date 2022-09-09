@@ -6,6 +6,7 @@ import { AppState } from '~/state';
 import { displayBN, displayFullBN } from '~/util';
 import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/PieChart';
 import StatCard from '../StatCard';
+import Row from '~/components/Common/Row';
 
 export type StalkCardProps = (
   {
@@ -54,14 +55,14 @@ const SiloAssetCard: React.FC<StalkCardProps> = ({
         </Box>
         <Stack gap={0.5}>
           {Object.keys(state).map((key) => (
-            <Stack key={key} direction="row" justifyContent="space-between">
+            <Row key={key} justifyContent="space-between">
               <Typography sx={{ opacity: 0.6, textTransform: 'capitalize' }}>
                 {key} {token.name}
               </Typography>
               <Typography>
                 {displayFullBN(state[key as keyof typeof state], 0)}
               </Typography>
-            </Stack>
+            </Row>
             ))}
         </Stack>
       </Stack>

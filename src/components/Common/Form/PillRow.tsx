@@ -1,7 +1,8 @@
 import React from 'react';
-import { Button, Stack, StackProps, Tooltip, Typography } from '@mui/material';
+import { Button, StackProps, Tooltip, Typography } from '@mui/material';
 import DropdownIcon from '../DropdownIcon';
 import { IconSize } from '../../App/muiTheme';
+import Row from '~/components/Common/Row';
 
 const PillRow : React.FC<{
   label: string;
@@ -19,8 +20,7 @@ const PillRow : React.FC<{
   isOpen = false,
   ...props
 }) => (
-  <Stack
-    direction="row"
+  <Row
     justifyContent="space-between"
     alignItems="center"
     sx={{
@@ -47,12 +47,12 @@ const PillRow : React.FC<{
         height: 'auto'
       }}
     >
-      <Stack direction="row" gap={0.5} alignItems="center">
+      <Row gap={0.5}>
         {children}
-      </Stack>
+      </Row>
       {isDropdown && <DropdownIcon sx={{ height: IconSize.xs }} open={isOpen} />}
     </Button>
-  </Stack>
+  </Row>
 );
 
 export default PillRow;
