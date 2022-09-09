@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { Accordion, AccordionDetails, Box, Stack, Typography } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
@@ -150,6 +150,15 @@ const ClaimForm : React.FC<
     ignoreSameToken: false,
     onReset: () => ({ amountOut: claimableBalance }),
   }), [claimableBalance]);
+
+  // HOTFIX:
+  // Formik isn't reinitializing state properly after claimableBalance is loaded.
+  // Here we override the behavior manually.
+  useEffect(() => {
+    console.debug('[Claim] manually setting claimableBalance');
+    setFieldValue('amount', claimableBalance);
+    setFieldValue('amountOut', claimableBalance);
+  }, [setFieldValue, claimableBalance]);
 
   return (
     <Form autoComplete="off" noValidate>
