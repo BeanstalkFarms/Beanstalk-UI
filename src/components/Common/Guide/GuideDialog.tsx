@@ -11,6 +11,7 @@ const GuideDialog: React.FC<DialogProps & GuideProps> = (props) => (
       <Stack gap={1}>
         {props.guides.map((guide) => (
           <Button
+            key={guide.url}
             component={Link}
             href={guide.url}
             variant="outlined"

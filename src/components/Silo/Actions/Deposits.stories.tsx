@@ -75,7 +75,7 @@ const siloBalance: FarmerSiloBalance = {
 };
 
 const Template: ComponentStory<typeof Deposits> = (args: any) => (
-  <Deposits token={BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET]} balance={siloBalance} />
+  <Deposits token={BEAN_ETH_UNIV2_LP[SupportedChainId.MAINNET]} siloBalance={siloBalance} />
 );
 
 export const Main = Template.bind({});
