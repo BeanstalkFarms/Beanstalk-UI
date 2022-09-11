@@ -4,7 +4,6 @@ import CallMadeIcon from '@mui/icons-material/CallMade';
 import { Card, Chip, Stack, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 
-import { useNavigate } from 'react-router-dom';
 import { ERC20Token } from '~/classes/Token';
 import {
   BEAN,
@@ -17,7 +16,7 @@ import {
 import { BeanstalkPalette, FontSize } from '../App/muiTheme';
 import Stat from '../Common/Stat';
 import TokenIcon from '../Common/TokenIcon';
-import { BEANSTALK_ADDRESSES, ONE_BN, ZERO_BN } from '~/constants';
+import { BEANSTALK_ADDRESSES, CURVE_LINK, ONE_BN, ZERO_BN } from '~/constants';
 import useAPY from '~/hooks/beanstalk/useAPY';
 import EducationDepositImage from '~/img/beanstalk/education/educationDepositImg.svg';
 import EducationEarnImage from '~/img/beanstalk/education/educationEarnImg.svg';
@@ -143,7 +142,6 @@ const PoolOverviewCard: React.FC<{
 }> = ({ token }) => {
   const apys = useApysWithToken(token);
   const pctValue = usePctOfTotalSiloValueWithToken(token);
-  const navigate = useNavigate();
 
   return (
     <Card sx={{ p: 2, width: '100%' }}>
@@ -160,7 +158,8 @@ const PoolOverviewCard: React.FC<{
               },
             }}
             onClick={() => {
-              navigate('/');
+              // FIXME: change link when more pools are added
+              window.open(CURVE_LINK, '_blank', 'noopener');
             }}
           >
             View liquidity
