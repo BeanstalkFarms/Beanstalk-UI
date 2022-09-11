@@ -1,11 +1,11 @@
-import { useNavigate , Link as RouterLink } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import React from 'react';
 import { BeanstalkPalette, IconSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
 
-const PageHeader : React.FC<{
+const PageHeader: React.FC<{
   /** The Field: The Decentralized Credit Facility */
   title?: string | JSX.Element;
   titleAlign?: 'left' | 'center';
@@ -16,12 +16,14 @@ const PageHeader : React.FC<{
   control?: React.ReactElement;
 }> = (props) => {
   const navigate = useNavigate();
-  const buttonProps = props.returnPath ? {
-    to: props.returnPath,
-    component: RouterLink,
-  } : {
-    onClick: () => navigate(-1),
-  };
+  const buttonProps = props.returnPath
+    ? {
+        to: props.returnPath,
+        component: RouterLink,
+      }
+    : {
+        onClick: () => navigate(-1),
+      };
   return (
     <Box>
       <Row justifyContent="space-between" gap={0.5}>
@@ -37,11 +39,14 @@ const PageHeader : React.FC<{
               mb: '-2.5px',
               '&:hover': {
                 color: BeanstalkPalette.logoGreen,
-              }
+              },
             }}
           >
             <Row gap={0.5} height="100%">
-              <KeyboardBackspaceIcon sx={{ width: IconSize.small }} height="auto" />
+              <KeyboardBackspaceIcon
+                sx={{ width: IconSize.small }}
+                height="auto"
+              />
               <Typography variant="h4">Back</Typography>
             </Row>
           </Button>
@@ -62,14 +67,12 @@ const PageHeader : React.FC<{
                 {props.title}
               </Typography>
             ) : (
-              <>
-                {props.title}
-              </>
+              <>{props.title}</>
             )}
           </>
         )}
         <Box sx={{ width: 70 }} display="flex" justifyContent="end">
-          {props.control ? (props.control) : null}
+          {props.control ? props.control : null}
         </Box>
       </Row>
     </Box>

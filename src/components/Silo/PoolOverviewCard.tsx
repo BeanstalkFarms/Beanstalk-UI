@@ -94,9 +94,9 @@ const usePctOfTotalSiloValueWithToken = (token: ERC20Token) => {
       if (isUnripe(address)) {
         const deposited = balances[address]?.deposited.amount ?? ZERO_BN;
         const depositSupply = unripeTokens[address]?.supply ?? ONE_BN;
-        const pctUnderlyingDeposited = deposited.div(depositSupply);
-        const underlyingAmount = unripeTokens[address]?.underlying ?? ZERO_BN;
-        return pctUnderlyingDeposited.times(underlyingAmount);
+        return deposited
+          .div(depositSupply)
+          .times(unripeTokens[address]?.underlying ?? ZERO_BN);
       }
       return balances[address]?.deposited.amount;
     };
@@ -178,7 +178,10 @@ const PoolOverviewCard: React.FC<{
                   label={
                     <>
                       <Typography display="inline" variant="h4">
-                        <TokenIcon token={STALK} style={{ marginTop: '4px', height: '0.8rem' }} />
+                        <TokenIcon
+                          token={STALK}
+                          style={{ marginTop: '4px', height: '0.8rem' }}
+                        />
                         {token.rewards?.stalk}
                       </Typography>{' '}
                       <Typography display="inline" variant="h4">
