@@ -282,7 +282,7 @@ export const BEAN_CRV3_LP = {
     18,
     {
       name: 'BEAN:3CRV LP',
-      symbol: 'BEAN:3CRV',
+      symbol: 'BEAN3CRV',
       logo: beanCrv3LpLogoUrl,
       isLP: true,
       color: '#DFB385'

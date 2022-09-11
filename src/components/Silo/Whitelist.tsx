@@ -95,11 +95,11 @@ const Whitelist : React.FC<{
               <Tooltip
                 title={
                   <>
-                    <strong>vAPY</strong> (Variable APY) uses historical data about Beans earned by Stalkholders to estimate future return for Depositing in the Silo.&nbsp;<Link underline="hover" href="https://docs.bean.money/guides/silo/understand-vapy" target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>Learn more</Link>
+                    <strong>vAPY</strong> (Variable APY) uses historical data about Beans earned by Stalkholders to estimate future returns for Depositing assets in the Silo.&nbsp;<Link underline="hover" href="https://docs.bean.money/guides/silo/understand-vapy" target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>Learn more</Link>
                     <Divider sx={{ my: 1 }} />
                     <Typography fontSize={FontSize.sm}>
-                      <strong>Bean vAPY:</strong> Estimated annual Beans earned by a Stalkholder for depositing an asset.<br />
-                      <strong>Stalk vAPY:</strong> Estimated annual growth in Stalk for depositing an asset.
+                      <strong>Bean vAPY:</strong> Estimated annual Beans earned by a Stalkholder for Depositing an asset.<br />
+                      <strong>Stalk vAPY:</strong> Estimated annual growth in Stalk for Depositing an asset.
                     </Typography>
                   </>
                 }
@@ -227,17 +227,17 @@ const Whitelist : React.FC<{
                             <Row gap={0}>
                               <Box sx={{ px: 1, py: 0.5, maxWidth: 245 }}>
                                 <Stat
-                                  title={<Row gap={0.5}><TokenIcon token={BEAN[1]} /> Beans per Season</Row>}
+                                  title={<Row gap={0.5}><TokenIcon token={BEAN[1]} /> Total Beans per Season</Row>}
                                   gap={0.25}
                                   variant="h4"
                                   amount={(
                                     latestYield ? displayFullBN(latestYield.beansPerSeasonEMA, Bean.displayDecimals) : '0'
                                   )}
-                                  subtitle="14 day exponential moving average of Beans earned by Stalkholders per Season."
+                                  subtitle="14-day exponential moving average of Beans earned by all Stalkholders per Season."
                                 />
                               </Box>
-                              <Box sx={{ px: 1, py: 0.5, maxWidth: 245 }}>
-                                The Variable Bean APY uses a moving average of Beans earned by Stalkholders during recent Seasons to estimate a future rate of return.&nbsp;<Link underline="hover" href="https://docs.bean.money/guides/silo/understand-vapy" target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>Learn more</Link>
+                              <Box sx={{ px: 1, py: 0.5, maxWidth: 275 }}>
+                                The Variable Bean APY uses a moving average of Beans earned by Stalkholders during recent Seasons to estimate a future rate of return, accounting for Stalk growth.&nbsp;<Link underline="hover" href="https://docs.bean.money/guides/silo/understand-vapy" target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>Learn more</Link>
                               </Box>
                             </Row>
                           }
@@ -255,7 +255,7 @@ const Whitelist : React.FC<{
                           placement="right"
                           title={
                             <Box sx={{ maxWidth: 245 }}>
-                              The Stalk APY estimates the growth in your Stalk Ownership for depositing {token.symbol}.&nbsp;<Link underline="hover" href="https://docs.bean.money/guides/silo/understand-vapy#bean-vapy-vs-stalk-vapy" target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>Learn more</Link>
+                              The Variable Stalk APY estimates the growth in your Stalk balance for Depositing {token.symbol}.&nbsp;<Link underline="hover" href="https://docs.bean.money/guides/silo/understand-vapy" target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>Learn more</Link>
                             </Box>
                           }
                         >
@@ -394,11 +394,11 @@ const Whitelist : React.FC<{
                         ? (
                           <Tooltip title={(
                             <>
-                              {displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)} Deposited Beans<br />
+                              {displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)} Deposited BEAN<br />
                               +&nbsp;
                               <Typography display="inline" color="primary">
                                 {displayFullBN(farmerSilo.beans.earned || ZERO_BN, token.displayDecimals)}
-                              </Typography> Earned Beans<br />
+                              </Typography> Earned BEAN<br />
                               <Divider sx={{ my: 0.5, opacity: 0.7, borderBottomWidth: 0, }} />
                               = {displayFullBN(farmerSilo.beans.earned.plus(deposited?.amount || ZERO_BN), token.displayDecimals)} BEAN<br />
                             </> 
