@@ -2,7 +2,7 @@ import {
   createTheme,
   experimental_sx as sx,
   lighten,
-  responsiveFontSizes
+  responsiveFontSizes,
 } from '@mui/material/styles';
 import React from 'react';
 
@@ -19,7 +19,7 @@ declare module '@mui/material/styles' {
   interface PaletteOptions {
     light: PaletteOptions['primary'];
     dark: PaletteOptions['primary'];
-    cancel: PaletteOptions['primary']
+    cancel: PaletteOptions['primary'];
     inverse: PaletteOptions['primary'];
     naked: PaletteOptions['primary'];
   }
@@ -92,6 +92,7 @@ export const BeanstalkPalette = {
   blue: '#C1DEF2',
   lightBlue: '#DAEBF7',
   lightestBlue: '#F6FAFE',
+  skyBlue: '#DBEDFD',
   darkBlue: '#1F78B4',
   // Other
   grey: '#657265',
@@ -135,7 +136,7 @@ export const FontWeight = {
   normal: 400,
   medium: 450,
   semiBold: 600,
-  bold: 700
+  bold: 700,
 };
 
 // FIXME: changes to createTheme don't hot reload.
@@ -149,7 +150,7 @@ let muiTheme = createTheme({
       xl: 1536,
     },
   },
-  
+
   /**
    *
    */
@@ -190,7 +191,7 @@ let muiTheme = createTheme({
     },
     cancel: {
       main: BeanstalkPalette.washedRed,
-      contrastText: '#ffffff'
+      contrastText: '#ffffff',
     },
     naked: {
       main: 'transparent',
@@ -210,13 +211,13 @@ let muiTheme = createTheme({
    */
   typography: {
     fontFamily: 'Futura PT',
-    fontSize:           16,
+    fontSize: 16,
 
     // FONT WEIGHTS
-    fontWeightLight:      FontWeight.normal,
-    fontWeightRegular:    FontWeight.medium,
-    fontWeightMedium:   FontWeight.semiBold,
-    fontWeightBold:         FontWeight.bold,
+    fontWeightLight: FontWeight.normal,
+    fontWeightRegular: FontWeight.medium,
+    fontWeightMedium: FontWeight.semiBold,
+    fontWeightBold: FontWeight.bold,
 
     // page headers
     h1: {
@@ -237,7 +238,7 @@ let muiTheme = createTheme({
     h4: {
       fontSize: FontSize.base, // 16px
       fontWeight: FontWeight.semiBold,
-      lineHeight: '1.25rem' // 20px
+      lineHeight: '1.25rem', // 20px
     },
     // ---
     body1: {
@@ -249,21 +250,21 @@ let muiTheme = createTheme({
     bodySmall: {
       fontFamily: 'Futura PT',
       fontSize: FontSize.sm, // 14px
-      fontWeight: FontWeight.medium
+      fontWeight: FontWeight.medium,
     },
     // nav labels, nav button labels, token labels (module)
     bodyMedium: {
       fontFamily: 'Futura PT',
       fontSize: FontSize['1xl'], // 20px
       fontWeight: FontWeight.medium,
-      lineHeight: '1.875rem'
+      lineHeight: '1.875rem',
     },
     // token inputs (module)
     bodyLarge: {
       fontFamily: 'Futura PT',
       fontSize: FontSize['2xl'], // 24px
       fontWeight: FontWeight.medium,
-      lineHeight: '1.875rem' // 30px
+      lineHeight: '1.875rem', // 30px
     },
     // page subtitles
     subtitle1: {
@@ -310,14 +311,14 @@ let muiTheme = createTheme({
             color: 'dark',
           },
           style: {
-            borderColor: 'rgba(0, 0, 0, 0.26)'
-          }
-        }
+            borderColor: 'rgba(0, 0, 0, 0.26)',
+          },
+        },
       ],
       defaultProps: {
         disableElevation: true,
         variant: 'contained',
-        disableRipple: true
+        disableRipple: true,
       },
       styleOverrides: {
         root: sx({
@@ -343,7 +344,7 @@ let muiTheme = createTheme({
         sizeLarge: sx({
           py: 1.5,
           px: 1.5,
-          height: '60px'
+          height: '60px',
         }),
         disabled: sx({
           pointerEvents: 'auto',
@@ -353,22 +354,21 @@ let muiTheme = createTheme({
         }),
         endIcon: sx({
           marginRight: 0, // prevent adornment from pulling close to right margin
-        })
+        }),
       },
     },
     MuiAlert: {
-      defaultProps: {
-      },
+      defaultProps: {},
       styleOverrides: {
         root: sx({
           px: 1,
           alignItems: 'center',
           '& .MuiAlert-icon': {
             m: 0,
-            p: 0
-          }
+            p: 0,
+          },
         }),
-      }
+      },
     },
     MuiTooltip: {
       defaultProps: {
@@ -379,10 +379,10 @@ let muiTheme = createTheme({
       variants: [
         {
           props: {
-            variant: 'wide'
+            variant: 'wide',
           },
-          style: {}
-        }
+          style: {},
+        },
       ],
       styleOverrides: {
         tooltip: sx({
@@ -395,7 +395,7 @@ let muiTheme = createTheme({
           p: 1,
           px: 1.25,
         }),
-      }
+      },
     },
     MuiAccordion: {
       defaultProps: {
@@ -424,7 +424,7 @@ let muiTheme = createTheme({
         root: sx({
           minHeight: '0 !important',
           my: 0,
-          px: 1
+          px: 1,
         }),
         expanded: sx({
           minHeight: '0 !important',
@@ -437,26 +437,25 @@ let muiTheme = createTheme({
         root: sx({
           pt: 0,
           pb: 1,
-        })
-      }
+        }),
+      },
     },
     MuiTextField: {
       defaultProps: {
         color: 'secondary',
       },
       styleOverrides: {
-        root: {
-        },
+        root: {},
       },
     },
     MuiInputBase: {
       styleOverrides: {
         root: {
-          fontSize: '1.5rem'
+          fontSize: '1.5rem',
         },
         sizeSmall: {
-          fontSize: '1.1rem'
-        }
+          fontSize: '1.1rem',
+        },
       },
     },
     MuiListItem: {
@@ -466,8 +465,8 @@ let muiTheme = createTheme({
             backgroundColor: BeanstalkPalette.lightGreen,
             borderRadius: 1,
           },
-        })
-      }
+        }),
+      },
     },
     MuiListItemButton: {
       styleOverrides: {
@@ -477,24 +476,23 @@ let muiTheme = createTheme({
           py: 1,
           border: '2px solid white',
         }),
-      }
+      },
     },
     MuiList: {
       styleOverrides: {
         root: sx({
           // p: 0
-        })
-      }
+        }),
+      },
     },
     MuiListItemText: {
       styleOverrides: {
-        root: {
-        },
+        root: {},
       },
     },
     MuiTabs: {
       defaultProps: {
-        variant: 'scrollable'
+        variant: 'scrollable',
       },
       styleOverrides: {
         root: sx({
@@ -529,7 +527,7 @@ let muiTheme = createTheme({
             color: BeanstalkPalette.black,
             labelIcon: {
               color: BeanstalkPalette.black,
-            }
+            },
           },
           // FIXME: unsure why `selected` style
           // override doesn't work here.
@@ -552,8 +550,7 @@ let muiTheme = createTheme({
       //     }),
       //   }
       // ],
-      styleOverrides: {
-      },
+      styleOverrides: {},
     },
     MuiButtonGroup: {
       defaultProps: {
@@ -569,7 +566,7 @@ let muiTheme = createTheme({
           },
           '&.MuiTab-iconWrapper': {
             color: BeanstalkPalette.black,
-            mr: 0
+            mr: 0,
           },
         },
       },
@@ -581,58 +578,56 @@ let muiTheme = createTheme({
       },
     },
     MuiDialog: {
-      defaultProps: {  
+      defaultProps: {
         transitionDuration: 0,
         PaperProps: {
           sx: {
             minWidth: { xs: '95%', sm: '400px' },
-          }
-        }
+          },
+        },
       },
       styleOverrides: {
-        root: sx({
-
-        })
-      }
+        root: sx({}),
+      },
     },
     MuiDialogContent: {
       styleOverrides: {
         root: sx({
           px: 1,
           // pb: 0.5,
-        })
-      }
+        }),
+      },
     },
     MuiChip: {
       variants: [
         {
           props: {
             variant: 'filled',
-            color: 'primary'
+            color: 'primary',
           },
           style: sx({
             color: BeanstalkPalette.logoGreen,
             backgroundColor: BeanstalkPalette.lightestGreen,
-          })
+          }),
         },
         {
           props: {
             variant: 'filled',
-            color: 'secondary'
+            color: 'secondary',
           },
           style: sx({
             color: BeanstalkPalette.darkBlue,
             backgroundColor: BeanstalkPalette.lightestBlue,
-          })
-        }
+          }),
+        },
       ],
       styleOverrides: {
         root: sx({
           fontWeight: 'normal',
-          borderRadius: 1
-        })
-      }
-    }
+          borderRadius: 1,
+        }),
+      },
+    },
   },
 });
 

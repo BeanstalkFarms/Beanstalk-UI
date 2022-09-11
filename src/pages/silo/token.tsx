@@ -8,6 +8,7 @@ import PageHeaderSecondary from '~/components/Common/PageHeaderSecondary';
 import TokenIcon from '~/components/Common/TokenIcon';
 import SiloActions from '~/components/Silo/Actions';
 import PoolCard from '~/components/Silo/PoolCard';
+import PoolOverviewCard from '~/components/Silo/PoolOverviewCard';
 import usePools from '~/hooks/beanstalk/usePools';
 import useWhitelist from '~/hooks/beanstalk/useWhitelist';
 import { AppState } from '~/state';
@@ -79,22 +80,27 @@ const TokenPage: React.FC<{}> = () => {
             />
           }
         />
-        {whitelistedToken.isLP && (
-          <PoolCard
-            pool={pool}
-            poolState={poolState}
-            //   ButtonProps={{
-            //     href: `https://etherscan.io/address/${pool.address}`,
-            //     target: '_blank',
-            //     rel: 'noreferrer'
-            //   }}
-          />
-        )}
-        <SiloActions
-          pool={pool}
-          token={whitelistedToken as ERC20Token}
-          siloBalance={siloBalance}
-        />
+        <Stack gap={2} direction={{ xs: 'column', lg: 'row' }}>
+          <PoolOverviewCard token={whitelistedToken} />
+          <Stack gap={2}>
+            {whitelistedToken.isLP && (
+              <PoolCard
+                pool={pool}
+                poolState={poolState}
+                //   ButtonProps={{
+                //     href: `https://etherscan.io/address/${pool.address}`,
+                //     target: '_blank',
+                //     rel: 'noreferrer'
+                //   }}
+              />
+            )}
+            <SiloActions
+              pool={pool}
+              token={whitelistedToken as ERC20Token}
+              siloBalance={siloBalance}
+            />
+          </Stack>
+        </Stack>
       </Stack>
     </Container>
   );

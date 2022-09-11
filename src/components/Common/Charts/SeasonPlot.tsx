@@ -1,15 +1,22 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { Stack, Box, CircularProgress, Typography } from '@mui/material';
+import { QueryOptions } from '@apollo/client';
+import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import { Line } from '@visx/shape';
 import { DocumentNode } from 'graphql';
-import { QueryOptions } from '@apollo/client';
-import Stat, { StatProps } from '~/components/Common/Stat';
-import LineChart, { DataPoint, LineChartProps } from '~/components/Common/Charts/LineChart';
-import useSeasonsQuery, { MinimumViableSnapshotQuery, SeasonAggregation, SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
+import React, { useCallback, useMemo, useState } from 'react';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import TimeTabs, { TimeTabState } from './TimeTabs';
-import { sortSeasons } from '~/util/Season';
+import LineChart, {
+  DataPoint,
+  LineChartProps
+} from '~/components/Common/Charts/LineChart';
 import StackedAreaChart from '~/components/Common/Charts/StackedAreaChart';
+import Stat, { StatProps } from '~/components/Common/Stat';
+import useSeasonsQuery, {
+  MinimumViableSnapshotQuery,
+  SeasonAggregation,
+  SeasonRange
+} from '~/hooks/beanstalk/useSeasonsQuery';
+import { sortSeasons } from '~/util/Season';
+import TimeTabs, { TimeTabState } from './TimeTabs';
 
 const defaultValueFormatter = (value: number) => value.toFixed(4);
 
@@ -37,26 +44,27 @@ export type SeasonPlotBaseProps = {
   height?: number | string;
   /** True if this plot should be a StackedAreaChard */
   stackedArea?: boolean;
-}
-type SeasonPlotFinalProps<T extends MinimumViableSnapshotQuery> = (
-  SeasonPlotBaseProps
-  & {
+};
+type SeasonPlotFinalProps<T extends MinimumViableSnapshotQuery> =
+  SeasonPlotBaseProps & {
     /**
      * Which value to display from the Season object
      */
-    getValue: (snapshot: T['seasons'][number]) => number,
+    getValue: (snapshot: T['seasons'][number]) => number;
     /**
      * Format the value from number -> string
      */
-    formatValue?: (value: number) => string | JSX.Element,
+    formatValue?: (value: number) => string | JSX.Element;
     /**
      *
      */
-    queryConfig?: Partial<QueryOptions>
-  }
-  & { StatProps: Omit<StatProps, 'amount' | 'subtitle'> }
-  & { LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP' | 'yAxisMultiplier'> }
-)
+    queryConfig?: Partial<QueryOptions>;
+  } & { StatProps: Omit<StatProps, 'amount' | 'subtitle'> } & {
+    LineChartProps?: Pick<
+      LineChartProps,
+      'curve' | 'isTWAP' | 'yAxisMultiplier'
+    >;
+  };
 
 /**
  *
@@ -68,41 +76,60 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
   getValue,
   formatValue = defaultValueFormatter,
   height = '175px',
-  StatProps: statProps,           // renamed to prevent type collision
+  StatProps: statProps, // renamed to prevent type collision
   LineChartProps: lineChartProps, // renamed to prevent type collision
   queryConfig,
   stackedArea,
 }: SeasonPlotFinalProps<T>) {
   /// Selected state
-  const [tabState, setTimeTab] = useState<TimeTabState>([SeasonAggregation.HOUR, SeasonRange.WEEK]);
+  const [tabState, setTimeTab] = useState<TimeTabState>([
+    SeasonAggregation.HOUR,
+    SeasonRange.WEEK,
+  ]);
 
   /// Display values
-  const [displayValue, setDisplayValue] = useState<number | undefined>(undefined);
-  const [displaySeason, setDisplaySeason] = useState<number | undefined>(undefined);
+  const [displayValue, setDisplayValue] = useState<number | undefined>(
+    undefined
+  );
+  const [displaySeason, setDisplaySeason] = useState<number | undefined>(
+    undefined
+  );
 
   ///
-  const { loading, error, data } = useSeasonsQuery<T>(document, tabState[1], queryConfig);
+  const { loading, error, data } = useSeasonsQuery<T>(
+    document,
+    tabState[1],
+    queryConfig
+  );
   const series = useMemo(() => {
-    console.debug(`[SeasonPlot] Building series with ${data?.seasons.length || 0} data points`, data);
+    console.debug(
+      `[SeasonPlot] Building series with ${
+        data?.seasons.length || 0
+      } data points`,
+      data
+    );
     if (data) {
       const lastIndex = data.seasons.length - 1;
-      const baseData  = data.seasons.reduce<SeasonDataPoint[]>(
+      const baseData = data.seasons.reduce<SeasonDataPoint[]>(
         (prev, curr, index) => {
           // FIXME: use different query for day aggregation
-          const useThisDataPoint = tabState[0] === SeasonAggregation.DAY ? (
-            index === 0              // first in the series
-            || index === lastIndex   // last in the series
-            || index % 24 === 0      // grab every 24th data point
-          ) : true;
+          const useThisDataPoint =
+            tabState[0] === SeasonAggregation.DAY
+              ? index === 0 || // first in the series
+                index === lastIndex || // last in the series
+                index % 24 === 0 // grab every 24th data point
+              : true;
 
           if (useThisDataPoint && curr !== null) {
             prev.push({
               season: curr.season as number,
-              date:   curr.timestamp ? new Date(parseInt(`${curr.timestamp}000`, 10)) : undefined,
-              value:  getValue(curr),
+              date: curr.timestamp
+                ? new Date(parseInt(`${curr.timestamp}000`, 10))
+                : undefined,
+              value: getValue(curr),
             });
           }
-          
+
           return prev;
         },
         []
@@ -113,26 +140,16 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
       return baseData.sort(sortSeasons); // FIXME: mapsort
     }
     return [];
-  }, [
-    data,
-    tabState,
-    getValue
-  ]);
+  }, [data, tabState, getValue]);
 
   /// Handlers
-  const handleChangeTimeTab = useCallback(
-    (tabs: TimeTabState) => {
-      setTimeTab(tabs);
-    },
-    []
-  );
-  const handleCursor = useCallback(
-    (dps?: SeasonDataPoint[]) => {
-      setDisplayValue(dps ? dps[0].value : undefined);
-      setDisplaySeason(dps ? dps[0].season : undefined);
-    },
-    []
-  );
+  const handleChangeTimeTab = useCallback((tabs: TimeTabState) => {
+    setTimeTab(tabs);
+  }, []);
+  const handleCursor = useCallback((dps?: SeasonDataPoint[]) => {
+    setDisplayValue(dps ? dps[0].value : undefined);
+    setDisplaySeason(dps ? dps[0].season : undefined);
+  }, []);
 
   /// If one of the defaults is missing, use the last data point.
   let defaultValue = _defaultValue || 0;
@@ -153,25 +170,35 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
         <Stat
           {...statProps}
           amount={
-            loading 
-              ? <CircularProgress variant="indeterminate" size="1.18em" thickness={5} />
-              : formatValue(displayValue !== undefined ? displayValue : defaultValue)
+            loading ? (
+              <CircularProgress
+                variant="indeterminate"
+                size="1.18em"
+                thickness={5}
+              />
+            ) : (
+              formatValue(
+                displayValue !== undefined ? displayValue : defaultValue
+              )
+            )
           }
-          subtitle={`Season ${(displaySeason !== undefined ? displaySeason : defaultSeason).toFixed()}`}
+          subtitle={`Season ${(displaySeason !== undefined
+            ? displaySeason
+            : defaultSeason
+          ).toFixed()}`}
         />
         <Stack alignItems="right">
-          <TimeTabs
-            state={tabState}
-            setState={handleChangeTimeTab}
-          />
+          <TimeTabs state={tabState} setState={handleChangeTimeTab} />
         </Stack>
       </Stack>
       {/* Chart Container */}
       <Box sx={{ width: '100%', height, position: 'relative' }}>
-        {(loading || series.length === 0) ? (
+        {loading || series.length === 0 ? (
           <Stack height="100%" alignItems="center" justifyContent="center">
             {error ? (
-              <Typography>An error occurred while loading this data.</Typography>
+              <Typography>
+                An error occurred while loading this data.
+              </Typography>
             ) : (
               <CircularProgress variant="indeterminate" />
             )}
