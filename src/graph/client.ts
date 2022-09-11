@@ -113,6 +113,7 @@ const cache = new InMemoryCache({
         beanHourlySnapshots: mergeUsingSeasons([]),
         siloAssetHourlySnapshots: mergeUsingSeasons(['$siloAsset']),
         siloHourlySnapshots: mergeUsingSeasons([]),
+        siloYields: mergeUsingSeasons([]),
       }
     }
   }

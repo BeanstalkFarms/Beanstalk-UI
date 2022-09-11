@@ -76,7 +76,7 @@ const strokes = [
 export type DataPoint = {
   season: number;
   value: number;
-  date: Date;
+  date?: Date;
 };
 
 // data accessors
@@ -244,7 +244,11 @@ const Graph: React.FC<GraphProps> = (props) => {
       return series[0].reduce<[number[], string[]]>((prev, curr, i) => {
         if (i % interval === shift) {
           prev[0].push(curr.season);
-          prev[1].push(`${(curr.date).getMonth() + 1}/${(curr.date).getDate()}`);
+          prev[1].push(
+            curr.date
+              ? `${(curr.date).getMonth() + 1}/${(curr.date).getDate()}`
+              : curr.season.toString() // fallback to season if no date provided
+          );
         }
         return prev;
       }, [[], []]);

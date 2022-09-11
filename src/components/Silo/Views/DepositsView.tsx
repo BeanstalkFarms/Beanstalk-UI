@@ -1,7 +1,7 @@
 import { Box, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import React, { useCallback, useEffect, useState } from 'react';
-import { displayBN, displayUSD } from '~/util';
+import { displayUSD } from '~/util';
 import LineChart, { DataPoint } from '~/components/Common/Charts/LineChart';
 import Stat from '~/components/Common/Stat';
 import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
@@ -34,7 +34,7 @@ const DepositsView: React.FC<TabData> = ({ season, current, series }) => {
       <Box sx={{ px: 2 }}>
         <Stat
           title="Value Deposited"
-          subtitle={`Season ${displayBN(season)}`}
+          subtitle={`Season ${season.toString()}`}
           amount={displayUSD(displayValue[0])}
           color="primary"
           amountIcon={undefined}

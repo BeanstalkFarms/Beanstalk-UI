@@ -87,6 +87,7 @@ export const BeanstalkPalette = {
   mediumGreen: lighten('#46B955', 0.7),
   lightGreen: '#E1F8E6',
   supportGreen: '#19873B',
+  lightestGreen: '#EDF8EE',
   // Blues
   blue: '#C1DEF2',
   lightBlue: '#DAEBF7',
@@ -602,6 +603,36 @@ let muiTheme = createTheme({
         })
       }
     },
+    MuiChip: {
+      variants: [
+        {
+          props: {
+            variant: 'filled',
+            color: 'primary'
+          },
+          style: sx({
+            color: BeanstalkPalette.logoGreen,
+            backgroundColor: BeanstalkPalette.lightestGreen,
+          })
+        },
+        {
+          props: {
+            variant: 'filled',
+            color: 'secondary'
+          },
+          style: sx({
+            color: BeanstalkPalette.darkBlue,
+            backgroundColor: BeanstalkPalette.lightestBlue,
+          })
+        }
+      ],
+      styleOverrides: {
+        root: sx({
+          fontWeight: 'normal',
+          borderRadius: 1
+        })
+      }
+    }
   },
 });
 

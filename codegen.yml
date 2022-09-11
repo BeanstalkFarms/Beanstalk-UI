@@ -1,7 +1,7 @@
 overwrite: true
 schema: [
-  "https://api.thegraph.com/subgraphs/name/cujowolf/beanstalk",
-  "https://api.thegraph.com/subgraphs/name/cujowolf/bean",
+  "https://graph.node.bean.money/subgraphs/name/beanstalk-testing",
+  "https://graph.node.bean.money/subgraphs/name/bean-testing",
   "https://hub.snapshot.org/graphql"
 ]
 documents: "src/**/*.graphql"
