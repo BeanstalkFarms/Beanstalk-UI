@@ -7,10 +7,8 @@ const InfoContent = styled(Stack)(({ theme }) => ({
   padding: '20px',
   boxSizing: 'border-box',
   justifyContent: 'space-between',
-  [theme.breakpoints.up('md')]: {
-    height: '250px',
-    maxWidth: '40%',
-  },
+  height: '250px',
+  maxWidth: '40%',
   [theme.breakpoints.down('md')]: {
     height: '225px',
     maxWidth: '100%',
@@ -29,6 +27,7 @@ const PoolEducationContent: React.FC<PoolEducationContentProps> = ({
   imageSrc,
 }) => (
   <Stack direction={{ xs: 'column', md: 'row' }}>
+    {/* Image */}
     <Stack
       sx={{
         width: '100%',
@@ -43,6 +42,8 @@ const PoolEducationContent: React.FC<PoolEducationContentProps> = ({
         style={{ objectFit: 'cover', height: 'auto', width: '100%' }}
       />
     </Stack>
+
+    {/* Information content */}
     <InfoContent>
       <Stack sx={{ pb: '20px' }}>
         <Typography>{title}</Typography>

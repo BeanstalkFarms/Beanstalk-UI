@@ -9,13 +9,20 @@ interface Props {
   paginationSx?: React.CSSProperties | SxProps<Theme>;
 }
 
+interface CarouselState {
+  page: number;
+  direction: 'left' | 'right';
+}
+
 const Carousel: React.FC<Props> = ({
   elements,
   hidePaginationControl,
   paginationSx,
 }) => {
-  const [page, setPage] = useState<number>(0);
-  const [direction, setDirection] = useState<'left' | 'right'>('right');
+  const [{ page, direction }, setState] = useState<CarouselState>({
+    page: 0,
+    direction: 'right',
+  });
 
   const transRef = useSpringRef();
   const transitions = useTransition(page, {
@@ -49,8 +56,10 @@ const Carousel: React.FC<Props> = ({
   const onPageClick = useCallback(
     (val: number) => {
       if (val < 0 || val >= elements.length) return;
-      setDirection(val > page ? 'right' : 'left');
-      setPage(val);
+      setState({
+        direction: val > page ? 'right' : 'left',
+        page: val,
+      });
     },
     [elements.length, page]
   );

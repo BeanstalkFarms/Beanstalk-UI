@@ -1,6 +1,7 @@
+import React, { useMemo } from 'react';
 import CallMadeIcon from '@mui/icons-material/CallMade';
 import { Card, Chip, Stack, Typography } from '@mui/material';
-import React from 'react';
+import { useSelector } from 'react-redux';
 import { ERC20Token } from '~/classes/Token';
 import {
   BEAN,
@@ -14,7 +15,7 @@ import { BeanstalkPalette, FontSize } from '../App/muiTheme';
 import Stat from '../Common/Stat';
 import TokenIcon from '../Common/TokenIcon';
 
-import { BEANSTALK_ADDRESSES } from '~/constants';
+import { BEANSTALK_ADDRESSES, ONE_BN, ZERO_BN } from '~/constants';
 import useAPY from '~/hooks/beanstalk/useAPY';
 import EducationDepositImage from '~/img/beanstalk/education/educationDepositImg.svg';
 import EducationEarnImage from '~/img/beanstalk/education/educationEarnImg.svg';
@@ -24,6 +25,9 @@ import Carousel from '../Common/Carousel';
 import PoolEducationContent, {
   PoolEducationContentProps,
 } from './PoolEducationContent';
+import { AppState } from '~/state';
+import useSiloTokenToFiat from '~/hooks/beanstalk/useSiloTokenToFiat';
+import { displayFullBN } from '~/util';
 
 const depositedAssetMap = {
   [BEAN[1].address]: {
@@ -42,6 +46,19 @@ const depositedAssetMap = {
     asset: UNRIPE_BEAN_CRV3[1],
     account: BEANSTALK_ADDRESSES[1],
   },
+};
+
+const getName = (address: string) => {
+  if (address === BEAN[1].address) {
+    return 'BEAN';
+  }
+  if (address === BEAN_CRV3_LP[1].address) {
+    return 'BEAN 3CRV';
+  }
+  if (address === UNRIPE_BEAN[1].address) {
+    return 'UNRIPE BEAN';
+  }
+  return 'UNRIPE BEAN 3CRV';
 };
 
 const getOptions = (tokenName: string): PoolEducationContentProps[] => [
@@ -71,41 +88,77 @@ const getOptions = (tokenName: string): PoolEducationContentProps[] => [
   },
 ];
 
+const usePctOfTotalSiloValueWithToken = (token: ERC20Token) => {
+  const balances = useSelector<
+    AppState,
+    AppState['_beanstalk']['silo']['balances']
+  >((state) => state._beanstalk.silo.balances);
+  const unripeTokens = useSelector<AppState, AppState['_bean']['unripe']>(
+    (state) => state._bean.unripe
+  );
+  const siloTokenToFiat = useSiloTokenToFiat();
+
+  return useMemo(() => {
+    const isUnripe = (address: string) =>
+      address === UNRIPE_BEAN[1].address ||
+      address === UNRIPE_BEAN_CRV3[1].address;
+    const getDepositedAmount = (address: string) => {
+      if (isUnripe(address)) {
+        const deposited = balances[address]?.deposited.amount ?? ZERO_BN;
+        const depositSupply = unripeTokens[address]?.supply ?? ONE_BN;
+        const pctUnderlyingDeposited = deposited.div(depositSupply);
+        const underlyingAmount = unripeTokens[address]?.underlying ?? ZERO_BN;
+        return pctUnderlyingDeposited.times(underlyingAmount);
+      }
+      return balances[address]?.deposited.amount;
+    };
+
+    const currTokenFiatValue = siloTokenToFiat(
+      token,
+      getDepositedAmount(token.address),
+      'usd',
+      !isUnripe(token.address)
+    );
+    const aggSiloFiatValue = Object.values(depositedAssetMap)
+      .map(({ asset }) =>
+        siloTokenToFiat(
+          asset,
+          getDepositedAmount(asset.address),
+          'usd',
+          !isUnripe(asset.address)
+        )
+      )
+      .reduce((prev, curr) => prev.plus(curr), ZERO_BN);
+
+    return currTokenFiatValue.div(aggSiloFiatValue).times(100);
+  }, [balances, siloTokenToFiat, token, unripeTokens]);
+};
+
+const useApysWithToken = (token: ERC20Token) => {
+  const { data: latestYield } = useAPY();
+
+  return useMemo(() => {
+    const seeds = token.getSeeds();
+    return latestYield
+      ? seeds.eq(2)
+        ? latestYield.bySeeds['2']
+        : seeds.eq(4)
+        ? latestYield.bySeeds['4']
+        : null
+      : null;
+  }, [token, latestYield]);
+};
+
 const PoolOverviewCard: React.FC<{
   token: ERC20Token;
 }> = ({ token }) => {
-  const apyQuery = useAPY();
-
-  console.log(apyQuery.data);
-
-  const asset = depositedAssetMap[token.address];
-
-  const renderVariableApyAmount = () => (
-    <Stack direction="row" gap={0.5}>
-      <Typography color="primary" variant="h2">
-        ~5.67%
-      </Typography>
-      <Chip
-        sx={{ borderRadius: '16px', height: '28px' }}
-        label={
-          <>
-            <Typography display="inline" variant="h4">
-              <TokenIcon token={STALK} style={{ marginTop: '1px' }} />
-              {token.rewards?.stalk}
-            </Typography>{' '}
-            <Typography display="inline" variant="h4">
-              <TokenIcon token={SEEDS} style={{ marginTop: '2px' }} />
-              {token.rewards?.seeds}
-            </Typography>
-          </>
-        }
-      />
-    </Stack>
-  );
+  const apys = useApysWithToken(token);
+  const pctValue = usePctOfTotalSiloValueWithToken(token);
 
   return (
     <Card sx={{ p: 2, width: '100%' }}>
       <Stack gap={2}>
+        {/* Title */}
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Typography variant="h4">{token.name} Overview</Typography>
           <Typography
@@ -121,27 +174,54 @@ const PoolOverviewCard: React.FC<{
             <CallMadeIcon sx={{ fontSize: FontSize.xs, ml: '5px' }} />
           </Typography>
         </Stack>
-        <Stack direction="row" justifyContent="space-between">
+
+        {/* Stats */}
+        <Stack direction="row" justifyContent="space-between" gap={2}>
           <Stat
             gap={0}
             title="Variable APY"
-            amount={renderVariableApyAmount()}
+            amount={
+              <Stack direction="row" gap={0.5}>
+                <Typography color="primary" variant="h2">
+                  {apys ? `${apys.bean.times(100).toFixed(1)}%` : '0.00%'}
+                </Typography>
+                <Chip
+                  sx={{ borderRadius: '16px', height: '28px' }}
+                  label={
+                    <>
+                      <Typography display="inline" variant="h4">
+                        <TokenIcon token={STALK} style={{ marginTop: '1px' }} />
+                        {token.rewards?.stalk}
+                      </Typography>{' '}
+                      <Typography display="inline" variant="h4">
+                        <TokenIcon token={SEEDS} style={{ marginTop: '2px' }} />
+                        {token.rewards?.seeds}
+                      </Typography>
+                    </>
+                  }
+                />
+              </Stack>
+            }
           />
-          <Stat
-            gap={0}
-            title="% of total value Deposited in Silo"
-            amount="27.52%"
-            variant="bodyLarge"
-            sx={{ alignSelf: 'flex-end' }}
-          />
+          <Stack textAlign="right">
+            <Stat
+              gap={0}
+              title="% of total value Deposited in Silo"
+              amount={`${displayFullBN(pctValue, 2, 2)}%`}
+              variant="bodyLarge"
+              sx={{ alignSelf: 'flex-end' }}
+            />
+          </Stack>
         </Stack>
+        {/* Token Graph */}
         <Card sx={{ borderColor: BeanstalkPalette.blue, pt: 2 }}>
           <DepositedAsset
-            asset={asset.asset}
-            account={asset.account}
+            asset={depositedAssetMap[token.address].asset}
+            account={depositedAssetMap[token.address].account}
             height={230}
           />
         </Card>
+        {/* Card Carousel */}
         <Stack>
           <Card sx={{ borderColor: BeanstalkPalette.blue }}>
             <Carousel
