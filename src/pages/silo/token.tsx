@@ -16,6 +16,7 @@ import { HOW_TO_CLAIM_WITHDRAWALS,
   HOW_TO_DEPOSIT_IN_THE_SILO, HOW_TO_TRANSFER_DEPOSITS,
   HOW_TO_WITHDRAW_FROM_THE_SILO
 } from '~/util/Guides';
+import PoolOverviewCard from '~/components/Silo/PoolOverviewCard';
 
 const TokenPage: React.FC<{}> = () => {
   // Constants
@@ -50,10 +51,11 @@ const TokenPage: React.FC<{}> = () => {
   if (!whitelistedToken) return null;
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="lg">
       <Stack gap={2}>
         <PageHeaderSecondary
           title={whitelistedToken.name}
+          titleAlign="left"
           icon={<TokenIcon style={{ marginTop: 3 }} token={whitelistedToken} />}
           returnPath="/silo"
           control={
@@ -69,22 +71,27 @@ const TokenPage: React.FC<{}> = () => {
             />
           }
         />
-        {whitelistedToken.isLP && (
-          <PoolCard
-            pool={pool}
-            poolState={poolState}
-          //   ButtonProps={{
-          //     href: `https://etherscan.io/address/${pool.address}`,
-          //     target: '_blank',
-          //     rel: 'noreferrer'
-          //   }}
-          />
-        )}
-        <SiloActions
-          pool={pool}
-          token={whitelistedToken as ERC20Token}
-          siloBalance={siloBalance}
-        />
+        <Stack gap={2} direction={{ xs: 'column', lg: 'row' }}>
+          <PoolOverviewCard token={whitelistedToken} />
+          <Stack gap={2}>
+            {whitelistedToken.isLP && (
+              <PoolCard
+                pool={pool}
+                poolState={poolState}
+                //   ButtonProps={{
+                //     href: `https://etherscan.io/address/${pool.address}`,
+                //     target: '_blank',
+                //     rel: 'noreferrer'
+                //   }}
+              />
+            )}
+            <SiloActions
+              pool={pool}
+              token={whitelistedToken as ERC20Token}
+              siloBalance={siloBalance}
+            /> 
+          </Stack>
+        </Stack>
       </Stack>
     </Container>
   );

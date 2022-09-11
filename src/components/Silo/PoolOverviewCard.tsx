@@ -178,7 +178,7 @@ const PoolOverviewCard: React.FC<{
                   label={
                     <>
                       <Typography display="inline" variant="h4">
-                        <TokenIcon token={STALK} style={{ marginTop: '1px' }} />
+                        <TokenIcon token={STALK} style={{ marginTop: '4px', height: '0.8rem' }} />
                         {token.rewards?.stalk}
                       </Typography>{' '}
                       <Typography display="inline" variant="h4">
