@@ -8,6 +8,7 @@ import Row from '~/components/Common/Row';
 const PageHeader : React.FC<{
   /** The Field: The Decentralized Credit Facility */
   title?: string | JSX.Element;
+  titleAlign?: 'left' | 'center';
   icon?: JSX.Element;
   /** Show a back button to return to `returnPath`. */
   returnPath?: string;
@@ -50,8 +51,12 @@ const PageHeader : React.FC<{
             {typeof props.title === 'string' ? (
               <Typography
                 variant="h2"
-                textAlign="center"
-                sx={{ verticalAlign: 'middle' }}
+                textAlign={props.titleAlign ?? 'center'}
+                sx={{
+                  ml: props.titleAlign ? 1.5 : 0,
+                  verticalAlign: 'middle',
+                  width: '100%',
+                }}
               >
                 {props.icon}&nbsp;
                 {props.title}
