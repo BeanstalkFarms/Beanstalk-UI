@@ -33,8 +33,8 @@ const APY: React.FC<{
     )}
     formatValue={formatValue}
     StatProps={useMemo(() => ({
-      title: `${metric} vAPY`,
-      titleTooltip: 'A variable estimate of return for depositing into the Silo.',
+      title: `Bean vAPY for Deposited ${metric}`,
+      titleTooltip: 'The Variable Bean APY uses a moving average of Beans earned by Stalkholders during recent Seasons to estimate a future rate of return, accounting for Stalk growth.',
       gap: 0.5,
     }), [metric])}
     queryConfig={queryConfig}
