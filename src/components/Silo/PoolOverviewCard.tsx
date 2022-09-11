@@ -4,6 +4,7 @@ import CallMadeIcon from '@mui/icons-material/CallMade';
 import { Card, Chip, Stack, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 
+import { useNavigate } from 'react-router-dom';
 import { ERC20Token } from '~/classes/Token';
 import {
   BEAN,
@@ -142,6 +143,7 @@ const PoolOverviewCard: React.FC<{
 }> = ({ token }) => {
   const apys = useApysWithToken(token);
   const pctValue = usePctOfTotalSiloValueWithToken(token);
+  const navigate = useNavigate();
 
   return (
     <Card sx={{ p: 2, width: '100%' }}>
@@ -156,6 +158,9 @@ const PoolOverviewCard: React.FC<{
               ':hover': {
                 color: BeanstalkPalette.logoGreen,
               },
+            }}
+            onClick={() => {
+              navigate('/');
             }}
           >
             View liquidity
