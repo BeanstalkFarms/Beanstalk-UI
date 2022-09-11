@@ -9,9 +9,26 @@ const InfoContent = styled(Stack)(({ theme }) => ({
   justifyContent: 'space-between',
   height: '250px',
   maxWidth: '40%',
-  [theme.breakpoints.down('md')]: {
-    height: '225px',
-    maxWidth: '100%',
+  [theme.breakpoints.between('sm', 'md')]: {
+    height: '175px !important',
+    maxWidth: '100% !important',
+  },
+  [theme.breakpoints.down('sm')]: {
+    height: '225px !important',
+    maxWidth: '100% !important',
+  },
+}));
+
+const Image = styled('img')(({ theme }) => ({
+  objectFit: 'cover',
+  alignSelf: 'center',
+  [theme.breakpoints.up('lg')]: {
+    width: '100%',
+    height: 'auto',
+  },
+  [theme.breakpoints.down('lg')]: {
+    height: '100%',
+    width: 'auto',
   },
 }));
 
@@ -27,23 +44,17 @@ const PoolEducationContent: React.FC<PoolEducationContentProps> = ({
   imageSrc,
 }) => (
   <Stack direction={{ xs: 'column', md: 'row' }}>
-    {/* Image */}
     <Stack
+      alignItems={{ lg: 'flex-end' }}
+      justifyContent="flex-end"
       sx={{
-        width: '100%',
-        justifyContent: 'flex-end',
         background: BeanstalkPalette.skyBlue,
-        maxHeight: '250px',
+        width: '100%',
+        height: '250px',
       }}
     >
-      <img
-        src={imageSrc}
-        alt=""
-        style={{ objectFit: 'cover', height: 'auto', width: '100%' }}
-      />
+      <Image src={imageSrc} alt="" />
     </Stack>
-
-    {/* Information content */}
     <InfoContent>
       <Stack sx={{ pb: '20px' }}>
         <Typography>{title}</Typography>

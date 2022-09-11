@@ -48,19 +48,6 @@ const depositedAssetMap = {
   },
 };
 
-const getName = (address: string) => {
-  if (address === BEAN[1].address) {
-    return 'BEAN';
-  }
-  if (address === BEAN_CRV3_LP[1].address) {
-    return 'BEAN 3CRV';
-  }
-  if (address === UNRIPE_BEAN[1].address) {
-    return 'UNRIPE BEAN';
-  }
-  return 'UNRIPE BEAN 3CRV';
-};
-
 const getOptions = (tokenName: string): PoolEducationContentProps[] => [
   {
     title: `Deposit ${tokenName}`,
@@ -223,7 +210,16 @@ const PoolOverviewCard: React.FC<{
         </Card>
         {/* Card Carousel */}
         <Stack>
-          <Card sx={{ borderColor: BeanstalkPalette.blue }}>
+          <Card
+            // heights are defined here otherwise layout jumps occur during animation
+            sx={({ breakpoints }) => ({
+              borderColor: BeanstalkPalette.blue,
+              overflow: 'hidden',
+              [breakpoints.up('md')]: { height: '250px' },
+              [breakpoints.between('sm', 'md')]: { height: '425px' },
+              [breakpoints.down('sm')]: { height: '475px' },
+            })}
+          >
             <Carousel
               elements={getOptions(token.name).map((props, i) => (
                 <PoolEducationContent key={i} {...props} />
