@@ -8,8 +8,9 @@ import useWhitelist from './useWhitelist';
 import { BeanstalkSiloBalance } from '~/state/beanstalk/silo';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
-import { BEAN } from '~/constants/tokens';
+import { BEAN, BEAN_CRV3_LP } from '~/constants/tokens';
 import useUnripeUnderlyingMap from '~/hooks/beanstalk/useUnripeUnderlying';
+import { UnripeToken } from '~/state/bean/unripe';
 
 // -----------------
 // Types and Helpers
@@ -19,7 +20,7 @@ export const STATE_CONFIG = {
   pooled: [
     'Pooled',
     '#8CB4CF',
-    (name: string) => `${name} in all liquidity pools.`
+    (name: string) => `${name} in all liquidity pools. Does not include Beans that make up Ripe BEAN:3CRV.`
   ],
   deposited: [
     'Deposited',
@@ -29,22 +30,27 @@ export const STATE_CONFIG = {
   withdrawn: [
     'Withdrawn & Claimable',
     '#E17E76', 
-    (name: string) => `${name} being Withdrawn from the Silo. At the end of the current Season, Withdrawn assets become Claimable.`
+    (name: string) => `${name} being Withdrawn from the Silo. At the end of the current Season, Withdrawn ${name} become Claimable.`
   ],
   farmable: [
     'Farm & Circulating',
     BeanstalkPalette.lightBlue, 
     (name: string) => `Farm ${name} are stored in Beanstalk. Circulating ${name} are in Farmers' wallets.`,
   ],
-  ripe: [
-    'Ripe',
-    '#DFB385', 
-    (name: string) => `${name} minted as Fertilizer is sold. Ripe assets are the assets underlying Unripe assets.`
-  ],
   budget: [
     'Budget',
     BeanstalkPalette.supportGreen,
-    (name: string) => `${name} in the BFM and BSM wallets.`,
+    (name: string) => `Circulating ${name} in the Beanstalk Farms and Bean Sprout multisig wallets.`,
+  ],
+  ripe: [
+    'Ripe',
+    '#DFB385', 
+    (name: string) => `${name} minted as the percentage of Fertilizer sold increases. Ripe ${name} are the ${name} underlying Unripe ${name}. ${name === 'Beans' ? 'Does not include Beans that make up Ripe BEAN:3CRV.' : ''}`
+  ],
+  ripePooled: [
+    'Ripe Pooled',
+    '#c07a30',
+    (name: string) => `Pooled ${name} that make up Ripe BEAN:3CRV.`
   ],
 } as const;
 
@@ -121,6 +127,7 @@ export default function useBeanstalkSiloBreakdown() {
 
   const getChainToken = useGetChainToken();
   const Bean = getChainToken(BEAN);
+  const Bean3CRV = getChainToken(BEAN_CRV3_LP);
   const unripeToRipe = useUnripeUnderlyingMap('unripe');
   const ripeToUnripe = useUnripeUnderlyingMap('ripe');
 
@@ -131,14 +138,15 @@ export default function useBeanstalkSiloBreakdown() {
 
       // Ensure we've loaded a Silo Balance for this token.
       if (siloBalance) {
-        let ripe;
-        let budget;
-        let pooled;
-        let farmable;
+        let ripe : undefined | BigNumber;
+        let ripePooled : undefined | BigNumber;
+        let budget : undefined | BigNumber;
+        let pooled : undefined | BigNumber;
+        let farmable : undefined | BigNumber;
 
         // Handle: Ripe Tokens (Add Ripe state to BEAN and BEAN:3CRV)
         if (ripeToUnripe[address]) {
-          const unripeToken = unripeTokenState[ripeToUnripe[address].address];
+          const unripeToken : undefined | UnripeToken = unripeTokenState[ripeToUnripe[address].address];
           if (unripeToken) ripe = unripeToken.underlying; // "ripe" is another word for "underlying"
         }
 
@@ -157,11 +165,22 @@ export default function useBeanstalkSiloBreakdown() {
         // Handle: BEAN
         if (TOKEN === Bean) {
           budget = Object.values(multisigBalances).reduce((_prev, curr) => _prev.plus(curr), ZERO_BN);
-          pooled = Object.values(poolState).reduce((_prev, curr) => _prev.plus(curr.reserves[0]), ZERO_BN);
+          // const pooled = Object.values(poolState).reduce((_prev, curr) => _prev.plus(curr.reserves[0]), ZERO_BN);
+          const totalPooled = Object.values(poolState).reduce((_prev, curr) => _prev.plus(curr.reserves[0]), ZERO_BN);
+
+          // Ripe Pooled = BEAN:3crv_RESERVES * (Ripe BEAN:3CRV / BEAN:3CRV Token Supply)
+          // TODO: can we reduce this duplicate code?
+          ripePooled = new BigNumber(totalPooled)
+            .multipliedBy(
+              new BigNumber(unripeTokenState[ripeToUnripe[Bean3CRV.address].address]?.underlying || 0)
+                .div(new BigNumber(poolState[Bean3CRV.address]?.supply || 0))
+            );
+          pooled = new BigNumber(totalPooled).minus(ripePooled);
+
           farmable = (
             beanSupply
               .minus(budget)
-              .minus(pooled)
+              .minus(totalPooled)
               .minus(ripe || ZERO_BN)
               .minus(siloBalance.deposited.amount)
               .minus(siloBalance.withdrawn.amount)
@@ -182,6 +201,7 @@ export default function useBeanstalkSiloBreakdown() {
           deposited:   siloBalance.deposited?.amount,
           withdrawn:   siloBalance.withdrawn?.amount,
           pooled:      pooled,
+          ripePooled: ripePooled,
           ripe:        ripe,
           budget:      budget,
           farmable:    farmable,
@@ -190,6 +210,7 @@ export default function useBeanstalkSiloBreakdown() {
           deposited:   getUSD(TOKEN, siloBalance.deposited.amount),
           withdrawn:   getUSD(TOKEN, siloBalance.withdrawn.amount),
           pooled:      pooled   ? getUSD(TOKEN, pooled) : undefined,
+          ripePooled:  ripePooled   ? getUSD(TOKEN, ripePooled) : undefined,
           ripe:        ripe     ? getUSD(TOKEN, ripe) : undefined,
           budget:      budget   ? getUSD(TOKEN, budget) : undefined,
           farmable:    farmable ? getUSD(TOKEN, farmable) : undefined,
@@ -217,7 +238,6 @@ export default function useBeanstalkSiloBreakdown() {
 
         // Aggregate amounts of each State
         STATE_IDS.forEach((s) => {
-          console.debug('[STATE_IDS] amountByState', amountByState);
           if (amountByState[s] !== undefined) {
             prev.tokens[address].byState[s].value  = (prev.tokens[address].byState[s].value || ZERO_BN).plus(usdValueByState[s] as BigNumber);
             prev.tokens[address].byState[s].amount = (prev.tokens[address].byState[s].amount || ZERO_BN).plus(amountByState[s] as BigNumber);
@@ -231,5 +251,18 @@ export default function useBeanstalkSiloBreakdown() {
       /** */
       tokens: _initState(WHITELIST_ADDRS, siloBalances),
     }),
-  [WHITELIST_ADDRS, siloBalances, WHITELIST, ripeToUnripe, unripeToRipe, Bean, poolState, getUSD, unripeTokenState, multisigBalances, beanSupply]);
+  [
+    WHITELIST_ADDRS,
+    siloBalances,
+    WHITELIST,
+    ripeToUnripe,
+    unripeToRipe,
+    Bean,
+    Bean3CRV,
+    poolState,
+    getUSD,
+    unripeTokenState,
+    multisigBalances,
+    beanSupply
+  ]);
 }

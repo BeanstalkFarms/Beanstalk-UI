@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, CircularProgress, Stack } from '@mui/material';
 import { BASE_IPFS_LINK, BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES } from '../../constants';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
+import { Nft } from '~/util';
 
 export interface NFTContentProps {
-  nft: any;
+  nft: Nft;
 }
 
 /** Maps an NFT collection to its ETH address. */
@@ -27,7 +29,7 @@ const NFTImage: React.FC<NFTContentProps> = ({
           style={{ display: 'block', borderRadius: '7px', aspectRatio: '1/1' }}
         />
       </Box>
-      {/* {!loaded && (
+      {!loaded && (
         <Stack
           alignItems="center"
           justifyContent="center"
@@ -39,7 +41,7 @@ const NFTImage: React.FC<NFTContentProps> = ({
           }}>
           <CircularProgress />
         </Stack>
-      )} */}
+      )}
     </>
   );
 };

@@ -47,6 +47,7 @@ import { ActionType } from '../../../util/Actions';
 import { IconSize } from '../../App/muiTheme';
 import IconWrapper from '../../Common/IconWrapper';
 import TokenIcon from '../../Common/TokenIcon';
+import Row from '~/components/Common/Row';
 
 type SowFormValues = FormState & {
   settings: SlippageSettingsFragment;
@@ -199,7 +200,7 @@ const SowForm : React.FC<
               token={PODS}
               amount={numPods}
               override={(
-                <Stack direction="row" alignItems="center" gap={0.5}>
+                <Row gap={0.5}>
                   <TokenIcon
                     token={PODS}
                     style={{
@@ -209,8 +210,7 @@ const SowForm : React.FC<
                   <Typography variant="bodyMedium">
                     <Typography display={{ xs: 'none', sm: 'inline' }} variant="bodyMedium">{PODS.symbol} </Typography>@ {displayBN(podLineLength)}
                   </Typography>
-
-                </Stack>
+                </Row>
               )}
             />
             {(maxAmountUsed && maxAmountUsed.gt(0.9)) ? (

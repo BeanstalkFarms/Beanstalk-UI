@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react';
-import { Button, Divider, Stack, StackProps, Typography } from '@mui/material';
+import { Button, Divider, StackProps, Typography } from '@mui/material';
 import { SeasonAggregation, SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
 import { BeanstalkPalette } from '../../App/muiTheme';
+import Row from '~/components/Common/Row';
 
 const DISPLAY = [
   { label: 'HR', index: 0 },
@@ -38,7 +39,7 @@ const TimeTabs: React.FC<
   }, [state, setState]);
 
   return (
-    <Stack direction="row" sx={{ ...sx }} gap={0.2} alignItems="center">
+    <Row sx={{ ...sx }} gap={0.2}>
       {DISPLAY.map((d) => (
         <Button
           onClick={() => handleChange0(d.index)}
@@ -82,7 +83,7 @@ const TimeTabs: React.FC<
           </Typography>
         </Button>
       ))}
-    </Stack>
+    </Row>
   );
 };
 

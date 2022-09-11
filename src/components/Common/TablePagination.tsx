@@ -1,10 +1,11 @@
 import React from 'react';
-import { Stack, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { makeStyles } from '@mui/styles';
 import { gridPageCountSelector, gridPageSelector, useGridApiContext, useGridSelector } from '@mui/x-data-grid';
 import { BeanstalkPalette, FontSize } from '../App/muiTheme';
+import Row from '~/components/Common/Row';
 
 const useStyles = makeStyles({
   arrow: {
@@ -32,7 +33,7 @@ const TablePagination: React.FC<{}> = () => {
   };
   
   return (
-    <Stack direction="row" alignItems="center" gap={0.5}>
+    <Row gap={0.5}>
       <ArrowBackIcon 
         className={classes.arrow} 
         onClick={handleBack} 
@@ -54,7 +55,7 @@ const TablePagination: React.FC<{}> = () => {
           }
         }}
       />
-    </Stack>
+    </Row>
   );
 };
 

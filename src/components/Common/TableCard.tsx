@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
-import { Box, Card, CircularProgress, Divider, Stack, Typography } from '@mui/material';
+import { Box, Card, CircularProgress, Divider, Typography } from '@mui/material';
 import {
   DataGrid,
   GridColumns,
@@ -13,6 +13,7 @@ import { Token } from '../../classes';
 import AuthEmptyState from './ZeroState/AuthEmptyState';
 import TablePagination from './TablePagination';
 import Fiat from './Fiat';
+import Row from '~/components/Common/Row';
 
 const MAX_ROWS = 5;
 
@@ -54,12 +55,12 @@ const TableCard : React.FC<{
   }, [rows]);
   return (
     <Card>
-      <Stack p={2} direction="row" justifyContent="space-between" alignItems="center">
+      <Row p={2} justifyContent="space-between">
         <Typography variant="h4">
           {title}
         </Typography>
         {state === 'ready' ? (
-          <Stack direction="row" gap={0.3} alignItems="center">
+          <Row gap={0.3}>
             {token && <img src={token.logo} alt="" height="17px" />}
             <Typography variant="h4">
               {displayBN(amount || ZERO_BN)}
@@ -69,13 +70,13 @@ const TableCard : React.FC<{
                 </Typography>
               )}
             </Typography>
-          </Stack>
+          </Row>
         ) : (
           state === 'loading' ? (
             <CircularProgress color="primary" variant="indeterminate" size={18} thickness={5} />
           ) : null
         )}
-      </Stack>
+      </Row>
       <Divider />
       <Box
         sx={{

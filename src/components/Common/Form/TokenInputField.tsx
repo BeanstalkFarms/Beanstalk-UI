@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Divider,
-  Stack,
   TextField,
   TextFieldProps,
   Tooltip,
@@ -14,6 +13,7 @@ import { displayBN, displayFullBN, displayTokenAmount } from '~/util';
 import { FarmerBalances } from '~/state/farmer/balances';
 import NumberFormatInput from './NumberFormatInput';
 import FieldWrapper from './FieldWrapper';
+import Row from '~/components/Common/Row';
 
 export type TokenInputCustomProps = {
   /**
@@ -227,15 +227,15 @@ const TokenInput: React.FC<
       />
       {/* Bottom Adornment */}
       {(balance && !hideBalance || quote) && (
-        <Stack direction="row" alignItems="center" gap={0.5} px={0.5} pt={0.75}>
+        <Row gap={0.5} px={0.5} pt={0.75}>
           {/* Leaving the Stack rendered regardless of whether `quote` is defined
             * ensures that the Balance section gets flexed to the right side of
             * the input. */}
-          <Stack direction="row" alignItems="center" sx={{ flex: 1 }} spacing={1}>
+          <Row sx={{ flex: 1 }} spacing={1}>
             <Typography variant="bodySmall">
               {quote}
             </Typography>
-          </Stack>
+          </Row>
           {(balance && !hideBalance) && (
             <>
               <Tooltip title={balanceTooltip}>
@@ -262,7 +262,7 @@ const TokenInput: React.FC<
               </Typography>
             </>
           )}
-        </Stack>
+        </Row>
       )}
     </FieldWrapper>
   );

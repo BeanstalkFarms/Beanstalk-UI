@@ -11,6 +11,7 @@ import { TabData } from '~/components/Silo/Views';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { SEEDS, STALK } from '~/constants/tokens';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
+import Row from '~/components/Common/Row';
 
 const StalkView: React.FC<TabData> = ({ current, series, season }) => {
   // Display value is an array [stalk, pct]
@@ -30,7 +31,7 @@ const StalkView: React.FC<TabData> = ({ current, series, season }) => {
 
   return (
     <>
-      <Stack direction="row" gap={4} sx={{ px: 2 }}>
+      <Row gap={4} sx={{ px: 2 }}>
         <Stat
           title="Stalk Balance"
           titleTooltip="Stalk is the governance token of the Beanstalk DAO. Stalk entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
@@ -50,7 +51,7 @@ const StalkView: React.FC<TabData> = ({ current, series, season }) => {
           gap={0.25}
           sx={{ ml: 0 }}
         />
-      </Stack>
+      </Row>
       <Box sx={{ width: '100%', height: '200px', position: 'relative' }}>
         {!account ? (
           <BlurComponent>
@@ -63,7 +64,7 @@ const StalkView: React.FC<TabData> = ({ current, series, season }) => {
           (breakdown.totalValue?.eq(0)) ? (
             <BlurComponent>
               <Stack justifyContent="center" alignItems="center" gap={1} px={1}>
-                <Typography variant="body1" color="gray">Receive <TokenIcon token={STALK} />Stalk and <TokenIcon token={SEEDS} />Seeds for Depositing whitelisted assets in the Silo. Stalkholders earn a portion of new Bean mints. Seeds grow into Stalk every season.</Typography>
+                <Typography variant="body1" color="gray">Receive <TokenIcon token={STALK} />Stalk and <TokenIcon token={SEEDS} />Seeds for Depositing whitelisted assets in the Silo. Stalkholders earn a portion of new Bean mints. Seeds grow into Stalk every Season.</Typography>
               </Stack>
             </BlurComponent>
           ) : (

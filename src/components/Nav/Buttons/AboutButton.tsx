@@ -7,7 +7,6 @@ import {
   ListItemText,
   Menu,
   MenuList,
-  Stack,
   Typography,
   useMediaQuery,
 } from '@mui/material';
@@ -24,6 +23,7 @@ import ROUTES from '../routes';
 import MenuItem from '../MenuItem';
 import SettingsDialog from '~/components/Nav/SettingsDialog';
 import useGlobal from '~/hooks/app/useGlobal';
+import Row from '~/components/Common/Row';
 
 const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
   /// Theme
@@ -69,7 +69,7 @@ const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
           color="secondary"
           sx={{ py: 0.9 }}
         >
-          <Stack direction="row" alignItems="center" spacing={1}>
+          <Row spacing={1}>
             <ListItemText>
               <Typography variant="h4">
                 Contract: {beanstalkAddress.slice(0, 6)}...
@@ -80,7 +80,7 @@ const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
                 sx={{ transform: 'rotate(-45deg)', fontSize: 12 }}
               />
             </Typography>
-          </Stack>
+          </Row>
         </Button>
       </Box>
     </MenuList>

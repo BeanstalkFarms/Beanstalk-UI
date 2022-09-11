@@ -1,14 +1,15 @@
-import { Stack, Tab, TabProps } from '@mui/material';
+import { Tab, TabProps } from '@mui/material';
 import React from 'react';
 import Dot from '~/components/Common/Dot';
+import Row from '~/components/Common/Row';
 
 const BadgeTab : React.FC<TabProps & { showBadge: boolean }> = ({ showBadge, label, sx, ...props }) => (
   <Tab
     label={(
-      <Stack display="inline-flex" direction="row" alignItems="center" gap={0.25}>
+      <Row display="inline-flex" gap={0.25}>
         {showBadge && <Dot color="primary.main" className="B-badge" sx={{ opacity: 0.7 }} />}
         <span>{label}</span>
-      </Stack>
+      </Row>
     )}
     sx={{
       overflow: 'visible',

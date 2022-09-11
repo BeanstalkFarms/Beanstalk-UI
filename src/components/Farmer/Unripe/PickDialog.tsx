@@ -33,6 +33,7 @@ import { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import useAccount from '~/hooks/ledger/useAccount';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import UnripeTokenRow from './UnripeTokenRow';
+import Row from '~/components/Common/Row';
 
 // ----------------------------------------------------
 
@@ -256,14 +257,14 @@ const PickBeansDialog: React.FC<{
       <StyledDialogTitle sx={{ pb: 1 }} onClose={handleDialogClose}>
         Pick non-Deposited Unripe Beans and Unripe BEAN:3CRV LP
       </StyledDialogTitle>
-      <Stack direction="row" alignItems="center" gap={1} pb={2} pl={1} pr={3}>
+      <Row gap={1} pb={2} pl={1} pr={3}>
         <img src={pickImage} alt="pick" style={{ height: 120 }} />
         <Typography sx={{ fontSize: '15px' }} color="text.secondary">
           To claim non-Deposited Unripe Beans and Unripe BEAN:3CRV LP, they must be Picked. After Replant, you can Pick assets to your wallet, or Pick and Deposit them directly in the Silo.<br /><br />
           Unripe Deposited assets <b>do not need to be Picked</b> and will be automatically Deposited at Replant.<br /><br />
           Read more about Unripe assets <Link href="https://docs.bean.money/farm/barn#unripe-assets" target="_blank" rel="noreferrer">here</Link>.
         </Typography>
-      </Stack>
+      </Row>
       <Divider />
       <StyledDialogContent>
         <Stack gap={2}>
@@ -290,11 +291,11 @@ const PickBeansDialog: React.FC<{
             {/**
               * Section 3b: Total Unripe Beans
               */}
-            <Stack direction="row" justifyContent="space-between" pl={1}>
+            <Row justifyContent="space-between" pl={1}>
               <Typography>
                 Unripe Beans available to Pick at Replant
               </Typography>
-              <Stack direction="row" alignItems="center" gap={0.3}>
+              <Row gap={0.3}>
                 <img src={unripeBeanIcon} alt="Circulating Beans" width={13} />
                 <Typography variant="h4">
                   {displayFullBN(
@@ -308,8 +309,8 @@ const PickBeansDialog: React.FC<{
                     )
                   )}
                 </Typography>
-              </Stack>
-            </Stack>
+              </Row>
+            </Row>
           </Stack>
           {/**
             * Section 3: LP
@@ -342,17 +343,17 @@ const PickBeansDialog: React.FC<{
             {/**
               * Section 2b: Total Unripe LP
               */}
-            <Stack direction="row" justifyContent="space-between" pl={1}>
+            <Row justifyContent="space-between" pl={1}>
               <Typography>
                 Unripe BEAN:3CRV LP available to Pick at Replant
               </Typography>
-              <Stack direction="row" alignItems="center" gap={0.3}>
+              <Row gap={0.3}>
                 <img src={brownLPIcon} alt="Circulating Beans" width={13} />
                 <Typography variant="h4">
                   {displayFullBN(tokenOrZero(unripe?.unripeLp, BEAN[1]))}
                 </Typography>
-              </Stack>
-            </Stack>
+              </Row>
+            </Row>
           </Stack>
         </Stack>
       </StyledDialogContent>

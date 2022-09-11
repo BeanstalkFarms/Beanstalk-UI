@@ -17,6 +17,7 @@ import { AppState } from '~/state';
 import useAccount from '~/hooks/ledger/useAccount';
 import WalletButton from '~/components/Common/Connection/WalletButton';
 import { SNAPSHOT_LINK } from '~/constants';
+import Row from '~/components/Common/Row';
 
 type VoteFormValues = {
   choice: number | undefined;
@@ -71,7 +72,7 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
         <Stack px={1} pb={1} gap={1.5}>
           {proposal.choices.map((choice: string, index: number) => (
             <Stack gap={0.5}>
-              <Stack direction="row" columnGap={0.5} flexWrap="wrap" justifyContent="space-between">
+              <Row columnGap={0.5} flexWrap="wrap" justifyContent="space-between">
                 <Typography variant="body1">
                   {isClosed && existingChoice !== undefined && (existingChoice === index + 1) ? (
                     <Tooltip title={`You voted: ${proposal.choices![existingChoice - 1]}`}>
@@ -86,7 +87,7 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
                     display={proposal.scores_total > 0 ? 'inline' : 'none'}>•{((proposal.scores[index] / proposal.scores_total) * 100).toFixed(2)}%
                   </Typography>
                 </Typography>
-              </Stack>
+              </Row>
               <LinearProgress
                 variant="determinate"
                 value={(

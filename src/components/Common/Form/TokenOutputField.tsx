@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, CircularProgress, Tooltip, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import React from 'react';
 import { Token } from '~/classes';
@@ -6,6 +6,7 @@ import { displayFullBN, displayUSD } from '~/util';
 import TokenIcon from '../TokenIcon';
 import OutputField from './OutputField';
 import { IconSize } from '../../App/muiTheme';
+import Row from '~/components/Common/Row';
 
 const TokenOutputField : React.FC<{
   /** */
@@ -60,7 +61,7 @@ const TokenOutputField : React.FC<{
         <CircularProgress size={16} thickness={5} />
       )}
       {override === undefined ? (
-        <Stack direction="row" alignItems="center" gap={0.5}>
+        <Row gap={0.5}>
           {token.logo && (
             <TokenIcon
               token={token}
@@ -72,7 +73,7 @@ const TokenOutputField : React.FC<{
           <Typography variant="bodyMedium">
             {modifier && `${modifier} `}{token.symbol}
           </Typography>
-        </Stack>
+        </Row>
       ) : <Box>{override}</Box>}
     </OutputField>
   );

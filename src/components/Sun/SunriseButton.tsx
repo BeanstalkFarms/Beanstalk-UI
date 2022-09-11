@@ -18,6 +18,7 @@ import { displayBN } from '~/util';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN } from '~/constants/tokens';
 import { AppState } from '~/state';
+import Row from '~/components/Common/Row';
 
 function getSunriseReward(now: DateTime) {
   return new BigNumber(100 * (1.01 ** (Math.min((now.minute * 60) + now.second, 300))));
@@ -92,17 +93,17 @@ const SunriseButton : React.FC = () => {
                       <img src={sunIcon} alt="Sunrise" style={{ height: IconSize.large }} />
                       <Stack gap={1}>
                         {awaiting ? (
-                          <Stack direction="row" justifyContent="center">
+                          <Row justifyContent="center">
                             <Typography variant="body1">Sunrise has been available for: {now.minute < 10 ? `0${now.minute}` : now.minute}:{now.second < 10 ? `0${now.second}` : now.second}</Typography>
-                          </Stack>
+                          </Row>
                         ) : (
-                          <Stack direction="row" justifyContent="center">
+                          <Row justifyContent="center">
                             <Typography textAlign="center" variant="body1">Sunrise available&nbsp;<span style={{ display: 'inline' }}><SunriseCountdown /></span>.</Typography>
-                          </Stack>
+                          </Row>
                         )}
-                        <Stack direction="row" justifyContent="center">
+                        <Row justifyContent="center">
                           <Typography variant="body1">Reward for calling <Box display="inline" sx={{ backgroundColor: BeanstalkPalette.lightYellow, borderRadius: 0.4, px: 0.4 }}><strong><Link color="text.primary" underline="none" href="https://docs.bean.money/additional-resources/glossary#sunrise" target="_blank" rel="noreferrer">sunrise()</Link></strong></Box>: <TokenIcon token={BEAN[1]} />&nbsp;{displayBN(reward)}</Typography>
-                        </Stack>
+                        </Row>
                       </Stack>
                     </Stack>
                     <Divider />

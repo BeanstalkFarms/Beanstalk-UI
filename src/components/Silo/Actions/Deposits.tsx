@@ -21,10 +21,10 @@ import TableCard from '../../Common/TableCard';
  */
 const Deposits : React.FC<{
   token: Token;
-  balance: FarmerSiloBalance | undefined;
+  siloBalance: FarmerSiloBalance | undefined;
 }> = ({
   token,
-  balance,
+  siloBalance,
 }) => {
   const Bean = useChainConstant(BEAN);
   const getUSD = useSiloTokenToFiat();
@@ -32,11 +32,11 @@ const Deposits : React.FC<{
   const { data: account } = useAccount();
 
   const rows : (DepositCrate & { id: BigNumber })[] = useMemo(() => 
-    balance?.deposited.crates.map((deposit) => ({
+    siloBalance?.deposited.crates.map((deposit) => ({
       id: deposit.season,
       ...deposit
     })) || [],
-    [balance?.deposited.crates]
+    [siloBalance?.deposited.crates]
   );
 
   const columns = useMemo(() => ([
@@ -99,7 +99,7 @@ const Deposits : React.FC<{
     COLUMNS.seeds,
   ] as GridColumns), [token.displayDecimals, Bean, currentSeason]);
 
-  const amount = balance?.deposited.amount;
+  const amount = siloBalance?.deposited.amount;
   const state = !account ? 'disconnected' : 'ready';
 
   return (

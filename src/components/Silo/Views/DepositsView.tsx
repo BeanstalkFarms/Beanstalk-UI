@@ -33,7 +33,7 @@ const DepositsView: React.FC<TabData> = ({ season, current, series }) => {
     <>
       <Box sx={{ px: 2 }}>
         <Stat
-          title="Total Silo Deposits"
+          title="Value Deposited"
           subtitle={`Season ${season.toString()}`}
           amount={displayUSD(displayValue[0])}
           color="primary"
@@ -54,7 +54,7 @@ const DepositsView: React.FC<TabData> = ({ season, current, series }) => {
           (breakdown.totalValue?.eq(0)) ? (
             <BlurComponent>
               <Stack justifyContent="center" alignItems="center" gap={1} px={1}>
-                <Typography variant="body1" color="gray">Receive <TokenIcon token={STALK} />Stalk and <TokenIcon token={SEEDS} />Seeds for Depositing whitelisted assets in the Silo. Stalkholders earn a portion of new Bean mints. Seeds grow into Stalk every season.</Typography>
+                <Typography variant="body1" color="gray">Receive <TokenIcon token={STALK} />Stalk and <TokenIcon token={SEEDS} />Seeds for Depositing whitelisted assets in the Silo. Stalkholders earn a portion of new Bean mints. Seeds grow into Stalk every Season.</Typography>
               </Stack>
             </BlurComponent>
           ) : (

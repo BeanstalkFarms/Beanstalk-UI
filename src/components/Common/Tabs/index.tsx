@@ -1,12 +1,13 @@
-import { Chip, Stack, styled, Tab, TabProps } from '@mui/material';
+import { Chip, styled, Tab, TabProps } from '@mui/material';
 import React from 'react';
 import { Token } from 'graphql';
+import Row from '~/components/Common/Row';
 
 export const ChipLabel : React.FC<{ name: string; token?: Token }> = ({ name, children }) => (
-  <Stack direction="row" alignItems="center" gap={0.2}>
+  <Row gap={0.2}>
     {name}&nbsp;
-    <Chip label={children} size="small" sx={{ fontWeight: 'bold' }} />
-  </Stack>
+    <Chip label={children} size="small" />
+  </Row>
 ); 
 
 /**

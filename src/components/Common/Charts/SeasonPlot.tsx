@@ -10,6 +10,7 @@ import { BeanstalkPalette } from '~/components/App/muiTheme';
 import TimeTabs, { TimeTabState } from './TimeTabs';
 import { sortSeasons } from '~/util/Season';
 import StackedAreaChart from '~/components/Common/Charts/StackedAreaChart';
+import Row from '~/components/Common/Row';
 
 const defaultValueFormatter = (value: number) => value.toFixed(4);
 
@@ -149,7 +150,7 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
   return (
     <>
       {/* Statistic & Controls */}
-      <Stack direction="row" justifyContent="space-between" sx={{ px: 2 }}>
+      <Row justifyContent="space-between" sx={{ px: 2 }}>
         <Stat
           {...statProps}
           amount={
@@ -165,7 +166,7 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
             setState={handleChangeTimeTab}
           />
         </Stack>
-      </Stack>
+      </Row>
       {/* Chart Container */}
       <Box sx={{ width: '100%', height, position: 'relative' }}>
         {(loading || series.length === 0) ? (

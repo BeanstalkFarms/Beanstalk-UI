@@ -20,6 +20,7 @@ import useAccount from '~/hooks/ledger/useAccount';
 import { CHAIN_INFO } from '~/constants';
 import OutputField from './OutputField';
 import { trimAddress } from '../../../util';
+import Row from '~/components/Common/Row';
 
 export type AddressInputFieldProps = (
   Partial<TextFieldProps>
@@ -70,7 +71,7 @@ const AddressInputFieldInner : React.FC<FieldProps & AddressInputFieldProps> = (
   if (isValid) {
     return (
       <OutputField sx={{ height: 67.5 /* lock to same height as input */ }}>
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Row spacing={1}>
           <CheckIcon sx={{ height: 20, width: 20, fontSize: '100%' }} color="primary" />
           <Typography>
             <Tooltip title="View on Etherscan">
@@ -85,7 +86,7 @@ const AddressInputFieldInner : React.FC<FieldProps & AddressInputFieldProps> = (
               </Link>
             </Tooltip>
           </Typography>
-        </Stack>
+        </Row>
         <Box>
           <IconButton onClick={() => form.setFieldValue(name, '')}>
             <CloseIcon sx={{ height: 20, width: 20, fontSize: '100%' }} />

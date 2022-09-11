@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import useTabs from '~/hooks/display/useTabs';
 import { getAccount } from '~/util/Account';
-import { ClaimStatus, loadNFTs, Nft } from '~/util/BeaNFTs';
+import { ADDRESS_COLLECTION, ClaimStatus, loadNFTs, Nft } from '~/util/BeaNFTs';
 import NFTDialog from '~/components/NFT/NFTDialog';
 import { BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES } from '~/constants';
 import NFTGrid from '~/components/NFT/NFTGrid';
@@ -15,6 +15,7 @@ import AuthEmptyState from '~/components/Common/ZeroState/AuthEmptyState';
 import PageHeader from '~/components/Common/PageHeader';
 import GuideButton from '~/components/Common/Guide/GuideButton';
 import { HOW_TO_MINT_BEANFTS } from '~/util/Guides';
+import Row from '~/components/Common/Row';
 
 const SLUGS = ['genesis', 'winter'];
 const NFTPage: React.FC = () => {
@@ -45,33 +46,65 @@ const NFTPage: React.FC = () => {
     setDialogOpen(false);
   };
 
-  const parseMints = useCallback((accountNFTs: any, contractAddress: string, setNFTs: any) => {
+  const parseMints = useCallback(async (accountNFTs: Nft[], contractAddress: string, setNFTs: any) => {
+    if (!account) {
+      return;
+    }
     const requestOptions: any = {
       method: 'GET',
       redirect: 'follow'
     };
 
     const nfts: Nft[] = [];
-    const baseURL = 'https://eth-mainnet.alchemyapi.io/nft/v2/demo/getNFTs/';
-    const ownerAddr = account?.toLowerCase();
-    const fetchURL = `${baseURL}?owner=${ownerAddr}&contractAddresses[]=${contractAddress}`;
 
-    fetch(fetchURL, requestOptions)
-      .then((response) => response.json())
-      .then((response) => {
-        console.debug('[parseMints] response: ', response);
-        // hashes of only user's claimed nfts
-        const nftHashes = response.ownedNfts.map((nft: any) => nft.metadata.image.replace('ipfs://', ''));
-        console.log('NFT HASHES', nftHashes);
-        for (let i = 0; i < accountNFTs.length; i += 1) {
-          if (nftHashes.includes(accountNFTs[i].imageIpfsHash)) {
-            nfts.push({ ...accountNFTs[i], claimed: ClaimStatus.CLAIMED });
-          } else {
-            nfts.push({ ...accountNFTs[i], claimed: ClaimStatus.UNCLAIMED });
-          }
+    // getNFTs
+    const nftsBaseURL = 'https://eth-mainnet.alchemyapi.io/nft/v2/demo/getNFTs/';
+    const nftsFetchURL = `${nftsBaseURL}?owner=${account?.toLowerCase()}&contractAddresses[]=${contractAddress}`;
+
+    // getNFTMetadata
+    const nftMetadataBaseURL = 'https://eth-mainnet.alchemyapi.io/nft/v2/demo/getNFTMetadata';
+    const nftMetadataFetchURL = (id: number) => `${nftMetadataBaseURL}?&contractAddress=${contractAddress}&tokenId=${id.toString()}`;
+
+    const [
+      // BeaNFTs owned by this account
+      userMintedNFTs,
+      // BeaNFTs originally assigned to this account
+      originalUserNFTs
+    ] = await Promise.all([
+      fetch(nftsFetchURL, requestOptions)
+        .then((response) => response.json()),
+      await Promise.all(accountNFTs.map((nft) => fetch(nftMetadataFetchURL(nft.id), requestOptions)
+          .then((response) => response.json())))
+    ]);
+
+    const ownedNfts = userMintedNFTs.ownedNfts;
+    const nftHashes = ownedNfts.map((nft: any) => nft.metadata.image.replace('ipfs://', ''));
+
+    /// UNCLAIMED
+    if (accountNFTs.length) {
+      for (let i = 0; i < accountNFTs.length; i += 1) {
+        // if nft hash is NOT included in accountNFTs but IS minted
+        // that means a new address owns this NFT now
+        const isNotMinted = originalUserNFTs[i].error;
+        if (!nftHashes.includes(accountNFTs[i].imageIpfsHash) && isNotMinted) {
+          nfts.push({ ...accountNFTs[i], claimed: ClaimStatus.UNCLAIMED });
         }
-        setNFTs(nfts);
-      });
+      }
+    }
+    /// CLAIMED
+    if (ownedNfts.length) {
+      for (let i = 0; i < ownedNfts.length; i += 1) {
+        nfts.push({
+          // assumes title is formatted: "BeaNFT 1234"
+          id: parseInt(ownedNfts[i].title.split(' ')[1], 10),
+          account: account,
+          subcollection: ADDRESS_COLLECTION[ownedNfts[i].contract.address],
+          claimed: ClaimStatus.CLAIMED,
+          imageIpfsHash: nftHashes[i]
+        });
+      }
+    }
+    setNFTs(nfts);
   }, [account]);
 
   // Mint Single Genesis BeaNFT
@@ -217,7 +250,7 @@ const NFTPage: React.FC = () => {
         />
         <Card sx={{ p: 2 }}>
           <Stack gap={1.5}>
-            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ px: 0.5 }}>
+            <Row justifyContent="space-between" alignItems="center" sx={{ px: 0.5 }}>
               <Tabs value={tab} onChange={handleChangeTab} sx={{ minHeight: 0 }}>
                 <Tab label={`Genesis (${genesisNFTs === null ? 0 : genesisNFTs?.length})`} />\
                 <Tab label={`Winter (${winterNFTs === null ? 0 : winterNFTs?.length})`} />
@@ -233,7 +266,7 @@ const NFTPage: React.FC = () => {
                   {isMobile ? 'Mint all' : 'Mint All Winter'}
                 </Button>
               )}
-            </Stack>
+            </Row>
             {/* Zero state when not logged in */}
             {account === undefined ? (
               <Box height={300}>

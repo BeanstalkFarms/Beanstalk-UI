@@ -8,6 +8,7 @@ import { SPROUTS } from '~/constants/tokens';
 import FertilizerImage, { FertilizerState } from './FertilizerImage';
 import { FertilizerTooltip } from './FertilizerItemTooltips';
 import { ZERO_BN } from '~/constants';
+import Row from '~/components/Common/Row';
 
 export type FertilizerData = {
   /**
@@ -81,36 +82,36 @@ const FertilizerItem: React.FC<FertilizerData & {
       <Typography textAlign="center">x0</Typography>
     ) : (
       <Stack width="100%" direction="column" rowGap={0.25}>
-        <Stack direction="row" justifyContent="space-between">
+        <Row justifyContent="space-between">
           <Typography sx={{ fontSize: '14px', opacity: 0.6 }} color="text.secondary">
             x{displayFullBN(amount, 0)}
           </Typography>
           <Tooltip title={tooltip.humidity} placement="right">
-            <Stack direction="row" gap={0.2} alignItems="center">
+            <Row gap={0.2} alignItems="center">
               <img alt="" src={humidityIcon} height="13px" />
               <Typography sx={{ fontSize: '14px', opacity: 0.6 }} color="text.secondary">
                 {humidity ? `${humidity.times(100).toNumber().toLocaleString('en-us', { maximumFractionDigits: 1 })}%` : '---'}
               </Typography>
-            </Stack>
+            </Row>
           </Tooltip>
-        </Stack>
+        </Row>
         <Tooltip
           title={
             tooltip.name === 'my-fertilizer'
               ? tooltip.reward(rinsableSprouts, (sprouts || ZERO_BN).minus(rinsableSprouts || ZERO_BN))
               : tooltip.reward}
           placement="right">
-          <Stack direction="row" justifyContent="space-between">
+          <Row justifyContent="space-between">
             <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
               Sprouts
             </Typography>
-            <Stack direction="row" alignItems="center" gap={0.2}>
+            <Row alignItems="center" gap={0.2}>
               <TokenIcon token={SPROUTS} style={{ width: '14px' }} />
               <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
                 {sprouts ? displayBN(sprouts) : '?'}
               </Typography>
-            </Stack>
-          </Stack>
+            </Row>
+          </Row>
         </Tooltip>
       </Stack>
       )}

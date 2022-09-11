@@ -1,8 +1,7 @@
 import { Accordion, AccordionDetails, Box, CircularProgress, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { Form, Formik, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
-import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import {
   FormState,
@@ -17,7 +16,6 @@ import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
 import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
 import TokenInputField from '~/components/Common/Form/TokenInputField';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import TransactionToast from '~/components/Common/TxnToast';
 import FarmModeField from '~/components/Common/Form/FarmModeField';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import { Beanstalk } from '~/generated/index';
@@ -28,15 +26,15 @@ import useTokenMap from '~/hooks/chain/useTokenMap';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import useAccount from '~/hooks/ledger/useAccount';
 import usePreferredToken, { PreferredToken } from '~/hooks/farmer/usePreferredToken';
-import { optimizeFromMode } from '~/util/Farm';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import { ActionType } from '~/util/Actions';
-import { displayBN, displayFullBN, parseError, toStringBaseUnitBN } from '~/util';
+import { displayBN, displayFullBN } from '~/util';
 import { UNRIPE_BEAN, UNRIPE_BEAN_CRV3, UNRIPE_TOKENS } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { AppState } from '~/state';
 import useUnripeUnderlyingMap from '~/hooks/beanstalk/useUnripeUnderlying';
+import Row from '~/components/Common/Row';
 
 type ChopFormValues = FormState & {
   destination: FarmToMode | undefined;
@@ -123,7 +121,7 @@ const ChopForm: React.FC<
           <FarmModeField
             name="destination"
           />
-          <Stack direction="row" justifyContent="space-between" px={0.5}>
+          <Row justifyContent="space-between" px={0.5}>
             <Typography variant="body1" color="gray">Chop Penalty</Typography>
             {!unripeTokens[inputToken.address] ? (
               <CircularProgress size={16} thickness={5} sx={{ color: BeanstalkPalette.washedRed }} />
@@ -132,7 +130,7 @@ const ChopForm: React.FC<
                 {displayFullBN(chopPenalty, 5)}%
               </Typography>
             )}
-          </Stack>
+          </Row>
         </Stack>
         {isSubmittable ? (
           <>
@@ -214,47 +212,48 @@ const Chop: React.FC<{}> = () => {
     destination: FarmToMode.INTERNAL,
   }), [baseToken]);
 
-  const onSubmit = useCallback(
-    async (
-      values: ChopFormValues,
-      formActions: FormikHelpers<ChopFormValues>
-    ) => {
-      let txToast;
-      try {
-        if (!account) throw new Error('Connect a wallet first.');
-        if (!values.destination) throw new Error('No destination selected.');
-        const state = values.tokens[0];
-        if (!state.amount?.gt(0)) throw new Error('No Unfertilized token to Chop.');
+  // const onSubmit = useCallback(
+  //   async (
+  //     values: ChopFormValues,
+  //     formActions: FormikHelpers<ChopFormValues>
+  //   ) => {
+  //     let txToast;
+  //     try {
+  //       if (!account) throw new Error('Connect a wallet first.');
+  //       if (!values.destination) throw new Error('No destination selected.');
+  //       const state = values.tokens[0];
+  //       if (!state.amount?.gt(0)) throw new Error('No Unfertilized token to Chop.');
 
-        txToast = new TransactionToast({
-          loading: `Chopping ${displayFullBN(state.amount)} ${state.token.symbol}...`,
-          success: 'Chop successful.',
-        });
+  //       txToast = new TransactionToast({
+  //         loading: `Chopping ${displayFullBN(state.amount)} ${state.token.symbol}...`,
+  //         success: 'Chop successful.',
+  //       });
 
-        const txn = await beanstalk.chop(
-          state.token.address,
-          toStringBaseUnitBN(state.amount, state.token.decimals),
-          optimizeFromMode(state.amount, farmerBalances[state.token.address]),
-          values.destination
-        );
-        txToast.confirming(txn);
+  //       const txn = await beanstalk.chop(
+  //         state.token.address,
+  //         toStringBaseUnitBN(state.amount, state.token.decimals),
+  //         optimizeFromMode(state.amount, farmerBalances[state.token.address]),
+  //         values.destination
+  //       );
+  //       txToast.confirming(txn);
 
-        const receipt = await txn.wait();
-        await Promise.all([refetchFarmerBalances()]); // should we also refetch the penalty?
-        txToast.success(receipt);
-        formActions.resetForm();
-      } catch (err) {
-        txToast ? txToast.error(err) : toast.error(parseError(err));
-        formActions.setSubmitting(false);
-      }
-    },
-    [
-      account,
-      beanstalk,
-      refetchFarmerBalances,
-      farmerBalances,
-    ]
-  );
+  //       const receipt = await txn.wait();
+  //       await Promise.all([refetchFarmerBalances()]); // should we also refetch the penalty?
+  //       txToast.success(receipt);
+  //       formActions.resetForm();
+  //     } catch (err) {
+  //       txToast ? txToast.error(err) : toast.error(parseError(err));
+  //       formActions.setSubmitting(false);
+  //     }
+  //   },
+  //   [
+  //     account,
+  //     beanstalk,
+  //     refetchFarmerBalances,
+  //     farmerBalances,
+  //   ]
+  // );
+  const onSubmit = () => {};
 
   return (
     <Formik<ChopFormValues>

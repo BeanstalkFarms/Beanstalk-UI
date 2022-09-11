@@ -3,6 +3,7 @@ import { Stack, Typography } from '@mui/material';
 import { BeanstalkPalette } from '../App/muiTheme';
 import { ClaimStatus, Nft } from '../../util/BeaNFTs';
 import NFTImage from './NFTImage';
+import Row from '~/components/Common/Row';
 
 export interface NFTContentProps {
   collection: string;
@@ -12,7 +13,7 @@ export interface NFTContentProps {
 const NFTDetails: React.FC<NFTContentProps> = ({ nft, collection }) => (
   <Stack gap={1} sx={{ width: '100%', aspectRatio: '1/1' }}>
     <NFTImage nft={nft} />
-    <Stack direction="row" alignItems="start" justifyContent="space-between">
+    <Row alignItems="start" justifyContent="space-between">
       {/* Name */}
       <Typography variant="h4">
         BeaNFT {nft.id}
@@ -29,7 +30,7 @@ const NFTDetails: React.FC<NFTContentProps> = ({ nft, collection }) => (
           ? 'Ready to mint'
           : 'Minted'}
       </Typography>
-    </Stack>
+    </Row>
   </Stack>
   );
 

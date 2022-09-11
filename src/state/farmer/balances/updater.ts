@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import flatMap from 'lodash/flatMap';
 import { ZERO_BN } from '~/constants';
-import { BALANCE_TOKENS, ERC20_TOKENS, ETH } from '~/constants/tokens';
+import { ERC20_TOKENS, ETH } from '~/constants/tokens';
 import useChainId from '~/hooks/chain/useChainId';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useTokenMap from '~/hooks/chain/useTokenMap';
@@ -18,7 +18,6 @@ export const useFetchFarmerBalances = () => {
   
   /// Constants
   const Eth = useChainConstant(ETH);
-  const tokenMap = useTokenMap(BALANCE_TOKENS);
   const erc20TokenMap = useTokenMap(ERC20_TOKENS);
 
   /// Contracts
@@ -29,7 +28,7 @@ export const useFetchFarmerBalances = () => {
   /// FIXME: multicall
   const fetch = useCallback(async () => {
     try {
-      if (account && tokenMap) {
+      if (account && erc20TokenMap) {
         const erc20Addresses = Object.keys(erc20TokenMap);
         console.debug('Token Addresses', erc20Addresses);
         const promises = Promise.all([
@@ -85,7 +84,6 @@ export const useFetchFarmerBalances = () => {
     }
   }, [
     dispatch,
-    tokenMap,
     beanstalk,
     Eth,
     erc20TokenMap,

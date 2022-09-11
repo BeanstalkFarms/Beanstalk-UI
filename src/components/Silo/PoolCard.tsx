@@ -5,6 +5,7 @@ import { displayBeanPrice, displayBN } from '~/util';
 import { Pool } from '~/classes';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { ZERO_BN } from '~/constants';
+import Row from '~/components/Common/Row';
 
 /**
  * Displays data about a Pool containing Beans and other assets.
@@ -19,23 +20,22 @@ const PoolCard: React.FC<{
   ButtonProps,
 }) => {
   const cardContent = (
-    <Stack direction="row" justifyContent="space-between" alignItems="center">
-      <Stack
-        direction="row"
+    <Row justifyContent="space-between">
+      <Row
         alignItems="center"
         gap={2}
       >
-        <Stack direction="row" spacing={0.25} sx={{ fontSize: 24 }}>
+        <Row spacing={0.25} sx={{ fontSize: 24 }}>
           {pool.tokens.map((token) => (
             <TokenIcon key={token.address} token={token} />
           ))}
-        </Stack>
+        </Row>
         <Typography sx={{ fontWeight: 600, pt: 0.2 }}>
           ${displayBeanPrice(poolState?.price || ZERO_BN, 4)}
         </Typography>
-      </Stack>
+      </Row>
       <Stack>
-        <Stack justifyContent="end" direction="row" gap={0.6}>
+        <Row justifyContent="end" gap={0.6}>
           <Typography
             color="text.secondary"
             variant="bodySmall"
@@ -45,23 +45,23 @@ const PoolCard: React.FC<{
           <Typography variant="bodySmall">
             ${displayBN(poolState?.liquidity || ZERO_BN)}
           </Typography>
-        </Stack>
-        <Stack justifyContent="end" direction="row" gap={0.6}>
+        </Row>
+        <Row justifyContent="end" gap={0.6}>
           <Typography
             color="text.secondary"
             variant="bodySmall"
           >
             deltaB:
           </Typography>
-          <Stack direction="row" gap={0.25}>
+          <Row gap={0.25}>
             <Typography variant="bodySmall">
               {poolState?.deltaB?.gte(0) ? '+' : ''}
               {displayBN(poolState?.deltaB || ZERO_BN, true)}
             </Typography>
-          </Stack>
-        </Stack>
+          </Row>
+        </Row>
       </Stack>
-    </Stack>
+    </Row>
   );
   
   return ButtonProps ? (
