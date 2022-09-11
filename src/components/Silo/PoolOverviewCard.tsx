@@ -217,7 +217,8 @@ const PoolOverviewCard: React.FC<{
           />
         </Card>
         {/* Card Carousel */}
-        <Stack>
+        <Stack gap={1}>
+          <Typography variant="h4">How the Silo works</Typography>
           <Card
             // heights are defined here otherwise layout jumps occur during animation
             sx={({ breakpoints }) => ({
