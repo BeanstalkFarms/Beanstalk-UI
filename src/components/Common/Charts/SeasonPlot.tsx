@@ -14,7 +14,7 @@ import Row from '~/components/Common/Row';
 
 const defaultValueFormatter = (value: number) => value.toFixed(4);
 
-export type SeasonDataPoint = DataPoint & { season: number; };
+export type SeasonDataPoint = DataPoint;
 
 export type SeasonPlotBaseProps = {
   /** */
@@ -99,8 +99,8 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
           if (useThisDataPoint && curr !== null) {
             prev.push({
               season: curr.season as number,
-              date: new Date(parseInt(`${curr.timestamp}000`, 10)), // FIXME: inefficient
-              value: getValue(curr),
+              date:   curr.timestamp ? new Date(parseInt(`${curr.timestamp}000`, 10)) : undefined,
+              value:  getValue(curr),
             });
           }
           

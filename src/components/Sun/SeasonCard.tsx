@@ -5,7 +5,6 @@ import rainySeasonIcon from '~/img/beanstalk/sun/rainy-season.svg';
 import drySeasonIcon from '~/img/beanstalk/sun/dry-season.svg';
 import { displayBN, displayFullBN } from '../../util';
 import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
-import { BEAN } from '~/constants/tokens';
 import Row from '~/components/Common/Row';
 
 export interface SeasonCardProps {
@@ -30,10 +29,10 @@ const SeasonCard: React.FC<SeasonCardProps> = ({
   isNew = false
 }) => (
   <div>
-    <Box sx={{ '&:hover > .test': { display: 'block' }, overflow: 'hidden', position: 'relative' }}>
+    <Box sx={{ '&:hover > .next-season': { display: 'block' }, overflow: 'hidden', position: 'relative' }}>
       {isNew && (
         <Box
-          className="test"
+          className="next-season"
           sx={{ 
             borderColor: 'rgba(240, 223, 146, 1)',
             borderWidth: 1,
@@ -89,7 +88,11 @@ const SeasonCard: React.FC<SeasonCardProps> = ({
           {/* Soil */}
           <Grid item xs={3} md={2} textAlign="right">
             <Typography variant="bodySmall">
-              {newSoil ? displayFullBN(newSoil, BEAN[1].displayDecimals, BEAN[1].displayDecimals) : '-'}
+              {newSoil
+                ? newSoil.lt(0.01)
+                  ? '<0.01'
+                  : displayFullBN(newSoil, 2, 2) 
+                : '-'}
             </Typography>
           </Grid>
           {/* Temperature */}

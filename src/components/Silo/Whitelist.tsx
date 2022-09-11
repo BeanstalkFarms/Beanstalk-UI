@@ -1,12 +1,12 @@
 import React from 'react';
-import { Box, Button, Card, Divider, Grid, Link, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Card, Chip, CircularProgress, Divider, Grid, Link, Stack, Tooltip, Typography } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Link as RouterLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Pool, Token } from '~/classes';
 import { AppState } from '~/state';
 import TokenIcon from '~/components/Common/TokenIcon';
-import { BEAN, BEAN_CRV3_LP, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
+import { BEAN, SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
 import { AddressMap, ONE_BN, ZERO_BN } from '~/constants';
 import { displayFullBN, displayTokenAmount } from '~/util/Tokens';
 import useBDV from '~/hooks/beanstalk/useBDV';
@@ -17,6 +17,8 @@ import useSetting from '~/hooks/app/useSetting';
 import Row from '~/components/Common/Row';
 import Stat from '~/components/Common/Stat';
 import useUnripeUnderlyingMap from '~/hooks/beanstalk/useUnripeUnderlying';
+import useAPY from '~/hooks/beanstalk/useAPY';
+import stalkIconBlue from '~/img/beanstalk/stalk-icon-blue.svg';
 
 const ARROW_CONTAINER_WIDTH = 20;
 const TOOLTIP_COMPONENT_PROPS = {
@@ -48,12 +50,13 @@ const Whitelist : React.FC<{
   /// Chain
   const getChainToken = useGetChainToken();
   const Bean          = getChainToken(BEAN);
-  const BeanCrv3      = getChainToken(BEAN_CRV3_LP);
   const urBean        = getChainToken(UNRIPE_BEAN);
   const urBeanCrv3    = getChainToken(UNRIPE_BEAN_CRV3);
   const unripeUnderlyingTokens = useUnripeUnderlyingMap();
 
   /// State
+  const apyQuery      = useAPY();
+  const latestYield   = apyQuery.data;
   const getBDV        = useBDV();
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
   const unripeTokens  = useSelector<AppState, AppState['_bean']['unripe']>((state) => state._bean.unripe);
@@ -72,17 +75,60 @@ const Whitelist : React.FC<{
         }}
       >
         <Grid container alignItems="flex-end">
-          <Grid item md={3} xs={4}>
+          <Grid item md={2.5} xs={4}>
             <Typography color="gray">Token</Typography>
           </Grid>
-          <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
-            <Tooltip title="Stalk and Seeds earned for each 1 Bean Denominated Value (BDV) Deposited in the Silo.">
-              <Typography color="gray">
-                Rewards
-              </Typography>
-            </Tooltip>
+          <Grid item md={3} xs={0} display={{ xs: 'none', md: 'block' }}>
+            <Row gap={0.25}>
+              <Tooltip
+                title={
+                  <>
+                    The amount of Stalk and Seeds earned for each 1 Bean Denominated Value (BDV) Deposited in the Silo.
+                  </>
+                }
+              >
+                <Typography color="gray">
+                  Rewards
+                </Typography>
+              </Tooltip>
+              &nbsp;
+              <Tooltip
+                title={
+                  <>
+                    <strong>vAPY</strong> (Variable APY) uses historical data about Beans earned by Stalkholders to estimate future returns for Depositing assets in the Silo.&nbsp;<Link underline="hover" href="https://docs.bean.money/guides/silo/understand-vapy" target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>Learn more</Link>
+                    <Divider sx={{ my: 1 }} />
+                    <Typography fontSize={FontSize.sm}>
+                      <strong>Bean vAPY:</strong> Estimated annual Beans earned by a Stalkholder for Depositing an asset.<br />
+                      <strong>Stalk vAPY:</strong> Estimated annual growth in Stalk for Depositing an asset.
+                    </Typography>
+                  </>
+                }
+              >
+                <span>
+                  <Row gap={0.25}> 
+                    <Chip
+                      variant="filled"
+                      color="primary"
+                      label={<Row gap={0.5}><TokenIcon token={BEAN[1]} /> vAPY</Row>}
+                      onClick={undefined}
+                      size="small"
+                    />
+                    <Chip
+                      variant="filled"
+                      color="secondary"
+                      label={<Row gap={0.5}><TokenIcon token={{ symbol: 'Stalk', logo: stalkIconBlue } as Token} /> vAPY</Row>}
+                      onClick={undefined}
+                      size="small"
+                    />
+                    {(apyQuery.loading) && (
+                      <CircularProgress variant="indeterminate" size={12} thickness={4} sx={{ ml: 0.5 }} />
+                    )}
+                  </Row>
+                </span>
+              </Tooltip>
+            </Row>
           </Grid>
-          <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
+          <Grid item md={1.5} xs={0} display={{ xs: 'none', md: 'block' }}>
             <Tooltip title="Total Value Deposited in the Silo.">
               <Typography color="gray">TVD</Typography>
             </Tooltip>
@@ -104,10 +150,24 @@ const Whitelist : React.FC<{
           </Grid>
         </Grid>
       </Box>
-      <Stack gap={1} sx={{ p: 1 }}>
+      <Stack gap={1} p={1}>
         {config.whitelist.map((token) => {
-          const deposited   = farmerSilo.balances[token.address]?.deposited;
-          const isUnripe    = token === urBean || token === urBeanCrv3;
+          const deposited = farmerSilo.balances[token.address]?.deposited;
+          const isUnripe = token === urBean || token === urBeanCrv3;
+          
+          // APYs
+          const seeds = token.getSeeds();
+          const apys = (
+            latestYield ? 
+              seeds.eq(2)
+              ? latestYield.bySeeds['2']
+              : seeds.eq(4)
+              ? latestYield.bySeeds['4']
+              : null
+            : null
+          );
+
+          // Unripe data
           const underlyingToken = isUnripe ? (
             unripeUnderlyingTokens[token.address]
           ) : null;
@@ -115,6 +175,7 @@ const Whitelist : React.FC<{
             (beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN)
               .div(unripeTokens[token.address]?.supply || ONE_BN)
           ) : ONE_BN;
+
           return (
             <Box key={`${token.address}-${token.chainId}`}>
               <Button
@@ -134,7 +195,7 @@ const Whitelist : React.FC<{
                   {/**
                     * Cell: Token
                     */}
-                  <Grid item md={3} xs={7}>
+                  <Grid item md={2.5} xs={7}>
                     <Row gap={1}>
                       <img
                         src={token.logo}
@@ -150,19 +211,71 @@ const Whitelist : React.FC<{
                   {/** 
                     * Cell: Rewards
                     */}
-                  <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
-                    <Tooltip placement="right" title={<>1 {token.symbol} = {displayFullBN(getBDV(token))} BDV</>}>
-                      <Typography display="inline" color="black">
-                        <TokenIcon token={STALK} />{token.rewards?.stalk} &nbsp;
-                        <TokenIcon token={SEEDS} style={{ marginTop: 1.5 }} />{token.rewards?.seeds}
-                      </Typography>
-                    </Tooltip>
+                  <Grid item md={3} xs={0} display={{ xs: 'none', md: 'block' }}>
+                    <Row gap={0.75}>
+                      <Tooltip placement="right" title={<>1 {token.symbol} = {displayFullBN(getBDV(token))} BDV</>}>
+                        <Typography display="inline" color="black">
+                          <TokenIcon token={STALK} />{token.rewards?.stalk}{' '}
+                          <TokenIcon token={SEEDS} style={{ marginTop: 1.5 }} />{token.rewards?.seeds}
+                        </Typography>
+                      </Tooltip>
+                      <Row gap={0.25}>
+                        <Tooltip
+                          placement="right"
+                          componentsProps={TOOLTIP_COMPONENT_PROPS}
+                          title={
+                            <Row gap={0}>
+                              <Box sx={{ px: 1, py: 0.5, maxWidth: 245 }}>
+                                <Stat
+                                  title={<Row gap={0.5}><TokenIcon token={BEAN[1]} /> Total Beans per Season</Row>}
+                                  gap={0.25}
+                                  variant="h4"
+                                  amount={(
+                                    latestYield ? displayFullBN(latestYield.beansPerSeasonEMA, Bean.displayDecimals) : '0'
+                                  )}
+                                  subtitle="14-day exponential moving average of Beans earned by all Stalkholders per Season."
+                                />
+                              </Box>
+                              <Box sx={{ px: 1, py: 0.5, maxWidth: 275 }}>
+                                The Variable Bean APY uses a moving average of Beans earned by Stalkholders during recent Seasons to estimate a future rate of return, accounting for Stalk growth.&nbsp;<Link underline="hover" href="https://docs.bean.money/guides/silo/understand-vapy" target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>Learn more</Link>
+                              </Box>
+                            </Row>
+                          }
+                        >
+                          <Chip
+                            variant="filled"
+                            color="primary"
+                            label={apys ? `${apys.bean.times(100).toFixed(1)}%` : '0.00%'}
+                            onClick={undefined}
+                            size="small"
+                          />
+                        </Tooltip>
+                        <Tooltip
+                          componentsProps={TOOLTIP_COMPONENT_PROPS}
+                          placement="right"
+                          title={
+                            <Box sx={{ maxWidth: 245 }}>
+                              The Variable Stalk APY estimates the growth in your Stalk balance for Depositing {token.symbol}.&nbsp;<Link underline="hover" href="https://docs.bean.money/guides/silo/understand-vapy" target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>Learn more</Link>
+                            </Box>
+                          }
+                        >
+                          <Chip
+                            variant="filled"
+                            color="secondary"
+                            label={apys ? `${apys.stalk.times(100).toFixed(1)}%` : '0.00%'}
+                            onClick={undefined}
+                            size="small"
+                            sx={{ display: { lg: 'inherit', xs: 'none' } }}
+                          />
+                        </Tooltip>
+                      </Row>
+                    </Row>
                   </Grid>
 
                   {/**
                     * Cell: TVD
                     */}
-                  <Grid item md={2} xs={0} display={{ xs: 'none', md: 'block' }}>
+                  <Grid item md={1.5} xs={0} display={{ xs: 'none', md: 'block' }}>
                     <Tooltip
                       placement="right"
                       componentsProps={TOOLTIP_COMPONENT_PROPS}
@@ -170,21 +283,7 @@ const Whitelist : React.FC<{
                         isUnripe ? (
                           <Stack gap={0.5}>
                             <Stack direction={{ xs: 'column', md: 'row' }} gap={{ xs: 0, md: 1 }} alignItems="stretch">
-                              <Stack display={{ xs: 'none', md: 'flex' }} alignItems="center" justifyContent="center">=</Stack>
-                              {/* <Box sx={{ px: 1, py: 0.5, maxWidth: 215, }}>
-                                <Stat
-                                  title={<Row gap={0.5}><TokenIcon token={token} /> Total Deposited {token.symbol}</Row>}
-                                  gap={0.25}
-                                  variant="h4"
-                                  amount={displayTokenAmount(beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN, token, { showName: false })}
-                                  subtitle={
-                                    <>
-                                      The total number of {token.symbol} Deposited in the Silo.
-                                    </>
-                                  }
-                                />
-                              </Box> */}
-                              {/* <Stack alignItems="center" justifyContent="center">×</Stack> */}
+                              <Row display={{ xs: 'none', md: 'flex' }}>=</Row>
                               <Box sx={{ px: 1, py: 0.5, maxWidth: 215 }}>
                                 <Stat
                                   title={<Row gap={0.5}><TokenIcon token={underlyingToken!} /> Ripe {underlyingToken!.symbol}</Row>}
@@ -200,8 +299,8 @@ const Whitelist : React.FC<{
                                   subtitle={`The ${denomination.toUpperCase()} value of the ${underlyingToken!.symbol} underlying all ${token.symbol}.`}
                                 />
                               </Box>
-                              <Stack alignItems="center" justifyContent="center">×</Stack>
-                              <Box sx={{ px: 1, py: 0.5,  maxWidth: 245 }}>
+                              <Row>×</Row>
+                              <Box sx={{ px: 1, py: 0.5, maxWidth: 245 }}>
                                 <Stat
                                   title="% Deposited"
                                   gap={0.25}
@@ -216,7 +315,7 @@ const Whitelist : React.FC<{
                               </Box>
                             </Stack>
                             <Divider />
-                            <Box sx={{ pl: { xs: 0, md:  2.7 } }}>
+                            <Box sx={{ pl: { xs: 0, md: 2.7 } }}>
                               <Typography variant="bodySmall" color="gray" textAlign="left">
                                 Total Amount Deposited: {displayFullBN(beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN, token.displayDecimals)} {token.symbol}<br />
                                 Total Supply: {displayFullBN(unripeTokens[token.address]?.supply || ZERO_BN)} {token.symbol}<br />
@@ -225,7 +324,7 @@ const Whitelist : React.FC<{
                           </Stack>
                         ) : (
                           <Stack direction={{ xs: 'column', md: 'row' }} gap={{ xs: 0, md: 1 }} alignItems="stretch">
-                            <Stack display={{ xs: 'none', md: 'flex' }} alignItems="center" justifyContent="center">=</Stack>
+                            <Row display={{ xs: 'none', md: 'flex' }}>=</Row>
                             <Box sx={{ px: 1, py: 0.5, maxWidth: 245 }}>
                               <Stat
                                 title={<Row gap={0.5}><TokenIcon token={token} /> Total Deposited {token.symbol}</Row>}
@@ -239,7 +338,7 @@ const Whitelist : React.FC<{
                                 }
                               />
                             </Box>
-                            <Stack alignItems="center" justifyContent="center">×</Stack>
+                            <Row>×</Row>
                             <Box sx={{ px: 1, py: 0.5 }}>
                               <Stat
                                 title={`${token.symbol} Price`}
@@ -295,11 +394,11 @@ const Whitelist : React.FC<{
                         ? (
                           <Tooltip title={(
                             <>
-                              {displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)} Deposited Beans<br />
+                              {displayFullBN(deposited?.amount || ZERO_BN, token.displayDecimals)} Deposited BEAN<br />
                               +&nbsp;
                               <Typography display="inline" color="primary">
                                 {displayFullBN(farmerSilo.beans.earned || ZERO_BN, token.displayDecimals)}
-                              </Typography> Earned Beans<br />
+                              </Typography> Earned BEAN<br />
                               <Divider sx={{ my: 0.5, opacity: 0.7, borderBottomWidth: 0, }} />
                               = {displayFullBN(farmerSilo.beans.earned.plus(deposited?.amount || ZERO_BN), token.displayDecimals)} BEAN<br />
                             </> 
@@ -330,7 +429,7 @@ const Whitelist : React.FC<{
                         componentsProps={TOOLTIP_COMPONENT_PROPS}
                         title={isUnripe ? (
                           <Stack direction={{ xs: 'column', md: 'row' }} gap={{ xs: 0, md: 1 }} alignItems="stretch">
-                            <Box sx={{ px: 1, py: 0.5, backgroundColor: 'transparent' }}>
+                            <Box sx={{ px: 1, py: 0.5 }}>
                               <Stat
                                 title={<Row gap={0.5}><TokenIcon token={token} /> {token.symbol}</Row>}
                                 gap={0.25}
@@ -343,8 +442,8 @@ const Whitelist : React.FC<{
                                 }
                               />
                             </Box>
-                            <Stack alignItems="center" justifyContent="center">×</Stack>
-                            <Box sx={{ px: 1, py: 0.5,  maxWidth: 215 }}>
+                            <Row>×</Row>
+                            <Box sx={{ px: 1, py: 0.5, maxWidth: 215 }}>
                               <Stat
                                 title="Chop Rate"
                                 gap={0.25}
@@ -357,7 +456,7 @@ const Whitelist : React.FC<{
                                 }
                               />
                             </Box>
-                            <Stack alignItems="center" justifyContent="center">×</Stack>
+                            <Row>×</Row>
                             <Box sx={{ px: 1, py: 0.5, maxWidth: 215 }}>
                               <Stat
                                 title={`${unripeUnderlyingTokens[token.address]} Price`}

@@ -10,6 +10,10 @@ export const ChipLabel : React.FC<{ name: string; token?: Token }> = ({ name, ch
   </Row>
 ); 
 
+/**
+ * Chips contained in a Tab respond to hover events and change
+ * colors when the parent Tab is selected.
+ */
 export const StyledTab = styled((props: TabProps) => (
   <Tab {...props} />
 ))(() => ({
@@ -22,13 +26,11 @@ export const StyledTab = styled((props: TabProps) => (
   '& .MuiChip-label': {
     opacity: 0.7
   },
-  '&.Mui-selected .MuiChip-root': {
-    // backgroundColor: BeanstalkPalette.lightGrey
-  },
   '&:hover .MuiChip-label, &.Mui-selected .MuiChip-label': {
     opacity: 1,
   },
   '& .MuiChip-root:hover': {
     cursor: 'pointer'
   }
+  // '&.Mui-selected .MuiChip-root': {},
 }));
