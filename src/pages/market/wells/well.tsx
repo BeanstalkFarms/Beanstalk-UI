@@ -17,10 +17,27 @@ import PageHeader from '~/components/Common/PageHeader';
 import WellStat from '~/components/Market/Wells/WellStat';
 import stalkIcon from '~/img/beanstalk/stalk-icon.svg';
 import { displayBN } from '~/util';
+import PagePath from '~/components/Common/PagePath';
 
 const WellPage: React.FC = () => (
   <Container maxWidth="lg">
     <Stack gap={2}>
+      <PagePath
+        items={[
+          {
+            title: 'Market',
+            path: '/'
+          },
+          {
+            title: 'Well Explorer',
+            path: '/'
+          },
+          {
+            title: 'BEAN:ETH Liquidity Well',
+            path: '/'
+          }
+        ]}
+      />
       <PageHeader
         title={
           <Row gap={1}>
