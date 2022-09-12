@@ -25,8 +25,8 @@ import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 
 import { PodOrder } from '~/state/farmer/market';
-import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
-import { ActionType } from '../../../util/Actions';
+import StyledAccordionSummary from '../../../Common/Accordion/AccordionSummary';
+import { ActionType } from '../../../../util/Actions';
 
 export type FillOrderFormValues = {
   plot: PlotFragment;

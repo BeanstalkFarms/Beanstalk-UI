@@ -10,7 +10,7 @@ import {
 import useAnchor from '~/hooks/display/useAnchor';
 import DropdownIcon from '~/components/Common/DropdownIcon';
 import ROUTES from '~/components/Nav/routes';
-import MenuItem from '../Nav/MenuItem';
+import MenuItem from '../../Nav/MenuItem';
 
 // -----------------------------------------------------------------
 

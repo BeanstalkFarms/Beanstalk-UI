@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 import { Box, BoxProps, Card, Typography } from '@mui/material';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
-import { tableStyle } from '../../Common/Table/styles';
-import TablePagination from '../../Common/TablePagination';
-import BlurComponent from '../../Common/ZeroState/BlurComponent';
+import { tableStyle } from '../../../Common/Table/styles';
+import TablePagination from '../../../Common/TablePagination';
+import BlurComponent from '../../../Common/ZeroState/BlurComponent';
 
 const MAX_ROWS = 10;
 
