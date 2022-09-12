@@ -106,7 +106,7 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
            */
           const latestSubgraphSeason = init.data.seasons[0].season;
 
-          console.debug(`[useSeasonsQuery] requested all seasons. current season is ${latestSubgraphSeason}. oldest loaded season ${null}`, init.data.seasons, queryConfig);
+          console.debug(`[useSeasonsQuery] requested all seasons. current season is ${latestSubgraphSeason}. oldest loaded season ${init.data.seasons[init.data.seasons.length - 1]}`, init.data.seasons, queryConfig);
 
           /**
            * 3000 / 1000 = 3 queries

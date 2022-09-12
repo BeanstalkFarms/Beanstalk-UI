@@ -3,7 +3,7 @@ import { bisector, extent, max, min } from 'd3-array';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { LinePath, Bar, Line } from '@visx/shape';
 import { Group } from '@visx/group';
-import { scaleLinear } from '@visx/scale';
+import { scaleLinear, scaleTime } from '@visx/scale';
 import { localPoint } from '@visx/event';
 import { useTooltip } from '@visx/tooltip';
 import {
@@ -61,12 +61,13 @@ type GraphProps = {
 export type DataPoint = {
   season: number;
   value:  number;
-  date?:  Date;
+  date:  Date;
 };
 
 // data accessors
-const getX = (d: DataPoint) => d?.season;
-const getY = (d: DataPoint) => d?.value;
+const getX = (d: DataPoint) => d.season;
+const getD = (d: DataPoint) => d.date;
+const getY = (d: DataPoint) => d.value;
 const bisectSeason = bisector<DataPoint, number>(
   (d) => d.season
 ).left;
@@ -143,17 +144,14 @@ const Graph: React.FC<GraphProps> = (props) => {
     curve: _curve = 'linear',
     children,
   } = props;
+  
   // When positioning the circle that accompanies the cursor,
   // use this dataset to decide where it goes. (There is one
   // circle but potentially multiple series).
   const data = series[0];
   const curve = typeof _curve === 'string' ? CURVES[_curve] : _curve;
-
   const yAxisWidth = 57;
 
-  /**
-   * 
-   */
   const {
     showTooltip,
     hideTooltip,
@@ -162,22 +160,21 @@ const Graph: React.FC<GraphProps> = (props) => {
     tooltipLeft = 0,
   } = useTooltip<DataPoint[] | undefined>();
 
-  /**
-   * Build scales.
-   * In both cases:
-   *  "domain" = values shown on the graph (dates, numbers)
-   *  "range"  = pixel values
-   */
   const scales = useMemo(() => series.map((_data) => {
+    const xDomain = extent(_data, getX) as [number, number];
     const xScale = scaleLinear<number>({
-      domain: extent(_data, getX) as [number, number],
+      domain: xDomain,
     });
+    const dScale = scaleTime({
+      domain: extent(_data, getD) as [Date, Date],
+      range:  xDomain
+    });
+    console.debug('xDomain', xDomain);
+    console.debug('dScale range', dScale.range());
 
-    //
+    /// Used for price graphs which should always show y = 1.
+    /// Sets the yScale so that 1 is always perfectly in the middle.
     let yScale;
-
-    // Used for price graphs which should always show y = 1.
-    // Sets the yScale so that 1 is always perfectly in the middle.
     if (isTWAP) {
       const yMin = min(_data, getY);
       const yMax = max(_data, getY);
@@ -193,21 +190,29 @@ const Graph: React.FC<GraphProps> = (props) => {
       });
     } 
     
-    // Min/max y scaling
+    /// Min/max y scaling
     else {
       yScale = scaleLinear<number>({
-        domain: [min(_data, getY) as number, max(_data, getY) as number],
+        domain: [
+          min(_data, getY) as number, 
+          max(_data, getY) as number
+        ],
       });
     }
 
+    /// Set ranges
     xScale.range([0, width - yAxisWidth]);
     yScale.range([
       height - axisHeight - margin.bottom - strokeBuffer, // bottom edge
       margin.top,
     ]);
 
-    return { xScale, yScale };
-  }), [width, height, series, isTWAP]);
+    return {
+      xScale,
+      dScale,
+      yScale,
+    };
+  }), [series, isTWAP, width, height]);
 
   const handleTooltip = useCallback(
     (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
@@ -252,28 +257,6 @@ const Graph: React.FC<GraphProps> = (props) => {
     onCursor(undefined);
   }, [hideTooltip, onCursor]);
 
-  const [
-    xTickSeasons,
-    xTickDates,
-  ] = useMemo(
-    () => {
-      const interval = Math.ceil(series[0].length / 12);
-      const shift    = Math.ceil(interval / 3); // slight shift on tick labels
-      return series[0].reduce<[number[], string[]]>((prev, curr, i) => {
-        if (i % interval === shift) {
-          prev[0].push(curr.season);
-          prev[1].push(
-            curr.date
-              ? `${(curr.date).getMonth() + 1}/${(curr.date).getDate()}`
-              : curr.season.toString() // fallback to season if no date provided
-          );
-        }
-        return prev;
-      }, [[], []]);
-    },
-    [series]
-  );
-  const xTickFormat = useCallback((_, i) => xTickDates[i], [xTickDates]);
   const yTickFormat = useCallback((val) => {
     if (isTWAP) {
       return displayFullBN(new BigNumber(val), 4, 4);
@@ -341,10 +324,12 @@ const Graph: React.FC<GraphProps> = (props) => {
             orientation={Orientation.bottom}
             scale={scales[0].xScale}
             stroke={axisColor}
-            tickFormat={xTickFormat}
             tickStroke={axisColor}
             tickLabelProps={xTickLabelProps}
-            tickValues={xTickSeasons}
+            tickFormat={(v) => {
+              const d = scales[0].dScale.invert(v);
+              return `${d.getMonth() + 1}/${d.getDate()}`;
+            }}
           />
         </g>
         <g transform={`translate(${width - 17}, 1)`}>
