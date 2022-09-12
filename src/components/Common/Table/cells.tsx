@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Chip, LinearProgress, Link, Tab, Tabs, Tooltip, Typography } from '@mui/material';
+import { Box, Chip, LinearProgress, Link, Tooltip, Typography } from '@mui/material';
 import { GridColumns, GridRenderCellParams, GridValueFormatterParams } from '@mui/x-data-grid';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import BigNumber from 'bignumber.js';
@@ -305,16 +305,11 @@ const COLUMNS = {
   /// DEX
   ///
   ///
-  label: (flex: number, tab: number, handleChangeTab: any) => ({
+  label: (flex: number, tabs: any) => ({
     field: 'label',
     headerName: 'Type',
     renderHeader: () => (
-      <Tabs value={tab} onChange={handleChangeTab}>
-        <Tab label="All" />
-        <Tab label="Swaps" />
-        <Tab label="Adds" />
-        <Tab label="Removes" />
-      </Tabs>
+      tabs
     ),
     flex: flex,
     align: 'left',

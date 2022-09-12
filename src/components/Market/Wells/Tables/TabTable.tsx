@@ -90,7 +90,7 @@ export type MarketBaseTableProps = {
   maxRows?: number;
 }
 
-const WellBaseTable: React.FC<
+const TabTable: React.FC<
   MarketBaseTableProps &
   DataGridProps
 > = ({
@@ -134,4 +134,4 @@ const WellBaseTable: React.FC<
   );
 };
 
-export default WellBaseTable;
+export default TabTable;

@@ -1,6 +1,5 @@
 import React from 'react';
-import { useMediaQuery } from '@mui/material';
-
+import { Tab, Tabs, useMediaQuery } from '@mui/material';
 import { DataGridProps } from '@mui/x-data-grid';
 import { useTheme } from '@mui/material/styles';
 import BigNumber from 'bignumber.js';
@@ -8,7 +7,7 @@ import useTabs from '~/hooks/display/useTabs';
 import { PodListing } from '~/state/farmer/market';
 import COLUMNS from '~/components/Common/Table/cells';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
-import WellBaseTable from '~/components/Market/Wells/Tables/Base';
+import TabTable from '~/components/Market/Wells/Tables/TabTable';
 import { Module, ModuleContent } from '~/components/Common/Module';
 import { BEAN, PODS } from '~/constants/tokens';
 
@@ -39,7 +38,15 @@ const WellActivity: React.FC<{}> = () => {
       // COLUMNS.pricePerPod(1),
       // // amount
       // maxHarvestableIndex
-      COLUMNS.label(2.5, tab, handleChangeTab),
+      COLUMNS.label(
+        2.5, 
+        <Tabs value={tab} onChange={handleChangeTab}>
+          <Tab label="All" />
+          <Tab label="Swaps" />
+          <Tab label="Adds" />
+          <Tab label="Removes" />
+        </Tabs>
+      ),
       COLUMNS.totalValue(1),
       COLUMNS.tokenAmount('tokenAmount0', BEAN[1], 1),
       COLUMNS.tokenAmount('tokenAmount1', PODS, 1),
@@ -67,7 +74,7 @@ const WellActivity: React.FC<{}> = () => {
       {/*  <Tab label="Removes" /> */}
       {/* </ModuleTabs> */}
       <ModuleContent>
-        <WellBaseTable
+        <TabTable
           columns={columns}
           rows={mockWellActivityData}
           loading={data.loading}
