@@ -17,11 +17,13 @@ const WellCharts: React.FC<{}> = () => {
         <Tab label="Liquidity" />
         <Tab label="Volume" />
         <Tab label="deltaB" />
-        <Tab label="Price" />
+        <Tab label="Price (BEAN/ETH)" />
+        <Tab label="Price (ETH/BEAN)" />
       </ModuleTabs>
       {tab === 0 && <Liquidity height={240} />}
       {tab === 1 && <Volume height={240} />}
       {tab === 2 && <MarketCap height={240} />}
+      {tab === 3 && <Supply height={240} />}
       {tab === 3 && <Supply height={240} />}
     </Module>
   );

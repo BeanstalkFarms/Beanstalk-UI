@@ -1,114 +1,115 @@
 import React from 'react';
-import { Button,
-  Card,
-  Container, Divider, Grid,
+import {
+  Container, Grid,
   Stack, Typography
 } from '@mui/material';
-import { Link } from 'react-router-dom';
-import PageHeaderSecondary from '~/components/Common/PageHeaderSecondary';
-import WhitelistBadge from '~/components/Market/Wells/WhitelistBadge';
+import BigNumber from 'bignumber.js';
 import Row from '~/components/Common/Row';
-import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
-import TokenIcon from '~/components/Common/TokenIcon';
-import { BEAN, STALK } from '~/constants/tokens';
+import { IconSize } from '~/components/App/muiTheme';
 import WellCharts from '~/components/Market/Wells/Charts';
 import WellActivity from '~/components/Market/Wells/Tables';
 import WellButtons from '~/components/Market/Wells/WellButtons';
 import beanIcon from '~/img/tokens/bean-logo-circled.svg';
 import ethIcon from '~/img/tokens/eth-logo-circled.svg';
 import { Module } from '~/components/Common/Module';
+import WellReserves from '~/components/Market/Wells/WellReserves';
+import PageHeader from '~/components/Common/PageHeader';
+import WellStat from '~/components/Market/Wells/WellStat';
+import stalkIcon from '~/img/beanstalk/stalk-icon.svg';
+import { displayBN } from '~/util';
 
 const WellPage: React.FC = () => (
   <Container maxWidth="lg">
     <Stack gap={2}>
-      <PageHeaderSecondary
+      <PageHeader
         title={
           <Row gap={1}>
             <Row gap={0.2}>
               <img alt="" src={beanIcon} height={IconSize.medium} />
               <img alt="" src={ethIcon} height={IconSize.medium} />
             </Row>
-            <Typography variant="h2" textAlign="center" sx={{ verticalAlign: 'middle' }}>BEAN:ETH</Typography>
+            <Typography variant="h2" textAlign="center" sx={{ verticalAlign: 'middle' }}>BEAN:ETH Liquidity
+              Well
+            </Typography>
           </Row>
         }
-        returnPath="/market/wells"
-        alignTitle="left"
         control={<WellButtons />}
       />
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6} lg={4}>
-          <Card sx={{ height: '100%', p: 1 }}>
-            <Stack justifyContent="space-between" height="100%">
-              <Stack p={1} pb={2} gap={1}>
-                <Row justifyContent="space-between">
-                  <Typography variant="h4">Well Overview</Typography>
-                  <WhitelistBadge isWhitelisted />
-                </Row>
-                <Stack
-                  gap={1}
-                  p={1.5}
-                  sx={{
-                    backgroundColor: BeanstalkPalette.lightestBlue,
-                    borderRadius: 1
-                  }}
-                >
-                  <Row justifyContent="space-between">
-                    <Row gap={0.5}>
-                      <TokenIcon token={BEAN[1]} />
-                      <Typography>BEAN</Typography>
-                    </Row>
-                    <Typography>750,135 (50.05%)</Typography>
-                  </Row>
-                  <Row justifyContent="space-between">
-                    <Row gap={0.5}>
-                      <TokenIcon token={BEAN[1]} />
-                      <Typography>ETH</Typography>
-                    </Row>
-                    <Typography>35.15 (49.95%)</Typography>
-                  </Row>
-                  <Divider />
-                  <Row justifyContent="space-between">
-                    <Typography>Current DeltaB</Typography>
-                    <Typography>-10,000</Typography>
-                  </Row>
-                </Stack>
-                <Stack gap={1} px={1}>
-                  <Row justifyContent="space-between">
-                    <Typography>Type</Typography>
-                    <Typography>Constant Product</Typography>
-                  </Row>
-                  <Row justifyContent="space-between">
-                    <Typography>Total Volume (7D)</Typography>
-                    <Typography>$353,353</Typography>
-                  </Row>
-                  <Row justifyContent="space-between">
-                    <Typography>Beans Earned by Depositors (7D)</Typography>
-                    <Row gap={0.3}>
-                      <TokenIcon token={BEAN[1]} />
-                      <Typography>136,361</Typography>
-                    </Row>
-                  </Row>
-                  <Row justifyContent="space-between">
-                    <Typography>Stalk Grown by Depositors (7D)</Typography>
-                    <Row gap={0.3}>
-                      <TokenIcon token={STALK} />
-                      <Typography>36,361</Typography>
-                    </Row>
-                  </Row>
-                </Stack>
-              </Stack>
-              {/* TODO: if whitelisted, link to specific pool in the silo */}
-              <Button fullWidth component={Link} to="/silo">
-                <Typography variant="h4">Deposit Liquidity through the Silo</Typography>
-              </Button>
-            </Stack>
-          </Card>
-        </Grid>
         <Grid item xs={12} md={6} lg={8}>
           <WellCharts />
         </Grid>
+        <Grid item xs={12} md={6} lg={4}>
+          <WellReserves />
+        </Grid>
       </Grid>
-      <Module sx={{ p: 2 }} />
+      <Module sx={{ p: 2 }}>
+        <Grid container>
+          <Grid item xs={6} md={1.75}>
+            <WellStat
+              title="Type"
+              subTitle={
+                <Typography variant="h4">
+                  Constant Product
+                </Typography>
+              }
+            />
+          </Grid>
+          <Grid item xs={6} md={1.5}>
+            <WellStat
+              title="Exchange Fees"
+              subTitle={
+                <Typography variant="h4">
+                  0.00%
+                </Typography>
+              }
+            />
+          </Grid>
+          <Grid item xs={6} md={1.5}>
+            <WellStat
+              title="Rewards per BDV"
+              subTitle={
+                <Row>
+                  <img src={stalkIcon} alt="" height={IconSize.small} />
+                  <Typography variant="h4">
+                    {displayBN(new BigNumber(5))}
+                  </Typography>
+                </Row>
+              }
+            />
+          </Grid>
+          <Grid item xs={6} md={2.75}>
+            <WellStat
+              title="Beans Earned by Depositors (7D)"
+              subTitle={
+                <Typography variant="h4">
+                  Constant Product
+                </Typography>
+              }
+            />
+          </Grid>
+          <Grid item xs={6} md={2.75}>
+            <WellStat
+              title="Stalk Grown by Depositors (7D)"
+              subTitle={
+                <Typography variant="h4">
+                  Constant Product
+                </Typography>
+              }
+            />
+          </Grid>
+          <Grid item xs={6} md={1.75}>
+            <WellStat
+              title="Well Address"
+              subTitle={
+                <Typography variant="h4">
+                  Constant Product
+                </Typography>
+              }
+            />
+          </Grid>
+        </Grid>
+      </Module>
       <WellActivity />
     </Stack>
   </Container>

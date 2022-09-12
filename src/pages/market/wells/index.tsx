@@ -13,7 +13,7 @@ const WellHomePage: React.FC = () => (
   <Container maxWidth="lg">
     <Stack gap={2}>
       <PageHeader
-        title="The Decentralized Exchange"
+        title="Reservoir"
         description="Explore Liquidity Wells in the zero-fee DEX."
         />
       <Card sx={{ flex: 1, pt: 2 }}>
