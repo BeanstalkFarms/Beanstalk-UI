@@ -12,16 +12,6 @@ import { Lookup } from '@react-spring/types';
 
 type SlideDirection = 'right' | 'left';
 
-export type CarouselOverrideFnParams = {
-  direction: SlideDirection;
-  page: number;
-};
-
-export interface CarouselConfigOverride {
-  config: any | ((props?: CarouselOverrideFnParams) => any);
-  // Carousel context values required to pass into config if type is function
-}
-
 export interface CarouselConfigProps {
   // disable translateX animation
   disableSlide?: boolean;
@@ -30,10 +20,17 @@ export interface CarouselConfigProps {
   // duration of animation in ms
   duration?: number;
   // override all and use only custom animation transitions
-  override?: CarouselConfigOverride;
+  override?:
+    | any
+    | ((props?: { direction: SlideDirection; page: number }) => any);
 }
 
-export interface CarouselContextReturn {
+export interface CarouselProps {
+  children: React.ReactNode;
+  total: number;
+}
+
+interface CarouselContextReturn {
   springRef: SpringRef<Lookup<any>>;
   page: number;
   direction: SlideDirection;
@@ -44,11 +41,6 @@ export interface CarouselContextReturn {
 interface CarouselState {
   page: number;
   direction: SlideDirection;
-}
-
-export interface CarouselProps {
-  children: React.ReactNode;
-  total: number;
 }
 
 const useCarouselController = ({
@@ -84,7 +76,6 @@ const useCarouselController = ({
 const CarouselContext = createContext<CarouselContextReturn | undefined>(
   undefined
 );
-
 export const CarouselProvider: React.FC<CarouselProps> = ({
   total,
   children,
@@ -96,13 +87,11 @@ export const CarouselProvider: React.FC<CarouselProps> = ({
 
 export const useCarousel = () => {
   const carouselContext = useContext(CarouselContext);
-
   if (!carouselContext) {
     throw new Error(
       'No CarouselContext.Provider found when calling useCarousel.'
     );
   }
-
   return carouselContext;
 };
 
