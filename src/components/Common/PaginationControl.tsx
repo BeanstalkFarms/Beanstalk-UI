@@ -1,17 +1,19 @@
 import React from 'react';
+import { experimental_sx as sx } from '@mui/material/styles';
 
-import { Box, Stack, styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 
 import { BeanstalkPalette } from '../App/muiTheme';
+import Row from '~/components/Common/Row';
 
 const PaginationItem = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isActive',
-})<{ isActive: boolean }>(({ isActive }) => ({
+})<{ isActive: boolean }>(({ isActive }) => sx({
   height: '5px',
   minWidth: '20px',
   width: '100%',
-  borderRadius: '5px',
+  borderRadius: 0.5,
   background: isActive
     ? BeanstalkPalette.logoGreen
     : BeanstalkPalette.lightestGrey,
@@ -52,7 +54,7 @@ const PaginationControl: React.FC<Props> = ({
   const canIncrement = page < total - 1;
 
   return (
-    <Stack direction="row" width="100%" alignItems="center" gap={1.5}>
+    <Row width="100%" gap={1.5}>
       {showNavigationButton ? (
         <PaginationArrow
           disabled={!canDecrement}
@@ -65,6 +67,7 @@ const PaginationControl: React.FC<Props> = ({
         .fill(null)
         .map((_item, idx) => (
           <PaginationItem
+            key={idx}
             isActive={idx === page}
             onClick={() => onPageClick(idx)}
           />
@@ -78,7 +81,7 @@ const PaginationControl: React.FC<Props> = ({
           isRightArrow
         />
       ) : null}
-    </Stack>
+    </Row>
   );
 };
 

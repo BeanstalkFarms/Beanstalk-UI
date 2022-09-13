@@ -24,6 +24,7 @@ import DepositedAsset from '../Analytics/Silo/DepositedAsset';
 
 import SiloCarousel from './SiloCarousel';
 import { ERC20Token } from '~/classes/Token';
+import Row from '~/components/Common/Row';
 
 const assetInfoMap = {
   [BEAN[1].address]: {
@@ -108,8 +109,8 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
     : null;
 
   const DepositRewards = () => (
-    <Stack gap={1} direction="row" justifyContent="center">
-      <Stack direction="row" justifyContent="center" gap={0.5}>
+    <Row gap={1} justifyContent="center">
+      <Row gap={0.5} justifyContent="center">
         <Typography variant="bodyLarge">
           <TokenIcon
             token={STALK}
@@ -124,7 +125,7 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
           />
           {token.rewards?.seeds}
         </Typography>
-      </Stack>
+      </Row>
       <Chip
         variant="filled"
         color="primary"
@@ -137,14 +138,14 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
         size="small"
         sx={{ alignSelf: 'center' }}
       />
-    </Stack>
+    </Row>
   );
 
   return (
     <Card sx={{ p: 2, boxSizing: 'border-box', height: '100%' }}>
       <Stack gap={2}>
         {/* Title */}
-        <Stack direction="row" justifyContent="space-between" gap={2}>
+        <Row gap={2} justifyContent="space-between">
           <Typography variant="h4">{token.name} Overview</Typography>
           {isRipeAndIsLP ? (
             <Typography
@@ -164,7 +165,7 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
               <CallMadeIcon sx={{ fontSize: FontSize.xs, ml: '5px' }} />
             </Typography>
           ) : null}
-        </Stack>
+        </Row>
 
         {/* Token Graph */}
         <Card sx={{ borderColor: BeanstalkPalette.blue, pt: 2 }}>
@@ -176,7 +177,7 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
         </Card>
 
         {/* Stats */}
-        <Stack direction="row" justifyContent="space-between" gap={2}>
+        <Row gap={2} justifyContent="space-between">
           <Stat gap={0} title="Deposit Rewards" amount={<DepositRewards />} />
           <Stack textAlign="right">
             <Stat
@@ -187,7 +188,7 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
               sx={{ alignSelf: 'flex-end' }}
             />
           </Stack>
-        </Stack>
+        </Row>
 
         {/* Card Carousel */}
         <Stack gap={1}>
