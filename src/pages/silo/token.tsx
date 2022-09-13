@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Container, Stack } from '@mui/material';
 import SiloActions from '~/components/Silo/Actions';
-import PoolCard from '~/components/Silo/PoolCard';
 import PageHeaderSecondary from '~/components/Common/PageHeaderSecondary';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { ERC20Token } from '~/classes/Token';
@@ -20,6 +19,9 @@ import {
 } from '~/util/Guides';
 import PoolOverviewCard from '~/components/Silo/PoolOverviewCard';
 
+// max width for only token page.
+const TOKEN_PAGE_MAX_WIDTH = 1400;
+
 const TokenPage: React.FC<{}> = () => {
   // Constants
   const whitelist = useWhitelist();
@@ -32,9 +34,6 @@ const TokenPage: React.FC<{}> = () => {
   // State
   const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>(
     (state) => state._farmer.silo
-  );
-  const poolStates = useSelector<AppState, AppState['_bean']['pools']>(
-    (state) => state._bean.pools
   );
 
   // Ensure this address is a whitelisted token
@@ -49,14 +48,15 @@ const TokenPage: React.FC<{}> = () => {
   // Most Silo Tokens will have a corresponding Pool.
   // If one is available, show a PoolCard with state info.
   const pool = pools[address];
-  const poolState = poolStates[address];
 
   // If no data loaded...
   if (!whitelistedToken) return null;
 
   return (
-    <Container maxWidth="lg">
-      <Stack gap={2}>
+    <Container
+      sx={{ maxWidth: `${TOKEN_PAGE_MAX_WIDTH}px !important`, width: '100%' }}
+    >
+      <Stack gap={2} width="100%">
         <PageHeaderSecondary
           title={whitelistedToken.name}
           titleAlign="left"
@@ -75,20 +75,19 @@ const TokenPage: React.FC<{}> = () => {
             />
           }
         />
-        <Stack gap={2} direction={{ xs: 'column', lg: 'row' }}>
-          <PoolOverviewCard token={whitelistedToken} />
-          <Stack gap={2}>
-            {whitelistedToken.isLP && (
-              <PoolCard
-                pool={pool}
-                poolState={poolState}
-                //   ButtonProps={{
-                //     href: `https://etherscan.io/address/${pool.address}`,
-                //     target: '_blank',
-                //     rel: 'noreferrer'
-                //   }}
-              />
-            )}
+
+        <Stack gap={2} direction={{ xs: 'column', lg: 'row' }} width="100%">
+          <Stack
+            width="100%"
+            sx={({ breakpoints }) => ({
+              width: '100%',
+              minWidth: 0,
+              [breakpoints.up('lg')]: { maxWidth: '850px' },
+            })}
+          >
+            <PoolOverviewCard token={whitelistedToken} />
+          </Stack>
+          <Stack gap={2} width="100%" sx={{ flexShrink: 2 }}>
             <SiloActions
               pool={pool}
               token={whitelistedToken as ERC20Token}

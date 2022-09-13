@@ -21,49 +21,74 @@ import useAPY from '~/hooks/beanstalk/useAPY';
 import EducationDepositImage from '~/img/beanstalk/education/educationDepositImg.svg';
 import EducationEarnImage from '~/img/beanstalk/education/educationEarnImg.svg';
 import EducationRewardsImage from '~/img/beanstalk/education/educationOwnershipImg.svg';
-import DepositedAsset from '../Analytics/Silo/DepositedAsset';
-import Carousel from '../Common/Carousel';
 import PoolEducationContent, {
   PoolEducationContentProps,
 } from './PoolEducationContent';
 import { AppState } from '~/state';
 import useSiloTokenToFiat from '~/hooks/beanstalk/useSiloTokenToFiat';
 import { displayFullBN } from '~/util';
+import DepositedAsset from '../Analytics/Silo/DepositedAsset';
+import Carousel from '../Common/Carousel';
 
-const depositedAssetMap = {
-  [BEAN[1].address]: {
+const whitelisted = {
+  bean: BEAN[1].address,
+  bean3crv: BEAN_CRV3_LP[1].address,
+  unripeBean: UNRIPE_BEAN[1].address,
+  unripe3crv: UNRIPE_BEAN_CRV3[1].address,
+};
+
+const assetInfoMap = {
+  [whitelisted.bean]: {
     asset: BEAN[1],
     account: BEANSTALK_ADDRESSES[1],
   },
-  [BEAN_CRV3_LP[1].address]: {
+  [whitelisted.bean3crv]: {
     asset: BEAN_CRV3_LP[1],
     account: BEANSTALK_ADDRESSES[1],
   },
-  [UNRIPE_BEAN[1].address]: {
+  [whitelisted.unripeBean]: {
     asset: UNRIPE_BEAN[1],
     account: BEANSTALK_ADDRESSES[1],
   },
-  [UNRIPE_BEAN_CRV3[1].address]: {
+  [whitelisted.unripe3crv]: {
     asset: UNRIPE_BEAN_CRV3[1],
     account: BEANSTALK_ADDRESSES[1],
   },
 };
 
-const getOptions = (tokenName: string): PoolEducationContentProps[] => [
+const cardTextsByToken = {
+  [whitelisted.bean]: [
+    'Use the form to Deposit BEAN into the Silo.',
+    'Beanstalk allows you to use BEAN, ETH, USDC, 3CRV, DAI, USDC, USDT from your wallet or Farm balance to Deposit Bean into the Silo. If you aren&#39;t using Bean, the UI will swap and Deposit for you in one transaction.',
+  ],
+  [whitelisted.bean3crv]: [
+    'Use the form to Deposit BEAN3CRV into the Silo.',
+    'Beanstalk allows you to use BEAN, ETH, USDC, 3CRV, DAI, USDC, USDT from your wallet or Farm balance to Deposit BEAN3CRV into the Silo. If you aren&#39;t using BEAN3CRV, the UI will swap, add liquidity, and Deposit the LP token for you in one transaction.',
+  ],
+  [whitelisted.unripeBean]: [
+    'Deposit urBEAN Use the form to Deposit urBEAN into the Silo.',
+    'Beanstalk allows you to use urBEAN from your wallet or Farm balance to Deposit urBEAN into the Silo.',
+  ],
+  [whitelisted.unripe3crv]: [
+    'Use the form to Deposit urBEAN3CRV into the Silo.',
+    'Beanstalk allows you to use urBEAN3CRV from your wallet or Farm balance to Deposit urBEAN3CRV into the Silo.',
+  ],
+};
+
+const getCardContentWithToken = (
+  token: ERC20Token
+): PoolEducationContentProps[] => [
   {
-    title: `Deposit ${tokenName}`,
+    title: `Deposit ${token.name}`,
     texts: [
-      `Use the form to Deposit ${tokenName} into the Silo.`,
+      `Use the form to Deposit ${token.name} into the Silo.`,
       'Beanstalk allows you to use BEAN, ETH, USDC, 3CRV, DAI, USDC, USDT from your wallet or farm balance and will swap, add liquidity, and deposit for you in one transaction. ',
     ],
     imageSrc: EducationDepositImage,
   },
   {
     title: 'Receive Stalk and Seeds for your Deposit',
-    texts: [
-      'Stalk entitles holders to participate in Beanstalk governance and earn a portion of Bean mints.',
-      'Seed grows into 1/10000 new Stalk every Season.',
-    ],
+    texts: [...cardTextsByToken[token.address]],
     imageSrc: EducationRewardsImage,
   },
   {
@@ -76,7 +101,9 @@ const getOptions = (tokenName: string): PoolEducationContentProps[] => [
   },
 ];
 
-const usePctOfTotalSiloValueWithToken = (token: ERC20Token) => {
+const PoolOverviewCard: React.FC<{
+  token: ERC20Token;
+}> = ({ token }) => {
   const balances = useSelector<
     AppState,
     AppState['_beanstalk']['silo']['balances']
@@ -84,9 +111,14 @@ const usePctOfTotalSiloValueWithToken = (token: ERC20Token) => {
   const unripeTokens = useSelector<AppState, AppState['_bean']['unripe']>(
     (state) => state._bean.unripe
   );
+  const poolStates = useSelector<AppState, AppState['_bean']['pools']>(
+    (state) => state._bean.pools
+  );
+  const { data: latestYield } = useAPY();
   const siloTokenToFiat = useSiloTokenToFiat();
 
-  return useMemo(() => {
+  // get pct value of all silo tokens
+  const pctValue = useMemo(() => {
     const isUnripe = (address: string) =>
       address === UNRIPE_BEAN[1].address ||
       address === UNRIPE_BEAN_CRV3[1].address;
@@ -107,7 +139,7 @@ const usePctOfTotalSiloValueWithToken = (token: ERC20Token) => {
       'usd',
       !isUnripe(token.address)
     );
-    const aggSiloFiatValue = Object.values(depositedAssetMap)
+    const aggSiloFiatValue = Object.values(assetInfoMap)
       .map(({ asset }) =>
         siloTokenToFiat(
           asset,
@@ -120,58 +152,60 @@ const usePctOfTotalSiloValueWithToken = (token: ERC20Token) => {
 
     return currTokenFiatValue.div(aggSiloFiatValue).times(100);
   }, [balances, siloTokenToFiat, token, unripeTokens]);
-};
 
-const useApysWithToken = (token: ERC20Token) => {
-  const { data: latestYield } = useAPY();
+  // apy
+  const seeds = token.getSeeds();
+  const apys = latestYield
+    ? seeds.eq(2)
+      ? latestYield.bySeeds['2']
+      : seeds.eq(4)
+      ? latestYield.bySeeds['4']
+      : null
+    : null;
 
-  return useMemo(() => {
-    const seeds = token.getSeeds();
-    return latestYield
-      ? seeds.eq(2)
-        ? latestYield.bySeeds['2']
-        : seeds.eq(4)
-        ? latestYield.bySeeds['4']
-        : null
-      : null;
-  }, [token, latestYield]);
-};
-
-const PoolOverviewCard: React.FC<{
-  token: ERC20Token;
-}> = ({ token }) => {
-  const apys = useApysWithToken(token);
-  const pctValue = usePctOfTotalSiloValueWithToken(token);
+  // determine if token is ripe and is LP
+  const isRipeAndLP = poolStates[token.address];
 
   return (
-    <Card sx={{ p: 2, width: '100%' }}>
+    <Card sx={{ p: 2, boxSizing: 'border-box', height: '100%' }}>
       <Stack gap={2}>
         {/* Title */}
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Typography variant="h4">{token.name} Overview</Typography>
-          <Typography
-            sx={{
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              ':hover': {
-                color: BeanstalkPalette.logoGreen,
-              },
-            }}
-            onClick={() => {
-              // FIXME: change link when more pools are added
-              window.open(CURVE_LINK, '_blank', 'noopener');
-            }}
-          >
-            View liquidity
-            <CallMadeIcon sx={{ fontSize: FontSize.xs, ml: '5px' }} />
-          </Typography>
+          {isRipeAndLP ? (
+            <Typography
+              sx={{
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                ':hover': {
+                  color: BeanstalkPalette.logoGreen,
+                },
+              }}
+              onClick={() => {
+                // FIXME: change link when more pools are added
+                window.open(CURVE_LINK, '_blank', 'noopener');
+              }}
+            >
+              View liquidity
+              <CallMadeIcon sx={{ fontSize: FontSize.xs, ml: '5px' }} />
+            </Typography>
+          ) : null}
         </Stack>
+
+        {/* Token Graph */}
+        <Card sx={{ borderColor: BeanstalkPalette.blue, pt: 2 }}>
+          <DepositedAsset
+            asset={assetInfoMap[token.address].asset}
+            account={assetInfoMap[token.address].account}
+            height={230}
+          />
+        </Card>
 
         {/* Stats */}
         <Stack direction="row" justifyContent="space-between" gap={2}>
           <Stat
             gap={0}
-            title="Variable APY"
+            title="Deposit Rewards"
             amount={
               <Stack direction="row" gap={0.5}>
                 <Typography color="primary" variant="h2">
@@ -208,14 +242,7 @@ const PoolOverviewCard: React.FC<{
             />
           </Stack>
         </Stack>
-        {/* Token Graph */}
-        <Card sx={{ borderColor: BeanstalkPalette.blue, pt: 2 }}>
-          <DepositedAsset
-            asset={depositedAssetMap[token.address].asset}
-            account={depositedAssetMap[token.address].account}
-            height={230}
-          />
-        </Card>
+
         {/* Card Carousel */}
         <Stack gap={1}>
           <Typography variant="h4">How the Silo works</Typography>
@@ -230,7 +257,7 @@ const PoolOverviewCard: React.FC<{
             })}
           >
             <Carousel
-              elements={getOptions(token.name).map((props, i) => (
+              elements={getCardContentWithToken(token).map((props, i) => (
                 <PoolEducationContent key={i} {...props} />
               ))}
               paginationSx={{
