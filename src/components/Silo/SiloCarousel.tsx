@@ -75,31 +75,16 @@ const useCardContentWithToken = ({ name, address }: ERC20Token) => [
 
 const ImageWrapper = styled(Stack)(({ theme }) => ({
   justifyContent: 'flex-end',
+  alignItems: 'center',
   background: BeanstalkPalette.skyBlue,
   width: '100%',
   height: '300px',
-  [theme.breakpoints.up('lg')]: { alignItems: 'flex-end' },
   [theme.breakpoints.down('md')]: { height: '250px !important' },
-}));
-
-const Image = styled('img')(({ theme }) => ({
-  objectFit: 'cover',
-  alignSelf: 'center',
-  [theme.breakpoints.up('lg')]: {
-    width: '100%',
-    height: 'auto',
-  },
-  [theme.breakpoints.down('lg')]: {
-    height: '100%',
-    width: 'auto',
-  },
 }));
 
 const InfoContent = styled(Stack)(({ theme }) => ({
   width: '100%',
   padding: '20px',
-  boxSizing: 'border-box',
-  justifyContent: 'space-between',
   [theme.breakpoints.up('md')]: {
     borderLeft: `${BeanstalkPalette.skyBlue} 1px solid`,
     maxWidth: '40%',
@@ -109,11 +94,9 @@ const InfoContent = styled(Stack)(({ theme }) => ({
   },
   [theme.breakpoints.between('sm', 'md')]: {
     height: '200px',
-    maxWidth: '100%',
   },
   [theme.breakpoints.down('sm')]: {
     height: '285px',
-    maxWidth: '100%',
   },
 }));
 
@@ -136,7 +119,11 @@ const SiloCarousel: React.FC<{ token: ERC20Token }> = ({ token }) => {
           <Carousel.Elements
             elements={content.map(({ imageSrc }, i) => (
               <ImageWrapper key={`${i}-img`}>
-                <Image src={imageSrc} alt="" />
+                <img
+                  src={imageSrc}
+                  alt=""
+                  style={{ objectFit: 'cover', height: '100%' }}
+                />
               </ImageWrapper>
             ))}
           />

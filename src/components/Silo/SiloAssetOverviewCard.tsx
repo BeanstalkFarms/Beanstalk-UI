@@ -107,6 +107,39 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
       : null
     : null;
 
+  const DepositRewards = () => (
+    <Stack gap={1} direction="row" justifyContent="center">
+      <Stack direction="row" justifyContent="center" gap={0.5}>
+        <Typography variant="bodyLarge">
+          <TokenIcon
+            token={STALK}
+            style={{ marginTop: '7px', height: '0.7em' }}
+          />
+          {token.rewards?.stalk}
+        </Typography>
+        <Typography variant="bodyLarge">
+          <TokenIcon
+            token={SEEDS}
+            style={{ marginTop: '4px', fontSize: 'inherit' }}
+          />
+          {token.rewards?.seeds}
+        </Typography>
+      </Stack>
+      <Chip
+        variant="filled"
+        color="primary"
+        onClick={undefined}
+        label={
+          <Typography>
+            {`vAPY ~${apys ? `${apys.bean.times(100).toFixed(1)}%` : '0.00%'}`}
+          </Typography>
+        }
+        size="small"
+        sx={{ alignSelf: 'center' }}
+      />
+    </Stack>
+  );
+
   return (
     <Card sx={{ p: 2, boxSizing: 'border-box', height: '100%' }}>
       <Stack gap={2}>
@@ -144,35 +177,7 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
 
         {/* Stats */}
         <Stack direction="row" justifyContent="space-between" gap={2}>
-          <Stat
-            gap={0}
-            title="Deposit Rewards"
-            amount={
-              <Stack direction="row" gap={0.5}>
-                <Typography color="primary" variant="h2">
-                  {apys ? `${apys.bean.times(100).toFixed(1)}%` : '0.00%'}
-                </Typography>
-                <Chip
-                  sx={{ borderRadius: '16px', height: '28px' }}
-                  label={
-                    <>
-                      <Typography display="inline" variant="h4">
-                        <TokenIcon
-                          token={STALK}
-                          style={{ marginTop: '4px', height: '0.8rem' }}
-                        />
-                        {token.rewards?.stalk}
-                      </Typography>{' '}
-                      <Typography display="inline" variant="h4">
-                        <TokenIcon token={SEEDS} style={{ marginTop: '2px' }} />
-                        {token.rewards?.seeds}
-                      </Typography>
-                    </>
-                  }
-                />
-              </Stack>
-            }
-          />
+          <Stat gap={0} title="Deposit Rewards" amount={<DepositRewards />} />
           <Stack textAlign="right">
             <Stat
               gap={0}
