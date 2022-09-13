@@ -4,6 +4,7 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import React from 'react';
 import { BeanstalkPalette, IconSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
+import PagePath, { PathItem } from './PagePath';
 
 const PageHeader: React.FC<{
   /** The Field: The Decentralized Credit Facility */
@@ -12,6 +13,8 @@ const PageHeader: React.FC<{
   icon?: JSX.Element;
   /** Show a back button to return to `returnPath`. */
   returnPath?: string;
+  //* show path items instead of back button */
+  pathItems?: PathItem[];
   /**  */
   control?: React.ReactElement;
 }> = (props) => {
@@ -25,32 +28,35 @@ const PageHeader: React.FC<{
         onClick: () => navigate(-1),
       };
   return (
-    <Box>
+    <Stack width="100%" gap={1}>
+      {props.pathItems ? <PagePath items={props.pathItems} /> : null}
       <Row justifyContent="space-between" gap={0.5}>
-        <Stack sx={{ width: 70, justifyContent: 'start' }}>
-          <Button
-            {...buttonProps}
-            color="naked"
-            sx={{
-              p: 0,
-              borderRadius: 1,
-              float: 'left',
-              display: 'inline',
-              mb: '-2.5px',
-              '&:hover': {
-                color: BeanstalkPalette.logoGreen,
-              },
-            }}
-          >
-            <Row gap={0.5} height="100%">
-              <KeyboardBackspaceIcon
-                sx={{ width: IconSize.small }}
-                height="auto"
-              />
-              <Typography variant="h4">Back</Typography>
-            </Row>
-          </Button>
-        </Stack>
+        {!props.pathItems ? (
+          <Stack sx={{ width: 70, justifyContent: 'start' }}>
+            <Button
+              {...buttonProps}
+              color="naked"
+              sx={{
+                p: 0,
+                borderRadius: 1,
+                float: 'left',
+                display: 'inline',
+                mb: '-2.5px',
+                '&:hover': {
+                  color: BeanstalkPalette.logoGreen,
+                },
+              }}
+            >
+              <Row gap={0.5} height="100%">
+                <KeyboardBackspaceIcon
+                  sx={{ width: IconSize.small }}
+                  height="auto"
+                />
+                <Typography variant="h4">Back</Typography>
+              </Row>
+            </Button>
+          </Stack>
+        ) : null}
         {props.title && (
           <>
             {typeof props.title === 'string' ? (
@@ -58,7 +64,7 @@ const PageHeader: React.FC<{
                 variant="h2"
                 textAlign={props.titleAlign ?? 'center'}
                 sx={{
-                  ml: props.titleAlign ? 1.5 : 0,
+                  ml: props.pathItems ? 0 : props.titleAlign ? 1.5 : 0,
                   verticalAlign: 'middle',
                   width: '100%',
                 }}
@@ -75,7 +81,7 @@ const PageHeader: React.FC<{
           {props.control ? props.control : null}
         </Box>
       </Row>
-    </Box>
+    </Stack>
   );
 };
 

@@ -22,6 +22,11 @@ import SiloAssetOverviewCard from '~/components/Silo/SiloAssetOverviewCard';
 // max width for only token page.
 const TOKEN_PAGE_MAX_WIDTH = 1400;
 
+const getPagePaths = (token: ERC20Token) => [
+  { title: 'Silo', path: '/silo' },
+  { title: token.name, path: `/silo/${token.address}` },
+];
+
 const TokenPage: React.FC<{}> = () => {
   // Constants
   const whitelist = useWhitelist();
@@ -61,7 +66,7 @@ const TokenPage: React.FC<{}> = () => {
           title={whitelistedToken.name}
           titleAlign="left"
           icon={<TokenIcon style={{ marginTop: 3 }} token={whitelistedToken} />}
-          returnPath="/silo"
+          pathItems={getPagePaths(whitelistedToken)}
           control={
             <GuideButton
               title="The Farmers' Almanac: Silo Guides"
