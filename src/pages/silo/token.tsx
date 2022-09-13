@@ -22,6 +22,13 @@ import PagePath from '~/components/Common/PagePath';
 
 // max width for only token page.
 const TOKEN_PAGE_MAX_WIDTH = 1400;
+const guides = [
+  HOW_TO_DEPOSIT_IN_THE_SILO,
+  HOW_TO_CONVERT_DEPOSITS,
+  HOW_TO_TRANSFER_DEPOSITS,
+  HOW_TO_WITHDRAW_FROM_THE_SILO,
+  HOW_TO_CLAIM_WITHDRAWALS,
+];
 
 const TokenPage: React.FC<{}> = () => {
   // Constants
@@ -68,13 +75,7 @@ const TokenPage: React.FC<{}> = () => {
           control={
             <GuideButton
               title="The Farmers' Almanac: Silo Guides"
-              guides={[
-                HOW_TO_DEPOSIT_IN_THE_SILO,
-                HOW_TO_CONVERT_DEPOSITS,
-                HOW_TO_TRANSFER_DEPOSITS,
-                HOW_TO_WITHDRAW_FROM_THE_SILO,
-                HOW_TO_CLAIM_WITHDRAWALS,
-              ]}
+              guides={guides}
             />
           }
         />
