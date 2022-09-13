@@ -1,4 +1,3 @@
-/* eslint-disable quotes */
 import React from 'react';
 import { Card, Stack, styled, Typography } from '@mui/material';
 import { ERC20Token } from '~/classes/Token';
@@ -8,52 +7,44 @@ import {
   UNRIPE_BEAN,
   UNRIPE_BEAN_CRV3,
 } from '~/constants/tokens';
-
 import earnBeansImg from '~/img/beanstalk/education/earnBeansImg.svg';
 import depositBeanImg from '~/img/beanstalk/education/depositBeanImg.svg';
 import depositBean3crvImg from '~/img/beanstalk/education/depositBean3crvImg.svg';
 import depositUrBean3crvImg from '~/img/beanstalk/education/depositUrBean3crvImg.svg';
 import depositUrBeanImg from '~/img/beanstalk/education/depositUrBeanImg.svg';
 import earnStalkAndSeedsImg from '~/img/beanstalk/education/earnStalkAndSeedsImg.svg';
-import { BeanstalkPalette } from '../App/muiTheme';
-import Carousel from '../Common/Carousel/Carousel';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
+import Carousel from '~/components/Common/Carousel/Carousel';
 
 const depositCardContentByToken = {
   [BEAN[1].address]: {
-    texts: [
-      'Use the form to Deposit BEAN into the Silo.',
-      "Beanstalk allows you to use BEAN, ETH, USDC, 3CRV, DAI, USDC, USDT from your wallet or Farm balance to Deposit Bean into the Silo. If you aren't using Bean, the UI will swap and Deposit for you in one transaction.",
-    ],
     img: depositBeanImg,
   },
   [BEAN_CRV3_LP[1].address]: {
-    texts: [
-      'Use the form to Deposit BEAN3CRV into the Silo.',
-      "Beanstalk allows you to use BEAN, ETH, USDC, 3CRV, DAI, USDC, USDT from your wallet or Farm balance to Deposit BEAN3CRV into the Silo. If you aren't using BEAN3CRV, the UI will swap, add liquidity, and Deposit the LP token for you in one transaction.",
-    ],
     img: depositBean3crvImg,
   },
   [UNRIPE_BEAN[1].address]: {
-    texts: [
-      'Deposit urBEAN Use the form to Deposit urBEAN into the Silo.',
-      'Beanstalk allows you to use urBEAN from your wallet or Farm balance to Deposit urBEAN into the Silo.',
-    ],
     img: depositUrBeanImg,
   },
   [UNRIPE_BEAN_CRV3[1].address]: {
-    texts: [
-      'Use the form to Deposit urBEAN3CRV into the Silo.',
-      'Beanstalk allows you to use urBEAN3CRV from your wallet or Farm balance to Deposit urBEAN3CRV into the Silo.',
-    ],
     img: depositUrBean3crvImg,
   },
 };
 
-const useCardContentWithToken = ({ name, address }: ERC20Token) => [
+const useCardContentWithToken = (token: ERC20Token) => [
   {
-    title: `Deposit ${name}`,
-    texts: [...depositCardContentByToken[address].texts],
-    imageSrc: depositCardContentByToken[address].img,
+    title: `Deposit ${token.name}`,
+    texts: [
+      `Use the form to Deposit ${token.symbol} into the Silo.`,
+      `Beanstalk allows you to use ${
+        token.isUnripe ? token.symbol : 'BEAN, ETH, USDC, 3CRV, DAI, USDC, or USDT'
+      } from your wallet or Farm balance to Deposit ${token.symbol} into the Silo.${
+        token.isUnripe ? '' : ` If you aren't using ${token.symbol}, the UI will swap${
+          token.isLP ? ', add liquidity, and Deposit the LP token' : ' and add liquidity'
+        } for you in one transaction.`
+      }`
+    ],
+    imageSrc: depositCardContentByToken[token.address]?.img || depositBeanImg,
   },
   {
     title: 'Receive Stalk and Seeds for your Deposit',

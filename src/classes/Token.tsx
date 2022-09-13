@@ -64,10 +64,11 @@ export default abstract class Token {
    */
   public readonly displayDecimals: number;
 
-  /**
-   * 
-   */
+  ///
   public readonly isLP: boolean;
+
+  ///
+  public readonly isUnripe: boolean;
 
   /**
    * @param chainId the chain ID on which this currency resides
@@ -86,6 +87,7 @@ export default abstract class Token {
       color?: string,
       displayDecimals?: number,
       isLP?: boolean;
+      isUnripe?: boolean;
     },
     rewards?: {
       stalk: number;
@@ -103,6 +105,7 @@ export default abstract class Token {
     this.color = metadata.color;
     this.displayDecimals = metadata.displayDecimals || 2;
     this.isLP = metadata.isLP || false;
+    this.isUnripe = metadata.isUnripe || false;
     this.rewards = rewards;
   }
 

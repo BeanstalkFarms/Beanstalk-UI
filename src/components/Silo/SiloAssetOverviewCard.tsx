@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
 import CallMadeIcon from '@mui/icons-material/CallMade';
-import { Card, Chip, Stack, Typography } from '@mui/material';
+import { Box, Card, Chip, Stack, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 
 import {
@@ -24,6 +24,12 @@ import DepositedAsset from '../Analytics/Silo/DepositedAsset';
 
 import SiloCarousel from './SiloCarousel';
 import { ERC20Token } from '~/classes/Token';
+import Row from '~/components/Common/Row';
+import {
+  Module,
+  ModuleContent,
+  ModuleHeader,
+} from '~/components/Common/Module';
 
 const assetInfoMap = {
   [BEAN[1].address]: {
@@ -52,14 +58,12 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
   const unripeTokens = useSelector<AppState, AppState['_bean']['unripe']>(
     (state) => state._bean.unripe
   );
-  const poolStates = useSelector<AppState, AppState['_bean']['pools']>(
-    (state) => state._bean.pools
-  );
+
   const { data: latestYield } = useAPY();
   const siloTokenToFiat = useSiloTokenToFiat();
 
   // determine if token is ripe and is LP
-  const isRipeAndIsLP = poolStates[token.address];
+  const isRipeAndIsLP = token.isLP && !token.isUnripe;
 
   // get pct value of all silo tokens
   const pctValue = useMemo(() => {
@@ -108,8 +112,8 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
     : null;
 
   const DepositRewards = () => (
-    <Stack gap={1} direction="row" justifyContent="center">
-      <Stack direction="row" justifyContent="center" gap={0.5}>
+    <Row gap={1} justifyContent="center">
+      <Row gap={0.5} justifyContent="center">
         <Typography variant="bodyLarge">
           <TokenIcon
             token={STALK}
@@ -124,7 +128,7 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
           />
           {token.rewards?.seeds}
         </Typography>
-      </Stack>
+      </Row>
       <Chip
         variant="filled"
         color="primary"
@@ -137,14 +141,13 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
         size="small"
         sx={{ alignSelf: 'center' }}
       />
-    </Stack>
+    </Row>
   );
 
   return (
-    <Card sx={{ p: 2, boxSizing: 'border-box', height: '100%' }}>
-      <Stack gap={2}>
-        {/* Title */}
-        <Stack direction="row" justifyContent="space-between" gap={2}>
+    <Module>
+      <ModuleHeader>
+        <Row gap={2} justifyContent="space-between">
           <Typography variant="h4">{token.name} Overview</Typography>
           {isRipeAndIsLP ? (
             <Typography
@@ -164,38 +167,41 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
               <CallMadeIcon sx={{ fontSize: FontSize.xs, ml: '5px' }} />
             </Typography>
           ) : null}
-        </Stack>
-
-        {/* Token Graph */}
-        <Card sx={{ borderColor: BeanstalkPalette.blue, pt: 2 }}>
-          <DepositedAsset
-            asset={assetInfoMap[token.address].asset}
-            account={assetInfoMap[token.address].account}
-            height={230}
-          />
-        </Card>
-
-        {/* Stats */}
-        <Stack direction="row" justifyContent="space-between" gap={2}>
-          <Stat gap={0} title="Deposit Rewards" amount={<DepositRewards />} />
-          <Stack textAlign="right">
-            <Stat
-              gap={0}
-              title="% of total value Deposited in Silo"
-              amount={`${displayFullBN(pctValue, 2, 2)}%`}
-              variant="bodyLarge"
-              sx={{ alignSelf: 'flex-end' }}
+        </Row>
+      </ModuleHeader>
+      <ModuleContent px={2} pb={2}>
+        <Stack gap={2}>
+          {/* Token Graph */}
+          <Card sx={{ pt: 2 }}>
+            <DepositedAsset
+              asset={assetInfoMap[token.address].asset}
+              account={assetInfoMap[token.address].account}
+              height={230}
             />
+          </Card>
+
+          {/* Stats */}
+          <Row gap={2} justifyContent="space-between">
+            <Stat gap={0} title="Deposit Rewards" amount={<DepositRewards />} />
+            <Box textAlign="right">
+              <Stat
+                gap={0}
+                title="% of total value Deposited in Silo"
+                amount={`${displayFullBN(pctValue, 2, 2)}%`}
+                variant="bodyLarge"
+                sx={{ alignSelf: 'flex-end' }}
+              />
+            </Box>
+          </Row>
+
+          {/* Card Carousel */}
+          <Stack gap={1}>
+            <Typography variant="h4">How the Silo works</Typography>
+            <SiloCarousel token={token} />
           </Stack>
         </Stack>
-
-        {/* Card Carousel */}
-        <Stack gap={1}>
-          <Typography variant="h4">How the Silo works</Typography>
-          <SiloCarousel token={token} />
-        </Stack>
-      </Stack>
-    </Card>
+      </ModuleContent>
+    </Module>
   );
 };
 

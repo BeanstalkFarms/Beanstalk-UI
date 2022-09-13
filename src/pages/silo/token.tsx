@@ -18,13 +18,16 @@ import {
   HOW_TO_WITHDRAW_FROM_THE_SILO,
 } from '~/util/Guides';
 import SiloAssetOverviewCard from '~/components/Silo/SiloAssetOverviewCard';
+import PagePath from '~/components/Common/PagePath';
 
 // max width for only token page.
 const TOKEN_PAGE_MAX_WIDTH = 1400;
-
-const getPagePaths = (token: ERC20Token) => [
-  { title: 'Silo', path: '/silo' },
-  { title: token.name, path: `/silo/${token.address}` },
+const guides = [
+  HOW_TO_DEPOSIT_IN_THE_SILO,
+  HOW_TO_CONVERT_DEPOSITS,
+  HOW_TO_TRANSFER_DEPOSITS,
+  HOW_TO_WITHDRAW_FROM_THE_SILO,
+  HOW_TO_CLAIM_WITHDRAWALS,
 ];
 
 const TokenPage: React.FC<{}> = () => {
@@ -62,21 +65,25 @@ const TokenPage: React.FC<{}> = () => {
       sx={{ maxWidth: `${TOKEN_PAGE_MAX_WIDTH}px !important`, width: '100%' }}
     >
       <Stack gap={2} width="100%">
+        <PagePath
+          items={[
+            { path: '/silo', title: 'Silo' },
+            {
+              path: `/silo/${whitelistedToken.address}`,
+              title: whitelistedToken.name,
+            },
+          ]}
+        />
         <PageHeaderSecondary
           title={whitelistedToken.name}
           titleAlign="left"
           icon={<TokenIcon style={{ marginTop: 3 }} token={whitelistedToken} />}
-          pathItems={getPagePaths(whitelistedToken)}
+          returnPath="/silo"
+          hideBackButton
           control={
             <GuideButton
               title="The Farmers' Almanac: Silo Guides"
-              guides={[
-                HOW_TO_DEPOSIT_IN_THE_SILO,
-                HOW_TO_CONVERT_DEPOSITS,
-                HOW_TO_TRANSFER_DEPOSITS,
-                HOW_TO_WITHDRAW_FROM_THE_SILO,
-                HOW_TO_CLAIM_WITHDRAWALS,
-              ]}
+              guides={guides}
             />
           }
         />

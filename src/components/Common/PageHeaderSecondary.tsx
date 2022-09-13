@@ -4,18 +4,19 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import React from 'react';
 import { BeanstalkPalette, IconSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
-import PagePath, { PathItem } from './PagePath';
 
-const PageHeader: React.FC<{
+const PageHeaderSecondary: React.FC<{
   /** The Field: The Decentralized Credit Facility */
   title?: string | JSX.Element;
+  /** Align text within the title. */
   titleAlign?: 'left' | 'center';
+  /** Show an icon next to the title. */
   icon?: JSX.Element;
-  /** Show a back button to return to `returnPath`. */
+  /** Set a custom path for the back button to return to. Defaults to navigate(-1). */
   returnPath?: string;
-  //* show path items instead of back button */
-  pathItems?: PathItem[];
-  /**  */
+  /** Show a back button */
+  hideBackButton?: boolean; 
+  /** Show a control on the right side of the header. */
   control?: React.ReactElement;
 }> = (props) => {
   const navigate = useNavigate();
@@ -28,10 +29,9 @@ const PageHeader: React.FC<{
         onClick: () => navigate(-1),
       };
   return (
-    <Stack width="100%" gap={1}>
-      {props.pathItems ? <PagePath items={props.pathItems} /> : null}
+    <div>
       <Row justifyContent="space-between" gap={0.5}>
-        {!props.pathItems ? (
+        {props.hideBackButton ? null : (
           <Stack sx={{ width: 70, justifyContent: 'start' }}>
             <Button
               {...buttonProps}
@@ -56,33 +56,31 @@ const PageHeader: React.FC<{
               </Row>
             </Button>
           </Stack>
-        ) : null}
+        )}
         {props.title && (
-          <>
-            {typeof props.title === 'string' ? (
-              <Typography
-                variant="h2"
-                textAlign={props.titleAlign ?? 'center'}
-                sx={{
-                  ml: props.pathItems ? 0 : props.titleAlign ? 1.5 : 0,
-                  verticalAlign: 'middle',
-                  width: '100%',
-                }}
-              >
-                {props.icon}&nbsp;
-                {props.title}
-              </Typography>
-            ) : (
-              <>{props.title}</>
-            )}
-          </>
+          typeof props.title === 'string' ? (
+            <Typography
+              variant="h2"
+              textAlign={props.titleAlign ?? 'center'}
+              sx={{
+                ml: !props.hideBackButton && props.titleAlign ? 1.5 : 0,
+                verticalAlign: 'middle',
+                width: '100%',
+              }}
+            >
+              {props.icon}&nbsp;
+              {props.title}
+            </Typography>
+          ) : (
+            props.title
+          )
         )}
         <Box sx={{ width: 70 }} display="flex" justifyContent="end">
-          {props.control ? props.control : null}
+          {props.control}
         </Box>
       </Row>
-    </Stack>
+    </div>
   );
 };
 
-export default PageHeader;
+export default PageHeaderSecondary;
