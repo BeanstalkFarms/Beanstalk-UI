@@ -17,7 +17,7 @@ import {
   HOW_TO_TRANSFER_DEPOSITS,
   HOW_TO_WITHDRAW_FROM_THE_SILO,
 } from '~/util/Guides';
-import PoolOverviewCard from '~/components/Silo/PoolOverviewCard';
+import SiloAssetOverviewCard from '~/components/Silo/SiloAssetOverviewCard';
 
 // max width for only token page.
 const TOKEN_PAGE_MAX_WIDTH = 1400;
@@ -79,13 +79,14 @@ const TokenPage: React.FC<{}> = () => {
         <Stack gap={2} direction={{ xs: 'column', lg: 'row' }} width="100%">
           <Stack
             width="100%"
+            height="100%"
             sx={({ breakpoints }) => ({
               width: '100%',
               minWidth: 0,
               [breakpoints.up('lg')]: { maxWidth: '850px' },
             })}
           >
-            <PoolOverviewCard token={whitelistedToken} />
+            <SiloAssetOverviewCard token={whitelistedToken} />
           </Stack>
           <Stack gap={2} width="100%" sx={{ flexShrink: 2 }}>
             <SiloActions
