@@ -9,7 +9,7 @@ import {
   UNRIPE_BEAN_CRV3,
 } from '~/constants/tokens';
 
-import EducationEarnImage from '~/img/beanstalk/education/educationEarnImg.svg';
+import earnBeansImg from '~/img/beanstalk/education/earnBeansImg.svg';
 import depositBeanImg from '~/img/beanstalk/education/depositBeanImg.svg';
 import depositBean3crvImg from '~/img/beanstalk/education/depositBean3crvImg.svg';
 import depositUrBean3crvImg from '~/img/beanstalk/education/depositUrBean3crvImg.svg';
@@ -69,7 +69,7 @@ const useCardContentWithToken = ({ name, address }: ERC20Token) => [
       'Every Season that Beans are minted, receive a share of the new Beans based on your percentage ownership of Stalk.',
       'Your Earned Beans are automatically deposited for Earned Stalk and Seeds.',
     ],
-    imageSrc: EducationEarnImage,
+    imageSrc: earnBeansImg,
   },
 ];
 
