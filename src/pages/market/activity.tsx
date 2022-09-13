@@ -100,7 +100,8 @@ const MarketActivityPage: React.FC = () => (
     <Stack spacing={2}>
       <PageHeaderSecondary
         title="Marketplace Activity"
-        />
+        returnPath="/market"
+      />
       <Card>
         <ActivityTable columns={columns} rows={rows} />
       </Card>

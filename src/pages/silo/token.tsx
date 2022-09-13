@@ -18,6 +18,7 @@ import {
   HOW_TO_WITHDRAW_FROM_THE_SILO,
 } from '~/util/Guides';
 import SiloAssetOverviewCard from '~/components/Silo/SiloAssetOverviewCard';
+import PagePath from '~/components/Common/PagePath';
 
 // max width for only token page.
 const TOKEN_PAGE_MAX_WIDTH = 1400;
@@ -57,11 +58,13 @@ const TokenPage: React.FC<{}> = () => {
       sx={{ maxWidth: `${TOKEN_PAGE_MAX_WIDTH}px !important`, width: '100%' }}
     >
       <Stack gap={2} width="100%">
+        <PagePath items={[{ path: '/silo', title: 'Silo' }, { path: `/silo/${whitelistedToken.address}`, title: whitelistedToken.name }]} />
         <PageHeaderSecondary
           title={whitelistedToken.name}
           titleAlign="left"
           icon={<TokenIcon style={{ marginTop: 3 }} token={whitelistedToken} />}
           returnPath="/silo"
+          hideBackButton
           control={
             <GuideButton
               title="The Farmers' Almanac: Silo Guides"
