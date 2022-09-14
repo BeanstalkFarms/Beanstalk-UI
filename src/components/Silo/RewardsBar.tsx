@@ -58,7 +58,7 @@ const RewardsBar: React.FC<RewardsBarProps & { compact?: boolean }> = (
           amount={beans.earned}
           icon={beanIcon}
           compact={compact}
-          isClaimable={action === ClaimRewardsAction.PLANT_AND_MOW || action === ClaimRewardsAction.CLAIM_ALL}
+          isClaimable={action && (action === ClaimRewardsAction.PLANT_AND_MOW || action === ClaimRewardsAction.CLAIM_ALL)}
         />
         <RewardItem
           title="Earned Stalk"
@@ -66,7 +66,7 @@ const RewardsBar: React.FC<RewardsBarProps & { compact?: boolean }> = (
           amount={stalk.earned}
           icon={stalkIcon}
           compact={compact}
-          isClaimable={action === ClaimRewardsAction.PLANT_AND_MOW || action === ClaimRewardsAction.CLAIM_ALL}
+          isClaimable={action && (action === ClaimRewardsAction.PLANT_AND_MOW || action === ClaimRewardsAction.CLAIM_ALL)}
         />
       </Row>
       {/* Divider */}
