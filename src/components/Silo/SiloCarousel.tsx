@@ -37,10 +37,13 @@ const useCardContentWithToken = (token: ERC20Token) => [
     texts: [
       `Use the form to Deposit ${token.symbol} into the Silo.`,
       `Beanstalk allows you to use ${
-        token.isUnripe ? token.symbol : 'BEAN, ETH, USDC, 3CRV, DAI, USDC, or USDT'
+        token.isUnripe ? token.symbol : 
+          token.symbol === 'BEAN' 
+            ? 'BEAN or ETH'
+            : 'BEAN, ETH, 3CRV, DAI, USDC, or USDT'
       } from your wallet or Farm balance to Deposit ${token.symbol} into the Silo.${
         token.isUnripe ? '' : ` If you aren't using ${token.symbol}, the UI will swap${
-          token.isLP ? ', add liquidity, and Deposit the LP token' : ' and add liquidity'
+          token.isLP ? ', add liquidity, and Deposit the LP token' : ' and Deposit'
         } for you in one transaction.`
       }`
     ],
@@ -58,7 +61,7 @@ const useCardContentWithToken = (token: ERC20Token) => [
     title: 'Earn Beans',
     texts: [
       'Every Season that Beans are minted, receive a share of the new Beans based on your percentage ownership of Stalk.',
-      'Your Earned Beans are automatically deposited for Earned Stalk and Seeds.',
+      'You can claim your Silo Rewards on the main Silo page.',
     ],
     imageSrc: earnBeansImg,
   },

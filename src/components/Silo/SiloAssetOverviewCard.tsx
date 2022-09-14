@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
 import CallMadeIcon from '@mui/icons-material/CallMade';
-import { Box, Card, Chip, Stack, Typography } from '@mui/material';
+import { Box, Card, Chip, Link, Stack, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 
 import {
@@ -135,7 +135,9 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
         onClick={undefined}
         label={
           <Typography>
-            {`vAPY ~${apys ? `${apys.bean.times(100).toFixed(1)}%` : '0.00%'}`}
+            <Row gap={0.5}>
+              <TokenIcon token={BEAN[1]} /> vAPY: {apys ? `${apys.bean.times(100).toFixed(1)}%` : '0.00%'}
+            </Row>
           </Typography>
         }
         size="small"
@@ -150,22 +152,10 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
         <Row gap={2} justifyContent="space-between">
           <Typography variant="h4">{token.name} Overview</Typography>
           {isRipeAndIsLP ? (
-            <Typography
-              sx={{
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                ':hover': {
-                  color: BeanstalkPalette.logoGreen,
-                },
-              }}
-              onClick={() => {
-                // FIXME: change link when more pools are added
-                window.open(CURVE_LINK, '_blank', 'noopener');
-              }}
-            >
+            <Link href={CURVE_LINK} target="_blank" rel="noreferrer" underline="none" color="text.primary" sx={{ ':hover': { color: BeanstalkPalette.logoGreen } }}>
               View liquidity
-              <CallMadeIcon sx={{ fontSize: FontSize.xs, ml: '5px' }} />
-            </Typography>
+              <CallMadeIcon sx={{ fontSize: FontSize.xs, ml: 0.5 }} />
+            </Link>
           ) : null}
         </Row>
       </ModuleHeader>
@@ -186,7 +176,7 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
             <Box textAlign="right">
               <Stat
                 gap={0}
-                title="% of total value Deposited in Silo"
+                title="% of TVD in Silo"
                 amount={`${displayFullBN(pctValue, 2, 2)}%`}
                 variant="bodyLarge"
                 sx={{ alignSelf: 'flex-end' }}
