@@ -14,20 +14,23 @@ import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdow
 import Row from '~/components/Common/Row';
 
 const SeedsView: React.FC<TabData> = ({ current, series, season }) => {
-  // Display value is an array [stalk, pct]
   const account = useAccount();
+  const breakdown = useFarmerBalancesBreakdown();
   
-   // state
-  const breakdown     = useFarmerBalancesBreakdown();
-  
+  const [displaySeason, setDisplaySeason] = useState<BigNumber>(season);
   const [displayValue, setDisplayValue] = useState(current);
+  
   const handleCursor = useCallback(
     (dps?: DataPoint[]) => {
+      setDisplaySeason(dps ? new BigNumber(dps[0].season) : season);
       setDisplayValue(dps ? dps.map((dp) => new BigNumber(dp.value)) : current);
     },
-    [current]
+    [current, season]
   );
+
+  //
   useEffect(() => setDisplayValue(current), [current]);
+  useEffect(() => setDisplaySeason(season), [season]);
 
   return (
     <>
@@ -35,7 +38,7 @@ const SeedsView: React.FC<TabData> = ({ current, series, season }) => {
         <Stat
           title="Seed Balance"
           titleTooltip="Seeds are illiquid tokens that yield 1/10,000 Stalk each Season."
-          subtitle={`Season ${season.toString()}`}
+          subtitle={`Season ${displaySeason.toString()}`}
           amount={displayBN(displayValue[0])}
           color="primary"
           sx={{ minWidth: 180, ml: 0 }}
@@ -58,13 +61,12 @@ const SeedsView: React.FC<TabData> = ({ current, series, season }) => {
                 <Typography variant="body1" color="gray">Receive <TokenIcon token={STALK} />Stalk and <TokenIcon token={SEEDS} />Seeds for Depositing whitelisted assets in the Silo. Stalkholders earn a portion of new Bean mints. Seeds grow into Stalk every Season.</Typography>
               </Stack>
             </BlurComponent>
-          ) : (
-            <BlurComponent blur={6}>Historical Seed balance will be available soon.</BlurComponent>
-          )
+          ) : null
         )}
         <LineChart
           series={series}
           onCursor={handleCursor}
+          curve="stepBefore"
         />
       </Box>
     </>

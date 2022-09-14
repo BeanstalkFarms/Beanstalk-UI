@@ -9,6 +9,8 @@ import { useTooltip } from '@visx/tooltip';
 import {
   curveLinear,
   curveStep,
+  curveStepAfter,
+  curveStepBefore,
   curveNatural,
   curveBasis,
   curveMonotoneX,
@@ -22,6 +24,8 @@ import { displayBN, displayFullBN } from '~/util';
 const CURVES = {
   linear: curveLinear,
   step: curveStep,
+  stepAfter: curveStepAfter,
+  stepBefore: curveStepBefore,
   natural: curveNatural,
   basis: curveBasis,
   monotoneX: curveMonotoneX,

@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
+import { DateTime } from 'luxon';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import { AppState } from '~/state';
 
@@ -16,59 +17,47 @@ import { displayBN, toTokenUnitsBN } from '~/util';
 import { ChipLabel, StyledTab } from '~/components/Common/Tabs';
 import { ZERO_BN } from '~/constants';
 import Row from '~/components/Common/Row';
-import { useFarmerSiloRewardsQuery } from '~/generated/graphql';
+import { FarmerSiloRewardsQuery, useFarmerSiloRewardsQuery } from '~/generated/graphql';
 import useAccount from '~/hooks/ledger/useAccount';
 import { Module, ModuleTabs } from '~/components/Common/Module';
 import useSeason from '~/hooks/beanstalk/useSeason';
 import { SeasonDataPoint } from '~/components/Common/Charts/SeasonPlot';
 
-// //
-// const farmerSiloQuery = useSeasonsQuery<FarmerSiloRewardsQuery>(FarmerSiloRewardsDocument, SeasonRange.WEEK, queryConfig);
-// const queries = useMemo(() => [farmerSiloQuery], [farmerSiloQuery]);
-// const series = useMemo(() => {
-//   // const ready = !queries.some((q) => q.loading === true || !q.data?.seasons);
-//   // if (ready) {
-//   // }
-//   // return queries.map((q) => (
-//   // ))
-// }, [queries]);
-
-// const stalkData = useMemo(() => 
-//   // if (farmerSiloQuery.data?.seasons?.length) {
-//   //   return farmerSiloQuery.data.seasons.map((curr) => ({
-//   //     season: curr.season,
-//   //     date: new Date(parseInt(`${curr.timestamp}000`, 10)),
-//   //     value: toTokenUnitsBN(curr.totalStalk, STALK.decimals).toNumber(),
-//   //   })).sort(sortSeasons); 
-//   // }
-//    [],
-//  [farmerSiloQuery.data?.seasons]);
-
 const secondsToDate = (ts: string) => new Date(parseInt(ts, 10) * 1000);
 
-const useFarmerStalkInterpolation = () => {
-  const account = useAccount();
-  const season = useSeason();
-  const farmerSilo = useFarmerSiloRewardsQuery({ variables: { account }, skip: !account });
+const addBufferSeasons = (
+  points: SeasonDataPoint[],
+  num: number = 24
+) => {
+  if (points.length === 0) return [];
+  const currTimestamp = DateTime.fromJSDate(points[0].date);
+  return [
+    ...new Array(num).fill(null).map((_, i) => ({
+      season: points[0].season + (i - num),
+      date: currTimestamp.plus({ hours: i - num }).toJSDate(),
+      value: 0,
+    })),
+    ...points,
+  ];
+};
 
-  return useMemo(() => {
-    if (!season.gt(0)) return [];
-    if (!farmerSilo.data?.snapshots) return [];
-    const snapshots = farmerSilo.data.snapshots;
-
-    if (snapshots.length === 0) return [];
-
+const interpolateFarmerStalk = (
+  snapshots: FarmerSiloRewardsQuery['snapshots'],
+  season: BigNumber,
+  bufferSeasons : number = 24
+) => {
     // Sequence
     let j = 0;
-    console.log('Snapshots', snapshots);
     const minSeason = snapshots[j].season;
     const maxSeason = season.toNumber(); // current season
-    
     let currStalk : BigNumber = ZERO_BN;
     let currSeeds : BigNumber = ZERO_BN;
-    let currTimestamp : Date = new Date();
+    let currTimestamp = DateTime.fromJSDate(secondsToDate(snapshots[j].timestamp));
     let nextSeason : number | undefined = minSeason;
-    const points : SeasonDataPoint[] = [];
+    
+    // Add buffer points before the first snapshot
+    const stalk : SeasonDataPoint[] = [];
+    const seeds : SeasonDataPoint[] = [];
     
     for (let s = minSeason; s <= maxSeason; s += 1) {
       if (s === nextSeason) {
@@ -76,22 +65,39 @@ const useFarmerStalkInterpolation = () => {
         // Use the corresponding total stalk value.
         currStalk = toTokenUnitsBN(snapshots[j].totalStalk, STALK.decimals);
         currSeeds = toTokenUnitsBN(snapshots[j].totalSeeds, SEEDS.decimals);
-        currTimestamp = secondsToDate(snapshots[j].timestamp);
+        currTimestamp = DateTime.fromJSDate(secondsToDate(snapshots[j].timestamp));
         j += 1;
         nextSeason = snapshots[j]?.season || undefined;
       } else {
+        // Estimate actual amount of stalk using seeds
         currStalk = currStalk.plus(currSeeds.multipliedBy(1 / 10_000)); // Each Seed grows 1/10,000 Stalk per Season
-        currTimestamp.setTime(currTimestamp.getTime() + 1 * 60 * 60 * 1000);
+        currTimestamp = currTimestamp.plus({ hours: 1 });
       }
-      points.push({
+      stalk.push({
         season: s,
-        date:   new Date(currTimestamp),
+        date:   currTimestamp.toJSDate(),
         value:  currStalk.toNumber(),
+      });
+      seeds.push({
+        season: s,
+        date:   currTimestamp.toJSDate(),
+        value:  currSeeds.toNumber(),
       });
     }
     
-    return points;
-  }, [farmerSilo.data?.snapshots, season]);
+    return [
+      addBufferSeasons(stalk, bufferSeasons),
+      addBufferSeasons(seeds, bufferSeasons)
+    ] as const;
+};
+
+const useFarmerStalkInterpolation = (query: ReturnType<typeof useFarmerSiloRewardsQuery>) => {
+  const season = useSeason();
+  return useMemo(() => {
+    if (!season.gt(0) || !query.data?.snapshots?.length) return [[], []];
+    const snapshots = query.data.snapshots;
+    return interpolateFarmerStalk(snapshots, season);
+  }, [query.data?.snapshots, season]);
 };
 
 const SLUGS = ['deposits', 'stalk'];
@@ -103,9 +109,9 @@ const Overview: React.FC<{
 }> = ({ farmerSilo, beanstalkSilo, breakdown, season }) => {
   const [tab, handleChange] = useTabs(SLUGS, 'view');
 
-  //
-  const data = useFarmerStalkInterpolation();
-  console.debug('Stalk Interpolation', data);
+  const account = useAccount();
+  const farmerSiloQuery = useFarmerSiloRewardsQuery({ variables: { account }, skip: !account });
+  const [stalkData, seedsData] = useFarmerStalkInterpolation(farmerSiloQuery);
 
   return (
     <Module>
@@ -147,7 +153,7 @@ const Overview: React.FC<{
               : ZERO_BN,
           ]}
           series={[
-            data,
+            stalkData,
             // mockOwnershipPctData
           ]}
           season={season}
@@ -159,7 +165,7 @@ const Overview: React.FC<{
             farmerSilo.seeds.active,
           ]}
           series={[
-            mockDepositData,
+            seedsData
           ]}
           season={season}
         />

@@ -6,7 +6,7 @@ import Row from '~/components/Common/Row';
 export const ChipLabel : React.FC<{ name: string; token?: Token }> = ({ name, children }) => (
   <Row gap={0.2}>
     {name}&nbsp;
-    <Chip label={children} size="small" />
+    <Chip label={children} size="small" sx={{ fontWeight: 'bold' }} />
   </Row>
 ); 
 
@@ -24,7 +24,7 @@ export const StyledTab = styled((props: TabProps) => (
     cursor: 'pointer'
   },
   '& .MuiChip-label': {
-    opacity: 0.7
+    opacity: 0.7,
   },
   '&:hover .MuiChip-label, &.Mui-selected .MuiChip-label': {
     opacity: 1,
