@@ -129,8 +129,8 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
   );
   const handleCursor = useCallback(
     (dps?: SeasonDataPoint[]) => {
-      setDisplayValue(dps ? dps[0].value : undefined);
       setDisplaySeason(dps ? dps[0].season : undefined);
+      setDisplayValue(dps ? dps[0].value : undefined);
     },
     []
   );

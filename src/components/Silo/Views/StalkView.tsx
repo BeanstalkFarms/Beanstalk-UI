@@ -2,7 +2,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import React, { useCallback, useEffect, useState } from 'react';
 import { displayBN } from '~/util';
-import LineChart, { DataPoint } from '~/components/Common/Charts/LineChart';
+import { DataPoint } from '~/components/Common/Charts/LineChart';
 import Stat from '~/components/Common/Stat';
 import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
 import WalletButton from '~/components/Common/Connection/WalletButton';
@@ -12,21 +12,21 @@ import TokenIcon from '~/components/Common/TokenIcon';
 import { SEEDS, STALK } from '~/constants/tokens';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import Row from '~/components/Common/Row';
+import StackedAreaChart from '~/components/Common/Charts/StackedAreaChart';
 
 const StalkView: React.FC<TabData> = ({ current, series, season }) => {
-  // Display value is an array [stalk, pct]
   const account = useAccount();
+  const breakdown = useFarmerBalancesBreakdown();
 
-  // state
-  const breakdown     = useFarmerBalancesBreakdown();
-
-  const [displayValue, setDisplayValue] = useState(current);
+  const [displayValue, setDisplayValue] = useState<TabData['current']>(current);
   const handleCursor = useCallback(
     (dps?: DataPoint[]) => {
       setDisplayValue(dps ? dps.map((dp) => new BigNumber(dp.value)) : current);
     },
     [current]
   );
+
+  // If current data point changes upstream, update display value
   useEffect(() => setDisplayValue(current), [current]);
 
   return (
@@ -67,11 +67,9 @@ const StalkView: React.FC<TabData> = ({ current, series, season }) => {
                 <Typography variant="body1" color="gray">Receive <TokenIcon token={STALK} />Stalk and <TokenIcon token={SEEDS} />Seeds for Depositing whitelisted assets in the Silo. Stalkholders earn a portion of new Bean mints. Seeds grow into Stalk every Season.</Typography>
               </Stack>
             </BlurComponent>
-          ) : (
-            <BlurComponent blur={6}>Historical Stalk balance and ownership will be available soon.</BlurComponent>
-          )
+          ) : null
         )}
-        <LineChart
+        <StackedAreaChart
           series={series}
           onCursor={handleCursor}
         />
