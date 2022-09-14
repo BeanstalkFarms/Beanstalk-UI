@@ -45,9 +45,10 @@ export type SnapshotData<T extends MinimumViableSnapshotQuery> = T['seasons'][nu
 /**
  * Iteratively query entities that have a `season` entity.
  * This allows for loading of full datasets when the user
- * requests to see "all" data for a given chart.
+ * requests to see "all" data for a given chart. Assumes that
+ * the subgraph contains 1 entity per Season starting at Season 1.
  * 
- * @param document an arbitrary graphql query document
+ * @param document an arbitrary graphql query document with a `seasons` entity
  * @param range 
  * @returns QueryDocument
  */

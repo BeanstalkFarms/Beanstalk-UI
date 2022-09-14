@@ -2,7 +2,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import React, { useCallback, useEffect, useState } from 'react';
 import { displayBN } from '~/util';
-import { DataPoint } from '~/components/Common/Charts/LineChart';
+import LineChart, { DataPoint } from '~/components/Common/Charts/LineChart';
 import Stat from '~/components/Common/Stat';
 import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
 import WalletButton from '~/components/Common/Connection/WalletButton';
@@ -12,22 +12,25 @@ import TokenIcon from '~/components/Common/TokenIcon';
 import { SEEDS, STALK } from '~/constants/tokens';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import Row from '~/components/Common/Row';
-import StackedAreaChart from '~/components/Common/Charts/StackedAreaChart';
 
 const StalkView: React.FC<TabData> = ({ current, series, season }) => {
   const account = useAccount();
   const breakdown = useFarmerBalancesBreakdown();
 
+  const [displaySeason, setDisplaySeason] = useState<BigNumber>(season);
   const [displayValue, setDisplayValue] = useState<TabData['current']>(current);
+
   const handleCursor = useCallback(
     (dps?: DataPoint[]) => {
+      setDisplaySeason(dps ? new BigNumber(dps[0].season) : season);
       setDisplayValue(dps ? dps.map((dp) => new BigNumber(dp.value)) : current);
     },
-    [current]
+    [current, season]
   );
 
   // If current data point changes upstream, update display value
   useEffect(() => setDisplayValue(current), [current]);
+  useEffect(() => setDisplaySeason(season), [season]);
 
   return (
     <>
@@ -35,7 +38,7 @@ const StalkView: React.FC<TabData> = ({ current, series, season }) => {
         <Stat
           title="Stalk Balance"
           titleTooltip="Stalk is the governance token of the Beanstalk DAO. Stalk entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
-          subtitle={`Season ${season.toString()}`}
+          subtitle={`Season ${displaySeason.toString()}`}
           amount={displayBN(displayValue[0])}
           color="primary"
           sx={{ minWidth: 180, ml: 0 }}
@@ -45,7 +48,7 @@ const StalkView: React.FC<TabData> = ({ current, series, season }) => {
         <Stat
           title="Stalk Ownership"
           titleTooltip="Your current ownership of Beanstalk is displayed as a percentage. Ownership is determined by your proportional ownership of the total Stalk supply"
-          amount={`${displayValue[1].multipliedBy(100).toFixed(3)}%`}
+          amount={`${current[1].multipliedBy(100).toFixed(4)}%`}
           color="secondary.dark"
           amountIcon={undefined}
           gap={0.25}
@@ -69,7 +72,7 @@ const StalkView: React.FC<TabData> = ({ current, series, season }) => {
             </BlurComponent>
           ) : null
         )}
-        <StackedAreaChart
+        <LineChart
           series={series}
           onCursor={handleCursor}
         />

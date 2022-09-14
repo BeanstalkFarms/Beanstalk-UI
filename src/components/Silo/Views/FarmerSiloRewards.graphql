@@ -1,9 +1,12 @@
 query FarmerSiloRewards(
   $account: String
 ) {
-  seasons: siloHourlySnapshots(where: {
-    silo: $account
-  }) {
+  snapshots: siloHourlySnapshots(
+    where: { silo: $account },
+    orderBy: season,
+    orderDirection: asc,
+    first: 1000
+  ) {
     id
     season
     timestamp
