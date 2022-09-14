@@ -33,7 +33,7 @@ const RemainingFertilizer: React.FC = () => {
           gap={3}
         >
           {/* left column */}
-          <Box sx={{ minWidth: 130, width: 'auto', display: { xs: 'none', md: 'block' }, aspectRatio: '1/1' }}>
+          <Box sx={{ width: 130, display: { xs: 'none', md: 'block' }, aspectRatio: '1/1' }}>
             <FertilizerImage progress={Math.max(progress.toNumber(), 0.05)} />
           </Box>
           {/* right column */}
