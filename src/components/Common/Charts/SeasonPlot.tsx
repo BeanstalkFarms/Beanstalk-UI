@@ -12,7 +12,7 @@ import { sortSeasons } from '~/util/Season';
 import StackedAreaChart from '~/components/Common/Charts/StackedAreaChart';
 import Row from '~/components/Common/Row';
 
-const defaultValueFormatter = (value: number) => value.toFixed(4);
+export const defaultValueFormatter = (value: number) => value.toFixed(4);
 
 export type SeasonDataPoint = DataPoint;
 
@@ -99,7 +99,7 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
           if (useThisDataPoint && curr !== null) {
             prev.push({
               season: curr.season as number,
-              date:   curr.timestamp ? new Date(parseInt(`${curr.timestamp}000`, 10)) : undefined,
+              date:   new Date(parseInt(`${curr.timestamp}000`, 10)),
               value:  getValue(curr),
             });
           }

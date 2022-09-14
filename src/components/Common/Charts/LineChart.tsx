@@ -21,7 +21,7 @@ import BigNumber from 'bignumber.js';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { displayBN, displayFullBN } from '~/util';
 
-const CURVES = {
+export const CURVES = {
   linear: curveLinear,
   step: curveStep,
   stepAfter: curveStepAfter,
@@ -173,8 +173,6 @@ const Graph: React.FC<GraphProps> = (props) => {
       domain: extent(_data, getD) as [Date, Date],
       range:  xDomain
     });
-    console.debug('xDomain', xDomain);
-    console.debug('dScale range', dScale.range());
 
     /// Used for price graphs which should always show y = 1.
     /// Sets the yScale so that 1 is always perfectly in the middle.
