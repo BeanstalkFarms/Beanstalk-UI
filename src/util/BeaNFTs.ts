@@ -1,4 +1,5 @@
-import { BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES } from '~/constants';
+import toast from 'react-hot-toast';
+import { BEANFT_BARNRAISE_ADDRESSES, BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES } from '~/constants';
 
 export enum ClaimStatus {
   CLAIMED = 0,
@@ -28,16 +29,27 @@ export type Nft = {
 /** Maps an NFT collection to its ETH address. */
 export const COLLECTION_ADDRESS: {[c: string]: string} = {
   Genesis: BEANFT_GENESIS_ADDRESSES[1],
-  Winter:  BEANFT_WINTER_ADDRESSES[1]
+  Winter:  BEANFT_WINTER_ADDRESSES[1],
+  BarnRaise: BEANFT_BARNRAISE_ADDRESSES[1],
 };
 
 export const ADDRESS_COLLECTION: {[c: string]: string} = {
   [BEANFT_GENESIS_ADDRESSES[1]]: COLLECTION_ADDRESS.Genesis,
-  [BEANFT_WINTER_ADDRESSES[1]]: COLLECTION_ADDRESS.Winter
+  [BEANFT_WINTER_ADDRESSES[1]]: COLLECTION_ADDRESS.Winter,
+  [BEANFT_BARNRAISE_ADDRESSES[1]]: COLLECTION_ADDRESS.BarnRaise
 };
 
 export async function loadNFTs(account: string) {
-  const nftData : Nft[] = await fetch(`/.netlify/functions/nfts?account=${account}`).then((response) => response.json());
+  const nftData : Nft[] = (
+    await fetch(`/.netlify/functions/nfts?account=${account}`)
+    .then((r) => r.json())
+    .catch(() => {
+      // this happens most commonly during dev when the netlify endpoint isn't deployed
+      // instead of showing a loader forever, return an empty nft array and show a toast.
+      toast.error('There was an error loading your mintable BeaNFTs.');
+      return [];
+    })
+  );
   
   if (nftData.length === 0) {
     return {

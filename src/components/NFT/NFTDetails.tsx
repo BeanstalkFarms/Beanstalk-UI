@@ -32,6 +32,6 @@ const NFTDetails: React.FC<NFTContentProps> = ({ nft, collection }) => (
       </Typography>
     </Row>
   </Stack>
-  );
+);
 
 export default NFTDetails;

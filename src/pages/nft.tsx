@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Box, Button, Card, Container, Stack, Tab, Tabs, useMediaQuery } from '@mui/material';
+import { Box, Button, Container, Stack, Tab, Tabs, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import useTabs from '~/hooks/display/useTabs';
 import { getAccount } from '~/util/Account';
 import { ADDRESS_COLLECTION, ClaimStatus, loadNFTs, Nft } from '~/util/BeaNFTs';
 import NFTDialog from '~/components/NFT/NFTDialog';
-import { BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES } from '~/constants';
+import { BEANFT_BARNRAISE_ADDRESSES, BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES } from '~/constants';
 import NFTGrid from '~/components/NFT/NFTGrid';
 import { useGenesisNFTContract, useWinterNFTContract } from '~/hooks/ledger/useContract';
 import TransactionToast from '~/components/Common/TxnToast';
@@ -16,12 +16,15 @@ import PageHeader from '~/components/Common/PageHeader';
 import GuideButton from '~/components/Common/Guide/GuideButton';
 import { HOW_TO_MINT_BEANFTS } from '~/util/Guides';
 import Row from '~/components/Common/Row';
+import { Module, ModuleContent, ModuleHeader } from '~/components/Common/Module';
 
 const SLUGS = ['genesis', 'winter'];
 const NFTPage: React.FC = () => {
   const account = useAccount();
   const theme = useTheme();
   const { data: signer } = useSigner();
+
+  //
   const genesisContract = useGenesisNFTContract(signer);
   const winterContract = useWinterNFTContract(signer);
 
@@ -33,6 +36,7 @@ const NFTPage: React.FC = () => {
   const [selectedNFT, setSelectedNFT] = useState<Nft | null>(null);
   const [genesisNFTs, setGenesisNFTs] = useState<Nft[] | null>(null);
   const [winterNFTs, setWinterNFTs] = useState<Nft[] | null>(null);
+  const [barnRaiseNFTs, setBarnRaiseNFTs] = useState<Nft[] | null>(null);
   const unmintedGenesis = genesisNFTs?.filter((nft) => nft.claimed === ClaimStatus.UNCLAIMED);
   const unmintedWinter = winterNFTs?.filter((nft) => nft.claimed === ClaimStatus.UNCLAIMED);
 
@@ -47,22 +51,21 @@ const NFTPage: React.FC = () => {
   };
 
   const parseMints = useCallback(async (accountNFTs: Nft[], contractAddress: string, setNFTs: any) => {
-    if (!account) {
-      return;
-    }
+    if (!account) return;
+    
+    //
+    const nfts: Nft[] = [];
     const requestOptions: any = {
       method: 'GET',
       redirect: 'follow'
     };
 
-    const nfts: Nft[] = [];
-
     // getNFTs
-    const nftsBaseURL = 'https://eth-mainnet.alchemyapi.io/nft/v2/demo/getNFTs/';
+    const nftsBaseURL = `https://eth-mainnet.alchemyapi.io/nft/v2/${import.meta.env.VITE_ALCHEMY_API_KEY}/getNFTs/`;
     const nftsFetchURL = `${nftsBaseURL}?owner=${account?.toLowerCase()}&contractAddresses[]=${contractAddress}`;
 
     // getNFTMetadata
-    const nftMetadataBaseURL = 'https://eth-mainnet.alchemyapi.io/nft/v2/demo/getNFTMetadata';
+    const nftMetadataBaseURL = `https://eth-mainnet.alchemyapi.io/nft/v2/${import.meta.env.VITE_ALCHEMY_API_KEY}/getNFTMetadata`;
     const nftMetadataFetchURL = (id: number) => `${nftMetadataBaseURL}?&contractAddress=${contractAddress}&tokenId=${id.toString()}`;
 
     const [
@@ -71,11 +74,13 @@ const NFTPage: React.FC = () => {
       // BeaNFTs originally assigned to this account
       originalUserNFTs
     ] = await Promise.all([
-      fetch(nftsFetchURL, requestOptions)
-        .then((response) => response.json()),
-      await Promise.all(accountNFTs.map((nft) => fetch(nftMetadataFetchURL(nft.id), requestOptions)
-          .then((response) => response.json())))
+      fetch(nftsFetchURL, requestOptions).then((r) => r.json()),
+      await Promise.all(accountNFTs.map((nft) => 
+        fetch(nftMetadataFetchURL(nft.id), requestOptions).then((r) => r.json())
+      ))
     ]);
+
+    console.debug(`[nft] Loaded for ${contractAddress}: `, userMintedNFTs.length);
 
     const ownedNfts = userMintedNFTs.ownedNfts;
     const nftHashes = ownedNfts.map((nft: any) => nft.metadata.image.replace('ipfs://', ''));
@@ -104,6 +109,7 @@ const NFTPage: React.FC = () => {
         });
       }
     }
+
     setNFTs(nfts);
   }, [account]);
 
@@ -209,28 +215,30 @@ const NFTPage: React.FC = () => {
     }
   };
 
-  // maps a NFT collection to a mint function
+  // Maps a NFT collection to a mint function
   const contractMap: { [s: string]: any } = {
     Genesis: mintGenesis,
     Winter: mintWinter,
   };
 
+  // Load when account connected
   useEffect(() => {
     if (account !== undefined) {
-      loadNFTs(getAccount(account)).then((data) => {
-        const genNFTs = data.genesis;
-        const winNFTs = data.winter;
-
-        parseMints(genNFTs, BEANFT_GENESIS_ADDRESSES[1], setGenesisNFTs);
-        parseMints(winNFTs, BEANFT_WINTER_ADDRESSES[1], setWinterNFTs);
-      });
+      loadNFTs(getAccount(account))
+        .then((data) => {
+          parseMints(data.genesis,  BEANFT_GENESIS_ADDRESSES[1],    setGenesisNFTs);
+          parseMints(data.winter,   BEANFT_WINTER_ADDRESSES[1],     setWinterNFTs);
+          parseMints([],            BEANFT_BARNRAISE_ADDRESSES[1],  setBarnRaiseNFTs);
+        });
     }
   }, [account, parseMints]);
-
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm')); //
-
+  
+  //
   const hideGenesis = !unmintedGenesis || unmintedGenesis.length === 0;
-  const hideWinter = !unmintedWinter || unmintedWinter.length === 0;
+  const hideWinter  = !unmintedWinter || unmintedWinter.length === 0;
+  
+  // Theming
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <Container maxWidth="lg">
@@ -248,12 +256,13 @@ const NFTPage: React.FC = () => {
             />
           }
         />
-        <Card sx={{ p: 2 }}>
-          <Stack gap={1.5}>
-            <Row justifyContent="space-between" alignItems="center" sx={{ px: 0.5 }}>
+        <Module>
+          <ModuleHeader>
+            <Row justifyContent="space-between">
               <Tabs value={tab} onChange={handleChangeTab} sx={{ minHeight: 0 }}>
-                <Tab label={`Genesis (${genesisNFTs === null ? 0 : genesisNFTs?.length})`} />\
-                <Tab label={`Winter (${winterNFTs === null ? 0 : winterNFTs?.length})`} />
+                <Tab label={`Genesis (${genesisNFTs === null ? 0 : genesisNFTs.length})`} />
+                <Tab label={`Winter (${winterNFTs === null ? 0 : winterNFTs.length})`} />
+                <Tab label={`Barn Raise (${barnRaiseNFTs === null ? 0 : barnRaiseNFTs.length})`} />
               </Tabs>
               {/* TODO: componentize these card action buttons */}
               {tab === 0 && genesisNFTs && !hideGenesis && (
@@ -267,31 +276,42 @@ const NFTPage: React.FC = () => {
                 </Button>
               )}
             </Row>
-            {/* Zero state when not logged in */}
-            {account === undefined ? (
-              <Box height={300}>
-                <AuthEmptyState message="Your BeaNFTs will appear here." />
-              </Box>
-            ) : (
-              <>
-                {/* genesis */}
-                {tab === 0 && (
-                  <NFTGrid
-                    nfts={genesisNFTs}
-                    handleDialogOpen={handleDialogOpen}
-                  />
-                )}
-                {/* winter */}
-                {tab === 1 && (
-                  <NFTGrid
-                    nfts={winterNFTs}
-                    handleDialogOpen={handleDialogOpen}
-                  />
-                )}
-              </>
-            )}
-          </Stack>
-        </Card>
+          </ModuleHeader>
+          <ModuleContent>
+            <Stack gap={1.5}>
+              {/* Zero state when not logged in */}
+              {account === undefined ? (
+                <Box height={300}>
+                  <AuthEmptyState message="Your BeaNFTs will appear here." />
+                </Box>
+              ) : (
+                <>
+                  {/* genesis */}
+                  {tab === 0 && (
+                    <NFTGrid
+                      nfts={genesisNFTs}
+                      handleDialogOpen={handleDialogOpen}
+                    />
+                  )}
+                  {/* winter */}
+                  {tab === 1 && (
+                    <NFTGrid
+                      nfts={winterNFTs}
+                      handleDialogOpen={handleDialogOpen}
+                    />
+                  )}
+                  {/* barn raise */}
+                  {tab === 2 && (
+                    <NFTGrid
+                      nfts={barnRaiseNFTs}
+                      handleDialogOpen={handleDialogOpen}
+                    />
+                  )}
+                </>
+              )}
+            </Stack>
+          </ModuleContent>
+        </Module>
       </Stack>
       {selectedNFT !== null && account &&
         <NFTDialog
