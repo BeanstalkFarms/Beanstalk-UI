@@ -55,7 +55,6 @@ export default function useTVD() {
     return {
       tvdByToken: tokenTvdMap,
       total,
-      // tokenTvd: tokenTvd,
     };
   }, [balances, siloTokenToFiat, unripeTokens, whitelist]);
 }

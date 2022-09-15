@@ -4,18 +4,13 @@ import CallMadeIcon from '@mui/icons-material/CallMade';
 import { Link, Stack, Typography } from '@mui/material';
 
 import {
-  BEAN,
-  BEAN_CRV3_LP,
   SEEDS,
   STALK,
-  UNRIPE_BEAN,
-  UNRIPE_BEAN_CRV3,
 } from '~/constants/tokens';
 import { BeanstalkPalette, FontSize } from '../App/muiTheme';
 import Stat from '../Common/Stat';
 import TokenIcon from '../Common/TokenIcon';
 import { BEANSTALK_ADDRESSES, CURVE_LINK } from '~/constants';
-import useAPY from '~/hooks/beanstalk/useAPY';
 import DepositedAsset from '../Analytics/Silo/DepositedAsset';
 
 import SiloCarousel from './SiloCarousel';
@@ -30,44 +25,13 @@ import useTVD from '~/hooks/beanstalk/useTVD';
 import { displayFullBN } from '~/util';
 import EmbeddedCard from '../Common/EmbeddedCard';
 import SiloAssetApyChip from './SiloAssetApyChip';
-
-const assetInfoMap = {
-  [BEAN[1].address]: {
-    asset: BEAN[1],
-    account: BEANSTALK_ADDRESSES[1],
-  },
-  [BEAN_CRV3_LP[1].address]: {
-    asset: BEAN_CRV3_LP[1],
-    account: BEANSTALK_ADDRESSES[1],
-  },
-  [UNRIPE_BEAN[1].address]: {
-    asset: UNRIPE_BEAN[1],
-    account: BEANSTALK_ADDRESSES[1],
-  },
-  [UNRIPE_BEAN_CRV3[1].address]: {
-    asset: UNRIPE_BEAN_CRV3[1],
-    account: BEANSTALK_ADDRESSES[1],
-  },
-};
+import useWhitelist from '~/hooks/beanstalk/useWhitelist';
 
 const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
   const { total, tvdByToken } = useTVD();
-  const { data: latestYield } = useAPY();
-  /** calculate TVD & pct TVD */
+  const whitelist = useWhitelist();
 
-  /** determine if token is ripe & is LP */
   const isRipeAndIsLP = token.isLP && !token.isUnripe;
-
-  /** calculate apy */
-  const seeds = token.getSeeds();
-  const apys = latestYield
-    ? seeds.eq(2)
-      ? latestYield.bySeeds['2']
-      : seeds.eq(4)
-      ? latestYield.bySeeds['4']
-      : null
-    : null;
-
   const tokenTVD = tvdByToken[token.address];
   const tokenPctTVD = tokenTVD.div(total).times(100);
 
@@ -124,8 +88,8 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
           {/* Token Graph */}
           <EmbeddedCard sx={{ pt: 2 }}>
             <DepositedAsset
-              asset={assetInfoMap[token.address].asset}
-              account={assetInfoMap[token.address].account}
+              asset={whitelist[token.address]}
+              account={BEANSTALK_ADDRESSES[1]}
               height={230}
           />
           </EmbeddedCard>
