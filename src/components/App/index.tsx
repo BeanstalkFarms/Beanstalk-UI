@@ -38,12 +38,12 @@ import GovernancePage from '~/pages/governance';
 import ProposalPage from '~/pages/governance/proposal';
 import GovernanceUpdater from '~/state/beanstalk/governance/updater';
 import NewProposalsDialog from '~/components/Governance/NewProposalsDialog';
-import useNavHeight from '~/hooks/app/usePageDimensions';
-import useBanner from '~/hooks/app/useBanner';
+import useNavHeight, { BANNER_HEIGHT } from '~/hooks/app/usePageDimensions';
 import { BeanstalkPalette } from './muiTheme';
 import './App.css';
 import PageNotFound from '~/pages/error/404';
 import { sgEnvKey } from '~/graph/client';
+import Banner from '~/components/Nav/Banner';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -79,7 +79,12 @@ const CustomToaster: React.FC<{ navHeight: number }> = ({ navHeight }) => (
 );
 
 export default function App() {
-  const banner    = useBanner();
+  // const banner    = useBanner();
+  const banner = (
+    <Banner target="_blank" rel="noreferrer" href="https://twitter.com/BeanstalkFarms/status/1570064409094938635" height={BANNER_HEIGHT}>
+      The Ethereum Merge is expected to occur soon. Farmers should avoid submitting transactions around this time. Learn more &rarr;
+    </Banner>
+  );
   const navHeight = useNavHeight(!!banner);
   return (
     <>
