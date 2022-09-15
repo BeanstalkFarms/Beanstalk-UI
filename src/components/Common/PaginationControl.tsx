@@ -31,6 +31,9 @@ const PaginationArrow: React.FC<{
       transform: `rotate(${isRightArrow ? '180' : '0'}deg)`,
       cursor: disabled ? 'default' : 'pointer',
       color: disabled ? BeanstalkPalette.lightGrey : BeanstalkPalette.black,
+      ':hover': { 
+        color: disabled ? BeanstalkPalette.lightGrey : BeanstalkPalette.logoGreen 
+      }
     }}
   />
 );

@@ -1,115 +1,39 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 
 import CallMadeIcon from '@mui/icons-material/CallMade';
-import { Box, Card, Chip, Link, Stack, Typography } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { Link, Stack, Typography } from '@mui/material';
 
 import {
-  BEAN,
-  BEAN_CRV3_LP,
   SEEDS,
   STALK,
-  UNRIPE_BEAN,
-  UNRIPE_BEAN_CRV3,
 } from '~/constants/tokens';
 import { BeanstalkPalette, FontSize } from '../App/muiTheme';
 import Stat from '../Common/Stat';
 import TokenIcon from '../Common/TokenIcon';
-import { BEANSTALK_ADDRESSES, CURVE_LINK, ONE_BN, ZERO_BN } from '~/constants';
-import useAPY from '~/hooks/beanstalk/useAPY';
-import { AppState } from '~/state';
-import useSiloTokenToFiat from '~/hooks/beanstalk/useSiloTokenToFiat';
-import { displayFullBN } from '~/util';
+import { BEANSTALK_ADDRESSES, CURVE_LINK } from '~/constants';
 import DepositedAsset from '../Analytics/Silo/DepositedAsset';
 
 import SiloCarousel from './SiloCarousel';
-import { ERC20Token } from '~/classes/Token';
+import Token, { ERC20Token } from '~/classes/Token';
 import Row from '~/components/Common/Row';
 import {
   Module,
   ModuleContent,
   ModuleHeader,
 } from '~/components/Common/Module';
-
-const assetInfoMap = {
-  [BEAN[1].address]: {
-    asset: BEAN[1],
-    account: BEANSTALK_ADDRESSES[1],
-  },
-  [BEAN_CRV3_LP[1].address]: {
-    asset: BEAN_CRV3_LP[1],
-    account: BEANSTALK_ADDRESSES[1],
-  },
-  [UNRIPE_BEAN[1].address]: {
-    asset: UNRIPE_BEAN[1],
-    account: BEANSTALK_ADDRESSES[1],
-  },
-  [UNRIPE_BEAN_CRV3[1].address]: {
-    asset: UNRIPE_BEAN_CRV3[1],
-    account: BEANSTALK_ADDRESSES[1],
-  },
-};
+import useTVD from '~/hooks/beanstalk/useTVD';
+import { displayFullBN } from '~/util';
+import EmbeddedCard from '../Common/EmbeddedCard';
+import SiloAssetApyChip from './SiloAssetApyChip';
+import useWhitelist from '~/hooks/beanstalk/useWhitelist';
 
 const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
-  const balances = useSelector<
-    AppState,
-    AppState['_beanstalk']['silo']['balances']
-  >((state) => state._beanstalk.silo.balances);
-  const unripeTokens = useSelector<AppState, AppState['_bean']['unripe']>(
-    (state) => state._bean.unripe
-  );
+  const { total, tvdByToken } = useTVD();
+  const whitelist = useWhitelist();
 
-  const { data: latestYield } = useAPY();
-  const siloTokenToFiat = useSiloTokenToFiat();
-
-  // determine if token is ripe and is LP
   const isRipeAndIsLP = token.isLP && !token.isUnripe;
-
-  // get pct value of all silo tokens
-  const pctValue = useMemo(() => {
-    const isUnripe = (address: string) =>
-      address === UNRIPE_BEAN[1].address ||
-      address === UNRIPE_BEAN_CRV3[1].address;
-    const getDepositedAmount = (address: string) => {
-      if (isUnripe(address)) {
-        const deposited = balances[address]?.deposited.amount ?? ZERO_BN;
-        const depositSupply = unripeTokens[address]?.supply ?? ONE_BN;
-        return deposited
-          .div(depositSupply)
-          .times(unripeTokens[address]?.underlying ?? ZERO_BN);
-      }
-      return balances[address]?.deposited.amount;
-    };
-
-    const currTokenFiatValue = siloTokenToFiat(
-      token,
-      getDepositedAmount(token.address),
-      'usd',
-      !isUnripe(token.address)
-    );
-    const aggSiloFiatValue = Object.values(assetInfoMap)
-      .map(({ asset }) =>
-        siloTokenToFiat(
-          asset,
-          getDepositedAmount(asset.address),
-          'usd',
-          !isUnripe(asset.address)
-        )
-      )
-      .reduce((prev, curr) => prev.plus(curr), ZERO_BN);
-
-    return currTokenFiatValue.div(aggSiloFiatValue).times(100);
-  }, [balances, siloTokenToFiat, token, unripeTokens]);
-
-  // apy
-  const seeds = token.getSeeds();
-  const apys = latestYield
-    ? seeds.eq(2)
-      ? latestYield.bySeeds['2']
-      : seeds.eq(4)
-      ? latestYield.bySeeds['4']
-      : null
-    : null;
+  const tokenTVD = tvdByToken[token.address];
+  const tokenPctTVD = tokenTVD.div(total).times(100);
 
   const DepositRewards = () => (
     <Row gap={1} justifyContent="center">
@@ -129,19 +53,9 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
           {token.rewards?.seeds}
         </Typography>
       </Row>
-      <Chip
-        variant="filled"
-        color="primary"
-        onClick={undefined}
-        label={
-          <Typography>
-            <Row gap={0.5}>
-              <TokenIcon token={BEAN[1]} /> vAPY: {apys ? `${apys.bean.times(100).toFixed(1)}%` : '0.00%'}
-            </Row>
-          </Typography>
-        }
-        size="small"
-        sx={{ alignSelf: 'center' }}
+      <SiloAssetApyChip 
+        token={token as Token}
+        variant="bean"
       />
     </Row>
   );
@@ -152,8 +66,18 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
         <Row gap={2} justifyContent="space-between">
           <Typography variant="h4">{token.name} Overview</Typography>
           {isRipeAndIsLP ? (
-            <Link href={CURVE_LINK} target="_blank" rel="noreferrer" underline="none" color="text.primary" sx={{ ':hover': { color: BeanstalkPalette.logoGreen } }}>
-              View liquidity
+            <Link
+              href={CURVE_LINK}
+              target="_blank"
+              rel="noreferrer"
+              underline="none"
+              color="text.primary"
+              sx={{ 
+                flexWrap: 'nowrap', 
+                ':hover': { color: BeanstalkPalette.logoGreen } 
+              }}
+            >
+              View Liquidity
               <CallMadeIcon sx={{ fontSize: FontSize.xs, ml: 0.5 }} />
             </Link>
           ) : null}
@@ -162,33 +86,33 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
       <ModuleContent px={2} pb={2}>
         <Stack gap={2}>
           {/* Token Graph */}
-          <Card sx={{ pt: 2 }}>
+          <EmbeddedCard sx={{ pt: 2 }}>
             <DepositedAsset
-              asset={assetInfoMap[token.address].asset}
-              account={assetInfoMap[token.address].account}
+              asset={whitelist[token.address]}
+              account={BEANSTALK_ADDRESSES[1]}
               height={230}
-            />
-          </Card>
+          />
+          </EmbeddedCard>
 
           {/* Stats */}
-          <Row gap={2} justifyContent="space-between">
+          <Row gap={2} justifyContent="space-between" flexWrap="wrap" pb={2}>
+            <Stat
+              gap={0}
+              title="TVD"
+              variant="bodyLarge"
+              amount={`$${displayFullBN(tokenTVD, token.displayDecimals)}`}
+            />
+            <Stat
+              gap={0}
+              title="% of TVD in Silo"
+              amount={`${displayFullBN(tokenPctTVD, 2, 2)}%`}
+              variant="bodyLarge"
+            />
             <Stat gap={0} title="Deposit Rewards" amount={<DepositRewards />} />
-            <Box textAlign="right">
-              <Stat
-                gap={0}
-                title="% of TVD in Silo"
-                amount={`${displayFullBN(pctValue, 2, 2)}%`}
-                variant="bodyLarge"
-                sx={{ alignSelf: 'flex-end' }}
-              />
-            </Box>
           </Row>
 
           {/* Card Carousel */}
-          <Stack gap={1}>
-            <Typography variant="h4">How the Silo works</Typography>
-            <SiloCarousel token={token} />
-          </Stack>
+          <SiloCarousel token={token} />
         </Stack>
       </ModuleContent>
     </Module>

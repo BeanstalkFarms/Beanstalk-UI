@@ -170,7 +170,6 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
       <Row justifyContent="space-between" sx={{ px: 2 }}>
         <Stat
           {...statProps}
-          variant="h2"
           amount={
             loading ? (
               <CircularProgress
@@ -189,7 +188,7 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
             : defaultSeason
           ).toFixed()}`}
         />
-        <Stack alignItems="right">
+        <Stack alignItems="right" alignSelf="flex-start">
           <TimeTabs state={tabState} setState={handleChangeTimeTab} />
         </Stack>
       </Row>
