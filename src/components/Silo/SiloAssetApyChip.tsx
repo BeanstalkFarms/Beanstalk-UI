@@ -26,8 +26,7 @@ type SiloAssetApyChipProps = {
   onlyApy?: boolean;
 };
 
-const SiloAssetApyChip: React.FC<SiloAssetApyChipProps> = (props) => {
-  const { token, variant, onlyApy = false } = props;
+const SiloAssetApyChip: React.FC<SiloAssetApyChipProps> = ({ token, variant, onlyApy = false }) => {
   const { data: latestYield } = useAPY();
   const getChainToken = useGetChainToken();
   const Bean = getChainToken(BEAN);
