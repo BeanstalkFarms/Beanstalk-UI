@@ -19,6 +19,7 @@ import Stat from '~/components/Common/Stat';
 import useUnripeUnderlyingMap from '~/hooks/beanstalk/useUnripeUnderlying';
 import useAPY from '~/hooks/beanstalk/useAPY';
 import stalkIconBlue from '~/img/beanstalk/stalk-icon-blue.svg';
+import SiloAssetApyChip from './SiloAssetApyChip';
 
 const ARROW_CONTAINER_WIDTH = 20;
 const TOOLTIP_COMPONENT_PROPS = {
@@ -56,7 +57,6 @@ const Whitelist : React.FC<{
 
   /// State
   const apyQuery      = useAPY();
-  const latestYield   = apyQuery.data;
   const getBDV        = useBDV();
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
   const unripeTokens  = useSelector<AppState, AppState['_bean']['unripe']>((state) => state._bean.unripe);
@@ -154,19 +154,6 @@ const Whitelist : React.FC<{
         {config.whitelist.map((token) => {
           const deposited = farmerSilo.balances[token.address]?.deposited;
           const isUnripe = token === urBean || token === urBeanCrv3;
-          
-          // APYs
-          const seeds = token.getSeeds();
-          const apys = (
-            latestYield ? 
-              seeds.eq(2)
-              ? latestYield.bySeeds['2']
-              : seeds.eq(4)
-              ? latestYield.bySeeds['4']
-              : null
-            : null
-          );
-
           // Unripe data
           const underlyingToken = isUnripe ? (
             unripeUnderlyingTokens[token.address]
@@ -220,54 +207,8 @@ const Whitelist : React.FC<{
                         </Typography>
                       </Tooltip>
                       <Row gap={0.25}>
-                        <Tooltip
-                          placement="right"
-                          componentsProps={TOOLTIP_COMPONENT_PROPS}
-                          title={
-                            <Row gap={0}>
-                              <Box sx={{ px: 1, py: 0.5, maxWidth: 245 }}>
-                                <Stat
-                                  title={<Row gap={0.5}><TokenIcon token={BEAN[1]} /> Total Beans per Season</Row>}
-                                  gap={0.25}
-                                  variant="h4"
-                                  amount={(
-                                    latestYield ? displayFullBN(latestYield.beansPerSeasonEMA, Bean.displayDecimals) : '0'
-                                  )}
-                                  subtitle="14-day exponential moving average of Beans earned by all Stalkholders per Season."
-                                />
-                              </Box>
-                              <Box sx={{ px: 1, py: 0.5, maxWidth: 275 }}>
-                                The Variable Bean APY uses a moving average of Beans earned by Stalkholders during recent Seasons to estimate a future rate of return, accounting for Stalk growth.&nbsp;<Link underline="hover" href="https://docs.bean.money/guides/silo/understand-vapy" target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>Learn more</Link>
-                              </Box>
-                            </Row>
-                          }
-                        >
-                          <Chip
-                            variant="filled"
-                            color="primary"
-                            label={apys ? `${apys.bean.times(100).toFixed(1)}%` : '0.00%'}
-                            onClick={undefined}
-                            size="small"
-                          />
-                        </Tooltip>
-                        <Tooltip
-                          componentsProps={TOOLTIP_COMPONENT_PROPS}
-                          placement="right"
-                          title={
-                            <Box sx={{ maxWidth: 245 }}>
-                              The Variable Stalk APY estimates the growth in your Stalk balance for Depositing {token.symbol}.&nbsp;<Link underline="hover" href="https://docs.bean.money/guides/silo/understand-vapy" target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>Learn more</Link>
-                            </Box>
-                          }
-                        >
-                          <Chip
-                            variant="filled"
-                            color="secondary"
-                            label={apys ? `${apys.stalk.times(100).toFixed(1)}%` : '0.00%'}
-                            onClick={undefined}
-                            size="small"
-                            sx={{ display: { lg: 'inherit', xs: 'none' } }}
-                          />
-                        </Tooltip>
+                        <SiloAssetApyChip token={token} variant="bean" onlyApy />
+                        <SiloAssetApyChip token={token} variant="stalk" onlyApy />
                       </Row>
                     </Row>
                   </Grid>
