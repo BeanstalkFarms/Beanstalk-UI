@@ -178,9 +178,9 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
                 thickness={5}
               />
             ) : (
-                formatValue(
-                  displayValue !== undefined ? displayValue : defaultValue
-                )
+              formatValue(
+                displayValue !== undefined ? displayValue : defaultValue
+              )
             )
           }
           subtitle={`Season ${(displaySeason !== undefined
