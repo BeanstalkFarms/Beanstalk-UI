@@ -1,7 +1,6 @@
 import { Box, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import React, { useCallback, useEffect, useState } from 'react';
-import { displayBN } from '~/util';
 import LineChart, { DataPoint } from '~/components/Common/Charts/LineChart';
 import Stat from '~/components/Common/Stat';
 import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
@@ -12,6 +11,7 @@ import TokenIcon from '~/components/Common/TokenIcon';
 import { SEEDS, STALK } from '~/constants/tokens';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import Row from '~/components/Common/Row';
+import { displayStalk } from '~/util';
 
 const SeedsView: React.FC<TabData> = ({ current, series, season }) => {
   const account = useAccount();
@@ -39,7 +39,7 @@ const SeedsView: React.FC<TabData> = ({ current, series, season }) => {
           title="Seed Balance"
           titleTooltip="Seeds are illiquid tokens that yield 1/10,000 Stalk each Season."
           subtitle={`Season ${displaySeason.toString()}`}
-          amount={displayBN(displayValue[0])}
+          amount={displayStalk(displayValue[0])}
           color="primary"
           sx={{ minWidth: 180, ml: 0 }}
           amountIcon={undefined}

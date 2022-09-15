@@ -1,7 +1,6 @@
 import { Box, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import React, { useCallback, useEffect, useState } from 'react';
-import { displayUSD } from '~/util';
 import LineChart, { DataPoint } from '~/components/Common/Charts/LineChart';
 import Stat from '~/components/Common/Stat';
 import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
@@ -11,31 +10,40 @@ import { TabData } from '~/components/Silo/Views';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { SEEDS, STALK } from '~/constants/tokens';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
+import { displayUSD } from '~/util';
 
 // ------------------------------------------------
 
 const DepositsView: React.FC<TabData> = ({ season, current, series }) => {
   const account = useAccount();
-  
-  // state
   const breakdown     = useFarmerBalancesBreakdown();
   
+  const [displaySeason, setDisplaySeason] = useState<BigNumber>(season);
   const [displayValue, setDisplayValue] = useState(current);
+  
   const handleCursor = useCallback(
-    (ds?: DataPoint[]) => {
-      setDisplayValue(ds ? ds.map((d) => new BigNumber(d?.value)) : current);
+    (dps?: DataPoint[]) => {
+      setDisplaySeason(dps ? new BigNumber(dps[0].season) : season);
+      setDisplayValue(dps ? dps.map((dp) => new BigNumber(dp.value)) : current);
     },
-    [current]
+    [current, season]
   );
+
+  //
   useEffect(() => setDisplayValue(current), [current]);
+  useEffect(() => setDisplaySeason(season), [season]);
 
   return (
     <>
       <Box sx={{ px: 2 }}>
         <Stat
           title="Value Deposited"
-          subtitle={`Season ${season.toString()}`}
-          amount={displayUSD(displayValue[0])}
+          titleTooltip="The "
+          subtitle={`Season ${displaySeason.toString()}`}
+          amount={
+            displayUSD(displayValue[0])
+            // <Fiat value={displayValue[0]} amount={displayValue[0]} />
+          }
           color="primary"
           amountIcon={undefined}
           gap={0.25}
@@ -50,17 +58,13 @@ const DepositsView: React.FC<TabData> = ({ season, current, series }) => {
               <WalletButton showFullText color="primary" sx={{ height: 45 }} />
             </Stack>
           </BlurComponent>
-        ) : (
-          (breakdown.totalValue?.eq(0)) ? (
-            <BlurComponent>
-              <Stack justifyContent="center" alignItems="center" gap={1} px={1}>
-                <Typography variant="body1" color="gray">Receive <TokenIcon token={STALK} />Stalk and <TokenIcon token={SEEDS} />Seeds for Depositing whitelisted assets in the Silo. Stalkholders earn a portion of new Bean mints. Seeds grow into Stalk every Season.</Typography>
-              </Stack>
-            </BlurComponent>
-          ) : (
-            <BlurComponent blur={6}>Historical Deposit value will be available soon.</BlurComponent>
-          )
-        )}
+        ) : breakdown.totalValue?.eq(0) ? (
+          <BlurComponent>
+            <Stack justifyContent="center" alignItems="center" gap={1} px={1}>
+              <Typography variant="body1" color="gray">Receive <TokenIcon token={STALK} />Stalk and <TokenIcon token={SEEDS} />Seeds for Depositing whitelisted assets in the Silo. Stalkholders earn a portion of new Bean mints. Seeds grow into Stalk every Season.</Typography>
+            </Stack>
+          </BlurComponent>
+        ) : null}
         <LineChart
           series={series}
           onCursor={handleCursor}
