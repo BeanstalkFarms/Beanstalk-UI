@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ethers } from 'ethers';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import toast from 'react-hot-toast';
+import { useConnect } from 'wagmi';
 import {
   FormApprovingState, FormTokenState,
   SettingInput,
@@ -83,6 +84,7 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
   handleQuote: DirectionalQuoteHandler;
   tokenList: (ERC20Token | NativeToken)[];
   getPathway: (tokenIn: Token, tokenOut: Token) => Pathway | false;
+  defaultValues: SwapFormValues;
 }> = ({
   //
   values,
@@ -93,10 +95,13 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
   balances,
   beanstalk,
   tokenList,
-  getPathway
+  getPathway,
+  defaultValues
 }) => {
   /// Tokens
   const Eth = useChainConstant(ETH);
+  const { status } = useConnect();
+  const account = useAccount();
   
   /// Derived values
   // Inputs
@@ -147,6 +152,18 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
   const handleForward  = useMemo(() => handleQuote('forward'),  [handleQuote]);
   const [resultIn,  quotingIn,  getMinAmountIn] = useQuote(tokenIn, handleBackward, QUOTE_SETTINGS);
   const [resultOut, quotingOut, getAmountOut]   = useQuote(tokenOut, handleForward, QUOTE_SETTINGS);
+
+    // reset to default values when user switches wallet addresses or disconnects
+  const handleSetDefault = useCallback(() => {
+    setFieldValue('modeIn', defaultValues.modeIn);
+    setFieldValue('modeOut', defaultValues.modeOut);
+    setFieldValue('tokensIn.0', { ...defaultValues.tokensIn[0] });
+    setFieldValue('tokensOut.amount', {  ...defaultValues.tokenOut });
+  }, [defaultValues, setFieldValue]);
+  useEffect(() => {
+    handleSetDefault();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [account, status]);
 
   /// When receiving new results from quote handlers, update
   /// the respective form fields.
@@ -221,27 +238,7 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
     setFieldValue('modeIn', newModeIn);
     setFieldValue('modeOut', newModeOut);
   }, [balanceIn, setFieldValue]);
-  
-  const handleSubmit = useCallback((_tokens: Set<Token>) => {
-    if (tokenSelect === 'tokenOut') {
-      const newTokenOut = Array.from(_tokens)[0];
-      setFieldValue('tokenOut', {
-        token: newTokenOut,
-        amount: undefined,
-      });
-      setFieldValue('tokensIn.0.amount', undefined);
-      if (tokenIn === newTokenOut) setInitialModes();
-    } else if (tokenSelect === 'tokensIn') {
-      const newTokenIn = Array.from(_tokens)[0];
-      setFieldValue('tokensIn.0', {
-        token: newTokenIn,
-        amount: undefined
-      });
-      setFieldValue('tokenOut.amount', undefined);
-      if (newTokenIn === tokenOut) setInitialModes();
-    }
-  }, [setFieldValue, setInitialModes, tokenIn, tokenOut, tokenSelect]);
-
+ 
   const handleReverse = useCallback(() => {
     if (tokensMatch) {
       /// Flip destinations.
@@ -258,6 +255,42 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
       });
     }
   }, [modeIn, modeOut, setFieldValue, tokenIn, tokenOut, tokensMatch]);
+
+  const handleTokensEqual = useCallback((_tokenIn: Token, _tokenOut: Token) => {
+    // if tokenIn && tokenOut are equal and no balances are found, reverse positions. 
+    // This prevents setting of internal balance of given token when there is none
+    if (_tokenIn !== _tokenOut) return;  
+    const noBalancesFound = Object.keys(balances).length === 0;
+    if (noBalancesFound) {
+      try { 
+        handleReverse(); 
+      } catch {
+        handleSetDefault();
+      }
+    } else {
+      setInitialModes();
+    }
+  }, [balances, handleReverse, handleSetDefault, setInitialModes]);
+
+   const handleSubmit = useCallback((_tokens: Set<Token>) => {
+    if (tokenSelect === 'tokenOut') {
+      const newTokenOut = Array.from(_tokens)[0];
+      setFieldValue('tokenOut', {
+        token: newTokenOut,
+        amount: undefined,
+      });
+      setFieldValue('tokensIn.0.amount', undefined);
+      handleTokensEqual(tokenIn, newTokenOut);
+    } else if (tokenSelect === 'tokensIn') {
+      const newTokenIn = Array.from(_tokens)[0];
+      setFieldValue('tokensIn.0', {
+        token: newTokenIn,
+        amount: undefined
+      });
+      setFieldValue('tokenOut.amount', undefined);
+      handleTokensEqual(newTokenIn, tokenOut);
+    }
+  }, [setFieldValue, handleTokensEqual, tokenSelect, tokenIn, tokenOut]);
 
   const handleMax = useCallback(() => {
     setFieldValue('tokensIn.0.amount', balanceInMax);
@@ -898,6 +931,7 @@ const Swap: React.FC<{}> = () => {
             balances={farmerBalances}
             beanstalk={beanstalk}
             tokenList={tokenList}
+            defaultValues={initialValues}
             handleQuote={handleQuote}
             getPathway={getPathway}
             {...formikProps}
