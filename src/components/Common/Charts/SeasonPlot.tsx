@@ -189,7 +189,7 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
             : defaultSeason
           ).toFixed()}`}
         />
-        <Stack alignItems="right">
+        <Stack alignItems="right" alignSelf="flex-start">
           <TimeTabs state={tabState} setState={handleChangeTimeTab} />
         </Stack>
       </Row>
