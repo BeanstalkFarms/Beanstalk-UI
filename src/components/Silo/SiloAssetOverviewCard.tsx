@@ -148,10 +148,7 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
           </Row>
 
           {/* Card Carousel */}
-          <Stack gap={1}>
-            <Typography variant="h4">How the Silo works</Typography>
-            <SiloCarousel token={token} />
-          </Stack>
+          <SiloCarousel token={token} />
         </Stack>
       </ModuleContent>
     </Module>
