@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import LineChart, { DataPoint  } from '~/components/Common/Charts/LineChart';
 import WalletButton from '~/components/Common/Connection/WalletButton';
-import Row from '~/components/Common/Row';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { SEEDS, STALK } from '~/constants/tokens';
 
@@ -45,9 +44,14 @@ const OverviewPlot: React.FC<OverviewPlotProps> = ({
 
   return (
     <>
-      <Row sx={{ px: 2 }} alignItems="flex-start">
+      <Stack
+        direction={{ xs: 'column', md: 'row' }}
+        gap={{ xs: 1, md: 0 }}
+        sx={{ px: 2, pb: { xs: 2, md: 0 } }}
+        alignItems="flex-start"
+      >
         {stats(displaySeason, displayValue)}
-      </Row>
+      </Stack>
       <Box sx={{ width: '100%', height: '220px', position: 'relative' }}>
         {!account ? (
           <Stack justifyContent="center" alignItems="center" gap={1} pt={4}>
