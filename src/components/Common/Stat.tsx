@@ -38,7 +38,7 @@ const Stat: React.FC<StatProps> = ({
   subtitle,
   // Typography
   sx,
-  variant = 'h1',
+  variant = 'h2',
   color,
   // Stack
   gap = 1,
