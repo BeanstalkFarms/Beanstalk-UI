@@ -16,10 +16,9 @@ import useSeasonsQuery, {
 } from '~/hooks/beanstalk/useSeasonsQuery';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import TimeTabs, { TimeTabState } from './TimeTabs';
-import { sortSeasons } from '~/util/Season';
 import StackedAreaChart from '~/components/Common/Charts/StackedAreaChart';
 import Row from '~/components/Common/Row';
-import { secondsToDate } from '~/util';
+import { secondsToDate, sortSeasons } from '~/util';
 
 export const defaultValueFormatter = (value: number) => value.toFixed(4);
 
@@ -48,7 +47,7 @@ export type SeasonPlotBaseProps = {
   /** True if this plot should be a StackedAreaChard */
   stackedArea?: boolean;
 };
-type SeasonPlotFinalProps<T extends MinimumViableSnapshotQuery> =
+type SeasonPlotFinalProps<T extends MinimumViableSnapshotQuery> = (
   SeasonPlotBaseProps & {
     /**
      * Which value to display from the Season object
@@ -153,6 +152,7 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
           });
         }
       }
+      return points.sort(sortSeasons);
     }
     return [];
   }, [data, tabState, getValue]);

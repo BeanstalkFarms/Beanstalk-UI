@@ -111,8 +111,6 @@ const strokes = [
 ];
 
 // AXIS
-export const backgroundColor = '#da7cff';
-export const labelColor = '#340098';
 const axisColor      = BeanstalkPalette.lightGrey;
 const tickLabelColor = BeanstalkPalette.lightGrey;
 const xTickLabelProps = () => ({
@@ -259,6 +257,7 @@ const Graph: React.FC<GraphProps> = (props) => {
     [showTooltip, onCursor, data, scales, series],
   );
 
+  // const yTickNum = height > 180 ? undefined : 5;
   const xTickNum = width > 700 ? undefined : Math.floor(width / 70);
   const xTickFormat = useCallback((v) => {
     const d = scales[0].dScale.invert(v);
