@@ -14,43 +14,23 @@ import PageHeaderSecondary from '~/components/Common/PageHeaderSecondary';
 import Row from '~/components/Common/Row';
 import COLUMNS from '~/components/Common/Table/cells';
 import useTabs from '~/hooks/display/useTabs';
-
-const rows = new Array(20).fill(null).map((_, i) => (
-  {
-    id: i,
-    label: 'Sell to Order',
-    pods: new BigNumber(10000000).multipliedBy(Math.random()),
-    podline: new BigNumber(100000).multipliedBy(Math.random()),
-    price: new BigNumber(1).multipliedBy(Math.random()),
-    beans: new BigNumber(10000).multipliedBy(Math.random()),
-  }
-));
+import useMarketplaceEventData from '~/hooks/beanstalk/useMarketplaceEventData';
 
 const MarketActivityPage: React.FC = () => {
   const [tab, handleChangeTab] = useTabs();
   
   const columns: DataGridProps['columns'] = [
-    // {
-    //   field: 'event',
-    //   headerName: 'Event',
-    //   flex: 1,
-    //   disableColumnMenu: true,
-    //   align: 'left',
-    //   headerAlign: 'left',
-    //   renderCell: (params) => <Typography><Link href="pages/market/marketplace">{params.value}</Link></Typography>,
-    // },
     COLUMNS.label(
       2.5,
       <Tabs value={tab} onChange={handleChangeTab}>
         <Tab label="All" />
-        <Tab label="Order" />
-        <Tab label="Listing" />
+        <Tab label="Create" />
         <Tab label="Fill" />
         <Tab label="Cancel" />
-      </Tabs>
+      </Tabs>,
     ),
     {
-      field: 'pods',
+      field: 'numPods',
       headerName: 'Pods',
       flex: 1,
       disableColumnMenu: true,
@@ -65,19 +45,19 @@ const MarketActivityPage: React.FC = () => {
       ),
     },
     {
-      field: 'podline',
+      field: 'placeInPodline',
       headerName: 'Podline',
       flex: 1,
       disableColumnMenu: true,
       align: 'left',
       headerAlign: 'left',
-      valueFormatter: (params) => `${displayFullBN(params.value as BigNumber, 2)}`,
+      // valueFormatter: (params) => `${displayFullBN(params.value as BigNumber, 2)}`,
       renderCell: (params) => (
-        <Typography>{displayBN(params.value)}</Typography>
+        <Typography>{params.value}</Typography>
       ),
     },
     {
-      field: 'price',
+      field: 'pricePerPod',
       headerName: 'Price',
       flex: 1,
       disableColumnMenu: true,
@@ -92,8 +72,8 @@ const MarketActivityPage: React.FC = () => {
       ),
     },
     {
-      field: 'beans',
-      headerName: 'Beans',
+      field: 'totalValue',
+      headerName: 'Total Value',
       flex: 1,
       disableColumnMenu: true,
       align: 'right',
@@ -102,11 +82,16 @@ const MarketActivityPage: React.FC = () => {
       renderCell: (params) => (
         <Row gap={0.3}>
           <Typography>{displayBN(params.value)}</Typography>
-          <img src={beanIcon} alt="Bean Icon" height="18px" />
         </Row>
       ),
     },
   ];
+
+  const { data } = useMarketplaceEventData();
+
+  if (data === undefined) {
+    return null;
+  }
   
   return (
     <Container maxWidth="lg">
@@ -114,7 +99,7 @@ const MarketActivityPage: React.FC = () => {
         <PageHeaderSecondary
           title="Marketplace Activity"
         />
-        <ActivityTable columns={columns} rows={rows} />
+        <ActivityTable columns={columns} rows={data.filter((e) => e.numPods !== undefined)} />
       </Stack>
     </Container>
   );

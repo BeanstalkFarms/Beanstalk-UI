@@ -316,7 +316,7 @@ const COLUMNS = {
     headerAlign: 'left',
     sortable: false,
     renderCell: (params: GridRenderCellParams<any, WellActivityData>) => (
-      <Link>
+      <Link href={`https://etherscan.io/tx/${params.row.hash}`}>
         <Typography>
           {params.row.label}
         </Typography>

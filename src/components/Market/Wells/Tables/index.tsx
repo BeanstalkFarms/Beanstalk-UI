@@ -13,6 +13,7 @@ import { BEAN, PODS } from '~/constants/tokens';
 
 // TODO: dummy type
 export type WellActivityData = {
+  hash: string;
   label: string;
   totalValue: BigNumber;
   tokenAmount0: BigNumber;
