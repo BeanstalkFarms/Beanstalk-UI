@@ -1,14 +1,19 @@
 import React from 'react';
+import { tickFormatPercentage } from '~/components/Analytics/formatters';
+import { LineChartProps } from '~/components/Common/Charts/LineChart';
 import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
 import { SeasonalRRoRDocument, SeasonalRRoRQuery } from '~/generated/graphql';
 import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
 
 const getValue = (season: SnapshotData<SeasonalRRoRQuery>) => parseFloat(season.realRateOfReturn) * 100;
 const formatValue = (value: number) => `${value.toFixed(2)}%`;
-const StatProps = {
+const statProps = {
   title: 'Real Rate of Return',
   titleTooltip: 'The return for Sowing Beans, accounting for the Bean price. RRoR = (1 + Temperature) / TWAP.',
   gap: 0.5,
+};
+const lineChartProps : Partial<LineChartProps> = {
+  yTickFormat: tickFormatPercentage
 };
 
 const RRoR: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => (
@@ -17,7 +22,8 @@ const RRoR: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) =>
     document={SeasonalRRoRDocument}
     getValue={getValue}
     formatValue={formatValue}
-    StatProps={StatProps}
+    StatProps={statProps}
+    LineChartProps={lineChartProps}
   />
 );
 

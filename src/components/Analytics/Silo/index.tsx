@@ -1,32 +1,16 @@
 import { Alert, Box, Card, Link, Tab, Tabs, Typography } from '@mui/material';
 import React from 'react';
-// import DepositedBeans from './DepositedBeans';
-// import DepositedBean3CRV from './DepositedBean3Crv';
-// import DepositedUnripeBeans from './DepositedUnripeBeans';
-// import DepositedUnripeBean3CRV from './DepositedUnripeBean3Crv';
-// import Stalk from './Stalk';
-// import Seeds from './Seeds';
+import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
+import { BEANSTALK_ADDRESSES } from '~/constants';
+import { clearApolloCache } from '~/util';
 import useTabs from '~/hooks/display/useTabs';
 import Stalk from '~/components/Analytics/Silo/Stalk';
 import Seeds from '~/components/Analytics/Silo/Seeds';
 import DepositedAsset from '~/components/Analytics/Silo/DepositedAsset';
-import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
-import { BEANSTALK_ADDRESSES } from '~/constants';
 import WarningIcon from '~/components/Common/Alert/WarningIcon';
-import { clearApolloCache } from '~/util';
 import APY from '~/components/Analytics/Silo/APY';
 
-const SLUGS = [
-  'deposited_bean',
-  // 'withdrawn_bean',
-  'deposited_lp',
-  // 'withdrawn_lp',
-  'deposited_urbean',
-  'deposited_urlp',
-  'stalk',
-  'seeds',
-];
-
+// const SLUGS = ['deposited_bean','deposited_lp','deposited_urbean','deposited_urlp','stalk','seeds',];
 const SiloAnalytics: React.FC<{}> = () => {
   const [tab, handleChangeTab] = useTabs();
   return (

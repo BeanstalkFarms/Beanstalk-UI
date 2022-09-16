@@ -4,10 +4,12 @@ import { SeasonalSeedsDocument, SeasonalSeedsQuery } from '~/generated/graphql';
 import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
 import { toTokenUnitsBN } from '~/util';
 import { SEEDS } from '~/constants/tokens';
+import { tickFormatTruncated } from '~/components/Analytics/formatters';
+import { LineChartProps } from '~/components/Common/Charts/LineChart';
 
 const getValue = (season: SnapshotData<SeasonalSeedsQuery>) => toTokenUnitsBN(season.totalSeeds, SEEDS.decimals).toNumber();
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
-const StatProps = {
+const statProps = {
   title: 'Seeds',
   titleTooltip: 'The total number of Seeds.',
   gap: 0.5,
@@ -17,6 +19,9 @@ const queryConfig = {
     season_gt: 6073,
   }
 };
+const lineChartProps : Partial<LineChartProps> = {
+  yTickFormat: tickFormatTruncated
+}; 
 
 const Seeds: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => (
   <SeasonPlot<SeasonalSeedsQuery>
@@ -24,7 +29,8 @@ const Seeds: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height })
     document={SeasonalSeedsDocument}
     getValue={getValue}
     formatValue={formatValue}
-    StatProps={StatProps}
+    StatProps={statProps}
+    LineChartProps={lineChartProps}
     queryConfig={queryConfig}
   />
 );

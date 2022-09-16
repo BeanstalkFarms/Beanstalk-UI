@@ -1,11 +1,16 @@
 import React, { useCallback, useMemo } from 'react';
 import { Token } from '~/classes';
+import { tickFormatTruncated } from '~/components/Analytics/formatters';
+import { LineChartProps } from '~/components/Common/Charts/LineChart';
 import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
 import { SeasonalDepositedSiloAssetDocument, SeasonalDepositedSiloAssetQuery } from '~/generated/graphql';
 import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
 import { toTokenUnitsBN } from '~/util';
 
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+const lineChartProps : Partial<LineChartProps> = {
+  yTickFormat: tickFormatTruncated
+}; 
 
 const DepositedAsset: React.FC<{
   height?: SeasonPlotBaseProps['height'];
@@ -20,7 +25,7 @@ const DepositedAsset: React.FC<{
     (season: SnapshotData<SeasonalDepositedSiloAssetQuery>) => toTokenUnitsBN(season.totalDepositedAmount, asset.decimals).toNumber(),
     [asset]
   );
-  const StatProps = useMemo(() => ({
+  const statProps = useMemo(() => ({
     title: `Deposited ${asset.symbol}`,
     titleTooltip: `The total number of Deposited ${asset.symbol === 'BEAN' ? 'Beans' : asset.symbol === 'urBEAN' ? 'Unripe Beans' : asset.name}.`,
     gap: 0.5,
@@ -37,7 +42,8 @@ const DepositedAsset: React.FC<{
       document={SeasonalDepositedSiloAssetDocument}
       getValue={getValue}
       formatValue={formatValue}
-      StatProps={StatProps}
+      StatProps={statProps}
+      LineChartProps={lineChartProps}
       queryConfig={queryConfig}
     />
   );

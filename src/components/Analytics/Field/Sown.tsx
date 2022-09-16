@@ -5,15 +5,20 @@ import useSeason from '~/hooks/beanstalk/useSeason';
 import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
 import { toTokenUnitsBN } from '~/util';
 import { BEAN } from '~/constants/tokens';
+import { LineChartProps } from '~/components/Common/Charts/LineChart';
+import { tickFormatTruncated } from '~/components/Analytics/formatters';
 
-const getValue = (season: SnapshotData<SeasonalSownQuery>) => toTokenUnitsBN(season.sownBeans, BEAN[1].decimals).toNumber();
+const getValue = (season: SnapshotData<SeasonalSownQuery>) => toTokenUnitsBN(season.totalSownBeans, BEAN[1].decimals).toNumber();
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
-const StatProps = {
+const statProps = {
   title: 'Beans Sown',
-  titleTooltip: 'The number of Beans Sown each Season.',
+  titleTooltip: 'The total number of Beans Sown.',
   gap: 0.25,
   sx: { ml: 0 }
 };
+const lineChartProps : Partial<LineChartProps> = {
+  yTickFormat: tickFormatTruncated
+}; 
 
 const Sown: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => {
   const season  = useSeason();
@@ -21,11 +26,11 @@ const Sown: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) =>
     <SeasonPlot<SeasonalSownQuery>
       height={height}
       document={SeasonalSownDocument}
-      // defaultValue={podRate?.gt(0) ? podRate.div(100).toNumber() : 0}
       defaultSeason={season?.gt(0) ? season.toNumber() : 0}
       getValue={getValue}
       formatValue={formatValue}
-      StatProps={StatProps}
+      StatProps={statProps}
+      LineChartProps={lineChartProps}
     />
   );
 };
