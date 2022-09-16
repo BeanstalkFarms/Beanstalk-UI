@@ -4,11 +4,9 @@ import { SeasonDataPoint } from '~/components/Common/Charts/SeasonPlot';
 import { ZERO_BN } from '~/constants';
 import { BEAN, SEEDS, STALK } from '~/constants/tokens';
 import { FarmerSiloRewardsQuery, SeasonalPriceQuery } from '~/generated/graphql';
-import { toTokenUnitsBN } from '~/util';
+import { secondsToDate, toTokenUnitsBN } from '~/util';
 
 export type Snapshot = { season: number, timestamp: string, hourlyDepositedBDV: string };
-
-export const secondsToDate = (ts: string) => new Date(parseInt(ts, 10) * 1000);
 
 export const addBufferSeasons = (
   points: SeasonDataPoint[],

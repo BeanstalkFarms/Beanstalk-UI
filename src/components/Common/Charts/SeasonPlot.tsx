@@ -3,6 +3,7 @@ import { Stack, Box, CircularProgress, Typography } from '@mui/material';
 import { Line } from '@visx/shape';
 import { DocumentNode } from 'graphql';
 import { QueryOptions } from '@apollo/client';
+import BigNumber from 'bignumber.js';
 import Stat, { StatProps } from '~/components/Common/Stat';
 import LineChart, { DataPoint, LineChartProps } from '~/components/Common/Charts/LineChart';
 import useSeasonsQuery, { MinimumViableSnapshotQuery, SeasonAggregation, SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
@@ -11,6 +12,7 @@ import TimeTabs, { TimeTabState } from './TimeTabs';
 import { sortSeasons } from '~/util/Season';
 import StackedAreaChart from '~/components/Common/Charts/StackedAreaChart';
 import Row from '~/components/Common/Row';
+import { secondsToDate } from '~/util';
 
 export const defaultValueFormatter = (value: number) => value.toFixed(4);
 
@@ -87,28 +89,50 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
     console.debug(`[SeasonPlot] Building series with ${data?.seasons.length || 0} data points`, data);
     if (data) {
       const lastIndex = data.seasons.length - 1;
-      const baseData  = data.seasons.reduce<SeasonDataPoint[]>(
-        (prev, curr, index) => {
-          // FIXME: use different query for day aggregation
-          const useThisDataPoint = tabState[0] === SeasonAggregation.DAY ? (
-            index === 0              // first in the series
-            || index === lastIndex   // last in the series
-            || index % 24 === 0      // grab every 24th data point
-          ) : true;
+      const points : SeasonDataPoint[] = [];
 
-          if (useThisDataPoint && curr !== null) {
-            prev.push({
-              season: curr.season as number,
-              date:   new Date(parseInt(`${curr.timestamp}000`, 10)),
-              value:  getValue(curr),
+      if (tabState[0] === SeasonAggregation.DAY) {
+        let v = 0; // value aggregator
+        let i = 0; // total iterations
+        let j = 0; // points averaged into this day
+        let d : Date | undefined; // current date for this avg
+        let s : number | undefined; // current season for this avg
+        for (let k = lastIndex; k >= 0; k -= 1) {
+          const season = data.seasons[k];
+          if (!season) continue; // skip empty points
+          v += getValue(season);
+          if (j === 0) {
+            d = secondsToDate(season.timestamp);
+            s = season.season as number;
+            j += 1;
+          } else if (
+            i === lastIndex // last iteration
+            || j === 24 // full day of data ready
+          ) {
+            points.push({
+              season: s as number,
+              date:   d as Date,
+              value:  new BigNumber(v).div(j + 1).toNumber()
             });
+            v = 0;
+            j = 0;
+          } else {
+            j += 1;
           }
-          
-          return prev;
-        },
-        []
-      );
-      return baseData.sort(sortSeasons); // FIXME: mapsort
+          i += 1;
+        }
+      } else {
+        for (const season of data.seasons) {
+          if (!season) continue;
+          points.push({
+            season: season.season as number,
+            date:   secondsToDate(season.timestamp),
+            value:  getValue(season),
+          });
+        }
+      }
+      
+      return points.sort(sortSeasons); // FIXME: mapsort
     }
     return [];
   }, [
