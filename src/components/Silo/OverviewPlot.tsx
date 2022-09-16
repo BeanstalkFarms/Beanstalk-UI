@@ -3,8 +3,10 @@ import BigNumber from 'bignumber.js';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import LineChart, { DataPoint  } from '~/components/Common/Charts/LineChart';
+import { mockDepositData } from '~/components/Common/Charts/LineChart.mock';
 import WalletButton from '~/components/Common/Connection/WalletButton';
 import TokenIcon from '~/components/Common/TokenIcon';
+import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
 import { SEEDS, STALK } from '~/constants/tokens';
 
 export type OverviewPlotProps = {
@@ -17,6 +19,14 @@ export type OverviewPlotProps = {
   loading: boolean;
   label: string;
 };
+
+const MockSeries = [mockDepositData];
+const FakeChart = () => (
+  <LineChart
+    series={MockSeries}
+    onCursor={() => {}}
+  />
+);
 
 const OverviewPlot: React.FC<OverviewPlotProps> = ({
   account,
@@ -42,6 +52,12 @@ const OverviewPlot: React.FC<OverviewPlotProps> = ({
     [current, season]
   );
 
+  const ready = (
+    account
+    && !loading
+    && !empty
+  );
+
   return (
     <>
       <Stack
@@ -53,26 +69,33 @@ const OverviewPlot: React.FC<OverviewPlotProps> = ({
         {stats(displaySeason, displayValue)}
       </Stack>
       <Box sx={{ width: '100%', height: '220px', position: 'relative' }}>
-        {!account ? (
-          <Stack justifyContent="center" alignItems="center" gap={1} pt={4}>
-            <Typography variant="body1" color="gray">Your {label} will appear here.</Typography>
-            <WalletButton showFullText color="primary" sx={{ height: 45 }} />
-          </Stack>
-        ) : loading ? (
-          <Stack justifyContent="center" alignItems="center" height="100%">
-            <CircularProgress variant="indeterminate" thickness={4} color="primary" />
-          </Stack>
-        ) : empty ? (
-          <Stack justifyContent="center" alignItems="center" px={1} height="100%">
-            <Typography variant="body1" color="gray">
-              Receive <TokenIcon token={STALK} />Stalk and <TokenIcon token={SEEDS} />Seeds for Depositing whitelisted assets in the Silo. Stalkholders earn a portion of new Bean mints. Seeds grow into Stalk every Season.
-            </Typography>
-          </Stack>
-        ) : ( 
+        <Box sx={{ display: ready ? 'hidden' : 'block', height: '100%' }}>
+          <FakeChart />
+        </Box>
+        {ready ? (
           <LineChart
             series={series}
             onCursor={handleCursor}
           />
+        ) : (
+          <>
+            <BlurComponent>
+              <Stack justifyContent="center" alignItems="center" height="100%" gap={1}>
+                {!account ? (
+                  <>
+                    <Typography variant="body1" color="gray">Your {label} will appear here.</Typography>
+                    <WalletButton showFullText color="primary" sx={{ height: 45 }} />
+                  </>
+                ) : loading ? (
+                  <CircularProgress variant="indeterminate" thickness={4} color="primary" />
+                ) : empty ? (
+                  <Typography variant="body1" color="gray">
+                    Receive <TokenIcon token={STALK} />Stalk and <TokenIcon token={SEEDS} />Seeds for Depositing whitelisted assets in the Silo. Stalkholders earn a portion of new Bean mints. Seeds grow into Stalk every Season.
+                  </Typography>
+                ) : null}
+              </Stack>
+            </BlurComponent>
+          </>
         )}
       </Box>
     </>

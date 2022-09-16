@@ -98,12 +98,14 @@ export const interpolateFarmerDepositedValue = (
 
   // Price data goes all the way back to season 0, find the price index
   // where we should start iterating based on the user's oldest deposit
-  let priceStartIndex = prices.findIndex((p) => minSeason <= p.season) + 1;
-  if (priceStartIndex < 0) priceStartIndex = 0;
+  let currPriceIndex = prices.findIndex((p) => p && minSeason <= p.season) + 1;
+  if (currPriceIndex < 0) currPriceIndex = 0;
+
+  // FIXME: p returning null sometimes during state transitions
+  if (!prices[currPriceIndex]) return [];
   
   // if the subgraph misses some prices or something happens in the frontend
   // we use the last known price until we encounter a price at the current season
-  let currPriceIndex = priceStartIndex;
   const points : SeasonDataPoint[] = [];
 
   for (let s = minSeason; s <= maxSeason; s += 1) {

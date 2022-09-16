@@ -133,7 +133,6 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
               first: season < 1000 ? (season - 1) : 1000,
               season_lte: season,
             };
-            console.debug(`[useSeasonsQuery] get: ${season} -> ${Math.max(season - 1000, 2)}`,  { variables: thisVariables });
             promises.push(
               apolloClient.query({
                 ...queryConfig,
@@ -141,7 +140,7 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
                 variables: thisVariables,
                 notifyOnNetworkStatusChange: true,
               }).then((r) => {
-                console.debug(`[useSeasonsQuery] get: ${season} -> ${Math.max(season - 1000, 2)} =`, r.data);
+                console.debug(`[useSeasonsQuery] get: ${season} -> ${Math.max(season - 1000, 1)} =`, r.data, { variables: thisVariables, document });
                 return r;
               })
             );
