@@ -116,6 +116,7 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
   const amountOut = stateOut.amount;
   // Other
   const tokensMatch = tokenIn === tokenOut;
+  const noBalancesFound = useMemo(() => Object.keys(balances).length === 0, [balances]);
   const [balanceIn, balanceInInput, balanceInMax] = useMemo(() => {
     const _balanceIn = balances[tokenIn.address];
     if (tokensMatch) {
@@ -152,14 +153,15 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
   const handleForward  = useMemo(() => handleQuote('forward'),  [handleQuote]);
   const [resultIn,  quotingIn,  getMinAmountIn] = useQuote(tokenIn, handleBackward, QUOTE_SETTINGS);
   const [resultOut, quotingOut, getAmountOut]   = useQuote(tokenOut, handleForward, QUOTE_SETTINGS);
-
-    // reset to default values when user switches wallet addresses or disconnects
+  
   const handleSetDefault = useCallback(() => {
     setFieldValue('modeIn', defaultValues.modeIn);
     setFieldValue('modeOut', defaultValues.modeOut);
     setFieldValue('tokensIn.0', { ...defaultValues.tokensIn[0] });
     setFieldValue('tokenOut', {  ...defaultValues.tokenOut });
   }, [defaultValues, setFieldValue]);
+  
+  /// reset to default values when user switches wallet addresses or disconnects
   useEffect(() => {
     handleSetDefault();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -256,21 +258,19 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
     }
   }, [modeIn, modeOut, setFieldValue, tokenIn, tokenOut, tokensMatch]);
 
-  const handleTokensEqual = useCallback((_tokenIn: Token, _tokenOut: Token) => {
-    // if tokenIn && tokenOut are equal and no balances are found, reverse positions. 
+// if tokenIn && tokenOut are equal and no balances are found, reverse positions. 
     // This prevents setting of internal balance of given token when there is none
-    if (_tokenIn !== _tokenOut) return;  
-    const noBalancesFound = Object.keys(balances).length === 0;
-    if (noBalancesFound) {
-      try { 
-        handleReverse(); 
-      } catch {
-        handleSetDefault();
-      }
-    } else {
+  const handleTokensEqual = useCallback(() => {
+    if (!noBalancesFound) {
       setInitialModes();
+      return;
     }
-  }, [balances, handleReverse, handleSetDefault, setInitialModes]);
+    try {
+      handleReverse();
+    } catch {
+      handleSetDefault();
+    }
+  }, [noBalancesFound, handleReverse, handleSetDefault, setInitialModes]);
 
    const handleSubmit = useCallback((_tokens: Set<Token>) => {
     if (tokenSelect === 'tokenOut') {
@@ -280,7 +280,7 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
         amount: undefined,
       });
       setFieldValue('tokensIn.0.amount', undefined);
-      handleTokensEqual(tokenIn, newTokenOut);
+      if (tokenIn === newTokenOut) handleTokensEqual();
     } else if (tokenSelect === 'tokensIn') {
       const newTokenIn = Array.from(_tokens)[0];
       setFieldValue('tokensIn.0', {
@@ -288,7 +288,7 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
         amount: undefined
       });
       setFieldValue('tokenOut.amount', undefined);
-      handleTokensEqual(newTokenIn, tokenOut);
+      if (newTokenIn === tokenOut) handleTokensEqual();
     }
   }, [setFieldValue, handleTokensEqual, tokenSelect, tokenIn, tokenOut]);
 
