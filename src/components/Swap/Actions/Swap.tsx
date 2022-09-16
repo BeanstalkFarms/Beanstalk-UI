@@ -158,7 +158,7 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
     setFieldValue('modeIn', defaultValues.modeIn);
     setFieldValue('modeOut', defaultValues.modeOut);
     setFieldValue('tokensIn.0', { ...defaultValues.tokensIn[0] });
-    setFieldValue('tokensOut.amount', {  ...defaultValues.tokenOut });
+    setFieldValue('tokenOut', {  ...defaultValues.tokenOut });
   }, [defaultValues, setFieldValue]);
   useEffect(() => {
     handleSetDefault();
