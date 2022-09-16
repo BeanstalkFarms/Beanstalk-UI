@@ -11,14 +11,11 @@ import { displayPercentage, displayStalk, displayUSD } from '~/util';
 import { ChipLabel, StyledTab } from '~/components/Common/Tabs';
 import { ZERO_BN } from '~/constants';
 import Row from '~/components/Common/Row';
-import { SeasonalPriceDocument, useFarmerSiloAssetSnapshotsQuery, useFarmerSiloRewardsQuery } from '~/generated/graphql';
 import useAccount from '~/hooks/ledger/useAccount';
 import { Module, ModuleTabs } from '~/components/Common/Module';
-import useSeasonsQuery, { SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
 import OverviewPlot from '~/components/Silo/OverviewPlot';
 import Stat from '~/components/Common/Stat';
-import useInterpolateStalk from '~/hooks/farmer/useInterpolateStalk';
-import useInterpolateDeposits from '~/hooks/farmer/useInterpolateDeposits';
+import useFarmerSiloOverview from '~/hooks/farmer/useFarmerSiloOverview';
 
 const depositStats = (s: BigNumber, v: BigNumber[]) => (
   <Stat
@@ -53,30 +50,6 @@ const seedsStats = (s: BigNumber, v: BigNumber[]) => (
   />
 );
 
-const useFarmerOverviewData = (account: string | undefined) => {
-  const siloRewardsQuery = useFarmerSiloRewardsQuery({ variables: { account: account || '' }, skip: !account, fetchPolicy: 'cache-and-network' });
-  const siloAssetsQuery = useFarmerSiloAssetSnapshotsQuery({ variables: { account: account || '' }, skip: !account, fetchPolicy: 'cache-and-network' });
-  const priceQuery = useSeasonsQuery(SeasonalPriceDocument, SeasonRange.ALL);
-
-  //
-  const [stalkData, seedsData] = useInterpolateStalk(siloRewardsQuery);
-  const depositData = useInterpolateDeposits(siloAssetsQuery, priceQuery);
-
-  return {
-    data: {
-      deposits: depositData,
-      stalk: stalkData,
-      seeds: seedsData,
-    },
-    loading: (
-      siloRewardsQuery.loading
-      || siloAssetsQuery.loading 
-      || priceQuery.loading
-      // || breakdown hasn't loaded value yet
-    )
-  };
-};
-
 const SLUGS = ['deposits', 'stalk'];
 const Overview: React.FC<{
   farmerSilo:     AppState['_farmer']['silo'];
@@ -93,7 +66,7 @@ const Overview: React.FC<{
 
   //
   const account = useAccount();
-  const { data, loading } = useFarmerOverviewData(account);
+  const { data, loading } = useFarmerSiloOverview(account);
 
   //
   const ownership = (

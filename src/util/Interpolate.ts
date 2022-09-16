@@ -140,7 +140,5 @@ export const interpolateFarmerDepositedValue = (
     currBDV = thisBDV;
   }
 
-  console.log('Points', points);
-
   return addBufferSeasons(points, bufferSeasons);
 };
