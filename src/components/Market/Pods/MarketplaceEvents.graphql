@@ -1,0 +1,49 @@
+query MarketplaceEvents {
+  marketplaceEvents(first: 1000, orderBy: timestamp, orderDirection: desc) {
+    ... on PodListingCreated {
+      id
+      index
+      amount
+      maxHarvestableIndex
+      pricePerPod
+      timestamp
+      start
+    }
+    ... on PodListingFilled {
+      id
+      index
+      start
+      amount
+      timestamp
+    }
+    ... on PodListingCancelled {
+      id
+      account
+      index
+      timestamp
+    }
+    ... on PodOrderCancelled {
+      id
+      timestamp
+    }
+    ... on PodOrderCreated {
+      amount
+      id
+      maxPlaceInLine
+      pricePerPod
+      timestamp
+    }
+    ... on PodOrderFilled {
+      id
+      start
+      timestamp
+      index
+      amount
+    }
+  }
+  _meta {
+    block {
+      number
+    }
+  }
+}
