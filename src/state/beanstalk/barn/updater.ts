@@ -1,14 +1,30 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import BigNumber from 'bignumber.js';
+import { BEAN, UNRIPE_BEAN } from '../../../constants/tokens';
+
 import { USDC_ADDRESSES } from '~/constants/addresses';
-import { BEAN } from '~/constants/tokens';
+
 import { useBeanstalkContract, useBeanstalkFertilizerContract, useERC20Contract } from '~/hooks/ledger/useContract';
 import { tokenResult, bigNumberResult } from '~/util';
 import useChainId from '~/hooks/chain/useChainId';
 import { resetBarn, updateBarn } from './actions';
 
 const fetchGlobal = fetch;
+
+const fetchFertilizerTotalSupply = async (): Promise<BigNumber> =>  
+  fetchGlobal('https://api.thegraph.com/subgraphs/name/publiuss/fertilizer', {
+    method: 'POST',
+    body: JSON.stringify({
+      query: `
+        query {
+          fertilizers {
+            totalSupply
+          }
+        }
+      `
+    })
+  }).then((r) => r.json()).then((r) => new BigNumber(r.data.fertilizers?.[0]?.totalSupply || 0));
 
 export const useFetchBeanstalkBarn = () => {
   const dispatch        = useDispatch();
@@ -27,27 +43,18 @@ export const useFetchBeanstalkBarn = () => {
         currentBpf,
         endBpf,
         unfertilized,
-        fertilized
+        fertilized,
+        recapFundedPct
       ] = await Promise.all([
         beanstalk.remainingRecapitalization().then(tokenResult(BEAN)),
         /// FIXME: use compiled subgraph query
-        await fetchGlobal('https://api.thegraph.com/subgraphs/name/publiuss/fertilizer', {
-          method: 'POST',
-          body: JSON.stringify({
-            query: `
-              query {
-                fertilizers {
-                  totalSupply
-                }
-              }
-            `
-          })
-        }).then((r) => r.json()).then((r) => new BigNumber(r.data.fertilizers?.[0]?.totalSupply || 0)),
+        fetchFertilizerTotalSupply(),
         beanstalk.getCurrentHumidity().then(bigNumberResult),
         beanstalk.beansPerFertilizer().then(bigNumberResult),
         beanstalk.getEndBpf().then(bigNumberResult),
         beanstalk.totalUnfertilizedBeans().then(tokenResult(BEAN)),
         beanstalk.totalFertilizedBeans().then(tokenResult(BEAN)),
+        beanstalk.getRecapFundedPercent(UNRIPE_BEAN[1].address).then(tokenResult(UNRIPE_BEAN)),
       ] as const);
       console.debug(`[beanstalk/fertilizer/updater] RESULT: remaining = ${remainingRecapitalization.toFixed(2)}`);
       dispatch(updateBarn({
@@ -58,6 +65,7 @@ export const useFetchBeanstalkBarn = () => {
         endBpf,       //
         unfertilized,  //
         fertilized,
+        recapFundedPct,
       }));
     }
   }, [

@@ -6,6 +6,7 @@ export type BeanstalkBarn = {
   humidity: BigNumber;
   currentBpf: BigNumber;
   endBpf: BigNumber;
+  recapFundedPct: BigNumber;
 
   /**
    * The total number of Unfertilized Sprouts remaining.
