@@ -258,8 +258,8 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
     }
   }, [modeIn, modeOut, setFieldValue, tokenIn, tokenOut, tokensMatch]);
 
-// if tokenIn && tokenOut are equal and no balances are found, reverse positions. 
-    // This prevents setting of internal balance of given token when there is none
+  // if tokenIn && tokenOut are equal and no balances are found, reverse positions. 
+  // This prevents setting of internal balance of given token when there is none
   const handleTokensEqual = useCallback(() => {
     if (!noBalancesFound) {
       setInitialModes();
