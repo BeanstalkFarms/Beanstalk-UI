@@ -1,21 +1,54 @@
-import { Box, Card, Tabs } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import { AppState } from '~/state';
 
 import useTabs from '~/hooks/display/useTabs';
-import { mockDepositData, mockOwnershipPctData } from '~/components/Common/Charts/LineChart.mock';
-import SeedsView from '~/components/Silo/Views/SeedsView';
-import StalkView from '~/components/Silo/Views/StalkView';
-import DepositsView from '~/components/Silo/Views/DepositsView';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { SEEDS, STALK } from '~/constants/tokens';
-import Fiat from '~/components/Common/Fiat';
-import { displayBN } from '~/util';
+import { displayPercentage, displayStalk, displayUSD } from '~/util';
 import { ChipLabel, StyledTab } from '~/components/Common/Tabs';
 import { ZERO_BN } from '~/constants';
 import Row from '~/components/Common/Row';
+import useAccount from '~/hooks/ledger/useAccount';
+import { Module, ModuleTabs } from '~/components/Common/Module';
+import OverviewPlot from '~/components/Silo/OverviewPlot';
+import Stat from '~/components/Common/Stat';
+import useFarmerSiloOverview from '~/hooks/farmer/useFarmerSiloOverview';
+
+const depositStats = (s: BigNumber, v: BigNumber[]) => (
+  <Stat
+    title="Value Deposited"
+    titleTooltip={(
+      <>
+        Shows the historical value of your Silo Deposits. <br />
+        <Typography variant="bodySmall">
+          Note: Unripe assets are valued based on the current Chop Rate. Earned Beans are shown upon Plant.
+        </Typography>
+      </>
+    )}
+    subtitle={`Season ${s.toString()}`}
+    amount={displayUSD(v[0])}
+    color="primary"
+    amountIcon={undefined}
+    gap={0.25}
+    sx={{ ml: 0 }}
+  />
+);
+
+const seedsStats = (s: BigNumber, v: BigNumber[]) => (
+  <Stat
+    title="Seed Balance"
+    titleTooltip="Seeds are illiquid tokens that yield 1/10,000 Stalk each Season."
+    subtitle={`Season ${s.toString()}`}
+    amount={displayStalk(v[0])}
+    color="primary"
+    sx={{ minWidth: 180, ml: 0 }}
+    amountIcon={undefined}
+    gap={0.25}
+  />
+);
 
 const SLUGS = ['deposits', 'stalk'];
 const Overview: React.FC<{
@@ -23,81 +56,126 @@ const Overview: React.FC<{
   beanstalkSilo:  AppState['_beanstalk']['silo'];
   breakdown:      ReturnType<typeof useFarmerBalancesBreakdown>;
   season:         BigNumber;
-}> = ({ farmerSilo, beanstalkSilo, breakdown, season }) => {
+}> = ({
+  farmerSilo,
+  beanstalkSilo,
+  breakdown,
+  season
+}) => {
   const [tab, handleChange] = useTabs(SLUGS, 'view');
+
+  //
+  const account = useAccount();
+  const { data, loading } = useFarmerSiloOverview(account);
+
+  //
+  const ownership = (
+    (farmerSilo.stalk.active?.gt(0) && beanstalkSilo.stalk.total?.gt(0))
+      ? farmerSilo.stalk.active.div(beanstalkSilo.stalk.total)
+      : ZERO_BN
+  );
+  const stalkStats = useCallback((s: BigNumber, v: BigNumber[]) => (
+    <>
+      <Stat
+        title="Stalk Balance"
+        titleTooltip="Stalk is the governance token of the Beanstalk DAO. Stalk entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
+        subtitle={`Season ${s.toString()}`}
+        amount={displayStalk(v[0])}
+        color="primary"
+        sx={{ minWidth: 220, ml: 0 }}
+        gap={0.25}
+      />
+      <Stat
+        title="Stalk Ownership"
+        titleTooltip="Your current ownership of Beanstalk is displayed as a percentage. Ownership is determined by your proportional ownership of the total Stalk supply"
+        amount={displayPercentage(ownership.multipliedBy(100))}
+        color="secondary.dark"
+        gap={0.25}
+        sx={{ minWidth: 200, ml: 0 }}
+      />
+      <Stat
+        title="Stalk Grown per Day"
+        titleTooltip="Your current ownership of Beanstalk is displayed as a percentage. Ownership is determined by your proportional ownership of the total Stalk supply"
+        amount={displayStalk(farmerSilo.seeds.active.times(1 / 10_000).times(24))}
+        color="text.secondary"
+        gap={0.25}
+        sx={{ minWidth: 120, ml: 0 }}
+      />
+    </>
+  ), [farmerSilo, ownership]);
+
   return (
-    <Card>
-      {/* FIXME: sizing between deposits tab and Total Silo Deposits */}
-      <Row
-        justifyContent="space-between"
-        sx={{
-          px: 2,
-          pt: 2,
-          pb: 1.5,
-        }}
-      >
-        {/* Tabs */}
-        <Tabs value={tab} onChange={handleChange} sx={{ minHeight: 0 }}>
-          <StyledTab label={
-            <ChipLabel name="Deposits">
-              <Fiat value={breakdown.states.deposited.value} amount={breakdown.states.deposited.value} truncate />
-            </ChipLabel>
-          } />
-          <StyledTab label={
-            <ChipLabel name="Stalk">
-              <Row alignItems="center"><TokenIcon token={STALK} /> {displayBN(farmerSilo.stalk.active)}</Row>
-            </ChipLabel>
-          } />
-          <StyledTab label={
-            <ChipLabel name="Seeds">
-              <Row alignItems="center"><TokenIcon token={SEEDS} /> {displayBN(farmerSilo.seeds.active)}</Row>
-            </ChipLabel>
-          } />
-        </Tabs>
-        {/* "Windows" (time range selector) */}
-        <Box sx={{ display: 'none' }}>
-          {/* <TimeTabs tab={timeTab} setState={handleChangeTimeTab} /> */}
-        </Box>
-      </Row>
+    <Module>
+      <ModuleTabs value={tab} onChange={handleChange} sx={{ minHeight: 0 }}>
+        <StyledTab label={
+          <ChipLabel name="Deposits">
+            {displayUSD(breakdown.states.deposited.value)}
+            {/* <Fiat value={breakdown.states.deposited.value} amount={breakdown.states.deposited.value} /> */}
+          </ChipLabel>
+        } />
+        <StyledTab label={
+          <ChipLabel name="Stalk">
+            <Row alignItems="center"><TokenIcon token={STALK} /> {displayStalk(farmerSilo.stalk.active, 0)}</Row>
+          </ChipLabel>
+        } />
+        <StyledTab label={
+          <ChipLabel name="Seeds">
+            <Row alignItems="center"><TokenIcon token={SEEDS} /> {displayStalk(farmerSilo.seeds.active, 0)}</Row>
+          </ChipLabel>
+        } />
+      </ModuleTabs>
       <Box sx={{ display: tab === 0 ? 'block' : 'none' }}>
-        <DepositsView
-          current={[
+        <OverviewPlot
+          label="Silo Deposits"
+          account={account}
+          current={useMemo(() => ([
             breakdown.states.deposited.value
-          ]}
-          series={[
-            mockDepositData
-          ]}
+          ]), [breakdown.states.deposited.value])}
+          series={useMemo(() => ([
+            data.deposits
+          ]), [data.deposits])}
           season={season}
+          stats={depositStats}
+          loading={loading}
+          empty={breakdown.states.deposited.value.eq(0)}
         />
       </Box>
       <Box sx={{ display: tab === 1 ? 'block' : 'none' }}>
-        <StalkView
-          current={[
+        <OverviewPlot
+          label="Stalk Ownership"
+          account={account}
+          current={useMemo(() => ([
             farmerSilo.stalk.active,
             // Show zero while these data points are loading
-            (farmerSilo.stalk.active?.gt(0) && beanstalkSilo.stalk.total?.gt(0))
-              ? farmerSilo.stalk.active.div(beanstalkSilo.stalk.total)
-              : ZERO_BN,
-          ]}
-          series={[
-            mockDepositData,
-            mockOwnershipPctData,
-          ]}
+            ownership,
+          ]), [farmerSilo.stalk.active, ownership])}
+          series={useMemo(() => ([
+            data.stalk
+            // mockOwnershipPctData
+          ]), [data.stalk])}
           season={season}
+          stats={stalkStats}
+          loading={loading}
+          empty={farmerSilo.stalk.total.lte(0)}
         />
       </Box>
       <Box sx={{ display: tab === 2 ? 'block' : 'none' }}>
-        <SeedsView
-          current={[
+        <OverviewPlot
+          label="Seeds Ownership"
+          account={account}
+          current={useMemo(() => ([
             farmerSilo.seeds.active,
-          ]}
-          series={[
-            mockDepositData,
-          ]}
+          ]), [farmerSilo.seeds.active])}
+          series={useMemo(() => ([
+            data.seeds
+          ]), [data.seeds])}
           season={season}
+          stats={seedsStats}
+          loading={loading}
+          empty={farmerSilo.seeds.total.lte(0)}
         />
       </Box>
-    </Card>
+    </Module>
   );
 };
 

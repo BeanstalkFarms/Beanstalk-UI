@@ -38,7 +38,7 @@ export const useFetchPools = () => {
             // but the above beanstalkPriceContract call also grabs the 
             // aggregate price, so for now we bundle them here.
             beanErc20.totalSupply().then(tokenResult(Bean)),
-            beanstalk.totalDeltaB().then(tokenResult(Bean)),
+            beanstalk.totalDeltaB().then(tokenResult(Bean)), // TWAdeltaB
           ]);
 
           if (!priceResult) return;

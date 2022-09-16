@@ -633,6 +633,18 @@ let muiTheme = createTheme({
           borderRadius: 1
         })
       }
+    },
+    MuiCircularProgress: {
+      styleOverrides: {
+        root: {
+          animationDuration: '0.8s',
+        },
+        circleIndeterminate: sx({
+          animation: 'none',
+          strokeDasharray: '80px, 200px',
+          strokeDashoffset: '0px' 
+        })
+      }
     }
   },
 });
