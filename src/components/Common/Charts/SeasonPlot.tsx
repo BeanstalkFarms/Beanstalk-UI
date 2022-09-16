@@ -56,7 +56,7 @@ type SeasonPlotFinalProps<T extends MinimumViableSnapshotQuery> = (
     queryConfig?: Partial<QueryOptions>
   }
   & { StatProps: Omit<StatProps, 'amount' | 'subtitle'> }
-  & { LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP' | 'yAxisMultiplier'> }
+  & { LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP'> }
 )
 
 /**

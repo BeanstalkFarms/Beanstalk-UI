@@ -3,7 +3,7 @@ import { bisector, extent, max, min } from 'd3-array';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { LinePath, Bar, Line } from '@visx/shape';
 import { Group } from '@visx/group';
-import { scaleLinear, scaleTime } from '@visx/scale';
+import { scaleLinear, scaleTime, NumberLike } from '@visx/scale';
 import { localPoint } from '@visx/event';
 import { useTooltip } from '@visx/tooltip';
 import {
@@ -15,11 +15,9 @@ import {
   curveBasis,
   curveMonotoneX,
 } from '@visx/curve';
-import { Axis, Orientation } from '@visx/axis';
+import { Axis, Orientation, TickFormatter } from '@visx/axis';
 import { CurveFactory } from 'd3-shape';
-import BigNumber from 'bignumber.js';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import { displayBN, displayFullBN } from '~/util';
 
 export const CURVES = {
   linear: curveLinear,
@@ -46,11 +44,11 @@ export type LineChartProps = {
   onCursor?: (ds?: DataPoint[]) => void;
   isTWAP?: boolean; // used to indicate if we are displaying TWAP price
   curve?: CurveFactory | (keyof typeof CURVES);
-  yAxisMultiplier?: number;
   children?: (props: GraphProps & {
     scales: Scale[];
     dataRegion: DataRegion;
   }) => React.ReactElement | null;
+  yTickFormat?: TickFormatter<NumberLike>
 };
 
 type GraphProps = {
@@ -144,9 +142,9 @@ const Graph: React.FC<GraphProps> = (props) => {
     series,
     onCursor,
     isTWAP,
-    yAxisMultiplier,
     curve: _curve = 'linear',
     children,
+    yTickFormat
   } = props;
   
   // When positioning the circle that accompanies the cursor,
@@ -261,21 +259,11 @@ const Graph: React.FC<GraphProps> = (props) => {
     [showTooltip, onCursor, data, scales, series],
   );
 
-  // Ticks
-  const yTickFormat = useCallback((val) => {
-    if (isTWAP) {
-      return displayFullBN(new BigNumber(val), 4, 4);
-    }
-    return displayBN(yAxisMultiplier ? new BigNumber(val * yAxisMultiplier) : new BigNumber(val));
-  }, [isTWAP, yAxisMultiplier]);
-  
   const xTickNum = width > 700 ? undefined : Math.floor(width / 70);
   const xTickFormat = useCallback((v) => {
     const d = scales[0].dScale.invert(v);
     return `${d.getMonth() + 1}/${d.getDate()}`;
   }, [scales]);
-
-  //
 
   // Empty state
   if (!series || series.length === 0) return null;
