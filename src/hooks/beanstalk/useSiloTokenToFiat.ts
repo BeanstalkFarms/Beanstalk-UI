@@ -65,7 +65,15 @@ const useSiloTokenToFiat = () => {
 
     const usd = _amountLP.div(pool.supply).times(pool.liquidity); // usd value; liquidity
     return _denomination === 'bdv' ? usd.div(price) : usd;
-  }, [Bean, BeanCrv3.address, beanPools, price, unripe, urBean, urBeanCrv3]);
+  }, [
+    Bean, 
+    BeanCrv3.address, 
+    beanPools, 
+    price, 
+    unripe, 
+    urBean, 
+    urBeanCrv3
+  ]);
 };
 
 export default useSiloTokenToFiat;

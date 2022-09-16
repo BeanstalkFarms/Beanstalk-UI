@@ -1,5 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { tickFormatPercentage } from '~/components/Analytics/formatters';
+import { LineChartProps } from '~/components/Common/Charts/LineChart';
 import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
 import { SeasonalWeatherDocument, SeasonalWeatherQuery } from '~/generated/graphql';
 import useSeason from '~/hooks/beanstalk/useSeason';
@@ -8,10 +10,13 @@ import { AppState } from '~/state';
 
 const getValue = (snapshot: SnapshotData<SeasonalWeatherQuery>) => snapshot.weather;
 const formatValue = (value: number) => `${value.toFixed(0)}%`;
-const StatProps = {
+const statProps = {
   title: 'Temperature',
   titleTooltip: 'The interest rate for Sowing Beans.',
   gap: 0.5,
+};
+const lineChartProps : Partial<LineChartProps> = {
+  yTickFormat: tickFormatPercentage
 };
 
 const Temperature: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => {
@@ -25,7 +30,8 @@ const Temperature: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ heigh
       defaultSeason={season?.gt(0) ? season.toNumber() : 0}
       getValue={getValue}
       formatValue={formatValue}
-      StatProps={StatProps}
+      StatProps={statProps}
+      LineChartProps={lineChartProps}
     />
   );
 };

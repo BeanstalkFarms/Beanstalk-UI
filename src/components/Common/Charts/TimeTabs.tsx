@@ -4,7 +4,7 @@ import { SeasonAggregation, SeasonRange } from '~/hooks/beanstalk/useSeasonsQuer
 import { BeanstalkPalette } from '../../App/muiTheme';
 import Row from '~/components/Common/Row';
 
-const DISPLAY = [
+const AGGREGATION = [
   { label: 'HR', index: 0 },
   { label: 'DAY', index: 1 },
 ];
@@ -20,6 +20,8 @@ export type TimeTabState = [SeasonAggregation, SeasonRange];
 export interface TimeTabProps {
   state: TimeTabState;
   setState: (s: TimeTabState) => void;
+  aggregation?: boolean;
+  windows?: boolean;
 }
 
 const TimeTabs: React.FC<
@@ -28,7 +30,9 @@ const TimeTabs: React.FC<
 > = ({ 
   sx, 
   setState, 
-  state
+  state,
+  aggregation = true,
+  windows = true
 }) => {
   const handleChange0 = useCallback((i: number) => {
     setState([i, state[1]]);
@@ -40,7 +44,7 @@ const TimeTabs: React.FC<
 
   return (
     <Row sx={{ ...sx }} gap={0.2}>
-      {DISPLAY.map((d) => (
+      {aggregation ? AGGREGATION.map((d) => (
         <Button
           onClick={() => handleChange0(d.index)}
           key={d.label}
@@ -60,9 +64,11 @@ const TimeTabs: React.FC<
             {d.label}
           </Typography>
         </Button>
-      ))}
-      <Divider orientation="vertical" sx={{ height: '14px', ml: 0.1, mr: 0.1 }} />
-      {WINDOWS.map((w) => (
+      )) : null}
+      {aggregation && windows ? (
+        <Divider orientation="vertical" sx={{ height: '14px', ml: 0.1, mr: 0.1 }} />
+      ) : null}
+      {windows ? WINDOWS.map((w) => (
         <Button
           onClick={() => handleChange1(w.index)}
           key={w.label}
@@ -82,7 +88,7 @@ const TimeTabs: React.FC<
             {w.label}
           </Typography>
         </Button>
-      ))}
+      )) : null}
     </Row>
   );
 };

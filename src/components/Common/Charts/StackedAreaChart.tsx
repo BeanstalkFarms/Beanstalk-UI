@@ -8,10 +8,6 @@ import { localPoint } from '@visx/event';
 import { useTooltip } from '@visx/tooltip';
 import {
   curveLinear,
-  curveStep,
-  curveNatural,
-  curveBasis,
-  curveMonotoneX,
 } from '@visx/curve';
 import { Axis, Orientation } from '@visx/axis';
 import { CurveFactory } from 'd3-shape';
@@ -19,14 +15,7 @@ import { LinearGradient } from '@visx/gradient';
 import BigNumber from 'bignumber.js';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { displayBN } from '~/util';
-
-const CURVES = {
-  linear: curveLinear,
-  step: curveStep,
-  natural: curveNatural,
-  basis: curveBasis,
-  monotoneX: curveMonotoneX,
-};
+import { CURVES } from '~/components/Common/Charts/LineChart';
 
 export type Scale = {
   xScale: ReturnType<typeof scaleLinear>;

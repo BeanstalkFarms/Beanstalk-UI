@@ -10,7 +10,7 @@ import Sown from './Sown';
 import TotalSowers from './TotalSowers';
 import RRoR from './RRoR';
 
-const SLUGS = ['rror', 'weather', 'pods', 'podrate', 'sown', 'harvested', 'sowers'];
+// const SLUGS = ['rror', 'weather', 'pods', 'podrate', 'sown', 'harvested', 'sowers'];
 const FieldAnalytics: React.FC<{}> = () => {
   const [tab, handleChangeTab] = useTabs();
   return (
