@@ -1,18 +1,15 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { DateTime } from 'luxon';
 import { useSelector } from 'react-redux';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import { AppState } from '~/state';
 
 import useTabs from '~/hooks/display/useTabs';
-import SeedsView from '~/components/Silo/Views/SeedsView';
-import StalkView from '~/components/Silo/Views/StalkView';
-import DepositsView from '~/components/Silo/Views/DepositsView';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN, SEEDS, STALK } from '~/constants/tokens';
-import { displayStalk, displayUSD, toTokenUnitsBN } from '~/util';
+import { displayPercentage, displayStalk, displayUSD, toTokenUnitsBN } from '~/util';
 import { ChipLabel, StyledTab } from '~/components/Common/Tabs';
 import { ZERO_BN } from '~/constants';
 import Row from '~/components/Common/Row';
@@ -22,6 +19,8 @@ import { Module, ModuleTabs } from '~/components/Common/Module';
 import useSeason from '~/hooks/beanstalk/useSeason';
 import { SeasonDataPoint } from '~/components/Common/Charts/SeasonPlot';
 import useSeasonsQuery, { SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
+import View from '~/components/Silo/Views/View';
+import Stat from '~/components/Common/Stat';
 
 const secondsToDate = (ts: string) => new Date(parseInt(ts, 10) * 1000);
 
@@ -179,7 +178,6 @@ const useFarmerDepositedValueInterpolation = (
   priceQuery: ReturnType<typeof useSeasonsQuery>,
 ) => {
   const unripe = useSelector<AppState, AppState['_bean']['unripe']>((state) => state._bean.unripe);
-
   return useMemo(() => {
     if (
       priceQuery.loading
@@ -221,24 +219,116 @@ const useFarmerDepositedValueInterpolation = (
   ]);
 };
 
+const depositStats = (s: BigNumber, v: BigNumber[]) => (
+  <Stat
+    title="Value Deposited"
+    titleTooltip={(
+      <>
+        Shows the historical value of your Silo Deposits. <br />
+        <Typography variant="bodySmall">
+          Note: Unripe assets are valued based on the current Chop Rate. Earned Beans are shown upon Plant.
+        </Typography>
+      </>
+    )}
+    subtitle={`Season ${s.toString()}`}
+    amount={displayUSD(v[0])}
+    color="primary"
+    amountIcon={undefined}
+    gap={0.25}
+    sx={{ ml: 0 }}
+  />
+);
+
+const seedsStats = (s: BigNumber, v: BigNumber[]) => (
+  <Stat
+    title="Seed Balance"
+    titleTooltip="Seeds are illiquid tokens that yield 1/10,000 Stalk each Season."
+    subtitle={`Season ${s.toString()}`}
+    amount={displayStalk(v[0])}
+    color="primary"
+    sx={{ minWidth: 180, ml: 0 }}
+    amountIcon={undefined}
+    gap={0.25}
+  />
+);
+
+const useFarmerOverviewData = (account: string | undefined) => {
+  const siloRewardsQuery = useFarmerSiloRewardsQuery({ variables: { account: account || '' }, skip: !account, fetchPolicy: 'cache-and-network' });
+  const siloAssetsQuery = useFarmerSiloAssetSnapshotsQuery({ variables: { account: account || '' }, skip: !account, fetchPolicy: 'cache-and-network' });
+  const priceQuery = useSeasonsQuery(SeasonalPriceDocument, SeasonRange.ALL);
+
+  //
+  const [stalkData, seedsData] = useFarmerStalkInterpolation(siloRewardsQuery);
+  const depositData = useFarmerDepositedValueInterpolation(siloAssetsQuery, priceQuery);
+
+  return {
+    data: {
+      deposits: depositData,
+      stalk: stalkData,
+      seeds: seedsData,
+    },
+    loading: (
+      siloRewardsQuery.loading
+      || siloAssetsQuery.loading 
+      || priceQuery.loading
+      // || breakdown hasn't loaded value yet
+    )
+  };
+};
+
 const SLUGS = ['deposits', 'stalk'];
 const Overview: React.FC<{
   farmerSilo:     AppState['_farmer']['silo'];
   beanstalkSilo:  AppState['_beanstalk']['silo'];
   breakdown:      ReturnType<typeof useFarmerBalancesBreakdown>;
   season:         BigNumber;
-}> = ({ farmerSilo, beanstalkSilo, breakdown, season }) => {
+}> = ({
+  farmerSilo,
+  beanstalkSilo,
+  breakdown,
+  season
+}) => {
   const [tab, handleChange] = useTabs(SLUGS, 'view');
 
   //
   const account = useAccount();
-  const siloRewardsQuery = useFarmerSiloRewardsQuery({ variables: { account: account || '' }, skip: !account });
-  const siloAssetsQuery = useFarmerSiloAssetSnapshotsQuery({ variables: { account: account || '' }, skip: !account });
-  const priceQuery = useSeasonsQuery(SeasonalPriceDocument, SeasonRange.ALL);
+  const { data, loading } = useFarmerOverviewData(account);
 
   //
-  const [stalkData, seedsData] = useFarmerStalkInterpolation(siloRewardsQuery);
-  const depositData = useFarmerDepositedValueInterpolation(siloAssetsQuery, priceQuery);
+  const ownership = (
+    (farmerSilo.stalk.active?.gt(0) && beanstalkSilo.stalk.total?.gt(0))
+      ? farmerSilo.stalk.active.div(beanstalkSilo.stalk.total)
+      : ZERO_BN
+  );
+  const stalkStats = useCallback((s: BigNumber, v: BigNumber[]) => (
+    <>
+      <Stat
+        title="Stalk Balance"
+        titleTooltip="Stalk is the governance token of the Beanstalk DAO. Stalk entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
+        subtitle={`Season ${s.toString()}`}
+        amount={displayStalk(v[0])}
+        color="primary"
+        sx={{ minWidth: 220, ml: 0 }}
+        gap={0.25}
+      />
+      <Stat
+        title="Stalk Ownership"
+        titleTooltip="Your current ownership of Beanstalk is displayed as a percentage. Ownership is determined by your proportional ownership of the total Stalk supply"
+        amount={displayPercentage(ownership.multipliedBy(100))}
+        color="secondary.dark"
+        gap={0.25}
+        sx={{ minWidth: 200, ml: 0 }}
+      />
+      <Stat
+        title="Stalk Grown per Day"
+        titleTooltip="Your current ownership of Beanstalk is displayed as a percentage. Ownership is determined by your proportional ownership of the total Stalk supply"
+        amount={displayStalk(farmerSilo.seeds.active.times(1 / 10_000).times(24))}
+        color="text.secondary"
+        gap={0.25}
+        sx={{ minWidth: 120, ml: 0 }}
+      />
+    </>
+  ), [farmerSilo, ownership]);
 
   return (
     <Module>
@@ -261,41 +351,54 @@ const Overview: React.FC<{
         } />
       </ModuleTabs>
       <Box sx={{ display: tab === 0 ? 'block' : 'none' }}>
-        <DepositsView
-          current={[
+        <View
+          label="Silo Deposits"
+          account={account}
+          current={useMemo(() => ([
             breakdown.states.deposited.value
-          ]}
-          series={[
-            depositData
-          ]}
+          ]), [breakdown.states.deposited.value])}
+          series={useMemo(() => ([
+            data.deposits
+          ]), [data.deposits])}
           season={season}
+          stats={depositStats}
+          loading={loading}
+          empty={breakdown.states.deposited.value.eq(0)}
         />
       </Box>
       <Box sx={{ display: tab === 1 ? 'block' : 'none' }}>
-        <StalkView
-          current={[
+        <View
+          label="Stalk Ownership"
+          account={account}
+          current={useMemo(() => ([
             farmerSilo.stalk.active,
             // Show zero while these data points are loading
-            (farmerSilo.stalk.active?.gt(0) && beanstalkSilo.stalk.total?.gt(0))
-              ? farmerSilo.stalk.active.div(beanstalkSilo.stalk.total)
-              : ZERO_BN,
-          ]}
-          series={[
-            stalkData,
+            ownership,
+          ]), [farmerSilo.stalk.active, ownership])}
+          series={useMemo(() => ([
+            data.stalk
             // mockOwnershipPctData
-          ]}
+          ]), [data.stalk])}
           season={season}
+          stats={stalkStats}
+          loading={loading}
+          empty={farmerSilo.stalk.total.lte(0)}
         />
       </Box>
       <Box sx={{ display: tab === 2 ? 'block' : 'none' }}>
-        <SeedsView
-          current={[
+        <View
+          label="Seeds Ownership"
+          account={account}
+          current={useMemo(() => ([
             farmerSilo.seeds.active,
-          ]}
-          series={[
-            seedsData
-          ]}
+          ]), [farmerSilo.seeds.active])}
+          series={useMemo(() => ([
+            data.seeds
+          ]), [data.seeds])}
           season={season}
+          stats={seedsStats}
+          loading={loading}
+          empty={farmerSilo.seeds.total.lte(0)}
         />
       </Box>
     </Module>
