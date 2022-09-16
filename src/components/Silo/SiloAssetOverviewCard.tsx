@@ -55,7 +55,8 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
       </Row>
       <SiloAssetApyChip 
         token={token as Token}
-        variant="bean"
+        metric="bean"
+        variant="labeled"
       />
     </Row>
   );
@@ -91,7 +92,7 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
               asset={whitelist[token.address]}
               account={BEANSTALK_ADDRESSES[1]}
               height={230}
-          />
+            />
           </EmbeddedCard>
 
           {/* Stats */}

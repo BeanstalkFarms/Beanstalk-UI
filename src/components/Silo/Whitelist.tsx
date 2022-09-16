@@ -207,8 +207,8 @@ const Whitelist : React.FC<{
                         </Typography>
                       </Tooltip>
                       <Row gap={0.25}>
-                        <SiloAssetApyChip token={token} variant="bean" onlyApy />
-                        <SiloAssetApyChip token={token} variant="stalk" onlyApy />
+                        <SiloAssetApyChip token={token} metric="bean" />
+                        <SiloAssetApyChip token={token} metric="stalk" />
                       </Row>
                     </Row>
                   </Grid>

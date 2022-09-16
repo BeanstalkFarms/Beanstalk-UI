@@ -9,7 +9,7 @@ import stalkIconBlue from '~/img/beanstalk/stalk-icon-blue.svg';
 import { displayFullBN } from '~/util';
 
 import Stat from '../Common/Stat';
-import useGetChainToken from '~/hooks/chain/useGetChainToken';
+import useChainConstant from '~/hooks/chain/useChainConstant';
 
 const TOOLTIP_COMPONENT_PROPS = {
   tooltip: {
@@ -22,15 +22,14 @@ const TOOLTIP_COMPONENT_PROPS = {
 
 type SiloAssetApyChipProps = {
   token: Token;
-  variant: 'bean' | 'stalk';
-  onlyApy?: boolean;
+  metric: 'bean' | 'stalk';
+  variant?: 'default' | 'labeled'
 };
 
-const SiloAssetApyChip: React.FC<SiloAssetApyChipProps> = ({ token, variant, onlyApy = false }) => {
+const SiloAssetApyChip: React.FC<SiloAssetApyChipProps> = ({ token, metric, variant = 'default' }) => {
   const { data: latestYield } = useAPY();
-  const getChainToken = useGetChainToken();
-  const Bean = getChainToken(BEAN);
-  const isBean = variant === 'bean';
+  const Bean = useChainConstant(BEAN);
+  const isBean = metric === 'bean';
 
   const seeds = token.getSeeds();
   const apys = latestYield
@@ -49,7 +48,7 @@ const SiloAssetApyChip: React.FC<SiloAssetApyChipProps> = ({ token, variant, onl
       componentsProps={TOOLTIP_COMPONENT_PROPS}
       title={
         <Row gap={0}>
-          {variant === 'bean' && (
+          {metric === 'bean' && (
             <Box sx={{ px: 1, py: 0.5, maxWidth: 245 }}>
               <Stat 
                 title={<Row gap={0.5}><TokenIcon token={Bean} />Total Beans per Season</Row>}
@@ -60,8 +59,8 @@ const SiloAssetApyChip: React.FC<SiloAssetApyChipProps> = ({ token, variant, onl
               />
             </Box>
           )}
-          <Box sx={{ maxWidth: isBean ? 275 : 245, px: isBean ? 1 : 0, py: isBean ? 0.5 : 0 }}>
-            {variant === 'bean' ? (
+          <Box sx={{ maxWidth: isBean ? 285 : 245, px: isBean ? 1 : 0, py: isBean ? 0.5 : 0 }}>
+            {metric === 'bean' ? (
               <> The Variable Bean APY uses a moving average of Beans earned by Stalkholders during recent Seasons to estimate a future rate of return, accounting for Stalk growth.&nbsp; </>
             ) : (
               <> The Variable Stalk APY estimates the growth in your Stalk balance for Depositing {token.name}.&nbsp; </>
@@ -75,18 +74,14 @@ const SiloAssetApyChip: React.FC<SiloAssetApyChipProps> = ({ token, variant, onl
     >
       <Chip
         variant="filled"
-        color={variant === 'bean' ? 'primary' : 'secondary'}
+        color={metric === 'bean' ? 'primary' : 'secondary'}
         label={
-          <Row gap={0.5} flexWrap="nowrap" justifyContent="center">
-            <Typography sx={{ whiteSpace: 'nowrap' }}>
-              {!onlyApy && (
-                <>
-                  <TokenIcon token={tokenProps} /> vAPY:{' '}
-                </>
-              )}
-              {`${apys ? apys[variant].times(100).toFixed(1) : '0.00'}%`}
-            </Typography>
-          </Row>
+          <Typography sx={{ whiteSpace: 'nowrap' }}>
+            <Row gap={0.5} flexWrap="nowrap" justifyContent="center">
+              {variant === 'labeled' && <><TokenIcon token={tokenProps} /> vAPY:{' '}</>}
+              {`${apys ? apys[metric].times(100).toFixed(1) : '0.0'}%`}
+            </Row>
+          </Typography>
         }
         onClick={undefined}
         size="small"
