@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { NEW_BN, ZERO_BN } from '~/constants';
 import { BeanstalkBarn } from '.';
-import { resetBarn, setRemaining, setTotalRaised, setHumidity, updateBarn } from './actions';
+import { resetBarn, updateBarn } from './actions';
 
 const initialState : BeanstalkBarn = {
   remaining:    ZERO_BN,
@@ -20,13 +20,4 @@ export default createReducer(initialState, (builder) =>
     .addCase(updateBarn, (_state, { payload }) => 
        ({ ...payload })
     )
-    .addCase(setRemaining, (state, { payload }) => {
-      state.remaining = payload;
-    })
-    .addCase(setTotalRaised, (state, { payload }) => {
-      state.totalRaised = payload;
-    })
-    .addCase(setHumidity, (state, { payload }) => {
-      state.humidity = payload;
-    })
 );

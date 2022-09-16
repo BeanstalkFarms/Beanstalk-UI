@@ -1,5 +1,4 @@
 import { createAction } from '@reduxjs/toolkit';
-import BigNumber from 'bignumber.js';
 import { BeanstalkBarn } from '.';
 
 export const resetBarn = createAction(
@@ -8,14 +7,4 @@ export const resetBarn = createAction(
 
 export const updateBarn = createAction<BeanstalkBarn>(
   'beanstalk/barn/update'
-);
-
-export const setRemaining = createAction<BigNumber>(
-  'beanstalk/barn/setRemaining'
-);
-export const setTotalRaised = createAction<BigNumber>(
-  'beanstalk/barn/setTotalRaised'
-);
-export const setHumidity = createAction<BigNumber>(
-  'beanstalk/barn/setHumidity'
 );
