@@ -43,7 +43,7 @@ export type DataRegion = {
 
 export type LineChartProps = {
   series: (DataPoint[])[];
-  onCursor: (ds?: DataPoint[]) => void;
+  onCursor?: (ds?: DataPoint[]) => void;
   isTWAP?: boolean; // used to indicate if we are displaying TWAP price
   curve?: CurveFactory | (keyof typeof CURVES);
   yAxisMultiplier?: number;
@@ -164,6 +164,7 @@ const Graph: React.FC<GraphProps> = (props) => {
     tooltipLeft = 0,
   } = useTooltip<DataPoint[] | undefined>();
 
+  // Scales
   const scales = useMemo(() => series.map((_data) => {
     const xDomain = extent(_data, getX) as [number, number];
     const xScale = scaleLinear<number>({
@@ -203,7 +204,10 @@ const Graph: React.FC<GraphProps> = (props) => {
     }
 
     /// Set ranges
-    xScale.range([0, width - yAxisWidth]);
+    xScale.range([
+      0,
+      width - yAxisWidth
+    ]);
     yScale.range([
       height - axisHeight - margin.bottom - strokeBuffer, // bottom edge
       margin.top,
@@ -216,6 +220,11 @@ const Graph: React.FC<GraphProps> = (props) => {
     };
   }), [series, isTWAP, width, height]);
 
+  // Handlers
+  const handleMouseLeave = useCallback(() => {
+    hideTooltip();
+    onCursor?.(undefined);
+  }, [hideTooltip, onCursor]);
   const handleTooltip = useCallback(
     (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
       const { x } = localPoint(event) || { x: 0 };
@@ -245,44 +254,34 @@ const Graph: React.FC<GraphProps> = (props) => {
       showTooltip({
         tooltipData: ds,
         tooltipLeft: x, // in pixels
-        // scales[0].xScale(getX(ds[0]))
-        // cursorLeft:  x,
         tooltipTop:  scales[0].yScale(getY(ds[0])), // in pixels
       });
-      onCursor(ds);
+      onCursor?.(ds);
     },
     [showTooltip, onCursor, data, scales, series],
   );
 
-  const handleMouseLeave = useCallback(() => {
-    hideTooltip();
-    onCursor(undefined);
-  }, [hideTooltip, onCursor]);
-
+  // Ticks
   const yTickFormat = useCallback((val) => {
     if (isTWAP) {
       return displayFullBN(new BigNumber(val), 4, 4);
     }
     return displayBN(yAxisMultiplier ? new BigNumber(val * yAxisMultiplier) : new BigNumber(val));
   }, [isTWAP, yAxisMultiplier]);
+  
+  const xTickNum = width > 700 ? undefined : Math.floor(width / 70);
+  const xTickFormat = useCallback((v) => {
+    const d = scales[0].dScale.invert(v);
+    return `${d.getMonth() + 1}/${d.getDate()}`;
+  }, [scales]);
 
+  //
+
+  // Empty state
   if (!series || series.length === 0) return null;
   
-  //
+  // Derived
   const tooltipLeftAttached = tooltipData ? scales[0].xScale(getX(tooltipData[0])) : undefined;
-
-  /**
-   * Height: `height` (controlled by container)
-   * Width:  `width`  (controlled by container)
-   * 
-   * ----------------------------------
-   * |                                |
-   * |           plot                 |  
-   * |                                |
-   * ----------------------------------
-   * |           axes                 | 
-   * ----------------------------------
-   */
   const dataRegion = {
     yTop: margin.top, // chart edge to data region first pixel
     yBottom: 
@@ -326,12 +325,10 @@ const Graph: React.FC<GraphProps> = (props) => {
             orientation={Orientation.bottom}
             scale={scales[0].xScale}
             stroke={axisColor}
+            tickFormat={xTickFormat}
             tickStroke={axisColor}
             tickLabelProps={xTickLabelProps}
-            tickFormat={(v) => {
-              const d = scales[0].dScale.invert(v);
-              return `${d.getMonth() + 1}/${d.getDate()}`;
-            }}
+            numTicks={xTickNum}
           />
         </g>
         <g transform={`translate(${width - 17}, 1)`}>
