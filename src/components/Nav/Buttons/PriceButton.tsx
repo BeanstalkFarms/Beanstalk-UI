@@ -14,7 +14,7 @@ import BeanProgressIcon from '~/components/Common/BeanProgressIcon';
 import useSeason from '~/hooks/beanstalk/useSeason';
 import usePrice from '~/hooks/beanstalk/usePrice';
 import { displayBeanPrice, displayBN } from '~/util/Tokens';
-import { NEW_BN, ZERO_BN } from '~/constants';
+import { CURVE_LINK, NEW_BN, ZERO_BN } from '~/constants';
 import { useFetchPools } from '~/state/bean/pools/updater';
 import { AppState } from '~/state';
 import FolderMenu from '../FolderMenu';
@@ -49,7 +49,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
       poolState={beanPools[pool.address]}
       ButtonProps={{
         // FIXME: change link when more pools are added
-        href: 'https://curve.fi/factory/152',
+        href: CURVE_LINK,
         // href: `https://etherscan.io/address/${pool.address}`,
         target: '_blank',
         rel: 'noreferrer',

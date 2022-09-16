@@ -93,6 +93,7 @@ export const BeanstalkPalette = {
   lightBlue: '#DAEBF7',
   lightestBlue: '#F6FAFE',
   darkBlue: '#1F78B4',
+  skyBlue: '#DBEDFD',
   // Other
   grey: '#657265',
   lightGrey: '#9E9E9E',

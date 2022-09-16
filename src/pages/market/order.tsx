@@ -17,7 +17,6 @@ import FillOrder from '../../components/Market/Actions/FillOrder';
 import OrderDetails from '../../components/Market/Cards/OrderDetails';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 import { Module, ModuleContent, ModuleHeader } from '~/components/Common/Module';
-import Row from '~/components/Common/Row';
 
 const OrderPage: React.FC = () => {
   const account = useAccount();
@@ -68,11 +67,9 @@ const OrderPage: React.FC = () => {
       <Stack spacing={2}>
         <PageHeaderSecondary
           title={(
-            <Row gap={0.5}>
-              <Typography variant="h2">
-                Order {order.id.substring(0, 8)}
-              </Typography>
-            </Row>
+            <Typography variant="h2">
+              Order {order.id.substring(0, 8)}
+            </Typography>
           )}
           returnPath="/market"
         />
