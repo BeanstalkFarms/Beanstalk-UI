@@ -8,9 +8,7 @@ import Row from '~/components/Common/Row';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { SEEDS, STALK } from '~/constants/tokens';
 
-// ------------------------------------------------
-
-export type ViewData = {
+export type OverviewPlotProps = {
   account: string | undefined;
   season: BigNumber;
   current: BigNumber[];
@@ -21,7 +19,7 @@ export type ViewData = {
   label: string;
 };
 
-const View: React.FC<ViewData> = ({
+const OverviewPlot: React.FC<OverviewPlotProps> = ({
   account,
   season,
   current,
@@ -77,4 +75,4 @@ const View: React.FC<ViewData> = ({
   );
 };
 
-export default View;
+export default OverviewPlot;

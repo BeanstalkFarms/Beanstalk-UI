@@ -19,7 +19,7 @@ import { Module, ModuleTabs } from '~/components/Common/Module';
 import useSeason from '~/hooks/beanstalk/useSeason';
 import { SeasonDataPoint } from '~/components/Common/Charts/SeasonPlot';
 import useSeasonsQuery, { SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
-import View from '~/components/Silo/Views/View';
+import OverviewPlot from '~/components/Silo/OverviewPlot';
 import Stat from '~/components/Common/Stat';
 
 const secondsToDate = (ts: string) => new Date(parseInt(ts, 10) * 1000);
@@ -351,7 +351,7 @@ const Overview: React.FC<{
         } />
       </ModuleTabs>
       <Box sx={{ display: tab === 0 ? 'block' : 'none' }}>
-        <View
+        <OverviewPlot
           label="Silo Deposits"
           account={account}
           current={useMemo(() => ([
@@ -367,7 +367,7 @@ const Overview: React.FC<{
         />
       </Box>
       <Box sx={{ display: tab === 1 ? 'block' : 'none' }}>
-        <View
+        <OverviewPlot
           label="Stalk Ownership"
           account={account}
           current={useMemo(() => ([
@@ -386,7 +386,7 @@ const Overview: React.FC<{
         />
       </Box>
       <Box sx={{ display: tab === 2 ? 'block' : 'none' }}>
-        <View
+        <OverviewPlot
           label="Seeds Ownership"
           account={account}
           current={useMemo(() => ([
