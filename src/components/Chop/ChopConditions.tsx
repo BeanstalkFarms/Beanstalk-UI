@@ -4,17 +4,16 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useSelector } from 'react-redux';
 import { displayBN, displayFullBN } from '../../util';
 import { BeanstalkPalette, FontSize } from '../App/muiTheme';
-import useFertilizerProgress from '../../hooks/beanstalk/useFertilizerProgress';
 import { AppState } from '~/state';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import { UNRIPE_BEAN } from '~/constants/tokens';
 
 const ChopConditions: React.FC<{}> = () => {
-  const fertilizerSold  = useFertilizerProgress();
-  const barn = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
-  const pctDebtRepaid = barn.fertilized.div(barn.fertilized.plus(barn.unfertilized));
+  const { fertilized, recapFundedPct, unfertilized } = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
+  const pctDebtRepaid = fertilized.div(fertilized.plus(unfertilized));
   const unripeTokens = useSelector<AppState, AppState['_bean']['unripe']>((_state) => _state._bean.unripe);
   const urBean = useChainConstant(UNRIPE_BEAN);
+
   return (
     <Card sx={{ p: 2 }}>
       <Stack gap={1}>
@@ -53,7 +52,7 @@ const ChopConditions: React.FC<{}> = () => {
                 </Typography>
               </Tooltip>
               <Typography variant="bodyLarge" fontWeight="400">
-                {displayFullBN(fertilizerSold.multipliedBy(100), 2)}%
+                {displayFullBN(recapFundedPct.times(100), 2)}%
               </Typography>
             </Stack>
           </Grid>
