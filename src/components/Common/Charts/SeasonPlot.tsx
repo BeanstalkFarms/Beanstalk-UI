@@ -108,9 +108,6 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
         },
         []
       );
-
-      console.debug('[SeasonPlot] made baseData', baseData);
-
       return baseData.sort(sortSeasons); // FIXME: mapsort
     }
     return [];

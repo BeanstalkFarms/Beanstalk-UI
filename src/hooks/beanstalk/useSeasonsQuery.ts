@@ -15,11 +15,11 @@ export enum SeasonRange {
   ALL = 2,
 }
 
-const SEASON_RANGE_TO_COUNT : { [key in SeasonRange]: number | undefined } = {
+export const SEASON_RANGE_TO_COUNT : { [key in SeasonRange]: number | undefined } = {
   [SeasonRange.WEEK]:  168, // 7*24
   [SeasonRange.MONTH]: 672, // 28*24
   [SeasonRange.ALL]:   undefined,
-};
+} as const;
 
 /**
  * The minimum data points that each Snapshot should acquire.

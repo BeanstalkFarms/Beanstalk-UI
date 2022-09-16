@@ -1,13 +1,16 @@
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import React, { useCallback, useEffect, useState } from 'react';
 
 import LineChart, { DataPoint  } from '~/components/Common/Charts/LineChart';
-import { mockDepositData } from '~/components/Common/Charts/LineChart.mock';
+import TimeTabs, { TimeTabState } from '~/components/Common/Charts/TimeTabs';
 import WalletButton from '~/components/Common/Connection/WalletButton';
+import Row from '~/components/Common/Row';
 import TokenIcon from '~/components/Common/TokenIcon';
 import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
+import MockPlot from '~/components/Silo/MockPlot';
 import { SEEDS, STALK } from '~/constants/tokens';
+import { SeasonAggregation, SeasonRange, SEASON_RANGE_TO_COUNT } from '~/hooks/beanstalk/useSeasonsQuery';
 
 export type OverviewPlotProps = {
   account: string | undefined;
@@ -19,14 +22,6 @@ export type OverviewPlotProps = {
   loading: boolean;
   label: string;
 };
-
-const MockSeries = [mockDepositData];
-const FakeChart = () => (
-  <LineChart
-    series={MockSeries}
-    onCursor={() => {}}
-  />
-);
 
 const OverviewPlot: React.FC<OverviewPlotProps> = ({
   account,
@@ -52,6 +47,21 @@ const OverviewPlot: React.FC<OverviewPlotProps> = ({
     [current, season]
   );
 
+  const [tabState, setTimeTab] = useState<TimeTabState>([SeasonAggregation.HOUR, SeasonRange.WEEK]);
+  const handleChangeTimeTab = useCallback(
+    (tabs: TimeTabState) => {
+      setTimeTab(tabs);
+    },
+    []
+  );
+
+  const filteredSeries = useMemo(() => {
+    if (tabState[1] !== SeasonRange.ALL) {
+      return series.map((s) => s.slice(-(SEASON_RANGE_TO_COUNT[tabState[1]] as number)));
+    }
+    return series;
+  }, [series, tabState]);
+
   const ready = (
     account
     && !loading
@@ -60,25 +70,32 @@ const OverviewPlot: React.FC<OverviewPlotProps> = ({
 
   return (
     <>
-      <Stack
-        direction={{ xs: 'column', md: 'row' }}
-        gap={{ xs: 1, md: 0 }}
-        sx={{ px: 2, pb: { xs: 2, md: 0 } }}
-        alignItems="flex-start"
-      >
-        {stats(displaySeason, displayValue)}
-      </Stack>
+      <Row alignItems="flex-start" justifyContent="space-between" pr={2}>
+        <Stack
+          direction={{ xs: 'column', md: 'row' }}
+          gap={{ xs: 1, md: 0 }}
+          sx={{ px: 2, pb: { xs: 2, md: 0 } }}
+          alignItems="flex-start"
+        >
+          {stats(displaySeason, displayValue)}
+        </Stack>
+        <Stack alignItems="right">
+          <TimeTabs
+            state={tabState}
+            setState={handleChangeTimeTab}
+            aggregation={false}
+          />
+        </Stack>
+      </Row>
       <Box sx={{ width: '100%', height: '220px', position: 'relative' }}>
-        <Box sx={{ display: ready ? 'hidden' : 'block', height: '100%' }}>
-          <FakeChart />
-        </Box>
         {ready ? (
           <LineChart
-            series={series}
+            series={filteredSeries}
             onCursor={handleCursor}
           />
         ) : (
           <>
+            <MockPlot />
             <BlurComponent>
               <Stack justifyContent="center" alignItems="center" height="100%" gap={1}>
                 {!account ? (
