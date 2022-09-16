@@ -7,7 +7,7 @@ import {
   UNRIPE_BEAN,
   UNRIPE_BEAN_CRV3,
 } from '~/constants/tokens';
-import earnBeansImg from '~/img/beanstalk/education/earnBeansImg.svg';
+import earnBeansImg from '~/img/beanstalk/education/earnBeansImg.png';
 import depositBeanImg from '~/img/beanstalk/education/depositBeanImg.svg';
 import depositBean3crvImg from '~/img/beanstalk/education/depositBean3crvImg.svg';
 import depositUrBean3crvImg from '~/img/beanstalk/education/depositUrBean3crvImg.svg';
@@ -63,7 +63,7 @@ const useCardContentWithToken = (token: ERC20Token) => [
       'Every Season that Beans are minted, receive a share of the new Beans based on your percentage ownership of Stalk.',
       'You can claim your Silo Rewards on the main Silo page.',
     ],
-    imageSrc: earnBeansImg,
+    imageSrc: earnBeansImg, // Made this one a PNG because it contains 4 BeaNFTs which are too big when base64 encoded in an SVG.
   },
 ];
 
