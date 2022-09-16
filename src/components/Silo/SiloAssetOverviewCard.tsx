@@ -27,6 +27,32 @@ import EmbeddedCard from '../Common/EmbeddedCard';
 import SiloAssetApyChip from './SiloAssetApyChip';
 import useWhitelist from '~/hooks/beanstalk/useWhitelist';
 
+const DepositRewards : React.FC<{ token: ERC20Token }> = ({ token }) => (
+  <Row gap={1} justifyContent="center">
+    <Row gap={0.5} justifyContent="center">
+      <Typography variant="bodyLarge">
+        <TokenIcon
+          token={STALK}
+          style={{ marginTop: '7px', height: '0.7em' }}
+        />
+        {token.rewards?.stalk}
+      </Typography>
+      <Typography variant="bodyLarge">
+        <TokenIcon
+          token={SEEDS}
+          style={{ marginTop: '4px', fontSize: 'inherit' }}
+        />
+        {token.rewards?.seeds}
+      </Typography>
+    </Row>
+    <SiloAssetApyChip 
+      token={token as Token}
+      metric="bean"
+      variant="labeled"
+    />
+  </Row>
+);
+
 const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
   const { total, tvdByToken } = useTVD();
   const whitelist = useWhitelist();
@@ -34,32 +60,6 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
   const isRipeAndIsLP = token.isLP && !token.isUnripe;
   const tokenTVD = tvdByToken[token.address];
   const tokenPctTVD = tokenTVD.div(total).times(100);
-
-  const DepositRewards = () => (
-    <Row gap={1} justifyContent="center">
-      <Row gap={0.5} justifyContent="center">
-        <Typography variant="bodyLarge">
-          <TokenIcon
-            token={STALK}
-            style={{ marginTop: '7px', height: '0.7em' }}
-          />
-          {token.rewards?.stalk}
-        </Typography>
-        <Typography variant="bodyLarge">
-          <TokenIcon
-            token={SEEDS}
-            style={{ marginTop: '4px', fontSize: 'inherit' }}
-          />
-          {token.rewards?.seeds}
-        </Typography>
-      </Row>
-      <SiloAssetApyChip 
-        token={token as Token}
-        metric="bean"
-        variant="labeled"
-      />
-    </Row>
-  );
 
   return (
     <Module>
@@ -96,7 +96,7 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
           </EmbeddedCard>
 
           {/* Stats */}
-          <Row gap={2} justifyContent="space-between" flexWrap="wrap" pb={2}>
+          <Row gap={2} justifyContent="space-between" flexWrap="wrap" py={1}>
             <Stat
               gap={0}
               title="TVD"
@@ -109,7 +109,7 @@ const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
               amount={`${displayFullBN(tokenPctTVD, 2, 2)}%`}
               variant="bodyLarge"
             />
-            <Stat gap={0} title="Deposit Rewards" amount={<DepositRewards />} />
+            <Stat gap={0} title="Deposit Rewards" amount={<DepositRewards token={token} />} />
           </Row>
 
           {/* Card Carousel */}

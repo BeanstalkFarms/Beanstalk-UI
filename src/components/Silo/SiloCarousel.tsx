@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Stack, styled, Typography } from '@mui/material';
+import { Stack, styled, Typography } from '@mui/material';
 import { ERC20Token } from '~/classes/Token';
 import {
   BEAN,
@@ -15,6 +15,7 @@ import depositUrBeanImg from '~/img/beanstalk/education/depositUrBeanImg.svg';
 import earnStalkAndSeedsImg from '~/img/beanstalk/education/earnStalkAndSeedsImg.svg';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import Carousel from '~/components/Common/Carousel/Carousel';
+import EmbeddedCard from '~/components/Common/EmbeddedCard';
 
 const depositCardContentByToken = {
   [BEAN[1].address]: {
@@ -94,7 +95,7 @@ const InfoContent = styled(Stack)(({ theme }) => ({
   },
 }));
 
-const CarouselCard = styled(Card)(({ theme }) => ({
+const CarouselCard = styled(EmbeddedCard)(({ theme }) => ({
   // heights are defined here otherwise layout jumps occur during animation
   borderColor: BeanstalkPalette.blue,
   overflow: 'hidden',
