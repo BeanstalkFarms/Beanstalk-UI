@@ -12,7 +12,7 @@ const getValue = (season: SnapshotData<SeasonalSownQuery>) => toTokenUnitsBN(sea
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const statProps = {
   title: 'Beans Sown',
-  titleTooltip: 'The total number of Beans Sown.',
+  titleTooltip: 'The total number of Beans Sown at the end of each Season.',
   gap: 0.25,
   sx: { ml: 0 }
 };

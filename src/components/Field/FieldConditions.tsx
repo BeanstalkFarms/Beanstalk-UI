@@ -23,7 +23,7 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
         <Grid item xs={6} md={3}>
           <Stack gap={0.5}>
             <Tooltip
-              title="The number of Beans that can currently be Sown, or lent to Beanstalk."
+              title="The number of Beans that can currently be Sown (lent to Beanstalk)."
               placement="top"
             >
               <Typography variant="body1">
@@ -55,7 +55,7 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
         </Grid>
         <Grid item xs={6} md={3}>
           <Stack gap={0.5}>
-            <Tooltip title="The order Pods will become Harvestable based on the FIFO Harvest schedule." placement="top">
+            <Tooltip title="The number of Pods that will become Harvestable before Pods earned for newly Sown Beans, based on the FIFO Harvest schedule." placement="top">
               <Typography variant="body1">
                 Pod Line&nbsp;
                 <HelpOutlineIcon
@@ -70,7 +70,7 @@ const FieldConditions: React.FC<FieldConditionsProps> = ({
         </Grid>
         <Grid item xs={6} md={3}>
           <Stack gap={0.5}>
-            <Tooltip title="The number of Beans that Beanstalk has paid back to Sowers." placement="top">
+            <Tooltip title="The number of Pods that have become redeemable for a Bean (i.e., the debt paid back by Beanstalk to date)." placement="top">
               <Typography variant="body1">
                 Pods Harvested&nbsp;
                 <HelpOutlineIcon
