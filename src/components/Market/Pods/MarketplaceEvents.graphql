@@ -30,6 +30,7 @@ query MarketplaceEvents {
       pricePerPod
       timestamp
       start
+      account
     }
     ... on PodListingCancelled {
       id

@@ -3,11 +3,23 @@ import { useMarketplaceEventsQuery } from '~/generated/graphql';
 import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import { displayBN, toTokenUnitsBN } from '~/util';
 import { BEAN } from '~/constants/tokens';
+import usePodListing from '~/hooks/beanstalk/usePodListing';
+import usePodOrder from '~/hooks/beanstalk/usePodOrder';
+
+const PodListingData = (index: string) => {
+  const data = usePodListing(index);
+  return data;
+};
+
+const PodOrderData = (id: string) => {
+  const data = usePodOrder(id);
+  return data;
+};
 
 export type MarketEvent = {
   id?: any;
   /** Event action type */
-  action: 'create' | 'fill' | 'cancel';
+  action: 'create' | 'fill' | 'cancel' | 'default';
   /** ex: Pod Order Created */
   label?: string;
   numPods?: BigNumber;
@@ -22,11 +34,17 @@ export type MarketEvent = {
 const useMarketplaceEventData = () => {
   /// Beanstalk data
   const harvestableIndex = useHarvestableIndex();
-  
+
   /// Queries
-  const rawEvents = useMarketplaceEventsQuery({ fetchPolicy: 'cache-and-network', nextFetchPolicy: 'cache-first', notifyOnNetworkStatusChange: true });
-  console.log('RAW EVENTS', rawEvents.data);
+  const rawEvents = useMarketplaceEventsQuery({
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true
+  });
   
+  let podListing;
+  let podOrder;
+
   /// Calculations
   const data: MarketEvent[] | undefined = rawEvents.data?.marketplaceEvents.map((e) => {
     switch (e.__typename) {
@@ -67,16 +85,46 @@ const useMarketplaceEventData = () => {
           time: e.timestamp,
         };
       case 'PodListingCancelled':
+        podListing = PodListingData(e.index);
+        if (podListing.data) {
+          const p = podListing.data;
+          return {
+            id: e.id,
+            hash: e.hash,
+            action: 'cancel',
+            label: 'Pod Listing Cancelled',
+            numPods: p.pricePerPod,
+            placeInPodline: `${displayBN(p.placeInLine)}`,
+            pricePerPod: p.pricePerPod,
+            totalValue: p.amount.multipliedBy(p.pricePerPod),
+            time: e.timestamp,
+          };
+        }
         return {
           id: e.id,
           hash: e.hash,
-          action: 'cancel',
+          action: 'default',
         };
       case 'PodListingFilled':
+        podListing = PodListingData(e.index);
+        if (podListing.data) {
+          const p = podListing.data;
+          return {
+            id: e.id,
+            hash: e.hash,
+            action: 'fill',
+            label: 'Pod Listing Filled',
+            numPods: p.pricePerPod,
+            placeInPodline: `${displayBN(p.placeInLine)}`,
+            pricePerPod: p.pricePerPod,
+            totalValue: p.filledAmount.multipliedBy(p.pricePerPod),
+            time: e.timestamp,
+          };
+        }
         return {
           id: e.id,
           hash: e.hash,
-         action: 'fill',
+          action: 'default',
         };
       default:
         return {
@@ -89,7 +137,7 @@ const useMarketplaceEventData = () => {
 
   /// Query status
   const loading = rawEvents.loading;
-  const error   = rawEvents.error;
+  const error = rawEvents.error;
 
   return {
     data,
