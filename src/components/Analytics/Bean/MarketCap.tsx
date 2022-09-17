@@ -9,7 +9,7 @@ const getValue = (season: Season) => parseFloat(season.marketCap);
 const formatValue = (value: number) => `$${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const statProps = {
   title: 'Market Cap',
-  titleTooltip: 'The USD value of the total Bean supply at the end of every Season/day.',
+  titleTooltip: 'The USD value of the total Bean supply at the end of every Season.',
   gap: 0.25,
 };
 const lineChartProps : Partial<LineChartProps> = {

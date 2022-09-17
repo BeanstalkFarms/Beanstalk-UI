@@ -9,7 +9,7 @@ const getValue = (season: SeasonalLiquidityQuery['seasons'][number]) => parseFlo
 const formatValue = (value: number) => `$${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const statProps = {
   title: 'Liquidity',
-  titleTooltip: 'The USD value of the BEAN:3CRV pool at the end of every Season/day.',
+  titleTooltip: 'The USD value of the tokens in the BEAN:3CRV pool at the end of every Season.',
   gap: 0.25,
 };
 const queryConfig = {
