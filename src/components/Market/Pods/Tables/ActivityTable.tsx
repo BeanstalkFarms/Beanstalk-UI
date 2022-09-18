@@ -3,7 +3,6 @@ import { BoxProps } from '@mui/material';
 import { DataGridProps } from '@mui/x-data-grid';
 import TablePagination from '../../../Common/TablePagination';
 import TabTable from '~/components/Common/Table/TabTable';
-import { Module, ModuleContent } from '~/components/Common/Module';
 
 const MAX_ROWS = 10;
 
@@ -15,24 +14,21 @@ const ActivityTable: React.FC<DataGridProps & BoxProps> = ({ rows, columns }) =>
   }, [rows]);
 
   return (
-    <Module sx={{ pt: 2, px: 1 }}>
-      <ModuleContent>
-        <TabTable
-          columns={columns}
-          rows={rows}
-          disableSelectionOnClick
-          maxRows={15}
-          initialState={{
-            sorting: {
-              sortModel: [{ field: 'placeInLine', sort: 'asc' }],
-            }
-          }}
-          components={{
-            Pagination: TablePagination
-          }}
-        />
-      </ModuleContent>
-    </Module>
+    
+    <TabTable
+      columns={columns}
+      rows={rows}
+      disableSelectionOnClick
+      maxRows={15}
+      initialState={{
+        sorting: {
+          sortModel: [{ field: 'placeInLine', sort: 'asc' }],
+        }
+      }}
+      components={{
+        Pagination: TablePagination
+      }}
+    />
   );
 };
 

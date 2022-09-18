@@ -13,8 +13,11 @@ import Row from '~/components/Common/Row';
 import EntityIcon from '~/components/Market/Pods/EntityIcon';
 import { WellActivityData } from '~/components/Market/Wells/Tables';
 import { Token } from '~/classes';
+import podIcon from '~/img/beanstalk/pod-icon.svg';
+import { MarketEvent } from '~/hooks/beanstalk/useMarketplaceEventData';
+import beanIcon from '~/img/tokens/bean-logo-circled.svg';
 
-const basicCell = (params : GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
+const basicCell = (params: GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
 
 const COLUMNS = {
   ///
@@ -41,7 +44,7 @@ const COLUMNS = {
     align: 'right',
     headerAlign: 'right',
     valueFormatter: (params: GridValueFormatterParams) => displayFullBN(params.value, 2),
-    renderCell: (params : GridRenderCellParams) => (
+    renderCell: (params: GridRenderCellParams) => (
       <>
         <Typography display={{ xs: 'none', md: 'block' }}>{displayFullBN(params.value, 2)}</Typography>
         <Typography display={{ xs: 'block', md: 'none' }}>{displayBN(params.value)}</Typography>
@@ -66,9 +69,10 @@ const COLUMNS = {
         placement="right"
         title={
           <>
-            Total Value: {displayFullBN((params.value as BigNumber).times(params.row.pricePerPod), BEAN[1].displayDecimals)} BEAN
+            Total
+            Value: {displayFullBN((params.value as BigNumber).times(params.row.pricePerPod), BEAN[1].displayDecimals)} BEAN
           </>
-      }>
+        }>
         <Row gap={0.3}>
           <TokenIcon token={PODS} />
           <Typography>
@@ -133,6 +137,66 @@ const COLUMNS = {
     )
   }) as GridColumns[number],
 
+  /// Pod Market History
+  numPodsMarketHistory: (flex: number) => (
+    {
+      field: 'numPods',
+      headerName: 'Pods',
+      flex: flex,
+      disableColumnMenu: true,
+      align: 'left',
+      headerAlign: 'left',
+      valueFormatter: (params: GridRenderCellParams<any, MarketEvent>) => `${displayFullBN(params.value as BigNumber, 2)}`,
+      renderCell: (params: GridRenderCellParams<any, MarketEvent>) => (
+        <Row gap={0.3}>
+          <Typography>{displayBN(params.value)}</Typography>
+          <img src={podIcon} alt="Pod Icon" height="18px" />
+        </Row>
+      ),
+    }
+  ) as GridColumns[number],
+  placeInLineMarketHistory: (flex: number) => ({
+    field: 'placeInPodline',
+    headerName: 'Podline',
+    flex: flex,
+    disableColumnMenu: true,
+    align: 'left',
+    headerAlign: 'left',
+    // valueFormatter: (params) => `${displayFullBN(params.value as BigNumber, 2)}`,
+    renderCell: (params: GridRenderCellParams<any, MarketEvent>) => (
+      <Typography>{params.value}</Typography>
+    ),
+  }) as GridColumns[number],
+  pricePerPodMarketHistory: (flex: number) => ({
+    field: 'pricePerPod',
+    headerName: 'Price',
+    flex: flex,
+    disableColumnMenu: true,
+    align: 'right',
+    headerAlign: 'right',
+    valueFormatter: (params: GridRenderCellParams<any, MarketEvent>) => `${displayFullBN(params.value as BigNumber, 2)}`,
+    renderCell: (params: GridRenderCellParams<any, MarketEvent>) => (
+      <Row gap={0.3}>
+        <img src={beanIcon} alt="Bean Icon" height="18px" />
+        <Typography>{displayBN(params.value)}</Typography>
+      </Row>
+    ),
+  }) as GridColumns[number],
+  totalValueMarketHistory: (flex: number) => ({
+    field: 'totalValue',
+    headerName: 'Total Value',
+    flex: flex,
+    disableColumnMenu: true,
+    align: 'right',
+    headerAlign: 'right',
+    valueFormatter: (params: GridRenderCellParams<any, MarketEvent>) => `${displayFullBN(params.value as BigNumber, 2)}`,
+    renderCell: (params: GridRenderCellParams<any, MarketEvent>) => (
+      <Row gap={0.3}>
+        <Typography>${displayBN(params.value)}</Typography>
+      </Row>
+    ),
+  }) as GridColumns[number],
+
   ///
   numPodsActive: (flex: number) => ({
     field: 'remainingAmount',
@@ -147,9 +211,10 @@ const COLUMNS = {
         placement="right"
         title={
           <>
-            Total Value: {displayFullBN((params.value as BigNumber).times(params.row.pricePerPod), BEAN[1].displayDecimals)} BEAN
+            Total
+            Value: {displayFullBN((params.value as BigNumber).times(params.row.pricePerPod), BEAN[1].displayDecimals)} BEAN
           </>
-      }>
+        }>
         <Row gap={0.3}>
           <TokenIcon token={PODS} />
           <Typography>
@@ -269,7 +334,10 @@ const COLUMNS = {
     renderCell: (params: GridRenderCellParams) => {
       const expiresIn = MaxBN((params.value as BigNumber).minus(harvestableIndex), ZERO_BN);
       const tip = expiresIn?.gt(0) ? (
-        <>If the Pod Line moves forward {displayFullBN((params.value as BigNumber).minus(harvestableIndex), PODS.displayDecimals)} Pods, this Listing will expire.</>
+        <>If the Pod Line moves
+          forward {displayFullBN((params.value as BigNumber).minus(harvestableIndex), PODS.displayDecimals)} Pods, this
+          Listing will expire.
+        </>
       ) : '';
       return (
         <Tooltip placement="right" title={tip}>

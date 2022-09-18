@@ -7,6 +7,7 @@ import usePodListing from '~/hooks/beanstalk/usePodListing';
 import { BEANSTALK_ADDRESSES } from '~/constants';
 import usePodFillOrder from '~/hooks/beanstalk/usePodFillOrder';
 import usePodOrder from '~/hooks/beanstalk/usePodOrder';
+import useSiloTokenToFiat from '~/hooks/beanstalk/useSiloTokenToFiat';
 
 /// Individual Event Queries
 const PodListingData = (index: string) => usePodListing(index);
@@ -31,6 +32,7 @@ export type MarketEvent = {
 const useMarketplaceEventData = () => {
   /// Beanstalk data
   const harvestableIndex = useHarvestableIndex();
+  const getUSD = useSiloTokenToFiat();
 
   /// Queries
   const rawEvents = useMarketplaceEventsQuery({
@@ -55,7 +57,7 @@ const useMarketplaceEventData = () => {
           numPods: toTokenUnitsBN(e.amount, BEAN[1].decimals),
           placeInPodline: `0 - ${displayBN(toTokenUnitsBN(e.maxPlaceInLine, BEAN[1].decimals))}`,
           pricePerPod: toTokenUnitsBN(e.pricePerPod, BEAN[1].decimals),
-          totalValue: toTokenUnitsBN(e.amount, BEAN[1].decimals).multipliedBy(toTokenUnitsBN(e.pricePerPod, BEAN[1].decimals)),
+          totalValue: getUSD(BEAN[1], toTokenUnitsBN(e.amount, BEAN[1].decimals).multipliedBy(toTokenUnitsBN(e.pricePerPod, BEAN[1].decimals))),
           time: e.timestamp,
         };
       case 'PodOrderCancelled':
@@ -70,7 +72,7 @@ const useMarketplaceEventData = () => {
             numPods: p.totalAmount,
             placeInPodline: `0 - ${displayBN(p.maxPlaceInLine)}`,
             pricePerPod: p.pricePerPod,
-            totalValue: p.totalAmount?.multipliedBy(p.pricePerPod),
+            totalValue: getUSD(BEAN[1], p.totalAmount?.multipliedBy(p.pricePerPod)),
             time: e.timestamp,
           };
         }
@@ -91,7 +93,7 @@ const useMarketplaceEventData = () => {
             numPods: toTokenUnitsBN(e.amount, BEAN[1].decimals),
             placeInPodline: `0 - ${displayBN(p.maxPlaceInLine)}`,
             pricePerPod: p.pricePerPod,
-            totalValue: toTokenUnitsBN(e.amount, BEAN[1].decimals).multipliedBy(p.pricePerPod),
+            totalValue: getUSD(BEAN[1], toTokenUnitsBN(e.amount, BEAN[1].decimals).multipliedBy(p.pricePerPod)),
             time: e.timestamp,
           };
         }
@@ -109,7 +111,7 @@ const useMarketplaceEventData = () => {
           numPods: toTokenUnitsBN(e.amount, BEAN[1].decimals),
           placeInPodline: `${displayBN(toTokenUnitsBN(e.index, BEAN[1].decimals).minus(harvestableIndex))}`,
           pricePerPod: toTokenUnitsBN(e.pricePerPod, BEAN[1].decimals),
-          totalValue: toTokenUnitsBN(e.amount, BEAN[1].decimals).multipliedBy(toTokenUnitsBN(e.pricePerPod, BEAN[1].decimals)),
+          totalValue: getUSD(BEAN[1], toTokenUnitsBN(e.amount, BEAN[1].decimals).multipliedBy(toTokenUnitsBN(e.pricePerPod, BEAN[1].decimals))),
           time: e.timestamp,
         };
       case 'PodListingCancelled':
@@ -124,7 +126,7 @@ const useMarketplaceEventData = () => {
             numPods: p.pricePerPod,
             placeInPodline: `${displayBN(p.placeInLine)}`,
             pricePerPod: p.pricePerPod,
-            totalValue: p.amount.multipliedBy(p.pricePerPod),
+            totalValue: getUSD(BEAN[1], p.amount.multipliedBy(p.pricePerPod)),
             time: e.timestamp,
           };
         }
@@ -145,7 +147,7 @@ const useMarketplaceEventData = () => {
             numPods: p.pricePerPod,
             placeInPodline: `${displayBN(p.placeInLine)}`,
             pricePerPod: p.pricePerPod,
-            totalValue: p.filledAmount.multipliedBy(p.pricePerPod),
+            totalValue: getUSD(BEAN[1], p.filledAmount.multipliedBy(p.pricePerPod)),
             time: e.timestamp,
           };
         }
