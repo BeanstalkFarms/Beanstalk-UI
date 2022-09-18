@@ -24,7 +24,7 @@ export type MarketEvent = {
   placeInPodline?: string;
   pricePerPod?: BigNumber;
   totalValue?: BigNumber;
-  time?: string;
+  time?: number;
   /** Txn hash */
   hash: string;
 }
@@ -47,6 +47,7 @@ const useMarketplaceEventData = () => {
 
   /// Calculations
   const data: MarketEvent[] | undefined = rawEvents.data?.marketplaceEvents.map((e) => {
+    console.log('TIMESTAMP', e.timestamp);
     switch (e.__typename) {
       case 'PodOrderCreated':
         return {

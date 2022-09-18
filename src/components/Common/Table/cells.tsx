@@ -3,6 +3,7 @@ import { Box, Chip, LinearProgress, Link, Tooltip, Typography } from '@mui/mater
 import { GridColumns, GridRenderCellParams, GridValueFormatterParams } from '@mui/x-data-grid';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import BigNumber from 'bignumber.js';
+import moment from 'moment';
 import { displayBN, displayFullBN, MaxBN, trimAddress } from '~/util';
 import { BEAN, PODS } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
@@ -193,6 +194,20 @@ const COLUMNS = {
     renderCell: (params: GridRenderCellParams<any, MarketEvent>) => (
       <Row gap={0.3}>
         <Typography>${displayBN(params.value)}</Typography>
+      </Row>
+    ),
+  }) as GridColumns[number],
+  timeAgoMarketHistory: (flex: number) => ({
+    field: 'time',
+    headerName: 'Time',
+    flex: flex,
+    disableColumnMenu: true,
+    align: 'right',
+    headerAlign: 'right',
+    // valueFormatter: (params: GridRenderCellParams<any, MarketEvent>) => `${displayFullBN(params.value as BigNumber, 2)}`,
+    renderCell: (params: GridRenderCellParams<any, MarketEvent>) => (
+      <Row gap={0.3}>
+        <Typography>{moment(new Date(params.value * 1000)).fromNow()}</Typography>
       </Row>
     ),
   }) as GridColumns[number],

@@ -35,6 +35,7 @@ const MarketActivityPage: React.FC = () => {
       COLUMNS.placeInLineMarketHistory(1),
       COLUMNS.pricePerPodMarketHistory(1),
       COLUMNS.totalValueMarketHistory(1),
+      COLUMNS.timeAgoMarketHistory(1),
     ]
     : [
       COLUMNS.label(
