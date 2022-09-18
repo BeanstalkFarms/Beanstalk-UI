@@ -64,7 +64,7 @@ const useMarketplaceEventData = () => {
           const p = podOrder.data;
           return {
             id: e.id,
-            action: 'fill',
+            action: 'cancel',
             hash: e.hash,
             label: 'Pod Order Cancelled',
             numPods: p.totalAmount,
@@ -77,7 +77,7 @@ const useMarketplaceEventData = () => {
         return {
           id: e.id,
           hash: e.hash,
-          action: 'cancel',
+          action: 'default',
         };
       case 'PodOrderFilled':
         podOrder = PodFillOrderData(e.index, e.hash);
@@ -98,7 +98,7 @@ const useMarketplaceEventData = () => {
         return {
           id: e.id,
           hash: e.hash,
-          action: 'fill',
+          action: 'default',
         };
       case 'PodListingCreated':
         return {
@@ -158,7 +158,7 @@ const useMarketplaceEventData = () => {
         return {
           id: e.id,
           hash: e.hash,
-          action: 'create',
+          action: 'default',
         };
     }
   });

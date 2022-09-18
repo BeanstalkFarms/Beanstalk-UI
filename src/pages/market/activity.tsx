@@ -99,7 +99,10 @@ const MarketActivityPage: React.FC = () => {
         <PageHeaderSecondary
           title="Marketplace Activity"
         />
-        <ActivityTable columns={columns} rows={data.filter((e) => e.numPods !== undefined)} />
+        {tab === 0 && <ActivityTable columns={columns} rows={data.filter((e) => e.action !== 'default')} />}
+        {tab === 1 && <ActivityTable columns={columns} rows={data.filter((e) => e.action === 'create')} />}
+        {tab === 2 && <ActivityTable columns={columns} rows={data.filter((e) => e.action === 'fill')} />}
+        {tab === 3 && <ActivityTable columns={columns} rows={data.filter((e) => e.action === 'cancel')} />}
       </Stack>
     </Container>
   );
