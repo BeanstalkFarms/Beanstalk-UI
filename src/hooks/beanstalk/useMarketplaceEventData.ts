@@ -4,6 +4,8 @@ import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import { displayBN, toTokenUnitsBN } from '~/util';
 import { BEAN } from '~/constants/tokens';
 import usePodListing from '~/hooks/beanstalk/usePodListing';
+import { BEANSTALK_ADDRESSES } from '~/constants';
+import usePodFillOrder from '~/hooks/beanstalk/usePodFillOrder';
 import usePodOrder from '~/hooks/beanstalk/usePodOrder';
 
 const PodListingData = (index: string) => {
@@ -13,6 +15,11 @@ const PodListingData = (index: string) => {
 
 const PodOrderData = (id: string) => {
   const data = usePodOrder(id);
+  return data;
+};
+
+const PodFillOrderData = (index: string, hash: string) => {
+  const data = usePodFillOrder(`${BEANSTALK_ADDRESSES[1]}-${index}-${hash}`);
   return data;
 };
 
@@ -61,12 +68,42 @@ const useMarketplaceEventData = () => {
           time: e.timestamp,
         };
       case 'PodOrderCancelled':
+        podOrder = PodOrderData(e.orderId);
+        if (podOrder.data) {
+          const p = podOrder.data;
+          return {
+            id: e.id,
+            action: 'fill',
+            hash: e.hash,
+            label: 'Pod Order Cancelled',
+            numPods: p.totalAmount,
+            placeInPodline: `0 - ${displayBN(p.maxPlaceInLine)}`,
+            pricePerPod: p.pricePerPod,
+            totalValue: p.totalAmount?.multipliedBy(p.pricePerPod),
+            time: e.timestamp,
+          };
+        }
         return {
           id: e.id,
           hash: e.hash,
           action: 'cancel',
         };
       case 'PodOrderFilled':
+        podOrder = PodFillOrderData(e.index, e.hash);
+        if (podOrder.data) {
+          const p = podOrder.data;
+          return {
+            id: e.id,
+            action: 'fill',
+            hash: e.hash,
+            label: 'Pod Order Filled',
+            numPods: toTokenUnitsBN(e.amount, BEAN[1].decimals),
+            placeInPodline: `0 - ${displayBN(p.maxPlaceInLine)}`,
+            pricePerPod: p.pricePerPod,
+            totalValue: toTokenUnitsBN(e.amount, BEAN[1].decimals).multipliedBy(p.pricePerPod),
+            time: e.timestamp,
+          };
+        }
         return {
           id: e.id,
           hash: e.hash,

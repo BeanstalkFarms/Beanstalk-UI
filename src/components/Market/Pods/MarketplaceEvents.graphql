@@ -12,6 +12,7 @@ query MarketplaceEvents {
       id
       hash
       timestamp
+      orderId
     }
     ... on PodOrderFilled {
       id
