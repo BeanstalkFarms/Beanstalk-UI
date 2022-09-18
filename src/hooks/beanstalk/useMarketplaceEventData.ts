@@ -8,20 +8,10 @@ import { BEANSTALK_ADDRESSES } from '~/constants';
 import usePodFillOrder from '~/hooks/beanstalk/usePodFillOrder';
 import usePodOrder from '~/hooks/beanstalk/usePodOrder';
 
-const PodListingData = (index: string) => {
-  const data = usePodListing(index);
-  return data;
-};
-
-const PodOrderData = (id: string) => {
-  const data = usePodOrder(id);
-  return data;
-};
-
-const PodFillOrderData = (index: string, hash: string) => {
-  const data = usePodFillOrder(`${BEANSTALK_ADDRESSES[1]}-${index}-${hash}`);
-  return data;
-};
+/// Individual Event Queries
+const PodListingData = (index: string) => usePodListing(index);
+const PodOrderData = (id: string) => usePodOrder(id);
+const PodFillOrderData = (index: string, hash: string) => usePodFillOrder(`${BEANSTALK_ADDRESSES[1]}-${index}-${hash}`);
 
 export type MarketEvent = {
   id?: any;
@@ -49,6 +39,7 @@ const useMarketplaceEventData = () => {
     notifyOnNetworkStatusChange: true
   });
   
+  // Temp
   let podListing;
   let podOrder;
 
