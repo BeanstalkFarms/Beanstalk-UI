@@ -14,7 +14,12 @@ const useStyles = makeStyles({
   }
 });
 
-const TablePagination: React.FC<{}> = () => {
+const TablePagination: React.FC<{
+  /** A function called to query the next set of data. */
+  fetchMore: any,
+  /** Hardcode number of pages the pagination has. */
+  numPages?: number
+}> = (props) => {
   const classes = useStyles();
   const apiRef = useGridApiContext();
   const page = useGridSelector(apiRef, gridPageSelector);
@@ -27,6 +32,9 @@ const TablePagination: React.FC<{}> = () => {
   };
   
   const handleForward = () => {
+    // if (props.fetchMore) {
+    //   props.fetchMore();
+    // }
     if (page < pageCount) {
       apiRef.current.setPage(page + 1);
     }

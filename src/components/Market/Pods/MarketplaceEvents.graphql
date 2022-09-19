@@ -1,5 +1,13 @@
-query MarketplaceEvents {
-  marketplaceEvents(first: 500, orderBy: timestamp, orderDirection: desc) {
+query MarketplaceEvents(
+  $first: Int = 15,
+  $timestamp_lt: BigInt
+) {
+  marketplaceEvents(
+    first: $first,
+    orderBy: timestamp,
+    orderDirection: desc
+    where: {timestamp_lt: $timestamp_lt}
+  ) {
     ... on PodOrderCreated {
       id
       hash

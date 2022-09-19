@@ -29,25 +29,55 @@ export type MarketEvent = {
   hash: string;
 }
 
+/**
+ * Default: queries first 15 events whose timestamp
+ * is less than timestamp_lt.
+ */
 const useMarketplaceEventData = () => {
   /// Beanstalk data
   const harvestableIndex = useHarvestableIndex();
   const getUSD = useSiloTokenToFiat();
 
   /// Queries
-  const rawEvents = useMarketplaceEventsQuery({
+  const { data: rawEvents, fetchMore, loading, error, } = useMarketplaceEventsQuery({
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-first',
-    notifyOnNetworkStatusChange: true
+    notifyOnNetworkStatusChange: true,
+    variables: {
+      timestamp_lt: Math.round(Date.now() / 1000).toString(),
+    },
   });
-  
+
+  const fetchMoreData = () => {
+    console.log('FETCHING MORE!!!');
+    const numData = rawEvents?.marketplaceEvents.length;
+    console.log('num d', numData);
+    if (numData) {
+      const timestamp_lt = rawEvents?.marketplaceEvents[numData - 1]?.timestamp.toString();
+      console.log('MAX TMSTMP', timestamp_lt);
+      fetchMore({
+        variables: {
+          // first: 15,
+          timestamp_lt: timestamp_lt
+        }
+      }).then((d) => console.log('DATA', d));
+      console.log('RAW DATA AFTER FETCH', rawEvents);
+      console.log('RAW DATA LEN', rawEvents.marketplaceEvents.length);
+    }
+  };
+
+  // const [ test ] = Promise.all([
+  //   rawEvents?.marketplaceEvents.filter((e) => e.__typename === 'PodOrderCancelled').map((e) => {
+  //
+  //   })
+  // ])
+
   // Temp
   let podListing;
   let podOrder;
 
   /// Calculations
-  const data: MarketEvent[] | undefined = rawEvents.data?.marketplaceEvents.map((e) => {
-    console.log('TIMESTAMP', e.timestamp);
+  const data: MarketEvent[] | undefined = rawEvents?.marketplaceEvents.map((e) => {
     switch (e.__typename) {
       case 'PodOrderCreated':
         return {
@@ -62,46 +92,60 @@ const useMarketplaceEventData = () => {
           time: e.timestamp,
         };
       case 'PodOrderCancelled':
-        podOrder = PodOrderData(e.orderId);
-        if (podOrder.data) {
-          const p = podOrder.data;
-          return {
-            id: e.id,
-            action: 'cancel',
-            hash: e.hash,
-            label: 'Pod Order Cancelled',
-            numPods: p.totalAmount,
-            placeInPodline: `0 - ${displayBN(p.maxPlaceInLine)}`,
-            pricePerPod: p.pricePerPod,
-            totalValue: getUSD(BEAN[1], p.totalAmount?.multipliedBy(p.pricePerPod)),
-            time: e.timestamp,
-          };
-        }
+        // podOrder = PodOrderData(e.orderId);
+        // if (podOrder.data) {
+        //   const p = podOrder.data;
+        //   return {
+        //     id: e.id,
+        //     action: 'cancel',
+        //     hash: e.hash,
+        //     label: 'Pod Order Cancelled',
+        //     numPods: p.totalAmount,
+        //     placeInPodline: `0 - ${displayBN(p.maxPlaceInLine)}`,
+        //     pricePerPod: p.pricePerPod,
+        //     totalValue: getUSD(BEAN[1], p.totalAmount?.multipliedBy(p.pricePerPod)),
+        //     time: e.timestamp,
+        //   };
+        // }
         return {
           id: e.id,
           hash: e.hash,
-          action: 'default',
+          action: 'cancel',
+          // DUMMY DATA
+          label: 'DUMMY Pod Order Cancelled',
+          numPods: new BigNumber(0),
+          placeInPodline: '0 - 100',
+          pricePerPod: new BigNumber(0),
+          totalValue: new BigNumber(0),
+          time: e.timestamp,
         };
       case 'PodOrderFilled':
-        podOrder = PodFillOrderData(e.index, e.hash);
-        if (podOrder.data) {
-          const p = podOrder.data;
-          return {
-            id: e.id,
-            action: 'fill',
-            hash: e.hash,
-            label: 'Pod Order Filled',
-            numPods: toTokenUnitsBN(e.amount, BEAN[1].decimals),
-            placeInPodline: `0 - ${displayBN(p.maxPlaceInLine)}`,
-            pricePerPod: p.pricePerPod,
-            totalValue: getUSD(BEAN[1], toTokenUnitsBN(e.amount, BEAN[1].decimals).multipliedBy(p.pricePerPod)),
-            time: e.timestamp,
-          };
-        }
+        // podOrder = PodFillOrderData(e.index, e.hash);
+        // if (podOrder.data) {
+        //   const p = podOrder.data;
+        //   return {
+        //     id: e.id,
+        //     action: 'fill',
+        //     hash: e.hash,
+        //     label: 'Pod Order Filled',
+        //     numPods: toTokenUnitsBN(e.amount, BEAN[1].decimals),
+        //     placeInPodline: `0 - ${displayBN(p.maxPlaceInLine)}`,
+        //     pricePerPod: p.pricePerPod,
+        //     totalValue: getUSD(BEAN[1], toTokenUnitsBN(e.amount, BEAN[1].decimals).multipliedBy(p.pricePerPod)),
+        //     time: e.timestamp,
+        //   };
+        // }
         return {
           id: e.id,
           hash: e.hash,
-          action: 'default',
+          action: 'fill',
+          // DUMMY DATA
+          label: 'DUMMY Pod Order FILLED',
+          numPods: new BigNumber(0),
+          placeInPodline: '0 - 100',
+          pricePerPod: new BigNumber(0),
+          totalValue: new BigNumber(0),
+          time: e.timestamp,
         };
       case 'PodListingCreated':
         return {
@@ -116,46 +160,60 @@ const useMarketplaceEventData = () => {
           time: e.timestamp,
         };
       case 'PodListingCancelled':
-        podListing = PodListingData(e.index);
-        if (podListing.data) {
-          const p = podListing.data;
-          return {
-            id: e.id,
-            hash: e.hash,
-            action: 'cancel',
-            label: 'Pod Listing Cancelled',
-            numPods: p.pricePerPod,
-            placeInPodline: `${displayBN(p.placeInLine)}`,
-            pricePerPod: p.pricePerPod,
-            totalValue: getUSD(BEAN[1], p.amount.multipliedBy(p.pricePerPod)),
-            time: e.timestamp,
-          };
-        }
+        // podListing = PodListingData(e.index);
+        // if (podListing.data) {
+        //   const p = podListing.data;
+        //   return {
+        //     id: e.id,
+        //     hash: e.hash,
+        //     action: 'cancel',
+        //     label: 'Pod Listing Cancelled',
+        //     numPods: p.pricePerPod,
+        //     placeInPodline: `${displayBN(p.placeInLine)}`,
+        //     pricePerPod: p.pricePerPod,
+        //     totalValue: getUSD(BEAN[1], p.amount.multipliedBy(p.pricePerPod)),
+        //     time: e.timestamp,
+        //   };
+        // }
         return {
           id: e.id,
           hash: e.hash,
-          action: 'default',
+          action: 'cancel',
+          // DUMMY DATA
+          label: 'DUMMY Pod LISTING Cancelled',
+          numPods: new BigNumber(0),
+          placeInPodline: '0 - 100',
+          pricePerPod: new BigNumber(0),
+          totalValue: new BigNumber(0),
+          time: e.timestamp,
         };
       case 'PodListingFilled':
-        podListing = PodListingData(e.index);
-        if (podListing.data) {
-          const p = podListing.data;
-          return {
-            id: e.id,
-            hash: e.hash,
-            action: 'fill',
-            label: 'Pod Listing Filled',
-            numPods: p.pricePerPod,
-            placeInPodline: `${displayBN(p.placeInLine)}`,
-            pricePerPod: p.pricePerPod,
-            totalValue: getUSD(BEAN[1], p.filledAmount.multipliedBy(p.pricePerPod)),
-            time: e.timestamp,
-          };
-        }
+        // podListing = PodListingData(e.index);
+        // if (podListing.data) {
+        //   const p = podListing.data;
+        //   return {
+        //     id: e.id,
+        //     hash: e.hash,
+        //     action: 'fill',
+        //     label: 'Pod Listing Filled',
+        //     numPods: p.pricePerPod,
+        //     placeInPodline: `${displayBN(p.placeInLine)}`,
+        //     pricePerPod: p.pricePerPod,
+        //     totalValue: getUSD(BEAN[1], p.filledAmount.multipliedBy(p.pricePerPod)),
+        //     time: e.timestamp,
+        //   };
+        // }
         return {
           id: e.id,
           hash: e.hash,
-          action: 'default',
+          action: 'fill',
+          // DUMMY DATA
+          label: 'DUMMY Pod LISTING Filled',
+          numPods: new BigNumber(0),
+          placeInPodline: '0 - 100',
+          pricePerPod: new BigNumber(0),
+          totalValue: new BigNumber(0),
+          time: e.timestamp,
         };
       default:
         return {
@@ -167,14 +225,15 @@ const useMarketplaceEventData = () => {
   });
 
   /// Query status
-  const loading = rawEvents.loading;
-  const error = rawEvents.error;
+  // const loading = rawEvents?.loading;
+  //   // const error = rawEvents?.error;
 
   return {
     data,
     harvestableIndex,
     loading,
     error,
+    fetchMoreData
   };
 };
 

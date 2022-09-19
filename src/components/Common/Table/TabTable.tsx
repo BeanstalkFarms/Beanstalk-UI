@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import { Box } from '@mui/material';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { BeanstalkPalette, FontSize } from '~/components/App/muiTheme';
-import TablePagination from '../TablePagination';
 
 const wellTableBaseStyle = {
   '& .MuiDataGrid-root': {
@@ -124,9 +123,6 @@ const TabTable: React.FC<
           sorting: {
             sortModel: [{ field: 'placeInLine', sort: 'asc' }],
           }
-        }}
-        components={{
-          Pagination: TablePagination
         }}
         {...props}
       />

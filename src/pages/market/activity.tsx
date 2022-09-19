@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Button,
   CircularProgress,
   Container,
   Stack, Tab, Tabs, useMediaQuery,
@@ -19,16 +20,21 @@ const MarketActivityPage: React.FC = () => {
 
   // Local State
   const [tab, handleChangeTab] = useTabs();
+  const tabLabels = ['All', 'Create', 'Fill', 'Cancel'];
 
   const columns: DataGridProps['columns'] = !isMobile
     ? [
       COLUMNS.label(
         2.5,
         <Tabs value={tab} onChange={handleChangeTab}>
-          <Tab label="All" />
-          <Tab label="Create" />
-          <Tab label="Fill" />
-          <Tab label="Cancel" />
+          {/* All */}
+          <Tab label={tabLabels[0]} />
+          {/* Create */}
+          <Tab label={tabLabels[1]} />
+          {/* Fill */}
+          <Tab label={tabLabels[2]} />
+          {/* Cancel */}
+          <Tab label={tabLabels[3]} />
         </Tabs>,
       ),
       COLUMNS.numPodsMarketHistory(1),
@@ -48,7 +54,7 @@ const MarketActivityPage: React.FC = () => {
       COLUMNS.totalValueMarketHistory(1),
     ];
 
-  const { data, loading } = useMarketplaceEventData();
+  const { data, loading, fetchMoreData } = useMarketplaceEventData();
 
   return (
     <Container maxWidth="lg">
@@ -66,10 +72,16 @@ const MarketActivityPage: React.FC = () => {
               )
               : (
                 <>
-                  {tab === 0 && <ActivityTable columns={columns} rows={data.filter((e) => e.action !== 'default')} />}
-                  {tab === 1 && <ActivityTable columns={columns} rows={data.filter((e) => e.action === 'create')} />}
-                  {tab === 2 && <ActivityTable columns={columns} rows={data.filter((e) => e.action === 'fill')} />}
-                  {tab === 3 && <ActivityTable columns={columns} rows={data.filter((e) => e.action === 'cancel')} />}
+                  <ActivityTable 
+                    fetchMore={fetchMoreData}
+                    columns={columns} 
+                    rows={data.filter((e) => (
+                      tab === 0
+                        ? e.action !== 'default'
+                        : e.action === tabLabels[tab].toLowerCase()
+                    ))}
+                  />
+                  <Button onClick={fetchMoreData}>Fetch more</Button>
                 </>
               )}
           </ModuleContent>
