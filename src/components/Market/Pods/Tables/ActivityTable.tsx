@@ -17,7 +17,7 @@ const ActivityTable: React.FC<DataGridProps & BoxProps & {fetchMore:any}> = (pro
         }
       }}
        components={{
-        Pagination: () => <TablePagination fetchMore={props.fetchMore} numPages={10} />
+        Pagination: () => <TablePagination fetchMore={props.fetchMore} numPages={50} />
       }}
     />
   );

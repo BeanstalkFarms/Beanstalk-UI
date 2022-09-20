@@ -40,7 +40,7 @@ const useMarketplaceEventData = () => {
 
   /// Queries
   const { data: rawEvents, fetchMore, loading, error, } = useMarketplaceEventsQuery({
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
     nextFetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
     variables: {
@@ -49,20 +49,15 @@ const useMarketplaceEventData = () => {
   });
 
   const fetchMoreData = () => {
-    console.log('FETCHING MORE!!!');
     const numData = rawEvents?.marketplaceEvents.length;
-    console.log('num d', numData);
     if (numData) {
       const timestamp_lt = rawEvents?.marketplaceEvents[numData - 1]?.timestamp.toString();
-      console.log('MAX TMSTMP', timestamp_lt);
       fetchMore({
         variables: {
           // first: 15,
           timestamp_lt: timestamp_lt
         }
       }).then((d) => console.log('DATA', d));
-      console.log('RAW DATA AFTER FETCH', rawEvents);
-      console.log('RAW DATA LEN', rawEvents.marketplaceEvents.length);
     }
   };
 

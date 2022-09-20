@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -24,27 +24,45 @@ const TablePagination: React.FC<{
   const apiRef = useGridApiContext();
   const page = useGridSelector(apiRef, gridPageSelector);
   const pageCount = useGridSelector(apiRef, gridPageCountSelector);
+  const [updatePageCount, setUpdatePageCount] = useState(false);
 
-  const handleBack = () => {
+   const handleBack = () => {
     if (page > 0) {
       apiRef.current.setPage(page - 1);
     }
   };
-  
+
   const handleForward = () => {
-    // if (props.fetchMore) {
-    //   props.fetchMore();
-    // }
+    if (props.fetchMore && page + 1 === pageCount) {
+      setUpdatePageCount(true);
+      props.fetchMore();
+    }
     if (page < pageCount) {
       apiRef.current.setPage(page + 1);
     }
   };
-  
+
+  // const updatePage
+
+  /** Determines color of next arrow. */
+  const hasNextPage = useMemo(() => !(
+    props.numPages
+      ? (page === props.numPages - 1)
+      : (page === pageCount - 1)
+      || pageCount === 0), [page, pageCount, props.numPages]);
+
+  useEffect(() => {
+    if (updatePageCount) {
+      apiRef.current.setPage(page + 1);
+      setUpdatePageCount(false);
+    }
+  }, [apiRef, page, updatePageCount]);
+
   return (
     <Row gap={0.5}>
-      <ArrowBackIcon 
-        className={classes.arrow} 
-        onClick={handleBack} 
+      <ArrowBackIcon
+        className={classes.arrow}
+        onClick={handleBack}
         sx={{
           color: page === 0 ? 'gray' : null,
           '&:hover': {
@@ -52,12 +70,19 @@ const TablePagination: React.FC<{
           }
         }}
       />
-      <Typography variant="body1">Page {page + 1} of {pageCount === 0 ? pageCount + 1 : pageCount}</Typography>
+      <Typography variant="body1">
+        Page {page + 1} of {pageCount === 0 ? pageCount + 1 : (
+        props.numPages
+          // ? props.numPages
+          ? pageCount
+          : pageCount
+      )}
+      </Typography>
       <ArrowForwardIcon
         className={classes.arrow}
         onClick={handleForward}
         sx={{
-          color: page === pageCount - 1 || pageCount === 0 ? 'gray' : null,
+          color: hasNextPage ? null : 'gray',
           '&:hover': {
             color: page === pageCount - 1 || pageCount === 0 ? 'gray' : BeanstalkPalette.logoGreen,
           }
