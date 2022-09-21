@@ -87,7 +87,7 @@ const Overview: React.FC<{
       />
       <Stat
         title="Stalk Ownership"
-        titleTooltip="Your current ownership of Beanstalk is displayed as a percentage. Ownership is determined by your proportional ownership of the total Stalk supply"
+        titleTooltip="Your current ownership of Beanstalk is displayed as a percentage. Ownership is determined by your proportional ownership of the total Stalk supply."
         amount={displayPercentage(ownership.multipliedBy(100))}
         color="secondary.dark"
         gap={0.25}
@@ -95,7 +95,7 @@ const Overview: React.FC<{
       />
       <Stat
         title="Stalk Grown per Day"
-        titleTooltip="Your current ownership of Beanstalk is displayed as a percentage. Ownership is determined by your proportional ownership of the total Stalk supply"
+        titleTooltip="The number of Stalk your Seeds will grow every 24 Seasons based on your current Seed balance."
         amount={displayStalk(farmerSilo.seeds.active.times(1 / 10_000).times(24))}
         color="text.secondary"
         gap={0.25}

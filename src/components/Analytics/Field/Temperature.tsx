@@ -12,7 +12,7 @@ const getValue = (snapshot: SnapshotData<SeasonalWeatherQuery>) => snapshot.weat
 const formatValue = (value: number) => `${value.toFixed(0)}%`;
 const statProps = {
   title: 'Temperature',
-  titleTooltip: 'The interest rate for Sowing Beans.',
+  titleTooltip: 'The interest rate for Sowing Beans each Season.',
   gap: 0.5,
 };
 const lineChartProps : Partial<LineChartProps> = {

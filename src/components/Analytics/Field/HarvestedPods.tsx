@@ -11,7 +11,7 @@ const getValue = (season: SnapshotData<SeasonalHarvestedPodsQuery>) => toTokenUn
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const StatProps = {
   title: 'Harvested Pods',
-  titleTooltip: 'The total number of Pods Harvested.',
+  titleTooltip: 'The total number of Pods Harvested at the end of each Season.',
   gap: 0.5,
 };
 const lineChartProps : Partial<LineChartProps> = {

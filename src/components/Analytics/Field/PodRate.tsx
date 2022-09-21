@@ -11,7 +11,7 @@ const getValue = (season: SnapshotData<SeasonalPodRateQuery>) => parseFloat(seas
 const formatValue = (value: number) => `${value.toFixed(2)}%`;
 const statProps = {
   title: 'Pod Rate',
-  titleTooltip: 'The number of Pods per Bean as a percentage. The Pod Rate is often used as a proxy for Beanstalk\'s health.',
+  titleTooltip: 'The ratio of outstanding Pods per Bean, displayed as a percentage. The Pod Rate is used by Beanstalk as a proxy for its health.',
   gap: 0.25,
   sx: { ml: 0 }
 };

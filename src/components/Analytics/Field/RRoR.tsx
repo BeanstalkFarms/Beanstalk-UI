@@ -9,7 +9,7 @@ const getValue = (season: SnapshotData<SeasonalRRoRQuery>) => parseFloat(season.
 const formatValue = (value: number) => `${value.toFixed(2)}%`;
 const statProps = {
   title: 'Real Rate of Return',
-  titleTooltip: 'The return for Sowing Beans, accounting for the Bean price. RRoR = (1 + Temperature) / TWAP.',
+  titleTooltip: 'The return for Sowing Beans at the beginning of each Season, accounting for the Bean price. RRoR = (1 + Temperature) / TWAP.',
   gap: 0.5,
 };
 const lineChartProps : Partial<LineChartProps> = {

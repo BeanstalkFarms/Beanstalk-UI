@@ -17,7 +17,7 @@ const SiloAnalytics: React.FC<{}> = () => {
     <Card>
       <Tabs value={tab} onChange={handleChangeTab} sx={{ px: 2, pt: 2, pb: 1.5 }}>
         <Tab label="Deposited BEAN" />
-        <Tab label="Deposited BEAN:3CRV" />
+        <Tab label="Deposited BEAN3CRV" />
         <Tab label="Deposited urBEAN" />
         <Tab label="Deposited urBEAN3CRV" />
         <Tab label="Stalk" />

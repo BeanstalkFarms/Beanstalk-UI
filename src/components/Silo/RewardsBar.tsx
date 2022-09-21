@@ -77,7 +77,7 @@ const RewardsBar: React.FC<RewardsBarProps & { compact?: boolean }> = (
       <Row gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
         <RewardItem
           title="Plantable Seeds"
-          tooltip="Seeds earned in conjuction with Earned Beans. Plantable Seeds must be Planted in order to grow Stalk."
+          tooltip="Seeds earned in conjunction with Earned Beans. Plantable Seeds must be Planted in order to grow Stalk."
           amount={seeds.earned}
           icon={seedIcon}
           compact={compact}

@@ -27,7 +27,7 @@ const DepositedAsset: React.FC<{
   );
   const statProps = useMemo(() => ({
     title: `Total Deposited ${asset.symbol}`,
-    titleTooltip: `The total number of Deposited ${asset.symbol === 'BEAN' ? 'Beans' : asset.symbol === 'urBEAN' ? 'Unripe Beans' : asset.name}.`,
+    titleTooltip: `The total number of Deposited ${asset.symbol === 'BEAN' ? 'Beans' : asset.symbol === 'urBEAN' ? 'Unripe Beans' : asset.name} at the end of each Season.`,
     gap: 0.5,
   }), [asset]);
   const queryConfig = useMemo(() => ({

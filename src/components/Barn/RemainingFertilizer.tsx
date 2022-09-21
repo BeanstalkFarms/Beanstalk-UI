@@ -65,7 +65,7 @@ const RemainingFertilizer: React.FC = () => {
                     variant="bodySmall"
                     color={BeanstalkPalette.logoGreen}
                   >
-                    {displayFullBN(recapFundedPct.times(100), 2)}% Purchased
+                    {displayFullBN(recapFundedPct.times(100), 2)}% Recapitalized
                   </Typography>
                 ) : null}
               </Row>
