@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Button,
   CircularProgress,
   Container,
   Stack, Tab, Tabs, useMediaQuery,
@@ -61,6 +60,7 @@ const MarketActivityPage: React.FC = () => {
       <Stack spacing={2}>
         <PageHeaderSecondary
           title="Marketplace Activity"
+          returnPath="/market"
         />
         <Module sx={{ pt: 2, px: 1 }}>
           <ModuleContent>
@@ -71,18 +71,15 @@ const MarketActivityPage: React.FC = () => {
                 </Stack>
               )
               : (
-                <>
-                  <ActivityTable 
-                    fetchMore={fetchMoreData}
-                    columns={columns} 
-                    rows={data.filter((e) => (
-                      tab === 0
-                        ? e.action !== 'default'
-                        : e.action === tabLabels[tab].toLowerCase()
-                    ))}
-                  />
-                  <Button onClick={fetchMoreData}>Fetch more</Button>
-                </>
+                <ActivityTable
+                  fetchMore={fetchMoreData}
+                  columns={columns}
+                  rows={data.filter((e) => (
+                    tab === 0
+                      ? e.action !== 'default'
+                      : e.action === tabLabels[tab].toLowerCase()
+                  ))}
+                />
               )}
           </ModuleContent>
         </Module>

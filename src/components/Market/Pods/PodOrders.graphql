@@ -1,0 +1,18 @@
+query PodOrders(
+  $first: Int = 15,
+  $createdAt_lt: BigInt
+) {
+  podOrders(
+    first: $first,
+    orderBy: createdAt,
+    orderDirection: desc,
+    where: {createdAt_lt: $createdAt_lt}
+  ) {
+    id
+    amount
+    maxPlaceInLine
+    pricePerPod
+    filledAmount
+    createdAt
+  }
+}

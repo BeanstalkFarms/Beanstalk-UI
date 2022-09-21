@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -24,25 +24,25 @@ const TablePagination: React.FC<{
   const apiRef = useGridApiContext();
   const page = useGridSelector(apiRef, gridPageSelector);
   const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-  const [updatePageCount, setUpdatePageCount] = useState(false);
 
-   const handleBack = () => {
+  // const [params, update] = useSearchParams();
+
+   const handleBack = useCallback(() => {
     if (page > 0) {
+      // update({ t: (page - 1).toString() });
       apiRef.current.setPage(page - 1);
     }
-  };
+  }, [apiRef, page]);
 
-  const handleForward = () => {
-    if (props.fetchMore && page + 1 === pageCount) {
-      setUpdatePageCount(true);
-      props.fetchMore();
-    }
+  const handleForward = useCallback(() => {
+    // if (props.fetchMore && page + 1 === pageCount) {
+    //   props.fetchMore();
+    // }
     if (page < pageCount) {
+      // update({ t: (page + 1).toString() });
       apiRef.current.setPage(page + 1);
     }
-  };
-
-  // const updatePage
+  }, [apiRef, page, pageCount]);
 
   /** Determines color of next arrow. */
   const hasNextPage = useMemo(() => !(
@@ -51,12 +51,12 @@ const TablePagination: React.FC<{
       : (page === pageCount - 1)
       || pageCount === 0), [page, pageCount, props.numPages]);
 
-  useEffect(() => {
-    if (updatePageCount) {
-      apiRef.current.setPage(page + 1);
-      setUpdatePageCount(false);
-    }
-  }, [apiRef, page, updatePageCount]);
+  // useEffect(() => {
+  //   const pageParam = params.get('t');
+  //   if (pageParam) {
+  //     apiRef.current.setPage(Number(params.get('t')));
+  //   }
+  // }, [apiRef, params]);
 
   return (
     <Row gap={0.5}>

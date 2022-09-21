@@ -1,0 +1,23 @@
+query PodListings(
+  $first: Int = 15,
+  $createdAt_lt: BigInt
+) {
+  podListings(
+      first: $first,
+      orderBy: createdAt,
+      orderDirection: desc,
+      where: {createdAt_lt: $createdAt_lt}
+  ) {
+    amount
+    cancelledAmount
+    createdAt
+    pricePerPod
+    remainingAmount
+    totalAmount
+    totalFilled
+    id
+    index
+    maxHarvestableIndex
+    filledAmount
+  }
+}
