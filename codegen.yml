@@ -2,7 +2,6 @@ overwrite: true
 schema: [
   "https://graph.node.bean.money/subgraphs/name/beanstalk-testing",
   "https://graph.node.bean.money/subgraphs/name/bean-testing",
-  "https://graph.node.bean.money/subgraphs/name/beanstalk-dev",
   "https://hub.snapshot.org/graphql"
 ]
 documents: "src/**/*.graphql"
