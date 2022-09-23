@@ -1,7 +1,7 @@
 #import "../PodListing.fragment.graphql"
 query AllPodListings(
   $first: Int = 1000,
-  $status: String = "active",
+  $status: MarketStatus = ACTIVE,
   $maxHarvestableIndex: BigInt!
 ) {
   podListings(

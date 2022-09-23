@@ -2,9 +2,9 @@
 query PodOrder($id: ID!) {
   podOrder(id: $id) {
     ...PodOrder
-    transaction {
-      id
-      timestamp
-    }
+#    transaction {
+#      id
+#      timestamp
+#    }
   }
 }

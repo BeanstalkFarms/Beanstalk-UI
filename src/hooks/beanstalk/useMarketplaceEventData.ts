@@ -23,7 +23,7 @@ export type MarketEvent = {
   hash: string;
 }
 
-const QUERY_AMOUNT = 15;
+const QUERY_AMOUNT = 500;
 
 /**
  * Default: queries first 15 events whose timestamp

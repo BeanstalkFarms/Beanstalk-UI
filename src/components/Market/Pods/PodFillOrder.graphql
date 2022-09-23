@@ -4,9 +4,9 @@ query PodFillOrder($id: ID!) {
     order {
       ...PodOrder
     }
-    transaction {
-      id
-      timestamp
-    }
+#    transaction {
+#      id
+#      timestamp
+#    }
   }
 }
