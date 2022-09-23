@@ -7,7 +7,7 @@ import { useTheme } from '@mui/material/styles';
 import COLUMNS from '~/components/Common/Table/cells';
 import MarketBaseTable from './Base';
 import AuthEmptyState from '../../../Common/ZeroState/AuthEmptyState';
-import TablePagination from '../../../Common/TablePagination';
+import ArrowPagination from '../../../Common/ArrowPagination';
 import { AppState } from '~/state';
 
 const components = {
@@ -16,7 +16,7 @@ const components = {
       <AuthEmptyState message="Your Orders will appear here." />
     );
   },
-  Pagination: TablePagination,
+  Pagination: ArrowPagination,
 };
 
 const MyOrdersTable : React.FC<{}> = () => {

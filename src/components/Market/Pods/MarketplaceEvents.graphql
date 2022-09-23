@@ -1,61 +1,95 @@
-query MarketplaceEvents(
-  $first: Int = 15,
-  $timestamp_lt: BigInt
-) {
+query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
   marketplaceEvents(
-    first: $first,
     orderBy: timestamp,
-    orderDirection: desc
-    where: {timestamp_lt: $timestamp_lt}
-  ) {
+    orderDirection: desc,
+    first: $first,
+    skip: $skip,
+    ) {
+    hash
+    timestamp
+    # Inside marketplaceEvents, we can expand all of the marketplace event types
     ... on PodOrderCreated {
       id
-      hash
       amount
       maxPlaceInLine
       pricePerPod
-      timestamp
-    }
-    ... on PodOrderCancelled {
-      id
-      hash
-      timestamp
-      orderId
     }
     ... on PodOrderFilled {
       id
-      hash
-      timestamp
-      index
+      from
+      to
+      orderID
       amount
+      index # index of plot was sold to the Order
+      start #
+      # => maxPlaceInLine
+      # => pricePerPod
     }
     ... on PodListingCreated {
       id
-      hash
       index
       amount
       maxHarvestableIndex
       pricePerPod
-      timestamp
     }
-    ... on PodListingCancelled {
+    ... on PodOrderCancelled {
       id
-      hash
+      orderId
       account
-      index
-      timestamp
+      # => amount
+      # => maxPlaceInLine
+      # => pricePerPod
     }
     ... on PodListingFilled {
       id
-      hash
-      index
+      from
+      to
       amount
-      timestamp
+      index # index of Listing that sold
+      start
+      # => pricePerPod
     }
+    ... on PodListingCancelled {
+      id
+      index # of the listing that was cancelled
+      account
+      # => amount
+      # => pricePerPod
+    }
+    # ... etc.
   }
-  _meta {
-    block {
-      number
-    }
+
+  podOrders(where: {
+    # FIXME: could also be status_not: "active"
+    status_in: [
+      "cancelled",
+      "partial-cancelled",
+      "filled"
+    ], # no partial filled orders
+  }, orderBy: updatedAt, orderDirection: desc) {
+    id
+    status
+    # ---
+    amount
+    maxPlaceInLine
+    pricePerPod
+    # ---
+  }
+
+  podListings(where: {
+    # FIXME: could also be status_not: "active"
+    status_in: [
+      "cancelled",
+      "filled",
+      "filled-partial"
+    ]
+  }, orderBy: updatedAt, orderDirection: desc) {
+    id
+    status
+    # ---
+    amount
+    pricePerPod
+    index
+    # ---
   }
 }

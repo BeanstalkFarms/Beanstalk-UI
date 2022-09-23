@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Box } from '@mui/material';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { BeanstalkPalette, FontSize } from '~/components/App/muiTheme';
-import TablePagination from '../../../Common/TablePagination';
+import ArrowPagination from '../../../Common/ArrowPagination';
 
 const marketplaceTableStyle = {
   '& .MuiDataGrid-root': {
@@ -113,7 +113,7 @@ const MarketBaseTable: React.FC<
           }
         }}
         components={{
-          Pagination: TablePagination
+          Pagination: ArrowPagination
         }}
         {...props}
       />

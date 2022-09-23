@@ -14,17 +14,11 @@ const useStyles = makeStyles({
   }
 });
 
-const TablePagination: React.FC<{
-  /** A function called to query the next set of data. */
-  fetchMore: any,
-  /** Hardcode number of pages the pagination has. */
-  numPages?: number
-}> = (props) => {
+const ArrowPagination: React.FC<{}> = () => {
   const classes = useStyles();
   const apiRef = useGridApiContext();
   const page = useGridSelector(apiRef, gridPageSelector);
   const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-
   // const [params, update] = useSearchParams();
 
    const handleBack = useCallback(() => {
@@ -45,18 +39,7 @@ const TablePagination: React.FC<{
   }, [apiRef, page, pageCount]);
 
   /** Determines color of next arrow. */
-  const hasNextPage = useMemo(() => !(
-    props.numPages
-      ? (page === props.numPages - 1)
-      : (page === pageCount - 1)
-      || pageCount === 0), [page, pageCount, props.numPages]);
-
-  // useEffect(() => {
-  //   const pageParam = params.get('t');
-  //   if (pageParam) {
-  //     apiRef.current.setPage(Number(params.get('t')));
-  //   }
-  // }, [apiRef, params]);
+  const hasNextPage = useMemo(() => !((page === pageCount - 1) || pageCount === 0), [page, pageCount]);
 
   return (
     <Row gap={0.5}>
@@ -71,12 +54,7 @@ const TablePagination: React.FC<{
         }}
       />
       <Typography variant="body1">
-        Page {page + 1} of {pageCount === 0 ? pageCount + 1 : (
-        props.numPages
-          // ? props.numPages
-          ? pageCount
-          : pageCount
-      )}
+        Page {page + 1} of {pageCount === 0 ? pageCount + 1 : pageCount}
       </Typography>
       <ArrowForwardIcon
         className={classes.arrow}
@@ -92,4 +70,4 @@ const TablePagination: React.FC<{
   );
 };
 
-export default TablePagination;
+export default ArrowPagination;
