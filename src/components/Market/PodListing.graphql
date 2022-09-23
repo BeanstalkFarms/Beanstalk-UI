@@ -9,9 +9,5 @@ query PodListing($index: BigInt) {
     orderDirection: desc,
   ) {
     ...PodListing
-    transaction {
-      id
-      timestamp
-    }
   }
 }
