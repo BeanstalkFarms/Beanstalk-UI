@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { DocumentNode, QueryOptions, useLazyQuery } from '@apollo/client';
-import { OperationDefinitionNode } from 'graphql';
+import { QueryOptions, useLazyQuery } from '@apollo/client';
+import { DocumentNode } from 'graphql';
+import { useState, useEffect } from 'react';
 import { apolloClient } from '~/graph/client';
 
 const PAGE_SIZE = 1000;
@@ -46,17 +46,7 @@ export type MinimumViableSnapshotQuery = {
 export type SnapshotData<T extends MinimumViableSnapshotQuery> =
   T['seasons'][number];
 
-/**
- * Iteratively query entities that have a `season` entity.
- * This allows for loading of full datasets when the user
- * requests to see "all" data for a given chart. Assumes that
- * the subgraph contains 1 entity per Season starting at Season 1.
- *
- * @param document an arbitrary graphql query document with a `seasons` entity
- * @param range
- * @returns QueryDocument
- */
-const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
+export const useSeasonsQueries = <T extends MinimumViableSnapshotQuery>(
   document: DocumentNode,
   range: SeasonRange,
   queryConfig?: Partial<QueryOptions>
@@ -65,18 +55,15 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
   const [loading, setLoading] = useState(false);
 
   /// Execute generic lazy query (beanstalk subgraph)
-  const [get, query] = useLazyQuery<T>(document, {
+  const [beanstalkGet, beanstalkQuery] = useLazyQuery<T>(document, {
     variables: {},
   });
 
-  const getThing = (() => {
-    if (document.definitions.length > 0) {
-      const first = document.definitions[0] as OperationDefinitionNode;
-      if (first.name?.toString() === 'SeasonalLiquidity') {
-        console.log('document: ', document);
-      }
-    }
-  })();
+  /// Execute generic lazy query (bean subgraph)
+  const [beanGet, queryBean] = useLazyQuery<T>(document, {
+    variables: {},
+    context: { subgraph: 'bean' },
+  });
 
   useEffect(() => {
     (async () => {
@@ -90,7 +77,7 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
             season_lte: 999999999,
           };
           console.debug('[useSeasonsQuery] run', { variables });
-          await get({
+          await beanstalkGet({
             ...queryConfig,
             variables,
             fetchPolicy: 'cache-first',
@@ -104,7 +91,7 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
           };
           console.debug('[useSeasonsQuery] run', { variables });
 
-          const init = await get({
+          const init = await beanstalkGet({
             ...queryConfig,
             variables,
           });
@@ -189,12 +176,10 @@ const useSeasonsQuery = <T extends MinimumViableSnapshotQuery>(
         console.error(e);
       }
     })();
-  }, [range, get, queryConfig, document]);
+  }, [range, beanstalkGet, queryConfig, document]);
 
   return {
-    ...query,
-    loading: loading || query.loading,
+    ...beanstalkQuery,
+    loading: loading || beanstalkQuery.loading,
   };
 };
-
-export default useSeasonsQuery;
