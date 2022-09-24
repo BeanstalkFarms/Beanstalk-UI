@@ -34,10 +34,10 @@ export type SeasonPlotBaseProps = {
    */
   defaultValue?: number;
   /**
-   * The season displayed when the chart isn't being hovered.
-   * If not provided, uses the `season` of the last data point if available,
-   * otherwise returns 0.
-   */
+  * The season displayed when the chart isn't being hovered.
+  * If not provided, uses the `season` of the last data point if available,
+  * otherwise returns 0.
+  */
   defaultSeason?: number;
   /**
    * Height applied to the chart range. Can be a fixed
@@ -47,20 +47,22 @@ export type SeasonPlotBaseProps = {
   /** True if this plot should be a StackedAreaChard */
   stackedArea?: boolean;
 };
+
 type SeasonPlotFinalProps<T extends MinimumViableSnapshotQuery> = (
-  SeasonPlotBaseProps & {
+  SeasonPlotBaseProps
+  & { 
     /**
-     * Which value to display from the Season object
-     */
+    * Which value to display from the Season object
+    */
     getValue: (snapshot: T['seasons'][number]) => number;
     /**
-     * Format the value from number -> string
-     */
+    * Format the value from number -> string
+    */
     formatValue?: (value: number) => string | JSX.Element;
     /**
-     *
+     * 
      */
-    queryConfig?: Partial<QueryOptions>
+    queryConfig?: Partial<QueryOptions> 
   }
   & { StatProps: Omit<StatProps, 'amount' | 'subtitle'> }
   & { LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP'> }
