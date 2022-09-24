@@ -1,33 +1,25 @@
-import { useMemo, useState } from 'react';
+import { useState, useCallback } from 'react';
 import { TimeTabState } from '~/components/Common/Charts/TimeTabs';
 import { SeasonAggregation, SeasonRange } from '../beanstalk/useSeasonsQuery';
 
-type UseTimeTabStateParams = [
+export type TimeTabStateParams = [
   TimeTabState,
-  (aggregation: SeasonAggregation) => void,
-  (range: SeasonRange) => void,
+  (state: TimeTabState) => void,
 ];
 
 /**
  * @returns [0]: {}
- * @returns [1]: setAggregation
- * @returns [2]: setRange
+ * @returns [1]: setTimeTabState
  */
-export default function useTimeTabState(): UseTimeTabStateParams {
+export default function useTimeTabState(): TimeTabStateParams {
   const [tabState, setTimeTab] = useState<TimeTabState>([
     SeasonAggregation.HOUR,
     SeasonRange.WEEK,
   ]);
 
-  const set = useMemo(() => {
-    const aggregation = (_aggregation: SeasonAggregation) => {
-      setTimeTab((prev) => [_aggregation, prev[1]]);
-    };
-    const range = (_range: SeasonRange) => {
-      setTimeTab((prev) => [prev[0], _range]);
-    };
-    return { aggregation, range };
+  const set = useCallback((state: TimeTabState) => {
+    setTimeTab(state);
   }, []);
 
-  return [tabState, set.aggregation, set.range];
+  return [tabState, set];
 }

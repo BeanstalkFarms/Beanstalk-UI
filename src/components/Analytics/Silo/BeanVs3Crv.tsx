@@ -1,8 +1,6 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Card, Stack } from '@mui/material';
 import useSeasonsQuery, {
-  SeasonAggregation,
-  SeasonRange,
   SnapshotData,
 } from '~/hooks/beanstalk/useSeasonsQuery';
 import { BEANSTALK_ADDRESSES } from '~/constants';
@@ -11,9 +9,9 @@ import {
   SeasonalDepositedSiloAssetDocument,
   SeasonalDepositedSiloAssetQuery,
 } from '~/generated/graphql';
-import { TimeTabState } from '~/components/Common/Charts/TimeTabs';
 import { useMergeSeasonsQueries } from '~/hooks/beanstalk/useMergeSeasonsQueries';
 import { toTokenUnitsBN } from '~/util';
+import useTimeTabState from '~/hooks/app/useTimeTabState';
 
 const assets = {
   bean: BEAN[1],
@@ -34,10 +32,8 @@ const BeanVs3Crv: React.FC<{}> = () => {
     []
   );
   // refactor me
-  const timeTabState = useState<TimeTabState>([
-    SeasonAggregation.HOUR,
-    SeasonRange.WEEK,
-  ]);
+  const timeTabState = useTimeTabState();
+  
   const queryConfig = useMemo(() => ({
     bean: { 
       variables: {

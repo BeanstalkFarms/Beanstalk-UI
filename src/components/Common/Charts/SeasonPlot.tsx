@@ -48,22 +48,21 @@ export type SeasonPlotBaseProps = {
   stackedArea?: boolean;
 };
 
+export type SeasonPlotValueProps<T extends MinimumViableSnapshotQuery> = {
+  /**
+  * Which value to display from the Season object
+  */
+  getValue: (snapshot: T['seasons'][number]) => number;
+  /**
+  * Format the value from number -> string
+  */
+  formatValue?: (value: number) => string | JSX.Element;
+}
+
 type SeasonPlotFinalProps<T extends MinimumViableSnapshotQuery> = (
   SeasonPlotBaseProps
-  & { 
-    /**
-    * Which value to display from the Season object
-    */
-    getValue: (snapshot: T['seasons'][number]) => number;
-    /**
-    * Format the value from number -> string
-    */
-    formatValue?: (value: number) => string | JSX.Element;
-    /**
-     * 
-     */
-    queryConfig?: Partial<QueryOptions> 
-  }
+  & SeasonPlotValueProps<T>
+  & { queryConfig?: Partial<QueryOptions> }
   & { StatProps: Omit<StatProps, 'amount' | 'subtitle'> }
   & { LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP'> }
 )
