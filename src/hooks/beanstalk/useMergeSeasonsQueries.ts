@@ -2,52 +2,41 @@ import { useMemo } from 'react';
 import { ApolloError } from '@apollo/client';
 import useSeasonsQuery, {  MinimumViableSnapshotQuery, SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
 
-export type QueryResultParams<T extends MinimumViableSnapshotQuery> = { 
-  /**
-   * return value of useSeasonsQuery
-   */
-  query: ReturnType<typeof useSeasonsQuery<T>> 
-  /**
-   * Which value to obtain from query data
-   */
-  getValue: (snapshot: SnapshotData<T>) => number;
-}
-
-export type MergedSeasonsQueries = { 
+export type MergedSeasonsQueryData<T extends MinimumViableSnapshotQuery> = { 
   [season: number]: {
     season: number;
     timestamp: string;
-    value: number[];
+    value: SnapshotData<T>[];
   }
 } 
 
 export const useMergeSeasonsQueries = <T extends MinimumViableSnapshotQuery>(
-  params: QueryResultParams<T>[]
+  params: ReturnType<typeof useSeasonsQuery<T>>[]
 ): {
-  data: MergedSeasonsQueries;
+  data: MergedSeasonsQueryData<T>;
   error: ApolloError[] | undefined;
   loading: boolean;
 } => {
-  const loading = !!params.find((q) => q.query.loading);
+  const loading = !!(params.find((p) => p.loading));
 
   const error = useMemo(() => {
     const errs = params
-      .filter(({ query }) => query.error !== undefined)
-      .map(({ query }) => query.error) as ApolloError[]; 
+      .filter(({ error: e }) => e !== undefined)
+      .map(({ error: e }) => e) as ApolloError[]; 
     return errs.length ? errs : undefined;
   }, [params]);
 
   const merged = useMemo(() => {
     console.debug(
       `[useMergeSeasonsQueries] merging data from ${params.length} queries`,
-      params.map((p) => p.query.observable.queryName)
+      params.map(({ observable }) => observable.queryName)
     );
 
-    const queryData: MergedSeasonsQueries = {};
+    const queryData: MergedSeasonsQueryData<T> = {};
     if (!params.length || loading || error) return queryData;
     
     // merge query data
-    params.forEach(({ query, getValue }) => {
+    params.forEach((query) => {
       // if no seasons data, skip
       if (!query?.data?.seasons) return;
       query.data.seasons.forEach((s) => {
@@ -58,10 +47,10 @@ export const useMergeSeasonsQueries = <T extends MinimumViableSnapshotQuery>(
           queryData[s.season] = {
             season: s.season,
             timestamp: s.timestamp,
-            value: [getValue(s)]
+            value: [s]
           };
         } else {
-          queryData[s.season].value = prev.value.concat(getValue(s));
+          queryData[s.season].value = prev.value.concat(s);
         }
       });
     });

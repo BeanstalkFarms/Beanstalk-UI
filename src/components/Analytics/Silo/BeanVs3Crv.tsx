@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Card, Stack } from '@mui/material';
 import useSeasonsQuery, {
   SeasonAggregation,
@@ -13,6 +13,7 @@ import {
 } from '~/generated/graphql';
 import { TimeTabState } from '~/components/Common/Charts/TimeTabs';
 import { useMergeSeasonsQueries } from '~/hooks/beanstalk/useMergeSeasonsQueries';
+import { toTokenUnitsBN } from '~/util';
 
 const assets = {
   bean: BEAN[1],
@@ -24,8 +25,16 @@ const account = BEANSTALK_ADDRESSES[1];
 const getValue = (s: SnapshotData<SeasonalDepositedSiloAssetQuery>) => s.totalDepositedAmount;
 
 const BeanVs3Crv: React.FC<{}> = () => {
+  const getBeanValue = useCallback(
+    (season: SnapshotData<SeasonalDepositedSiloAssetQuery>) =>
+      toTokenUnitsBN(
+        season.totalDepositedAmount,
+        assets.bean.decimals
+      ).toNumber(),
+    []
+  );
   // refactor me
-  const [tabState, setTimeTab] = useState<TimeTabState>([
+  const timeTabState = useState<TimeTabState>([
     SeasonAggregation.HOUR,
     SeasonRange.WEEK,
   ]);
@@ -45,21 +54,21 @@ const BeanVs3Crv: React.FC<{}> = () => {
   }),[]);
   const beanQuery = useSeasonsQuery<SeasonalDepositedSiloAssetQuery>(
     SeasonalDepositedSiloAssetDocument,
-    tabState[1],
+    timeTabState[0][1],
     queryConfig.bean
   );
   const bean3CrvQuery = useSeasonsQuery<SeasonalDepositedSiloAssetQuery>(
     SeasonalDepositedSiloAssetDocument,
-    tabState[1],
+    timeTabState[0][1],
     queryConfig.bean3Crv
   );
 
   const params = useMemo(() => [
-      { query: beanQuery, getValue }, 
+      { query: beanQuery, getValue, }, 
       { query: bean3CrvQuery, getValue }
     ], [bean3CrvQuery, beanQuery]);
 
-  const { data, error, loading } = useMergeSeasonsQueries(params);
+  const { data, error, loading } = useMergeSeasonsQueries([beanQuery, bean3CrvQuery]);
 
   console.log('rerender...');
 
