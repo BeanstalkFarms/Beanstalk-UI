@@ -9,7 +9,7 @@ export const BEANSTALK_ADDRESSES = {
 };
 
 export const BEANSTALK_PRICE_ADDRESSES = {
-  [SupportedChainId.MAINNET]: '0xA57289161FF18D67A68841922264B317170b0b81'.toLowerCase(),
+  [SupportedChainId.MAINNET]: '0xF2C2b7eabcB353bF6f2128a7f8e1e32Eeb112530'.toLowerCase(),
 };
 
 export const BEANSTALK_FERTILIZER_ADDRESSES = {
