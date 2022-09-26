@@ -90,6 +90,7 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
     amount
     pricePerPod
     index
+    originalIndex
     # ---
   }
 }

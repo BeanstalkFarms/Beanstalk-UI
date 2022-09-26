@@ -23,7 +23,7 @@ export type MarketEvent = {
   hash: string;
 }
 
-const QUERY_AMOUNT = 500;
+export const QUERY_AMOUNT = 50;
 
 /**
  * Default: queries first 15 events whose timestamp
@@ -68,7 +68,7 @@ const useMarketplaceEventData = () => {
     if (numData) {
       fetchMore({
         variables: {
-          first: 15,
+          first: QUERY_AMOUNT,
           skip: numData
         }
       });
@@ -98,6 +98,7 @@ const useMarketplaceEventData = () => {
         };
       case 'PodOrderCancelled':
         podOrder = podOrdersById[e.orderId];
+        console.log('PRICE', new BigNumber(podOrder?.pricePerPod || 0).toNumber());
         return {
           id: e.id,
           action: 'cancel',
@@ -105,10 +106,12 @@ const useMarketplaceEventData = () => {
           label: 'Pod Order Cancelled',
           numPods: toTokenUnitsBN(podOrder?.amount, BEAN[1].decimals),
           placeInPodline: `0 - ${displayBN(toTokenUnitsBN(podOrder?.maxPlaceInLine, BEAN[1].decimals))}`,
-          pricePerPod: new BigNumber(podOrder?.pricePerPod || 0),
+          pricePerPod: toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals),
           totalValue: getUSD(BEAN[1], toTokenUnitsBN(
             podOrder?.amount, BEAN[1].decimals
-          )?.multipliedBy(new BigNumber(podOrder?.pricePerPod || 0))),
+          )?.multipliedBy(
+            toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals)
+          )),
           time: e.timestamp,
         };
       case 'PodOrderFilled':
@@ -120,10 +123,10 @@ const useMarketplaceEventData = () => {
           label: 'Pod Order Filled',
           numPods: toTokenUnitsBN(podOrder?.amount, BEAN[1].decimals),
           placeInPodline: `0 - ${displayBN(toTokenUnitsBN(podOrder?.maxPlaceInLine, BEAN[1].decimals))}`,
-          pricePerPod: new BigNumber(podOrder?.pricePerPod || 0),
+          pricePerPod: toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals),
           totalValue: getUSD(BEAN[1], toTokenUnitsBN(
             podOrder?.amount, BEAN[1].decimals
-          )?.multipliedBy(new BigNumber(podOrder?.pricePerPod || 0))),
+          )?.multipliedBy(toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals))),
           time: e.timestamp,
         };
       case 'PodListingCreated':
@@ -140,32 +143,36 @@ const useMarketplaceEventData = () => {
         };
       case 'PodListingCancelled':
         podListing = podListingsById[`${e.account}-${e.index}`];
-        if (podListing === undefined) {
-          // console.log('UNDEFINED LISTING', `${e.account}-${e.index}`);
-        }
-        // console.log('podListing', podListing);
         return {
           id: e.id,
           hash: e.hash,
           action: 'cancel',
           label: 'Pod Listing Cancelled',
-          numPods: new BigNumber(podListing?.pricePerPod || 0),
+          numPods: toTokenUnitsBN(podListing?.amount, BEAN[1].decimals),
           placeInPodline: `${displayBN(toTokenUnitsBN(podListing?.index, BEAN[1].decimals).minus(harvestableIndex))}`,
-          pricePerPod: new BigNumber(podListing?.pricePerPod || 0),
-          totalValue: getUSD(BEAN[1], toTokenUnitsBN(podListing?.amount, BEAN[1].decimals).multipliedBy(new BigNumber(podListing?.pricePerPod || 0))),
+          pricePerPod: toTokenUnitsBN(new BigNumber(podListing?.pricePerPod || 0), BEAN[1].decimals),
+          totalValue: getUSD(BEAN[1], toTokenUnitsBN(podListing?.amount, BEAN[1].decimals).multipliedBy(toTokenUnitsBN(new BigNumber(podListing?.pricePerPod || 0), BEAN[1].decimals))),
           time: e.timestamp,
         };
       case 'PodListingFilled':
         podListing = podListingsById[`${e.from}-${e.index}`];
+        if (podListing === undefined) {
+          // console.log('FROM', e.from);
+          // console.log('INDEX', e.index);
+          // console.log('UNDEFINED LISTING', `${e.account}-${e.index}`);
+        } else {
+          console.log('INDEX', podListing.index);
+          console.log('ORIG INDEX', podListing.originalIndex);
+        }
         return {
           id: e.id,
           hash: e.hash,
           action: 'fill',
           label: 'Pod Listing Filled',
-          numPods: new BigNumber(podListing?.pricePerPod || 0),
+          numPods: toTokenUnitsBN(podListing?.amount, BEAN[1].decimals),
           placeInPodline: `${displayBN(toTokenUnitsBN(podListing?.index, BEAN[1].decimals).minus(harvestableIndex))}`,
-          pricePerPod: new BigNumber(podListing?.pricePerPod || 0),
-          totalValue: getUSD(BEAN[1], toTokenUnitsBN(podListing?.amount, BEAN[1].decimals).multipliedBy(new BigNumber(podListing?.pricePerPod || 0))),
+          pricePerPod: toTokenUnitsBN(new BigNumber(podListing?.pricePerPod || 0), BEAN[1].decimals),
+          totalValue: getUSD(BEAN[1], toTokenUnitsBN(podListing?.amount, BEAN[1].decimals).multipliedBy(toTokenUnitsBN(new BigNumber(podListing?.pricePerPod || 0), BEAN[1].decimals))),
           time: e.timestamp,
         };
       default:

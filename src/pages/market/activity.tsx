@@ -1,59 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+  Box,
   CircularProgress,
-  Container,
-  Stack, Tab, Tabs, useMediaQuery,
+  Container, Link,
+  Stack, Typography,
 } from '@mui/material';
-import { DataGridProps } from '@mui/x-data-grid';
-import { useTheme } from '@mui/material/styles';
-import ActivityTable from '~/components/Market/Pods/Tables/ActivityTable';
 import PageHeaderSecondary from '~/components/Common/PageHeaderSecondary';
-import COLUMNS from '~/components/Common/Table/cells';
 import useTabs from '~/hooks/display/useTabs';
-import useMarketplaceEventData from '~/hooks/beanstalk/useMarketplaceEventData';
+import useMarketplaceEventData, { QUERY_AMOUNT } from '~/hooks/beanstalk/useMarketplaceEventData';
 import { Module, ModuleContent } from '~/components/Common/Module';
+import Row from '~/components/Common/Row';
+import ActivityTableHeader from '~/components/Market/Pods/Tables/ActivityTableHeader';
+import ActivityTableRow from '~/components/Market/Pods/Tables/ActivityTableRow';
+
+export const tabLabels = ['All', 'Create', 'Fill', 'Cancel'];
 
 const MarketActivityPage: React.FC = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
   // Local State
   const [tab, handleChangeTab] = useTabs();
-  const tabLabels = ['All', 'Create', 'Fill', 'Cancel'];
-
-  const columns: DataGridProps['columns'] = !isMobile
-    ? [
-      COLUMNS.label(
-        2.5,
-        <Tabs value={tab} onChange={handleChangeTab}>
-          {/* All */}
-          <Tab label={tabLabels[0]} />
-          {/* Create */}
-          <Tab label={tabLabels[1]} />
-          {/* Fill */}
-          <Tab label={tabLabels[2]} />
-          {/* Cancel */}
-          <Tab label={tabLabels[3]} />
-        </Tabs>,
-      ),
-      COLUMNS.numPodsMarketHistory(1),
-      COLUMNS.placeInLineMarketHistory(1),
-      COLUMNS.pricePerPodMarketHistory(1),
-      COLUMNS.totalValueMarketHistory(1),
-      COLUMNS.timeAgoMarketHistory(1),
-    ]
-    : [
-      COLUMNS.label(
-        2.5,
-        <Tabs value={tab} onChange={handleChangeTab}>
-          <Tab label="All" />
-        </Tabs>,
-      ),
-      COLUMNS.numPodsMarketHistory(1),
-      COLUMNS.totalValueMarketHistory(1),
-    ];
+  const [scrollPosition, setScrollPosition] = useState<number | undefined>();
 
   const { data, loading, fetchMoreData } = useMarketplaceEventData();
+
+  const handleFetchMore = () => {
+    fetchMoreData();
+    setScrollPosition(window.scrollY);
+  };
+
+  useEffect(() => {
+    if (scrollPosition) {
+      window.scrollTo(0, scrollPosition || 0);
+      setScrollPosition(undefined);
+    }
+  }, [data, scrollPosition]);
 
   return (
     <Container maxWidth="lg">
@@ -64,22 +43,36 @@ const MarketActivityPage: React.FC = () => {
         />
         <Module sx={{ pt: 2, px: 1 }}>
           <ModuleContent>
-            {data === undefined || loading
+            {data === undefined
               ? (
                 <Stack height={300} alignItems="center" justifyContent="center">
                   <CircularProgress />
                 </Stack>
               )
               : (
-                <ActivityTable
-                  fetchMore={fetchMoreData}
-                  columns={columns}
-                  rows={data.filter((e) => (
+                <>
+                  {/* Table header */}
+                  <ActivityTableHeader tab={tab} handleChangeTab={handleChangeTab} />
+                  {/* Table body */}
+                  {data.filter((e) => (
                     tab === 0
                       ? e.action !== 'default'
                       : e.action === tabLabels[tab].toLowerCase()
+                  )).map((e) => (
+                    <ActivityTableRow event={e} />
                   ))}
-                />
+                  <Box p={1}>
+                    {loading ? (
+                      <Row justifyContent="center">
+                        <CircularProgress size={25} />
+                      </Row>
+                    ) : (
+                      <Link onClick={handleFetchMore}>
+                        <Typography textAlign="center" sx={{ cursor: 'pointer' }}>Load {QUERY_AMOUNT} more</Typography>
+                      </Link>
+                    )}
+                  </Box>
+                </>
               )}
           </ModuleContent>
         </Module>

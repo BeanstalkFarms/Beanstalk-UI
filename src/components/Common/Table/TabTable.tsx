@@ -47,7 +47,7 @@ const wellTableBaseStyle = {
       py: 2.8,
       // mb: 0.8,
       alignItems: 'center',
-      cursor: 'pointer',
+      // cursor: 'pointer',
       width: 'calc(100% - 2.5px)',
       '&:hover': {
         background: 'transparent'

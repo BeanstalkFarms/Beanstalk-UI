@@ -1,5 +1,5 @@
 #import "./PodOrder.fragment.graphql"
-query PodFillOrder($id: ID!) {
+query PodOrderFilledEvent($id: ID!) {
   podFill(id: $id) {
     order {
       ...PodOrder

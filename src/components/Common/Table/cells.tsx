@@ -3,7 +3,6 @@ import { Box, Chip, LinearProgress, Link, Tooltip, Typography } from '@mui/mater
 import { GridColumns, GridRenderCellParams, GridValueFormatterParams } from '@mui/x-data-grid';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import BigNumber from 'bignumber.js';
-import moment from 'moment';
 import { displayBN, displayFullBN, MaxBN, trimAddress } from '~/util';
 import { BEAN, PODS } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
@@ -14,9 +13,6 @@ import Row from '~/components/Common/Row';
 import EntityIcon from '~/components/Market/Pods/EntityIcon';
 import { WellActivityData } from '~/components/Market/Wells/Tables';
 import { Token } from '~/classes';
-import podIcon from '~/img/beanstalk/pod-icon.svg';
-import { MarketEvent } from '~/hooks/beanstalk/useMarketplaceEventData';
-import beanIcon from '~/img/tokens/bean-logo-circled.svg';
 
 const basicCell = (params: GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
 
@@ -136,80 +132,6 @@ const COLUMNS = {
         </Row>
       </Tooltip>
     )
-  }) as GridColumns[number],
-
-  /// Pod Market History
-  numPodsMarketHistory: (flex: number) => (
-    {
-      field: 'numPods',
-      headerName: 'Pods',
-      flex: flex,
-      disableColumnMenu: true,
-      align: 'left',
-      headerAlign: 'left',
-      valueFormatter: (params: GridRenderCellParams<any, MarketEvent>) => `${displayFullBN(params.value as BigNumber, 2)}`,
-      renderCell: (params: GridRenderCellParams<any, MarketEvent>) => (
-        <Row gap={0.3}>
-          <Typography>{displayBN(params.value)}</Typography>
-          <img src={podIcon} alt="Pod Icon" height="18px" />
-        </Row>
-      ),
-    }
-  ) as GridColumns[number],
-  placeInLineMarketHistory: (flex: number) => ({
-    field: 'placeInPodline',
-    headerName: 'Podline',
-    flex: flex,
-    disableColumnMenu: true,
-    align: 'left',
-    headerAlign: 'left',
-    // valueFormatter: (params) => `${displayFullBN(params.value as BigNumber, 2)}`,
-    renderCell: (params: GridRenderCellParams<any, MarketEvent>) => (
-      <Typography>{params.value}</Typography>
-    ),
-  }) as GridColumns[number],
-  pricePerPodMarketHistory: (flex: number) => ({
-    field: 'pricePerPod',
-    headerName: 'Price',
-    flex: flex,
-    disableColumnMenu: true,
-    align: 'right',
-    headerAlign: 'right',
-    valueFormatter: (params: GridRenderCellParams<any, MarketEvent>) => `${displayFullBN(params.value as BigNumber, 2)}`,
-    renderCell: (params: GridRenderCellParams<any, MarketEvent>) => (
-      <Row gap={0.3}>
-        <img src={beanIcon} alt="Bean Icon" height="18px" />
-        <Typography>{displayBN(params.value)}</Typography>
-      </Row>
-    ),
-  }) as GridColumns[number],
-  totalValueMarketHistory: (flex: number) => ({
-    field: 'totalValue',
-    headerName: 'Total Value',
-    flex: flex,
-    disableColumnMenu: true,
-    align: 'right',
-    headerAlign: 'right',
-    valueFormatter: (params: GridRenderCellParams<any, MarketEvent>) => `${displayFullBN(params.value as BigNumber, 2)}`,
-    renderCell: (params: GridRenderCellParams<any, MarketEvent>) => (
-      <Row gap={0.3}>
-        <Typography>${displayBN(params.value)}</Typography>
-      </Row>
-    ),
-  }) as GridColumns[number],
-  timeAgoMarketHistory: (flex: number) => ({
-    field: 'time',
-    headerName: 'Time',
-    flex: flex,
-    disableColumnMenu: true,
-    align: 'right',
-    headerAlign: 'right',
-    // valueFormatter: (params: GridRenderCellParams<any, MarketEvent>) => `${displayFullBN(params.value as BigNumber, 2)}`,
-    renderCell: (params: GridRenderCellParams<any, MarketEvent>) => (
-      <Row gap={0.3}>
-        <Typography>{moment(new Date(params.value * 1000)).fromNow()}</Typography>
-      </Row>
-    ),
   }) as GridColumns[number],
 
   ///
@@ -399,7 +321,7 @@ const COLUMNS = {
     headerAlign: 'left',
     sortable: false,
     renderCell: (params: GridRenderCellParams<any, WellActivityData>) => (
-      <Link href={`https://etherscan.io/tx/${params.row.hash}`}>
+      <Link href={`https://etherscan.io/tx/${params.row.hash}`} target="_blank" rel="noopener noreferrer">
         <Typography>
           {params.row.label}
         </Typography>
