@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { useMemo } from 'react';
-import { useAllPodOrdersQuery } from '~/generated/graphql';
+import { MarketStatus, useAllPodOrdersQuery } from '~/generated/graphql';
 import useCastApolloQuery from '~/hooks/app/useCastApolloQuery';
 import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import usePodListings from '~/hooks/beanstalk/usePodListings';
@@ -11,8 +11,8 @@ const useMarketData = () => {
   const harvestableIndex = useHarvestableIndex();
   
   /// Queries
-  const listingsQ = usePodListings({ variables: { status: 'active', }, fetchPolicy: 'cache-and-network', nextFetchPolicy: 'cache-first', notifyOnNetworkStatusChange: true });
-  const ordersQ   = useAllPodOrdersQuery({ variables: { status: 'active' }, fetchPolicy: 'cache-and-network', nextFetchPolicy: 'cache-first', notifyOnNetworkStatusChange: true  });
+  const listingsQ = usePodListings({ variables: { status: MarketStatus.Active, }, fetchPolicy: 'cache-and-network', nextFetchPolicy: 'cache-first', notifyOnNetworkStatusChange: true });
+  const ordersQ   = useAllPodOrdersQuery({ variables: { status: MarketStatus.Active }, fetchPolicy: 'cache-and-network', nextFetchPolicy: 'cache-first', notifyOnNetworkStatusChange: true  });
   
   /// Cast query data to BigNumber, etc.
   const listings = useCastApolloQuery<PodListing>(listingsQ, 'podListings', (_listing) => castPodListing(_listing, harvestableIndex));
