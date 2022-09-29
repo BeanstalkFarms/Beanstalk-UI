@@ -30,7 +30,8 @@ type SeasonPlotMultiBaseProps = Omit<SeasonPlotBaseProps, 'document'> &
     LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP'>;
   };
 
-const useMaxSeasonsWithRange = (range: SeasonRange) => useMemo(() => {
+const useMaxSeasonsWithRange = (range: SeasonRange) =>
+  useMemo(() => {
     const perDay = 24;
     const perWeek = perDay * 7;
     const perMonth = perDay * 30;
@@ -41,7 +42,7 @@ const useMaxSeasonsWithRange = (range: SeasonRange) => useMemo(() => {
       case SeasonRange.MONTH: {
         return perMonth;
       }
-      default: 
+      default:
         return undefined;
     }
   }, [range]);
@@ -71,14 +72,48 @@ export default function SeasonPlotMulti<T extends BaseMultiDataPoint>({
   const maxSeasons = useMaxSeasonsWithRange(timeTabState[0][1]);
 
   const series = useMemo(() => {
+    console.debug(
+      `[SeasonPlot] Building series with ${data?.length || 0} data points`,
+      data
+    );
     const points: T[] = [];
     if (!data || !data.length) return points;
 
     const currSeason = data[data.length - 1].season;
-
-    const minSeason = currSeason && maxSeasons 
-      ? currSeason - maxSeasons 
-      : undefined;
+    const minSeason =
+      currSeason && maxSeasons ? currSeason - maxSeasons : undefined;
+    const lastIndex = data.length - 1;
+    // if (timeTabState[0][0] === SeasonAggregation.DAY) {
+    //   let v = 0; // value aggregator
+    //   let i = 0; // total iterations
+    //   let j = 0; // points averaged into this day
+    //   let d : Date | undefined; // current date for this avg
+    //   let s : number | undefined; // current season for this avg
+    //   for (let k = lastIndex; k >= 0; k -= 1) {
+    //     const season = data[k];
+    //     if (!season) continue; // skip empty points
+    //     v += getValue(season);
+    //     if (j === 0) {
+    //       d = secondsToDate(season.timestamp);
+    //       s = season.season as number;
+    //       j += 1;
+    //     } else if (
+    //       i === lastIndex // last iteration
+    //       || j === 24 // full day of data ready
+    //     ) {
+    //       points.push({
+    //         season: s as number,
+    //         date:   d as Date,
+    //         value:  new BigNumber(v).div(j + 1).toNumber()
+    //       });
+    //       v = 0;
+    //       j = 0;
+    //     } else {
+    //       j += 1;
+    //     }
+    //     i += 1;
+    //   }
+    // }
 
     for (const season of data) {
       if (!season) continue;
@@ -97,7 +132,7 @@ export default function SeasonPlotMulti<T extends BaseMultiDataPoint>({
   const defaultValue = _defaultValue || 0;
   const defaultSeason = _defaultSeason || 0;
 
-  const seriesInput = useMemo(() => [series], [series]);
+  const seriesInput = useMemo(() => series, [series]);
 
   return (
     <>
