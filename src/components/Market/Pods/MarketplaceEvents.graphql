@@ -7,22 +7,14 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
     ) {
     hash
     timestamp
-    # Inside marketplaceEvents, we can expand all of the marketplace event types
-    ... on PodOrderCreated {
+    # --------
+    # LISTINGS
+    # --------
+    ... on PodListingCancelled {
       id
-      amount
-      maxPlaceInLine
-      pricePerPod
-    }
-    ... on PodOrderFilled {
-      id
-      from
-      to
-      orderID
-      amount
-      index # index of plot was sold to the Order
-      start #
-      # => maxPlaceInLine
+      index # of the listing that was cancelled
+      account
+      # => amount
       # => pricePerPod
     }
     ... on PodListingCreated {
@@ -31,14 +23,6 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
       amount
       maxHarvestableIndex
       pricePerPod
-    }
-    ... on PodOrderCancelled {
-      id
-      orderId
-      account
-      # => amount
-      # => maxPlaceInLine
-      # => pricePerPod
     }
     ... on PodListingFilled {
       id
@@ -49,14 +33,35 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
       start
       # => pricePerPod
     }
-    ... on PodListingCancelled {
+    # ------
+    # ORDERS
+    # ------
+    ... on PodOrderCancelled {
       id
-      index # of the listing that was cancelled
+      orderId
       account
       # => amount
+      # => maxPlaceInLine
       # => pricePerPod
     }
-    # ... etc.
+    ... on PodOrderCreated {
+      id
+      amount
+      maxPlaceInLine
+      pricePerPod
+    }
+    ... on PodOrderFilled {
+      id
+      from
+      to
+      historyID
+      # orderID
+      amount
+      index # index of plot was sold to the Order
+      start #
+      # => maxPlaceInLine
+      # => pricePerPod
+    }
   }
 
   podOrders(where: {

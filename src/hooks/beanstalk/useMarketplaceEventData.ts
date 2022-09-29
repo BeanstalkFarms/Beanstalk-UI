@@ -115,7 +115,8 @@ const useMarketplaceEventData = () => {
           time: e.timestamp,
         };
       case 'PodOrderFilled':
-        podOrder = podOrdersById[e.orderID];
+        // podOrder = podOrdersById[e.orderID];
+        podOrder = podOrdersById[e.historyID];
         return {
           id: e.id,
           action: 'fill',
