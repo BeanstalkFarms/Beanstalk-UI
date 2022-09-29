@@ -10377,7 +10377,6 @@ __metadata:
     lint-staged: ^13.0.3
     luxon: ^2.4.0
     markdown-to-jsx: ^7.1.7
-    moment: ^2.29.4
     mui-markdown: ^0.5.5
     netlify-cli: ^10.5.1
     prettier: ^2.3.0
@@ -14724,7 +14723,7 @@ __metadata:
   dependencies:
     bn.js: ^4.11.8
     ethereumjs-util: ^6.0.0
-  checksum: 03127d09960e5f8a44167463faf25b2894db2f746376dbb8195b789ed11762f93db9c574eaa7c498c400063508e9dfc1c80de2edf5f0e1406b25c87d860ff2f1
+  checksum: ae074be0bb012857ab5d3ae644d1163b908a48dd724b7d2567cfde309dc72222d460438f2411936a70dc949dc604ce1ef7118f7273bd525815579143c907e336
   languageName: node
   linkType: hard
 
@@ -20456,13 +20455,6 @@ __metadata:
     fast-equals: ^3.0.1
     micro-memoize: ^4.0.9
   checksum: f72ed323194f5ba26ecea23f554b0ada97919842d4dfb7fcae832701445185286418fff1a8a68165aa20b3955ce2825a1e56b81ae20569b0c3d83b5c7e39dccc
-  languageName: node
-  linkType: hard
-
-"moment@npm:^2.29.4":
-  version: 2.29.4
-  resolution: "moment@npm:2.29.4"
-  checksum: 0ec3f9c2bcba38dc2451b1daed5daded747f17610b92427bebe1d08d48d8b7bdd8d9197500b072d14e326dd0ccf3e326b9e3d07c5895d3d49e39b6803b76e80e
   languageName: node
   linkType: hard
 

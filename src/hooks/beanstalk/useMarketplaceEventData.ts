@@ -48,7 +48,7 @@ const useMarketplaceEventData = () => {
   const podOrdersById = useMemo(() => {
     if (rawEvents?.podOrders) {
       return rawEvents?.podOrders.reduce((prev, curr) => {
-        prev[curr.id] = curr;
+        prev[curr.historyID] = curr;
         return prev;
       }, {} as any);
     }
@@ -57,7 +57,7 @@ const useMarketplaceEventData = () => {
   const podListingsById = useMemo(() => {
     if (rawEvents?.podListings) {
       return rawEvents?.podListings.reduce((prev, curr) => {
-        prev[curr.id] = curr;
+        prev[curr.historyID] = curr;
         return prev;
       }, {} as any);
     }
@@ -74,8 +74,6 @@ const useMarketplaceEventData = () => {
       });
     }
   };
-
-  console.log('LEN DATA', rawEvents?.marketplaceEvents.length);
 
   // Temp
   let podListing;
@@ -97,8 +95,7 @@ const useMarketplaceEventData = () => {
           time: e.timestamp,
         };
       case 'PodOrderCancelled':
-        podOrder = podOrdersById[e.orderId];
-        console.log('PRICE', new BigNumber(podOrder?.pricePerPod || 0).toNumber());
+        podOrder = podOrdersById[e.historyID];
         return {
           id: e.id,
           action: 'cancel',
@@ -143,7 +140,11 @@ const useMarketplaceEventData = () => {
           time: e.timestamp,
         };
       case 'PodListingCancelled':
-        podListing = podListingsById[`${e.account}-${e.index}`];
+        podListing = podListingsById[e.historyID];
+        if (podListing === undefined) {
+          console.log('Empty pod listing cancelled');
+          console.log(e.historyID);
+        }
         return {
           id: e.id,
           hash: e.hash,
@@ -156,14 +157,10 @@ const useMarketplaceEventData = () => {
           time: e.timestamp,
         };
       case 'PodListingFilled':
-        podListing = podListingsById[`${e.from}-${e.index}`];
+        podListing = podListingsById[e.historyID];
         if (podListing === undefined) {
-          // console.log('FROM', e.from);
-          // console.log('INDEX', e.index);
-          // console.log('UNDEFINED LISTING', `${e.account}-${e.index}`);
-        } else {
-          console.log('INDEX', podListing.index);
-          console.log('ORIG INDEX', podListing.originalIndex);
+          console.log('Empty pod listing filled');
+          console.log(e.historyID);
         }
         return {
           id: e.id,

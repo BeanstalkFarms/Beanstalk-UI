@@ -14,6 +14,7 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
       id
       index # of the listing that was cancelled
       account
+      historyID
       # => amount
       # => pricePerPod
     }
@@ -31,6 +32,7 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
       amount
       index # index of Listing that sold
       start
+      historyID
       # => pricePerPod
     }
     # ------
@@ -40,6 +42,7 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
       id
       orderId
       account
+      historyID
       # => amount
       # => maxPlaceInLine
       # => pricePerPod
@@ -67,6 +70,7 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
   podOrders(where: {
     # FIXME: could also be status_not: "active"
     status_in: [
+      ACTIVE,
       CANCELLED,
       CANCELLED_PARTIAL,
       FILLED
@@ -78,6 +82,7 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
     amount
     maxPlaceInLine
     pricePerPod
+    historyID
     # ---
   }
 
@@ -85,8 +90,10 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
     # FIXME: could also be status_not: "active"
     status_in: [
       CANCELLED,
+      CANCELLED_PARTIAL,
       FILLED,
-      FILLED_PARTIAL
+      FILLED_PARTIAL,
+      ACTIVE
     ]
   }, orderBy: updatedAt, orderDirection: desc) {
     id
@@ -96,6 +103,7 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
     pricePerPod
     index
     originalIndex
+    historyID
     # ---
   }
 }
