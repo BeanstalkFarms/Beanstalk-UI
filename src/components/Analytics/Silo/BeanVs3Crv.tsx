@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo } from 'react';
-import { Card, Stack } from '@mui/material';
+import React, { useMemo } from 'react';
+import { Card } from '@mui/material';
 import useSeasonsQuery, {
   SnapshotData,
 } from '~/hooks/beanstalk/useSeasonsQuery';
@@ -12,42 +12,42 @@ import {
 import { useMergeSeasonsQueries } from '~/hooks/beanstalk/useMergeSeasonsQueries';
 import { toTokenUnitsBN } from '~/util';
 import useTimeTabState from '~/hooks/app/useTimeTabState';
+import SeasonPlotMulti from '~/components/Common/Charts/SeasonPlotMulti';
+import { ERC20Token } from '~/classes/Token';
 
 const assets = {
   bean: BEAN[1],
   bean3Crv: BEAN_CRV3_LP[1],
 };
-
 const account = BEANSTALK_ADDRESSES[1];
 
-const getValue = (s: SnapshotData<SeasonalDepositedSiloAssetQuery>) => s.totalDepositedAmount;
+const getValue = (asset: ERC20Token) => {
+  const fn = (season: SnapshotData<SeasonalDepositedSiloAssetQuery>) =>
+    toTokenUnitsBN(season.totalDepositedAmount, asset.decimals).toNumber();
+  return fn;
+};
 
 const BeanVs3Crv: React.FC<{}> = () => {
-  const getBeanValue = useCallback(
-    (season: SnapshotData<SeasonalDepositedSiloAssetQuery>) =>
-      toTokenUnitsBN(
-        season.totalDepositedAmount,
-        assets.bean.decimals
-      ).toNumber(),
-    []
-  );
   // refactor me
   const timeTabState = useTimeTabState();
-  
-  const queryConfig = useMemo(() => ({
-    bean: { 
-      variables: {
-        season_gt: 6073,
-        siloAsset: `${account.toLowerCase()}-${assets.bean.address}`,
-      } 
-    },
-    bean3Crv: { 
-      variables: {
-        season_gt: 6073,
-        siloAsset: `${account.toLowerCase()}-${assets.bean3Crv.address}`,
-      } 
-    }
-  }),[]);
+
+  const queryConfig = useMemo(
+    () => ({
+      bean: {
+        variables: {
+          season_gt: 6073,
+          siloAsset: `${account.toLowerCase()}-${assets.bean.address}`,
+        },
+      },
+      bean3Crv: {
+        variables: {
+          season_gt: 6073,
+          siloAsset: `${account.toLowerCase()}-${assets.bean3Crv.address}`,
+        },
+      },
+    }),
+    []
+  );
   const beanQuery = useSeasonsQuery<SeasonalDepositedSiloAssetQuery>(
     SeasonalDepositedSiloAssetDocument,
     timeTabState[0][1],
@@ -59,46 +59,27 @@ const BeanVs3Crv: React.FC<{}> = () => {
     queryConfig.bean3Crv
   );
 
-  const params = useMemo(() => [
-      { query: beanQuery, getValue, }, 
-      { query: bean3CrvQuery, getValue }
-    ], [bean3CrvQuery, beanQuery]);
-
-  const { data, error, loading } = useMergeSeasonsQueries([beanQuery, bean3CrvQuery]);
-
-  console.log('rerender...');
+  const mergeProps = useMergeSeasonsQueries([
+    { query: beanQuery, getValue: getValue(assets.bean), key: 'bean' },
+    {
+      query: bean3CrvQuery,
+      getValue: getValue(assets.bean3Crv),
+      key: 'bean3Crv',
+    },
+  ]);
 
   return (
     <Card>
-      <Stack>Text graph</Stack>
+      <SeasonPlotMulti
+        {...mergeProps}
+        // StatProps={{
+        //   title: 'Deposited Bean vs Bean3Crv',
+        // }}
+        // formatStat={(value: number) => value.toString()}
+        timeTabState={timeTabState}
+      />
     </Card>
   );
 };
 
 export default BeanVs3Crv;
-
-// const getBeanValue = useCallback(
-//   (season: SnapshotData<SeasonalDepositedSiloAssetQuery>) =>
-//     toTokenUnitsBN(
-//       season.totalDepositedAmount,
-//       assets.bean.decimals
-//     ).toNumber(),
-//   []
-// );
-
-/// Display values
-// const [displayValue, setDisplayValue] = useState<number | undefined>(
-//   undefined
-// );
-// const [displaySeason, setDisplaySeason] = useState<number | undefined>(
-//   undefined
-// );
-
-/// Handlers
-// const handleChangeTimeTab = useCallback((tabs: TimeTabState) => {
-//   setTimeTab(tabs);
-// }, []);
-// const handleCursor = useCallback((dps?: SeasonDataPoint[]) => {
-//   setDisplaySeason(dps ? dps[0].season : undefined);
-//   setDisplayValue(dps ? dps[0].value : undefined);
-// }, []);
