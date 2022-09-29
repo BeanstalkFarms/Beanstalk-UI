@@ -4,7 +4,7 @@ import useSeasonsQuery, {
   SnapshotData,
 } from '~/hooks/beanstalk/useSeasonsQuery';
 import { BEANSTALK_ADDRESSES } from '~/constants';
-import { BEAN, BEAN_CRV3_LP } from '~/constants/tokens';
+import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
 import {
   SeasonalDepositedSiloAssetDocument,
   SeasonalDepositedSiloAssetQuery,
@@ -18,6 +18,8 @@ import { ERC20Token } from '~/classes/Token';
 const assets = {
   bean: BEAN[1],
   bean3Crv: BEAN_CRV3_LP[1],
+  urBean: UNRIPE_BEAN[1],
+  urBean3Crv: UNRIPE_BEAN_CRV3[1],
 };
 const account = BEANSTALK_ADDRESSES[1];
 

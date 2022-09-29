@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
-import { extent, max, min } from 'd3-array';
+import { bisector, extent, max, min } from 'd3-array';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import { AreaStack } from '@visx/shape';
+import { AreaStack, Bar, Line } from '@visx/shape';
 import { Group } from '@visx/group';
 import { scaleLinear } from '@visx/scale';
 
@@ -9,7 +9,8 @@ import { CurveFactory } from 'd3-shape';
 import { LinearGradient } from '@visx/gradient';
 import BigNumber from 'bignumber.js';
 import { Axis, Orientation } from '@visx/axis';
-import { SeriesPoint } from '@visx/shape/lib/types';
+import { localPoint } from '@visx/event';
+import { useTooltip, TooltipWithBounds } from '@visx/tooltip';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { CURVES, DataPoint } from '~/components/Common/Charts/LineChart';
 import { MinimumViableSnapshot } from '~/hooks/beanstalk/useSeasonsQuery';
@@ -89,39 +90,24 @@ const gradients = [
 // data accessors
 const getX = (d: BaseMultiDataPoint) => d.season;
 const getY = (d: BaseMultiDataPoint, i: number) => d?.[i];
-const getY0 = (d: SeriesPoint<BaseMultiDataPoint>) => {
-  if (d[0]) {
-    return d[0];
-  }
-  return 0;
-};
-const getY1 = (d: SeriesPoint<BaseMultiDataPoint>) => {
-  if (d[1]) {
-    return d[1];
-  }
-  return 0;
-};
-
+const bisectSeason = bisector<BaseMultiDataPoint, number>(
+  (d) => d.season
+).left;
 const getMin = (d: BaseMultiDataPoint) => {
-  const data = Object.entries(d).map(([key, value]) => {
-    if (key === 'season' || key === 'date' || key === 'timestamp') {
-      return Infinity;
-    }
-    return value as number;
+  const data: number[] = [];
+  Object.entries(d).forEach(([key, value]) => {
+    if (key === 'season' || key === 'date' || key === 'timestamp') { return; }
+    data.push(value as number);
   });
-
-  return Math.min(...data, 0);
+  return Math.min(...data);
 };
-
 const getMax = (d: BaseMultiDataPoint) => {
-  const data = Object.entries(d).map(([key, value]) => {
-    if (key === 'season' || key === 'date' || key === 'timestamp') {
-      return -Infinity;
-    }
-    return value as number;
+  const data: number[] = [];
+  Object.entries(d).forEach(([key, value]) => {
+    if (key === 'season' || key === 'date' || key === 'timestamp') { return; }
+    data.push(value as number);
   });
-
-  return Math.max(...data, 0);
+  return Math.max(...data);
 };
 
 // const bisectSeason = bisector<{ season: number }, number>(
@@ -193,6 +179,12 @@ function Graph<T extends BaseMultiDataPoint>(props: GraphProps<T>) {
 
         let yScale;
 
+        const t = [
+          0.95 * (min(_data, getMin) as number),
+          1.05 * (max(_data, getMax) as number),
+        ];
+        console.log('t: ', t);
+
         if (isTWAP) {
           const yMin = min(_data, getY);
           const yMax = max(_data, getY);
@@ -208,8 +200,8 @@ function Graph<T extends BaseMultiDataPoint>(props: GraphProps<T>) {
           yScale = scaleLinear<number>({
             range: [height - margin.top - margin.bottom, 0],
             domain: [
-              0.95 * (min(_data, getMin) as number),
-              1.05 * (max(_data, getMax) as number),
+              min(_data, getMin) as number,
+              max(_data, getMax) as number
             ],
             clamp: true,
           });
@@ -243,13 +235,62 @@ function Graph<T extends BaseMultiDataPoint>(props: GraphProps<T>) {
     );
   }, [series]);
 
+  const {
+  showTooltip,
+  hideTooltip,
+  tooltipData,
+  tooltipTop = 0,
+  tooltipLeft = 0,
+} = useTooltip<BaseMultiDataPoint[] | undefined>();
+
+const handleMouseLeave = useCallback(() => {
+  hideTooltip();
+  onCursor?.(undefined);
+}, [hideTooltip, onCursor]);
+
+  const handleTooltip = useCallback(
+    (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
+      const { x } = localPoint(event) || { x: 0 }; // x0 + x1 + ... + xn = width of chart (~ 1123 px on my screen) ||| ex 956
+  
+      // for each series
+      const ds = scales.map((scale, i) => {
+        const x0 = scale.xScale.invert(x);   // get Date (season) corresponding to pixel coordinate x ||| ex: 6145.742342789
+        const index = bisectSeason(series[i], x0, 1);  // find the closest index of x0 within data
+  
+        const d0 = series[i][index - 1];  // value at x0 - 1
+        const d1 = series[i][index];      // value at x0
+  
+        //     |   6   |  | 3 |
+        // [(d0)-------(x0)---(d1)]
+        // default to the left endpoint
+        let d = d0;
+        if (d1 && getX(d1)) {
+          // use d1 if x0 is closer to d1
+          d = (x0.valueOf() - getX(d0).valueOf()) > (getX(d1).valueOf() - x0.valueOf())
+            ? d1
+            : d0;
+        }
+  
+        return d;
+      });
+  
+      showTooltip({
+        tooltipData: ds,
+        tooltipLeft: x, // in pixels
+        tooltipTop: scales[0].yScale(getMax(ds[0])), // in pixels
+      });
+      onCursor?.(ds);
+    },
+    [showTooltip, onCursor, scales, series],
+  );
+
   const xTickFormat = useCallback((_, i) => tickDates[i], [tickDates]);
   const yTickFormat = useCallback((val) => displayBN(new BigNumber(val)), []);
 
   if (!series || series.length === 0) return null;
 
   //
-  // const tooltipLeftAttached = tooltipData ? scales[0].xScale(getX(tooltipData[0])) : undefined;
+  const tooltipLeftAttached = tooltipData ? scales[0].xScale(getX(tooltipData[0])) : undefined;
 
   /**
    * Height: `height` (controlled by container)
@@ -299,15 +340,15 @@ function Graph<T extends BaseMultiDataPoint>(props: GraphProps<T>) {
             keys={keys}
             data={data}
             height={height}
+            order="ascending"
             x={(d) => scales[0].xScale(getX(d.data)) ?? 0}
-            y0={(d) => scales[0].yScale(getY0(d)) ?? 0}
-            y1={(d) => scales[0].yScale(getY1(d)) ?? 0}
+            y0={(d) => scales[0].yScale(d[0]) ?? 0}
+            y1={(d) => scales[0].yScale(d[1]) ?? 0}
           >
-            {({ stacks, path }) => 
-              // console.log('stacks: ', stacks);
-               stacks.map((stack, i) => {
+            {({ stacks, path }) =>
+              stacks.map((stack, i) => {
+                // console.log('stack: ', stack);
                 const fillIndex = Math.floor(i % gradients.length);
-                // console.log('idx: ', fillIndex);
                 return (
                   <path
                     key={`stack-${stack.key}`}
@@ -321,19 +362,6 @@ function Graph<T extends BaseMultiDataPoint>(props: GraphProps<T>) {
             }
           </AreaStack>
         </Group>
-        {/* <Group width={width - yAxisWidth} height={dataRegion.yBottom - dataRegion.yTop}>
-          {children && children({ scales, dataRegion, ...props })}
-          {series.map((_data, index) => (
-            <LinePath
-              key={index}
-              curve={curveLinear}
-              data={_data}
-              x={(d) => scales[index].xScale(getX(d)) ?? 0}
-              y={(d) => scales[index].yScale(getY(d)) ?? 0}
-              {...strokes[index]}
-            />
-          ))}
-        </Group>  */}
         <g transform={`translate(0, ${dataRegion.yBottom})`}>
           <Axis
             key="axis"
@@ -359,6 +387,50 @@ function Graph<T extends BaseMultiDataPoint>(props: GraphProps<T>) {
             strokeWidth={0}
           />
         </g>
+        {tooltipData && (
+          <g>
+            <Line
+              from={{ x: tooltipLeft, y: dataRegion.yTop }}
+              to={{ x: tooltipLeft, y: dataRegion.yBottom }}
+              stroke={BeanstalkPalette.lightGrey}
+              strokeWidth={1}
+              pointerEvents="none"
+            />
+            <div>hello</div>
+            {/* <circle
+              cx={tooltipLeftAttached}
+              cy={tooltipTop}
+              r={4}
+              fill="black"
+              fillOpacity={0.1}
+              stroke="black"
+              strokeOpacity={0.1}
+              strokeWidth={2}
+              pointerEvents="none"
+            /> */}
+          </g>
+        )}
+        {tooltipData && (
+          <g>
+            <TooltipWithBounds>
+              <div>hello</div>
+            </TooltipWithBounds>
+          </g>
+        )}
+        {/* Overlay to handle tooltip.
+          * Needs to be the last item to maintain mouse control. */}
+        <Bar
+          x={0}
+          y={0}
+          width={width}
+          height={height}
+          fill="transparent"
+          rx={14}
+          onTouchStart={handleTooltip}
+          onTouchMove={handleTooltip}
+          onMouseMove={handleTooltip}
+          onMouseLeave={handleMouseLeave}
+        />
       </svg>
     </>
   );
@@ -383,42 +455,6 @@ function StackedAreaChart2<T extends BaseMultiDataPoint>(
 }
 
 export default StackedAreaChart2;
-
-// const handleTooltip = useCallback(
-//   (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
-//     const { x } = localPoint(event) || { x: 0 }; // x0 + x1 + ... + xn = width of chart (~ 1123 px on my screen) ||| ex 956
-
-//     // for each series
-//     const ds = scales.map((scale, i) => {
-//       const x0 = scale.xScale.invert(x);   // get Date (season) corresponding to pixel coordinate x ||| ex: 6145.742342789
-//       const index = bisectSeason(series[i], x0, 1);  // find the closest index of x0 within data
-
-//       const d0 = series[i][index - 1];  // value at x0 - 1
-//       const d1 = series[i][index];      // value at x0
-
-//       //     |   6   |  | 3 |
-//       // [(d0)-------(x0)---(d1)]
-//       // default to the left endpoint
-//       let d = d0;
-//       if (d1 && getX(d1)) {
-//         // use d1 if x0 is closer to d1
-//         d = (x0.valueOf() - getX(d0).valueOf()) > (getX(d1).valueOf() - x0.valueOf())
-//           ? d1
-//           : d0;
-//       }
-
-//       return d;
-//     });
-
-//     showTooltip({
-//       tooltipData: ds,
-//       tooltipLeft: x, // in pixels
-//       tooltipTop: scales[0].yScale(getY(ds[0])), // in pixels
-//     });
-//     onCursor(ds);
-//   },
-//   [showTooltip, onCursor, scales, series],
-// );
 
 // const handleMouseLeave = useCallback(() => {
 //   hideTooltip();

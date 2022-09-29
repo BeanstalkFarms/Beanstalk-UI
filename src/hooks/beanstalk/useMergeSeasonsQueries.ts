@@ -54,8 +54,6 @@ export const useMergeSeasonsQueries = <T extends MinimumViableSnapshotQuery>(
       sorted[sorted.length - 1].season
     ] as [number, number];
 
-    console.log('first: ', firstSeason, '\nlast: ', lastSeason);
-
     const getNextNonNullValueWithSeason = (startSeason: number, key: string) => {
       let i = startSeason + 1;
       let mayNull = data[i];
@@ -63,13 +61,16 @@ export const useMergeSeasonsQueries = <T extends MinimumViableSnapshotQuery>(
         i += 1;
         mayNull = data[i];
       }
-      return i;
+      return [i, mayNull[key]];
     };
 
     const _interpolate = ({ nnv, lnv, nns, lns }: Required<InterpolateCache>, season: number) => {
       const m = (nnv - lnv) / (nns - lns);
       const cObj = _data[season];
       const mTimestamp = (parseFloat(data[nns].timestamp) - parseFloat(data[lns].timestamp)) / (nns - lns);
+
+      const len = nns - lns;
+
       const value = (m * (season - lns) + lnv);
       const timestamp = cObj && ('timestamp' in cObj)
         ? cObj.timestamp 
@@ -98,14 +99,11 @@ export const useMergeSeasonsQueries = <T extends MinimumViableSnapshotQuery>(
           if (cache.nns && cache.nns < season) {
             const { value, timestamp } = _interpolate(cache, season);
             addData(season, value, timestamp, k);
-            cache.lnv = value;
-            cache.lns = season;
           } else {
-            cache.nns = getNextNonNullValueWithSeason(cache.lns, k);
+            const [nns, nnv] = getNextNonNullValueWithSeason(cache.lns, k);
+            cache = { ...cache, nnv, nns };
             const { value, timestamp } = _interpolate(cache, season);
             addData(season, value, timestamp, k);
-            cache.lnv = value;
-            cache.lns = season;
           }
         }
       }
@@ -145,6 +143,10 @@ export const useMergeSeasonsQueries = <T extends MinimumViableSnapshotQuery>(
         }
       });
     });
+
+    console.log('querydata: ', queryData);
+    const interpolated = interpolate(queryData, _keys);
+    console.log('interpolated: ', interpolated);
 
     return [interpolate(queryData, _keys), _keys];
   }, [interpolate, error, loading, params]);

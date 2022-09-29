@@ -110,6 +110,7 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
       data
     );
     if (data) {
+      console.log('data: ', data);
       const lastIndex = data.seasons.length - 1;
       const points : SeasonDataPoint[] = [];
 

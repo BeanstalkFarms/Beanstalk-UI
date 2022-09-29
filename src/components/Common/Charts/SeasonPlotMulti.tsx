@@ -2,6 +2,7 @@ import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import React, { useMemo, useState } from 'react';
 import { TimeTabStateParams } from '~/hooks/app/useTimeTabState';
 import { useMergeSeasonsQueries } from '~/hooks/beanstalk/useMergeSeasonsQueries';
+import { SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
 
 import { secondsToDate } from '~/util';
 import Row from '../Row';
@@ -29,6 +30,22 @@ type SeasonPlotMultiBaseProps = Omit<SeasonPlotBaseProps, 'document'> &
     LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP'>;
   };
 
+const useMaxSeasonsWithRange = (range: SeasonRange) => useMemo(() => {
+    const perDay = 24;
+    const perWeek = perDay * 7;
+    const perMonth = perDay * 30;
+    switch (range) {
+      case SeasonRange.WEEK: {
+        return perWeek;
+      }
+      case SeasonRange.MONTH: {
+        return perMonth;
+      }
+      default: 
+        return undefined;
+    }
+  }, [range]);
+
 export default function SeasonPlotMulti<T extends BaseMultiDataPoint>({
   data,
   loading,
@@ -51,16 +68,22 @@ export default function SeasonPlotMulti<T extends BaseMultiDataPoint>({
     undefined
   );
 
+  const maxSeasons = useMaxSeasonsWithRange(timeTabState[0][1]);
+
   const series = useMemo(() => {
     const points: T[] = [];
-    if (!data) return points;
-    const lastIndex = data?.length;
+    if (!data || !data.length) return points;
 
-    // if (timeTabState[0][0] === SeasonAggregation.DAY) {
+    const currSeason = data[data.length - 1].season;
 
-    // } else {
+    const minSeason = currSeason && maxSeasons 
+      ? currSeason - maxSeasons 
+      : undefined;
+
     for (const season of data) {
       if (!season) continue;
+      // if data.season is less than minimum season, ignore data
+      if (minSeason && season.season < minSeason) continue;
       points.push({
         ...season,
         season: season.season as number,
@@ -68,7 +91,7 @@ export default function SeasonPlotMulti<T extends BaseMultiDataPoint>({
       });
     }
     return points;
-  }, [data]);
+  }, [data, maxSeasons]);
 
   /// If one of the defaults is missing, use the last data point.
   const defaultValue = _defaultValue || 0;
@@ -110,7 +133,7 @@ export default function SeasonPlotMulti<T extends BaseMultiDataPoint>({
         </Stack>
       </Row>
       <Box width="100%" sx={{ height, position: 'relative' }}>
-        {loading || series.length === 0 || error ? (
+        {loading || series?.length === 0 || error ? (
           <Stack height="100%" alignItems="center" justifyContent="center">
             {error ? (
               <Typography>
