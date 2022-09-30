@@ -116,7 +116,7 @@ export const BeanstalkPalette = {
   // ---
   theme: {
     fall: {
-      extraLight: '#FFF9E0',
+      extraLight: '#FFFCED',
       light: '#FBE39D',
       primary: '#FFDE7B',
       brown: '#B97D46',
