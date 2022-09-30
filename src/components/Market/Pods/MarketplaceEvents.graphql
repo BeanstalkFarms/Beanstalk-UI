@@ -86,15 +86,16 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
     # ---
   }
 
-  podListings(where: {
+  podListings(
+    where: {
     # FIXME: could also be status_not: "active"
-    status_in: [
-      CANCELLED,
-      CANCELLED_PARTIAL,
-      FILLED,
-      FILLED_PARTIAL,
-      ACTIVE
-    ]
+      status_in: [
+        CANCELLED,
+        CANCELLED_PARTIAL,
+        FILLED,
+        FILLED_PARTIAL,
+        ACTIVE,
+      ]
   }, orderBy: updatedAt, orderDirection: desc) {
     id
     status

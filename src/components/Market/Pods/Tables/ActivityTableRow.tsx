@@ -18,14 +18,14 @@ const ActivityTableRow: React.FC<BoxProps & { event: MarketEvent }> = (props) =>
   const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZoneName;
 
   // build date strings
-  const top = date.toLocaleString({
+  const topDate = date.toLocaleString({
     month: 'short',
     day: '2-digit',
     year: 'numeric',
     timeZone: userTimezone
   });
 
-  const bottom = date.toLocaleString({
+  const bottomDate = date.toLocaleString({
     hour: '2-digit',
     minute: '2-digit',
     // second: '2-digit',
@@ -71,8 +71,8 @@ const ActivityTableRow: React.FC<BoxProps & { event: MarketEvent }> = (props) =>
       </Grid>
       <Grid item xs={0} md={1.59} display={{ xs: 'none', md: 'block' }}>
         <Stack justifyContent="end">
-          <Typography textAlign="right">{top}</Typography>
-          <Typography textAlign="right">{bottom}</Typography>
+          <Typography textAlign="right">{topDate}</Typography>
+          <Typography textAlign="right">{bottomDate}</Typography>
         </Stack>
       </Grid>
     </Grid>

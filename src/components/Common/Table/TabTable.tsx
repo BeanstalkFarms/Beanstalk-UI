@@ -76,10 +76,6 @@ const wellTableBaseStyle = {
     '& .MuiDataGrid-columnHeaderTitleContainer': {
       outline: 'none',
     },
-    '& .MuiDataGrid-virtualScrollerRenderZone :hover': {
-      // backgroundColor: "transparent"
-      // backgroundColor: "#D8F2DB"
-    }
   }
 };
 
