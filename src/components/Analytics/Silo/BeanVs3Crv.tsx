@@ -19,6 +19,8 @@ import { toTokenUnitsBN } from '~/util';
 import useTimeTabState from '~/hooks/app/useTimeTabState';
 import SeasonPlotMulti from '~/components/Common/Charts/SeasonPlotMulti';
 import { ERC20Token } from '~/classes/Token';
+import { ChartMultiStyles } from '~/components/Common/Charts/MultiStackedAreaChart';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const assets = {
   bean: BEAN[1],
@@ -27,6 +29,11 @@ const assets = {
   urBean3Crv: UNRIPE_BEAN_CRV3[1],
 };
 const account = BEANSTALK_ADDRESSES[1];
+
+const stylesConfig: ChartMultiStyles = {
+  bean: { stroke: BeanstalkPalette.lightGreen, fillPrimary: BeanstalkPalette.mediumGreen },
+  bean3Crv: { stroke: BeanstalkPalette.lightBlue, fillPrimary: BeanstalkPalette.skyBlue }
+};
 
 const getValue = (asset: ERC20Token) => {
   const fn = (season: SnapshotData<SeasonalDepositedSiloAssetQuery>) =>
@@ -39,18 +46,8 @@ const BeanVs3Crv: React.FC<{}> = () => {
   const timeTabState = useTimeTabState();
   const queryConfig = useMemo(
     () => ({
-      bean: {
-        variables: {
-          season_gt: 6073,
-          siloAsset: `${account.toLowerCase()}-${assets.bean.address}`,
-        },
-      },
-      bean3Crv: {
-        variables: {
-          season_gt: 6073,
-          siloAsset: `${account.toLowerCase()}-${assets.bean3Crv.address}`,
-        },
-      },
+      bean: { variables: { season_gt: 6073, siloAsset: `${account.toLowerCase()}-${assets.bean.address}` } },
+      bean3Crv: { variables: { season_gt: 6073, siloAsset: `${account.toLowerCase()}-${assets.bean3Crv.address}` } },
     }),
     []
   );
@@ -64,12 +61,9 @@ const BeanVs3Crv: React.FC<{}> = () => {
     timeTabState[0][1],
     queryConfig.bean3Crv
   );
-
-  const mergeProps = useMergeSeasonsQueries(
-    [
-      { query: beanQuery, getValue: getValue(assets.bean), key: 'bean' },
-      { query: bean3CrvQuery, getValue: getValue(assets.bean3Crv), key: 'bean3Crv' },
-    ],
+  const mergeProps = useMergeSeasonsQueries([
+    { query: beanQuery, getValue: getValue(assets.bean), key: 'bean' },
+    { query: bean3CrvQuery, getValue: getValue(assets.bean3Crv), key: 'bean3Crv' }],
     true
   );
 
@@ -77,6 +71,7 @@ const BeanVs3Crv: React.FC<{}> = () => {
     <Card>
       <SeasonPlotMulti
         {...mergeProps}
+        
         // StatProps={{
         //   title: 'Deposited Bean vs Bean3Crv',
         // }}

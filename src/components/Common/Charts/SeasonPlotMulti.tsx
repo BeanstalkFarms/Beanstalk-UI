@@ -1,5 +1,5 @@
 import { Box, CircularProgress, Stack, Typography } from '@mui/material';
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { TimeTabStateParams } from '~/hooks/app/useTimeTabState';
 import { useMergeSeasonsQueries } from '~/hooks/beanstalk/useMergeSeasonsQueries';
 import { SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
@@ -7,25 +7,21 @@ import { SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
 import { secondsToDate } from '~/util';
 import Row from '../Row';
 import Stat, { StatProps } from '../Stat';
-import { LineChartProps } from './LineChart';
-import { SeasonPlotBaseProps } from './SeasonPlot';
-import MultiStackedAreaChart from './MultiStackedAreaChart';
+import { defaultValueFormatter, SeasonPlotBaseProps } from './SeasonPlot';
+import MultiStackedAreaChart, { ChartMultiProps } from './MultiStackedAreaChart';
 import TimeTabs from './TimeTabs';
 import { BaseDataPoint } from './ChartPropProvider';
 
-type PlotStatProps =
-  | (Omit<StatProps, 'amount' | 'subtitle'> & {
-      formatStat: (value: number) => string | JSX.Element;
-    })
-  | { formatStat: never };
-
-type SeasonPlotMultiBaseProps = Omit<SeasonPlotBaseProps, 'document'> &
-  ReturnType<typeof useMergeSeasonsQueries> & {
-    formatValue?: (value: number) => string | JSX.Element;
-    timeTabState: TimeTabStateParams;
-    StatProps?: PlotStatProps;
-    LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP'>;
-  };
+type SeasonPlotMultiBaseProps<T extends BaseDataPoint> = (
+  Omit<SeasonPlotBaseProps, 'document'> 
+  & ReturnType<typeof useMergeSeasonsQueries> 
+  & {
+    formatStat?: (value: number) => string | JSX.Element;
+    StatProps?: Omit<StatProps, 'amount' | 'subtitle'>; 
+  }
+  & { timeTabState: TimeTabStateParams }
+  & { ChartProps?: ChartMultiProps<T> }
+);
 
 const useMaxSeasonsWithRange = (range: SeasonRange) =>
   useMemo(() => {
@@ -45,19 +41,22 @@ const useMaxSeasonsWithRange = (range: SeasonRange) =>
   }, [range]);
 
 export default function SeasonPlotMulti<T extends BaseDataPoint>({
-  data,
+  // use mergeSeasonsQueries
+  data: _data,
   loading,
   error,
   keys,
+  // season plot base props
   defaultValue: _defaultValue,
   defaultSeason: _defaultSeason,
-  formatValue,
   height = '175px',
-  StatProps: statProps, // renamed to prevent type collision
-  LineChartProps: lineChartProps, // renamed to prevent type collision,
   stackedArea,
+  // stat props
+  formatStat = defaultValueFormatter,
+  StatProps: statProps, // renamed to prevent type collision
+  ChartProps: chartProps,
   timeTabState,
-}: SeasonPlotMultiBaseProps) {
+}: SeasonPlotMultiBaseProps<T>) {
   /// Display values
   const [displayValue, setDisplayValue] = useState<number | undefined>(
     undefined
@@ -66,14 +65,17 @@ export default function SeasonPlotMulti<T extends BaseDataPoint>({
     undefined
   );
   const maxSeasons = useMaxSeasonsWithRange(timeTabState[0][1]);
+
   const series = useMemo(() => {
+    const data = _data && _data.length ? _data[0] : undefined;
+
     console.debug(
       `[SeasonPlot] Building series with ${data?.length || 0} data points`,
       data
     );
     const points: T[] = [];
-    if (!data || !data.length) return points;
-
+    if (!data || !data.length) return [points];
+    
     const currSeason = data[data.length - 1].season;
     const minSeason =
       currSeason && maxSeasons ? currSeason - maxSeasons : undefined;
@@ -120,8 +122,13 @@ export default function SeasonPlotMulti<T extends BaseDataPoint>({
         date: secondsToDate(season.timestamp),
       });
     }
-    return points;
-  }, [data, maxSeasons]);
+    return [points];
+  }, [_data, maxSeasons]);
+
+  const handleCursor = useCallback((dps?: T) => {
+    setDisplaySeason(dps ? dps.season : undefined);
+    setDisplayValue(dps ? dps.value : undefined);
+  }, []);
 
   /// If one of the defaults is missing, use the last data point.
   const defaultValue = _defaultValue || 0;
@@ -144,7 +151,7 @@ export default function SeasonPlotMulti<T extends BaseDataPoint>({
                   thickness={5}
                 />
               ) : (
-                statProps.formatStat(displayValue ?? defaultValue)
+                formatStat(displayValue ?? defaultValue)
               )
             }
             subtitle={`Season ${(displaySeason !== undefined
@@ -177,7 +184,8 @@ export default function SeasonPlotMulti<T extends BaseDataPoint>({
           <MultiStackedAreaChart
             series={seriesInput}
             keys={keys}
-            {...lineChartProps}
+            onCursor={handleCursor}
+            // {...lineChartProps}
           />
         )}
       </Box>

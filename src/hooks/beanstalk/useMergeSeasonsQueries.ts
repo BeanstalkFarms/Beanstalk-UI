@@ -30,14 +30,82 @@ export type MergeSeasonsQueryProps<T extends MinimumViableSnapshotQuery> = {
  */
 type InterpolateCache = { lns: number; nns: number; lnv: number; nnv: number  };
 
+const interpolateIsStackedArea = (_data: MergedSeasonsQueryData, keys: string[]) => {
+  const data = { ..._data };
+  const arrData = Object.values(data);
+
+  // sort seasons in ascending order
+  if (!arrData || !arrData.length) return [];
+  const sorted = arrData.sort((a, b) => a.season - b.season);
+  const [firstSeason, lastSeason] = [
+    sorted[0].season,
+    sorted[sorted.length - 1].season
+  ] as [number, number];
+
+  const getNextNonNullValueWithSeason = (startSeason: number, key: string) => {
+    let i = startSeason + 1;
+    let mayNull = data[i];
+    while (!mayNull || !(key in mayNull)) {
+      i += 1;
+      mayNull = data[i];
+    }
+    return [i, mayNull[key]];
+  };
+
+  const _interpolate = ({ nnv, lnv, nns, lns }: Required<InterpolateCache>, season: number) => {
+    const m = (nnv - lnv) / (nns - lns);
+    const cObj = _data[season];
+    const mTimestamp = (parseFloat(data[nns].timestamp) - parseFloat(data[lns].timestamp)) / (nns - lns);
+    const value = (m * (season - lns) + lnv);
+    const timestamp = cObj && ('timestamp' in cObj)
+      ? cObj.timestamp 
+      : (mTimestamp * (season - lns) + parseFloat(data[lns].timestamp)).toFixed();
+
+    return { value, timestamp };
+  };
+
+  const addData = (season: number, value: number, timestamp: string, key: string) => {
+    const sData = data[season];
+    if (sData) { data[season] = { ...sData, timestamp, [key]: value }; } 
+    else { data[season] = { season, timestamp, [key]: value }; }
+  };
+
+  keys.forEach((k) => {
+    let cache: InterpolateCache = { lns: 0, nns: 0, lnv: 0, nnv: 0 };
+    for (let season = firstSeason; season <= lastSeason; season += 1) {
+      const seasonData = data[season];
+      // if season value of data[season][key] exists, update cache & continue
+      if (seasonData && k in seasonData) {
+        cache = { ...cache, lns: season, lnv: seasonData[k] };
+        continue;
+      }
+      
+      if (cache.lns && cache.lnv) {
+        if (cache.nns && cache.nns < season) {
+          const { value, timestamp } = _interpolate(cache, season);
+          addData(season, value, timestamp, k);
+        } else {
+          const [nns, nnv] = getNextNonNullValueWithSeason(cache.lns, k);
+          cache = { ...cache, nnv, nns };
+          const { value, timestamp } = _interpolate(cache, season);
+          addData(season, value, timestamp, k);
+        }
+      }
+    }
+  }, []);
+
+  return Object.values(data);
+};
+
 export const useMergeSeasonsQueries = <T extends MinimumViableSnapshotQuery>(
   params: MergeSeasonsQueryProps<T>[],
-  isStackedArea?: boolean
+  isStackedArea?: boolean,
 ): {
-  data: SnapshotData<T>[] | undefined;
+  data: SnapshotData<T>[][] | undefined;
   error: ApolloError[] | undefined;
   keys: string[];
   loading: boolean;
+  isStackedArea: boolean;
 } => {
   const loading = !!(params.find((p) => p.query.loading));
 
@@ -48,76 +116,9 @@ export const useMergeSeasonsQueries = <T extends MinimumViableSnapshotQuery>(
     return errs.length ? errs : undefined;
   }, [params]);
 
-  // assumes that any data for any given index is not null
-  const interpolate = useCallback((_data: MergedSeasonsQueryData, keys: string[]) => {
-    const data = { ..._data };
-    const arrData = Object.values(data);
-
-    // sort seasons in ascending order
-    if (!arrData || !arrData.length) return [];
-    const sorted = arrData.sort((a, b) => a.season - b.season);
-    const [firstSeason, lastSeason] = [
-      sorted[0].season,
-      sorted[sorted.length - 1].season
-    ] as [number, number];
-
-    const getNextNonNullValueWithSeason = (startSeason: number, key: string) => {
-      let i = startSeason + 1;
-      let mayNull = data[i];
-      while (!mayNull || !(key in mayNull)) {
-        i += 1;
-        mayNull = data[i];
-      }
-      return [i, mayNull[key]];
-    };
-
-    const _interpolate = ({ nnv, lnv, nns, lns }: Required<InterpolateCache>, season: number) => {
-      const m = (nnv - lnv) / (nns - lns);
-      const cObj = _data[season];
-      const mTimestamp = (parseFloat(data[nns].timestamp) - parseFloat(data[lns].timestamp)) / (nns - lns);
-      const value = (m * (season - lns) + lnv);
-      const timestamp = cObj && ('timestamp' in cObj)
-        ? cObj.timestamp 
-        : (mTimestamp * (season - lns) + parseFloat(data[lns].timestamp)).toFixed();
-
-      return { value, timestamp };
-    };
-
-    const addData = (season: number, value: number, timestamp: string, key: string) => {
-      const sData = data[season];
-      if (sData) { data[season] = { ...sData, timestamp, [key]: value }; } 
-      else { data[season] = { season, timestamp, [key]: value }; }
-    };
-
-    keys.forEach((k) => {
-      let cache: InterpolateCache = { lns: 0, nns: 0, lnv: 0, nnv: 0 };
-      for (let season = firstSeason; season <= lastSeason; season += 1) {
-        const seasonData = data[season];
-        // if season value of data[season][key] exists, update cache & continue
-        if (seasonData && k in seasonData) {
-          cache = { ...cache, lns: season, lnv: seasonData[k] };
-          continue;
-        }
-        
-        if (cache.lns && cache.lnv) {
-          if (cache.nns && cache.nns < season) {
-            const { value, timestamp } = _interpolate(cache, season);
-            addData(season, value, timestamp, k);
-          } else {
-            const [nns, nnv] = getNextNonNullValueWithSeason(cache.lns, k);
-            cache = { ...cache, nnv, nns };
-            const { value, timestamp } = _interpolate(cache, season);
-            addData(season, value, timestamp, k);
-          }
-        }
-      }
-    }, []);
-
-    return Object.values(data);
-  }, []);
-
   const [merged, keys] = useMemo(() => {
-    if (!params.length || loading || error) return [[], []];
+    const base: SnapshotData<T>[][] = [[]];
+    if (!params.length || loading || error) return [base, []];
     console.debug(
       `[useMergeSeasonsQueries] merging data from ${params.length} queries`,
       params.map((p) => p.query.observable.queryName)
@@ -148,8 +149,14 @@ export const useMergeSeasonsQueries = <T extends MinimumViableSnapshotQuery>(
       });
     });
 
-    return [interpolate(queryData, _keys), _keys];
-  }, [interpolate, error, loading, params]);
+    return [[interpolateIsStackedArea(queryData, _keys)], _keys];
+  }, [error, loading, params]);
 
-  return { data: merged, error, loading, keys };
+  console.log('merged: ', merged);
+
+  const mergeSeriesData = useCallback((_params: MergeSeasonsQueryProps<T>[]) => {
+    
+  }, []);
+
+  return { data: merged, error, loading, keys, isStackedArea: !!isStackedArea };
 };

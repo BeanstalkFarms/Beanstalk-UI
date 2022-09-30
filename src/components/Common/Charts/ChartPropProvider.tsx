@@ -6,8 +6,10 @@ import { scaleLinear, scaleTime } from '@visx/scale';
 import { ScaleLinear, ScaleTime } from 'd3-scale';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
+import { DataPoint } from './LineChart';
+import { ChartMultiStyles } from './MultiStackedAreaChart';
 
-// commonly used params
+// shared parameters across stacked area and line charts
 const margin = {
   top: 10,
   bottom: 9,
@@ -21,6 +23,24 @@ const labelColor = '#340098';
 const tickLabelColor = BeanstalkPalette.lightGrey;
 const axisColor = BeanstalkPalette.lightGrey;
 const yAxisWidth = 57;
+
+// default strokes
+const defaultChartStyles: ChartMultiStyles = {
+  'chart-green': {
+    stroke: BeanstalkPalette.logoGreen,
+    fillPrimary: BeanstalkPalette.lightGreen,
+  },
+  'chart-blue': {
+    stroke: BeanstalkPalette.darkBlue,
+    fillPrimary: BeanstalkPalette.lightBlue,
+  },
+  'chart-grey': {
+    stroke: BeanstalkPalette.grey,
+    fillPrimary: BeanstalkPalette.lightGrey,
+    strokeWidth: 0.5
+  }
+};
+
 const xTickLabelProps = () =>
   ({
     fill: tickLabelColor,
@@ -37,9 +57,20 @@ const yTickLabelProps = () =>
     textAnchor: 'end',
   } as const);
 
-export type BaseDataPoint = { [key: string]: number } & {
-  season: number;
-  date: Date;
+// types
+export type BaseDataPoint = { [key: string]: number } & Omit<DataPoint, 'value'>
+type ChartSharedValuesProps = {
+  strokeBuffer: number;
+  margin: { top: number; bottom: number; left: number; right: number };
+  axisColor: string;
+  axisHeight: number;
+  backgroundColor: string;
+  labelColor: string;
+  tickLabelColor: string;
+  yAxisWidth: number;
+  defaultChartStyles: ChartMultiStyles;
+  yTickLabelProps: typeof yTickLabelProps;
+  xTickLabelProps: typeof xTickLabelProps;
 };
 type GenerateScalesParams<T extends BaseDataPoint> = {
   stackedArea: (seriesData: T[], height: number, width: number, isTWAP?: boolean) => {
@@ -62,26 +93,17 @@ type ChartAccessorProps<T extends BaseDataPoint> = {
   getYMax: (d: T) => number;
   bisectSeason: (array: ArrayLike<T>, x: number, lo?: number | undefined, hi?: number | undefined) => number;
 };
-type ChartSharedValuesProps = {
-  strokeBuffer: number;
-  margin: { top: number; bottom: number; left: number; right: number };
-  axisColor: string;
-  axisHeight: number;
-  backgroundColor: string;
-  labelColor: string;
-  tickLabelColor: string;
-  yAxisWidth: number;
-  yTickLabelProps: typeof yTickLabelProps;
-  xTickLabelProps: typeof xTickLabelProps;
-};
+
 export type ProvidedChartProps<T extends BaseDataPoint> = (
-  { generateScales: GenerateScalesParams<T>; } 
+  ChartSharedValuesProps
+  & { generateScales: GenerateScalesParams<T> } 
   & { accessors: ChartAccessorProps<T> } 
-  & ChartSharedValuesProps
 );
+
 type ChartPropProviderProps<T extends BaseDataPoint> = {
   children: (props: ProvidedChartProps<T>) => React.ReactNode;
 };
+
 export default function ChartPropProvider<T extends BaseDataPoint>({
   children,
 }: ChartPropProviderProps<T>) {
@@ -95,6 +117,7 @@ export default function ChartPropProvider<T extends BaseDataPoint>({
       axisColor,
       tickLabelColor,
       yAxisWidth,
+      defaultChartStyles,
       xTickLabelProps,
       yTickLabelProps,
     }),
@@ -106,18 +129,12 @@ export default function ChartPropProvider<T extends BaseDataPoint>({
     const getX = (d: T) => d.season;
     const getY = (d: T) => d.value;
     const getD = (d: T) => d.date;
-    const getY0 = (_d: SeriesPoint<T>) => {
-      const d0 = _d[0];
-      return !d0 || Number.isNaN(d0) || !Number.isFinite(d0) ? 0 : d0;
-    };
-    const getY1 = (_d: SeriesPoint<T>) => {
-      const d1 = _d[1];
-      return !d1 || Number.isNaN(d1) || !Number.isFinite(d1) ? 0 : d1;
-    };
-    const baseDataPoint = {
-      season: true,
-      date: true,
-      timestamp: true,
+    const getY0 = (d: SeriesPoint<T>) => (!d[0] || Number.isNaN(d[0]) || !Number.isFinite(d[0]) ? 0 : d[0]);
+    const getY1 = (d: SeriesPoint<T>) => (!d[1] || Number.isNaN(d[1]) || !Number.isFinite(d[1]) ? 0 : d[1]);
+    const baseDataPoint = { 
+      season: true, 
+      date: true, 
+      timestamp: true 
     } as const;
     const getYMin = (d: T) =>
       Object.entries(d).reduce((acc, [k, v]) => {
@@ -131,7 +148,6 @@ export default function ChartPropProvider<T extends BaseDataPoint>({
         acc += v as number;
         return acc;
       }, 0);
-
     return {
       getX,
       getY,
@@ -145,7 +161,7 @@ export default function ChartPropProvider<T extends BaseDataPoint>({
   }, []);
 
   const generateStackedAreaScale = useCallback(
-    (seriesData: T[], _height: number, _width: number, isTWAP?: boolean) => {
+    (seriesData: T[], height: number, width: number, isTWAP?: boolean) => {
       const { getYMin, getYMax, getX } = accessors;
       const xScale = scaleLinear<number>({
         domain: extent(seriesData, getX) as [number, number],
@@ -170,16 +186,15 @@ export default function ChartPropProvider<T extends BaseDataPoint>({
         });
       }
 
-      xScale.range([0, _width - yAxisWidth]);
+      xScale.range([0, width - yAxisWidth]);
       yScale.range([
-        _height - axisHeight - margin.bottom - strokeBuffer, // bottom edge
+        height - axisHeight - margin.bottom - strokeBuffer, // bottom edge
         margin.top,
       ]);
       return { xScale, yScale };
     },
     [accessors]
   );
-
   const generateSeriesScales = useCallback(
     (seriesData: T[][], height: number, width: number, isTWAP?: boolean) => {
       const { getD, getX, getY } = accessors;
@@ -230,7 +245,6 @@ export default function ChartPropProvider<T extends BaseDataPoint>({
     },
     [accessors]
   );
-
   const generateScales = useMemo(
     () => ({
       stackedArea: generateStackedAreaScale,
@@ -246,7 +260,6 @@ export default function ChartPropProvider<T extends BaseDataPoint>({
         accessors,
         generateScales,
       })}
-      <div />
     </>
   );
 }
