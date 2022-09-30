@@ -5,6 +5,7 @@ import {
   Container, Link,
   Stack, Typography,
 } from '@mui/material';
+import { DateTime } from 'luxon';
 import PageHeaderSecondary from '~/components/Common/PageHeaderSecondary';
 import useTabs from '~/hooks/display/useTabs';
 import useMarketplaceEventData, { QUERY_AMOUNT } from '~/hooks/beanstalk/useMarketplaceEventData';
@@ -33,6 +34,24 @@ const MarketActivityPage: React.FC = () => {
       setScrollPosition(undefined);
     }
   }, [data, scrollPosition]);
+
+  console.log('MARKET EVENT   ', DateTime.fromMillis(1664388071 * 1000 as number).toLocaleString({
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'PST'
+  }));
+
+  console.log('LISTING CANCEL', DateTime.fromMillis(1662226017 * 1000 as number).toLocaleString({
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'PST'
+  }));
 
   return (
     <Container maxWidth="lg">

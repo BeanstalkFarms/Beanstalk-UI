@@ -67,14 +67,15 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
     }
   }
 
-  podOrders(where: {
-    # FIXME: could also be status_not: "active"
-    status_in: [
-      ACTIVE,
-      CANCELLED,
-      CANCELLED_PARTIAL,
-      FILLED
-    ], # no partial filled orders
+  podOrders(
+    where: {
+      # FIXME: could also be status_not: "active"
+      status_in: [
+        ACTIVE,
+        CANCELLED,
+        CANCELLED_PARTIAL,
+        FILLED
+      ], # no partial filled orders
   }, orderBy: updatedAt, orderDirection: desc) {
     id
     status
@@ -94,7 +95,7 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
         CANCELLED_PARTIAL,
         FILLED,
         FILLED_PARTIAL,
-        ACTIVE,
+#        ACTIVE,
       ]
   }, orderBy: updatedAt, orderDirection: desc) {
     id
