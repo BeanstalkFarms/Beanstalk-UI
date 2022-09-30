@@ -24,7 +24,7 @@ const LinkButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to,
       // Switch to green when selected.
       borderBottom: 3,
       borderColor: 'transparent',
-      borderBottomColor: match ? BeanstalkPalette.black : 'transparent',
+      borderBottomColor: match ? BeanstalkPalette.theme.fall.brown : 'transparent',
       // Pull the button down slightly so that it overlaps the Nav's
       // bottom blue border.
       mb: '-1.5px',
@@ -37,7 +37,7 @@ const LinkButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to,
         to={to}
         size="small"
         variant="text"
-        color={match ? 'dark' : 'dark'}
+        color={match ? 'primary' : 'dark'}
         sx={{
           '&:hover > h6': {
             textDecorationThickness: '2px',

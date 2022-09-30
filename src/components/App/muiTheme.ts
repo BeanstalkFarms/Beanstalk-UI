@@ -119,6 +119,8 @@ export const BeanstalkPalette = {
       extraLight: '#FFF9E0',
       light: '#FBE39D',
       primary: '#FFDE7B',
+      brown: '#B97D46',
+      lightBrown: '#E5D7C8'
     }
   }
 };
@@ -180,7 +182,7 @@ let muiTheme = createTheme({
    */
   palette: {
     primary: {
-      main: BeanstalkPalette.logoGreen,
+      main: BeanstalkPalette.theme.fall.brown,
       light: BeanstalkPalette.lightGreen,
       contrastText: '#ffffff',
     },
