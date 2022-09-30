@@ -7,12 +7,12 @@ import {
   UNRIPE_BEAN,
   UNRIPE_BEAN_CRV3,
 } from '~/constants/tokens';
-import earnBeansImg from '~/img/beanstalk/education/earnBeansImg.png';
-import depositBeanImg from '~/img/beanstalk/education/depositBeanImg.svg';
-import depositBean3crvImg from '~/img/beanstalk/education/depositBean3crvImg.svg';
-import depositUrBean3crvImg from '~/img/beanstalk/education/depositUrBean3crvImg.svg';
-import depositUrBeanImg from '~/img/beanstalk/education/depositUrBeanImg.svg';
-import earnStalkAndSeedsImg from '~/img/beanstalk/education/earnStalkAndSeedsImg.svg';
+import earnBeansImg from '~/img/beanstalk/silo/edu/earnBeansImg.png';
+import depositBeanImg from '~/img/beanstalk/silo/edu/depositBeanImg.svg';
+import depositBean3crvImg from '~/img/beanstalk/silo/edu/depositBean3crvImg.svg';
+import depositUrBean3crvImg from '~/img/beanstalk/silo/edu/depositUrBean3crvImg.svg';
+import depositUrBeanImg from '~/img/beanstalk/silo/edu/depositUrBeanImg.svg';
+import earnStalkAndSeedsImg from '~/img/beanstalk/silo/edu/earnStalkAndSeedsImg.svg';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import Carousel from '~/components/Common/Carousel/Carousel';
 import EmbeddedCard from '~/components/Common/EmbeddedCard';
