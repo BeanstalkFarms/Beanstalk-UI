@@ -32,7 +32,7 @@ const MoreDropdown: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
     </MenuList>
   );
 
-  // Connected
+  // Connected 
   return (
     <>
       {/* Wallet Button */}

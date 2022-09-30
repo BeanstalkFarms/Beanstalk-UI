@@ -9,6 +9,7 @@ import {
   useMatch,
   useResolvedPath,
 } from 'react-router-dom';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 /**
  * 
@@ -23,7 +24,7 @@ const LinkButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to,
       // Switch to green when selected.
       borderBottom: 3,
       borderColor: 'transparent',
-      borderBottomColor: match ? '#67b761' : 'transparent',
+      borderBottomColor: match ? BeanstalkPalette.black : 'transparent',
       // Pull the button down slightly so that it overlaps the Nav's
       // bottom blue border.
       mb: '-1.5px',
@@ -36,7 +37,7 @@ const LinkButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to,
         to={to}
         size="small"
         variant="text"
-        color={match ? 'primary' : 'dark'}
+        color={match ? 'dark' : 'dark'}
         sx={{
           '&:hover > h6': {
             textDecorationThickness: '2px',

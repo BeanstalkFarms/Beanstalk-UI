@@ -136,7 +136,7 @@ const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...
           </Typography>
         </Row>
       </MenuItem>
-      <Divider sx={{ mx: 1 }} />
+      <Divider sx={{ mx: 1  }} />
       <Box sx={{ px: 1, pb: 0.25 }}>
         <Button
           fullWidth

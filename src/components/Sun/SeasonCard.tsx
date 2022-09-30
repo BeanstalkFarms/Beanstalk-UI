@@ -58,7 +58,7 @@ const SeasonCard: React.FC<SeasonCardProps> = ({
       <Box
         sx={{
           border: 1,
-          borderColor: BeanstalkPalette.blue,
+          borderColor: BeanstalkPalette.lightestGrey,
           p: 0.75,
           borderRadius: '8px',
           animation: isNew ? 'pulse 1s ease-in-out' : undefined,

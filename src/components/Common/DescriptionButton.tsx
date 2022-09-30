@@ -10,7 +10,7 @@ import {
   TypographyProps
 } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { FontSize } from '~/components/App/muiTheme';
+import { BeanstalkPalette, FontSize } from '~/components/App/muiTheme';
 import Row from '~/components/Common/Row';
 
 const GAP = 2;
@@ -65,9 +65,10 @@ const DescriptionButton : React.FC<ButtonProps & {
       // changing the internal layout.
       display: 'block',
       color: 'inherit',
-      backgroundColor: isSelected ? '#F6FAFE' : null,
+      borderColor: isSelected ? BeanstalkPalette.theme.fall.primary : BeanstalkPalette.lightestGrey,
+      backgroundColor: isSelected ? BeanstalkPalette.theme.fall.extraLight : null,
       '&:hover': {
-        backgroundColor: isSelected ? '#F6FAFE' : null,
+        backgroundColor: isSelected ? BeanstalkPalette.theme.fall.extraLight : null,
       },
       height: 'auto'
     }}
