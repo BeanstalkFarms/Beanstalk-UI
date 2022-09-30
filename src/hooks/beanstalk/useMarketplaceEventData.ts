@@ -24,6 +24,7 @@ export type MarketEvent = {
 }
 
 export const QUERY_AMOUNT = 50;
+export const MAX_TIMESTAMP = '9999999999999'; // 166 455 351 3803
 
 /**
  * Default: queries first 15 events whose timestamp
@@ -40,8 +41,12 @@ const useMarketplaceEventData = () => {
     nextFetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
     variables: {
-      first: QUERY_AMOUNT,
-      skip: 0,
+      events_first: QUERY_AMOUNT,
+      listings_first: QUERY_AMOUNT,
+      orders_first: QUERY_AMOUNT,
+      events_timestamp_lt: MAX_TIMESTAMP,
+      listings_updatedAt_lt: MAX_TIMESTAMP,
+      orders_updatedAt_lt: MAX_TIMESTAMP,
     },
   });
 
@@ -64,15 +69,16 @@ const useMarketplaceEventData = () => {
   }, [rawEvents?.podListings]);
 
   const fetchMoreData = () => {
-    const numData = rawEvents?.marketplaceEvents.length;
-    if (numData) {
-      fetchMore({
-        variables: {
-          first: QUERY_AMOUNT,
-          skip: numData
-        }
-      });
-    }
+    const events_timestamp_lt   = rawEvents?.marketplaceEvents[rawEvents?.marketplaceEvents.length - 1].timestamp;
+    const listings_updatedAt_lt = rawEvents?.podListings[rawEvents?.podListings.length - 1].updatedAt;
+    const orders_updatedAt_lt   = rawEvents?.podOrders[rawEvents?.podOrders.length - 1].updatedAt;
+    fetchMore({
+      variables: {
+        events_timestamp_lt,
+        listings_updatedAt_lt,
+        orders_updatedAt_lt,
+      }
+    });
   };
 
   // Temp

@@ -1,10 +1,19 @@
-query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
+query MarketplaceEvents(
+  $events_first: Int = 1000,
+  $events_timestamp_lt: BigInt!,
+  $orders_first: Int = 1000,
+  $orders_updatedAt_lt: BigInt!,
+  $listings_first: Int = 1000,
+  $listings_updatedAt_lt: BigInt!
+) {
   marketplaceEvents(
     orderBy: timestamp,
     orderDirection: desc,
-    first: $first,
-    skip: $skip,
-    ) {
+    first: $events_first,
+    where: { 
+      timestamp_lt: $events_timestamp_lt
+    }
+  ) {
     hash
     timestamp
     # --------
@@ -12,7 +21,7 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
     # --------
     ... on PodListingCancelled {
       id
-      index # of the listing that was cancelled
+      index # of the Listing that was cancelled
       account
       historyID
       # => amount
@@ -30,7 +39,7 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
       from
       to
       amount
-      index # index of Listing that sold
+      index # of Listing that sold
       start
       historyID
       # => pricePerPod
@@ -58,7 +67,6 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
       from
       to
       historyID
-      # orderID
       amount
       index # index of plot was sold to the Order
       start #
@@ -68,15 +76,20 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
   }
 
   podOrders(
+    first: $orders_first,
     where: {
-      # FIXME: could also be status_not: "active"
+      updatedAt_lt: $orders_updatedAt_lt
       status_in: [
         ACTIVE,
         CANCELLED,
         CANCELLED_PARTIAL,
         FILLED
-      ], # no partial filled orders
-  }, orderBy: updatedAt, orderDirection: desc) {
+        # there is no FILLED_PARTIAL for orders
+      ], 
+    }, 
+    orderBy: updatedAt, 
+    orderDirection: desc
+  ) {
     id
     status
     # ---
@@ -85,19 +98,24 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
     pricePerPod
     historyID
     # ---
+    updatedAt
   }
 
   podListings(
+    first: $listings_first,
     where: {
-    # FIXME: could also be status_not: "active"
+      updatedAt_lt: $listings_updatedAt_lt,
       status_in: [
+        ACTIVE,
         CANCELLED,
         CANCELLED_PARTIAL,
         FILLED,
         FILLED_PARTIAL,
-#        ACTIVE,
       ]
-  }, orderBy: updatedAt, orderDirection: desc) {
+    },
+    orderBy: updatedAt,
+    orderDirection: desc
+  ) {
     id
     status
     # ---
@@ -107,5 +125,6 @@ query MarketplaceEvents($first: Int = 1000, $skip: Int = 0) {
     originalIndex
     historyID
     # ---
+    updatedAt
   }
 }
