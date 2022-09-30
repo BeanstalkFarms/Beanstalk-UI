@@ -8,13 +8,10 @@ import { secondsToDate } from '~/util';
 import Row from '../Row';
 import Stat, { StatProps } from '../Stat';
 import { LineChartProps } from './LineChart';
-import { SeasonDataPoint, SeasonPlotBaseProps } from './SeasonPlot';
-import StackedAreaChart2, { BaseMultiDataPoint } from './StackedAreaChart2';
+import { SeasonPlotBaseProps } from './SeasonPlot';
+import MultiStackedAreaChart from './MultiStackedAreaChart';
 import TimeTabs from './TimeTabs';
-
-type MultiDataPoint = Required<Omit<SeasonDataPoint, 'value'>>;
-
-export type SeasonMultiDataPoint<T extends MultiDataPoint> = T;
+import { BaseDataPoint } from './ChartPropProvider';
 
 type PlotStatProps =
   | (Omit<StatProps, 'amount' | 'subtitle'> & {
@@ -47,7 +44,7 @@ const useMaxSeasonsWithRange = (range: SeasonRange) =>
     }
   }, [range]);
 
-export default function SeasonPlotMulti<T extends BaseMultiDataPoint>({
+export default function SeasonPlotMulti<T extends BaseDataPoint>({
   data,
   loading,
   error,
@@ -68,9 +65,7 @@ export default function SeasonPlotMulti<T extends BaseMultiDataPoint>({
   const [displaySeason, setDisplaySeason] = useState<number | undefined>(
     undefined
   );
-
   const maxSeasons = useMaxSeasonsWithRange(timeTabState[0][1]);
-
   const series = useMemo(() => {
     console.debug(
       `[SeasonPlot] Building series with ${data?.length || 0} data points`,
@@ -179,7 +174,7 @@ export default function SeasonPlotMulti<T extends BaseMultiDataPoint>({
             )}
           </Stack>
         ) : (
-          <StackedAreaChart2
+          <MultiStackedAreaChart
             series={seriesInput}
             keys={keys}
             {...lineChartProps}

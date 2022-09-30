@@ -4,7 +4,12 @@ import useSeasonsQuery, {
   SnapshotData,
 } from '~/hooks/beanstalk/useSeasonsQuery';
 import { BEANSTALK_ADDRESSES } from '~/constants';
-import { BEAN, BEAN_CRV3_LP, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
+import {
+  BEAN,
+  BEAN_CRV3_LP,
+  UNRIPE_BEAN,
+  UNRIPE_BEAN_CRV3,
+} from '~/constants/tokens';
 import {
   SeasonalDepositedSiloAssetDocument,
   SeasonalDepositedSiloAssetQuery,
@@ -32,7 +37,6 @@ const getValue = (asset: ERC20Token) => {
 const BeanVs3Crv: React.FC<{}> = () => {
   // refactor me
   const timeTabState = useTimeTabState();
-
   const queryConfig = useMemo(
     () => ({
       bean: {
@@ -61,14 +65,13 @@ const BeanVs3Crv: React.FC<{}> = () => {
     queryConfig.bean3Crv
   );
 
-  const mergeProps = useMergeSeasonsQueries([
-    { query: beanQuery, getValue: getValue(assets.bean), key: 'bean' },
-    {
-      query: bean3CrvQuery,
-      getValue: getValue(assets.bean3Crv),
-      key: 'bean3Crv',
-    },
-  ]);
+  const mergeProps = useMergeSeasonsQueries(
+    [
+      { query: beanQuery, getValue: getValue(assets.bean), key: 'bean' },
+      { query: bean3CrvQuery, getValue: getValue(assets.bean3Crv), key: 'bean3Crv' },
+    ],
+    true
+  );
 
   return (
     <Card>

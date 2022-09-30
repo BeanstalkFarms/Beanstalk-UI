@@ -34,10 +34,10 @@ export type SeasonPlotBaseProps = {
    */
   defaultValue?: number;
   /**
-  * The season displayed when the chart isn't being hovered.
-  * If not provided, uses the `season` of the last data point if available,
-  * otherwise returns 0.
-  */
+   * The season displayed when the chart isn't being hovered.
+   * If not provided, uses the `season` of the last data point if available,
+   * otherwise returns 0.
+   */
   defaultSeason?: number;
   /**
    * Height applied to the chart range. Can be a fixed
@@ -50,22 +50,20 @@ export type SeasonPlotBaseProps = {
 
 export type SeasonPlotValueProps<T extends MinimumViableSnapshotQuery> = {
   /**
-  * Which value to display from the Season object
-  */
+   * Which value to display from the Season object
+   */
   getValue: (snapshot: T['seasons'][number]) => number;
   /**
-  * Format the value from number -> string
-  */
+   * Format the value from number -> string
+   */
   formatValue?: (value: number) => string | JSX.Element;
-}
+};
 
-type SeasonPlotFinalProps<T extends MinimumViableSnapshotQuery> = (
-  SeasonPlotBaseProps
-  & SeasonPlotValueProps<T>
-  & { queryConfig?: Partial<QueryOptions> }
-  & { StatProps: Omit<StatProps, 'amount' | 'subtitle'> }
-  & { LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP'> }
-)
+type SeasonPlotFinalProps<T extends MinimumViableSnapshotQuery> =
+  SeasonPlotBaseProps &
+    SeasonPlotValueProps<T> & { queryConfig?: Partial<QueryOptions> } & {
+      StatProps: Omit<StatProps, 'amount' | 'subtitle'>;
+    } & { LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP'> };
 
 /**
  *
@@ -110,16 +108,15 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
       data
     );
     if (data) {
-      console.log('data: ', data);
       const lastIndex = data.seasons.length - 1;
-      const points : SeasonDataPoint[] = [];
+      const points: SeasonDataPoint[] = [];
 
       if (tabState[0] === SeasonAggregation.DAY) {
         let v = 0; // value aggregator
         let i = 0; // total iterations
         let j = 0; // points averaged into this day
-        let d : Date | undefined; // current date for this avg
-        let s : number | undefined; // current season for this avg
+        let d: Date | undefined; // current date for this avg
+        let s: number | undefined; // current season for this avg
         for (let k = lastIndex; k >= 0; k -= 1) {
           const season = data.seasons[k];
           if (!season) continue; // skip empty points
@@ -129,13 +126,13 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
             s = season.season as number;
             j += 1;
           } else if (
-            i === lastIndex // last iteration
-            || j === 24 // full day of data ready
+            i === lastIndex || // last iteration
+            j === 24 // full day of data ready
           ) {
             points.push({
               season: s as number,
-              date:   d as Date,
-              value:  new BigNumber(v).div(j + 1).toNumber()
+              date: d as Date,
+              value: new BigNumber(v).div(j + 1).toNumber(),
             });
             v = 0;
             j = 0;
@@ -149,8 +146,8 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
           if (!season) continue;
           points.push({
             season: season.season as number,
-            date:   secondsToDate(season.timestamp),
-            value:  getValue(season),
+            date: secondsToDate(season.timestamp),
+            value: getValue(season),
           });
         }
       }
@@ -160,19 +157,13 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
   }, [data, tabState, getValue]);
 
   /// Handlers
-  const handleChangeTimeTab = useCallback(
-    (tabs: TimeTabState) => {
-      setTimeTab(tabs);
-    },
-    []
-  );
-  const handleCursor = useCallback(
-    (dps?: SeasonDataPoint[]) => {
-      setDisplaySeason(dps ? dps[0].season : undefined);
-      setDisplayValue(dps ? dps[0].value : undefined);
-    },
-    []
-  );
+  const handleChangeTimeTab = useCallback((tabs: TimeTabState) => {
+    setTimeTab(tabs);
+  }, []);
+  const handleCursor = useCallback((dps?: SeasonDataPoint[]) => {
+    setDisplaySeason(dps ? dps[0].season : undefined);
+    setDisplayValue(dps ? dps[0].value : undefined);
+  }, []);
 
   /// If one of the defaults is missing, use the last data point.
   let defaultValue = _defaultValue || 0;

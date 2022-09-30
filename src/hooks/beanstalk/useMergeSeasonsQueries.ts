@@ -22,10 +22,17 @@ export type MergeSeasonsQueryProps<T extends MinimumViableSnapshotQuery> = {
   key: string;
 }
 
+/**
+ * lns: last season where data[season][key] is not null
+ * nns: next season where data[season][key] is not null
+ * lnv: value of data[lns][key]
+ * nnv: value of data[lnv][key]
+ */
 type InterpolateCache = { lns: number; nns: number; lnv: number; nnv: number  };
 
 export const useMergeSeasonsQueries = <T extends MinimumViableSnapshotQuery>(
   params: MergeSeasonsQueryProps<T>[],
+  isStackedArea?: boolean
 ): {
   data: SnapshotData<T>[] | undefined;
   error: ApolloError[] | undefined;
@@ -68,9 +75,6 @@ export const useMergeSeasonsQueries = <T extends MinimumViableSnapshotQuery>(
       const m = (nnv - lnv) / (nns - lns);
       const cObj = _data[season];
       const mTimestamp = (parseFloat(data[nns].timestamp) - parseFloat(data[lns].timestamp)) / (nns - lns);
-
-      const len = nns - lns;
-
       const value = (m * (season - lns) + lnv);
       const timestamp = cObj && ('timestamp' in cObj)
         ? cObj.timestamp 
@@ -144,14 +148,8 @@ export const useMergeSeasonsQueries = <T extends MinimumViableSnapshotQuery>(
       });
     });
 
-    console.log('querydata: ', queryData);
-    const interpolated = interpolate(queryData, _keys);
-    console.log('interpolated: ', interpolated);
-
     return [interpolate(queryData, _keys), _keys];
   }, [interpolate, error, loading, params]);
-
-  // console.log('merged: ', merged);
 
   return { data: merged, error, loading, keys };
 };
