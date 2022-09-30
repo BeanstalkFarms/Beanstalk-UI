@@ -72,7 +72,7 @@ const PoolCard: React.FC<{
         height: 'auto', // FIXME
         display: 'block',
         color: '#000000',
-        borderColor: '#c7ddf0',
+        // borderColor: PAGE_BORDER_COLOR,
       }}
       {...ButtonProps}
     >

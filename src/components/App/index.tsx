@@ -46,10 +46,10 @@ import useNavHeight from '~/hooks/app/usePageDimensions';
 import useBanner from '~/hooks/app/useBanner';
 import { sgEnvKey } from '~/graph/client';
 
-import pageBackground from '~/img/theme/bg-mainnet.png';
+import pageBackground from '~/img/beanstalk/interface/bg/fall@2x.png';
 
 import './App.css';
-import { BeanstalkPalette } from './muiTheme';
+import { PAGE_BG_COLOR } from './muiTheme';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -122,7 +122,7 @@ export default function App() {
       <NewProposalsDialog />
       <Box
         sx={{
-          backgroundColor: BeanstalkPalette.lightBlue,
+          backgroundColor: PAGE_BG_COLOR,
           backgroundImage: `url(${pageBackground})`,
           backgroundAttachment: 'fixed',
           backgroundPosition: 'bottom center',

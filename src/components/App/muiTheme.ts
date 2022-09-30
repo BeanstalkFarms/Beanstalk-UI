@@ -112,7 +112,18 @@ export const BeanstalkPalette = {
   // Brown
   brown: 'rgba(121,87,57,1)',
   lightBrown: 'rgba(121,87,57,0.2)',
+  
+  // ---
+  theme: {
+    fall: {
+      light: '#FFECA9',
+      primary: '#FFDE7B',
+    }
+  }
 };
+
+export const PAGE_BG_COLOR = BeanstalkPalette.theme.fall.light;
+export const PAGE_BORDER_COLOR = BeanstalkPalette.theme.fall.primary;
 
 export const IconSize = {
   xs: 14,
@@ -291,7 +302,8 @@ let muiTheme = createTheme({
       styleOverrides: {
         root: sx({
           borderWidth: 1,
-          borderColor: 'secondary.main',
+          // borderColor: 'secondary.main',
+          borderColor: PAGE_BORDER_COLOR
         }),
       },
     },

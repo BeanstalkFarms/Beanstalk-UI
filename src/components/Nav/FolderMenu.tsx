@@ -13,6 +13,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import DropdownIcon from '~/components/Common/DropdownIcon';
 import useToggle from '~/hooks/display/useToggle';
 import useAnchor from '~/hooks/display/useAnchor';
+import { PAGE_BORDER_COLOR } from '~/components/App/muiTheme';
 
 /**
  * Show a "Folder". A folder is a button that shows a popup;
@@ -109,7 +110,7 @@ const FolderMenu: React.FC<{
           // to secondary when the Popper is open.
           borderWidth: 1,
           borderStyle: 'solid',
-          borderColor: popoverOpen ? 'secondary.main' : 'white',
+          borderColor: popoverOpen ? PAGE_BORDER_COLOR : 'white',
           // Keep this white so we can make it look like the
           // button is "expanding" into a Box when you click it.
           borderBottomColor: 'white',
@@ -145,7 +146,7 @@ const FolderMenu: React.FC<{
             borderBottomLeftRadius: _theme.shape.borderRadius,
             borderBottomRightRadius: _theme.shape.borderRadius,
             borderTopRightRadius: _theme.shape.borderRadius,
-            borderColor: 'secondary.main',
+            borderColor: PAGE_BORDER_COLOR,
             borderWidth: 1,
             borderStyle: 'solid',
             // px: 1,
