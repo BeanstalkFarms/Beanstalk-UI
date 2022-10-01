@@ -1,7 +1,10 @@
 import BigNumber from 'bignumber.js';
-import { useMemo } from 'react';
+import { useCallback, useState, useEffect } from 'react';
+import keyBy from 'lodash/keyBy';
 import {
-  useMarketplaceEventsQuery,
+  useHistoricalListingsLazyQuery,
+  useHistoricalOrdersLazyQuery,
+  useMarketplaceEventsLazyQuery,
 } from '~/generated/graphql';
 import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import { displayBN, toTokenUnitsBN } from '~/util';
@@ -9,7 +12,7 @@ import { BEAN } from '~/constants/tokens';
 import useSiloTokenToFiat from '~/hooks/beanstalk/useSiloTokenToFiat';
 
 export type MarketEvent = {
-  id?: any;
+  id: string;
   /** Event action type */
   action: 'create' | 'fill' | 'cancel' | 'default';
   /** ex: Pod Order Created */
@@ -35,165 +38,217 @@ const useMarketplaceEventData = () => {
   const harvestableIndex = useHarvestableIndex();
   const getUSD = useSiloTokenToFiat();
 
+  ///
+  const [page, setPage] = useState<number>(0);
+  const [data, setData] = useState<MarketEvent[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
   /// Queries
-  const { data: rawEvents, fetchMore, loading, error, } = useMarketplaceEventsQuery({
-    fetchPolicy: 'cache-first',
-    nextFetchPolicy: 'cache-first',
+  const [getEvents, eventsQuery] = useMarketplaceEventsLazyQuery({
+    fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true,
     variables: {
       events_first: QUERY_AMOUNT,
-      listings_first: QUERY_AMOUNT,
-      orders_first: QUERY_AMOUNT,
       events_timestamp_lt: MAX_TIMESTAMP,
-      listings_updatedAt_lt: MAX_TIMESTAMP,
-      orders_updatedAt_lt: MAX_TIMESTAMP,
     },
   });
-
-  const podOrdersById = useMemo(() => {
-    if (rawEvents?.podOrders) {
-      return rawEvents?.podOrders.reduce((prev, curr) => {
-        prev[curr.historyID] = curr;
-        return prev;
-      }, {} as any);
-    }
-  }, [rawEvents?.podOrders]);
-  
-  const podListingsById = useMemo(() => {
-    if (rawEvents?.podListings) {
-      return rawEvents?.podListings.reduce((prev, curr) => {
-        prev[curr.historyID] = curr;
-        return prev;
-      }, {} as any);
-    }
-  }, [rawEvents?.podListings]);
-
-  const fetchMoreData = () => {
-    const events_timestamp_lt   = rawEvents?.marketplaceEvents[rawEvents?.marketplaceEvents.length - 1].timestamp;
-    const listings_updatedAt_lt = rawEvents?.podListings[rawEvents?.podListings.length - 1].updatedAt;
-    const orders_updatedAt_lt   = rawEvents?.podOrders[rawEvents?.podOrders.length - 1].updatedAt;
-    fetchMore({
-      variables: {
-        events_timestamp_lt,
-        listings_updatedAt_lt,
-        orders_updatedAt_lt,
-      }
-    });
-  };
-
-  // Temp
-  let podListing;
-  let podOrder;
-
-  /// Calculations
-  const data: MarketEvent[] | undefined = rawEvents?.marketplaceEvents.map((e) => {
-    switch (e.__typename) {
-      case 'PodOrderCreated':
-        return {
-          id: e.id,
-          action: 'create',
-          hash: e.hash,
-          label: 'Pod Order Created',
-          numPods: toTokenUnitsBN(e.amount, BEAN[1].decimals),
-          placeInPodline: `0 - ${displayBN(toTokenUnitsBN(e.maxPlaceInLine, BEAN[1].decimals))}`,
-          pricePerPod: toTokenUnitsBN(e.pricePerPod, BEAN[1].decimals),
-          totalValue: getUSD(BEAN[1], toTokenUnitsBN(e.amount, BEAN[1].decimals).multipliedBy(toTokenUnitsBN(e.pricePerPod, BEAN[1].decimals))),
-          time: e.timestamp,
-        };
-      case 'PodOrderCancelled':
-        podOrder = podOrdersById[e.historyID];
-        return {
-          id: e.id,
-          action: 'cancel',
-          hash: e.hash,
-          label: 'Pod Order Cancelled',
-          numPods: toTokenUnitsBN(podOrder?.amount, BEAN[1].decimals),
-          placeInPodline: `0 - ${displayBN(toTokenUnitsBN(podOrder?.maxPlaceInLine, BEAN[1].decimals))}`,
-          pricePerPod: toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals),
-          totalValue: getUSD(BEAN[1], toTokenUnitsBN(
-            podOrder?.amount, BEAN[1].decimals
-          )?.multipliedBy(
-            toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals)
-          )),
-          time: e.timestamp,
-        };
-      case 'PodOrderFilled':
-        // podOrder = podOrdersById[e.orderID];
-        podOrder = podOrdersById[e.historyID];
-        return {
-          id: e.id,
-          action: 'fill',
-          hash: e.hash,
-          label: 'Pod Order Filled',
-          numPods: toTokenUnitsBN(podOrder?.amount, BEAN[1].decimals),
-          placeInPodline: `0 - ${displayBN(toTokenUnitsBN(podOrder?.maxPlaceInLine, BEAN[1].decimals))}`,
-          pricePerPod: toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals),
-          totalValue: getUSD(BEAN[1], toTokenUnitsBN(
-            podOrder?.amount, BEAN[1].decimals
-          )?.multipliedBy(toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals))),
-          time: e.timestamp,
-        };
-      case 'PodListingCreated':
-        return {
-          id: e.id,
-          hash: e.hash,
-          action: 'create',
-          label: 'Pod Listing Created',
-          numPods: toTokenUnitsBN(e.amount, BEAN[1].decimals),
-          placeInPodline: `${displayBN(toTokenUnitsBN(e.index, BEAN[1].decimals).minus(harvestableIndex))}`,
-          pricePerPod: toTokenUnitsBN(e.pricePerPod, BEAN[1].decimals),
-          totalValue: getUSD(BEAN[1], toTokenUnitsBN(e.amount, BEAN[1].decimals).multipliedBy(toTokenUnitsBN(e.pricePerPod, BEAN[1].decimals))),
-          time: e.timestamp,
-        };
-      case 'PodListingCancelled':
-        podListing = podListingsById[e.historyID];
-        if (podListing === undefined) {
-          console.log('Empty pod listing cancelled');
-          console.log(e.historyID);
-        }
-        return {
-          id: e.id,
-          hash: e.hash,
-          action: 'cancel',
-          label: 'Pod Listing Cancelled',
-          numPods: toTokenUnitsBN(podListing?.amount, BEAN[1].decimals),
-          placeInPodline: `${displayBN(toTokenUnitsBN(podListing?.index, BEAN[1].decimals).minus(harvestableIndex))}`,
-          pricePerPod: toTokenUnitsBN(new BigNumber(podListing?.pricePerPod || 0), BEAN[1].decimals),
-          totalValue: getUSD(BEAN[1], toTokenUnitsBN(podListing?.amount, BEAN[1].decimals).multipliedBy(toTokenUnitsBN(new BigNumber(podListing?.pricePerPod || 0), BEAN[1].decimals))),
-          time: e.timestamp,
-        };
-      case 'PodListingFilled':
-        podListing = podListingsById[e.historyID];
-        if (podListing === undefined) {
-          console.log('Empty pod listing filled');
-          console.log(e.historyID);
-        }
-        return {
-          id: e.id,
-          hash: e.hash,
-          action: 'fill',
-          label: 'Pod Listing Filled',
-          numPods: toTokenUnitsBN(podListing?.amount, BEAN[1].decimals),
-          placeInPodline: `${displayBN(toTokenUnitsBN(podListing?.index, BEAN[1].decimals).minus(harvestableIndex))}`,
-          pricePerPod: toTokenUnitsBN(new BigNumber(podListing?.pricePerPod || 0), BEAN[1].decimals),
-          totalValue: getUSD(BEAN[1], toTokenUnitsBN(podListing?.amount, BEAN[1].decimals).multipliedBy(toTokenUnitsBN(new BigNumber(podListing?.pricePerPod || 0), BEAN[1].decimals))),
-          time: e.timestamp,
-        };
-      default:
-        return {
-          id: e.id,
-          hash: e.hash,
-          action: 'default',
-        };
-    }
+  const [getOrders, ordersQuery] = useHistoricalOrdersLazyQuery({
+    fetchPolicy: 'network-only'
   });
+  const [getListings, listingsQuery] = useHistoricalListingsLazyQuery({
+    fetchPolicy: 'network-only'
+  });
+
+  const error = (
+    eventsQuery.error
+    || ordersQuery.error
+    || listingsQuery.error
+  );
+
+  const _fetch = useCallback(async (first: number, after: string) => {
+    setLoading(true);
+    setPage((p) => p + 1);
+    const result = await getEvents({ variables: { events_first: first, events_timestamp_lt: after } });
+
+    // run join query if we loaded more market events
+    if (result.data?.marketplaceEvents.length) {
+      // find IDs to join against
+      const [orderIDs, listingIDs] = result.data.marketplaceEvents.reduce<[string[], string[]]>((prev, curr) => {
+        if (curr.__typename === 'PodOrderFilled' || curr.__typename === 'PodOrderCancelled') {
+          prev[0].push(curr.historyID);
+        } else if (curr.__typename === 'PodListingFilled' || curr.__typename === 'PodListingCancelled') {
+          prev[1].push(curr.historyID);
+        }
+        return prev;
+      }, [[], []]);
+
+      // lookup all of the orders and listings needed to join to the above query
+      await Promise.all([
+        getOrders({
+          variables: { 
+            historyIDs: orderIDs,
+          }
+        }),
+        getListings({
+          variables: { 
+            historyIDs: listingIDs,
+          }
+        }),
+      ]);
+    }
+
+    setLoading(false);
+  }, [getEvents, getListings, getOrders]);
+
+  const fetchMoreData = useCallback(async () => {
+    // look up the next set of marketplaceEvents using the last known timestamp
+    const first = QUERY_AMOUNT;
+    const after = (
+      eventsQuery.data?.marketplaceEvents?.length
+        ? eventsQuery.data?.marketplaceEvents[eventsQuery.data?.marketplaceEvents.length - 1].timestamp
+        : MAX_TIMESTAMP
+    );
+    console.debug('Fetch more: ', first, after);
+    await _fetch(first, after);
+  }, [_fetch, eventsQuery.data?.marketplaceEvents]);
+
+  // when all queries finish, process data
+  useEffect(() => {
+    const events = eventsQuery.data?.marketplaceEvents;
+    if (!loading && events?.length) {
+      const podOrdersById = keyBy(ordersQuery.data?.podOrders, 'historyID');
+      const podListingsById = keyBy(listingsQuery.data?.podListings, 'historyID');
+
+      const parseEvent = (e: typeof events[number]) => {
+        switch (e.__typename) {
+          case 'PodOrderCreated':
+            return {
+              id: e.id,
+              action: 'create' as const,
+              hash: e.hash,
+              label: 'Pod Order Created',
+              numPods: toTokenUnitsBN(e.amount, BEAN[1].decimals),
+              placeInPodline: `0 - ${displayBN(toTokenUnitsBN(e.maxPlaceInLine, BEAN[1].decimals))}`,
+              pricePerPod: toTokenUnitsBN(e.pricePerPod, BEAN[1].decimals),
+              totalValue: getUSD(BEAN[1], toTokenUnitsBN(e.amount, BEAN[1].decimals).multipliedBy(toTokenUnitsBN(e.pricePerPod, BEAN[1].decimals))),
+              time: e.timestamp,
+            };
+          case 'PodOrderCancelled': {
+            const podOrder = podOrdersById[e.historyID];
+            return {
+              id: e.id,
+              action: 'cancel' as const,
+              hash: e.hash,
+              label: 'Pod Order Cancelled',
+              numPods: toTokenUnitsBN(podOrder?.amount, BEAN[1].decimals),
+              placeInPodline: `0 - ${displayBN(toTokenUnitsBN(podOrder?.maxPlaceInLine, BEAN[1].decimals))}`,
+              pricePerPod: toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals),
+              totalValue: getUSD(BEAN[1], toTokenUnitsBN(
+                podOrder?.amount, BEAN[1].decimals
+              )?.multipliedBy(
+                toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals)
+              )),
+              time: e.timestamp,
+            };
+          }
+          case 'PodOrderFilled': {
+            const podOrder = podOrdersById[e.historyID];
+            return {
+              id: e.id,
+              action: 'fill' as const,
+              hash: e.hash,
+              label: 'Pod Order Filled',
+              numPods: toTokenUnitsBN(podOrder?.amount, BEAN[1].decimals),
+              placeInPodline: displayBN(toTokenUnitsBN(new BigNumber(e.index), BEAN[1].decimals).minus(harvestableIndex)),
+              pricePerPod: toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals),
+              totalValue: getUSD(BEAN[1], toTokenUnitsBN(
+                podOrder?.amount, BEAN[1].decimals
+              )?.multipliedBy(toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals))),
+              time: e.timestamp,
+            };
+          }
+          case 'PodListingCreated': {
+            return {
+              id: e.id,
+              hash: e.hash,
+              action: 'create' as const,
+              label: 'Pod Listing Created',
+              numPods: toTokenUnitsBN(e.amount, BEAN[1].decimals),
+              placeInPodline: `${displayBN(toTokenUnitsBN(e.index, BEAN[1].decimals).minus(harvestableIndex))}`,
+              pricePerPod: toTokenUnitsBN(e.pricePerPod, BEAN[1].decimals),
+              totalValue: getUSD(BEAN[1], toTokenUnitsBN(e.amount, BEAN[1].decimals).multipliedBy(toTokenUnitsBN(e.pricePerPod, BEAN[1].decimals))),
+              time: e.timestamp,
+            };
+          }
+          case 'PodListingCancelled': {
+            const podListing = podListingsById[e.historyID];
+            return {
+              id: e.id,
+              hash: e.hash,
+              action: 'cancel' as const,
+              label: 'Pod Listing Cancelled',
+              numPods: toTokenUnitsBN(podListing?.amount, BEAN[1].decimals),
+              placeInPodline: `${displayBN(toTokenUnitsBN(podListing?.index, BEAN[1].decimals).minus(harvestableIndex))}`,
+              pricePerPod: toTokenUnitsBN(new BigNumber(podListing?.pricePerPod || 0), BEAN[1].decimals),
+              totalValue: getUSD(BEAN[1], toTokenUnitsBN(podListing?.amount, BEAN[1].decimals).multipliedBy(toTokenUnitsBN(new BigNumber(podListing?.pricePerPod || 0), BEAN[1].decimals))),
+              time: e.timestamp,
+            };
+          }
+          case 'PodListingFilled': {
+            const podListing = podListingsById[e.historyID];
+            return {
+              id: e.id,
+              hash: e.hash,
+              action: 'fill' as const,
+              label: 'Pod Listing Filled',
+              numPods: toTokenUnitsBN(podListing?.amount, BEAN[1].decimals),
+              placeInPodline: `${displayBN(toTokenUnitsBN(podListing?.index, BEAN[1].decimals).minus(harvestableIndex))}`,
+              pricePerPod: toTokenUnitsBN(new BigNumber(podListing?.pricePerPod || 0), BEAN[1].decimals),
+              totalValue: getUSD(BEAN[1], toTokenUnitsBN(podListing?.amount, BEAN[1].decimals).multipliedBy(toTokenUnitsBN(new BigNumber(podListing?.pricePerPod || 0), BEAN[1].decimals))),
+              time: e.timestamp,
+            };
+          }
+          default: {
+            return {
+              id: e.id,
+              hash: e.hash,
+              action: 'default' as const,
+            };
+          }
+        }
+      };
+
+      const _data : MarketEvent[] = [];
+      const _max = Math.min(events.length, QUERY_AMOUNT * page);
+      for (let i = 0; i < _max; i += 1)  {
+        _data.push(parseEvent(events[i]));
+      }
+
+      setData(_data);
+    }
+  }, [
+    getUSD, 
+    harvestableIndex, 
+    loading, 
+    eventsQuery.data, 
+    listingsQuery.data, 
+    ordersQuery.data,
+    page,
+  ]);
+
+  // kick things off
+  useEffect(() => {
+    _fetch(QUERY_AMOUNT, MAX_TIMESTAMP);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return {
     data,
     harvestableIndex,
     loading,
     error,
-    fetchMoreData
+    fetchMoreData,
+    page
   };
 };
 

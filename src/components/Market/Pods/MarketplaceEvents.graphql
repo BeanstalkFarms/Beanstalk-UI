@@ -1,10 +1,10 @@
 query MarketplaceEvents(
   $events_first: Int = 1000,
   $events_timestamp_lt: BigInt!,
-  $orders_first: Int = 1000,
-  $orders_updatedAt_lt: BigInt!,
-  $listings_first: Int = 1000,
-  $listings_updatedAt_lt: BigInt!
+  # $orders_first: Int = 1000,
+  # $orders_updatedAt_lt: BigInt!,
+  # $listings_first: Int = 1000,
+  # $listings_updatedAt_lt: BigInt!
 ) {
   marketplaceEvents(
     orderBy: timestamp,
@@ -75,56 +75,55 @@ query MarketplaceEvents(
     }
   }
 
-  podOrders(
-    first: $orders_first,
-    where: {
-      updatedAt_lt: $orders_updatedAt_lt
-      status_in: [
-        ACTIVE,
-        CANCELLED,
-        CANCELLED_PARTIAL,
-        FILLED
-        # there is no FILLED_PARTIAL for orders
-      ], 
-    }, 
-    orderBy: updatedAt, 
-    orderDirection: desc
-  ) {
-    id
-    status
-    # ---
-    amount
-    maxPlaceInLine
-    pricePerPod
-    historyID
-    # ---
-    updatedAt
-  }
+  # podOrders(
+  #   first: $orders_first,
+  #   where: {
+  #     updatedAt_lt: $orders_updatedAt_lt
+  #     status_in: [
+  #       ACTIVE,
+  #       CANCELLED,
+  #       CANCELLED_PARTIAL,
+  #       FILLED
+  #       # there is no FILLED_PARTIAL for orders
+  #     ], 
+  #   }, 
+  #   orderBy: updatedAt, 
+  #   orderDirection: desc
+  # ) {
+  #   id
+  #   status
+  #   # ---
+  #   amount
+  #   maxPlaceInLine
+  #   pricePerPod
+  #   historyID
+  #   # ---
+  #   updatedAt
+  # }
 
-  podListings(
-    first: $listings_first,
-    where: {
-      updatedAt_lt: $listings_updatedAt_lt,
-      status_in: [
-        ACTIVE,
-        CANCELLED,
-        CANCELLED_PARTIAL,
-        FILLED,
-        FILLED_PARTIAL,
-      ]
-    },
-    orderBy: updatedAt,
-    orderDirection: desc
-  ) {
-    id
-    status
-    # ---
-    amount
-    pricePerPod
-    index
-    originalIndex
-    historyID
-    # ---
-    updatedAt
-  }
+  # podListings(
+  #   first: $listings_first,
+  #   where: {
+  #     updatedAt_lt: $listings_updatedAt_lt,
+  #     status_in: [
+  #       CANCELLED,
+  #       CANCELLED_PARTIAL,
+  #       FILLED,
+  #       FILLED_PARTIAL,
+  #     ]
+  #   },
+  #   orderBy: updatedAt,
+  #   orderDirection: desc
+  # ) {
+  #   id
+  #   status
+  #   # ---
+  #   amount
+  #   pricePerPod
+  #   index
+  #   originalIndex
+  #   historyID
+  #   # ---
+  #   updatedAt
+  # }
 }

@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Box,
   CircularProgress,
   Container, Link,
   Stack, Typography,
 } from '@mui/material';
-import { DateTime } from 'luxon';
 import PageHeaderSecondary from '~/components/Common/PageHeaderSecondary';
 import useTabs from '~/hooks/display/useTabs';
 import useMarketplaceEventData, { QUERY_AMOUNT } from '~/hooks/beanstalk/useMarketplaceEventData';
@@ -21,7 +20,7 @@ const MarketActivityPage: React.FC = () => {
   const [tab, handleChangeTab] = useTabs();
   const [scrollPosition, setScrollPosition] = useState<number | undefined>();
 
-  const { data, loading, fetchMoreData } = useMarketplaceEventData();
+  const { data, harvestableIndex, loading, fetchMoreData } = useMarketplaceEventData();
 
   const handleFetchMore = () => {
     fetchMoreData();
@@ -34,24 +33,17 @@ const MarketActivityPage: React.FC = () => {
       setScrollPosition(undefined);
     }
   }, [data, scrollPosition]);
+  
+  const filteredData = useMemo(() => {
+    if (tab === 0) return data;
+    const label = tabLabels[tab].toLowerCase();
+    return data.filter((event) => event.action === label);
+  }, [data, tab]);
 
-  console.log('MARKET EVENT   ', DateTime.fromMillis(1664388071 * 1000 as number).toLocaleString({
-    month: 'short',
-    day: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'PST'
-  }));
-
-  console.log('LISTING CANCEL', DateTime.fromMillis(1662226017 * 1000 as number).toLocaleString({
-    month: 'short',
-    day: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'PST'
-  }));
+  const initializing = (
+    data.length === 0
+    || harvestableIndex.lte(0)
+  );
 
   return (
     <Container maxWidth="lg">
@@ -62,7 +54,7 @@ const MarketActivityPage: React.FC = () => {
         />
         <Module sx={{ pt: 2, px: 1 }}>
           <ModuleContent>
-            {data === undefined
+            {initializing
               ? (
                 <Stack height={300} alignItems="center" justifyContent="center">
                   <CircularProgress />
@@ -73,12 +65,8 @@ const MarketActivityPage: React.FC = () => {
                   {/* Table header */}
                   <ActivityTableHeader tab={tab} handleChangeTab={handleChangeTab} />
                   {/* Table body */}
-                  {data.filter((e) => (
-                    tab === 0
-                      ? e.action !== 'default'
-                      : e.action === tabLabels[tab].toLowerCase()
-                  )).map((e) => (
-                    <ActivityTableRow event={e} />
+                  {filteredData.map((e) => (
+                    <ActivityTableRow key={e.id} event={e} />
                   ))}
                   <Box p={1}>
                     {loading ? (

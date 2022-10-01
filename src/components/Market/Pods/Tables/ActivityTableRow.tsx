@@ -1,5 +1,5 @@
 import React from 'react';
-import { BoxProps, Grid, Link, Stack, Typography } from '@mui/material';
+import { BoxProps, Grid, Link, Stack, Tooltip, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import Row from '~/components/Common/Row';
@@ -37,14 +37,16 @@ const ActivityTableRow: React.FC<BoxProps & { event: MarketEvent }> = (props) =>
     <Grid container direction="row" px={1} py={0.75} borderBottom={1} borderColor={BeanstalkPalette.blue}>
       <Grid item xs={5} md={4}>
         <Row alignItems="center" height="100%">
-          <Link
-            href={`https://etherscan.io/tx/${e.hash}`}
-            target="_blank"
-            rel="noopener noreferrer">
-            <Typography>
-              {e.label}
-            </Typography>
-          </Link>
+          <Tooltip title={<Typography variant="bodySmall">ID: {e.id}</Typography>}>
+            <Link
+              href={`https://etherscan.io/tx/${e.hash}`}
+              target="_blank"
+              rel="noopener noreferrer">
+              <Typography>
+                {e.label}
+              </Typography>
+            </Link>
+          </Tooltip>
         </Row>
       </Grid>
       <Grid item xs={3} md={1.63}>
