@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { MarketStatus } from '~/generated/graphql';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 
@@ -21,7 +22,7 @@ export const mockPodListingData: PodListing[] = new Array(20).fill(null).map((_,
     totalAmount: new BigNumber(10000000 * Math.random()),
     remainingAmount: amount,
     filledAmount: new BigNumber(3000000 * Math.random()),
-    status: 'active',
+    status: MarketStatus.Active,
     placeInLine: index.minus(50_000_000)
   };
 });
@@ -38,5 +39,5 @@ export const mockPodOrderData: PodOrder[] = new Array(20).fill(null).map(() => (
   totalAmount: new BigNumber(10000000 * Math.random()),
   remainingAmount: new BigNumber(5000000 * Math.random()),
   filledAmount: new BigNumber(3000000 * Math.random()),
-  status: 'active',
+  status: MarketStatus.Active,
 }));

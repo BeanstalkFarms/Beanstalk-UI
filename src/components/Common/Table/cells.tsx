@@ -1,18 +1,20 @@
 import React from 'react';
-import { Box, Chip, LinearProgress, Tooltip, Typography } from '@mui/material';
+import { Box, Chip, LinearProgress, Link, Tooltip, Typography } from '@mui/material';
 import { GridColumns, GridRenderCellParams, GridValueFormatterParams } from '@mui/x-data-grid';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import BigNumber from 'bignumber.js';
-import { displayBN, displayFullBN, MaxBN } from '~/util';
+import { displayBN, displayFullBN, MaxBN, trimAddress } from '~/util';
 import { BEAN, PODS } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 import TokenIcon from '../TokenIcon';
 import AddressIcon from '../AddressIcon';
-import EntityIcon from '~/components/Market/EntityIcon';
 import Row from '~/components/Common/Row';
+import EntityIcon from '~/components/Market/Pods/EntityIcon';
+import { WellActivityData } from '~/components/Market/Wells/Tables';
+import { Token } from '~/classes';
 
-const basicCell = (params : GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
+const basicCell = (params: GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
 
 const COLUMNS = {
   ///
@@ -39,7 +41,7 @@ const COLUMNS = {
     align: 'right',
     headerAlign: 'right',
     valueFormatter: (params: GridValueFormatterParams) => displayFullBN(params.value, 2),
-    renderCell: (params : GridRenderCellParams) => (
+    renderCell: (params: GridRenderCellParams) => (
       <>
         <Typography display={{ xs: 'none', md: 'block' }}>{displayFullBN(params.value, 2)}</Typography>
         <Typography display={{ xs: 'block', md: 'none' }}>{displayBN(params.value)}</Typography>
@@ -49,7 +51,7 @@ const COLUMNS = {
   } as GridColumns[number],
 
   ///
-  /// Market
+  /// Pod Market
   ///
   numPods: (flex: number) => ({
     field: 'totalAmount',
@@ -64,9 +66,10 @@ const COLUMNS = {
         placement="right"
         title={
           <>
-            Total Value: {displayFullBN((params.value as BigNumber).times(params.row.pricePerPod), BEAN[1].displayDecimals)} BEAN
+            Total
+            Value: {displayFullBN((params.value as BigNumber).times(params.row.pricePerPod), BEAN[1].displayDecimals)} BEAN
           </>
-      }>
+        }>
         <Row gap={0.3}>
           <TokenIcon token={PODS} />
           <Typography>
@@ -145,9 +148,10 @@ const COLUMNS = {
         placement="right"
         title={
           <>
-            Total Value: {displayFullBN((params.value as BigNumber).times(params.row.pricePerPod), BEAN[1].displayDecimals)} BEAN
+            Total
+            Value: {displayFullBN((params.value as BigNumber).times(params.row.pricePerPod), BEAN[1].displayDecimals)} BEAN
           </>
-      }>
+        }>
         <Row gap={0.3}>
           <TokenIcon token={PODS} />
           <Typography>
@@ -267,7 +271,10 @@ const COLUMNS = {
     renderCell: (params: GridRenderCellParams) => {
       const expiresIn = MaxBN((params.value as BigNumber).minus(harvestableIndex), ZERO_BN);
       const tip = expiresIn?.gt(0) ? (
-        <>If the Pod Line moves forward {displayFullBN((params.value as BigNumber).minus(harvestableIndex), PODS.displayDecimals)} Pods, this Listing will expire.</>
+        <>If the Pod Line moves
+          forward {displayFullBN((params.value as BigNumber).minus(harvestableIndex), PODS.displayDecimals)} Pods, this
+          Listing will expire.
+        </>
       ) : '';
       return (
         <Tooltip placement="right" title={tip}>
@@ -286,7 +293,7 @@ const COLUMNS = {
     renderCell: (params: GridRenderCellParams) => (
       <Tooltip title="">
         <Typography>
-          {params.row.status === 'filled' 
+          {params.row.status === 'filled'
             ? <Chip color="primary" label="Filled" variant="filled" />
             /// FIXME: right now the event processor doesn't flag
             /// listings as expired, so we override status here.
@@ -298,6 +305,78 @@ const COLUMNS = {
       </Tooltip>
     )
   } as GridColumns[number]),
+
+  ///
+  /// DEX
+  ///
+  ///
+  label: (flex: number, tabs: any) => ({
+    field: 'label',
+    headerName: 'Type',
+    renderHeader: () => (
+      tabs
+    ),
+    flex: flex,
+    align: 'left',
+    headerAlign: 'left',
+    sortable: false,
+    renderCell: (params: GridRenderCellParams<any, WellActivityData>) => (
+      <Link href={`https://etherscan.io/tx/${params.row.hash}`} target="_blank" rel="noopener noreferrer">
+        <Typography>
+          {params.row.label}
+        </Typography>
+      </Link>
+    )
+  }) as GridColumns[number],
+  tokenAmount: (column: string, token: Token, flex: number) => ({
+    field: column,
+    headerName: 'Token Amount',
+    flex: flex,
+    align: 'left',
+    headerAlign: 'left',
+    renderCell: (params: GridRenderCellParams<any, WellActivityData>) => (
+      <Typography>
+        {displayBN(params.row.tokenAmount0)} {token.symbol}
+      </Typography>
+    )
+  }) as GridColumns[number],
+  totalValue: (flex: number) => ({
+    field: 'totalValue',
+    headerName: 'Total Value',
+    flex: flex,
+    align: 'left',
+    headerAlign: 'left',
+    renderCell: (params: GridRenderCellParams<any, WellActivityData>) => (
+      <Typography>
+        {displayBN(params.row.totalValue)}
+      </Typography>
+    )
+  }) as GridColumns[number],
+  account: (flex: number) => ({
+    field: 'account',
+    headerName: 'Account',
+    flex: flex,
+    align: 'right',
+    headerAlign: 'right',
+    renderCell: (params: GridRenderCellParams<any, WellActivityData>) => (
+      <Link>
+        <Typography>
+          {trimAddress(params.row.account)}
+        </Typography>
+      </Link>
+    )
+  }) as GridColumns[number],
+
+  time: (flex: number) => ({
+    field: 'time',
+    headerName: 'Time',
+    flex: flex,
+    align: 'right',
+    headerAlign: 'right',
+    renderCell: (params: GridRenderCellParams<any, WellActivityData>) => (
+      <Typography>{params.row.time}</Typography>
+    )
+  }) as GridColumns[number],
 
   ///
   /// Extras

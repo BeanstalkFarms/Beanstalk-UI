@@ -13,8 +13,8 @@ import { useTheme } from '@mui/material/styles';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 import useTabs from '~/hooks/display/useTabs';
 import AddressIcon from '~/components/Common/AddressIcon';
-import MyOrdersTable from '~/components/Market/Tables/MyOrders';
-import MyListingsTable from '~/components/Market/Tables/MyListings';
+import MyOrdersTable from '~/components/Market/Pods/Tables/MyOrders';
+import MyListingsTable from '~/components/Market/Pods/Tables/MyListings';
 import Row from '~/components/Common/Row';
 
 const SLUGS = ['orders', 'listings'];

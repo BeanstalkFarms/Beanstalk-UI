@@ -2,9 +2,8 @@ import React, { useMemo } from 'react';
 import { Box } from '@mui/material';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { BeanstalkPalette, FontSize } from '~/components/App/muiTheme';
-import TablePagination from '../../Common/TablePagination';
 
-const marketplaceTableStyle = {
+const wellTableBaseStyle = {
   '& .MuiDataGrid-root': {
     outline: 'none',
     border: 'none',
@@ -16,7 +15,8 @@ const marketplaceTableStyle = {
     },
     '& .MuiDataGrid-columnHeaderTitle': {
       fontWeight: 500,
-      fontSize: FontSize.base
+      fontSize: FontSize.base,
+      color: 'gray'
     },
     '& .MuiDataGrid-columnHeader:focus': {
       outline: 'none'
@@ -40,16 +40,17 @@ const marketplaceTableStyle = {
       border: 'none',
     },
     '& .MuiDataGrid-row': {
-      border: 1,
+      // border: 1,
+      // borderTop: 1,
+      borderBottom: 1,
       borderColor: BeanstalkPalette.blue,
-      borderRadius: 1,
-      py: 2.4,
-      mb: 0.8,
+      py: 2.8,
+      // mb: 0.8,
       alignItems: 'center',
-      cursor: 'pointer',
+      // cursor: 'pointer',
       width: 'calc(100% - 2.5px)',
       '&:hover': {
-        background: BeanstalkPalette.lightestBlue
+        background: 'transparent'
       }
     },
     '& .MuiDataGrid-footerContainer': {
@@ -60,14 +61,21 @@ const marketplaceTableStyle = {
     },
     '& .MuiDataGrid-columnHeaders': {
       outline: 'none',
-      border: 'none',
+      borderBottom: 2,
+      borderColor: BeanstalkPalette.blue,
       fontSize: '18px',
-      color: '#000000'
+      color: '#000000',
+      '&:hover' : {
+        outline: 'none !important'
+      }
     },
-    '& .MuiDataGrid-virtualScrollerRenderZone :hover': {
-      // backgroundColor: "transparent"
-      // backgroundColor: "#D8F2DB"
-    }
+    '& .MuiDataGrid-columnHeader': {
+      outline: 'none',
+      border: 'none'
+    },
+    '& .MuiDataGrid-columnHeaderTitleContainer': {
+      outline: 'none',
+    },
   }
 };
 
@@ -77,8 +85,8 @@ export type MarketBaseTableProps = {
   maxRows?: number;
 }
 
-const MarketBaseTable: React.FC<
-  MarketBaseTableProps & 
+const TabTable: React.FC<
+  MarketBaseTableProps &
   DataGridProps
 > = ({
   rows,
@@ -97,7 +105,7 @@ const MarketBaseTable: React.FC<
     <Box sx={{
       height: tableHeight,
       width: '100%',
-      ...marketplaceTableStyle,
+      ...wellTableBaseStyle,
     }}>
       <DataGrid
         columns={columns}
@@ -112,13 +120,10 @@ const MarketBaseTable: React.FC<
             sortModel: [{ field: 'placeInLine', sort: 'asc' }],
           }
         }}
-        components={{
-          Pagination: TablePagination
-        }}
         {...props}
       />
     </Box>
   );
 };
 
-export default MarketBaseTable;
+export default TabTable;
