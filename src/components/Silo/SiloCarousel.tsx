@@ -71,7 +71,7 @@ const useCardContentWithToken = (token: ERC20Token) => [
 const ImageWrapper = styled(Stack)(({ theme }) => ({
   justifyContent: 'flex-end',
   alignItems: 'center',
-  background: BeanstalkPalette.skyBlue,
+  background: BeanstalkPalette.theme.fall.extraLight,
   width: '100%',
   height: '300px',
   [theme.breakpoints.down('md')]: { height: '250px !important' },
@@ -81,11 +81,11 @@ const InfoContent = styled(Stack)(({ theme }) => ({
   width: '100%',
   padding: '20px',
   [theme.breakpoints.up('md')]: {
-    borderLeft: `${BeanstalkPalette.skyBlue} 1px solid`,
+    borderLeft: `${BeanstalkPalette.theme.fall.light} 1px solid`,
     maxWidth: '40%',
   },
   [theme.breakpoints.down('md')]: {
-    borderTop: `${BeanstalkPalette.skyBlue} 1px solid`,
+    borderTop: `${BeanstalkPalette.theme.fall.light} 1px solid`,
   },
   [theme.breakpoints.between('sm', 'md')]: {
     height: '200px',
@@ -97,7 +97,7 @@ const InfoContent = styled(Stack)(({ theme }) => ({
 
 const CarouselCard = styled(EmbeddedCard)(({ theme }) => ({
   // heights are defined here otherwise layout jumps occur during animation
-  borderColor: BeanstalkPalette.blue,
+  borderColor: BeanstalkPalette.theme.fall.light,
   overflow: 'hidden',
   [theme.breakpoints.up('md')]: { height: '300px' },
   [theme.breakpoints.between('sm', 'md')]: { height: '450px' },
