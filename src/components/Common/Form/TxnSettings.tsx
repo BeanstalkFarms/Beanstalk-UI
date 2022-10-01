@@ -44,7 +44,7 @@ const TxnSettings : React.FC<{
         onClose={handleHideMenu}
         PaperProps={{
           sx: {
-            backgroundColor: BeanstalkPalette.lightestBlue,
+            backgroundColor: BeanstalkPalette.theme.fall.extraLight,
             borderWidth: 2,
             borderColor: 'secondary.main',
             borderStyle: 'solid',
