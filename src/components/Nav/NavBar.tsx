@@ -3,7 +3,7 @@ import {
   AppBar,
   Box,
 } from '@mui/material';
-import { BeanstalkPalette } from '~/components/App/muiTheme';
+import { PAGE_BG_COLOR, PAGE_BORDER_COLOR } from '~/components/App/muiTheme';
 import WalletButton from '~/components/Common/Connection/WalletButton';
 import NetworkButton from '~/components/Common/Connection/NetworkButton';
 import PriceButton from './Buttons/PriceButton';
@@ -23,8 +23,8 @@ const NavBar: React.FC<{}> = ({ children }) => (
     className="navbar"
     sx={{
       position: 'sticky',
-      backgroundColor: BeanstalkPalette.lightBlue,
-      borderBottom: `${NAV_BORDER_HEIGHT}px solid ${BeanstalkPalette.blue}`,
+      backgroundColor: PAGE_BG_COLOR,
+      borderBottom: `${NAV_BORDER_HEIGHT}px solid ${PAGE_BORDER_COLOR}`,
     }}
   >
     {children}

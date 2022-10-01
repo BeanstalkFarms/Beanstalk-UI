@@ -6,8 +6,8 @@ const EmbeddedCard: React.FC<CardProps> = ({ children, ...cardProps }) => (
     {...cardProps} 
     sx={{ 
       ...cardProps.sx, 
-      borderWidth: '0.5px !important', 
-      borderRadius: '6px !important'
+      borderWidth: '.5px !important', 
+      borderRadius: '6px !important',
     }}>
     {children}
   </Card>

@@ -70,7 +70,7 @@ const Whitelist : React.FC<{
           pt: '14px', // manually adjusted
           pb: '5px',  // manually adjusted
           borderBottomStyle: 'solid',
-          borderBottomColor: 'secondary.main', 
+          borderBottomColor: BeanstalkPalette.lightestGrey, 
           borderBottomWidth: 1.5,
         }}
       >
@@ -176,6 +176,7 @@ const Whitelist : React.FC<{
                   textAlign: 'left',
                   px: 2,
                   py: 1.5,
+                  borderColor: BeanstalkPalette.lightestGrey
                 }}
               >
                 <Grid container alignItems="center">
@@ -429,7 +430,7 @@ const Whitelist : React.FC<{
                         </Typography>
                       </Tooltip>
                       <Stack display={{ xs: 'none', md: 'block' }} sx={{ width: ARROW_CONTAINER_WIDTH }} alignItems="center">
-                        <ArrowRightIcon />
+                        <ArrowRightIcon sx={{ color: BeanstalkPalette.lightestGrey }} />
                       </Stack>
                     </Row>
                   </Grid>

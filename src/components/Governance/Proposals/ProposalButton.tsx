@@ -43,7 +43,7 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
         p: 2,
         height: 'auto',
         color: '#000000',
-        borderColor: '#c7ddf0',
+        borderColor: BeanstalkPalette.lightestGrey,
       }}
     >
       <Stack gap={1} width="100%">
