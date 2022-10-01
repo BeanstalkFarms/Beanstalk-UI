@@ -49,10 +49,7 @@ const ActivityTableRow: React.FC<BoxProps & { event: MarketEvent }> = (props) =>
             {actionToModifier[e.action]}
           </Typography>
           {e.entity !== 'unknown' ? (
-            <EntityIcon
-              type={e.entity}
-              modifier={actionToModifier[e.action]}
-            />
+            <EntityIcon type={e.entity} />
           ) : null}
           <Link
             href={`https://etherscan.io/tx/${e.hash}`}
