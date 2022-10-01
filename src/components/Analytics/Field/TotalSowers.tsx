@@ -1,4 +1,6 @@
 import React from 'react';
+import { tickFormatLocale } from '~/components/Analytics/formatters';
+import { LineChartProps } from '~/components/Common/Charts/LineChart';
 import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
 import { SeasonalTotalSowersDocument, SeasonalTotalSowersQuery } from '~/generated/graphql';
 import useSeason from '~/hooks/beanstalk/useSeason';
@@ -6,11 +8,14 @@ import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
 
 const getValue = (season: SnapshotData<SeasonalTotalSowersQuery>) => season.totalNumberOfSowers;
 const formatValue = (value: number) => `${value}`;
-const StatProps = {
+const statProps = {
   title: 'Total Sowers',
-  titleTooltip: 'The total number of unique Sowers.',
+  titleTooltip: 'The total number of unique Sowers at the end of each Season.',
   gap: 0.25,
   sx: { ml: 0 }
+};
+const lineChartProps : Partial<LineChartProps> = {
+  yTickFormat: tickFormatLocale
 };
 
 const TotalSowers: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => {
@@ -19,11 +24,11 @@ const TotalSowers: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ heigh
     <SeasonPlot<SeasonalTotalSowersQuery>
       height={height}
       document={SeasonalTotalSowersDocument}
-      // defaultValue={podRate?.gt(0) ? podRate.div(100).toNumber() : 0}
       defaultSeason={season?.gt(0) ? season.toNumber() : 0}
       getValue={getValue}
       formatValue={formatValue}
-      StatProps={StatProps}
+      StatProps={statProps}
+      LineChartProps={lineChartProps}
     />
   );
 };

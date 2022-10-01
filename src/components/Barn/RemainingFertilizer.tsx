@@ -9,18 +9,18 @@ import { AppState } from '~/state';
 import { displayFullBN } from '~/util';
 import FertilizerImage from './FertilizerImage';
 import { BeanstalkPalette, FontSize } from '../App/muiTheme';
-import useFertilizerProgress from '../../hooks/beanstalk/useFertilizerProgress';
 import Row from '~/components/Common/Row';
 
 const RemainingFertilizer: React.FC = () => {
+  // eslint-disable-next-line unused-imports/no-unused-vars
   const [humidity, nextDecreaseAmount] = useHumidity();
-  const barn = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
+  const { recapFundedPct, remaining } = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
   const season = useSeason();
   
+  // eslint-disable-next-line unused-imports/no-unused-vars
   const nextDecreaseTimeString = season.eq(6074)
     ? 'per Season upon Unpause'
     :  <SunriseCountdown />;
-  const progress = useFertilizerProgress();
 
   return (
     <Card sx={{ p: 2 }}>
@@ -33,8 +33,8 @@ const RemainingFertilizer: React.FC = () => {
           gap={3}
         >
           {/* left column */}
-          <Box sx={{ minWidth: 130, width: 'auto', display: { xs: 'none', md: 'block' }, aspectRatio: '1/1' }}>
-            <FertilizerImage progress={Math.max(progress.toNumber(), 0.05)} />
+          <Box sx={{ width: 130, display: { xs: 'none', md: 'block' }, aspectRatio: '1/1' }}>
+            <FertilizerImage progress={Math.max(recapFundedPct.toNumber(), 0.05)} />
           </Box>
           {/* right column */}
           <Stack justifyContent="space-between" gap={2}>
@@ -57,15 +57,15 @@ const RemainingFertilizer: React.FC = () => {
                   variant="bodyLarge"
                   sx={{ fontWeight: 400 }}
                 >
-                  {displayFullBN(barn.remaining, 0)}&nbsp;
+                  {displayFullBN(remaining, 0)}&nbsp;
                 </Typography>
-                {progress.gt(0) ? (
+                {recapFundedPct.gt(0) ? (
                   <Typography
                     display="inline-block"
                     variant="bodySmall"
                     color={BeanstalkPalette.logoGreen}
                   >
-                    {displayFullBN(progress.multipliedBy(100), 2)}% Purchased
+                    {displayFullBN(recapFundedPct.times(100), 2)}% Recapitalized
                   </Typography>
                 ) : null}
               </Row>

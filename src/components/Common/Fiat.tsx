@@ -10,7 +10,7 @@ import { ZERO_BN } from '~/constants';
 import Row from '~/components/Common/Row';
 
 const Fiat : React.FC<{
-  /* usd value of `amount`. if defined, overrides siloTokenToFiat */
+  /* The USD value of `amount`. If provided, we don't try to derive via `siloTokenToFiat`. */
   value?: BigNumber,
   token?: Token,
   amount: BigNumber | undefined,
@@ -18,24 +18,22 @@ const Fiat : React.FC<{
   chop?: boolean,
   truncate?: boolean,
 }> = ({
-  //
   value: _value,
   token,
   amount,
-  //
   allowNegative = false,
   chop = true,
   truncate = false,
 }) => {
-  const [denomination]  = useSetting('denomination');
+  const [denomination] = useSetting('denomination');
   const price = usePrice();
   const siloTokenToFiat = useSiloTokenToFiat();
-  /// FIXME: refactor fiat calculation to accept
-  /// externally provided value
   const value = _value 
+    // value override provided (in USD terms)
     ? denomination === 'usd'
       ? _value
       : _value.div(price)
+    // derive value from token amount
     : (amount && token)
       ? siloTokenToFiat(token, amount, denomination, chop)
       : ZERO_BN;

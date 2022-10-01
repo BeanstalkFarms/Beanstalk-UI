@@ -4,14 +4,19 @@ import { SeasonalPodRateDocument, SeasonalPodRateQuery } from '~/generated/graph
 import useSeason from '~/hooks/beanstalk/useSeason';
 import usePodRate from '~/hooks/beanstalk/usePodRate';
 import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
+import { LineChartProps } from '~/components/Common/Charts/LineChart';
+import { tickFormatPercentage } from '~/components/Analytics/formatters';
 
-const getValue = (season: SnapshotData<SeasonalPodRateQuery>) => parseFloat(season.podRate);
-const formatValue = (value: number) => `${(value * 100).toFixed(2)}%`;
-const StatProps = {
+const getValue = (season: SnapshotData<SeasonalPodRateQuery>) => parseFloat(season.podRate) * 100;
+const formatValue = (value: number) => `${value.toFixed(2)}%`;
+const statProps = {
   title: 'Pod Rate',
-  titleTooltip: 'The number of Pods per Bean as a percentage. The Pod Rate is often used as a proxy for Beanstalk\'s health.',
+  titleTooltip: 'The ratio of outstanding Pods per Bean, displayed as a percentage. The Pod Rate is used by Beanstalk as a proxy for its health.',
   gap: 0.25,
   sx: { ml: 0 }
+};
+const lineChartProps : Partial<LineChartProps> = {
+  yTickFormat: tickFormatPercentage
 };
 
 const PodRate: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => {
@@ -21,12 +26,12 @@ const PodRate: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height })
     <SeasonPlot<SeasonalPodRateQuery>
       height={height}
       document={SeasonalPodRateDocument}
-      defaultValue={podRate?.gt(0) ? podRate.div(100).toNumber() : 0}
+      defaultValue={podRate?.gt(0) ? podRate.toNumber() : 0}
       defaultSeason={season?.gt(0) ? season.toNumber() : 0}
       getValue={getValue}
       formatValue={formatValue}
-      StatProps={StatProps}
-      LineChartProps={{ yAxisMultiplier: 100 }}
+      StatProps={statProps}
+      LineChartProps={lineChartProps}
     />
   );
 };

@@ -1,5 +1,7 @@
 export const sleep = (ms: number = 1000) => new Promise<void>((r) => setTimeout(() => { r(); }, ms));
 
+export const secondsToDate = (ts: string) => new Date(parseInt(ts, 10) * 1000);
+
 export const getDateCountdown = (
   /** ms since epoch; getTime() */
   time: number 

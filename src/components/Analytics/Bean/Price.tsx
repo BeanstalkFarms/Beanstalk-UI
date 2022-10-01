@@ -1,5 +1,7 @@
 import BigNumber from 'bignumber.js';
 import React from 'react';
+import { tickFormatBeanPrice } from '~/components/Analytics/formatters';
+import { LineChartProps } from '~/components/Common/Charts/LineChart';
 import SeasonPlot, {
   SeasonPlotBaseProps,
 } from '~/components/Common/Charts/SeasonPlot';
@@ -9,13 +11,14 @@ import useSeason from '~/hooks/beanstalk/useSeason';
 
 const getValue = (season: Season) => parseFloat(season.price);
 const formatValue = (value: number) => `$${value.toFixed(4)}`;
-const StatProps = {
+const statProps = {
   title: 'Bean Price',
-  titleTooltip: 'The price at the end of every Season/day.',
+  titleTooltip: 'The price at the end of every Season.',
   gap: 0.25,
 };
-const LineChartProps = {
+const lineChartProps : Partial<LineChartProps> = {
   isTWAP: true,
+  yTickFormat: tickFormatBeanPrice
 };
 
 const Price: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({
@@ -31,8 +34,8 @@ const Price: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({
       defaultSeason={season?.gt(0) ? season.toNumber() : 0}
       getValue={getValue}
       formatValue={formatValue}
-      StatProps={StatProps}
-      LineChartProps={LineChartProps}
+      StatProps={statProps}
+      LineChartProps={lineChartProps}
     />
   );
 };

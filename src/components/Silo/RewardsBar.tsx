@@ -58,7 +58,7 @@ const RewardsBar: React.FC<RewardsBarProps & { compact?: boolean }> = (
           amount={beans.earned}
           icon={beanIcon}
           compact={compact}
-          isClaimable={action !== ClaimRewardsAction.MOW}
+          isClaimable={action && (action === ClaimRewardsAction.PLANT_AND_MOW || action === ClaimRewardsAction.CLAIM_ALL)}
         />
         <RewardItem
           title="Earned Stalk"
@@ -66,7 +66,7 @@ const RewardsBar: React.FC<RewardsBarProps & { compact?: boolean }> = (
           amount={stalk.earned}
           icon={stalkIcon}
           compact={compact}
-          isClaimable={action !== ClaimRewardsAction.MOW}
+          isClaimable={action && (action === ClaimRewardsAction.PLANT_AND_MOW || action === ClaimRewardsAction.CLAIM_ALL)}
         />
       </Row>
       {/* Divider */}
@@ -77,7 +77,7 @@ const RewardsBar: React.FC<RewardsBarProps & { compact?: boolean }> = (
       <Row gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
         <RewardItem
           title="Plantable Seeds"
-          tooltip="Seeds earned in conjuction with Earned Beans. Plantable Seeds must be Planted in order to grow Stalk."
+          tooltip="Seeds earned in conjunction with Earned Beans. Plantable Seeds must be Planted in order to grow Stalk."
           amount={seeds.earned}
           icon={seedIcon}
           compact={compact}

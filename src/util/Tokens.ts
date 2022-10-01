@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js';
 import Token from '~/classes/Token';
 import { ZERO_BN } from '~/constants';
+import { STALK } from '~/constants/tokens';
 
 // -------------------------
 // BigNumber Comparators
@@ -176,6 +177,20 @@ export function displayBeanPrice(
   decimals: number = 4,
 ) {
   return price.dp(decimals, BigNumber.ROUND_FLOOR).toFixed(decimals);
+}
+
+export function displayStalk(
+  stalk: BigNumber,
+  decimals : number = STALK.displayDecimals,
+) {
+  return stalk.lt(0.0001) ? '0' : displayFullBN(stalk, decimals);
+}
+
+export function displayPercentage(
+  pct: BigNumber,
+  decimals : number = 4
+) {
+  return pct.lt(10 ** (-decimals)) ? '0%' : `${pct.toFixed(4)}%`;
 }
 
 // -------------------------

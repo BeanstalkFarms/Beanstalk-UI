@@ -308,7 +308,8 @@ export const UNRIPE_BEAN = {
       symbol: 'urBEAN',
       logo: unripeBeanLogoUrl,
       displayDecimals: 2,
-      color: '#ECBCB3'
+      color: '#ECBCB3',
+      isUnripe: true,
     },
     {
       stalk: 1,
@@ -327,7 +328,8 @@ export const UNRIPE_BEAN_CRV3 = {
       symbol: 'urBEAN3CRV',
       logo: unripeBeanCrv3LogoUrl,
       displayDecimals: 2,
-      color: BeanstalkPalette.lightBlue
+      color: BeanstalkPalette.lightBlue,
+      isUnripe: true,
     },
     {
       stalk: 1,

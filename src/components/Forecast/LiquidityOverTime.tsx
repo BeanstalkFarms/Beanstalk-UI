@@ -10,7 +10,7 @@ import useSeason from '~/hooks/beanstalk/useSeason';
 /// Setup SeasonPlot
 const getValue = (season: SeasonalLiquidityQuery['seasons'][number]) => parseFloat(season.totalLiquidityUSD);
 const formatValue = (value: number) => (
-  <Typography variant="h1" color="text.primary">
+  <Typography variant="h2" color="text.primary">
     ${value.toLocaleString('en-US', { maximumFractionDigits: 2 })}
   </Typography>
 );

@@ -3,25 +3,27 @@ import { bisector, extent, max, min } from 'd3-array';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { LinePath, Bar, Line } from '@visx/shape';
 import { Group } from '@visx/group';
-import { scaleLinear } from '@visx/scale';
+import { scaleLinear, scaleTime, NumberLike } from '@visx/scale';
 import { localPoint } from '@visx/event';
 import { useTooltip } from '@visx/tooltip';
 import {
   curveLinear,
   curveStep,
+  curveStepAfter,
+  curveStepBefore,
   curveNatural,
   curveBasis,
   curveMonotoneX,
 } from '@visx/curve';
-import { Axis, Orientation } from '@visx/axis';
+import { Axis, Orientation, TickFormatter } from '@visx/axis';
 import { CurveFactory } from 'd3-shape';
-import BigNumber from 'bignumber.js';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import { displayBN, displayFullBN } from '~/util';
 
-const CURVES = {
+export const CURVES = {
   linear: curveLinear,
   step: curveStep,
+  stepAfter: curveStepAfter,
+  stepBefore: curveStepBefore,
   natural: curveNatural,
   basis: curveBasis,
   monotoneX: curveMonotoneX,
@@ -39,14 +41,14 @@ export type DataRegion = {
 
 export type LineChartProps = {
   series: (DataPoint[])[];
-  onCursor: (ds?: DataPoint[]) => void;
+  onCursor?: (ds?: DataPoint[]) => void;
   isTWAP?: boolean; // used to indicate if we are displaying TWAP price
   curve?: CurveFactory | (keyof typeof CURVES);
-  yAxisMultiplier?: number;
   children?: (props: GraphProps & {
     scales: Scale[];
     dataRegion: DataRegion;
   }) => React.ReactElement | null;
+  yTickFormat?: TickFormatter<NumberLike>
 };
 
 type GraphProps = {
@@ -61,12 +63,13 @@ type GraphProps = {
 export type DataPoint = {
   season: number;
   value:  number;
-  date?:  Date;
+  date:  Date;
 };
 
 // data accessors
-const getX = (d: DataPoint) => d?.season;
-const getY = (d: DataPoint) => d?.value;
+const getX = (d: DataPoint) => d.season;
+const getD = (d: DataPoint) => d.date;
+const getY = (d: DataPoint) => d.value;
 const bisectSeason = bisector<DataPoint, number>(
   (d) => d.season
 ).left;
@@ -108,8 +111,6 @@ const strokes = [
 ];
 
 // AXIS
-export const backgroundColor = '#da7cff';
-export const labelColor = '#340098';
 const axisColor      = BeanstalkPalette.lightGrey;
 const tickLabelColor = BeanstalkPalette.lightGrey;
 const xTickLabelProps = () => ({
@@ -139,21 +140,18 @@ const Graph: React.FC<GraphProps> = (props) => {
     series,
     onCursor,
     isTWAP,
-    yAxisMultiplier,
     curve: _curve = 'linear',
     children,
+    yTickFormat
   } = props;
+  
   // When positioning the circle that accompanies the cursor,
   // use this dataset to decide where it goes. (There is one
   // circle but potentially multiple series).
   const data = series[0];
   const curve = typeof _curve === 'string' ? CURVES[_curve] : _curve;
-
   const yAxisWidth = 57;
 
-  /**
-   * 
-   */
   const {
     showTooltip,
     hideTooltip,
@@ -162,22 +160,20 @@ const Graph: React.FC<GraphProps> = (props) => {
     tooltipLeft = 0,
   } = useTooltip<DataPoint[] | undefined>();
 
-  /**
-   * Build scales.
-   * In both cases:
-   *  "domain" = values shown on the graph (dates, numbers)
-   *  "range"  = pixel values
-   */
+  // Scales
   const scales = useMemo(() => series.map((_data) => {
+    const xDomain = extent(_data, getX) as [number, number];
     const xScale = scaleLinear<number>({
-      domain: extent(_data, getX) as [number, number],
+      domain: xDomain,
+    });
+    const dScale = scaleTime({
+      domain: extent(_data, getD) as [Date, Date],
+      range:  xDomain
     });
 
-    //
+    /// Used for price graphs which should always show y = 1.
+    /// Sets the yScale so that 1 is always perfectly in the middle.
     let yScale;
-
-    // Used for price graphs which should always show y = 1.
-    // Sets the yScale so that 1 is always perfectly in the middle.
     if (isTWAP) {
       const yMin = min(_data, getY);
       const yMax = max(_data, getY);
@@ -193,22 +189,38 @@ const Graph: React.FC<GraphProps> = (props) => {
       });
     } 
     
-    // Min/max y scaling
+    /// Min/max y scaling
     else {
       yScale = scaleLinear<number>({
-        domain: [min(_data, getY) as number, max(_data, getY) as number],
+        domain: [
+          min(_data, getY) as number, 
+          max(_data, getY) as number
+        ],
       });
     }
 
-    xScale.range([0, width - yAxisWidth]);
+    /// Set ranges
+    xScale.range([
+      0,
+      width - yAxisWidth
+    ]);
     yScale.range([
       height - axisHeight - margin.bottom - strokeBuffer, // bottom edge
       margin.top,
     ]);
 
-    return { xScale, yScale };
-  }), [width, height, series, isTWAP]);
+    return {
+      xScale,
+      dScale,
+      yScale,
+    };
+  }), [series, isTWAP, width, height]);
 
+  // Handlers
+  const handleMouseLeave = useCallback(() => {
+    hideTooltip();
+    onCursor?.(undefined);
+  }, [hideTooltip, onCursor]);
   const handleTooltip = useCallback(
     (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
       const { x } = localPoint(event) || { x: 0 };
@@ -238,66 +250,25 @@ const Graph: React.FC<GraphProps> = (props) => {
       showTooltip({
         tooltipData: ds,
         tooltipLeft: x, // in pixels
-        // scales[0].xScale(getX(ds[0]))
-        // cursorLeft:  x,
         tooltipTop:  scales[0].yScale(getY(ds[0])), // in pixels
       });
-      onCursor(ds);
+      onCursor?.(ds);
     },
     [showTooltip, onCursor, data, scales, series],
   );
 
-  const handleMouseLeave = useCallback(() => {
-    hideTooltip();
-    onCursor(undefined);
-  }, [hideTooltip, onCursor]);
+  // const yTickNum = height > 180 ? undefined : 5;
+  const xTickNum = width > 700 ? undefined : Math.floor(width / 70);
+  const xTickFormat = useCallback((v) => {
+    const d = scales[0].dScale.invert(v);
+    return `${d.getMonth() + 1}/${d.getDate()}`;
+  }, [scales]);
 
-  const [
-    xTickSeasons,
-    xTickDates,
-  ] = useMemo(
-    () => {
-      const interval = Math.ceil(series[0].length / 12);
-      const shift    = Math.ceil(interval / 3); // slight shift on tick labels
-      return series[0].reduce<[number[], string[]]>((prev, curr, i) => {
-        if (i % interval === shift) {
-          prev[0].push(curr.season);
-          prev[1].push(
-            curr.date
-              ? `${(curr.date).getMonth() + 1}/${(curr.date).getDate()}`
-              : curr.season.toString() // fallback to season if no date provided
-          );
-        }
-        return prev;
-      }, [[], []]);
-    },
-    [series]
-  );
-  const xTickFormat = useCallback((_, i) => xTickDates[i], [xTickDates]);
-  const yTickFormat = useCallback((val) => {
-    if (isTWAP) {
-      return displayFullBN(new BigNumber(val), 4, 4);
-    }
-    return displayBN(yAxisMultiplier ? new BigNumber(val * yAxisMultiplier) : new BigNumber(val));
-  }, [isTWAP, yAxisMultiplier]);
-
+  // Empty state
   if (!series || series.length === 0) return null;
   
-  //
+  // Derived
   const tooltipLeftAttached = tooltipData ? scales[0].xScale(getX(tooltipData[0])) : undefined;
-
-  /**
-   * Height: `height` (controlled by container)
-   * Width:  `width`  (controlled by container)
-   * 
-   * ----------------------------------
-   * |                                |
-   * |           plot                 |  
-   * |                                |
-   * ----------------------------------
-   * |           axes                 | 
-   * ----------------------------------
-   */
   const dataRegion = {
     yTop: margin.top, // chart edge to data region first pixel
     yBottom: 
@@ -344,7 +315,7 @@ const Graph: React.FC<GraphProps> = (props) => {
             tickFormat={xTickFormat}
             tickStroke={axisColor}
             tickLabelProps={xTickLabelProps}
-            tickValues={xTickSeasons}
+            numTicks={xTickNum}
           />
         </g>
         <g transform={`translate(${width - 17}, 1)`}>
