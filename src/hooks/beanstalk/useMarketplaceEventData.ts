@@ -13,8 +13,9 @@ import useSiloTokenToFiat from '~/hooks/beanstalk/useSiloTokenToFiat';
 
 export type MarketEvent = {
   id: string;
+  entity: 'listing' | 'order' | 'unknown';
   /** Event action type */
-  action: 'create' | 'fill' | 'cancel' | 'default';
+  action: 'create' | 'fill' | 'cancel' | 'unknown';
   /** ex: Pod Order Created */
   label?: string;
   numPods?: BigNumber;
@@ -124,8 +125,9 @@ const useMarketplaceEventData = () => {
           case 'PodOrderCreated':
             return {
               id: e.id,
-              action: 'create' as const,
               hash: e.hash,
+              entity: 'order' as const,
+              action: 'create' as const,
               label: 'Pod Order Created',
               numPods: toTokenUnitsBN(e.amount, BEAN[1].decimals),
               placeInPodline: `0 - ${displayBN(toTokenUnitsBN(e.maxPlaceInLine, BEAN[1].decimals))}`,
@@ -137,8 +139,9 @@ const useMarketplaceEventData = () => {
             const podOrder = podOrdersById[e.historyID];
             return {
               id: e.id,
-              action: 'cancel' as const,
               hash: e.hash,
+              entity: 'order' as const,
+              action: 'cancel' as const,
               label: 'Pod Order Cancelled',
               numPods: toTokenUnitsBN(podOrder?.amount, BEAN[1].decimals),
               placeInPodline: `0 - ${displayBN(toTokenUnitsBN(podOrder?.maxPlaceInLine, BEAN[1].decimals))}`,
@@ -155,8 +158,9 @@ const useMarketplaceEventData = () => {
             const podOrder = podOrdersById[e.historyID];
             return {
               id: e.id,
-              action: 'fill' as const,
               hash: e.hash,
+              entity: 'order' as const,
+              action: 'fill' as const,
               label: 'Pod Order Filled',
               numPods: toTokenUnitsBN(podOrder?.amount, BEAN[1].decimals),
               placeInPodline: displayBN(toTokenUnitsBN(new BigNumber(e.index), BEAN[1].decimals).minus(harvestableIndex)),
@@ -171,6 +175,7 @@ const useMarketplaceEventData = () => {
             return {
               id: e.id,
               hash: e.hash,
+              entity: 'listing' as const,
               action: 'create' as const,
               label: 'Pod Listing Created',
               numPods: toTokenUnitsBN(e.amount, BEAN[1].decimals),
@@ -185,6 +190,7 @@ const useMarketplaceEventData = () => {
             return {
               id: e.id,
               hash: e.hash,
+              entity: 'listing' as const,
               action: 'cancel' as const,
               label: 'Pod Listing Cancelled',
               numPods: toTokenUnitsBN(podListing?.amount, BEAN[1].decimals),
@@ -199,6 +205,7 @@ const useMarketplaceEventData = () => {
             return {
               id: e.id,
               hash: e.hash,
+              entity: 'listing' as const,
               action: 'fill' as const,
               label: 'Pod Listing Filled',
               numPods: toTokenUnitsBN(podListing?.amount, BEAN[1].decimals),
@@ -212,7 +219,8 @@ const useMarketplaceEventData = () => {
             return {
               id: e.id,
               hash: e.hash,
-              action: 'default' as const,
+              entity: 'unknown' as const,
+              action: 'unknown' as const,
             };
           }
         }

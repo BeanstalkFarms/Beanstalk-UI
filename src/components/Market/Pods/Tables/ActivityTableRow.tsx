@@ -1,5 +1,5 @@
 import React from 'react';
-import { BoxProps, Grid, Link, Stack, Tooltip, Typography } from '@mui/material';
+import { BoxProps, Grid, Link, Stack, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import Row from '~/components/Common/Row';
@@ -8,14 +8,22 @@ import { ZERO_BN } from '~/constants';
 import podIcon from '~/img/beanstalk/pod-icon.svg';
 import beanIcon from '~/img/tokens/bean-logo-circled.svg';
 import { MarketEvent } from '~/hooks/beanstalk/useMarketplaceEventData';
+import EntityIcon from '~/components/Market/Pods/EntityIcon';
+
+// get current user's timezone
+const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZoneName;
+
+const actionToModifier = {
+  fill: '💰',
+  create: '✏️',
+  cancel: '❌',
+  unknown: undefined,
+};
 
 const ActivityTableRow: React.FC<BoxProps & { event: MarketEvent }> = (props) => {
   // setup
   const e = props.event;
   const date = DateTime.fromMillis(Number(e.time) * 1000 as number);
-
-  // get current user's timezone
-  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZoneName;
 
   // build date strings
   const topDate = date.toLocaleString({
@@ -36,17 +44,27 @@ const ActivityTableRow: React.FC<BoxProps & { event: MarketEvent }> = (props) =>
   return (
     <Grid container direction="row" px={1} py={0.75} borderBottom={1} borderColor={BeanstalkPalette.blue}>
       <Grid item xs={5} md={4}>
-        <Row alignItems="center" height="100%">
-          <Tooltip title={<Typography variant="bodySmall">ID: {e.id}</Typography>}>
-            <Link
-              href={`https://etherscan.io/tx/${e.hash}`}
-              target="_blank"
-              rel="noopener noreferrer">
-              <Typography>
-                {e.label}
-              </Typography>
-            </Link>
-          </Tooltip>
+        <Row alignItems="center" height="100%" gap={1}>
+          <Typography fontSize={14}>
+            {actionToModifier[e.action]}
+          </Typography>
+          {e.entity !== 'unknown' ? (
+            <EntityIcon
+              type={e.entity}
+              modifier={actionToModifier[e.action]}
+            />
+          ) : null}
+          <Link
+            href={`https://etherscan.io/tx/${e.hash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            underline="hover"
+            color="text.primary"
+          >
+            <Typography>
+              {e.label}
+            </Typography>
+          </Link>
         </Row>
       </Grid>
       <Grid item xs={3} md={1.63}>
