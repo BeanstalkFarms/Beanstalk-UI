@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import { Button, Divider, StackProps, Typography } from '@mui/material';
 import { SeasonAggregation, SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
-import { BeanstalkPalette } from '../../App/muiTheme';
 import Row from '~/components/Common/Row';
 
 const AGGREGATION = [
@@ -60,7 +59,7 @@ const TimeTabs: React.FC<
           }}
           disableRipple
         >
-          <Typography color={state[0] === d.index ? BeanstalkPalette.logoGreen : 'text.primary'}>
+          <Typography color={state[0] === d.index ? 'primary' : 'text.primary'}>
             {d.label}
           </Typography>
         </Button>
@@ -84,7 +83,7 @@ const TimeTabs: React.FC<
           }}
           disableRipple
         >
-          <Typography color={state[1] === w.index ? BeanstalkPalette.logoGreen : 'text.primary'}>
+          <Typography color={state[1] === w.index ? 'primary' : 'text.primary'}>
             {w.label}
           </Typography>
         </Button>

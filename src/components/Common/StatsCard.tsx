@@ -5,6 +5,7 @@ import Stat from '~/components/Common/Stat';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { displayFullBN } from '~/util';
 import { Token } from '~/classes';
+import { BeanstalkPalette }  from '~/components/App/muiTheme';
 
 export type StatItem = {
   title: string;
@@ -21,7 +22,7 @@ export type StatItem = {
 const StatsCard: React.FC<{
   stats: StatItem[];
 } & CardProps> = ({ stats }, props) => (
-  <Card sx={{ p: 1 }} {...props}>
+  <Card sx={{ p: 1, borderColor: BeanstalkPalette.lightestGrey }} {...props}>
     <Grid container spacing={1} rowSpacing={3}>
       {stats.map((stat, index) => (
         <Grid key={index} item xs={12} md={3}>

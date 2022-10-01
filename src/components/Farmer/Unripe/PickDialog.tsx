@@ -17,7 +17,7 @@ import unripeBeanIcon from '~/img/tokens/unripe-bean-logo-circled.svg';
 import brownLPIcon from '~/img/tokens/unripe-lp-logo-circled.svg';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
-import pickImage from '~/img/pick.png';
+import pickImage from '~/img/beanstalk/unripe/pick.png';
 import DescriptionButton from '~/components/Common/DescriptionButton';
 import type { PickMerkleResponse } from '~/functions/pick/pick';
 import TransactionToast from '~/components/Common/TxnToast';
