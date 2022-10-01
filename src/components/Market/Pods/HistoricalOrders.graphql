@@ -1,0 +1,17 @@
+query HistoricalOrders(
+  $historyIDs: [String!]!
+) {
+  podOrders(where: {
+    historyID_in: $historyIDs
+  }, orderBy: updatedAt, orderDirection: desc) {
+    id
+    historyID
+    status
+    # ---
+    amount
+    maxPlaceInLine
+    pricePerPod
+    # ---
+    updatedAt
+  }
+}
