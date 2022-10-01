@@ -2448,6 +2448,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@beanstalk/sdk@link:../sdk::locator=beanstalk-ui%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@beanstalk/sdk@link:../sdk::locator=beanstalk-ui%40workspace%3A."
+  languageName: node
+  linkType: soft
+
 "@bugsnag/browser@npm:^7.17.0":
   version: 7.17.0
   resolution: "@bugsnag/browser@npm:7.17.0"
@@ -10302,6 +10308,7 @@ __metadata:
   resolution: "beanstalk-ui@workspace:."
   dependencies:
     "@apollo/client": ^3.4.10
+    "@beanstalk/sdk": "link:../sdk"
     "@curvefi/api": ^2.1.0
     "@emotion/react": ^11.9.0
     "@emotion/styled": ^11.8.1

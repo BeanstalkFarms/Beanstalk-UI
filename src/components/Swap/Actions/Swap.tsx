@@ -1,10 +1,11 @@
 import { Accordion, AccordionDetails, Alert, Box, CircularProgress, IconButton, Link, Stack } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { ethers } from 'ethers';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import toast from 'react-hot-toast';
 import { useConnect } from 'wagmi';
+import type { BeanstalkSDK } from '@beanstalk/sdk';
 import {
   FormApprovingState, FormTokenState,
   SettingInput,
@@ -26,10 +27,9 @@ import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useFarmerBalances from '~/hooks/farmer/useFarmerBalances';
 import useTokenMap from '~/hooks/chain/useTokenMap';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
+import { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import useQuote, { QuoteHandler } from '~/hooks/ledger/useQuote';
-import useFarm from '~/hooks/sdk/useFarm';
 import useAccount from '~/hooks/ledger/useAccount';
 import { toStringBaseUnitBN, toTokenUnitsBN, parseError, MinBN } from '~/util';
 import { IconSize } from '~/components/App/muiTheme';
@@ -42,6 +42,7 @@ import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSumma
 import { ActionType } from '~/util/Actions';
 import WarningIcon from '~/components/Common/Alert/WarningIcon';
 import Row from '~/components/Common/Row';
+import { SDKContext } from '~/components/App/SDKProvider';
 
 /// ---------------------------------------------------------------
 
@@ -605,7 +606,9 @@ const isPair = (_tokenIn : Token, _tokenOut : Token, _pair : [Token, Token]) => 
 const Swap: React.FC<{}> = () => {
   ///
   const { data: signer } = useSigner();
+  const sdk = useContext<BeanstalkSDK>(SDKContext);
   const beanstalk = useBeanstalkContract(signer);
+
   const account = useAccount();
 
   ///
@@ -617,7 +620,6 @@ const Swap: React.FC<{}> = () => {
   const crv3Underlying = useMemo(() => new Set(CRV3_UNDERLYING.map(getChainToken)), [getChainToken]);
   const tokenMap      = useTokenMap<ERC20Token | NativeToken>(SUPPORTED_TOKENS);
   const tokenList     = useMemo(() => Object.values(tokenMap), [tokenMap]);
-  const farm          = useFarm();
   
   ///
   const farmerBalances = useFarmerBalances();
@@ -658,167 +660,6 @@ const Swap: React.FC<{}> = () => {
     return false;
   }, [Bean, Crv3, Eth, Weth, crv3Underlying]);
 
-  const handleEstimate = useCallback(async (
-    forward : boolean,
-    amountIn : ethers.BigNumber,
-    _account : string,
-    _tokenIn : Token,
-    _tokenOut : Token,
-    _fromMode : FarmFromMode,
-    _toMode : FarmToMode,
-  ) => {
-    console.debug('[handleEstimate]', {
-      forward,
-      amountIn,
-      _account,
-      _tokenIn,
-      _tokenOut,
-      _fromMode,
-      _toMode,
-    });
-
-    const pathway = getPathway(_tokenIn, _tokenOut);
-
-    console.debug('[handleEstimate] got pathway: ', pathway);
-
-    /// Say I want to buy 1000 BEAN and I have ETH.
-    /// I select ETH as the input token, BEAN as the output token.
-    /// Then I type 1000 into the BEAN input.
-    ///
-    /// When this happens, `handleEstimate` is called
-    /// with `forward = false` (since we are finding the amount of
-    /// ETH needed to buy 1,000 BEAN, rather than the amount of BEAN
-    /// received for a set amount of ETH). 
-    /// 
-    /// In this instance, `_tokenIn` is BEAN and `_tokenOut` is ETH,
-    /// since we are quoting from BEAN to ETH.
-    /// 
-    /// If forward-quoting, then the user's selected input token (the
-    /// first one that appears in the form) is the same as _tokenIn.
-    /// If backward-quoting, then we flip things.
-    const startToken = forward ? _tokenIn : _tokenOut;
-
-    /// Token <-> Token
-    if (pathway === Pathway.TRANSFER) {
-      console.debug('[handleEstimate] estimating: transferToken');
-      return Farm.estimate(
-        [
-          farm.transferToken(
-            _tokenIn.address,
-            _account,
-            _fromMode,
-            _toMode,
-          )
-        ],
-        [amountIn],
-        forward
-      );
-    } 
-
-    /// ETH <-> WETH
-    if (pathway === Pathway.ETH_WETH) {
-      console.debug(`[handleEstimate] estimating: ${startToken === Eth ? 'wrap' : 'unwrap'}`);
-      return Farm.estimate(
-        [
-          startToken === Eth
-            ? farm.wrapEth(_toMode)
-            : farm.unwrapEth(_fromMode)
-        ],
-        [amountIn],
-        forward,
-      );
-    } 
-
-    /// BEAN <-> 3CRV
-    if (pathway === Pathway.BEAN_CRV3) {
-      console.debug('[handleEstimate] estimating: BEAN <-> CRV3');
-      return Farm.estimate(
-        [
-          farm.exchange(
-            farm.contracts.curve.pools.beanCrv3.address,
-            farm.contracts.curve.registries.metaFactory.address,
-            _tokenIn.address,
-            _tokenOut.address,
-            _fromMode,
-            _toMode
-          )
-        ],
-        [amountIn],
-        forward,
-      );
-    }
-
-    /// BEAN <-> ETH
-    if (pathway === Pathway.BEAN_ETH) {
-      console.debug('[handleEstimate] estimating: BEAN <-> ETH');
-      return Farm.estimate(
-        startToken === Eth
-         ? [
-            farm.wrapEth(
-              FarmToMode.INTERNAL
-            ),
-            ...farm.pair.WETH_BEAN(
-              'WETH',
-              FarmFromMode.INTERNAL,
-              _toMode,
-            ),
-         ]
-         : [
-            ...farm.pair.WETH_BEAN(
-              'BEAN',
-              _fromMode,
-              FarmToMode.INTERNAL, // send WETH to INTERNAL
-            ), // amountOut is not exact
-            farm.unwrapEth(
-              FarmFromMode.INTERNAL_TOLERANT  // unwrap WETH from INTERNAL
-            ), // always goes to EXTERNAL because ETH is not ERC20 and therefore not circ. bal. compatible
-         ],
-       [amountIn],
-       forward,
-     );
-    }
-
-    /// BEAN <-> WETH
-    if (pathway === Pathway.BEAN_WETH) {
-      console.debug('[handleEstimate] estimating: BEAN <-> WETH');
-      return Farm.estimate(
-        startToken === Weth
-          ? farm.pair.WETH_BEAN(
-            'WETH',
-            _fromMode,
-            _toMode,
-          )
-          : farm.pair.WETH_BEAN(
-            'BEAN',
-            _fromMode,
-            _toMode,
-          ),
-       [amountIn],
-       forward,
-     );
-    } 
-
-    /// BEAN <-> CRV3 Underlying
-    if (pathway === Pathway.BEAN_CRV3_UNDERLYING) {
-      console.debug('[handleEstimate] estimating: BEAN <-> 3CRV Underlying');
-      return Farm.estimate(
-        [
-          farm.exchangeUnderlying(
-            farm.contracts.curve.pools.beanCrv3.address,
-            _tokenIn.address,
-            _tokenOut.address,
-            _fromMode,
-            _toMode
-          )
-        ],
-        [amountIn],
-        forward,
-      );
-    }
-
-    throw new Error('Unsupported swap mode.');
-  }, [Eth, Weth, farm, getPathway]);
-
   const handleQuote = useCallback<DirectionalQuoteHandler>(
     (direction) => async (_tokenIn, _amountIn, _tokenOut) => {
       console.debug('[handleQuote] ', {
@@ -827,17 +668,27 @@ const Swap: React.FC<{}> = () => {
         _amountIn,
         _tokenOut
       }); 
-      if (!account) throw new Error('Connect a wallet first.');
       
+      if (!account) throw new Error('Connect a wallet first.');
+
+      const tokenIn = sdk.tokens.findByAddress(_tokenIn.address);
+      if (!tokenIn) {
+        throw new Error(`Address of ${_tokenIn.symbol} was not found in SDK tokens.`);
+      }
+      const tokenOut = sdk.tokens.findByAddress(_tokenOut.address);
+      if (!tokenIn) {
+        throw new Error(`Address of ${_tokenIn.symbol} was not found in SDK tokens.`);
+      }
       const amountIn = ethers.BigNumber.from(toStringBaseUnitBN(_amountIn, _tokenIn.decimals));
-      const estimate = await handleEstimate(
+      const estimate = await sdk.swap.estimate(
         direction === 'forward',
         amountIn,
-        account,
-        _tokenIn,
-        _tokenOut,
+        account, 
+        // @ts-ignore FIXME
+        tokenIn,
+        tokenOut,
         FarmFromMode.INTERNAL_EXTERNAL,
-        FarmToMode.EXTERNAL,
+        FarmToMode.EXTERNAL
       );
 
       return {
@@ -848,7 +699,7 @@ const Swap: React.FC<{}> = () => {
         steps: estimate.steps,
       };
     },
-    [account, handleEstimate]
+    [account, sdk]
   );
 
   const onSubmit = useCallback(
@@ -856,11 +707,17 @@ const Swap: React.FC<{}> = () => {
       let txToast;
       try {
         const stateIn = values.tokensIn[0];
-        const tokenIn = stateIn.token;
+        const tokenIn = sdk.tokens.findByAddress(stateIn.token.address);
+        if (!tokenIn) {
+          throw new Error(`Address of ${stateIn.token.symbol} was not found in SDK tokens.`);
+        }
         const modeIn  = values.modeIn;
         const balanceIn = farmerBalances[tokenIn.address];
         const stateOut = values.tokenOut;
-        const tokenOut = stateOut.token;
+        const tokenOut = sdk.tokens.findByAddress(stateOut.token.address);
+        if (!tokenOut) {
+          throw new Error(`Address of ${stateOut.token.symbol} was not found in SDK tokens.`);
+        }
         const modeOut  = values.modeOut;
         if (!stateIn.amount) throw new Error('No input amount set.');
         if (!account) throw new Error('Connect a wallet first.');
@@ -868,10 +725,12 @@ const Swap: React.FC<{}> = () => {
         const amountIn = ethers.BigNumber.from(
           stateIn.token.stringify(stateIn.amount)
         );
-        const estimate = await handleEstimate(
+        
+        const estimate = await sdk.swap.estimate(
           true,
           amountIn,
           account,
+          // @ts-ignore FIXME
           tokenIn,
           tokenOut,
           tokenIn === tokenOut
@@ -886,12 +745,10 @@ const Swap: React.FC<{}> = () => {
           success: 'Swap successful.'
         });
         
-        if (!estimate.steps) throw new Error('Unable to generate a transaction sequence');
-        const data = Farm.encodeStepsWithSlippage(
-          estimate.steps,
-          values.settings.slippage / 100,
+        const txn = await sdk.swap.execute(
+          estimate,
+          values.settings.slippage / 100
         );
-        const txn = await beanstalk.farm(data, { value: estimate.value });
         txToast.confirming(txn);
 
         const receipt = await txn.wait();
@@ -913,7 +770,7 @@ const Swap: React.FC<{}> = () => {
         formActions.setSubmitting(false);
       }
     },
-    [account, beanstalk, farmerBalances, handleEstimate, refetchFarmerBalances]
+    [account, farmerBalances, refetchFarmerBalances, sdk.tokens, sdk.swap]
   );
 
   return (
