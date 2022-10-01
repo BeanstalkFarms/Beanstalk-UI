@@ -57,7 +57,7 @@ const PageHeader : React.FC<{
                 <Link
                   href={props.href || 'https://docs.bean.money'}
                   underline="none"
-                  color={BeanstalkPalette.theme.fall.brown}
+                  color="primary"
                   display="flex"
                   flexDirection="row"
                   gap={1}

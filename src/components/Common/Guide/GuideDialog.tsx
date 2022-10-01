@@ -23,9 +23,6 @@ const GuideDialog: React.FC<DialogProps & GuideProps> = (props) => (
               display: 'block',
               color: 'inherit',
               borderColor: BeanstalkPalette.lightestGrey,
-              // '&:hover': {
-              //   borderColor: BeanstalkPalette.lightestBlue,
-              // },
               height: 'auto',
               textAlign: 'center'
             }}
