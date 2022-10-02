@@ -1,13 +1,10 @@
 import React, { useMemo } from 'react';
-import { Card } from '@mui/material';
+import { Card, Stack, Typography } from '@mui/material';
 import useSeasonsQuery, {
   SnapshotData,
 } from '~/hooks/beanstalk/useSeasonsQuery';
 import { BEANSTALK_ADDRESSES } from '~/constants';
-import {
-  BEAN,
-  BEAN_CRV3_LP,
-} from '~/constants/tokens';
+import { BEAN, BEAN_CRV3_LP } from '~/constants/tokens';
 import {
   SeasonalDepositedSiloAssetDocument,
   SeasonalDepositedSiloAssetQuery,
@@ -19,6 +16,7 @@ import { ERC20Token } from '~/classes/Token';
 import { ChartMultiStyles } from '~/components/Common/Charts/MultiStackedAreaChart';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
+import Row from '~/components/Common/Row';
 
 const assets = {
   bean: BEAN[1],
@@ -27,18 +25,36 @@ const assets = {
 const account = BEANSTALK_ADDRESSES[1];
 
 const stylesConfig: ChartMultiStyles = {
-  bean: { stroke: BeanstalkPalette.logoGreen, fillPrimary: BeanstalkPalette.lightGreen },
-  bean3Crv: { stroke: BeanstalkPalette.darkBlue, fillPrimary: BeanstalkPalette.lightBlue }
+  bean: {
+    stroke: BeanstalkPalette.logoGreen,
+    fillPrimary: BeanstalkPalette.lightGreen,
+  },
+  bean3Crv: {
+    stroke: BeanstalkPalette.darkBlue,
+    fillPrimary: BeanstalkPalette.lightBlue,
+  },
 };
 
-const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
-
+const formatValue = (value: number) =>
+  `${value.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
 const updateDisplayValue = <T extends BaseDataPoint>(v?: T) => {
   if (v?.bean && v?.bean3Crv) {
-    return formatValue(v.bean3Crv / v.bean);
+    return parseFloat(formatValue(v.bean3Crv / v.bean));
   }
   return 0;
 };
+const TooltipComponent = <T extends BaseDataPoint>({ d }: { d: T }) => (
+  <Stack gap={0.5} width="200px">
+    <Row justifyContent="space-between">
+      <Typography>Bean</Typography>
+      <Typography textAlign="right">{formatValue(d?.bean)}</Typography>
+    </Row>
+    <Row justifyContent="space-between">
+      <Typography>Bean3Crv</Typography>
+      <Typography textAlign="right">{formatValue(d?.bean3Crv)}</Typography>
+    </Row>
+  </Stack>
+);
 
 const getValue = (asset: ERC20Token) => {
   const fn = (season: SnapshotData<SeasonalDepositedSiloAssetQuery>) =>
@@ -51,9 +67,19 @@ const BeanVs3Crv: React.FC<{}> = () => {
   const timeTabParams = useTimeTabState();
   const queryConfig = useMemo(
     () => ({
-      bean: { variables: { season_gt: 6073, siloAsset: `${account.toLowerCase()}-${assets.bean.address}` } },
-      bean3Crv: { variables: { season_gt: 6073, siloAsset: `${account.toLowerCase()}-${assets.bean3Crv.address}` } },
-    }), 
+      bean: {
+        variables: {
+          season_gt: 6073,
+          siloAsset: `${account.toLowerCase()}-${assets.bean.address}`,
+        },
+      },
+      bean3Crv: {
+        variables: {
+          season_gt: 6073,
+          siloAsset: `${account.toLowerCase()}-${assets.bean3Crv.address}`,
+        },
+      },
+    }),
     []
   );
   const beanQuery = useSeasonsQuery<SeasonalDepositedSiloAssetQuery>(
@@ -67,16 +93,25 @@ const BeanVs3Crv: React.FC<{}> = () => {
     queryConfig.bean3Crv
   );
 
-  const queryParams = useMemo(() => [
+  const queryParams = useMemo(
+    () => [
       { query: beanQuery, getValue: getValue(assets.bean), key: 'bean' },
-      { query: bean3CrvQuery, getValue: getValue(assets.bean3Crv), key: 'bean3Crv' }
+      {
+        query: bean3CrvQuery,
+        getValue: getValue(assets.bean3Crv),
+        key: 'bean3Crv',
+      },
     ],
-   [bean3CrvQuery, beanQuery]);
+    [bean3CrvQuery, beanQuery]
+  );
 
-  const statProps = useMemo(() => ({
-    title: 'Total Deposited Bean & Bean3Crv',
-    gap: 0.5
-  }), []);
+  const statProps = useMemo(
+    () => ({
+      title: 'Total Deposited Bean & Bean3Crv',
+      gap: 0.5,
+    }),
+    []
+  );
 
   return (
     <Card sx={{ pt: 2 }}>
@@ -89,7 +124,8 @@ const BeanVs3Crv: React.FC<{}> = () => {
         updateDisplayValue={updateDisplayValue}
         stackedArea
         ChartProps={{
-          stylesConfig: stylesConfig
+          stylesConfig: stylesConfig,
+          tooltipComponent: TooltipComponent,
         }}
       />
     </Card>

@@ -1,27 +1,33 @@
 import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
 import { TimeTabStateParams } from '~/hooks/app/useTimeTabState';
-import { MergeSeasonsQueryProps, useMergeSeasonsQueries } from '~/hooks/beanstalk/useMergeSeasonsQueries';
+import {
+  MergeSeasonsQueryProps,
+  useMergeSeasonsQueries,
+} from '~/hooks/beanstalk/useMergeSeasonsQueries';
 import { MinimumViableSnapshotQuery } from '~/hooks/beanstalk/useSeasonsQuery';
 
 import Row from '../Row';
 import Stat, { StatProps } from '../Stat';
 import { defaultValueFormatter, SeasonPlotBaseProps } from './SeasonPlot';
-import MultiStackedAreaChart, { ChartMultiProps } from './MultiStackedAreaChart';
+import MultiStackedAreaChart, {
+  ChartMultiProps,
+} from './MultiStackedAreaChart';
 import TimeTabs from './TimeTabs';
 import { BaseDataPoint } from './ChartPropProvider';
 
-type SeasonPlotMultiBaseProps<T extends BaseDataPoint, K extends MinimumViableSnapshotQuery> = (
-  Omit<SeasonPlotBaseProps, 'document'> 
-  & { queryData: MergeSeasonsQueryProps<K>[] }
-  & { timeTabParams: TimeTabStateParams }
-  & { ChartProps?: ChartMultiProps<T> }
-  & {
-    formatStat?: (value: number) => string | JSX.Element;
-    StatProps?: Omit<StatProps, 'amount' | 'subtitle'>; 
-    updateDisplayValue?: (d?: T) => number;
-  }
-);
+type SeasonPlotMultiBaseProps<
+  T extends BaseDataPoint,
+  K extends MinimumViableSnapshotQuery
+> = Omit<SeasonPlotBaseProps, 'document'> & {
+  queryData: MergeSeasonsQueryProps<K>[];
+} & { timeTabParams: TimeTabStateParams } & {
+  ChartProps?: ChartMultiProps<T>;
+} & {
+  formatStat?: (value: number) => string | JSX.Element;
+  StatProps?: Omit<StatProps, 'amount' | 'subtitle'>;
+  updateDisplayValue?: (d?: T) => number;
+};
 
 export default function SeasonPlotMulti<
   T extends BaseDataPoint,
@@ -49,21 +55,24 @@ export default function SeasonPlotMulti<
     undefined
   );
 
-  const { 
-    data: series, 
-    loading, 
-    error, 
-    keys 
+  const {
+    data: series,
+    loading,
+    error,
+    keys,
   } = useMergeSeasonsQueries(queryData, timeTabParams[0], stackedArea);
 
-  const handleCursor = useCallback((dps?: T) => {
-    setDisplaySeason(dps ? dps.season : undefined);
-    if (updateDisplayValue) {
-      setDisplayValue(updateDisplayValue(dps));
-    } else {
-      setDisplayValue(dps ? dps.value : undefined);
-    }
-  }, [updateDisplayValue]);
+  const handleCursor = useCallback(
+    (dps?: T) => {
+      setDisplaySeason(dps ? dps.season : undefined);
+      if (updateDisplayValue) {
+        setDisplayValue(updateDisplayValue(dps));
+      } else {
+        setDisplayValue(dps ? dps.value : undefined);
+      }
+    },
+    [updateDisplayValue]
+  );
 
   /// If one of the defaults is missing, use the last data point.
   const defaultValue = _defaultValue || 0;
@@ -123,8 +132,8 @@ export default function SeasonPlotMulti<
             keys={keys}
             onCursor={handleCursor}
             {...chartProps}
-            />
-        ) : (null)}
+          />
+        ) : null}
       </Box>
     </>
   );
