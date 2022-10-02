@@ -60,10 +60,10 @@ export type SeasonPlotValueProps<T extends MinimumViableSnapshotQuery> = {
 };
 
 type SeasonPlotFinalProps<T extends MinimumViableSnapshotQuery> =
-  SeasonPlotBaseProps &
-    SeasonPlotValueProps<T> & { queryConfig?: Partial<QueryOptions> } & {
-      StatProps: Omit<StatProps, 'amount' | 'subtitle'>;
-    } & { LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP'> };
+  SeasonPlotBaseProps 
+  & SeasonPlotValueProps<T> & { queryConfig?: Partial<QueryOptions> } 
+  & { StatProps: Omit<StatProps, 'amount' | 'subtitle'> } 
+  & { LineChartProps?: Pick<LineChartProps, 'curve' | 'isTWAP'> };
 
 /**
  *

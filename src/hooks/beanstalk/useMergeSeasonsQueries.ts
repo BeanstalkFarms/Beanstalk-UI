@@ -1,6 +1,10 @@
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { ApolloError } from '@apollo/client';
-import useSeasonsQuery, {  MinimumViableSnapshot, MinimumViableSnapshotQuery, SnapshotData } from './useSeasonsQuery';
+import BigNumber from 'bignumber.js';
+import { BaseDataPoint } from '../../components/Common/Charts/ChartPropProvider';
+import { TimeTabState } from '../../components/Common/Charts/TimeTabs';
+import useSeasonsQuery, {  MinimumViableSnapshot, MinimumViableSnapshotQuery, SeasonAggregation } from './useSeasonsQuery';
+import { secondsToDate, sortSeasons } from '~/util';
 
 type SeasonData = (Omit<MinimumViableSnapshot, 'id'> & any);
 interface MergedSeasonsQueryData {
@@ -22,90 +26,152 @@ export type MergeSeasonsQueryProps<T extends MinimumViableSnapshotQuery> = {
   key: string;
 }
 
-/**
- * lns: last season where data[season][key] is not null
- * nns: next season where data[season][key] is not null
- * lnv: value of data[lns][key]
- * nnv: value of data[lnv][key]
- */
-type InterpolateCache = { lns: number; nns: number; lnv: number; nnv: number  };
+const generateStackedAreaSeriesData = <T extends MinimumViableSnapshotQuery, K extends BaseDataPoint>(
+  params: MergeSeasonsQueryProps<T>[], 
+  seasonAggregation: SeasonAggregation, 
+  keys: string[],
+) => {
+  const points: K[] = [];
+  // merge
+  const queryData: MergedSeasonsQueryData = {};
+  params.forEach(({ query, getValue, key }) => {
+    // if no seasons data, skip
+    if (!query?.data?.seasons) return;
+    query.data.seasons.forEach((s) => {
+      // if no season data, skip
+      if (!s) return;
+      const prev = queryData[s.season];
+      if (!prev) {
+        queryData[s.season] = {
+          season: s.season,
+          timestamp: s.timestamp,
+          [key]: getValue(s)
+        };
+      } else {
+        queryData[s.season] = {
+          ...queryData[s.season],
+          [key]: getValue(s)
+        };
+      }
+    });
+  });
 
-const interpolateIsStackedArea = (_data: MergedSeasonsQueryData, keys: string[]) => {
-  const data = { ..._data };
-  const arrData = Object.values(data);
+  const seasonsData = Object.values(queryData);
 
-  // sort seasons in ascending order
-  if (!arrData || !arrData.length) return [];
-  const sorted = arrData.sort((a, b) => a.season - b.season);
-  const [firstSeason, lastSeason] = [
-    sorted[0].season,
-    sorted[sorted.length - 1].season
-  ] as [number, number];
-
-  const getNextNonNullValueWithSeason = (startSeason: number, key: string) => {
-    let i = startSeason + 1;
-    let mayNull = data[i];
-    while (!mayNull || !(key in mayNull)) {
+  if (seasonAggregation === SeasonAggregation.DAY) {
+    const data = seasonsData.reverse();
+    const lastIndex = data.length - 1;
+    const agg = keys.reduce((acc, _key) => {
+      acc[_key] = 0;
+      return acc;
+    }, {} as { [k: string]: number }); // value aggregator
+    let i = 0; // total iterations
+    let j = 0; // points averaged into this day
+    let d: Date | undefined; // current date for this avg
+    let s: number | undefined; // current season for this avg
+    for (let k = lastIndex; k >= 0; k -= 1) {
+      const season = data[k];
+      if (!season) continue;
+      keys.forEach((_key) => {
+        const sd = season[_key] as number;
+        if (sd) agg[_key] += sd;
+      });
+      if (j === 0) {
+        d = secondsToDate(season.timestamp);
+        s = season.season as number;
+        j += 1;
+      } else if (i === lastIndex || j === 24) {
+        points.push({
+          season: s as number,
+          date: d as Date,
+          ...agg,
+        } as unknown as K);
+        keys.forEach((_k) => {
+          agg[_k] = 0;
+        });
+        j = 0;
+      } else {
+        j += 1;
+      }
       i += 1;
-      mayNull = data[i];
     }
-    return [i, mayNull[key]];
-  };
-
-  const _interpolate = ({ nnv, lnv, nns, lns }: Required<InterpolateCache>, season: number) => {
-    const m = (nnv - lnv) / (nns - lns);
-    const cObj = _data[season];
-    const mTimestamp = (parseFloat(data[nns].timestamp) - parseFloat(data[lns].timestamp)) / (nns - lns);
-    const value = (m * (season - lns) + lnv);
-    const timestamp = cObj && ('timestamp' in cObj)
-      ? cObj.timestamp 
-      : (mTimestamp * (season - lns) + parseFloat(data[lns].timestamp)).toFixed();
-
-    return { value, timestamp };
-  };
-
-  const addData = (season: number, value: number, timestamp: string, key: string) => {
-    const sData = data[season];
-    if (sData) { data[season] = { ...sData, timestamp, [key]: value }; } 
-    else { data[season] = { season, timestamp, [key]: value }; }
-  };
-
-  keys.forEach((k) => {
-    let cache: InterpolateCache = { lns: 0, nns: 0, lnv: 0, nnv: 0 };
-    for (let season = firstSeason; season <= lastSeason; season += 1) {
-      const seasonData = data[season];
-      // if season value of data[season][key] exists, update cache & continue
-      if (seasonData && k in seasonData) {
-        cache = { ...cache, lns: season, lnv: seasonData[k] };
-        continue;
-      }
-      
-      if (cache.lns && cache.lnv) {
-        if (cache.nns && cache.nns < season) {
-          const { value, timestamp } = _interpolate(cache, season);
-          addData(season, value, timestamp, k);
-        } else {
-          const [nns, nnv] = getNextNonNullValueWithSeason(cache.lns, k);
-          cache = { ...cache, nnv, nns };
-          const { value, timestamp } = _interpolate(cache, season);
-          addData(season, value, timestamp, k);
-        }
-      }
+  } else {
+    for (const seasonData of seasonsData) {
+      points.push({
+        ...seasonData,
+        season: seasonData.season as number,
+        date: secondsToDate(seasonData.timestamp)
+      } as unknown as K);
     }
-  }, []);
-
-  return Object.values(data);
+  }
+  
+  return [points.sort(sortSeasons)];
 };
 
-export const useMergeSeasonsQueries = <T extends MinimumViableSnapshotQuery>(
+const generateSeriesData = <T extends MinimumViableSnapshotQuery, K extends BaseDataPoint>(
+  params: MergeSeasonsQueryProps<T>[], 
+  seasonAggregation: SeasonAggregation,
+) => {
+  const points: K[][] = params.map(({ query, getValue }) => {
+    const _points: K[] = [];
+    const data = query.data;
+    if (!data || !data.seasons.length) return [];
+    const lastIndex = data.seasons.length - 1;
+    if (seasonAggregation === SeasonAggregation.DAY) {
+      let v = 0; // value aggregator
+      let i = 0; // total iterations
+      let j = 0; // points averaged into this day
+      let d: Date | undefined; // current date for this avg
+      let s: number | undefined; // current season for this avg
+      for (let k = lastIndex; k >= 0; k -= 1) {
+        const season = data.seasons[k];
+        if (!season) continue; // skip empty points
+        v += getValue(season);
+        if (j === 0) {
+          d = secondsToDate(season.timestamp);
+          s = season.season as number;
+          j += 1;
+        } else if (
+          i === lastIndex || // last iteration
+          j === 24 // full day of data ready
+        ) {
+          _points.push({
+            season: s as number,
+            date: d as Date,
+            value: new BigNumber(v).div(j + 1).toNumber(),
+          } as unknown as K);
+          v = 0;
+          j = 0;
+        } else {
+          j += 1;
+        }
+        i += 1;
+      }
+    } else {
+      for (const season of data.seasons) {
+        if (!season) continue;
+        _points.push({
+          season: season.season as number,
+          date: secondsToDate(season.timestamp),
+          value: getValue(season),
+        } as unknown as K);
+      }
+    }
+    return _points.sort(sortSeasons);
+  });
+  return points;
+};
+
+export const useMergeSeasonsQueries = <T extends MinimumViableSnapshotQuery, K extends BaseDataPoint>(
   params: MergeSeasonsQueryProps<T>[],
-  isStackedArea?: boolean,
+  timeTabState: TimeTabState,
+  stackedArea?: boolean,
 ): {
-  data: SnapshotData<T>[][] | undefined;
+  data: K[][];
   error: ApolloError[] | undefined;
   keys: string[];
   loading: boolean;
-  isStackedArea: boolean;
+  stackedArea?: boolean;
 } => {
   const loading = !!(params.find((p) => p.query.loading));
 
@@ -116,47 +182,14 @@ export const useMergeSeasonsQueries = <T extends MinimumViableSnapshotQuery>(
     return errs.length ? errs : undefined;
   }, [params]);
 
-  const [merged, keys] = useMemo(() => {
-    const base: SnapshotData<T>[][] = [[]];
-    if (!params.length || loading || error) return [base, []];
-    console.debug(
-      `[useMergeSeasonsQueries] merging data from ${params.length} queries`,
-      params.map((p) => p.query.observable.queryName)
-    );
+  const [mergedData, dataKeys] = useMemo(() => {
     const _keys = params.map(({ key }) => key);
-    const queryData: MergedSeasonsQueryData = {};
-
-    // // merge query data
-    params.forEach(({ query, getValue, key }) => {
-      // if no seasons data, skip
-      if (!query?.data?.seasons) return;
-      query.data.seasons.forEach((s) => {
-        // if no season data, skip
-        if (!s) return;
-        const prev = queryData[s.season];
-        if (!prev) {
-          queryData[s.season] = {
-            season: s.season,
-            timestamp: s.timestamp,
-            [key]: getValue(s)
-          };
-        } else {
-          queryData[s.season] = {
-            ...queryData[s.season],
-            [key]: getValue(s)
-          };
-        }
-      });
-    });
-
-    return [[interpolateIsStackedArea(queryData, _keys)], _keys];
-  }, [error, loading, params]);
-
-  console.log('merged: ', merged);
-
-  const mergeSeriesData = useCallback((_params: MergeSeasonsQueryProps<T>[]) => {
+    const series = stackedArea 
+      ? generateStackedAreaSeriesData(params, timeTabState[0], _keys)
+      : generateSeriesData(params, timeTabState[0]);
     
-  }, []);
+    return [series, _keys] as [K[][], string[]];
+  }, [params, stackedArea, timeTabState]);
 
-  return { data: merged, error, loading, keys, isStackedArea: !!isStackedArea };
+  return { data: mergedData, error, loading, keys: dataKeys, stackedArea };
 };

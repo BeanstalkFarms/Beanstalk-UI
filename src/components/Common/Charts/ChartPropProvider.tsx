@@ -87,6 +87,7 @@ type ChartAccessorProps<T extends BaseDataPoint> = {
   // accessors
   getX: (d: T) => number;
   getD: (d: T) => Date;
+  getY: (d: T) => number;
   getY0: (d: SeriesPoint<T>) => number;
   getY1: (d: SeriesPoint<T>) => number;
   getYMin: (d: T) => number;

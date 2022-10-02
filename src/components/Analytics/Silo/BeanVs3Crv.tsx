@@ -7,14 +7,11 @@ import { BEANSTALK_ADDRESSES } from '~/constants';
 import {
   BEAN,
   BEAN_CRV3_LP,
-  UNRIPE_BEAN,
-  UNRIPE_BEAN_CRV3,
 } from '~/constants/tokens';
 import {
   SeasonalDepositedSiloAssetDocument,
   SeasonalDepositedSiloAssetQuery,
 } from '~/generated/graphql';
-import { useMergeSeasonsQueries } from '~/hooks/beanstalk/useMergeSeasonsQueries';
 import { toTokenUnitsBN } from '~/util';
 import useTimeTabState from '~/hooks/app/useTimeTabState';
 import SeasonPlotMulti from '~/components/Common/Charts/SeasonPlotMulti';
@@ -25,10 +22,10 @@ import { BeanstalkPalette } from '~/components/App/muiTheme';
 const assets = {
   bean: BEAN[1],
   bean3Crv: BEAN_CRV3_LP[1],
-  urBean: UNRIPE_BEAN[1],
-  urBean3Crv: UNRIPE_BEAN_CRV3[1],
 };
 const account = BEANSTALK_ADDRESSES[1];
+
+const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 
 const stylesConfig: ChartMultiStyles = {
   bean: { stroke: BeanstalkPalette.lightGreen, fillPrimary: BeanstalkPalette.mediumGreen },
@@ -43,40 +40,48 @@ const getValue = (asset: ERC20Token) => {
 
 const BeanVs3Crv: React.FC<{}> = () => {
   // refactor me
-  const timeTabState = useTimeTabState();
+  const timeTabParams = useTimeTabState();
   const queryConfig = useMemo(
     () => ({
       bean: { variables: { season_gt: 6073, siloAsset: `${account.toLowerCase()}-${assets.bean.address}` } },
       bean3Crv: { variables: { season_gt: 6073, siloAsset: `${account.toLowerCase()}-${assets.bean3Crv.address}` } },
-    }),
+    }), 
     []
   );
   const beanQuery = useSeasonsQuery<SeasonalDepositedSiloAssetQuery>(
     SeasonalDepositedSiloAssetDocument,
-    timeTabState[0][1],
+    timeTabParams[0][1],
     queryConfig.bean
   );
   const bean3CrvQuery = useSeasonsQuery<SeasonalDepositedSiloAssetQuery>(
     SeasonalDepositedSiloAssetDocument,
-    timeTabState[0][1],
+    timeTabParams[0][1],
     queryConfig.bean3Crv
   );
-  const mergeProps = useMergeSeasonsQueries([
-    { query: beanQuery, getValue: getValue(assets.bean), key: 'bean' },
-    { query: bean3CrvQuery, getValue: getValue(assets.bean3Crv), key: 'bean3Crv' }],
-    true
-  );
+
+  const queryParams = useMemo(() => [
+      { query: beanQuery, getValue: getValue(assets.bean), key: 'bean' },
+      { query: bean3CrvQuery, getValue: getValue(assets.bean3Crv), key: 'bean3Crv' }
+    ],
+   [bean3CrvQuery, beanQuery]);
+
+  const statProps = useMemo(() => ({
+    title: 'Total Deposited Bean & Bean3Crv',
+    gap: 0.5
+  }), []);
 
   return (
-    <Card>
+    <Card sx={{ pt: 2 }}>
       <SeasonPlotMulti
-        {...mergeProps}
-        
-        // StatProps={{
-        //   title: 'Deposited Bean vs Bean3Crv',
-        // }}
-        // formatStat={(value: number) => value.toString()}
-        timeTabState={timeTabState}
+        queryData={queryParams}
+        height={300}
+        StatProps={statProps}
+        timeTabParams={timeTabParams}
+        formatStat={formatValue}
+        stackedArea
+        ChartProps={{
+          stylesConfig: stylesConfig
+        }}
       />
     </Card>
   );

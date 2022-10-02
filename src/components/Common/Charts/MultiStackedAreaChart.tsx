@@ -41,7 +41,7 @@ export type ChartMultiProps<T extends BaseDataPoint> = {
 }
 
 export type MultiStackedAreaChartProps<T extends BaseDataPoint> = {
-  series: T[][];
+  series: T[];
   keys: string[];
   tooltipComponent?: ({ d }: { d: T }) => JSX.Element;
 } & Omit<ChartMultiProps<T>, 'children'>;
@@ -51,41 +51,6 @@ type GraphProps<T extends BaseDataPoint> = (
   & MultiStackedAreaChartProps<T> 
   & ProvidedChartProps<T>
 );
-
-// default strokes
-const strokes = [
-  {
-    stroke: BeanstalkPalette.logoGreen,
-    strokeWidth: 1,
-  },
-  {
-    stroke: BeanstalkPalette.darkBlue,
-    strokeWidth: 1,
-  },
-  {
-    stroke: BeanstalkPalette.lightGrey,
-    strokeWidth: 0.5,
-  },
-];
-
-// default gradients
-const gradients = [
-  {
-    to: BeanstalkPalette.lightGreen,
-    from: BeanstalkPalette.logoGreen,
-    id: 'stacked-area-green',
-  },
-  {
-    to: BeanstalkPalette.lightBlue,
-    from: BeanstalkPalette.darkBlue,
-    id: 'stacked-area-blue',
-  },
-  {
-    to: BeanstalkPalette.lightGrey,
-    from: BeanstalkPalette.grey,
-    id: 'stacked-area-grey',
-  },
-];
 
 function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
   const {
@@ -103,9 +68,14 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
     accessors, // memoized accessor fns
     generateScales, // memoized fn to generate x & y scales
   } = props;
-  const { getX, getY0, getY1, getY, bisectSeason } = accessors;
+  const { getX, getY0, getY, getY1, bisectSeason } = accessors;
 
-  const data = useMemo(() => (series.length ? series[0] : []), [series]);
+  // const data = series.length ? series : []
+  
+  const data = useMemo(() => {
+    console.log('series data: ', series);
+    return series.length ? series : [];
+  }, [series]);
 
   const scale = useMemo(
     () => generateScales.stackedArea(data, height, width, isTWAP),
@@ -188,12 +158,14 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
   const yTickFormat = useCallback((val) => displayBN(new BigNumber(val)), []);
 
   const getPathFromStack = useCallback(<K extends keyof T>(stackData: Series<T, K>): T[] => {
+    // console.log('stackData: ', stackData);
     const converted = stackData.map((_stack: SeriesPoint<T>) => ({ 
       season: _stack.data.season, 
       date: _stack.data.date, 
-      value: getY1(_stack) 
+      value: getY1(_stack) ?? 0 
     }));
-    return converted as unknown as T[];
+    // console.log('converted: ', converted);
+    return converted as unknown[] as T[];
   }, [getY1]);
 
   const chartStyle = useMemo(() => {
@@ -210,7 +182,7 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
     return { getStyle, styles };
   }, [defaultChartStyles, stylesConfig]);
 
-  if (!data || data.length === 0) return null;
+  if (data.length === 0) return null;
 
   const dataRegion = {
     yTop: props.margin.top, // chart edge to data region first pixel
@@ -255,29 +227,28 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
             y1={(d) => scale.yScale(getY1(d)) ?? 0}
           >
             {({ stacks, path }) => 
-              stacks.map((stack, i) => {
-                if (i === 0) {
-                  console.log(stack);
-                }
-                return (
-                  <>
-                    <path
-                      key={`stack-${stack.key}`}
-                      d={path(stack) || ''}
-                      stroke="transparent"
-                      fill={`url(#${chartStyle.getStyle(`${stack.key}`, i).id})`}
+              stacks.map((stack, i) => 
+                  // console.log('stackkey: ', stack.key, stack);
+                 (
+                   <>
+                     <path
+                       key={`stack-${stack.key}`}
+                       d={path(stack) || ''}
+                       stroke="transparent"
+                       fill={`url(#${chartStyle.getStyle(`${stack.key}`, i).id})`}
                   />
-                    <LinePath<T>
-                      stroke={chartStyle.getStyle(`${stack.key}`, i).stroke}
-                      key={`line-${i}`}
-                      curve={curveLinear}
-                      data={getPathFromStack(stack)}
-                      x={(d) => scale.xScale(getX(d)) ?? 0}
-                      y={(d) => scale.yScale(getY(d)) ?? 0}
+                     <LinePath<T>
+                      // stroke={chartStyle.getStyle(`${stack.key}`, i).stroke}
+                       stroke="black"
+                       key={`line-${i}`}
+                       curve={curveLinear}
+                       data={getPathFromStack(stack)}
+                       x={(d) => scale.xScale(getX(d)) ?? 0}
+                       y={(d) => scale.yScale(getY(d)) ?? 0}
                     />
-                  </>
-                );
-               })
+                   </>
+                )
+               )
             }
           </AreaStack>
         </Group>
