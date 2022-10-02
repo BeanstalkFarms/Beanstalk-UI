@@ -77,26 +77,28 @@ const DescriptionButton : React.FC<ButtonProps & {
     <Row gap={0.5} justifyContent="space-between" {...StackProps}>
       {/* Icon + Title */}
       <Stack gap={0.5}>
-        <Tooltip title={titleTooltip || ''} placement="top" sx={{ pointerEvents: 'all' }}>
-          <Row gap={0.25}>
-            {icon && (
-              <>
-                {icon}&nbsp;
-              </>
+        <Row gap={0.25}>
+          {icon && (
+          <>
+            {icon}&nbsp;
+          </>
             )}
-            <Typography variant="bodyMedium" {...TitleProps}>
-              {title}
-              {titleTooltip && (
+          <Typography variant="bodyMedium" {...TitleProps}>
+            {title}
+            <Tooltip title={titleTooltip || ''} placement="top" sx={{ pointerEvents: 'all' }}>
+              <>
+                {titleTooltip && (
                 <>
                   &nbsp;
                   <HelpOutlineIcon
                     sx={{ color: 'text.secondary', fontSize: FontSize.sm, display: 'inline' }}
-                  />
+                      />
                 </>
-              )}
-            </Typography>
-          </Row>
-        </Tooltip>
+                  )}
+              </>
+            </Tooltip>
+          </Typography>
+        </Row>
         {/* Description */}
         {description && (
           <Typography>
