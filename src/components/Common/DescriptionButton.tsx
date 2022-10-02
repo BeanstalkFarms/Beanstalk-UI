@@ -18,13 +18,12 @@ const GAP = 2;
 /**
  * Shows a standard Button with various slots for standard sizing
  * and positioning of elements, like tooltips and tags.
- * 
  * Rewards dialog (Mow, Plant, Enroot, Claim All buttons)
  * Pick dialog (Pick, Pick and Deposit)
  * PillSelectField (provides buttons for things like DestinationField)
  * Governance page
  */
-const DescriptionButton : React.FC<ButtonProps & {
+const DescriptionButton: React.FC<ButtonProps & {
   /** Title */
   title?: string;
   /** Description displayed below the title. */
@@ -41,78 +40,77 @@ const DescriptionButton : React.FC<ButtonProps & {
   StackProps?: MuiStackProps;
   /** Props applied to the title <Typography>. */
   TitleProps?: TypographyProps;
-}> = ({
-  title,
-  description,
-  icon,
-  tag,
-  isSelected,
-  titleTooltip,
-  StackProps,
-  TitleProps,
-  sx,
-  ...props
-}) => (
-  <Button
-    variant="outlined"
-    color="secondary"
-    sx={{
-      textAlign: 'left',
-      px: GAP,
-      py: GAP,
-      ...sx,
-      // Prevents the button's flex properties from
-      // changing the internal layout.
-      display: 'block',
-      color: 'inherit',
-      borderColor: isSelected ? BeanstalkPalette.theme.fall.primary : BeanstalkPalette.lightestGrey,
-      backgroundColor: isSelected ? BeanstalkPalette.theme.fall.extraLight : null,
-      '&:hover': {
+}> =
+  ({
+     title,
+     description,
+     icon,
+     tag,
+     isSelected,
+     titleTooltip,
+     StackProps,
+     TitleProps,
+     sx,
+     ...props
+   }) => (
+     <Button
+       variant="outlined"
+       color="secondary"
+       sx={{
+        textAlign: 'left',
+        px: GAP,
+        py: GAP,
+        ...sx,
+        // Prevents the button's flex properties from
+        // changing the internal layout.
+        display: 'block',
+        color: 'inherit',
+        borderColor: isSelected ? BeanstalkPalette.theme.fall.primary : BeanstalkPalette.lightestGrey,
         backgroundColor: isSelected ? BeanstalkPalette.theme.fall.extraLight : null,
-      },
-      height: 'auto'
-    }}
-    {...props}
-  >
-    <Row gap={0.5} justifyContent="space-between" {...StackProps}>
-      {/* Icon + Title */}
-      <Stack gap={0.5}>
-        <Row gap={0.25}>
-          {icon && (
-          <>
-            {icon}&nbsp;
-          </>
+        '&:hover': {
+          backgroundColor: isSelected ? BeanstalkPalette.theme.fall.extraLight : null,
+        },
+        height: 'auto'
+      }}
+       {...props}
+    >
+       <Row gap={0.5} justifyContent="space-between" {...StackProps}>
+         {/* Icon + Title */}
+         <Stack gap={0.5}>
+           <Row gap={0.25}>
+             {icon && (
+             <>
+               {icon}&nbsp;
+             </>
             )}
-          <Typography variant="bodyMedium" {...TitleProps}>
-            {title}
-            <Tooltip title={titleTooltip || ''} placement="top" sx={{ pointerEvents: 'all' }}>
-              <>
-                {titleTooltip && (
-                <>
-                  &nbsp;
-                  <HelpOutlineIcon
-                    sx={{ color: 'text.secondary', fontSize: FontSize.sm, display: 'inline' }}
-                      />
-                </>
+             <Typography variant="bodyMedium" {...TitleProps}>
+               {title}
+               <Tooltip title={titleTooltip || ''} placement="top" sx={{ pointerEvents: 'all' }}>
+                 <>
+                   {titleTooltip && (
+                   <>
+                     &nbsp;
+                     <HelpOutlineIcon sx={{ color: 'text.secondary', fontSize: FontSize.sm, display: 'inline' }} />
+                   </>
                   )}
-              </>
-            </Tooltip>
-          </Typography>
-        </Row>
-        {/* Description */}
-        {description && (
-          <Typography>
-            {description}
-          </Typography>
+                 </>
+               </Tooltip>
+             </Typography>
+           </Row>
+           {/* Description */}
+           {description && (
+           <Typography>
+             {description}
+           </Typography>
+          )}
+         </Stack>
+         {tag && (
+         <Box sx={{ flexWrap: 'nowrap' }}>
+           {tag}
+         </Box>
         )}
-      </Stack>
-      {tag && (
-        <Box sx={{ flexWrap: 'nowrap' }}>
-          {tag}
-        </Box>
-      )}
-    </Row>
-  </Button>
-);
+       </Row>
+     </Button>
+  );
 
 export default DescriptionButton;
