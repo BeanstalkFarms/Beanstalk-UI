@@ -5,7 +5,6 @@ import { SeriesPoint } from '@visx/shape/lib/types';
 import { scaleLinear, scaleTime } from '@visx/scale';
 import { ScaleLinear, ScaleTime } from 'd3-scale';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import { SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
 import { DataPoint } from './LineChart';
 import { ChartMultiStyles } from './MultiStackedAreaChart';
 
@@ -264,20 +263,3 @@ export default function ChartPropProvider<T extends BaseDataPoint>({
     </>
   );
 }
-
-const useMaxSeasonsWithRange = (range: SeasonRange) =>
-  useMemo(() => {
-    const perDay = 24;
-    const perWeek = perDay * 7;
-    const perMonth = perDay * 30;
-    switch (range) {
-      case SeasonRange.WEEK: {
-        return perWeek;
-      }
-      case SeasonRange.MONTH: {
-        return perMonth;
-      }
-      default:
-        return undefined;
-    }
-  }, [range]);

@@ -10,7 +10,6 @@ import { Axis, Orientation } from '@visx/axis';
 import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
 
 import { localPoint } from '@visx/event';
-import { Stack, Typography } from '@mui/material';
 import {
   curveLinear,
 } from '@visx/curve';
@@ -23,7 +22,7 @@ import ChartPropProvider, { BaseDataPoint, ProvidedChartProps } from './ChartPro
 export type ChartMultiStyles = {
   [key: string]: {
     stroke: string; // stroke color
-    fillPrimary?: string; // gradient 'to' color
+    fillPrimary: string; // gradient 'to' color
     fillSecondary?: string; // gradient 'from' color
     strokeWidth?: number;
   };
@@ -38,12 +37,12 @@ export type ChartMultiProps<T extends BaseDataPoint> = {
     scales: Scale[];
     dataRegion: DataRegion;
   }) => React.ReactElement | null;
+  tooltipComponent?: ({ d }: { d: T }) => JSX.Element;
 }
 
 export type MultiStackedAreaChartProps<T extends BaseDataPoint> = {
   series: T[];
   keys: string[];
-  tooltipComponent?: ({ d }: { d: T }) => JSX.Element;
 } & Omit<ChartMultiProps<T>, 'children'>;
 
 type GraphProps<T extends BaseDataPoint> = (
@@ -58,6 +57,7 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
     width,
     height,
     // Line Chart Props
+    tooltipComponent,
     series,
     curve,
     keys,
@@ -129,12 +129,14 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
       const index = bisectSeason(data, x0, 1);
       const d0 = data[index - 1]; // value at x0 - 1
       const d1 = data[index]; // value at x0
+
       const d = (() => {
         if (d1 && getX(d1)) {
           return x0.valueOf() - getX(d0).valueOf() > getX(d1).valueOf() - x0.valueOf() ? d1 : d0;
         }
         return d0;  
       })();
+      console.log('d: ', d);
       showTooltip({
         tooltipLeft: containerX,
         tooltipTop: containerY,
@@ -172,7 +174,7 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
     const style = stylesConfig || defaultChartStyles;
     const styles = Object.entries((style)).map(([k, { stroke, fillPrimary, fillSecondary }]) => {
       const primary = fillPrimary || stroke;
-      const secondary = fillSecondary || (fillPrimary || stroke);
+      const secondary = fillSecondary || fillPrimary;
       return { id: k, to: primary, from: secondary, stroke };
     });
     const getStyle = (k: string, i: number) => {
@@ -228,7 +230,6 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
           >
             {({ stacks, path }) => 
               stacks.map((stack, i) => 
-                  // console.log('stackkey: ', stack.key, stack);
                  (
                    <>
                      <path
@@ -238,8 +239,8 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
                        fill={`url(#${chartStyle.getStyle(`${stack.key}`, i).id})`}
                   />
                      <LinePath<T>
-                      // stroke={chartStyle.getStyle(`${stack.key}`, i).stroke}
-                       stroke="black"
+                       stroke={chartStyle.getStyle(`${stack.key}`, i).stroke}
+                      //  stroke="black"
                        key={`line-${i}`}
                        curve={curveLinear}
                        data={getPathFromStack(stack)}
@@ -288,18 +289,14 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
             />
           </g>
         )}
-        {tooltipData && (
+        {tooltipData && tooltipComponent && (
           <div>
             <TooltipInPortal 
               key={Math.random()} 
               left={tooltipLeft}
               top={tooltipTop}
             >
-              <Stack spacing={0.5}>
-                {keys.map((k) => (
-                  <Typography key={k}> {k}: {tooltipData[k]} </Typography>
-                ))}
-              </Stack>
+              {tooltipComponent({ d: tooltipData })}
             </TooltipInPortal>
           </div>
         )}

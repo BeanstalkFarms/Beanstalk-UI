@@ -2,7 +2,7 @@ import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
 import { TimeTabStateParams } from '~/hooks/app/useTimeTabState';
 import { MergeSeasonsQueryProps, useMergeSeasonsQueries } from '~/hooks/beanstalk/useMergeSeasonsQueries';
-import { MinimumViableSnapshotQuery, SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
+import { MinimumViableSnapshotQuery } from '~/hooks/beanstalk/useSeasonsQuery';
 
 import Row from '../Row';
 import Stat, { StatProps } from '../Stat';
@@ -20,25 +20,7 @@ type SeasonPlotMultiBaseProps<T extends BaseDataPoint, K extends MinimumViableSn
     formatStat?: (value: number) => string | JSX.Element;
     StatProps?: Omit<StatProps, 'amount' | 'subtitle'>; 
   }
-
 );
-
-const useMaxSeasonsWithRange = (range: SeasonRange) =>
-  useMemo(() => {
-    const perDay = 24;
-    const perWeek = perDay * 7;
-    const perMonth = perDay * 30;
-    switch (range) {
-      case SeasonRange.WEEK: {
-        return perWeek;
-      }
-      case SeasonRange.MONTH: {
-        return perMonth;
-      }
-      default:
-        return undefined;
-    }
-  }, [range]);
 
 export default function SeasonPlotMulti<T extends BaseDataPoint, K extends MinimumViableSnapshotQuery>({
   // use mergeSeasonsQueries
@@ -61,70 +43,14 @@ export default function SeasonPlotMulti<T extends BaseDataPoint, K extends Minim
   const [displaySeason, setDisplaySeason] = useState<number | undefined>(
     undefined
   );
-  const maxSeasons = useMaxSeasonsWithRange(timeTabParams[0][1]);
-  const { data: series, loading, error, keys } = useMergeSeasonsQueries(queryData, timeTabParams[0], stackedArea);
 
-  console.log('rerender...');
-/*
-  // const series = useMemo(() => {
-  //   const data = mergedData && mergedData.length ? mergedData[0] : undefined;
+  const { 
+    data: series, 
+    loading, 
+    error, 
+    keys 
+  } = useMergeSeasonsQueries(queryData, timeTabParams[0], stackedArea);
 
-  //   console.debug(
-  //     `[SeasonPlot] Building series with ${data?.length || 0} data points`,
-  //     data
-  //   );
-  //   const points: T[] = [];
-  //   if (!data || !data.length) return [points];
-    
-  //   const currSeason = data[data.length - 1].season;
-  //   const minSeason =
-  //     currSeason && maxSeasons ? currSeason - maxSeasons : undefined;
-  //   const lastIndex = data.length - 1;
-  //   // if (timeTabState[0][0] === SeasonAggregation.DAY) {
-  //   //   let v = 0; // value aggregator
-  //   //   let i = 0; // total iterations
-  //   //   let j = 0; // points averaged into this day
-  //   //   let d : Date | undefined; // current date for this avg
-  //   //   let s : number | undefined; // current season for this avg
-  //   //   for (let k = lastIndex; k >= 0; k -= 1) {
-  //   //     const season = data[k];
-  //   //     if (!season) continue; // skip empty points
-  //   //     v += getValue(season);
-  //   //     if (j === 0) {
-  //   //       d = secondsToDate(season.timestamp);
-  //   //       s = season.season as number;
-  //   //       j += 1;
-  //   //     } else if (
-  //   //       i === lastIndex // last iteration
-  //   //       || j === 24 // full day of data ready
-  //   //     ) {
-  //   //       points.push({
-  //   //         season: s as number,
-  //   //         date:   d as Date,
-  //   //         value:  new BigNumber(v).div(j + 1).toNumber()
-  //   //       });
-  //   //       v = 0;
-  //   //       j = 0;
-  //   //     } else {
-  //   //       j += 1;
-  //   //     }
-  //   //     i += 1;
-  //   //   }
-  //   // }
-
-  //   for (const season of data) {
-  //     if (!season) continue;
-  //     // if data.season is less than minimum season, ignore data
-  //     if (minSeason && season.season < minSeason) continue;
-  //     points.push({
-  //       ...season,
-  //       season: season.season as number,
-  //       date: secondsToDate(season.timestamp),
-  //     });
-  //   }
-  //   return [points];
-  // }, [mergedData, maxSeasons]);
-*/
   const handleCursor = useCallback((dps?: T) => {
     setDisplaySeason(dps ? dps.season : undefined);
     setDisplayValue(dps ? dps.value : undefined);
@@ -134,7 +60,10 @@ export default function SeasonPlotMulti<T extends BaseDataPoint, K extends Minim
   const defaultValue = _defaultValue || 0;
   const defaultSeason = _defaultSeason || 0;
 
-  const seriesInput = useMemo(() => (series.length ? series[0] : []), [series]);
+  const seriesInput = useMemo(() => {
+    if (stackedArea) return (series.length ? series[0] : []) as T[];
+    return series as T[][];
+  }, [series, stackedArea]);
 
   return (
     <>
@@ -142,7 +71,6 @@ export default function SeasonPlotMulti<T extends BaseDataPoint, K extends Minim
         {statProps ? (
           <Stat
             {...statProps}
-            title="sup"
             amount={
               loading ? (
                 <CircularProgress
@@ -180,14 +108,14 @@ export default function SeasonPlotMulti<T extends BaseDataPoint, K extends Minim
               <CircularProgress variant="indeterminate" />
             )}
           </Stack>
-        ) : (
+        ) : stackedArea ? (
           <MultiStackedAreaChart
-            series={seriesInput}
+            series={seriesInput as T[]}
             keys={keys}
             onCursor={handleCursor}
             {...chartProps}
-          />
-        )}
+            />
+        ) : (null)}
       </Box>
     </>
   );

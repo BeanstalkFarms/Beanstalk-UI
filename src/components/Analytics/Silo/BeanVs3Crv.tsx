@@ -28,8 +28,8 @@ const account = BEANSTALK_ADDRESSES[1];
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 
 const stylesConfig: ChartMultiStyles = {
-  bean: { stroke: BeanstalkPalette.lightGreen, fillPrimary: BeanstalkPalette.mediumGreen },
-  bean3Crv: { stroke: BeanstalkPalette.lightBlue, fillPrimary: BeanstalkPalette.skyBlue }
+  bean: { stroke: BeanstalkPalette.logoGreen, fillPrimary: BeanstalkPalette.lightGreen },
+  bean3Crv: { stroke: BeanstalkPalette.darkBlue, fillPrimary: BeanstalkPalette.lightBlue }
 };
 
 const getValue = (asset: ERC20Token) => {

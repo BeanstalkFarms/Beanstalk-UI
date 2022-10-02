@@ -61,7 +61,7 @@ const generateStackedAreaSeriesData = <T extends MinimumViableSnapshotQuery, K e
   if (seasonAggregation === SeasonAggregation.DAY) {
     const data = seasonsData.reverse();
     const lastIndex = data.length - 1;
-    const agg = keys.reduce((acc, _key) => {
+    let agg = keys.reduce((acc, _key) => {
       acc[_key] = 0;
       return acc;
     }, {} as { [k: string]: number }); // value aggregator
@@ -69,26 +69,30 @@ const generateStackedAreaSeriesData = <T extends MinimumViableSnapshotQuery, K e
     let j = 0; // points averaged into this day
     let d: Date | undefined; // current date for this avg
     let s: number | undefined; // current season for this avg
+
+    const copy = { ...agg }; // copy of agg to reset values in agg
+
     for (let k = lastIndex; k >= 0; k -= 1) {
       const season = data[k];
       if (!season) continue;
-      keys.forEach((_key) => {
-        const sd = season[_key] as number;
-        if (sd) agg[_key] += sd;
-      });
+      for (const _k of keys) {
+        const sd = season[_k];
+        if (sd) agg[_k] += sd;
+      }
       if (j === 0) {
         d = secondsToDate(season.timestamp);
         s = season.season as number;
         j += 1;
       } else if (i === lastIndex || j === 24) {
+        for (const _k of keys) {
+          agg[_k] = new BigNumber(agg[_k]).div(j + 1).toNumber();
+        }
         points.push({
           season: s as number,
           date: d as Date,
           ...agg,
-        } as unknown as K);
-        keys.forEach((_k) => {
-          agg[_k] = 0;
-        });
+        } as K);
+        agg = { ...copy };
         j = 0;
       } else {
         j += 1;
@@ -104,6 +108,8 @@ const generateStackedAreaSeriesData = <T extends MinimumViableSnapshotQuery, K e
       } as unknown as K);
     }
   }
+
+  console.log('points: ', points);
   
   return [points.sort(sortSeasons)];
 };
