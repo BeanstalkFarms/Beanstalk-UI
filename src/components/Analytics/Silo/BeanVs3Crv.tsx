@@ -18,6 +18,7 @@ import SeasonPlotMulti from '~/components/Common/Charts/SeasonPlotMulti';
 import { ERC20Token } from '~/classes/Token';
 import { ChartMultiStyles } from '~/components/Common/Charts/MultiStackedAreaChart';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
+import { BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
 
 const assets = {
   bean: BEAN[1],
@@ -25,11 +26,18 @@ const assets = {
 };
 const account = BEANSTALK_ADDRESSES[1];
 
-const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
-
 const stylesConfig: ChartMultiStyles = {
   bean: { stroke: BeanstalkPalette.logoGreen, fillPrimary: BeanstalkPalette.lightGreen },
   bean3Crv: { stroke: BeanstalkPalette.darkBlue, fillPrimary: BeanstalkPalette.lightBlue }
+};
+
+const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+
+const updateDisplayValue = <T extends BaseDataPoint>(v?: T) => {
+  if (v?.bean && v?.bean3Crv) {
+    return formatValue(v.bean3Crv / v.bean);
+  }
+  return 0;
 };
 
 const getValue = (asset: ERC20Token) => {
@@ -78,6 +86,7 @@ const BeanVs3Crv: React.FC<{}> = () => {
         StatProps={statProps}
         timeTabParams={timeTabParams}
         formatStat={formatValue}
+        updateDisplayValue={updateDisplayValue}
         stackedArea
         ChartProps={{
           stylesConfig: stylesConfig

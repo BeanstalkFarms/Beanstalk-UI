@@ -19,10 +19,14 @@ type SeasonPlotMultiBaseProps<T extends BaseDataPoint, K extends MinimumViableSn
   & {
     formatStat?: (value: number) => string | JSX.Element;
     StatProps?: Omit<StatProps, 'amount' | 'subtitle'>; 
+    updateDisplayValue?: (d?: T) => number;
   }
 );
 
-export default function SeasonPlotMulti<T extends BaseDataPoint, K extends MinimumViableSnapshotQuery>({
+export default function SeasonPlotMulti<
+  T extends BaseDataPoint,
+  K extends MinimumViableSnapshotQuery
+>({
   // use mergeSeasonsQueries
   queryData,
   // season plot base props
@@ -32,6 +36,7 @@ export default function SeasonPlotMulti<T extends BaseDataPoint, K extends Minim
   stackedArea,
   // stat props
   formatStat = defaultValueFormatter,
+  updateDisplayValue,
   StatProps: statProps, // renamed to prevent type collision
   ChartProps: chartProps,
   timeTabParams,
@@ -53,8 +58,12 @@ export default function SeasonPlotMulti<T extends BaseDataPoint, K extends Minim
 
   const handleCursor = useCallback((dps?: T) => {
     setDisplaySeason(dps ? dps.season : undefined);
-    setDisplayValue(dps ? dps.value : undefined);
-  }, []);
+    if (updateDisplayValue) {
+      setDisplayValue(updateDisplayValue(dps));
+    } else {
+      setDisplayValue(dps ? dps.value : undefined);
+    }
+  }, [updateDisplayValue]);
 
   /// If one of the defaults is missing, use the last data point.
   const defaultValue = _defaultValue || 0;
