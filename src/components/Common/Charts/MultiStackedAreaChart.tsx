@@ -3,15 +3,14 @@ import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { AreaStack, Line, LinePath } from '@visx/shape';
 import { Group } from '@visx/group';
 
-import { CurveFactory, Series } from 'd3-shape';
+import { CurveFactory } from 'd3-shape';
 import { LinearGradient } from '@visx/gradient';
 import BigNumber from 'bignumber.js';
-import { Axis, Orientation } from '@visx/axis';
+import { Axis, Orientation, TickFormatter } from '@visx/axis';
 import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
-
+import { NumberLike } from '@visx/scale';
 import { localPoint } from '@visx/event';
 import { curveLinear } from '@visx/curve';
-import { SeriesPoint } from '@visx/shape/lib/types';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import {
   CURVES,
@@ -33,60 +32,63 @@ export type ChartMultiStyles = {
   };
 };
 
-export type ChartMultiProps<T extends BaseDataPoint> = {
+export type ChartMultiProps = {
   curve?: CurveFactory | keyof typeof CURVES;
   isTWAP?: boolean;
   stylesConfig?: ChartMultiStyles;
-  onCursor?: (ds?: T) => void;
+  onCursor?: (dps?: BaseDataPoint | BaseDataPoint[]) => void;
   children?: (
-    props: GraphProps<T> & {
+    props: GraphProps & {
       scales: Scale[];
       dataRegion: DataRegion;
     }
   ) => React.ReactElement | null;
-  tooltipComponent?: ({ d }: { d: T }) => JSX.Element;
+  tooltip?: boolean | (({ d }: { d?: BaseDataPoint }) => JSX.Element);
+  tooltipComponent?: ({ d }: { d: BaseDataPoint }) => JSX.Element;
+  yTickFormat?: TickFormatter<NumberLike>;
 };
 
-export type MultiStackedAreaChartProps<T extends BaseDataPoint> = {
-  series: T[];
+export type MultiStackedAreaChartProps = {
+  series: BaseDataPoint[][];
   keys: string[];
-} & Omit<ChartMultiProps<T>, 'children'>;
+} & Omit<ChartMultiProps, 'children'>;
 
-type GraphProps<T extends BaseDataPoint> = {
+type GraphProps = {
   width: number;
   height: number;
-} & MultiStackedAreaChartProps<T> &
-  ProvidedChartProps<T>;
+} & MultiStackedAreaChartProps &
+  ProvidedChartProps;
 
-function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
+function Graph<T extends BaseDataPoint>(props: GraphProps) {
   const {
     // Chart sizing
     width,
     height,
     // Line Chart Props
-    tooltipComponent,
+    // tooltipComponent,
     series,
     curve,
     keys,
     onCursor,
     isTWAP,
     stylesConfig,
-    defaultChartStyles,
+    common,
     accessors, // memoized accessor fns
-    generateScales, // memoized fn to generate x & y scales
+    utils,
   } = props;
   const { getX, getY0, getY, getY1, bisectSeason } = accessors;
-
+  const { generateScale, generatePathFromStack } = utils;
+  const { defaultChartStyles } = common;
   // const data = series.length ? series : []
 
-  const data = useMemo(() => {
-    console.log('series data: ', series);
-    return series.length ? series : [];
-  }, [series]);
+  const data = useMemo(
+    () => (series.length && series[0]?.length ? series[0] : []),
+    [series]
+  );
 
   const scale = useMemo(
-    () => generateScales.stackedArea(data, height, width, isTWAP),
-    [generateScales, data, height, width, isTWAP]
+    () => generateScale(series, height, width, true, isTWAP)[0],
+    [generateScale, series, height, width, isTWAP]
   );
 
   const [tickSeasons, tickDates] = useMemo(() => {
@@ -114,7 +116,7 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
     tooltipData,
     tooltipTop = 0,
     tooltipLeft = 0,
-  } = useTooltip<T | undefined>();
+  } = useTooltip<BaseDataPoint | undefined>();
 
   const { containerRef, containerBounds, TooltipInPortal } = useTooltipInPortal(
     { scroll: true, detectBounds: true }
@@ -150,7 +152,7 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
         }
         return d0;
       })();
-      console.log('d: ', d);
+      // console.log('d: ', d);
       showTooltip({
         tooltipLeft: containerX,
         tooltipTop: containerY,
@@ -161,31 +163,17 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
     [
       containerBounds.left,
       containerBounds.top,
-      scale.xScale,
+      scale,
       bisectSeason,
       data,
-      getX,
       showTooltip,
       onCursor,
+      getX,
     ]
   );
 
   const xTickFormat = useCallback((_, i) => tickDates[i], [tickDates]);
   const yTickFormat = useCallback((val) => displayBN(new BigNumber(val)), []);
-
-  const getPathFromStack = useCallback(
-    <K extends keyof T>(stackData: Series<T, K>): T[] => {
-      // console.log('stackData: ', stackData);
-      const converted = stackData.map((_stack: SeriesPoint<T>) => ({
-        season: _stack.data.season,
-        date: _stack.data.date,
-        value: getY1(_stack) ?? 0,
-      }));
-      // console.log('converted: ', converted);
-      return converted as unknown[] as T[];
-    },
-    [getY1]
-  );
 
   const chartStyle = useMemo(() => {
     const style = stylesConfig || defaultChartStyles;
@@ -206,12 +194,12 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
   if (data.length === 0) return null;
 
   const dataRegion = {
-    yTop: props.margin.top, // chart edge to data region first pixel
+    yTop: common.margin.top, // chart edge to data region first pixel
     yBottom:
       height - // chart edge to data region first pixel
-      props.axisHeight - // chart edge to data region first pixel
-      props.margin.bottom - // chart edge to data region first pixel
-      props.strokeBuffer,
+      common.axisHeight - // chart edge to data region first pixel
+      common.margin.bottom - // chart edge to data region first pixel
+      common.strokeBuffer,
   };
 
   return (
@@ -223,7 +211,7 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
     >
       <svg width={width} height={height}>
         <Group
-          width={width - props.yAxisWidth}
+          width={width - common.yAxisWidth}
           height={dataRegion.yBottom - dataRegion.yTop}
         >
           {chartStyle.styles.map((s) => (
@@ -237,9 +225,9 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
             fill="transparent"
             rx={14}
           />
-          <AreaStack<T>
-            top={props.margin.top}
-            left={props.margin.left}
+          <AreaStack<BaseDataPoint>
+            top={common.margin.top}
+            left={common.margin.left}
             keys={keys}
             data={data}
             height={height}
@@ -256,11 +244,11 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
                     stroke="transparent"
                     fill={`url(#${chartStyle.getStyle(`${stack.key}`, i).id})`}
                   />
-                  <LinePath<T>
+                  <LinePath<BaseDataPoint>
                     stroke={chartStyle.getStyle(`${stack.key}`, i).stroke}
                     key={`line-${i}`}
                     curve={curveLinear}
-                    data={getPathFromStack(stack)}
+                    data={generatePathFromStack(stack)}
                     x={(d) => scale.xScale(getX(d)) ?? 0}
                     y={(d) => scale.yScale(getY(d)) ?? 0}
                   />
@@ -274,10 +262,10 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
             key="axis"
             orientation={Orientation.bottom}
             scale={scale.xScale}
-            stroke={props.axisColor}
+            stroke={common.axisColor}
             tickFormat={xTickFormat}
-            tickStroke={props.axisColor}
-            tickLabelProps={props.xTickLabelProps}
+            tickStroke={common.axisColor}
+            tickLabelProps={common.xTickLabelProps}
             tickValues={tickSeasons}
           />
         </g>
@@ -286,10 +274,10 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
             key="axis"
             orientation={Orientation.right}
             scale={scale.yScale}
-            stroke={props.axisColor}
+            stroke={common.axisColor}
             tickFormat={yTickFormat}
-            tickStroke={props.axisColor}
-            tickLabelProps={props.yTickLabelProps}
+            tickStroke={common.axisColor}
+            tickLabelProps={common.yTickLabelProps}
             numTicks={6}
             strokeWidth={0}
           />
@@ -305,7 +293,7 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
             />
           </g>
         )}
-        {tooltipData && tooltipComponent && (
+        {/* {tooltipData && tooltipComponent && (
           <div>
             <TooltipInPortal
               key={Math.random()}
@@ -315,7 +303,7 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
               {tooltipComponent({ d: tooltipData })}
             </TooltipInPortal>
           </div>
-        )}
+        )} */}
       </svg>
     </div>
   );
@@ -325,25 +313,21 @@ function Graph<T extends BaseDataPoint>(props: GraphProps<T>) {
 //       Stacked Area Chart
 // ------------------------
 
-function MultiStackedAreaChart<T extends BaseDataPoint>(
-  props: MultiStackedAreaChartProps<T>
-) {
-  return (
-    <ChartPropProvider>
-      {({ ...sharedChartProps }) => (
-        <ParentSize debounceTime={50}>
-          {({ width: visWidth, height: visHeight }) => (
-            <Graph
-              width={visWidth}
-              height={visHeight}
-              {...sharedChartProps}
-              {...props}
-            />
-          )}
-        </ParentSize>
-      )}
-    </ChartPropProvider>
-  );
-}
+const MultiStackedAreaChart: React.FC<MultiStackedAreaChartProps> = (props) => (
+  <ChartPropProvider>
+    {({ ...sharedChartProps }) => (
+      <ParentSize debounceTime={50}>
+        {({ width: visWidth, height: visHeight }) => (
+          <Graph
+            width={visWidth}
+            height={visHeight}
+            {...sharedChartProps}
+            {...props}
+          />
+        )}
+      </ParentSize>
+    )}
+  </ChartPropProvider>
+);
 
 export default MultiStackedAreaChart;

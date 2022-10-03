@@ -109,7 +109,7 @@ const generateStackedAreaSeriesData = <T extends MinimumViableSnapshotQuery, K e
     }
   }
 
-  console.log('points: ', points);
+  // console.log('points: ', points);
   
   return [points.sort(sortSeasons)];
 };

@@ -1,4 +1,10 @@
-import { Stack, Typography, TypographyProps, StackProps, Tooltip } from '@mui/material';
+import {
+  Stack,
+  Typography,
+  TypographyProps,
+  StackProps,
+  Tooltip,
+} from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import React from 'react';
 import Row from '~/components/Common/Row';
@@ -26,7 +32,7 @@ export type StatProps = {
   color?: TypographyProps['color'];
   /** Gap between statistic elements (default: 1) */
   gap?: StackProps['gap'];
-}
+};
 
 const Stat: React.FC<StatProps> = ({
   title,
@@ -67,8 +73,9 @@ const Stat: React.FC<StatProps> = ({
     {/* Amount */}
     <Tooltip title={amountTooltip}>
       <Typography variant={variant} color={color} sx={sx}>
-        <Row gap={0.5}>
-          {amountIcon && <>{amountIcon}</>}{amount}
+        <Row gap={0.5} width="100%">
+          {amountIcon && <>{amountIcon}</>}
+          {amount}
         </Row>
       </Typography>
     </Tooltip>

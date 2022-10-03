@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-
+import { Series } from 'd3-shape';
 import { bisector, extent, min, max } from 'd3-array';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { scaleLinear, scaleTime } from '@visx/scale';
@@ -23,7 +23,7 @@ const tickLabelColor = BeanstalkPalette.lightGrey;
 const axisColor = BeanstalkPalette.lightGrey;
 const yAxisWidth = 57;
 
-// default strokes
+// default strokes & styles
 const defaultChartStyles: ChartMultiStyles = {
   'chart-green': {
     stroke: BeanstalkPalette.logoGreen,
@@ -36,8 +36,8 @@ const defaultChartStyles: ChartMultiStyles = {
   'chart-grey': {
     stroke: BeanstalkPalette.grey,
     fillPrimary: BeanstalkPalette.lightGrey,
-    strokeWidth: 0.5
-  }
+    strokeWidth: 0.5,
+  },
 };
 
 const xTickLabelProps = () =>
@@ -57,7 +57,10 @@ const yTickLabelProps = () =>
   } as const);
 
 // types
-export type BaseDataPoint = { [key: string]: number } & Omit<DataPoint, 'value'>
+export type BaseDataPoint = { [key: string]: number } & Omit<
+  DataPoint,
+  'value'
+>;
 type ChartSharedValuesProps = {
   strokeBuffer: number;
   margin: { top: number; bottom: number; left: number; right: number };
@@ -71,43 +74,55 @@ type ChartSharedValuesProps = {
   yTickLabelProps: typeof yTickLabelProps;
   xTickLabelProps: typeof xTickLabelProps;
 };
-type GenerateScalesParams<T extends BaseDataPoint> = {
-  stackedArea: (seriesData: T[], height: number, width: number, isTWAP?: boolean) => {
-    xScale: ScaleLinear<number, number, never>;
-    yScale: ScaleLinear<number, number, never>;
-  };
-  series: (seriesData: T[][], height: number, width: number, isTWAP?: boolean) => {
+
+type ChartAccessorProps = {
+  // accessors
+  getX: (d: BaseDataPoint) => number;
+  getD: (d: BaseDataPoint) => Date;
+  getY: (d: BaseDataPoint) => number;
+  getY0: (d: SeriesPoint<BaseDataPoint>) => number;
+  getY1: (d: SeriesPoint<BaseDataPoint>) => number;
+  getYMin: (d: BaseDataPoint) => number;
+  getYMax: (d: BaseDataPoint) => number;
+  bisectSeason: (
+    array: ArrayLike<BaseDataPoint>,
+    x: number,
+    lo?: number | undefined,
+    hi?: number | undefined
+  ) => number;
+};
+
+type UtilProps = {
+  generatePathFromStack: <K extends keyof BaseDataPoint>(
+    data: Series<BaseDataPoint, K>
+  ) => BaseDataPoint[];
+  generateScale: (
+    seriesData: BaseDataPoint[][],
+    height: number,
+    width: number,
+    stackedArea?: boolean,
+    isTWAP?: boolean
+  ) => {
     xScale: ScaleLinear<number, number, never>;
     dScale: ScaleTime<number, number, never>;
     yScale: ScaleLinear<number, number, never>;
   }[];
 };
-type ChartAccessorProps<T extends BaseDataPoint> = {
-  // accessors
-  getX: (d: T) => number;
-  getD: (d: T) => Date;
-  getY: (d: T) => number;
-  getY0: (d: SeriesPoint<T>) => number;
-  getY1: (d: SeriesPoint<T>) => number;
-  getYMin: (d: T) => number;
-  getYMax: (d: T) => number;
-  bisectSeason: (array: ArrayLike<T>, x: number, lo?: number | undefined, hi?: number | undefined) => number;
+
+export type ProvidedChartProps = {
+  common: ChartSharedValuesProps;
+  accessors: ChartAccessorProps;
+  utils: UtilProps;
 };
 
-export type ProvidedChartProps<T extends BaseDataPoint> = (
-  ChartSharedValuesProps
-  & { generateScales: GenerateScalesParams<T> } 
-  & { accessors: ChartAccessorProps<T> } 
-);
-
-type ChartPropProviderProps<T extends BaseDataPoint> = {
-  children: (props: ProvidedChartProps<T>) => React.ReactNode;
+type ChartPropProviderProps = {
+  children: (props: ProvidedChartProps) => React.ReactNode;
 };
 
-export default function ChartPropProvider<T extends BaseDataPoint>({
+export default function ChartPropProvider({
   children,
-}: ChartPropProviderProps<T>) {
-  const sharedValues = useMemo(
+}: ChartPropProviderProps) {
+  const common = useMemo(
     () => ({
       strokeBuffer,
       margin,
@@ -123,26 +138,33 @@ export default function ChartPropProvider<T extends BaseDataPoint>({
     }),
     []
   );
-
+  // chart data acessors
   const accessors = useMemo(() => {
-    const bisectSeason = bisector<T, number>((d) => d.season).left;
-    const getX = (d: T) => d.season;
-    const getY = (d: T) => d.value;
-    const getD = (d: T) => d.date;
-    const getY0 = (d: SeriesPoint<T>) => (!d[0] || Number.isNaN(d[0]) || !Number.isFinite(d[0]) ? 0 : d[0]);
-    const getY1 = (d: SeriesPoint<T>) => (!d[1] || Number.isNaN(d[1]) || !Number.isFinite(d[1]) ? 0 : d[1]);
-    const baseDataPoint = { 
-      season: true, 
-      date: true, 
-      timestamp: true 
+    const bisectSeason = bisector<BaseDataPoint, number>((d) => d.season).left;
+    const getX = (d: BaseDataPoint) => d.season;
+    const getY = (d: BaseDataPoint) => d.value;
+    const getD = (d: BaseDataPoint) => d.date;
+    const getY0 = (d: SeriesPoint<BaseDataPoint>) => {
+      const d0 = d[0];
+      return !d0 || Number.isNaN(d0) || !Number.isFinite(d0) ? 0 : d0;
+    };
+    const getY1 = (d: SeriesPoint<BaseDataPoint>) => {
+      const d1 = d[1];
+      return !d1 || Number.isNaN(d1) || !Number.isFinite(d1) ? 0 : d1;
+    };
+    const baseDataPoint = {
+      season: true,
+      date: true,
+      timestamp: true,
     } as const;
-    const getYMin = (d: T) =>
+    // get min of T for stacked area chart scales
+    const getYMin = (d: BaseDataPoint) =>
       Object.entries(d).reduce((acc, [k, v]) => {
         if (k in baseDataPoint) return acc;
         return Math.min(acc, v as number);
       }, 0);
-    // get max to allow for stacking
-    const getYMax = (d: T) =>
+    // get max of T for stacked area chart scales
+    const getYMax = (d: BaseDataPoint) =>
       Object.entries(d).reduce((acc, [k, v]) => {
         if (k in baseDataPoint) return acc;
         acc += v as number;
@@ -160,105 +182,87 @@ export default function ChartPropProvider<T extends BaseDataPoint>({
     };
   }, []);
 
-  const generateStackedAreaScale = useCallback(
-    (seriesData: T[], height: number, width: number, isTWAP?: boolean) => {
-      const { getYMin, getYMax, getX } = accessors;
-      const xScale = scaleLinear<number>({
-        domain: extent(seriesData, getX) as [number, number],
-      });
+  const generateScale = useCallback(
+    (
+      seriesData: BaseDataPoint[][],
+      height: number,
+      width: number,
+      stackedArea?: boolean,
+      isTWAP?: boolean
+    ) => {
+      const { getYMin, getYMax, getX, getD, getY } = accessors;
+      return seriesData.map((data) => {
+        // generate yScale
+        const xDomain = extent(data, getX) as [number, number];
+        const xScale = scaleLinear<number>({ domain: xDomain });
 
-      let yScale;
-      if (isTWAP) {
-        const biggestDifference = Math.max(
-          Math.abs(1 - (min(seriesData, getYMin) as number)),
-          Math.abs(1 - (max(seriesData, getYMax) as number))
-        );
-        yScale = scaleLinear<number>({
-          domain: [1 - biggestDifference, 1 + biggestDifference],
-        });
-      } else {
-        yScale = scaleLinear<number>({
-          clamp: true,
-          domain: [
-            0.95 * (min(seriesData, getYMin) as number),
-            1.05 * (max(seriesData, getYMax) as number),
-          ],
-        });
-      }
+        // generate dScale (only for non-stacked Area charts)
+        const dScale = scaleTime() as ScaleTime<number, number, never>;
+        if (!stackedArea) {
+          dScale.domain(extent(data, getD) as [Date, Date]);
+          dScale.range(xDomain);
+        }
 
-      xScale.range([0, width - yAxisWidth]);
-      yScale.range([
-        height - axisHeight - margin.bottom - strokeBuffer, // bottom edge
-        margin.top,
-      ]);
-      return { xScale, yScale };
-    },
-    [accessors]
-  );
-  const generateSeriesScales = useCallback(
-    (seriesData: T[][], height: number, width: number, isTWAP?: boolean) => {
-      const { getD, getX, getY } = accessors;
-      return seriesData.map((_data) => {
-        const xDomain = extent(_data, getX) as [number, number];
-        const xScale = scaleLinear<number>({
-          domain: xDomain,
-        });
-        const dScale = scaleTime({
-          domain: extent(_data, getD) as [Date, Date],
-          range: xDomain,
-        });
-        /// Used for price graphs which should always show y = 1.
-        /// Sets the yScale so that 1 is always perfectly in the middle.
+        // generate yScale
         let yScale;
+
+        // if stacked area, get min and max of Y of T instead of T['value']
+        const [y1, y2] = stackedArea ? [getYMin, getYMax] : [getY, getY];
+
         if (isTWAP) {
-          const yMin = min(_data, getY);
-          const yMax = max(_data, getY);
+          const yMin = min(data, y1);
+          const yMax = max(data, y2);
           const biggestDifference = Math.max(
             Math.abs(1 - (yMin as number)),
             Math.abs(1 - (yMax as number))
           );
           yScale = scaleLinear<number>({
+            domain: [1 - biggestDifference, 1 + biggestDifference],
+          });
+        } else {
+          yScale = scaleLinear<number>({
+            clamp: !!stackedArea,
             domain: [
-              Math.max(1 - biggestDifference, 0), // TWAP can't go below zero
-              1 + biggestDifference,
+              0.95 * (min(data, y1) as number),
+              1.05 * (max(data, y2) as number),
             ],
           });
         }
-        /// Min/max y scaling
-        else {
-          yScale = scaleLinear<number>({
-            domain: [min(_data, getY) as number, max(_data, getY) as number],
-          });
-        }
-        /// Set ranges
+
+        // Set range for xScale
         xScale.range([0, width - yAxisWidth]);
+
+        // Set range for yScale
         yScale.range([
           height - axisHeight - margin.bottom - strokeBuffer, // bottom edge
           margin.top,
         ]);
-        return {
-          xScale,
-          dScale,
-          yScale,
-        };
+
+        return { xScale, dScale, yScale };
       });
     },
     [accessors]
   );
-  const generateScales = useMemo(
-    () => ({
-      stackedArea: generateStackedAreaScale,
-      series: generateSeriesScales,
-    }),
-    [generateSeriesScales, generateStackedAreaScale]
-  );
+
+  const utils = useMemo(() => {
+    const generatePathFromStack = <K extends keyof BaseDataPoint>(
+      data: Series<BaseDataPoint, K>
+    ) =>
+      data.map((_stack: SeriesPoint<BaseDataPoint>) => ({
+        season: _stack.data.season,
+        date: _stack.data.date,
+        value: accessors.getY1(_stack) ?? 0,
+      })) as unknown as BaseDataPoint[];
+
+    return { generatePathFromStack, generateScale };
+  }, [accessors, generateScale]);
 
   return (
     <>
       {children({
-        ...sharedValues,
+        common,
         accessors,
-        generateScales,
+        utils,
       })}
     </>
   );

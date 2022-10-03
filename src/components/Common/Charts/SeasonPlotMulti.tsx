@@ -1,5 +1,6 @@
 import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
+import { Line } from '@visx/shape';
 import { TimeTabStateParams } from '~/hooks/app/useTimeTabState';
 import {
   MergeSeasonsQueryProps,
@@ -15,24 +16,28 @@ import MultiStackedAreaChart, {
 } from './MultiStackedAreaChart';
 import TimeTabs from './TimeTabs';
 import { BaseDataPoint } from './ChartPropProvider';
+import MultiLineChart from './MultiLineChart';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
-type SeasonPlotMultiBaseProps<
-  T extends BaseDataPoint,
-  K extends MinimumViableSnapshotQuery
-> = Omit<SeasonPlotBaseProps, 'document'> & {
-  queryData: MergeSeasonsQueryProps<K>[];
-} & { timeTabParams: TimeTabStateParams } & {
-  ChartProps?: ChartMultiProps<T>;
-} & {
-  formatStat?: (value: number) => string | JSX.Element;
+type StatPropsMulti = {
   StatProps?: Omit<StatProps, 'amount' | 'subtitle'>;
-  updateDisplayValue?: (d?: T) => number;
+  getStatValue: (d: BaseDataPoint | BaseDataPoint[]) => number;
+  formatStat?: (value: number) => string | JSX.Element;
 };
 
-export default function SeasonPlotMulti<
-  T extends BaseDataPoint,
-  K extends MinimumViableSnapshotQuery
->({
+type SeasonPlotMultiBaseProps<K extends MinimumViableSnapshotQuery> = Omit<
+  SeasonPlotBaseProps,
+  'document'
+> &
+  StatPropsMulti & {
+    queryData: MergeSeasonsQueryProps<K>[];
+    ChartProps?: ChartMultiProps;
+    timeTabParams: TimeTabStateParams;
+    // formatStat?: (value: number) => string | JSX.Element;
+    updateDisplayValue?: (d?: BaseDataPoint) => number;
+  };
+
+export default function SeasonPlotMulti<T extends MinimumViableSnapshotQuery>({
   // use mergeSeasonsQueries
   queryData,
   // season plot base props
@@ -41,12 +46,13 @@ export default function SeasonPlotMulti<
   height = '175px',
   stackedArea,
   // stat props
+  getStatValue,
   formatStat = defaultValueFormatter,
   updateDisplayValue,
   StatProps: statProps, // renamed to prevent type collision
   ChartProps: chartProps,
   timeTabParams,
-}: SeasonPlotMultiBaseProps<T, K>) {
+}: SeasonPlotMultiBaseProps<T>) {
   /// Display values
   const [displayValue, setDisplayValue] = useState<number | undefined>(
     undefined
@@ -63,25 +69,39 @@ export default function SeasonPlotMulti<
   } = useMergeSeasonsQueries(queryData, timeTabParams[0], stackedArea);
 
   const handleCursor = useCallback(
-    (dps?: T) => {
-      setDisplaySeason(dps ? dps.season : undefined);
-      if (updateDisplayValue) {
-        setDisplayValue(updateDisplayValue(dps));
-      } else {
-        setDisplayValue(dps ? dps.value : undefined);
+    (dps?: BaseDataPoint | BaseDataPoint[]) => {
+      if (!dps) {
+        setDisplaySeason(undefined);
+        setDisplayValue(undefined);
+        return;
       }
+      const d = Array.isArray(dps) ? dps[0] : dps;
+      setDisplaySeason(d.season);
+      setDisplayValue(getStatValue(d));
+      setDisplaySeason(dps ? getStatValue(dps) : undefined);
     },
-    [updateDisplayValue]
+    [getStatValue]
   );
 
   /// If one of the defaults is missing, use the last data point.
   const defaultValue = _defaultValue || 0;
   const defaultSeason = _defaultSeason || 0;
 
-  const seriesInput = useMemo(() => {
-    if (stackedArea) return (series.length ? series[0] : []) as T[];
-    return series as T[][];
-  }, [series, stackedArea]);
+  const seriesInput = useMemo(() => series, [series]);
+
+  // const dValues = (() => {
+  //   let _dvalue = _defaultValue || 0;
+  //   let _dSeason = _defaultSeason || 0;
+
+  //   if (!_dvalue || !_dSeason) {
+  //     if (stackedArea && seriesInput.length > 0 && updateDisplayValue) {
+  //       const _seriesInput = seriesInput as T[];
+  //       _dvalue = updateDisplayValue(_seriesInput[seriesInput.length - 1]);
+  //       _dSeason = _seriesInput[seriesInput.length - 1].season;
+  //     } else if (seriesInput.length) {
+  //     }
+  //   }
+  // })();
 
   return (
     <>
@@ -109,7 +129,6 @@ export default function SeasonPlotMulti<
         <Stack
           alignItems="flex-end"
           alignSelf="flex-start"
-          width="100%"
           sx={{ py: statProps ? undefined : 2 }}
         >
           <TimeTabs state={timeTabParams[0]} setState={timeTabParams[1]} />
@@ -128,12 +147,34 @@ export default function SeasonPlotMulti<
           </Stack>
         ) : stackedArea ? (
           <MultiStackedAreaChart
-            series={seriesInput as T[]}
+            series={seriesInput}
             keys={keys}
             onCursor={handleCursor}
             {...chartProps}
           />
-        ) : null}
+        ) : (
+          <MultiLineChart
+            series={seriesInput}
+            keys={keys}
+            onCursor={handleCursor}
+            {...chartProps}
+          >
+            {(props) => {
+              if (!props.scales.length) return null;
+              const x = props.scales[0].xScale(6074) as number;
+              return x ? (
+                <Line
+                  from={{ x, y: props.dataRegion.yTop }}
+                  to={{ x, y: props.dataRegion.yBottom }}
+                  stroke={BeanstalkPalette.logoGreen}
+                  strokeDasharray={4}
+                  strokeDashoffset={2}
+                  strokeWidth={1}
+                />
+              ) : null;
+            }}
+          </MultiLineChart>
+        )}
       </Box>
     </>
   );
