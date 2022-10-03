@@ -1,6 +1,6 @@
 import React from 'react';
 import MuiMarkdown from 'mui-markdown';
-import { FontSize, FontWeight } from '~/components/App/muiTheme';
+import { BeanstalkPalette, FontSize, FontWeight } from '~/components/App/muiTheme';
 
 /**
  * Styles Markdown text to match MUI theme.
@@ -90,6 +90,23 @@ const MarkdownWrapper: React.FC = ({ children }) => (
             padding: 0.75,
             paddingRight: 3,
             paddingLeft: 3
+          }
+        }
+      },
+      // table: {
+      //   props: {
+      //     style: {
+      //       display: 'block',
+      //       overflow: 'scroll',
+      //       maxWidth: '100%',
+      //     }
+      //   }
+      // },
+      a: {
+        props: {
+          style: {
+            wordBreak: 'break-word',
+            color: BeanstalkPalette.theme.fall.brown,
           }
         }
       }
