@@ -50,6 +50,7 @@ import pageBackground from '~/img/beanstalk/interface/bg/fall@2x.png';
 
 import './App.css';
 import { PAGE_BG_COLOR } from './muiTheme';
+import useAccount from '~/hooks/ledger/useAccount';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -87,6 +88,7 @@ const CustomToaster: React.FC<{ navHeight: number }> = ({ navHeight }) => (
 export default function App() {
   const banner    = useBanner();
   const navHeight = useNavHeight(!!banner);
+  const account = useAccount();
   return (
     <>
       <CssBaseline />
@@ -119,7 +121,7 @@ export default function App() {
       <CustomToaster
         navHeight={navHeight}
       />
-      <NewProposalsDialog />
+      {account && <NewProposalsDialog />}
       <Box
         sx={{
           backgroundColor: PAGE_BG_COLOR,

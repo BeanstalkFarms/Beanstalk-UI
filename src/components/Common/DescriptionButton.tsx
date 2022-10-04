@@ -18,13 +18,12 @@ const GAP = 2;
 /**
  * Shows a standard Button with various slots for standard sizing
  * and positioning of elements, like tooltips and tags.
- * 
  * Rewards dialog (Mow, Plant, Enroot, Claim All buttons)
  * Pick dialog (Pick, Pick and Deposit)
  * PillSelectField (provides buttons for things like DestinationField)
  * Governance page
  */
-const DescriptionButton : React.FC<ButtonProps & {
+const DescriptionButton: React.FC<ButtonProps & {
   /** Title */
   title?: string;
   /** Description displayed below the title. */
@@ -77,26 +76,26 @@ const DescriptionButton : React.FC<ButtonProps & {
     <Row gap={0.5} justifyContent="space-between" {...StackProps}>
       {/* Icon + Title */}
       <Stack gap={0.5}>
-        <Tooltip title={titleTooltip || ''} placement="top" sx={{ pointerEvents: 'all' }}>
-          <Row gap={0.25}>
-            {icon && (
+        <Row gap={0.25}>
+          {icon && (
+            <>
+              {icon}&nbsp;
+            </>
+          )}
+          <Typography variant="bodyMedium" {...TitleProps}>
+            {title}
+            <Tooltip title={titleTooltip || ''} placement="top" sx={{ pointerEvents: 'all' }}>
               <>
-                {icon}&nbsp;
+                {titleTooltip && (
+                  <>
+                    &nbsp;
+                    <HelpOutlineIcon sx={{ color: 'text.secondary', fontSize: FontSize.sm, display: 'inline' }} />
+                  </>
+                )}
               </>
-            )}
-            <Typography variant="bodyMedium" {...TitleProps}>
-              {title}
-              {titleTooltip && (
-                <>
-                  &nbsp;
-                  <HelpOutlineIcon
-                    sx={{ color: 'text.secondary', fontSize: FontSize.sm, display: 'inline' }}
-                  />
-                </>
-              )}
-            </Typography>
-          </Row>
-        </Tooltip>
+            </Tooltip>
+          </Typography>
+        </Row>
         {/* Description */}
         {description && (
           <Typography>

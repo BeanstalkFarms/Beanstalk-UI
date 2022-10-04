@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Typography } from '@mui/material';
+import { Link, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { getDateMessage, Proposal } from '~/util/Governance';
 import { displayBN } from '~/util';
@@ -18,7 +18,13 @@ const ProposalStats: React.FC<{
   totalStalk,
   showLink = false,
 }) => (
-  <Row justifyContent="space-between" width="100%">
+  <Stack
+    alignItems={{ xs: 'start', md: 'center' }}
+    justifyContent="space-between"
+    width="100%"
+    direction={{ xs: 'column', md: 'row' }}
+    gap={{ xs: 0.5, md: 0 }}
+  >
     <Row gap={2}>
       <Row gap={0.5}>
         <Dot color={proposal.state === 'active' ? 'primary.main' : 'gray'} />
@@ -42,7 +48,7 @@ const ProposalStats: React.FC<{
     </Row>
     {/* if there is time remaining... */}
     {(differenceInTime && differenceInTime > 0 && totalStalk) && (
-      <Row gap={0.5} display={{ xs: 'none', md: 'block' }}>
+      <Row gap={0.5}>
         {proposal.space.id === 'wearebeansprout.eth' ? (
           <Typography textAlign={{ xs: 'center', md: 'left' }} variant="body1">
             {displayBN(new BigNumber(proposal.scores_total ? proposal.scores_total : ZERO_BN).div(totalStalk).multipliedBy(100))}% of Stalk voted
@@ -54,7 +60,7 @@ const ProposalStats: React.FC<{
         )}
       </Row>
     )}  
-  </Row>
+  </Stack>
 );
 
 export default ProposalStats;

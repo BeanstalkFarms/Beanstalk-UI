@@ -55,7 +55,7 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
           <Typography display={{ xs: 'block', md: 'none' }} textAlign="left" variant="bodyLarge" sx={{ fontSize: { xs: '20px', md: 'inherit' }, lineHeight: '24px' }}>
             {proposal.title.substring(0, 55)}{proposal.title.length > 55 ? '...' : null}
           </Typography>
-          {/* Sshow if user has voted */}
+          {/* Show if user has voted */}
           {(account && voteData?.votes?.length) ? (
             <Row gap={0.5}>
               <CheckIcon sx={{ color: BeanstalkPalette.logoGreen, width: IconSize.small }} />
