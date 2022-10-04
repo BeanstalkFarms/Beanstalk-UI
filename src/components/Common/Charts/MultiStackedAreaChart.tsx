@@ -9,7 +9,7 @@ import BigNumber from 'bignumber.js';
 import { Axis, Orientation, TickFormatter } from '@visx/axis';
 import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
 import { NumberLike } from '@visx/scale';
-import { Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import {
   CURVES,
@@ -77,16 +77,19 @@ function Graph(props: GraphProps) {
 
   const curveType = useMemo(() => getCurve(_curve), [_curve, getCurve]);
 
+  // data for stacked area chart will always be T[];
   const data = useMemo(
     () => (series.length && series[0]?.length ? series[0] : []),
     [series]
   );
 
+  // generate scales
   const scales = useMemo(
     () => generateScale(series, height, width, true, isTWAP),
     [generateScale, series, height, width, isTWAP]
   );
 
+  // generate ticks
   const [tickSeasons, tickDates] = useMemo(() => {
     const interval = Math.ceil(data.length / 12);
     const shift = Math.ceil(interval / 3); // slight shift on tick labels
@@ -106,10 +109,10 @@ function Graph(props: GraphProps) {
     );
   }, [data]);
 
+  // tooltip
   const { TooltipInPortal, containerBounds, containerRef } = useTooltipInPortal(
     { scroll: true, detectBounds: true }
   );
-
   const {
     showTooltip,
     hideTooltip,
@@ -142,6 +145,7 @@ function Graph(props: GraphProps) {
     [containerBounds, series, getPointerValue, onCursor, scales, showTooltip]
   );
 
+  // tick format + styles
   const xTickFormat = useCallback((_, i) => tickDates[i], [tickDates]);
   const yTickFormat = useCallback((val) => displayBN(new BigNumber(val)), []);
 
@@ -270,10 +274,20 @@ function Graph(props: GraphProps) {
                   top={tooltipTop}
                 >
                   {typeof tooltip === 'boolean' ? (
-                    <Stack gap={0.5} width="200px">
-                      {keys.map((key) => (
-                        <Row justifyContent="space-between">
-                          <Typography>{key}</Typography>
+                    <Stack gap={0.5}>
+                      {keys.map((key, i) => (
+                        <Row justifyContent="space-between" gap={2}>
+                          <Row gap={1}>
+                            <Box
+                              sx={{
+                                width: '12px',
+                                height: '12px',
+                                borderRadius: '50%',
+                                background: getStyle(key, i).stroke,
+                              }}
+                            />
+                            <Typography>{key}</Typography>
+                          </Row>
                           <Typography textAlign="right">
                             {formatValue(tooltipData[key])}
                           </Typography>
