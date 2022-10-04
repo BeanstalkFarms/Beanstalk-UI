@@ -428,7 +428,7 @@ let muiTheme = createTheme({
           },
           style: {
             background: 'transparent',
-            borderColor: BeanstalkPalette.theme.fall.light,
+            borderColor: BeanstalkPalette.lightBlue,
           },
         },
       ],
