@@ -1,4 +1,6 @@
 import { Handler } from '@netlify/functions';
+import middy from 'middy';
+import { cors, rateLimit } from '~/functions/middleware';
 
 const nftData = require('./nfts-genesis-winter.json');
 
@@ -8,7 +10,7 @@ const nftData = require('./nfts-genesis-winter.json');
  * information about mintable NFTs for both the Genesis
  * and Winter NFT colletions.
  */
-const handler: Handler = async (event) => {
+const _handler: Handler = async (event) => {
   const account = event.queryStringParameters?.account?.toLowerCase();
   if (!account) {
     return {
@@ -25,4 +27,6 @@ const handler: Handler = async (event) => {
   };
 };
 
-export { handler };
+export const handler = middy(_handler)
+  .use(cors({ origin: '*.bean.money' }))
+  .use(rateLimit());

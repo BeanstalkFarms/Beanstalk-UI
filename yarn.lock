@@ -4105,6 +4105,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@middy/http-cors@npm:^3.5.0":
+  version: 3.5.0
+  resolution: "@middy/http-cors@npm:3.5.0"
+  dependencies:
+    "@middy/util": 3.5.0
+  checksum: d04fab609f536ea98ce15d7abed771756e4f452c0070c06264591b2881eb4e0003951db60b8ebd4a8e71be50110db0ac1d8a5c1a67d79259d00678e52d05a048
+  languageName: node
+  linkType: hard
+
+"@middy/http-error-handler@npm:^3.5.0":
+  version: 3.5.0
+  resolution: "@middy/http-error-handler@npm:3.5.0"
+  dependencies:
+    "@middy/util": 3.5.0
+  checksum: 4b8cd0660eeded7d7c205f2256f496a08afe59c69d54d8139d56d17d483a5ef6463b31e68375c60d06cf26d0cfe0758b18668f8823b65868c385ed369f45739e
+  languageName: node
+  linkType: hard
+
+"@middy/util@npm:3.5.0":
+  version: 3.5.0
+  resolution: "@middy/util@npm:3.5.0"
+  checksum: 40b0b745bfee393e6025b0199e2c7cf23245e9853033debe6fcb4994fb80b59446651b7ba4da001e49567909c6da77ad9f2c04a9591e1f868e00ac1754c1ecfe
+  languageName: node
+  linkType: hard
+
 "@mrmlnc/readdir-enhanced@npm:^2.2.1":
   version: 2.2.1
   resolution: "@mrmlnc/readdir-enhanced@npm:2.2.1"
@@ -7000,6 +7025,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/aws-lambda@npm:^8.10.45":
+  version: 8.10.106
+  resolution: "@types/aws-lambda@npm:8.10.106"
+  checksum: 989a33a58ffb59bf3997383585d22b3f49b7ff78f7ccd42cd841bd0621dd5a24bec7bdb9b14e9f31f986679d05b8428f36df9b2f057be09f0f91267b3234810d
+  languageName: node
+  linkType: hard
+
 "@types/bn.js@npm:^4.11.3":
   version: 4.11.6
   resolution: "@types/bn.js@npm:4.11.6"
@@ -7235,6 +7267,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/http-errors@npm:^1.6.3":
+  version: 1.8.2
+  resolution: "@types/http-errors@npm:1.8.2"
+  checksum: ecc365eea98d7eca650d593e742571acc3003742f0dd0fbbb15b8fce286e0f7421644b4140fb9bf701bbb7f1b744aea3967ebe025f0f0811aa5ab2c3d40fe111
+  languageName: node
+  linkType: hard
+
 "@types/http-proxy@npm:^1.17.8":
   version: 1.17.9
   resolution: "@types/http-proxy@npm:1.17.9"
@@ -7356,6 +7395,13 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: e009a2bfb50e90ca9b7c6e8f648f8464067271fd99116f881073fa6fa76dc8d0133181dd65e6614d5fb1220d671d67b0124aef7d97dc02d7e342ab143a47779d
+  languageName: node
+  linkType: hard
+
+"@types/lambda-rate-limiter@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@types/lambda-rate-limiter@npm:3.0.0"
+  checksum: 8fda876754b16834c6e627b321db37ce3bcbe3a61e573b5beaa7956db17750f099ce6de8510cd4b25cb6d8a5b31b7d667ce2629abd6c0a9ceac01ef4bb1497d1
   languageName: node
   linkType: hard
 
@@ -9318,6 +9364,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ajv-i18n@npm:^3.4.0":
+  version: 3.6.0
+  resolution: "ajv-i18n@npm:3.6.0"
+  peerDependencies:
+    ajv: ^6.0.0
+  checksum: 9737a09f7d29a3429173b99e8779196f98e3a3894749b3c4646aa942d1ec96330fe524ff93c09095ccbabc524b361a4282622fbced8744579216213704ba6ad0
+  languageName: node
+  linkType: hard
+
 "ajv-keywords@npm:^3.1.0, ajv-keywords@npm:^3.4.1, ajv-keywords@npm:^3.5.2":
   version: 3.5.2
   resolution: "ajv-keywords@npm:3.5.2"
@@ -9327,7 +9382,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv@npm:^6.1.0, ajv@npm:^6.10.0, ajv@npm:^6.10.2, ajv@npm:^6.12.2, ajv@npm:^6.12.4, ajv@npm:^6.12.5":
+"ajv@npm:^6.1.0, ajv@npm:^6.10.0, ajv@npm:^6.10.2, ajv@npm:^6.12.2, ajv@npm:^6.12.4, ajv@npm:^6.12.5, ajv@npm:^6.9.1":
   version: 6.12.6
   resolution: "ajv@npm:6.12.6"
   dependencies:
@@ -10310,6 +10365,8 @@ __metadata:
     "@graphql-codegen/typescript": 2.6.0
     "@graphql-codegen/typescript-operations": ^2.4.3
     "@graphql-codegen/typescript-react-apollo": 3.2.17
+    "@middy/http-cors": ^3.5.0
+    "@middy/http-error-handler": ^3.5.0
     "@mui/icons-material": ^5.6.1
     "@mui/lab": 5.0.0-alpha.86
     "@mui/material": ^5.8.4
@@ -10335,6 +10392,7 @@ __metadata:
     "@types/d3-array": ^3.0.2
     "@types/d3-time-format": ^4.0.0
     "@types/jest": ^26.0.15
+    "@types/lambda-rate-limiter": ^3.0.0
     "@types/luxon": ^2.3.2
     "@types/node": ^12.0.0
     "@types/react": 17.0.47
@@ -10373,10 +10431,13 @@ __metadata:
     events: ^3.3.0
     formik: ^2.2.9
     graphql: ^16.5.0
+    http-errors: ^2.0.0
     husky: ^8.0.0
+    lambda-rate-limiter: ^3.0.1
     lint-staged: ^13.0.3
     luxon: ^2.4.0
     markdown-to-jsx: ^7.1.7
+    middy: ^0.36.0
     mui-markdown: ^0.5.5
     netlify-cli: ^10.5.1
     prettier: ^2.3.0
@@ -10899,6 +10960,15 @@ __metadata:
   dependencies:
     semver: ^7.0.0
   checksum: 66d204657fe36522822a95b288943ad11b58f5eaede235b11d8c4edaa28ce4800087d44a2681524c340494aadb120a0068011acabe99d30e8f11a7d826d83515
+  languageName: node
+  linkType: hard
+
+"busboy@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "busboy@npm:0.3.1"
+  dependencies:
+    dicer: 0.3.0
+  checksum: d2bcb788c4595edca4ea2168ab8bf7f9558b627ddcec2fb6bbaf0aa6a10b63da48dce35ce56936570f330c5268a3204f7037021a310a895a8b1a223568e0cc1b
   languageName: node
   linkType: hard
 
@@ -13231,6 +13301,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dicer@npm:0.3.0":
+  version: 0.3.0
+  resolution: "dicer@npm:0.3.0"
+  dependencies:
+    streamsearch: 0.1.2
+  checksum: 9f61aea61fcd81457f1b43967af7e66415b7a31d393336fa05a29b221b5ba065b99e5cac46476b2da36eb7af7665bf8dad6f9500409116dc6a35ada183841598
+  languageName: node
+  linkType: hard
+
 "diff-sequences@npm:^26.6.2":
   version: 26.6.2
   resolution: "diff-sequences@npm:26.6.2"
@@ -14723,7 +14802,7 @@ __metadata:
   dependencies:
     bn.js: ^4.11.8
     ethereumjs-util: ^6.0.0
-  checksum: ae074be0bb012857ab5d3ae644d1163b908a48dd724b7d2567cfde309dc72222d460438f2411936a70dc949dc604ce1ef7118f7273bd525815579143c907e336
+  checksum: 03127d09960e5f8a44167463faf25b2894db2f746376dbb8195b789ed11762f93db9c574eaa7c498c400063508e9dfc1c80de2edf5f0e1406b25c87d860ff2f1
   languageName: node
   linkType: hard
 
@@ -17008,7 +17087,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"http-errors@npm:2.0.0":
+"http-errors@npm:2.0.0, http-errors@npm:^2.0.0":
   version: 2.0.0
   resolution: "http-errors@npm:2.0.0"
   dependencies:
@@ -17021,7 +17100,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"http-errors@npm:~1.8.1":
+"http-errors@npm:^1.7.3, http-errors@npm:~1.8.1":
   version: 1.8.1
   resolution: "http-errors@npm:1.8.1"
   dependencies:
@@ -18607,6 +18686,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"json-mask@npm:^0.3.8":
+  version: 0.3.9
+  resolution: "json-mask@npm:0.3.9"
+  checksum: 34aabde7dea5c97f28f548cb125b7436aede770ebf7c25919078bab5a624a2c1c6cc05ba6f4f47c3569570d4727024498ae9cd34f41dc959965cbab4faac0aa2
+  languageName: node
+  linkType: hard
+
 "json-parse-better-errors@npm:^1.0.2":
   version: 1.0.2
   resolution: "json-parse-better-errors@npm:1.0.2"
@@ -19022,6 +19108,15 @@ __metadata:
   bin:
     lambda-local: build/cli.js
   checksum: 3d788d45f9df0f30bdb5238cf703edeaef9a7f720dc6deb3da935f8cb559b67914320f43370f511bf32f58868bee3c3787f53320cbd2688ce867b99e524fe990
+  languageName: node
+  linkType: hard
+
+"lambda-rate-limiter@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "lambda-rate-limiter@npm:3.0.1"
+  dependencies:
+    lru-cache: 6.0.0
+  checksum: 41948ad0472fded657fff546180358e7b1f56625c9e171350944ca12d0a34f4505fbc50f0d172ebf9b09a0fac69398328cbf4dc1f0efa518a86d6a2819c2ab11
   languageName: node
   linkType: hard
 
@@ -19656,21 +19751,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lru-cache@npm:6.0.0, lru-cache@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "lru-cache@npm:6.0.0"
+  dependencies:
+    yallist: ^4.0.0
+  checksum: f97f499f898f23e4585742138a22f22526254fdba6d75d41a1c2526b3b6cc5747ef59c5612ba7375f42aca4f8461950e925ba08c991ead0651b4918b7c978297
+  languageName: node
+  linkType: hard
+
 "lru-cache@npm:^5.1.1":
   version: 5.1.1
   resolution: "lru-cache@npm:5.1.1"
   dependencies:
     yallist: ^3.0.2
   checksum: c154ae1cbb0c2206d1501a0e94df349653c92c8cbb25236d7e85190bcaf4567a03ac6eb43166fabfa36fd35623694da7233e88d9601fbf411a9a481d85dbd2cb
-  languageName: node
-  linkType: hard
-
-"lru-cache@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "lru-cache@npm:6.0.0"
-  dependencies:
-    yallist: ^4.0.0
-  checksum: f97f499f898f23e4585742138a22f22526254fdba6d75d41a1c2526b3b6cc5747ef59c5612ba7375f42aca4f8461950e925ba08c991ead0651b4918b7c978297
   languageName: node
   linkType: hard
 
@@ -20157,6 +20252,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"middy@npm:^0.36.0":
+  version: 0.36.0
+  resolution: "middy@npm:0.36.0"
+  dependencies:
+    "@types/aws-lambda": ^8.10.45
+    "@types/http-errors": ^1.6.3
+    ajv: ^6.9.1
+    ajv-i18n: ^3.4.0
+    ajv-keywords: ^3.4.1
+    busboy: ^0.3.1
+    content-type: ^1.0.4
+    http-errors: ^1.7.3
+    json-mask: ^0.3.8
+    negotiator: ^0.6.1
+    once: ^1.4.0
+    qs: ^6.6.0
+    querystring: ^0.2.0
+  checksum: 2e276eed67b4da3579285dd269e16d5aa25f5fae4a1ca3a53b299a291ff73fad5a43f13e1406f9d7946741644b43dbb281dace5969451cd678b8a5f0d208830a
+  languageName: node
+  linkType: hard
+
 "miller-rabin@npm:^4.0.0":
   version: 4.0.1
   resolution: "miller-rabin@npm:4.0.1"
@@ -20602,7 +20718,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"negotiator@npm:0.6.3, negotiator@npm:^0.6.3":
+"negotiator@npm:0.6.3, negotiator@npm:^0.6.1, negotiator@npm:^0.6.3":
   version: 0.6.3
   resolution: "negotiator@npm:0.6.3"
   checksum: b8ffeb1e262eff7968fc90a2b6767b04cfd9842582a9d0ece0af7049537266e7b2506dfb1d107a32f06dd849ab2aea834d5830f7f4d0e5cb7d36e1ae55d021d9
@@ -22798,7 +22914,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:^6.9.6":
+"qs@npm:^6.6.0, qs@npm:^6.9.6":
   version: 6.11.0
   resolution: "qs@npm:6.11.0"
   dependencies:
@@ -25062,6 +25178,13 @@ __metadata:
   version: 1.0.1
   resolution: "stream-shift@npm:1.0.1"
   checksum: 59b82b44b29ec3699b5519a49b3cedcc6db58c72fb40c04e005525dfdcab1c75c4e0c180b923c380f204bed78211b9bad8faecc7b93dece4d004c3f6ec75737b
+  languageName: node
+  linkType: hard
+
+"streamsearch@npm:0.1.2":
+  version: 0.1.2
+  resolution: "streamsearch@npm:0.1.2"
+  checksum: d2db57cbfbf7947ab9c75a7b4c80a8ef8d24850cf0a1a24258bb6956c97317ce1eab7dbcbf9c5aba3e6198611af1053b02411057bbedb99bf9c64b8275248997
   languageName: node
   linkType: hard
 
