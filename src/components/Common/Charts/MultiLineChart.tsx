@@ -61,11 +61,6 @@ const Graph: React.FC<GraphProps> = (props) => {
   const { getX, getY } = accessors;
   const { generateScale, getCurve, getPointerValue } = utils;
 
-  // When positioning the circle that accompanies the cursor,
-  // use this dataset to decide where it goes. (There is one
-  // circle but potentially multiple series).
-  // const data = series[0];
-
   const curve = useMemo(() => getCurve(_curve), [getCurve, _curve]);
 
   // Scales
@@ -74,6 +69,7 @@ const Graph: React.FC<GraphProps> = (props) => {
     [generateScale, height, isTWAP, series, width]
   );
 
+  // tooltip
   const { TooltipInPortal, containerBounds, containerRef } = useTooltipInPortal(
     { scroll: true, detectBounds: true }
   );
@@ -101,7 +97,6 @@ const Graph: React.FC<GraphProps> = (props) => {
       const containerX = ('clientX' in event ? event.clientX : 0) - left;
       const containerY = ('clientY' in event ? event.clientY : 0) - top;
       const pointerData = getPointerValue(event, scales, series);
-
       showTooltip({
         tooltipData: pointerData,
         tooltipLeft: containerX, // in pixels
@@ -134,6 +129,7 @@ const Graph: React.FC<GraphProps> = (props) => {
   const tooltipLeftAttached = tooltipData
     ? scales[0].xScale(getX(tooltipData[0]))
     : undefined;
+
   const dataRegion = {
     yTop: common.margin.top, // chart edge to data region first pixel
     yBottom:

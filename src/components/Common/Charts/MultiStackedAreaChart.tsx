@@ -75,6 +75,7 @@ function Graph(props: GraphProps) {
   const { generateScale, generatePathFromStack, getPointerValue, getCurve } =
     utils;
 
+  // get curve type
   const curveType = useMemo(() => getCurve(_curve), [_curve, getCurve]);
 
   // data for stacked area chart will always be T[];
