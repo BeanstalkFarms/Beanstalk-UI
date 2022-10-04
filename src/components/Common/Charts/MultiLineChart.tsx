@@ -26,6 +26,7 @@ export type DataRegion = {
 export type MultiLineChartProps = {
   series: BaseDataPoint[][];
   keys: string[];
+  formatValue?: (value: number) => string | JSX.Element;
 } & ChartMultiProps;
 
 type GraphProps = {
@@ -33,16 +34,6 @@ type GraphProps = {
   height: number;
 } & MultiLineChartProps &
   ProvidedChartProps;
-
-// ------------------------
-//           Data
-// ------------------------
-
-export type DataPoint = {
-  season: number;
-  value: number;
-  date: Date;
-};
 
 // ------------------------
 //      Graph (Inner)

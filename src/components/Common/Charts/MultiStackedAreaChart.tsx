@@ -23,6 +23,7 @@ import ChartPropProvider, {
   ProvidedChartProps,
 } from './ChartPropProvider';
 import Row from '../Row';
+import { defaultValueFormatter } from './SeasonPlot';
 
 export type ChartMultiProps = {
   curve?: CurveFactory | keyof typeof CURVES;
@@ -36,13 +37,13 @@ export type ChartMultiProps = {
     }
   ) => React.ReactElement | null;
   tooltip?: boolean | (({ d }: { d?: BaseDataPoint }) => JSX.Element);
-  tooltipComponent?: ({ d }: { d: BaseDataPoint }) => JSX.Element;
   yTickFormat?: TickFormatter<NumberLike>;
 };
 
 export type MultiStackedAreaChartProps = {
   series: BaseDataPoint[][];
   keys: string[];
+  formatValue?: (value: number) => string | JSX.Element;
 } & Omit<ChartMultiProps, 'children'>;
 
 type GraphProps = {
@@ -60,7 +61,9 @@ function Graph(props: GraphProps) {
     series,
     curve: _curve,
     keys,
+    tooltip = false,
     onCursor,
+    formatValue = defaultValueFormatter,
     isTWAP,
     stylesConfig,
     // chart prop provider
@@ -248,7 +251,6 @@ function Graph(props: GraphProps) {
             strokeWidth={0}
           />
         </g>
-
         {tooltipData && (
           <>
             <g>
@@ -260,24 +262,30 @@ function Graph(props: GraphProps) {
                 pointerEvents="none"
               />
             </g>
-            <div>
-              <TooltipInPortal
-                key={Math.random()}
-                left={tooltipLeft}
-                top={tooltipTop}
-              >
-                <Stack gap={0.5} width="200px">
-                  {keys.map((key) => (
-                    <Row justifyContent="space-between">
-                      <Typography>{key}</Typography>
-                      <Typography textAlign="right">
-                        {tooltipData[key]}
-                      </Typography>
-                    </Row>
-                  ))}
-                </Stack>
-              </TooltipInPortal>
-            </div>
+            {tooltip ? (
+              <div>
+                <TooltipInPortal
+                  key={Math.random()}
+                  left={tooltipLeft}
+                  top={tooltipTop}
+                >
+                  {typeof tooltip === 'boolean' ? (
+                    <Stack gap={0.5} width="200px">
+                      {keys.map((key) => (
+                        <Row justifyContent="space-between">
+                          <Typography>{key}</Typography>
+                          <Typography textAlign="right">
+                            {formatValue(tooltipData[key])}
+                          </Typography>
+                        </Row>
+                      ))}
+                    </Stack>
+                  ) : (
+                    tooltip({ d: tooltipData })
+                  )}
+                </TooltipInPortal>
+              </div>
+            ) : null}
           </>
         )}
       </svg>

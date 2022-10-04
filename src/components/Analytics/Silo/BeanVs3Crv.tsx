@@ -119,11 +119,12 @@ const BeanVs3Crv: React.FC<{}> = () => {
         height={300}
         StatProps={statProps}
         timeTabParams={timeTabParams}
-        formatStat={formatValue}
         getStatValue={getStatValue}
+        formatValue={formatValue}
         stackedArea
         ChartProps={{
           stylesConfig: stylesConfig,
+          tooltip: true,
         }}
       />
     </Card>

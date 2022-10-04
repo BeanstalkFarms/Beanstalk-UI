@@ -22,7 +22,6 @@ import { BeanstalkPalette } from '~/components/App/muiTheme';
 type StatPropsMulti = {
   StatProps?: Omit<StatProps, 'amount' | 'subtitle'>;
   getStatValue: (d: BaseDataPoint | BaseDataPoint[]) => number;
-  formatStat?: (value: number) => string | JSX.Element;
 };
 
 type SeasonPlotMultiBaseProps<K extends MinimumViableSnapshotQuery> = Omit<
@@ -33,8 +32,7 @@ type SeasonPlotMultiBaseProps<K extends MinimumViableSnapshotQuery> = Omit<
     queryData: MergeSeasonsQueryProps<K>[];
     ChartProps?: ChartMultiProps;
     timeTabParams: TimeTabStateParams;
-    // formatStat?: (value: number) => string | JSX.Element;
-    // updateDisplayValue?: (d?: BaseDataPoint) => number;
+    formatValue?: (value: number) => string | JSX.Element;
   };
 
 export default function SeasonPlotMulti<T extends MinimumViableSnapshotQuery>({
@@ -45,9 +43,9 @@ export default function SeasonPlotMulti<T extends MinimumViableSnapshotQuery>({
   defaultSeason: _defaultSeason,
   height = '175px',
   stackedArea,
+  formatValue = defaultValueFormatter,
   // stat props
   getStatValue,
-  formatStat = defaultValueFormatter,
   StatProps: statProps, // renamed to prevent type collision
   ChartProps: chartProps,
   timeTabParams,
@@ -75,9 +73,9 @@ export default function SeasonPlotMulti<T extends MinimumViableSnapshotQuery>({
         return;
       }
       if (Array.isArray(dps)) {
-        // dps.length && setDisplaySeason(dps[0].season);
+        dps.length && setDisplaySeason(dps[0].season);
       } else if (dps.season) {
-        // dps.season && setDisplaySeason(dps.season);
+        dps.season && setDisplaySeason(dps.season);
       }
       setDisplayValue(getStatValue(dps));
     },
@@ -87,27 +85,28 @@ export default function SeasonPlotMulti<T extends MinimumViableSnapshotQuery>({
   const seriesInput = useMemo(() => series, [series]);
 
   /// If one of the defaults is missing, use the last data point.
-  const defaults = (() => {
-    const defaultValue = _defaultValue || 0;
-    const defaultSeason = _defaultSeason || 0;
+  const defaults = useMemo(() => {
+    let defaultValue = _defaultValue ?? 0;
+    let defaultSeason = _defaultSeason ?? 0;
 
     if (!defaultValue || !defaultSeason) {
       if (stackedArea && seriesInput.length) {
-        const _seriesInput = seriesInput[0];
-        // defaultValue = getStatValue(_seriesInput[seriesInput.length - 1]);
-        // defaultSeason = _seriesInput[seriesInput.length - 1].season;
+        const _seriesInput = seriesInput[seriesInput.length - 1];
+        if (_seriesInput.length) {
+          defaultValue = getStatValue(_seriesInput[_seriesInput.length - 1]);
+          defaultSeason = _seriesInput[seriesInput.length - 1].season;
+        }
       } else if (seriesInput.length > 0) {
         if (seriesInput.every((s) => 'season' in s)) {
-          // const lineSeriesInput = seriesInput.map((s) => s[s.length - 1]);
-          // console.log('lineseriesinput: ', lineSeriesInput);
-          // defaultValue = getStatValue(lineSeriesInput);
-          // defaultSeason = lineSeriesInput[lineSeriesInput.length - 1].season;
+          const lineSeriesInput = seriesInput.map((s) => s[s.length - 1]);
+          defaultValue = getStatValue(lineSeriesInput);
+          defaultSeason = lineSeriesInput[lineSeriesInput.length - 1].season;
         }
       }
     }
 
     return { defaultValue, defaultSeason };
-  })();
+  }, [_defaultSeason, _defaultValue, getStatValue, seriesInput, stackedArea]);
 
   return (
     <>
@@ -123,7 +122,7 @@ export default function SeasonPlotMulti<T extends MinimumViableSnapshotQuery>({
                   thickness={5}
                 />
               ) : (
-                formatStat(displayValue ?? defaults.defaultValue)
+                formatValue(displayValue ?? defaults.defaultValue)
               )
             }
             subtitle={`Season ${(displaySeason !== undefined
@@ -156,6 +155,7 @@ export default function SeasonPlotMulti<T extends MinimumViableSnapshotQuery>({
             series={seriesInput}
             keys={keys}
             onCursor={handleCursor}
+            formatValue={formatValue}
             {...chartProps}
           />
         ) : (
@@ -163,6 +163,7 @@ export default function SeasonPlotMulti<T extends MinimumViableSnapshotQuery>({
             series={seriesInput}
             keys={keys}
             onCursor={handleCursor}
+            formatValue={formatValue}
             {...chartProps}
           >
             {(props) => {
