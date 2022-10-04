@@ -1,4 +1,4 @@
-import { Button, LinearProgress, Stack, Tooltip, Typography } from '@mui/material';
+import { Button, Divider, LinearProgress, Stack, Tooltip, Typography } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 import { useVotesQuery } from '~/generated/graphql';
 import DescriptionButton from '~/components/Common/DescriptionButton';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import {  displayFullBN, parseError } from '~/util';
+import { displayBN, displayFullBN, parseError } from '~/util';
 import TransactionToast from '~/components/Common/TxnToast';
 import { Proposal } from '~/util/Governance';
 import { AppState } from '~/state';
@@ -27,15 +27,16 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
   proposal: Proposal;
   existingChoice: number | undefined;
 }> = ({
-  values,
-  setFieldValue,
-  isSubmitting,
-  proposal,
-  existingChoice
-}) => {
+        values,
+        setFieldValue,
+        isSubmitting,
+        proposal,
+        existingChoice
+      }) => {
   /// State
   const account = useAccount();
   const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
+  const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
 
   /// Time
   const today = new Date();
@@ -50,7 +51,7 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
   /// Option isn't selected or the voting period has ended
   const canVote = farmerSilo.stalk.active.gt(0);
   const alreadyVotedThisChoice = (
-    existingChoice !== undefined 
+    existingChoice !== undefined
     && existingChoice === values.choice
   );
   const isClosed = differenceInTime <= 0;
@@ -67,42 +68,54 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
     <Form autoComplete="off">
       <Stack gap={1}>
         {/**
-          * Progress by choice
-          */}
+         * Progress by choice
+         */}
         <Stack px={1} pb={1} gap={1.5}>
-          {proposal.choices.map((choice: string, index: number) => (
-            <Stack gap={0.5}>
-              <Row columnGap={0.5} flexWrap="wrap" justifyContent="space-between">
-                <Typography variant="body1">
-                  {isClosed && existingChoice !== undefined && (existingChoice === index + 1) ? (
-                    <Tooltip title={`You voted: ${proposal.choices![existingChoice - 1]}`}>
-                      <span>✓&nbsp;</span>
-                    </Tooltip>
-                  ) : null}
-                  {choice}
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  {displayFullBN(new BigNumber(proposal.scores[index]), 0, 0)} STALK
-                  <Typography
-                    display={proposal.scores_total > 0 ? 'inline' : 'none'}>•{((proposal.scores[index] / proposal.scores_total) * 100).toFixed(2)}%
+          <>
+            {farmerSilo.stalk.active.gt(0) && (
+              <>
+                <Row justifyContent="space-between">
+                  <Typography>Voting Power</Typography>
+                  <Typography>{displayBN(farmerSilo.stalk.active)} STALK • {displayBN(farmerSilo.stalk.active.div(beanstalkSilo.stalk.active).multipliedBy(100))}%</Typography>
+                </Row>
+                <Divider />
+              </>
+            )}
+            {proposal.choices.map((choice: string, index: number) => (
+              <Stack gap={0.5}>
+                <Row columnGap={0.5} flexWrap="wrap" justifyContent="space-between">
+                  <Typography variant="body1">
+                    {isClosed && existingChoice !== undefined && (existingChoice === index + 1) ? (
+                      <Tooltip title={`You voted: ${proposal.choices![existingChoice - 1]}`}>
+                        <span>✓&nbsp;</span>
+                      </Tooltip>
+                    ) : null}
+                    {choice}
                   </Typography>
-                </Typography>
-              </Row>
-              <LinearProgress
-                variant="determinate"
-                value={(
-                  proposal.scores_total > 0 
-                    ? (proposal.scores[index] / proposal.scores_total) * 100 
-                    : 0
-                )}
-                sx={{ height: '10px', borderRadius: 1 }}
-              />
-            </Stack>
-          ))}
+                  <Typography variant="body1" color="text.secondary">
+                    {displayFullBN(new BigNumber(proposal.scores[index]), 0, 0)} STALK
+                    <Typography
+                      display={proposal.scores_total > 0 ? 'inline' : 'none'}>•{((proposal.scores[index] / proposal.scores_total) * 100).toFixed(2)}%
+                    </Typography>
+                  </Typography>
+                </Row>
+                <LinearProgress
+                  variant="determinate"
+                  value={(
+                    proposal.scores_total > 0
+                      ? (proposal.scores[index] / proposal.scores_total) * 100
+                      : 0
+                  )}
+                  sx={{ height: '10px', borderRadius: 1 }}
+                />
+              </Stack>
+            ))}
+          </>
+
         </Stack>
         {/**
-          * Voting
-          */}
+         * Voting
+         */}
         {!isClosed && (
           proposal.type === 'single-choice' ? (
             account ? (
@@ -136,7 +149,7 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
                   loading={isSubmitting}
                   disabled={isInvalid || isSubmitting}
                 >
-                  {canVote 
+                  {canVote
                     ? (
                       alreadyVotedThisChoice
                         ? `Already Voted: ${proposal.choices[existingChoice - 1]}`
@@ -174,9 +187,9 @@ const Vote: React.FC<{ proposal: Proposal }> = (props) => {
   const { data: signer } = useSigner();
 
   /// Query Votes
-  const { 
+  const {
     data: voteData,
-    refetch : refetchVotes,
+    refetch: refetchVotes,
   } = useVotesQuery({
     variables: {
       proposal_id: props.proposal?.id.toLowerCase() || '',
@@ -188,9 +201,9 @@ const Vote: React.FC<{ proposal: Proposal }> = (props) => {
     nextFetchPolicy: 'network-only',
   });
   const existingChoice = voteData?.votes?.[0]?.choice;
-  
+
   /// Form setup
-  const initialValues: VoteFormValues = useMemo(() => ({ 
+  const initialValues: VoteFormValues = useMemo(() => ({
     choice: existingChoice
   }), [existingChoice]);
   const onSubmit = useCallback(
