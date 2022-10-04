@@ -34,7 +34,7 @@ type SeasonPlotMultiBaseProps<K extends MinimumViableSnapshotQuery> = Omit<
     ChartProps?: ChartMultiProps;
     timeTabParams: TimeTabStateParams;
     // formatStat?: (value: number) => string | JSX.Element;
-    updateDisplayValue?: (d?: BaseDataPoint) => number;
+    // updateDisplayValue?: (d?: BaseDataPoint) => number;
   };
 
 export default function SeasonPlotMulti<T extends MinimumViableSnapshotQuery>({
@@ -74,32 +74,40 @@ export default function SeasonPlotMulti<T extends MinimumViableSnapshotQuery>({
         setDisplayValue(undefined);
         return;
       }
-      const d = Array.isArray(dps) ? dps[0] : dps;
-      setDisplaySeason(d.season);
-      setDisplayValue(getStatValue(d));
+      if (Array.isArray(dps)) {
+        // dps.length && setDisplaySeason(dps[0].season);
+      } else if (dps.season) {
+        // dps.season && setDisplaySeason(dps.season);
+      }
+      setDisplayValue(getStatValue(dps));
     },
     [getStatValue]
   );
 
-  /// If one of the defaults is missing, use the last data point.
-  const defaultValue = _defaultValue || 0;
-  const defaultSeason = _defaultSeason || 0;
-
   const seriesInput = useMemo(() => series, [series]);
 
-  // const dValues = (() => {
-  //   let _dvalue = _defaultValue || 0;
-  //   let _dSeason = _defaultSeason || 0;
+  /// If one of the defaults is missing, use the last data point.
+  const defaults = (() => {
+    const defaultValue = _defaultValue || 0;
+    const defaultSeason = _defaultSeason || 0;
 
-  //   if (!_dvalue || !_dSeason) {
-  //     if (stackedArea && seriesInput.length > 0 && updateDisplayValue) {
-  //       const _seriesInput = seriesInput as T[];
-  //       _dvalue = updateDisplayValue(_seriesInput[seriesInput.length - 1]);
-  //       _dSeason = _seriesInput[seriesInput.length - 1].season;
-  //     } else if (seriesInput.length) {
-  //     }
-  //   }
-  // })();
+    if (!defaultValue || !defaultSeason) {
+      if (stackedArea && seriesInput.length) {
+        const _seriesInput = seriesInput[0];
+        // defaultValue = getStatValue(_seriesInput[seriesInput.length - 1]);
+        // defaultSeason = _seriesInput[seriesInput.length - 1].season;
+      } else if (seriesInput.length > 0) {
+        if (seriesInput.every((s) => 'season' in s)) {
+          // const lineSeriesInput = seriesInput.map((s) => s[s.length - 1]);
+          // console.log('lineseriesinput: ', lineSeriesInput);
+          // defaultValue = getStatValue(lineSeriesInput);
+          // defaultSeason = lineSeriesInput[lineSeriesInput.length - 1].season;
+        }
+      }
+    }
+
+    return { defaultValue, defaultSeason };
+  })();
 
   return (
     <>
@@ -115,12 +123,12 @@ export default function SeasonPlotMulti<T extends MinimumViableSnapshotQuery>({
                   thickness={5}
                 />
               ) : (
-                formatStat(displayValue ?? defaultValue)
+                formatStat(displayValue ?? defaults.defaultValue)
               )
             }
             subtitle={`Season ${(displaySeason !== undefined
               ? displaySeason
-              : defaultSeason
+              : defaults.defaultSeason
             ).toFixed()}`}
           />
         ) : null}

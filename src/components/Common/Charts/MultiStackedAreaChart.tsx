@@ -72,6 +72,8 @@ function Graph(props: GraphProps) {
   const { generateScale, generatePathFromStack, getPointerValue, getCurve } =
     utils;
 
+  const curveType = useMemo(() => getCurve(_curve), [_curve, getCurve]);
+
   const data = useMemo(
     () => (series.length && series[0]?.length ? series[0] : []),
     [series]
@@ -105,8 +107,6 @@ function Graph(props: GraphProps) {
     { scroll: true, detectBounds: true }
   );
 
-  const curveType = useMemo(() => getCurve(_curve), [_curve, getCurve]);
-
   const {
     showTooltip,
     hideTooltip,
@@ -134,7 +134,7 @@ function Graph(props: GraphProps) {
         tooltipTop: containerY,
         tooltipData: pointerData[0],
       });
-      onCursor?.(pointerData);
+      onCursor?.(pointerData[0]);
     },
     [containerBounds, series, getPointerValue, onCursor, scales, showTooltip]
   );
@@ -267,18 +267,14 @@ function Graph(props: GraphProps) {
                 top={tooltipTop}
               >
                 <Stack gap={0.5} width="200px">
-                  <Row justifyContent="space-between">
-                    <Typography>Bean</Typography>
-                    <Typography textAlign="right">
-                      {tooltipData?.bean}
-                    </Typography>
-                  </Row>
-                  <Row justifyContent="space-between">
-                    <Typography>Bean3Crv</Typography>
-                    <Typography textAlign="right">
-                      {tooltipData?.bean3Crv}
-                    </Typography>
-                  </Row>
+                  {keys.map((key) => (
+                    <Row justifyContent="space-between">
+                      <Typography>{key}</Typography>
+                      <Typography textAlign="right">
+                        {tooltipData[key]}
+                      </Typography>
+                    </Row>
+                  ))}
                 </Stack>
               </TooltipInPortal>
             </div>

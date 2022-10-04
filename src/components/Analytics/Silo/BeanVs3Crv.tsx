@@ -39,11 +39,18 @@ const stylesConfig: ChartMultiStyles = {
 const formatValue = (value: number) =>
   `${value.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
 
-const updateDisplayValue = <T extends BaseDataPoint>(v?: T | T[]) => {
+const getStatValue = <T extends BaseDataPoint>(v?: T | T[]) => {
   if (!v) return 0;
-  if (Array.isArray(v)) return 0;
+  if (Array.isArray(v)) {
+    return (
+      v.reduce((acc, curr) => {
+        acc += curr.value;
+        return acc;
+      }, 0) / 2
+    );
+  }
   if (v?.bean && v?.bean3Crv) {
-    return parseFloat(formatValue(v.bean3Crv / v.bean));
+    return v.bean3Crv / v.bean;
   }
   return 0;
 };
@@ -112,10 +119,9 @@ const BeanVs3Crv: React.FC<{}> = () => {
         height={300}
         StatProps={statProps}
         timeTabParams={timeTabParams}
-        // formatStat={formatValue}
-        getStatValue={updateDisplayValue}
-        updateDisplayValue={updateDisplayValue}
-        // stackedArea
+        formatStat={formatValue}
+        getStatValue={getStatValue}
+        stackedArea
         ChartProps={{
           stylesConfig: stylesConfig,
         }}

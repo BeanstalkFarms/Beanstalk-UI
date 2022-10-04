@@ -96,7 +96,6 @@ type ChartStyleConfig = {
   from: string;
   stroke: string;
 };
-
 type ChartSharedValuesProps = {
   strokeBuffer: number;
   margin: { top: number; bottom: number; left: number; right: number };
@@ -188,6 +187,7 @@ export default function ChartPropProvider({
       };
       return { getStyle, styles };
     };
+
     return {
       strokeBuffer,
       margin,

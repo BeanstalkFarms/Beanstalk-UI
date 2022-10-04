@@ -1,10 +1,9 @@
 import React, { useCallback, useMemo } from 'react';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import { LinePath, Bar, Line } from '@visx/shape';
+import { LinePath, Line } from '@visx/shape';
 import { Group } from '@visx/group';
 import { scaleLinear } from '@visx/scale';
-import { localPoint } from '@visx/event';
-import { useTooltip } from '@visx/tooltip';
+import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
 
 import { Axis, Orientation } from '@visx/axis';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
@@ -53,6 +52,8 @@ const Graph: React.FC<GraphProps> = (props) => {
   const {
     // Chart sizing
     stylesConfig,
+    // eslint-disable-next-line unused-imports/no-unused-vars
+    keys,
     width,
     height,
     // Line Chart Props
@@ -66,22 +67,15 @@ const Graph: React.FC<GraphProps> = (props) => {
     accessors,
     utils,
   } = props;
-  const { getX, getY, bisectSeason } = accessors;
-  const { generateScale, getCurve } = utils;
+  const { getX, getY } = accessors;
+  const { generateScale, getCurve, getPointerValue } = utils;
 
   // When positioning the circle that accompanies the cursor,
   // use this dataset to decide where it goes. (There is one
   // circle but potentially multiple series).
-  const data = series[0];
-  const curve = useMemo(() => getCurve(_curve), [getCurve, _curve]);
+  // const data = series[0];
 
-  const {
-    showTooltip,
-    hideTooltip,
-    tooltipData,
-    tooltipTop = 0,
-    tooltipLeft = 0,
-  } = useTooltip<BaseDataPoint[] | undefined>();
+  const curve = useMemo(() => getCurve(_curve), [getCurve, _curve]);
 
   // Scales
   const scales = useMemo(
@@ -89,50 +83,42 @@ const Graph: React.FC<GraphProps> = (props) => {
     [generateScale, height, isTWAP, series, width]
   );
 
+  const { TooltipInPortal, containerBounds, containerRef } = useTooltipInPortal(
+    { scroll: true, detectBounds: true }
+  );
+
+  const {
+    showTooltip,
+    hideTooltip,
+    tooltipData,
+    // eslint-disable-next-line unused-imports/no-unused-vars
+    tooltipTop = 0,
+    tooltipLeft = 0,
+  } = useTooltip<BaseDataPoint[] | undefined>();
+
   // Handlers
   const handleMouseLeave = useCallback(() => {
     hideTooltip();
     onCursor?.(undefined);
   }, [hideTooltip, onCursor]);
 
-  const handleTooltip = useCallback(
+  const handlePointerMove = useCallback(
     (
-      event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>
+      event: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>
     ) => {
-      const { x } = localPoint(event) || { x: 0 };
-
-      // for each series
-      const ds = scales.map((scale, i) => {
-        const x0 = scale.xScale.invert(x); // get Date corresponding to pixel coordinate x
-        const index = bisectSeason(data, x0, 1); // find the closest index of x0 within data
-
-        const d0 = series[i][index - 1]; // value at x0 - 1
-        const d1 = series[i][index]; // value at x0
-
-        //     |   6   |  | 3 |
-        // [(d0)-------(x0)---(d1)]
-        // default to the left endpoint
-        let d = d0;
-        if (d1 && getX(d1)) {
-          // use d1 if x0 is closer to d1
-          d =
-            x0.valueOf() - getX(d0).valueOf() >
-            getX(d1).valueOf() - x0.valueOf()
-              ? d1
-              : d0;
-        }
-
-        return d;
-      });
+      const { left, top } = containerBounds;
+      const containerX = ('clientX' in event ? event.clientX : 0) - left;
+      const containerY = ('clientY' in event ? event.clientY : 0) - top;
+      const pointerData = getPointerValue(event, scales, series);
 
       showTooltip({
-        tooltipData: ds,
-        tooltipLeft: x, // in pixels
-        tooltipTop: scales[0].yScale(getY(ds[0])), // in pixels
+        tooltipData: pointerData,
+        tooltipLeft: containerX, // in pixels
+        tooltipTop: containerY, // in pixels
       });
-      onCursor?.(ds);
+      onCursor?.(pointerData);
     },
-    [scales, showTooltip, getY, onCursor, bisectSeason, data, series, getX]
+    [containerBounds, getPointerValue, scales, series, showTooltip, onCursor]
   );
 
   // const yTickNum = height > 180 ? undefined : 5;
@@ -145,7 +131,7 @@ const Graph: React.FC<GraphProps> = (props) => {
     [scales]
   );
 
-  const { styles, getStyle } = useMemo(
+  const { getStyle } = useMemo(
     () => common.getChartStyles(stylesConfig),
     [common, stylesConfig]
   );
@@ -166,7 +152,22 @@ const Graph: React.FC<GraphProps> = (props) => {
   };
 
   return (
-    <>
+    <div style={{ position: 'relative' }}>
+      <div
+        style={{
+          position: 'absolute',
+          bottom: dataRegion.yTop,
+          left: 0,
+          width: width - common.yAxisWidth,
+          height: dataRegion.yBottom - dataRegion.yTop,
+          zIndex: 9,
+        }}
+        ref={containerRef}
+        onTouchStart={handlePointerMove}
+        onTouchMove={handlePointerMove}
+        onMouseMove={handlePointerMove}
+        onMouseLeave={handleMouseLeave}
+      />
       <svg width={width} height={height}>
         {/**
          * Lines
@@ -254,22 +255,8 @@ const Graph: React.FC<GraphProps> = (props) => {
             })}
           </g>
         )}
-        {/* Overlay to handle tooltip.
-         * Needs to be the last item to maintain mouse control. */}
-        <Bar
-          x={0}
-          y={0}
-          width={width - common.yAxisWidth}
-          height={height}
-          fill="transparent"
-          rx={14}
-          onTouchStart={handleTooltip}
-          onTouchMove={handleTooltip}
-          onMouseMove={handleTooltip}
-          onMouseLeave={handleMouseLeave}
-        />
       </svg>
-    </>
+    </div>
   );
 };
 
