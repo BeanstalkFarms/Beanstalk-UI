@@ -415,6 +415,7 @@ let muiTheme = createTheme({
     },
     MuiAccordion: {
       defaultProps: {
+        disableGutters: true,
         elevation: 0,
       },
       styleOverrides: {
