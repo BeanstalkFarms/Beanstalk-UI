@@ -1,12 +1,40 @@
 import React, { useCallback, useMemo } from 'react';
-import { Series } from 'd3-shape';
+import { Series, CurveFactory } from 'd3-shape';
 import { bisector, extent, min, max } from 'd3-array';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { scaleLinear, scaleTime } from '@visx/scale';
 import { ScaleLinear, ScaleTime } from 'd3-scale';
+import { localPoint } from '@visx/event';
+import {
+  curveLinear,
+  curveStep,
+  curveStepAfter,
+  curveStepBefore,
+  curveNatural,
+  curveBasis,
+  curveMonotoneX,
+} from '@visx/curve';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { DataPoint } from './LineChart';
-import { ChartMultiStyles } from './MultiStackedAreaChart';
+
+export const CURVES = {
+  linear: curveLinear,
+  step: curveStep,
+  stepAfter: curveStepAfter,
+  stepBefore: curveStepBefore,
+  natural: curveNatural,
+  basis: curveBasis,
+  monotoneX: curveMonotoneX,
+};
+
+export type ChartMultiStyles = {
+  [key: string]: {
+    stroke: string; // stroke color
+    fillPrimary: string; // gradient 'to' color
+    fillSecondary?: string; // gradient 'from' color
+    strokeWidth?: number;
+  };
+};
 
 // shared parameters across stacked area and line charts
 const margin = {
@@ -61,6 +89,14 @@ export type BaseDataPoint = { [key: string]: number } & Omit<
   DataPoint,
   'value'
 >;
+
+type ChartStyleConfig = {
+  id: string;
+  to: string;
+  from: string;
+  stroke: string;
+};
+
 type ChartSharedValuesProps = {
   strokeBuffer: number;
   margin: { top: number; bottom: number; left: number; right: number };
@@ -73,6 +109,10 @@ type ChartSharedValuesProps = {
   defaultChartStyles: ChartMultiStyles;
   yTickLabelProps: typeof yTickLabelProps;
   xTickLabelProps: typeof xTickLabelProps;
+  getChartStyles: (config?: ChartMultiStyles) => {
+    getStyle: (k: string, i: number) => ChartStyleConfig;
+    styles: ChartStyleConfig[];
+  };
 };
 
 type ChartAccessorProps = {
@@ -92,6 +132,12 @@ type ChartAccessorProps = {
   ) => number;
 };
 
+type Scales = {
+  xScale: ScaleLinear<number, number, never>;
+  dScale: ScaleTime<number, number, never>;
+  yScale: ScaleLinear<number, number, never>;
+};
+
 type UtilProps = {
   generatePathFromStack: <K extends keyof BaseDataPoint>(
     data: Series<BaseDataPoint, K>
@@ -102,11 +148,15 @@ type UtilProps = {
     width: number,
     stackedArea?: boolean,
     isTWAP?: boolean
-  ) => {
-    xScale: ScaleLinear<number, number, never>;
-    dScale: ScaleTime<number, number, never>;
-    yScale: ScaleLinear<number, number, never>;
-  }[];
+  ) => Scales[];
+  getPointerValue: (
+    event:
+      | React.TouchEvent<HTMLDivElement>
+      | React.MouseEvent<HTMLDivElement, MouseEvent>,
+    scales: Scales[],
+    data: BaseDataPoint[][]
+  ) => BaseDataPoint[];
+  getCurve: (curve?: keyof typeof CURVES | CurveFactory) => CurveFactory;
 };
 
 export type ProvidedChartProps = {
@@ -122,8 +172,23 @@ type ChartPropProviderProps = {
 export default function ChartPropProvider({
   children,
 }: ChartPropProviderProps) {
-  const common = useMemo(
-    () => ({
+  const common = useMemo(() => {
+    const getChartStyles = (config?: ChartMultiStyles) => {
+      const style = config || defaultChartStyles;
+      const styles = Object.entries(style).map(
+        ([k, { stroke, fillPrimary, fillSecondary }]) => {
+          const primary = fillPrimary || stroke;
+          const secondary = fillSecondary || fillPrimary;
+          return { id: k, to: primary, from: secondary, stroke };
+        }
+      );
+      const getStyle = (k: string, i: number) => {
+        const _style = styles.find((s) => s.id === k);
+        return _style || styles[Math.floor(i % styles.length)];
+      };
+      return { getStyle, styles };
+    };
+    return {
       strokeBuffer,
       margin,
       axisHeight,
@@ -135,9 +200,9 @@ export default function ChartPropProvider({
       defaultChartStyles,
       xTickLabelProps,
       yTickLabelProps,
-    }),
-    []
-  );
+      getChartStyles,
+    };
+  }, []);
   // chart data acessors
   const accessors = useMemo(() => {
     const bisectSeason = bisector<BaseDataPoint, number>((d) => d.season).left;
@@ -195,7 +260,6 @@ export default function ChartPropProvider({
         // generate yScale
         const xDomain = extent(data, getX) as [number, number];
         const xScale = scaleLinear<number>({ domain: xDomain });
-
         // generate dScale (only for non-stacked Area charts)
         const dScale = scaleTime() as ScaleTime<number, number, never>;
         if (!stackedArea) {
@@ -205,10 +269,8 @@ export default function ChartPropProvider({
 
         // generate yScale
         let yScale;
-
         // if stacked area, get min and max of Y of T instead of T['value']
         const [y1, y2] = stackedArea ? [getYMin, getYMax] : [getY, getY];
-
         if (isTWAP) {
           const yMin = min(data, y1);
           const yMax = max(data, y2);
@@ -228,10 +290,8 @@ export default function ChartPropProvider({
             ],
           });
         }
-
         // Set range for xScale
         xScale.range([0, width - yAxisWidth]);
-
         // Set range for yScale
         yScale.range([
           height - axisHeight - margin.bottom - strokeBuffer, // bottom edge
@@ -243,26 +303,68 @@ export default function ChartPropProvider({
     },
     [accessors]
   );
-
-  const utils = useMemo(() => {
-    const generatePathFromStack = <K extends keyof BaseDataPoint>(
-      data: Series<BaseDataPoint, K>
-    ) =>
-      data.map((_stack: SeriesPoint<BaseDataPoint>) => ({
+  const getPointerValue = useCallback(
+    (
+      event:
+        | React.TouchEvent<HTMLDivElement>
+        | React.MouseEvent<HTMLDivElement, MouseEvent>,
+      scales: Scales[],
+      series: BaseDataPoint[][]
+    ) => {
+      const { bisectSeason, getX } = accessors;
+      const data = series[0];
+      return scales.map((scale, i) => {
+        const { x } = localPoint(event) || { x: 0 };
+        const x0 = scale.xScale.invert(x);
+        const index = bisectSeason(data, x0, 1);
+        const d0 = series[i][index - 1]; // value at x0 - 1
+        const d1 = series[i][index]; // value at x0
+        return (() => {
+          if (d1 && getX(d1)) {
+            return x0.valueOf() - getX(d0).valueOf() >
+              getX(d1).valueOf() - x0.valueOf()
+              ? d1
+              : d0;
+          }
+          return d0;
+        })();
+      });
+    },
+    [accessors]
+  );
+  const generatePathFromStack = useCallback(
+    <K extends keyof BaseDataPoint>(data: Series<BaseDataPoint, K>) => {
+      const { getY1 } = accessors;
+      return data.map((_stack: SeriesPoint<BaseDataPoint>) => ({
         season: _stack.data.season,
         date: _stack.data.date,
-        value: accessors.getY1(_stack) ?? 0,
+        value: getY1(_stack) ?? 0,
       })) as unknown as BaseDataPoint[];
-
-    return { generatePathFromStack, generateScale };
-  }, [accessors, generateScale]);
+    },
+    [accessors]
+  );
+  const getCurve = useCallback(
+    (curve?: keyof typeof CURVES | CurveFactory): CurveFactory => {
+      if (!curve) return CURVES.linear;
+      if (typeof curve === 'string') {
+        return CURVES[curve];
+      }
+      return curve;
+    },
+    []
+  );
 
   return (
     <>
       {children({
         common,
         accessors,
-        utils,
+        utils: {
+          generatePathFromStack,
+          generateScale,
+          getPointerValue,
+          getCurve,
+        },
       })}
     </>
   );

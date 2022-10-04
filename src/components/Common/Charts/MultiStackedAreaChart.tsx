@@ -9,8 +9,7 @@ import BigNumber from 'bignumber.js';
 import { Axis, Orientation, TickFormatter } from '@visx/axis';
 import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
 import { NumberLike } from '@visx/scale';
-import { localPoint } from '@visx/event';
-import { curveLinear } from '@visx/curve';
+import { Stack, Typography } from '@mui/material';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import {
   CURVES,
@@ -20,17 +19,10 @@ import {
 import { displayBN } from '~/util';
 import ChartPropProvider, {
   BaseDataPoint,
+  ChartMultiStyles,
   ProvidedChartProps,
 } from './ChartPropProvider';
-
-export type ChartMultiStyles = {
-  [key: string]: {
-    stroke: string; // stroke color
-    fillPrimary: string; // gradient 'to' color
-    fillSecondary?: string; // gradient 'from' color
-    strokeWidth?: number;
-  };
-};
+import Row from '../Row';
 
 export type ChartMultiProps = {
   curve?: CurveFactory | keyof typeof CURVES;
@@ -59,35 +51,34 @@ type GraphProps = {
 } & MultiStackedAreaChartProps &
   ProvidedChartProps;
 
-function Graph<T extends BaseDataPoint>(props: GraphProps) {
+function Graph(props: GraphProps) {
   const {
     // Chart sizing
     width,
     height,
-    // Line Chart Props
-    // tooltipComponent,
+    // props
     series,
-    curve,
+    curve: _curve,
     keys,
     onCursor,
     isTWAP,
     stylesConfig,
+    // chart prop provider
     common,
-    accessors, // memoized accessor fns
+    accessors,
     utils,
   } = props;
-  const { getX, getY0, getY, getY1, bisectSeason } = accessors;
-  const { generateScale, generatePathFromStack } = utils;
-  const { defaultChartStyles } = common;
-  // const data = series.length ? series : []
+  const { getX, getY0, getY, getY1 } = accessors;
+  const { generateScale, generatePathFromStack, getPointerValue, getCurve } =
+    utils;
 
   const data = useMemo(
     () => (series.length && series[0]?.length ? series[0] : []),
     [series]
   );
 
-  const scale = useMemo(
-    () => generateScale(series, height, width, true, isTWAP)[0],
+  const scales = useMemo(
+    () => generateScale(series, height, width, true, isTWAP),
     [generateScale, series, height, width, isTWAP]
   );
 
@@ -110,6 +101,12 @@ function Graph<T extends BaseDataPoint>(props: GraphProps) {
     );
   }, [data]);
 
+  const { TooltipInPortal, containerBounds, containerRef } = useTooltipInPortal(
+    { scroll: true, detectBounds: true }
+  );
+
+  const curveType = useMemo(() => getCurve(_curve), [_curve, getCurve]);
+
   const {
     showTooltip,
     hideTooltip,
@@ -118,10 +115,6 @@ function Graph<T extends BaseDataPoint>(props: GraphProps) {
     tooltipLeft = 0,
   } = useTooltip<BaseDataPoint | undefined>();
 
-  const { containerRef, containerBounds, TooltipInPortal } = useTooltipInPortal(
-    { scroll: true, detectBounds: true }
-  );
-
   const handleMouseLeave = useCallback(() => {
     hideTooltip();
     onCursor?.(undefined);
@@ -129,67 +122,30 @@ function Graph<T extends BaseDataPoint>(props: GraphProps) {
 
   const handlePointerMove = useCallback(
     (
-      event:
-        | React.PointerEvent<SVGRectElement>
-        | React.PointerEvent<HTMLDivElement>
+      event: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>
     ) => {
-      // coordinates should be relative to the container in which Tooltip is rendered
-      const containerX =
-        ('clientX' in event ? event.clientX : 0) - containerBounds.left;
-      const containerY =
-        ('clientY' in event ? event.clientY : 0) - containerBounds.top;
-      const { x } = localPoint(event) || { x: 0 };
-      const x0 = scale.xScale.invert(x);
-      const index = bisectSeason(data, x0, 1);
-      const d0 = data[index - 1]; // value at x0 - 1
-      const d1 = data[index]; // value at x0
-      const d = (() => {
-        if (d1 && getX(d1)) {
-          return x0.valueOf() - getX(d0).valueOf() >
-            getX(d1).valueOf() - x0.valueOf()
-            ? d1
-            : d0;
-        }
-        return d0;
-      })();
-      // console.log('d: ', d);
+      const { left, top } = containerBounds;
+      const containerX = ('clientX' in event ? event.clientX : 0) - left;
+      const containerY = ('clientY' in event ? event.clientY : 0) - top;
+      const pointerData = getPointerValue(event, scales, series);
+
       showTooltip({
         tooltipLeft: containerX,
         tooltipTop: containerY,
-        tooltipData: d,
+        tooltipData: pointerData[0],
       });
-      onCursor?.(d);
+      onCursor?.(pointerData);
     },
-    [
-      containerBounds.left,
-      containerBounds.top,
-      scale,
-      bisectSeason,
-      data,
-      showTooltip,
-      onCursor,
-      getX,
-    ]
+    [containerBounds, series, getPointerValue, onCursor, scales, showTooltip]
   );
 
   const xTickFormat = useCallback((_, i) => tickDates[i], [tickDates]);
   const yTickFormat = useCallback((val) => displayBN(new BigNumber(val)), []);
 
-  const chartStyle = useMemo(() => {
-    const style = stylesConfig || defaultChartStyles;
-    const styles = Object.entries(style).map(
-      ([k, { stroke, fillPrimary, fillSecondary }]) => {
-        const primary = fillPrimary || stroke;
-        const secondary = fillSecondary || fillPrimary;
-        return { id: k, to: primary, from: secondary, stroke };
-      }
-    );
-    const getStyle = (k: string, i: number) => {
-      const _style = styles.find((s) => s.id === k);
-      return _style || styles[Math.floor(i % styles.length)];
-    };
-    return { getStyle, styles };
-  }, [defaultChartStyles, stylesConfig]);
+  const { styles, getStyle } = useMemo(() => {
+    const { getChartStyles } = common;
+    return getChartStyles(stylesConfig);
+  }, [common, stylesConfig]);
 
   if (data.length === 0) return null;
 
@@ -203,18 +159,28 @@ function Graph<T extends BaseDataPoint>(props: GraphProps) {
   };
 
   return (
-    <div
-      ref={containerRef}
-      onPointerMove={handlePointerMove}
-      onMouseLeave={handleMouseLeave}
-      style={{ width, height }}
-    >
+    <div style={{ position: 'relative' }}>
+      <div
+        style={{
+          position: 'absolute',
+          bottom: dataRegion.yTop,
+          left: 0,
+          width: width - common.yAxisWidth,
+          height: dataRegion.yBottom - dataRegion.yTop,
+          zIndex: 9,
+        }}
+        ref={containerRef}
+        onTouchStart={handlePointerMove}
+        onTouchMove={handlePointerMove}
+        onMouseMove={handlePointerMove}
+        onMouseLeave={handleMouseLeave}
+      />
       <svg width={width} height={height}>
         <Group
           width={width - common.yAxisWidth}
           height={dataRegion.yBottom - dataRegion.yTop}
         >
-          {chartStyle.styles.map((s) => (
+          {styles.map((s) => (
             <LinearGradient {...s} key={s.id} />
           ))}
           <rect
@@ -231,9 +197,9 @@ function Graph<T extends BaseDataPoint>(props: GraphProps) {
             keys={keys}
             data={data}
             height={height}
-            x={(d) => scale.xScale(getX(d.data)) ?? 0}
-            y0={(d) => scale.yScale(getY0(d)) ?? 0}
-            y1={(d) => scale.yScale(getY1(d)) ?? 0}
+            x={(d) => scales[0].xScale(getX(d.data)) ?? 0}
+            y0={(d) => scales[0].yScale(getY0(d)) ?? 0}
+            y1={(d) => scales[0].yScale(getY1(d)) ?? 0}
           >
             {({ stacks, path }) =>
               stacks.map((stack, i) => (
@@ -242,15 +208,15 @@ function Graph<T extends BaseDataPoint>(props: GraphProps) {
                     key={`stack-${stack.key}`}
                     d={path(stack) || ''}
                     stroke="transparent"
-                    fill={`url(#${chartStyle.getStyle(`${stack.key}`, i).id})`}
+                    fill={`url(#${getStyle(`${stack.key}`, i).id})`}
                   />
                   <LinePath<BaseDataPoint>
-                    stroke={chartStyle.getStyle(`${stack.key}`, i).stroke}
+                    stroke={getStyle(`${stack.key}`, i).stroke}
                     key={`line-${i}`}
-                    curve={curveLinear}
+                    curve={curveType}
                     data={generatePathFromStack(stack)}
-                    x={(d) => scale.xScale(getX(d)) ?? 0}
-                    y={(d) => scale.yScale(getY(d)) ?? 0}
+                    x={(d) => scales[0].xScale(getX(d)) ?? 0}
+                    y={(d) => scales[0].yScale(getY(d)) ?? 0}
                   />
                 </>
               ))
@@ -261,7 +227,7 @@ function Graph<T extends BaseDataPoint>(props: GraphProps) {
           <Axis
             key="axis"
             orientation={Orientation.bottom}
-            scale={scale.xScale}
+            scale={scales[0].xScale}
             stroke={common.axisColor}
             tickFormat={xTickFormat}
             tickStroke={common.axisColor}
@@ -273,7 +239,7 @@ function Graph<T extends BaseDataPoint>(props: GraphProps) {
           <Axis
             key="axis"
             orientation={Orientation.right}
-            scale={scale.yScale}
+            scale={scales[0].yScale}
             stroke={common.axisColor}
             tickFormat={yTickFormat}
             tickStroke={common.axisColor}
@@ -282,28 +248,42 @@ function Graph<T extends BaseDataPoint>(props: GraphProps) {
             strokeWidth={0}
           />
         </g>
+
         {tooltipData && (
-          <g>
-            <Line
-              from={{ x: tooltipLeft, y: dataRegion.yTop }}
-              to={{ x: tooltipLeft, y: dataRegion.yBottom }}
-              stroke={BeanstalkPalette.lightGrey}
-              strokeWidth={1}
-              pointerEvents="none"
-            />
-          </g>
+          <>
+            <g>
+              <Line
+                from={{ x: tooltipLeft, y: dataRegion.yTop }}
+                to={{ x: tooltipLeft, y: dataRegion.yBottom }}
+                stroke={BeanstalkPalette.lightGrey}
+                strokeWidth={1}
+                pointerEvents="none"
+              />
+            </g>
+            <div>
+              <TooltipInPortal
+                key={Math.random()}
+                left={tooltipLeft}
+                top={tooltipTop}
+              >
+                <Stack gap={0.5} width="200px">
+                  <Row justifyContent="space-between">
+                    <Typography>Bean</Typography>
+                    <Typography textAlign="right">
+                      {tooltipData?.bean}
+                    </Typography>
+                  </Row>
+                  <Row justifyContent="space-between">
+                    <Typography>Bean3Crv</Typography>
+                    <Typography textAlign="right">
+                      {tooltipData?.bean3Crv}
+                    </Typography>
+                  </Row>
+                </Stack>
+              </TooltipInPortal>
+            </div>
+          </>
         )}
-        {/* {tooltipData && tooltipComponent && (
-          <div>
-            <TooltipInPortal
-              key={Math.random()}
-              left={tooltipLeft}
-              top={tooltipTop}
-            >
-              {tooltipComponent({ d: tooltipData })}
-            </TooltipInPortal>
-          </div>
-        )} */}
       </svg>
     </div>
   );

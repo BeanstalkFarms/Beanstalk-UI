@@ -48,7 +48,6 @@ export default function SeasonPlotMulti<T extends MinimumViableSnapshotQuery>({
   // stat props
   getStatValue,
   formatStat = defaultValueFormatter,
-  updateDisplayValue,
   StatProps: statProps, // renamed to prevent type collision
   ChartProps: chartProps,
   timeTabParams,
@@ -78,7 +77,6 @@ export default function SeasonPlotMulti<T extends MinimumViableSnapshotQuery>({
       const d = Array.isArray(dps) ? dps[0] : dps;
       setDisplaySeason(d.season);
       setDisplayValue(getStatValue(d));
-      setDisplaySeason(dps ? getStatValue(dps) : undefined);
     },
     [getStatValue]
   );

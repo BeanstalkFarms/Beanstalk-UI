@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Card, Stack, Typography } from '@mui/material';
+import { Card } from '@mui/material';
 import useSeasonsQuery, {
   SnapshotData,
 } from '~/hooks/beanstalk/useSeasonsQuery';
@@ -13,10 +13,11 @@ import { toTokenUnitsBN } from '~/util';
 import useTimeTabState from '~/hooks/app/useTimeTabState';
 import SeasonPlotMulti from '~/components/Common/Charts/SeasonPlotMulti';
 import { ERC20Token } from '~/classes/Token';
-import { ChartMultiStyles } from '~/components/Common/Charts/MultiStackedAreaChart';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import { BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
-import Row from '~/components/Common/Row';
+import {
+  BaseDataPoint,
+  ChartMultiStyles,
+} from '~/components/Common/Charts/ChartPropProvider';
 
 const assets = {
   bean: BEAN[1],
@@ -46,18 +47,6 @@ const updateDisplayValue = <T extends BaseDataPoint>(v?: T | T[]) => {
   }
   return 0;
 };
-const TooltipComponent = <T extends BaseDataPoint>({ d }: { d: T }) => (
-  <Stack gap={0.5} width="200px">
-    <Row justifyContent="space-between">
-      <Typography>Bean</Typography>
-      <Typography textAlign="right">{formatValue(d?.bean)}</Typography>
-    </Row>
-    <Row justifyContent="space-between">
-      <Typography>Bean3Crv</Typography>
-      <Typography textAlign="right">{formatValue(d?.bean3Crv)}</Typography>
-    </Row>
-  </Stack>
-);
 
 const getValue = (asset: ERC20Token) => {
   const fn = (season: SnapshotData<SeasonalDepositedSiloAssetQuery>) =>
@@ -126,10 +115,9 @@ const BeanVs3Crv: React.FC<{}> = () => {
         // formatStat={formatValue}
         getStatValue={updateDisplayValue}
         updateDisplayValue={updateDisplayValue}
-        stackedArea
+        // stackedArea
         ChartProps={{
           stylesConfig: stylesConfig,
-          tooltipComponent: TooltipComponent,
         }}
       />
     </Card>

@@ -5,15 +5,7 @@ import { Group } from '@visx/group';
 import { scaleLinear } from '@visx/scale';
 import { localPoint } from '@visx/event';
 import { useTooltip } from '@visx/tooltip';
-import {
-  curveLinear,
-  curveStep,
-  curveStepAfter,
-  curveStepBefore,
-  curveNatural,
-  curveBasis,
-  curveMonotoneX,
-} from '@visx/curve';
+
 import { Axis, Orientation } from '@visx/axis';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import ChartPropProvider, {
@@ -21,16 +13,6 @@ import ChartPropProvider, {
   ProvidedChartProps,
 } from './ChartPropProvider';
 import { ChartMultiProps } from './MultiStackedAreaChart';
-
-export const CURVES = {
-  linear: curveLinear,
-  step: curveStep,
-  stepAfter: curveStepAfter,
-  stepBefore: curveStepBefore,
-  natural: curveNatural,
-  basis: curveBasis,
-  monotoneX: curveMonotoneX,
-};
 
 export type Scale = {
   xScale: ReturnType<typeof scaleLinear>;
@@ -64,82 +46,34 @@ export type DataPoint = {
 };
 
 // ------------------------
-//        Plot Sizing
-// ------------------------
-
-const margin = {
-  top: 10,
-  bottom: 9,
-  left: 0,
-  right: 0,
-};
-
-const axisHeight = 21;
-
-// ------------------------
-//      Fonts & Colors
-// ------------------------
-
-const strokes = [
-  {
-    stroke: BeanstalkPalette.logoGreen,
-    strokeWidth: 2,
-  },
-  {
-    stroke: BeanstalkPalette.darkBlue,
-    strokeWidth: 2,
-  },
-  {
-    stroke: BeanstalkPalette.lightGrey,
-    strokeWidth: 0.5,
-  },
-];
-
-// AXIS
-const axisColor = BeanstalkPalette.lightGrey;
-const tickLabelColor = BeanstalkPalette.lightGrey;
-const xTickLabelProps = () =>
-  ({
-    fill: tickLabelColor,
-    fontSize: 12,
-    fontFamily: 'Futura PT',
-    textAnchor: 'middle',
-  } as const);
-
-const yTickLabelProps = () =>
-  ({
-    fill: tickLabelColor,
-    fontSize: 12,
-    fontFamily: 'Futura PT',
-    textAnchor: 'end',
-  } as const);
-
-// ------------------------
 //      Graph (Inner)
 // ------------------------
 
 const Graph: React.FC<GraphProps> = (props) => {
   const {
     // Chart sizing
+    stylesConfig,
     width,
     height,
     // Line Chart Props
     series,
     onCursor,
     isTWAP,
-    curve: _curve = 'linear',
+    curve: _curve,
     children,
     yTickFormat,
+    common,
+    accessors,
+    utils,
   } = props;
-  const { getX, getY, getD, bisectSeason } = props.accessors;
-  const { generateScale, generatePathFromStack } = props.utils;
+  const { getX, getY, bisectSeason } = accessors;
+  const { generateScale, getCurve } = utils;
 
   // When positioning the circle that accompanies the cursor,
   // use this dataset to decide where it goes. (There is one
   // circle but potentially multiple series).
   const data = series[0];
-  const curve = typeof _curve === 'string' ? CURVES[_curve] : _curve;
-  const yAxisWidth = 57;
+  const curve = useMemo(() => getCurve(_curve), [getCurve, _curve]);
 
   const {
     showTooltip,
@@ -160,6 +94,7 @@ const Graph: React.FC<GraphProps> = (props) => {
     hideTooltip();
     onCursor?.(undefined);
   }, [hideTooltip, onCursor]);
+
   const handleTooltip = useCallback(
     (
       event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>
@@ -210,6 +145,11 @@ const Graph: React.FC<GraphProps> = (props) => {
     [scales]
   );
 
+  const { styles, getStyle } = useMemo(
+    () => common.getChartStyles(stylesConfig),
+    [common, stylesConfig]
+  );
+
   // Empty state
   if (!series || series.length === 0) return null;
 
@@ -218,11 +158,11 @@ const Graph: React.FC<GraphProps> = (props) => {
     ? scales[0].xScale(getX(tooltipData[0]))
     : undefined;
   const dataRegion = {
-    yTop: margin.top, // chart edge to data region first pixel
+    yTop: common.margin.top, // chart edge to data region first pixel
     yBottom:
       height - // chart edge to data region first pixel
-      axisHeight - // chart edge to data region first pixel
-      margin.bottom, // chart edge to data region first pixel
+      common.axisHeight - // chart edge to data region first pixel
+      common.margin.bottom, // chart edge to data region first pixel
   };
 
   return (
@@ -232,14 +172,15 @@ const Graph: React.FC<GraphProps> = (props) => {
          * Lines
          */}
         <Group
-          width={width - yAxisWidth}
+          width={width - common.yAxisWidth}
           height={dataRegion.yBottom - dataRegion.yTop}
         >
           {isTWAP && (
             <Line
               from={{ x: 0, y: scales[0].yScale(1) }}
-              to={{ x: width - yAxisWidth, y: scales[0].yScale(1) }}
-              {...strokes[2]}
+              to={{ x: width - common.yAxisWidth, y: scales[0].yScale(1) }}
+              stroke={BeanstalkPalette.grey}
+              strokeWidth={0.5}
             />
           )}
           {children && children({ scales, dataRegion, ...props })}
@@ -250,7 +191,8 @@ const Graph: React.FC<GraphProps> = (props) => {
               data={_data}
               x={(d) => scales[index].xScale(getX(d)) ?? 0}
               y={(d) => scales[index].yScale(getY(d)) ?? 0}
-              {...strokes[index]}
+              stroke={getStyle('', index).stroke}
+              strokeWidth={1}
             />
           ))}
         </Group>
@@ -262,10 +204,10 @@ const Graph: React.FC<GraphProps> = (props) => {
             key="axis"
             orientation={Orientation.bottom}
             scale={scales[0].xScale}
-            stroke={axisColor}
+            stroke={common.axisColor}
             tickFormat={xTickFormat}
-            tickStroke={axisColor}
-            tickLabelProps={xTickLabelProps}
+            tickStroke={common.axisColor}
+            tickLabelProps={common.xTickLabelProps}
             numTicks={xTickNum}
           />
         </g>
@@ -274,10 +216,10 @@ const Graph: React.FC<GraphProps> = (props) => {
             key="axis"
             orientation={Orientation.right}
             scale={scales[0].yScale}
-            stroke={axisColor}
+            stroke={common.axisColor}
             tickFormat={yTickFormat}
-            tickStroke={axisColor}
-            tickLabelProps={yTickLabelProps}
+            tickStroke={common.axisColor}
+            tickLabelProps={common.yTickLabelProps}
             numTicks={6}
             strokeWidth={0}
           />
@@ -294,17 +236,22 @@ const Graph: React.FC<GraphProps> = (props) => {
               strokeWidth={1}
               pointerEvents="none"
             />
-            <circle
-              cx={tooltipLeftAttached}
-              cy={tooltipTop}
-              r={4}
-              fill="black"
-              fillOpacity={0.1}
-              stroke="black"
-              strokeOpacity={0.1}
-              strokeWidth={2}
-              pointerEvents="none"
-            />
+            {tooltipData.map((td, i) => {
+              const tdTop = scales[i].yScale(getY(td));
+              return (
+                <circle
+                  cx={tooltipLeftAttached}
+                  cy={tdTop}
+                  r={4}
+                  fill="black"
+                  fillOpacity={0.1}
+                  stroke="black"
+                  strokeOpacity={0.1}
+                  strokeWidth={2}
+                  pointerEvents="none"
+                />
+              );
+            })}
           </g>
         )}
         {/* Overlay to handle tooltip.
@@ -312,7 +259,7 @@ const Graph: React.FC<GraphProps> = (props) => {
         <Bar
           x={0}
           y={0}
-          width={width - yAxisWidth}
+          width={width - common.yAxisWidth}
           height={height}
           fill="transparent"
           rx={14}
