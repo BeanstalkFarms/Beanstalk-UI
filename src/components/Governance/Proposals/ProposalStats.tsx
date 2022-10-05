@@ -38,7 +38,17 @@ const ProposalStats: React.FC<{
         <Row gap={0.5}>
           <Dot color={proposal.state === 'active' ? 'primary.main' : 'gray'} />
           <Typography variant="body1">
-            {proposal.state.charAt(0).toUpperCase() + proposal.state.slice(1)}
+            {proposal.state === 'active' 
+              ? 'Active'
+              : proposal.state === 'closed'
+              ? quorum
+                ? score.gt(quorum)
+                  ? 'Closed'
+                  : 'Closed'
+                  // ? 'Passed'
+                  // : 'Rejected'
+                : 'Closed'
+              : <Typography sx={{ textTransform: 'capitalize' }}>{proposal.state}</Typography>}
           </Typography>
         </Row>
         <Tooltip title={new Date(proposal.end * 1000).toLocaleString()}>
