@@ -77,7 +77,7 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
         <Stack direction={{ xs: 'column', lg: 'row' }} justifyContent="space-between">
           <ProposalStats
             proposal={proposal}
-            totalStalk={toTokenUnitsBN(data2?.siloHourlySnapshots[0]?.totalStalk, STALK.decimals)}
+            totalStalk={totalStalk.gt(0) ? totalStalk : undefined}
             quorum={quorum}
             differenceInTime={differenceInTime}
           />
