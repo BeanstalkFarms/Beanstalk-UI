@@ -30,11 +30,11 @@ const ProposalPage: React.FC = () => {
 
   const { loading: loading2, error: error2, data: data2 } = useProposalQuorumQuery({
     variables: { created_at: proposal?.start },
-    context: { subgraph: 'snapshot' },
-    fetchPolicy: 'cache-and-network',
-    // fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'network-only',
+    skip: !proposal?.start
   });
   console.log('QUORUM: ', data2);
+  console.log('error2: ', error2);
 
   /// Loading or Error
   if (loading || error) {

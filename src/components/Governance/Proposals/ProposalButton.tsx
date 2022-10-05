@@ -5,12 +5,14 @@ import { Link as ReactRouterLink } from 'react-router-dom';
 import CheckIcon from '@mui/icons-material/Check';
 import BigNumber from 'bignumber.js';
 import { AppState } from '~/state';
-import { useVotesQuery } from '~/generated/graphql';
+import { useProposalQuorumQuery, useVotesQuery } from '~/generated/graphql';
 import useAccount from '~/hooks/ledger/useAccount';
 import ProposalStats from '~/components/Governance/Proposals/ProposalStats';
 import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
 import { Proposal } from '~/util/Governance';
 import Row from '~/components/Common/Row';
+import { toTokenUnitsBN } from '~/util';
+import { STALK } from '~/constants/tokens';
 
 const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
   /// State
@@ -26,6 +28,12 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
     fetchPolicy: 'cache-and-network',
     skip: !account, // only send query when wallet connected
     context: { subgraph: 'snapshot' }
+  });
+
+  const { loading: loading2, error: error2, data: data2 } = useProposalQuorumQuery({
+    variables: { created_at: proposal?.start },
+    fetchPolicy: 'network-only',
+    skip: !proposal?.start
   });
 
   /// Time
@@ -66,7 +74,7 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
         {/* Bottom row */}
         <Stack direction={{ xs: 'column', lg: 'row' }} justifyContent="space-between">
           <ProposalStats
-            totalStalk={totalStalk}
+            totalStalk={toTokenUnitsBN(data2?.siloHourlySnapshots[0]?.totalStalk, STALK.decimals)}
             differenceInTime={differenceInTime}
             proposal={proposal}
           />

@@ -6,8 +6,7 @@ query ProposalQuorum(
     orderBy: season
     orderDirection: asc
     where: {
-#      timestamp_gte: $created_at,
-      timestamp_gte: "1659110400",
+      timestamp_gte: $created_at,
       silo: "0xc1e088fc1323b20bcbee9bd1b9fc9546db5624c5"
     }
   ) {
