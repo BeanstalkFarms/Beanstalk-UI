@@ -3,12 +3,12 @@ import { useDispatch } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import { resetBeanstalkGovernance, updateActiveProposals, updateMultisigBalances } from './actions';
 import { useProposalsLazyQuery } from '~/generated/graphql';
-import { SNAPSHOT_SPACES } from '~/util/Governance';
 import { AddressMap, MULTISIGS } from '~/constants';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import { BEAN } from '~/constants/tokens';
 import { tokenResult } from '~/util';
+import { SNAPSHOT_SPACES } from '~/lib/Beanstalk/Governance';
 
 export const useFetchBeanstalkGovernance = () => {
   const dispatch = useDispatch();

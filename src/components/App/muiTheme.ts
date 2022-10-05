@@ -415,6 +415,7 @@ let muiTheme = createTheme({
     },
     MuiAccordion: {
       defaultProps: {
+        disableGutters: true,
         elevation: 0,
       },
       styleOverrides: {
@@ -427,7 +428,7 @@ let muiTheme = createTheme({
           },
           style: {
             background: 'transparent',
-            borderColor: BeanstalkPalette.blue,
+            borderColor: BeanstalkPalette.lightBlue,
           },
         },
       ],
