@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 import PageHeader from '~/components/Common/PageHeader';
 import GovernanceActions from '~/components/Governance/Actions';
 import ProposalContent from '~/components/Governance/Proposal';
-import { useProposalQuery } from '~/generated/graphql';
+import { useProposalQuery, useProposalQuorumQuery } from '~/generated/graphql';
 import { Proposal } from '~/util/Governance';
 import PageNotFound from '~/pages/error/404';
 
@@ -26,6 +26,15 @@ const ProposalPage: React.FC = () => {
     skip: !id
   });
   const proposal = data?.proposal as Proposal;
+  console.log('PROP START', proposal?.start);
+
+  const { loading: loading2, error: error2, data: data2 } = useProposalQuorumQuery({
+    variables: { created_at: proposal?.start },
+    fetchPolicy: 'network-only',
+    skip: !proposal?.start
+  });
+  console.log('QUORUM: ', data2);
+  console.log('error2: ', error2);
 
   /// Loading or Error
   if (loading || error) {
@@ -55,11 +64,11 @@ const ProposalPage: React.FC = () => {
     <Container maxWidth="lg">
       <Stack gap={2}>
         <PageHeader returnPath="/governance" />
-        <Grid container direction={{ xs: 'column-reverse', md: 'row' }} spacing={2}>
-          <Grid item xs={12} md={8}>
+        <Grid container direction={{ xs: 'column-reverse', md: 'row' }} spacing={{ xs: 0, md: 2 }} gap={{ xs: 2, md: 0 }} maxWidth="100%">
+          <Grid item xs={12} md={8} maxWidth="100% !important">
             <ProposalContent proposal={proposal} />
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4} maxWidth="100%">
             <GovernanceActions proposal={proposal} />
           </Grid>
         </Grid>

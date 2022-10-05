@@ -45,7 +45,7 @@ type GraphProps = {
 
 const strokes = [
   {
-    stroke: BeanstalkPalette.logoGreen,
+    stroke: BeanstalkPalette.theme.fall.brown,
     strokeWidth: 1,
   },
   {
@@ -280,7 +280,7 @@ const Graph: React.FC<GraphProps> = (props) => {
          * Chart
          */}
         <Group width={width - yAxisWidth} height={dataRegion.yBottom - dataRegion.yTop}>
-          <LinearGradient from={BeanstalkPalette.lightGreen} to={BeanstalkPalette.lightGreen} id="stacked-area-green" />
+          <LinearGradient from={BeanstalkPalette.theme.fall.lightBrown} to={BeanstalkPalette.theme.fall.lightBrown} id="stacked-area-brown" />
           <rect x={0} y={0} width={width} height={height} fill="transparent" rx={14} />
           <AreaStack<DataPoint>
             top={margin.top}
@@ -298,7 +298,7 @@ const Graph: React.FC<GraphProps> = (props) => {
                   key={`stack-${stack.key}`}
                   d={path(stack) || ''}
                   // stroke={BeanstalkPalette.logoGreen}
-                  fill="url(#stacked-area-green)"
+                  fill="url(#stacked-area-brown)"
                   onClick={() => {
                   }}
                 />

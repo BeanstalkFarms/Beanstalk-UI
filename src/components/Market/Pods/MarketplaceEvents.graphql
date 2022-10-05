@@ -1,0 +1,129 @@
+query MarketplaceEvents(
+  $events_first: Int = 1000,
+  $events_timestamp_lt: BigInt!,
+  # $orders_first: Int = 1000,
+  # $orders_updatedAt_lt: BigInt!,
+  # $listings_first: Int = 1000,
+  # $listings_updatedAt_lt: BigInt!
+) {
+  marketplaceEvents(
+    orderBy: timestamp,
+    orderDirection: desc,
+    first: $events_first,
+    where: { 
+      timestamp_lt: $events_timestamp_lt
+    }
+  ) {
+    hash
+    timestamp
+    # --------
+    # LISTINGS
+    # --------
+    ... on PodListingCancelled {
+      id
+      index # of the Listing that was cancelled
+      account
+      historyID
+      # => amount
+      # => pricePerPod
+    }
+    ... on PodListingCreated {
+      id
+      index
+      amount
+      maxHarvestableIndex
+      pricePerPod
+    }
+    ... on PodListingFilled {
+      id
+      from
+      to
+      amount
+      index # of Listing that sold
+      start
+      historyID
+      # => pricePerPod
+    }
+    # ------
+    # ORDERS
+    # ------
+    ... on PodOrderCancelled {
+      id
+      orderId
+      account
+      historyID
+      # => amount
+      # => maxPlaceInLine
+      # => pricePerPod
+    }
+    ... on PodOrderCreated {
+      id
+      amount
+      maxPlaceInLine
+      pricePerPod
+    }
+    ... on PodOrderFilled {
+      id
+      from
+      to
+      historyID
+      amount
+      index # index of plot was sold to the Order
+      start #
+      # => maxPlaceInLine
+      # => pricePerPod
+    }
+  }
+
+  # podOrders(
+  #   first: $orders_first,
+  #   where: {
+  #     updatedAt_lt: $orders_updatedAt_lt
+  #     status_in: [
+  #       ACTIVE,
+  #       CANCELLED,
+  #       CANCELLED_PARTIAL,
+  #       FILLED
+  #       # there is no FILLED_PARTIAL for orders
+  #     ], 
+  #   }, 
+  #   orderBy: updatedAt, 
+  #   orderDirection: desc
+  # ) {
+  #   id
+  #   status
+  #   # ---
+  #   amount
+  #   maxPlaceInLine
+  #   pricePerPod
+  #   historyID
+  #   # ---
+  #   updatedAt
+  # }
+
+  # podListings(
+  #   first: $listings_first,
+  #   where: {
+  #     updatedAt_lt: $listings_updatedAt_lt,
+  #     status_in: [
+  #       CANCELLED,
+  #       CANCELLED_PARTIAL,
+  #       FILLED,
+  #       FILLED_PARTIAL,
+  #     ]
+  #   },
+  #   orderBy: updatedAt,
+  #   orderDirection: desc
+  # ) {
+  #   id
+  #   status
+  #   # ---
+  #   amount
+  #   pricePerPod
+  #   index
+  #   originalIndex
+  #   historyID
+  #   # ---
+  #   updatedAt
+  # }
+}

@@ -89,7 +89,7 @@ const Overview: React.FC<{
         title="Stalk Ownership"
         titleTooltip="Your current ownership of Beanstalk is displayed as a percentage. Ownership is determined by your proportional ownership of the total Stalk supply."
         amount={displayPercentage(ownership.multipliedBy(100))}
-        color="secondary.dark"
+        color="dark.main"
         gap={0.25}
         sx={{ minWidth: 200, ml: 0 }}
       />

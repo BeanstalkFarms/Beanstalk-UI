@@ -3,8 +3,10 @@ import BigNumber from 'bignumber.js';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Box, CssBaseline, Typography } from '@mui/material';
 import { ToastBar, Toaster } from 'react-hot-toast';
-import pageBackground from '~/img/theme/bg-mainnet.png';
+
 import NavBar from '~/components/Nav/NavBar';
+import NewProposalsDialog from '~/components/Governance/NewProposalsDialog';
+
 import PoolsUpdater from '~/state/bean/pools/updater';
 import UnripeUpdater from '~/state/bean/unripe/updater';
 import SunUpdater from '~/state/beanstalk/sun/updater';
@@ -17,6 +19,7 @@ import FarmerBarnUpdater from '~/state/farmer/barn/updater';
 import FarmerMarketUpdater from '~/state/farmer/market/updater';
 import FieldUpdater from '~/state/beanstalk/field/updater';
 import AppUpdater from '~/state/app/updater';
+
 import SiloPage from '~/pages/silo';
 import SiloTokenPage from '~/pages/silo/token';
 import FieldPage from '~/pages/field';
@@ -37,13 +40,17 @@ import AnalyticsPage from '~/pages/analytics';
 import GovernancePage from '~/pages/governance';
 import ProposalPage from '~/pages/governance/proposal';
 import GovernanceUpdater from '~/state/beanstalk/governance/updater';
-import NewProposalsDialog from '~/components/Governance/NewProposalsDialog';
+import PageNotFound from '~/pages/error/404';
+
 import useNavHeight from '~/hooks/app/usePageDimensions';
 import useBanner from '~/hooks/app/useBanner';
-import { BeanstalkPalette } from './muiTheme';
-import './App.css';
-import PageNotFound from '~/pages/error/404';
 import { sgEnvKey } from '~/graph/client';
+
+import pageBackground from '~/img/beanstalk/interface/bg/fall@2x.png';
+
+import './App.css';
+import { PAGE_BG_COLOR } from './muiTheme';
+import useAccount from '~/hooks/ledger/useAccount';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -81,6 +88,7 @@ const CustomToaster: React.FC<{ navHeight: number }> = ({ navHeight }) => (
 export default function App() {
   const banner    = useBanner();
   const navHeight = useNavHeight(!!banner);
+  const account = useAccount();
   return (
     <>
       <CssBaseline />
@@ -113,10 +121,10 @@ export default function App() {
       <CustomToaster
         navHeight={navHeight}
       />
-      <NewProposalsDialog />
+      {account && <NewProposalsDialog />}
       <Box
         sx={{
-          backgroundColor: BeanstalkPalette.lightBlue,
+          backgroundColor: PAGE_BG_COLOR,
           backgroundImage: `url(${pageBackground})`,
           backgroundAttachment: 'fixed',
           backgroundPosition: 'bottom center',

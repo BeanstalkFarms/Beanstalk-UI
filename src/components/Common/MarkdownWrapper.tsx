@@ -1,6 +1,6 @@
 import React from 'react';
 import MuiMarkdown from 'mui-markdown';
-import { FontSize, FontWeight } from '~/components/App/muiTheme';
+import { BeanstalkPalette, FontSize, FontWeight } from '~/components/App/muiTheme';
 
 /**
  * Styles Markdown text to match MUI theme.
@@ -14,7 +14,7 @@ const MarkdownWrapper: React.FC = ({ children }) => (
           style: {
             fontSize: FontSize.base,
             lineHeight: '1.25rem',
-            wordBreak: 'break-all'
+            wordBreak: 'normal'
           }
         } as React.HTMLProps<HTMLParagraphElement>,
       },
@@ -25,7 +25,7 @@ const MarkdownWrapper: React.FC = ({ children }) => (
             marginTop: '10px',
             fontSize: FontSize.base,
             lineHeight: '1.25rem',
-            wordBreak: 'break-word'
+            wordBreak: 'normal'
           }
         } as React.HTMLProps<HTMLParagraphElement>,
       },
@@ -38,7 +38,7 @@ const MarkdownWrapper: React.FC = ({ children }) => (
             fontFamily: 'Futura PT',
             fontSize: FontSize['2xl'], // 24px
             fontWeight: FontWeight.medium,
-            wordBreak: 'break-word'
+            wordBreak: 'normal'
           },
         } as React.HTMLProps<HTMLParagraphElement>,
       },
@@ -52,7 +52,7 @@ const MarkdownWrapper: React.FC = ({ children }) => (
             fontSize: FontSize['1xl'], // 20px
             fontWeight: FontWeight.medium,
             lineHeight: '1.875rem',
-            wordBreak: 'break-word'
+            wordBreak: 'normal'
           },
         } as React.HTMLProps<HTMLParagraphElement>,
       },
@@ -64,7 +64,7 @@ const MarkdownWrapper: React.FC = ({ children }) => (
             marginBottom: '0px',
             fontSize: FontSize.lg, // 18px
             fontWeight: FontWeight.normal,
-            wordBreak: 'break-word'
+            wordBreak: 'normal'
           },
         } as React.HTMLProps<HTMLParagraphElement>,
       },
@@ -77,10 +77,39 @@ const MarkdownWrapper: React.FC = ({ children }) => (
             fontSize: FontSize.base, // 16px
             fontWeight: FontWeight.normal,
             lineHeight: '1.25rem',
-            wordBreak: 'break-word'
+            wordBreak: 'normal'
           },
         } as React.HTMLProps<HTMLParagraphElement>,
       },
+      code: {
+        props: {
+          style: {
+            backgroundColor: '#f4f4f4',
+            borderRadius: 3,
+            margin: 1,
+            padding: 0.75,
+            paddingRight: 3,
+            paddingLeft: 3
+          }
+        }
+      },
+      // table: {
+      //   props: {
+      //     style: {
+      //       display: 'block',
+      //       overflow: 'scroll',
+      //       maxWidth: '100%',
+      //     }
+      //   }
+      // },
+      a: {
+        props: {
+          style: {
+            wordBreak: 'break-word',
+            color: BeanstalkPalette.theme.fall.brown,
+          }
+        }
+      }
     }}
   >
     {children as any}

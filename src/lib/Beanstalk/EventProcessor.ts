@@ -18,6 +18,7 @@ import { FarmerSiloBalance, WithdrawalCrate } from '~/state/farmer/silo';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 import { FarmToMode } from './Farm';
 import { PlotMap } from '~/util';
+import { MarketStatus } from '~/generated/graphql';
 
 // ----------------------------------------
 
@@ -577,7 +578,7 @@ export default class EventProcessor {
       totalAmount:      amount,   //
       remainingAmount:  amount,   //
       filledAmount:     BN(0),    // 
-      status:           'active',
+      status:           MarketStatus.Active,
       placeInLine:      ZERO_BN,  // FIXME
     };
   }
@@ -640,7 +641,7 @@ export default class EventProcessor {
 
     const isFilled = this.listings[newID].remainingAmount.isEqualTo(0);
     if (isFilled) {
-      this.listings[newID].status = 'filled';
+      this.listings[newID].status = MarketStatus.Filled;
       // delete this.listings[newID];
     }
   }
@@ -655,7 +656,7 @@ export default class EventProcessor {
       pricePerPod:      tokenBN(event.args.pricePerPod, BEAN[1]),
       remainingAmount:  tokenBN(event.args.amount, BEAN[1]),
       filledAmount:     new BigNumber(0),
-      status:           'active',
+      status:           MarketStatus.Active,
     };
   }
 
@@ -675,7 +676,7 @@ export default class EventProcessor {
     /// Update status
     const isFilled = this.orders[id].remainingAmount.isEqualTo(0);
     if (isFilled) {
-      this.orders[id].status = 'filled';
+      this.orders[id].status = MarketStatus.Filled;
       // delete this.orders[id];
     }
   }

@@ -9,6 +9,7 @@ fragment Proposal on Proposal {
   scores_total
   scores_updated
   state
+  snapshot
   space {
     id
     name
