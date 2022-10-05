@@ -1,5 +1,5 @@
 query ProposalQuorum(
-    $created_at: BigInt!
+  $created_at: BigInt!
 ) {
   siloHourlySnapshots(
     first: 1

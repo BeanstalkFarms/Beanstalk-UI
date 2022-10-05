@@ -8,7 +8,7 @@ import ProposalStats from '~/components/Governance/Proposals/ProposalStats';
 import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
 import { Proposal } from '~/util/Governance';
 import Row from '~/components/Common/Row';
-import useProposalQuorum from '~/hooks/beanstalk/useProposalQuorum';
+import useProposalQuorum from '~/hooks/beanstalk/useProposalBlockData';
 
 const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
   /// State
@@ -67,7 +67,7 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
         <Stack direction={{ xs: 'column', lg: 'row' }} justifyContent="space-between">
           <ProposalStats
             proposal={proposal}
-            totalStalk={totalStalk.gt(0) ? totalStalk : undefined}
+            totalStalk={totalStalk}
             quorum={quorum}
             differenceInTime={differenceInTime}
           />

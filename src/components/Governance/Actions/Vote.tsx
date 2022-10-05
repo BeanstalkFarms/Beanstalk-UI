@@ -18,7 +18,7 @@ import useAccount from '~/hooks/ledger/useAccount';
 import WalletButton from '~/components/Common/Connection/WalletButton';
 import { SNAPSHOT_LINK, ZERO_BN } from '~/constants';
 import Row from '~/components/Common/Row';
-import useProposalQuorum from '~/hooks/beanstalk/useProposalQuorum';
+import useProposalBlockData from '~/hooks/beanstalk/useProposalBlockData';
 import StatHorizontal from '~/components/Common/StatHorizontal';
 
 type VoteFormValues = {
@@ -41,7 +41,7 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
 
   /// Query Quorum
-  const { data: { totalStalk, quorum, quorumPct }, loading: loadingQuorum } = useProposalQuorum(proposal);
+  const { data: { totalStalk, quorum, quorumPct, votingPower, tag }, loading: loadingQuorum } = useProposalBlockData(proposal, account);
   
   /// Time
   const today = new Date();
@@ -76,80 +76,79 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
          * Progress by choice
          */}
         <Stack px={1} pb={1} gap={1.5}>
-          <>
-            {farmerSilo.stalk.active.gt(0) && (
-              <>
-                <StatHorizontal label="Voting Power">
-                  {displayBN(farmerSilo.stalk.active)} STALK&nbsp;&nbsp;·&nbsp;&nbsp;{displayBN(farmerSilo.stalk.active.div(beanstalkSilo.stalk.active).multipliedBy(100))}%
-                </StatHorizontal>
-                {(quorumPct && quorum) && (
-                  <StatHorizontal
-                    label="Quorum"
-                    labelTooltip={
-                      <div>
-                        <StatHorizontal label="Stalk voted For">
-                          {displayFullBN(new BigNumber(proposal.scores[0]) || ZERO_BN, 2)}
-                        </StatHorizontal>
-                        {quorum && (
-                          <StatHorizontal label="Stalk for Quorum">
-                            ~{displayFullBN(quorum, 2)}
-                          </StatHorizontal>
-                        )}
-                        <StatHorizontal label="Eligible Stalk">
-                          ~{displayFullBN(totalStalk || ZERO_BN, 2)}
-                        </StatHorizontal>
-                        <StatHorizontal label="Snapshot Block">
-                          {proposal.snapshot}
-                        </StatHorizontal>
-                      </div>
-                  }>
-                    {loadingQuorum ? (
-                      <CircularProgress size={16} />
-                    ) : (
-                      <>
-                        ~{displayFullBN(quorum, 0)} STALK&nbsp;&nbsp;·&nbsp;&nbsp;{(quorumPct * 100).toFixed(0)}%
-                      </>
-                    )}
-                  </StatHorizontal>
-                )}
-                <Divider />
-              </>
-            )}
-            {proposal.choices.map((choice: string, index: number) => (
-              <Stack gap={0.5}>
-                <Row columnGap={0.5} flexWrap="wrap" justifyContent="space-between">
-                  <Typography variant="body1">
-                    {isClosed && existingChoice !== undefined && (existingChoice === index + 1) ? (
-                      <Tooltip title={`You voted: ${proposal.choices![existingChoice - 1]}`}>
-                        <span>✓&nbsp;</span>
-                      </Tooltip>
-                    ) : null}
-                    {choice}
-                  </Typography>
-                  <Typography variant="body1" color="text.secondary">
-                    {displayFullBN(new BigNumber(proposal.scores[index]), 0, 0)} STALK
-                    <Typography
-                      display={proposal.scores_total > 0 ? 'inline' : 'none'}> · {((proposal.scores[index] / proposal.scores_total) * 100).toFixed(2)}%
-                    </Typography>
-                  </Typography>
-                </Row>
-                <LinearProgress
-                  variant="determinate"
-                  value={(
-                    proposal.scores_total > 0
-                      ? (proposal.scores[index] / proposal.scores_total) * 100
-                      : 0
+          {(votingPower && totalStalk) && (
+            <StatHorizontal
+              label="Voting Power"
+              labelTooltip={
+                <div>
+                  <Typography>A snapshot of your active STALK when voting on {tag} began.</Typography>
+                </div>
+              }
+            >
+              {displayBN(votingPower)} STALK&nbsp;&nbsp;·&nbsp;&nbsp;{displayBN(votingPower.div(totalStalk).multipliedBy(100))}%
+            </StatHorizontal>
+          )}
+          {(quorumPct && quorum) && (
+            <StatHorizontal
+              label="Quorum"
+              labelTooltip={
+                <Stack gap={0.5}>
+                  {quorum && (
+                    <StatHorizontal label="Stalk for Quorum">
+                      ~{displayFullBN(quorum, 2, 2)}
+                    </StatHorizontal>
                   )}
-                  sx={{ height: '10px', borderRadius: 1 }}
-                />
-              </Stack>
-            ))}
-          </>
-
+                  <StatHorizontal label="Eligible Stalk">
+                    ~{displayFullBN(totalStalk || ZERO_BN, 2, 2)}
+                  </StatHorizontal>
+                  <StatHorizontal label="Snapshot Block">
+                    {proposal.snapshot}
+                  </StatHorizontal>
+                </Stack>
+              }>
+              {loadingQuorum ? (
+                <CircularProgress size={16} />
+              ) : (
+                <>
+                  ~{displayFullBN(quorum, 0)} STALK&nbsp;&nbsp;·&nbsp;&nbsp;{(quorumPct * 100).toFixed(0)}%
+                </>
+              )}
+            </StatHorizontal>
+          )}
+          <Divider />
+          {proposal.choices.map((choice: string, index: number) => (
+            <Stack gap={0.5}>
+              <Row columnGap={0.5} flexWrap="wrap" justifyContent="space-between">
+                <Typography variant="body1">
+                  {isClosed && existingChoice !== undefined && (existingChoice === index + 1) ? (
+                    <Tooltip title={`You voted: ${proposal.choices![existingChoice - 1]}`}>
+                      <span>✓&nbsp;</span>
+                    </Tooltip>
+                    ) : null}
+                  {choice}
+                </Typography>
+                <Typography variant="body1" color="text.secondary">
+                  {displayFullBN(new BigNumber(proposal.scores[index]), 0, 0)} STALK
+                  <Typography
+                    display={proposal.scores_total > 0 ? 'inline' : 'none'}> · {((proposal.scores[index] / proposal.scores_total) * 100).toFixed(2)}%
+                  </Typography>
+                </Typography>
+              </Row>
+              <LinearProgress
+                variant="determinate"
+                value={(
+                  proposal.scores_total > 0
+                    ? (proposal.scores[index] / proposal.scores_total) * 100
+                    : 0
+                )}
+                sx={{ height: '10px', borderRadius: 1 }}
+              />
+            </Stack>
+          ))}
         </Stack>
         {/**
-         * Voting
-         */}
+          * Voting
+          */}
         {!isClosed && (
           proposal.type === 'single-choice' ? (
             account ? (

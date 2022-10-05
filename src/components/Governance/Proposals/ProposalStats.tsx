@@ -62,22 +62,22 @@ const ProposalStats: React.FC<{
         <Row gap={0.5}>
           <Tooltip
             title={
-              <div>
+              <Stack gap={0.5}>
                 <StatHorizontal label="Stalk voted For">
-                  {displayFullBN(new BigNumber(proposal.scores[0]) || ZERO_BN, 2)}
+                  {displayFullBN(new BigNumber(proposal.scores[0]) || ZERO_BN, 2, 2)}
                 </StatHorizontal>
                 {quorum && (
                   <StatHorizontal label="Stalk for Quorum">
-                    ~{displayFullBN(quorum, 2)}
+                    ~{displayFullBN(quorum, 2, 2)}
                   </StatHorizontal>
                 )}
                 <StatHorizontal label="Eligible Stalk">
-                  ~{displayFullBN(totalStalk, 2)}
+                  ~{displayFullBN(totalStalk, 2, 2)}
                 </StatHorizontal>
                 <StatHorizontal label="Snapshot Block">
                   {proposal.snapshot}
                 </StatHorizontal>
-              </div>
+              </Stack>
             }
           >
             <Typography textAlign={{ xs: 'center', md: 'left' }} variant="body1">
