@@ -16,7 +16,7 @@ import { Proposal } from '~/util/Governance';
 import { AppState } from '~/state';
 import useAccount from '~/hooks/ledger/useAccount';
 import WalletButton from '~/components/Common/Connection/WalletButton';
-import { SNAPSHOT_LINK } from '~/constants';
+import { SNAPSHOT_LINK, ZERO_BN } from '~/constants';
 import Row from '~/components/Common/Row';
 import useProposalQuorum from '~/hooks/beanstalk/useProposalQuorum';
 import StatHorizontal from '~/components/Common/StatHorizontal';
@@ -83,7 +83,26 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
                   {displayBN(farmerSilo.stalk.active)} STALK&nbsp;&nbsp;·&nbsp;&nbsp;{displayBN(farmerSilo.stalk.active.div(beanstalkSilo.stalk.active).multipliedBy(100))}%
                 </StatHorizontal>
                 {(quorumPct && quorum) && (
-                  <StatHorizontal label="Quorum">
+                  <StatHorizontal
+                    label="Quorum"
+                    labelTooltip={
+                      <div>
+                        <StatHorizontal label="Stalk voted For">
+                          {displayFullBN(new BigNumber(proposal.scores[0]) || ZERO_BN, 2)}
+                        </StatHorizontal>
+                        {quorum && (
+                          <StatHorizontal label="Stalk for Quorum">
+                            {displayFullBN(quorum, 2)}
+                          </StatHorizontal>
+                        )}
+                        <StatHorizontal label="Eligible Stalk">
+                          {displayFullBN(totalStalk || ZERO_BN, 2)}
+                        </StatHorizontal>
+                        <StatHorizontal label="Snapshot Block">
+                          {proposal.snapshot}
+                        </StatHorizontal>
+                      </div>
+                  }>
                     {loadingQuorum ? (
                       <CircularProgress size={16} />
                     ) : (

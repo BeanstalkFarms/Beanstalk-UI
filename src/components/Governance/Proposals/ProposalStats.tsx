@@ -74,6 +74,9 @@ const ProposalStats: React.FC<{
                 <StatHorizontal label="Eligible Stalk">
                   {displayFullBN(totalStalk, 2)}
                 </StatHorizontal>
+                <StatHorizontal label="Snapshot Block">
+                  {proposal.snapshot}
+                </StatHorizontal>
               </div>
             }
           >

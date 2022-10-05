@@ -25,6 +25,8 @@ export type Proposal = {
   scores_updated?: number;
   /** Whether the proposal is active or closed. */
   state: string;
+  /** The block number where the proposal was posted */
+  snapshot: string;
   /** snapshot.org/#/<space.eth> */
   space: {
     /**  */
