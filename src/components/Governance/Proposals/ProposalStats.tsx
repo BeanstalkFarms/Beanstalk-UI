@@ -38,7 +38,17 @@ const ProposalStats: React.FC<{
         <Row gap={0.5}>
           <Dot color={proposal.state === 'active' ? 'primary.main' : 'gray'} />
           <Typography variant="body1">
-            {proposal.state.charAt(0).toUpperCase() + proposal.state.slice(1)}
+            {proposal.state === 'active' 
+              ? 'Active'
+              : proposal.state === 'closed'
+              ? quorum
+                ? score.gt(quorum)
+                  ? 'Closed'
+                  : 'Closed'
+                  // ? 'Passed'
+                  // : 'Rejected'
+                : 'Closed'
+              : <Typography sx={{ textTransform: 'capitalize' }}>{proposal.state}</Typography>}
           </Typography>
         </Row>
         <Tooltip title={new Date(proposal.end * 1000).toLocaleString()}>
@@ -62,22 +72,22 @@ const ProposalStats: React.FC<{
         <Row gap={0.5}>
           <Tooltip
             title={
-              <div>
+              <Stack gap={0.5}>
                 <StatHorizontal label="Stalk voted For">
-                  {displayFullBN(new BigNumber(proposal.scores[0]) || ZERO_BN, 2)}
+                  {displayFullBN(new BigNumber(proposal.scores[0]) || ZERO_BN, 2, 2)}
                 </StatHorizontal>
                 {quorum && (
                   <StatHorizontal label="Stalk for Quorum">
-                    ~{displayFullBN(quorum, 2)}
+                    ~{displayFullBN(quorum, 2, 2)}
                   </StatHorizontal>
                 )}
                 <StatHorizontal label="Eligible Stalk">
-                  ~{displayFullBN(totalStalk, 2)}
+                  ~{displayFullBN(totalStalk, 2, 2)}
                 </StatHorizontal>
                 <StatHorizontal label="Snapshot Block">
                   {proposal.snapshot}
                 </StatHorizontal>
-              </div>
+              </Stack>
             }
           >
             <Typography textAlign={{ xs: 'center', md: 'left' }} variant="body1">

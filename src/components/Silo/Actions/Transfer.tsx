@@ -226,7 +226,8 @@ const Transfer: React.FC<{ token: ERC20Token; }> = ({ token }) => {
         siloBalances[token.address]?.deposited.crates,
         season,
       );
-
+        
+      if (!signer) throw new Error('Missing signer');
       if (!withdrawResult) throw new Error('Nothing to Transfer.');
       if (!values.to) throw new Error('Please enter a valid recipient address.');
 
@@ -244,10 +245,12 @@ const Transfer: React.FC<{ token: ERC20Token; }> = ({ token }) => {
 
       /// Optimize the call used depending on the
       /// number of crates.
+      const sender = await signer.getAddress();
       if (seasons.length === 0) {
         throw new Error('Malformatted crates.');
       } else if (seasons.length === 1) {
         call = beanstalk.transferDeposit(
+          sender,
           values.to,
           token.address,
           seasons[0],
@@ -255,6 +258,7 @@ const Transfer: React.FC<{ token: ERC20Token; }> = ({ token }) => {
         );
       } else {
         call = beanstalk.transferDeposits(
+          sender,
           values.to,
           token.address,
           seasons,
@@ -288,6 +292,7 @@ const Transfer: React.FC<{ token: ERC20Token; }> = ({ token }) => {
     season,
     refetchFarmerSilo,
     refetchSilo,
+    signer,
   ]);
 
   return (

@@ -2,6 +2,7 @@ import { createClient as createWagmiClient, configureChains, chain, Chain } from
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import { providers } from 'ethers';
+// import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 // import { InjectedConnector } from 'wagmi/connectors/injected';
