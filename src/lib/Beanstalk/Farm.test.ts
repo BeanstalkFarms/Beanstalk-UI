@@ -5,7 +5,7 @@ import Farm from './Farm';
 
 // ----------------------------------------------------------------------
 
-const ETH_PRICE = 1700; // 1000 BEAN / ETH
+const ETH_PRICE = 1300; // 1000 BEAN / ETH
 const withinPriceRange = (
   value:    ethers.BigNumber,
   expected: [

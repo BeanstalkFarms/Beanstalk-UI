@@ -1,21 +1,18 @@
 import React from 'react';
 import { Button, Stack, Typography } from '@mui/material';
-import { useSelector } from 'react-redux';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import CheckIcon from '@mui/icons-material/Check';
-import BigNumber from 'bignumber.js';
-import { AppState } from '~/state';
 import { useVotesQuery } from '~/generated/graphql';
 import useAccount from '~/hooks/ledger/useAccount';
 import ProposalStats from '~/components/Governance/Proposals/ProposalStats';
 import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
 import { Proposal } from '~/util/Governance';
 import Row from '~/components/Common/Row';
+import useProposalQuorum from '~/hooks/beanstalk/useProposalQuorum';
 
 const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
   /// State
   const account = useAccount();
-  const totalStalk = useSelector<AppState, BigNumber>((state) => state._beanstalk.silo.stalk.total);
 
   /// Query Votes
   const { data: voteData } = useVotesQuery({
@@ -28,11 +25,14 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
     context: { subgraph: 'snapshot' }
   });
 
+  /// Query Quorum
+  const { data: { totalStalk, quorum } } = useProposalQuorum(proposal);
+
   /// Time
   const today = new Date();
   const endDate = new Date(proposal.end * 1000);
   const differenceInTime = endDate.getTime() - today.getTime();
-  
+
   return (
     <Button
       variant="outlined"
@@ -66,9 +66,10 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
         {/* Bottom row */}
         <Stack direction={{ xs: 'column', lg: 'row' }} justifyContent="space-between">
           <ProposalStats
-            totalStalk={totalStalk}
-            differenceInTime={differenceInTime}
             proposal={proposal}
+            totalStalk={totalStalk.gt(0) ? totalStalk : undefined}
+            quorum={quorum}
+            differenceInTime={differenceInTime}
           />
         </Stack>
       </Stack>
