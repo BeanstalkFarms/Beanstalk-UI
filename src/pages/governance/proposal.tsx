@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 import PageHeader from '~/components/Common/PageHeader';
 import GovernanceActions from '~/components/Governance/Actions';
 import ProposalContent from '~/components/Governance/Proposal';
-import { useProposalQuery } from '~/generated/graphql';
+import { useProposalQuery, useProposalQuorumQuery } from '~/generated/graphql';
 import { Proposal } from '~/util/Governance';
 import PageNotFound from '~/pages/error/404';
 
@@ -26,6 +26,15 @@ const ProposalPage: React.FC = () => {
     skip: !id
   });
   const proposal = data?.proposal as Proposal;
+  console.log('PROP START', proposal?.start);
+
+  const { loading: loading2, error: error2, data: data2 } = useProposalQuorumQuery({
+    variables: { created_at: proposal?.start },
+    context: { subgraph: 'snapshot' },
+    fetchPolicy: 'cache-and-network',
+    // fetchPolicy: 'cache-and-network',
+  });
+  console.log('QUORUM: ', data2);
 
   /// Loading or Error
   if (loading || error) {

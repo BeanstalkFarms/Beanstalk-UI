@@ -17,6 +17,8 @@ export type Proposal = {
   body?: string;
   /** Voting type (i.e. single-choice, etc.) */
   type: string;
+  /** When the voting period opens. */
+  start: number;
   /** When the voting period closes. */
   end: number;
   /** URL to the proposal on Snapshot. */
