@@ -57,7 +57,7 @@ const BalancesPage: React.FC = () => {
         <PageHeader
           title="Balances"
           description="View your Beanstalk assets"
-          href="https://docs.bean.money/additional-resources/asset-states"
+          href="https://docs.bean.money/protocol-resources/asset-states"
           control={
             <GuideButton
               title="The Farmers' Almanac: Balances Guides"
