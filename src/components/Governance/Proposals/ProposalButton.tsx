@@ -2,15 +2,13 @@ import React from 'react';
 import { Button, Stack, Typography } from '@mui/material';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import CheckIcon from '@mui/icons-material/Check';
-import { useProposalQuorumQuery, useVotesQuery } from '~/generated/graphql';
+import { useVotesQuery } from '~/generated/graphql';
 import useAccount from '~/hooks/ledger/useAccount';
 import ProposalStats from '~/components/Governance/Proposals/ProposalStats';
 import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
-import { getProposalTag, getProposalType, Proposal } from '~/util/Governance';
+import { Proposal } from '~/util/Governance';
 import Row from '~/components/Common/Row';
-import { toTokenUnitsBN } from '~/util';
-import { STALK } from '~/constants/tokens';
-import { getQuorum } from '~/lib/Beanstalk/Governance';
+import useProposalQuorum from '~/hooks/beanstalk/useProposalQuorum';
 
 const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
   /// State
@@ -27,22 +25,14 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
     context: { subgraph: 'snapshot' }
   });
 
-  /// Query total stalk at the season right before this proposal
-  const { loading: loading2, error: error2, data: data2 } = useProposalQuorumQuery({
-    variables: { created_at: proposal?.start },
-    fetchPolicy: 'network-only',
-    skip: !proposal?.start
-  });
+  /// Query Quorum
+  const { data: { totalStalk, quorum } } = useProposalQuorum(proposal);
 
   /// Time
   const today = new Date();
   const endDate = new Date(proposal.end * 1000);
   const differenceInTime = endDate.getTime() - today.getTime();
-  const totalStalk = toTokenUnitsBN(data2?.siloHourlySnapshots[0].totalStalk || 0, STALK.decimals);
-  const tag = getProposalTag(proposal.title);
-  const type = getProposalType(tag);
-  const quorum = getQuorum(type, totalStalk);
-  
+
   return (
     <Button
       variant="outlined"

@@ -26,7 +26,6 @@ const ProposalStats: React.FC<{
       ? new BigNumber(proposal.scores_total || ZERO_BN)
       : new BigNumber(proposal.scores[0] || ZERO_BN)
   );
-
   return (
     <Stack
       alignItems={{ xs: 'start', md: 'center' }}
@@ -42,9 +41,11 @@ const ProposalStats: React.FC<{
             {proposal.state.charAt(0).toUpperCase() + proposal.state.slice(1)}
           </Typography>
         </Row>
-        <Typography variant="body1">
-          {getDateMessage(proposal.end)}
-        </Typography>
+        <Tooltip title={new Date(proposal.end * 1000).toLocaleString()}>
+          <Typography variant="body1">
+            {getDateMessage(proposal.end)}
+          </Typography>
+        </Tooltip>
         {showLink && (
           <Link
             href={`https://snapshot.org/#/${proposal.space.id}/proposal/${proposal.id}`}

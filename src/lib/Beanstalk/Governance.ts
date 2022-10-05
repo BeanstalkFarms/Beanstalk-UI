@@ -23,6 +23,13 @@ const QUORUM = {
   [GovProposalType.BFCP_C]:  0.25,
 };
 
+export const getQuorumPct = (type: string) => {
+  if (type in QUORUM) {
+    return QUORUM[type as keyof typeof QUORUM];
+  }
+  return undefined;
+};
+
 export const getQuorum = (type: string, totalStalk: BigNumber) => {
   if (type in QUORUM) {
     return totalStalk.multipliedBy(QUORUM[type as keyof typeof QUORUM]);

@@ -1,4 +1,4 @@
-import { Button, Divider, LinearProgress, Stack, Tooltip, Typography } from '@mui/material';
+import { Button, CircularProgress, Divider, LinearProgress, Stack, Tooltip, Typography } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -18,6 +18,8 @@ import useAccount from '~/hooks/ledger/useAccount';
 import WalletButton from '~/components/Common/Connection/WalletButton';
 import { SNAPSHOT_LINK } from '~/constants';
 import Row from '~/components/Common/Row';
+import useProposalQuorum from '~/hooks/beanstalk/useProposalQuorum';
+import StatHorizontal from '~/components/Common/StatHorizontal';
 
 type VoteFormValues = {
   choice: number | undefined;
@@ -27,17 +29,20 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
   proposal: Proposal;
   existingChoice: number | undefined;
 }> = ({
-        values,
-        setFieldValue,
-        isSubmitting,
-        proposal,
-        existingChoice
-      }) => {
+  values,
+  setFieldValue,
+  isSubmitting,
+  proposal,
+  existingChoice
+}) => {
   /// State
   const account = useAccount();
   const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
 
+  /// Query Quorum
+  const { data: { totalStalk, quorum, quorumPct }, loading: loadingQuorum } = useProposalQuorum(proposal);
+  
   /// Time
   const today = new Date();
   const endDate = new Date(proposal.end * 1000);
@@ -74,10 +79,20 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
           <>
             {farmerSilo.stalk.active.gt(0) && (
               <>
-                <Row justifyContent="space-between">
-                  <Typography>Voting Power</Typography>
-                  <Typography>{displayBN(farmerSilo.stalk.active)} STALK • {displayBN(farmerSilo.stalk.active.div(beanstalkSilo.stalk.active).multipliedBy(100))}%</Typography>
-                </Row>
+                <StatHorizontal label="Voting Power">
+                  {displayBN(farmerSilo.stalk.active)} STALK&nbsp;&nbsp;·&nbsp;&nbsp;{displayBN(farmerSilo.stalk.active.div(beanstalkSilo.stalk.active).multipliedBy(100))}%
+                </StatHorizontal>
+                {(quorumPct && quorum) && (
+                  <StatHorizontal label="Quorum">
+                    {loadingQuorum ? (
+                      <CircularProgress size={16} />
+                    ) : (
+                      <>
+                        {displayFullBN(quorum, 2)} STALK&nbsp;&nbsp;·&nbsp;&nbsp;{(quorumPct * 100).toFixed(0)}%
+                      </>
+                    )}
+                  </StatHorizontal>
+                )}
                 <Divider />
               </>
             )}
@@ -95,7 +110,7 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
                   <Typography variant="body1" color="text.secondary">
                     {displayFullBN(new BigNumber(proposal.scores[index]), 0, 0)} STALK
                     <Typography
-                      display={proposal.scores_total > 0 ? 'inline' : 'none'}>•{((proposal.scores[index] / proposal.scores_total) * 100).toFixed(2)}%
+                      display={proposal.scores_total > 0 ? 'inline' : 'none'}> · {((proposal.scores[index] / proposal.scores_total) * 100).toFixed(2)}%
                     </Typography>
                   </Typography>
                 </Row>
@@ -187,10 +202,7 @@ const Vote: React.FC<{ proposal: Proposal }> = (props) => {
   const { data: signer } = useSigner();
 
   /// Query Votes
-  const {
-    data: voteData,
-    refetch: refetchVotes,
-  } = useVotesQuery({
+  const { data: voteData, refetch: refetchVotes } = useVotesQuery({
     variables: {
       proposal_id: props.proposal?.id.toLowerCase() || '',
       voter_address: account || '',
