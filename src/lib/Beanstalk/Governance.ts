@@ -27,5 +27,5 @@ export const getQuorum = (type: string, totalStalk: BigNumber) => {
   if (type in QUORUM) {
     return totalStalk.multipliedBy(QUORUM[type as keyof typeof QUORUM]);
   }
-  return null;
+  return undefined;
 };
