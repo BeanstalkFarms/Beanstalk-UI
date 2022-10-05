@@ -68,11 +68,11 @@ const ProposalStats: React.FC<{
                 </StatHorizontal>
                 {quorum && (
                   <StatHorizontal label="Stalk for Quorum">
-                    {displayFullBN(quorum, 2)}
+                    ~{displayFullBN(quorum, 2)}
                   </StatHorizontal>
                 )}
                 <StatHorizontal label="Eligible Stalk">
-                  {displayFullBN(totalStalk, 2)}
+                  ~{displayFullBN(totalStalk, 2)}
                 </StatHorizontal>
                 <StatHorizontal label="Snapshot Block">
                   {proposal.snapshot}

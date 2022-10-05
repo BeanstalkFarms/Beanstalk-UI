@@ -92,11 +92,11 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
                         </StatHorizontal>
                         {quorum && (
                           <StatHorizontal label="Stalk for Quorum">
-                            {displayFullBN(quorum, 2)}
+                            ~{displayFullBN(quorum, 2)}
                           </StatHorizontal>
                         )}
                         <StatHorizontal label="Eligible Stalk">
-                          {displayFullBN(totalStalk || ZERO_BN, 2)}
+                          ~{displayFullBN(totalStalk || ZERO_BN, 2)}
                         </StatHorizontal>
                         <StatHorizontal label="Snapshot Block">
                           {proposal.snapshot}
@@ -107,7 +107,7 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
                       <CircularProgress size={16} />
                     ) : (
                       <>
-                        {displayFullBN(quorum, 2)} STALK&nbsp;&nbsp;·&nbsp;&nbsp;{(quorumPct * 100).toFixed(0)}%
+                        ~{displayFullBN(quorum, 0)} STALK&nbsp;&nbsp;·&nbsp;&nbsp;{(quorumPct * 100).toFixed(0)}%
                       </>
                     )}
                   </StatHorizontal>
