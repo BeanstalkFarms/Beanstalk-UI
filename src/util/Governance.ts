@@ -1,11 +1,5 @@
 import { getDateCountdown } from '~/util/Time';
 
-export const SNAPSHOT_SPACES = [
-  'beanstalkdao.eth',
-  'beanstalkfarms.eth',
-  'wearebeansprout.eth'
-];
-
 export type Proposal = {
   /**  */
   id: string;
@@ -49,16 +43,21 @@ export const getDateMessage = (end: number) => {
   return active ? `Vote ends ${message}` : `Ended ${message}`;
 };
 
+const SHORTEST_TAG = 3; // "BIP"
+const SEP_MIN_INDEX = SHORTEST_TAG + 2; // "BIP" + "-N"
+
 /**
  * Splits a typical proposal title after the colon (ex. BIP-24).
  * @note Could use a regex like `^(BIP|BOP)-[0-9]+`.
  * @returns string | null if no colon found
  */
 export const getProposalTag = (title: string) => {
-  const sep = title.indexOf(':', 5);
+  const sep = title.indexOf(':', SEP_MIN_INDEX);
   return (
     sep > -1
       ? title.substring(0, sep)
-      : null
+      : title
   );
 };
+
+export const getProposalType = (tag: string) => tag.substring(0, tag.lastIndexOf('-', tag.length - 1));

@@ -1,23 +1,20 @@
 import React from 'react';
 import { Button, Stack, Typography } from '@mui/material';
-import { useSelector } from 'react-redux';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import CheckIcon from '@mui/icons-material/Check';
-import BigNumber from 'bignumber.js';
-import { AppState } from '~/state';
 import { useProposalQuorumQuery, useVotesQuery } from '~/generated/graphql';
 import useAccount from '~/hooks/ledger/useAccount';
 import ProposalStats from '~/components/Governance/Proposals/ProposalStats';
 import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
-import { Proposal } from '~/util/Governance';
+import { getProposalTag, getProposalType, Proposal } from '~/util/Governance';
 import Row from '~/components/Common/Row';
 import { toTokenUnitsBN } from '~/util';
 import { STALK } from '~/constants/tokens';
+import { getQuorum } from '~/lib/Beanstalk/Governance';
 
 const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
   /// State
   const account = useAccount();
-  const totalStalk = useSelector<AppState, BigNumber>((state) => state._beanstalk.silo.stalk.total);
 
   /// Query Votes
   const { data: voteData } = useVotesQuery({
@@ -30,6 +27,7 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
     context: { subgraph: 'snapshot' }
   });
 
+  /// Query total stalk at the season right before this proposal
   const { loading: loading2, error: error2, data: data2 } = useProposalQuorumQuery({
     variables: { created_at: proposal?.start },
     fetchPolicy: 'network-only',
@@ -40,6 +38,10 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
   const today = new Date();
   const endDate = new Date(proposal.end * 1000);
   const differenceInTime = endDate.getTime() - today.getTime();
+  const totalStalk = toTokenUnitsBN(data2?.siloHourlySnapshots[0].totalStalk || 0, STALK.decimals);
+  const tag = getProposalTag(proposal.title);
+  const type = getProposalType(tag);
+  const quorum = getQuorum(type, totalStalk);
   
   return (
     <Button
@@ -74,9 +76,10 @@ const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
         {/* Bottom row */}
         <Stack direction={{ xs: 'column', lg: 'row' }} justifyContent="space-between">
           <ProposalStats
-            totalStalk={toTokenUnitsBN(data2?.siloHourlySnapshots[0]?.totalStalk, STALK.decimals)}
-            differenceInTime={differenceInTime}
             proposal={proposal}
+            totalStalk={toTokenUnitsBN(data2?.siloHourlySnapshots[0]?.totalStalk, STALK.decimals)}
+            quorum={quorum}
+            differenceInTime={differenceInTime}
           />
         </Stack>
       </Stack>
