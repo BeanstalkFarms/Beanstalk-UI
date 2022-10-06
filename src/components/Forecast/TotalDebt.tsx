@@ -22,7 +22,7 @@ const getPods = (season: SnapshotData<SeasonalPodsQuery>) =>
 const formatValue = (value: number) =>
   `$${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 
-const FertilizerDebt: React.FC<{}> = () => {
+const TotalDebt: React.FC<{}> = () => {
   const timeTabParams = useTimeTabState();
   const fertilizerQuery = useUnfertilizedSprouts(timeTabParams[0][1]);
   const podsQuery = useSeasonsQuery<SeasonalPodsQuery>(
@@ -67,11 +67,11 @@ const FertilizerDebt: React.FC<{}> = () => {
       formatValue={formatValue}
       StatProps={statProps}
       stackedArea
-      // ChartProps={{
-      //   tooltip: true,
-      // }}
+      ChartProps={{
+        tooltip: true,
+      }}
     />
   );
 };
 
-export default FertilizerDebt;
+export default TotalDebt;

@@ -7,7 +7,7 @@ import Price from '~/components/Analytics/Bean/Price';
 import PodRate from '~/components/Analytics/Field/PodRate';
 import LiquidityByState from '~/components/Forecast/LiquidityByState';
 import MarketCap from '~/components/Analytics/Bean/MarketCap';
-import FertilizerDebt from '~/components/Analytics/Field/FertilizerDebt';
+import TotalDebt from '~/components/Forecast/TotalDebt';
 
 const ForecastPage: React.FC = () => (
   <Container maxWidth="lg">
@@ -26,7 +26,7 @@ const ForecastPage: React.FC = () => (
         <MarketCap height={250} />
       </Card>
       <Card sx={{ pt: 2 }}>
-        <FertilizerDebt />
+        <TotalDebt />
       </Card>
       <LiquidityByState />
     </Stack>
