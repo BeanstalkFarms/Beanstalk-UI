@@ -6,6 +6,7 @@ import { Pool } from '~/classes';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { ZERO_BN } from '~/constants';
 import Row from '~/components/Common/Row';
+import { BeanstalkPalette } from '../App/muiTheme';
 
 /**
  * Displays data about a Pool containing Beans and other assets.
@@ -23,7 +24,7 @@ const PoolCard: React.FC<{
     <Row justifyContent="space-between">
       <Row
         alignItems="center"
-        gap={2}
+        gap={1.0}
       >
         <Row spacing={0.25} sx={{ fontSize: 24 }}>
           {pool.tokens.map((token) => (
@@ -72,7 +73,7 @@ const PoolCard: React.FC<{
         height: 'auto', // FIXME
         display: 'block',
         color: '#000000',
-        borderColor: '#c7ddf0',
+        borderColor: BeanstalkPalette.lightestGrey,
       }}
       {...ButtonProps}
     >

@@ -30,7 +30,11 @@ export const getDateCountdown = (
     } else if (differenceInHours > 1 && differenceInHours <= 24) {
       // less than one day away
       msg = `in ${Math.round(differenceInHours)} hours`;
-    } else if (differenceInHours > 24 && differenceInDays <= 7) {
+    } else if (differenceInHours > 24 && differenceInHours <= 48) {
+      // 1-2 days away
+      const diff = Math.round(differenceInHours - 24);
+      msg = `in ${Math.round(differenceInDays)} day, ${diff} hour${diff === 1 ? '' : 's'}`;
+    } else if (differenceInHours > 48 && differenceInDays <= 7) {
       // less than one week away
       msg = `in ${Math.round(differenceInDays)} days`;
     } else if (differenceInDays > 7) {

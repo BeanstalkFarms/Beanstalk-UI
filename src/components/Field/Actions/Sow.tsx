@@ -251,7 +251,7 @@ const SowForm : React.FC<
                   <Divider sx={{ my: 2, opacity: 0.4 }} />
                   <Box pb={1}>
                     <Typography variant="body2" alignItems="center">
-                      Pods become <strong>Harvestable</strong> on a first in, first out <Link href="https://docs.bean.money/additional-resources/glossary#fifo" target="_blank" rel="noreferrer" underline="hover">(FIFO)</Link> basis. Upon <strong>Harvest</strong>, each Pod is redeemed for <span><TokenIcon token={BEAN[1]} style={{ height: IconSize.xs, marginTop: 2.6 }} /></span>1.
+                      Pods become <strong>Harvestable</strong> on a first in, first out <Link href="https://docs.bean.money/protocol-resources/glossary#fifo" target="_blank" rel="noreferrer" underline="hover">(FIFO)</Link> basis. Upon <strong>Harvest</strong>, each Pod is redeemed for <span><TokenIcon token={BEAN[1]} style={{ height: IconSize.xs, marginTop: 2.6 }} /></span>1.
                     </Typography>
                   </Box>
                 </AccordionDetails>

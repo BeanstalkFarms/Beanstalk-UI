@@ -194,7 +194,7 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
           {_balances ? (
             <Typography ml={1} pt={0.5} textAlign="center" fontSize={FontSize.sm} color="gray">
               Displaying total Farm and Circulating balances.&nbsp;
-              <Link href="https://docs.bean.money/additional-resources/asset-states" target="_blank" rel="noreferrer" underline="none">
+              <Link href="https://docs.bean.money/protocol-resources/asset-states" target="_blank" rel="noreferrer" underline="none">
                 Learn more &rarr;
               </Link>
             </Typography>

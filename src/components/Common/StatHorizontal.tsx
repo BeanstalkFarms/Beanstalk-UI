@@ -5,8 +5,8 @@ import { FontSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
 
 const StatHorizontal : React.FC<{
-  label: string,
-  labelTooltip?: string,
+  label: string;
+  labelTooltip?: string | React.ReactElement;
 }> = ({
   label,
   labelTooltip = '',
