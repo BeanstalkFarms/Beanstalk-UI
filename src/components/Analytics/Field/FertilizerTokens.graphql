@@ -1,6 +1,6 @@
 query SeasonalFertilizerTokens($season_lte: Int, $season_gt: Int, $first: Int) {
   seasons: fertilizerTokens(
-    where: { season_gt: $season_gt, season_lte: $season_lte }
+    where: { season_lte: $season_lte, season_gt: $season_gt }
     first: $first
     orderDirection: desc
     orderBy: season

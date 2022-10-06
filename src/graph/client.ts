@@ -114,6 +114,8 @@ const cache = new InMemoryCache({
         siloAssetHourlySnapshots: mergeUsingSeasons(['$siloAsset']),
         siloHourlySnapshots: mergeUsingSeasons([]),
         siloYields: mergeUsingSeasons([]),
+        rewards: mergeUsingSeasons([]),
+        fertilizerTokens: mergeUsingSeasons([]),
       }
     }
   }

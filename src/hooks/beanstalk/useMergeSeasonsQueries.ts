@@ -3,19 +3,29 @@ import { ApolloError } from '@apollo/client';
 import BigNumber from 'bignumber.js';
 import { BaseDataPoint } from '../../components/Common/Charts/ChartPropProvider';
 import { TimeTabState } from '../../components/Common/Charts/TimeTabs';
-import useSeasonsQuery, {  MinimumViableSnapshot, MinimumViableSnapshotQuery, SeasonAggregation } from './useSeasonsQuery';
+import {
+  MinimumViableSnapshot,
+  MinimumViableSnapshotQuery,
+  SeasonAggregation,
+} from './useSeasonsQuery';
 import { secondsToDate, sortSeasons } from '~/util';
 
-type SeasonData = (Omit<MinimumViableSnapshot, 'id'> & any);
+type SeasonData = Omit<MinimumViableSnapshot, 'id'> & any;
 interface MergedSeasonsQueryData {
   [season: number]: SeasonData;
 }
+
+export type MinimumViableQueryType<T extends MinimumViableSnapshotQuery> = {
+  data?: T;
+  loading: boolean;
+  error?: ApolloError | ApolloError[];
+};
 
 export type MergeSeasonsQueryProps<T extends MinimumViableSnapshotQuery> = {
   /*
    * non-destructured value returned by useSeasonsQuery<T>
    */
-  query: ReturnType<typeof useSeasonsQuery<T>>
+  query: MinimumViableQueryType<T>;
   /*
    * fn used to get value from query
    */
@@ -24,12 +34,15 @@ export type MergeSeasonsQueryProps<T extends MinimumViableSnapshotQuery> = {
    * key of data
    */
   key: string;
-}
+};
 
-const generateStackedAreaSeriesData = <T extends MinimumViableSnapshotQuery, K extends BaseDataPoint>(
-  params: MergeSeasonsQueryProps<T>[], 
-  seasonAggregation: SeasonAggregation, 
-  keys: string[],
+const generateStackedAreaSeriesData = <
+  T extends MinimumViableSnapshotQuery,
+  K extends BaseDataPoint
+>(
+  params: MergeSeasonsQueryProps<T>[],
+  seasonAggregation: SeasonAggregation,
+  keys: string[]
 ) => {
   const points: K[] = [];
   // merge
@@ -45,12 +58,12 @@ const generateStackedAreaSeriesData = <T extends MinimumViableSnapshotQuery, K e
         queryData[s.season] = {
           season: s.season,
           timestamp: s.timestamp,
-          [key]: getValue(s)
+          [key]: getValue(s),
         };
       } else {
         queryData[s.season] = {
           ...queryData[s.season],
-          [key]: getValue(s)
+          [key]: getValue(s),
         };
       }
     });
@@ -104,19 +117,20 @@ const generateStackedAreaSeriesData = <T extends MinimumViableSnapshotQuery, K e
       points.push({
         ...seasonData,
         season: seasonData.season as number,
-        date: secondsToDate(seasonData.timestamp)
+        date: secondsToDate(seasonData.timestamp),
       } as unknown as K);
     }
   }
 
-  // console.log('points: ', points);
-  
   return [points.sort(sortSeasons)];
 };
 
-const generateSeriesData = <T extends MinimumViableSnapshotQuery, K extends BaseDataPoint>(
-  params: MergeSeasonsQueryProps<T>[], 
-  seasonAggregation: SeasonAggregation,
+const generateSeriesData = <
+  T extends MinimumViableSnapshotQuery,
+  K extends BaseDataPoint
+>(
+  params: MergeSeasonsQueryProps<T>[],
+  seasonAggregation: SeasonAggregation
 ) => {
   const points: K[][] = params.map(({ query, getValue }) => {
     const _points: K[] = [];
@@ -168,10 +182,13 @@ const generateSeriesData = <T extends MinimumViableSnapshotQuery, K extends Base
   return points;
 };
 
-export const useMergeSeasonsQueries = <T extends MinimumViableSnapshotQuery, K extends BaseDataPoint>(
+export const useMergeSeasonsQueries = <
+  T extends MinimumViableSnapshotQuery,
+  K extends BaseDataPoint
+>(
   params: MergeSeasonsQueryProps<T>[],
   timeTabState: TimeTabState,
-  stackedArea?: boolean,
+  stackedArea?: boolean
 ): {
   data: K[][];
   error: ApolloError[] | undefined;
@@ -179,21 +196,21 @@ export const useMergeSeasonsQueries = <T extends MinimumViableSnapshotQuery, K e
   loading: boolean;
   stackedArea?: boolean;
 } => {
-  const loading = !!(params.find((p) => p.query.loading));
+  const loading = !!params.find((p) => p.query.loading);
 
   const error = useMemo(() => {
     const errs = params
       .filter(({ query: q }) => q.error !== undefined)
-      .map(({ query: q }) => q.error) as ApolloError[]; 
+      .map(({ query: q }) => q.error) as ApolloError[];
     return errs.length ? errs : undefined;
   }, [params]);
 
   const [mergedData, dataKeys] = useMemo(() => {
     const _keys = params.map(({ key }) => key);
-    const series = stackedArea 
+    const series = stackedArea
       ? generateStackedAreaSeriesData(params, timeTabState[0], _keys)
       : generateSeriesData(params, timeTabState[0]);
-    
+
     return [series, _keys] as [K[][], string[]];
   }, [params, stackedArea, timeTabState]);
 

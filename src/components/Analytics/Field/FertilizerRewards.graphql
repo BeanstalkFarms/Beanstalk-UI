@@ -4,12 +4,14 @@ query SeasonalFertilizerRewards(
   $first: Int
 ) {
   seasons: rewards(
-    where: { season_gt: $season_gt, season_lte: $season_lte }
+    where: { season_lte: $season_lte, season_gt: $season_gt }
     first: $first
-    orderDirection: desc
     orderBy: season
+    orderDirection: desc
   ) {
+    id
     season
     toFertilizer
+    timestamp
   }
 }

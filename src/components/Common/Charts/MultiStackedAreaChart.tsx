@@ -205,6 +205,7 @@ function Graph(props: GraphProps) {
             keys={keys}
             data={data}
             height={height}
+            order="descending"
             x={(d) => scales[0].xScale(getX(d.data)) ?? 0}
             y0={(d) => scales[0].yScale(getY0(d)) ?? 0}
             y1={(d) => scales[0].yScale(getY1(d)) ?? 0}

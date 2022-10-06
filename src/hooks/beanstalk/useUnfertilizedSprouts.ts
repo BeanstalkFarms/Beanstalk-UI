@@ -1,18 +1,21 @@
 import { BigNumber } from 'bignumber.js';
 import { ApolloError, QueryOptions, useQuery } from '@apollo/client';
-import { useMemo, useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import {
   SeasonalFertilizerTokensQuery,
   SeasonalFertilizerTokensDocument,
   SeasonalFertilizerRewardsDocument,
   SeasonalFertilizerRewardsQuery,
 } from '../../generated/graphql';
-import { ZERO_BN } from '~/constants';
 
-import {
+import useSeasonsQuery, {
   SeasonRange,
   SEASON_RANGE_TO_COUNT,
 } from '~/hooks/beanstalk/useSeasonsQuery';
+import { MinimumViableQueryType } from './useMergeSeasonsQueries';
+import { NEW_BN, ZERO_BN } from '~/constants';
+import { sortSeasons } from '~/util';
+import useSeason from './useSeason';
 
 type RinsableSproutsBySeason = {
   season: number;
@@ -26,117 +29,117 @@ type UnfertilizedSproutsBySeason = {
   unfertilizedSprouts: BigNumber;
 };
 
+export type UnfertilizedSproutsBySeasonQuery = {
+  seasons: (UnfertilizedSproutsBySeason & any)[];
+};
+
 const useUnfertilizedSprouts = (
-  range: SeasonRange,
-  _queryConfig?: Partial<QueryOptions>
-) => {
-  const queryConfig = useMemo(
-    () => ({
-      ..._queryConfig,
+  range: SeasonRange
+): MinimumViableQueryType<UnfertilizedSproutsBySeasonQuery> => {
+  const queryConfig = useMemo(() => {
+    const tokens = {
       variables: {
-        ..._queryConfig?.variables,
-        season_gt: 6073,
-      },
-    }),
-    [_queryConfig]
-  );
-
-  const { data: tokensData, ...tokensQueryOther } =
-    useQuery<SeasonalFertilizerTokensQuery>(SeasonalFertilizerTokensDocument, {
-      variables: {
-        season_lte: 9999999,
-        season_gt: 6073,
         first: 1000,
+        season_gt: 6073,
+        season_lte: 9999999,
       },
-    });
+      fetchPolicy: 'cache-first',
+    };
+    const rewards = {
+      variables: {
+        season_gt: 6073,
+      },
+    };
+    return { tokens, rewards };
+  }, []);
 
-  const { data: rewardsData, ...rewardsQueryOther } =
-    useQuery<SeasonalFertilizerRewardsQuery>(
-      SeasonalFertilizerRewardsDocument,
-      {
-        variables: {
-          season_lte: 9999999,
-          season_gt: 6073,
-          first: 1000,
-        },
-      }
+  // useQuery fits use-case since there are less than 1000 items returned from query
+  const tokensQuery = useQuery<SeasonalFertilizerTokensQuery>(
+    SeasonalFertilizerTokensDocument,
+    queryConfig.tokens as Partial<QueryOptions>
+  );
+  const rewardsQuery = useSeasonsQuery<SeasonalFertilizerRewardsQuery>(
+    SeasonalFertilizerRewardsDocument,
+    SeasonRange.ALL,
+    queryConfig.rewards
+  );
+
+  const currSeason = useSeason();
+
+  const loading = useMemo(() => {
+    const queriesLoading = !![tokensQuery.loading, rewardsQuery.loading].find(
+      (_loading) => _loading
     );
+    const seasonLoading = currSeason.eq(NEW_BN);
+    return !!(queriesLoading || seasonLoading);
+  }, [rewardsQuery, tokensQuery, currSeason]);
 
-  const loading = useMemo(
-    () =>
-      !![tokensQueryOther.loading, rewardsQueryOther.loading].find(
-        (isLoading) => isLoading
-      ),
-    [rewardsQueryOther, tokensQueryOther]
-  );
-  const errors = useMemo(
-    () =>
-      [tokensQueryOther.error, rewardsQueryOther.error]
-        .filter((e) => e !== undefined)
-        .map((e) => e as ApolloError),
-    [tokensQueryOther, rewardsQueryOther]
-  );
+  const errors = useMemo(() => {
+    const errs = [tokensQuery.error, rewardsQuery.error]
+      .filter((e) => e !== undefined)
+      .map((e) => e as ApolloError);
+    return errs.length ? errs : undefined;
+  }, [tokensQuery, rewardsQuery]);
 
   // returns mapping of cumulative rinsable sprouts by season
   const getRinsableSproutsBySeason = useCallback(() => {
-    const sd = rewardsData?.seasons;
-    if (!sd) return undefined;
+    const sd = rewardsQuery.data?.seasons;
+    if (!sd || sd.length === 0) return undefined;
 
-    const data: { [s: number]: RinsableSproutsBySeason } = {};
-    let cumRinsable: BigNumber = ZERO_BN;
+    const data: { [season: number]: RinsableSproutsBySeason } = {};
+    let k: BigNumber = ZERO_BN; // cumulative rinsable sprouts
+    const sorted = [...sd].filter((datum) => datum !== null).sort(sortSeasons);
 
-    [...sd]
-      .sort((a, b) => a.season - b.season)
-      .forEach((s) => {
-        cumRinsable = cumRinsable.plus(s.toFertilizer);
-        data[s.season] = {
-          season: s.season,
-          rinsableSprouts: cumRinsable,
-          timestamp: s.timestamp,
-        };
-      });
-    return data;
-  }, [rewardsData]);
+    sorted.forEach((s) => {
+      k = k.plus(s.toFertilizer);
+      data[s.season] = {
+        season: s.season,
+        rinsableSprouts: k,
+        timestamp: s.timestamp,
+      };
+    });
+
+    return { earliest: sorted[0].season, data };
+  }, [rewardsQuery]);
 
   // returns mapping of cumulative sprouts by season
   const getCumulativeSproutsBySeason = useCallback(() => {
-    const fertTokens = tokensData?.seasons;
-    if (!fertTokens?.length) return undefined;
+    const fertTokens = tokensQuery.data?.seasons;
+    if (!fertTokens || fertTokens.length === 0) return undefined;
 
-    const cumulativeSproutsBySeason: { [season: number]: BigNumber } = {};
-    let cumSprouts: BigNumber = ZERO_BN;
+    const data: { [season: number]: BigNumber } = {};
+    let s: BigNumber = ZERO_BN; // cumulative sprouts
+    let earliestSeason: number;
 
-    [...fertTokens]
-      .sort((a, b) => a.season - b.season)
-      .forEach(({ endBpf, supply, season }) => {
-        const numSproutsForSeason = new BigNumber(endBpf).times(supply);
-        cumSprouts = cumSprouts.plus(numSproutsForSeason);
-        cumulativeSproutsBySeason[season] = cumSprouts;
-      });
+    const sorted = [...fertTokens]
+      .filter((datum) => datum !== null)
+      .sort(sortSeasons);
 
-    return cumulativeSproutsBySeason;
-  }, [tokensData]);
+    sorted.forEach(({ endBpf, supply, season }) => {
+      if (!earliestSeason && season && season < earliestSeason) {
+        earliestSeason = season;
+      }
+      const numSproutsForSeason = new BigNumber(endBpf).times(supply);
+      s = s.plus(numSproutsForSeason);
+      data[season] = s;
+    });
+
+    return { earliest: sorted[0].season, data };
+  }, [tokensQuery]);
 
   const queryResult = useMemo(() => {
-    const ft = tokensData?.seasons;
-    const fr = rewardsData?.seasons;
+    const ft = tokensQuery.data?.seasons;
+    const fr = rewardsQuery.data?.seasons;
 
-    if (!ft?.length || !fr?.length) return undefined;
+    if (!ft?.length || !fr?.length || currSeason.eq(NEW_BN)) return undefined;
 
-    const cumulativeSproutsBySeason = getCumulativeSproutsBySeason();
-    if (!cumulativeSproutsBySeason) return undefined;
+    const cumSprouts = getCumulativeSproutsBySeason();
+    if (!cumSprouts?.data) return undefined;
 
-    const seasonalRinsableSprouts = getRinsableSproutsBySeason();
-    if (!seasonalRinsableSprouts) return undefined;
+    const rinsable = getRinsableSproutsBySeason();
+    if (!rinsable?.data) return undefined;
 
-    const firstAndLast = [
-      ft[ft.length - 1].season,
-      ft[0].season,
-      fr[fr.length - 1].season,
-      fr[0].season,
-    ];
-    const earliestSeason = Math.min(...firstAndLast);
-    const latestSeason = Math.max(...firstAndLast);
+    const earliestSeason = Math.min(cumSprouts.earliest, rinsable.earliest);
 
     const unfertilizedSproutsBySeason: UnfertilizedSproutsBySeason[] = [];
     let k = earliestSeason; // last season in which cumulative sprouts by season is not null
@@ -145,11 +148,11 @@ const useUnfertilizedSprouts = (
     let r; // object containing rinsable sprouts for season i
     let u; // unfertilized sprouts for season i
 
-    for (let i = earliestSeason; i <= latestSeason; i += 1) {
-      if (cumulativeSproutsBySeason[i]) k = i;
-      if (seasonalRinsableSprouts[i]) j = i;
-      n = cumulativeSproutsBySeason[k];
-      r = seasonalRinsableSprouts[j];
+    for (let i = earliestSeason; i <= currSeason.toNumber(); i += 1) {
+      if (cumSprouts.data[i]) k = i;
+      if (rinsable.data[i]) j = i;
+      n = cumSprouts.data[k];
+      r = rinsable.data[j];
       u = n.minus(r?.rinsableSprouts || ZERO_BN) || ZERO_BN;
       unfertilizedSproutsBySeason.push({
         season: i,
@@ -160,21 +163,24 @@ const useUnfertilizedSprouts = (
 
     return unfertilizedSproutsBySeason;
   }, [
+    currSeason,
     getCumulativeSproutsBySeason,
     getRinsableSproutsBySeason,
-    rewardsData?.seasons,
-    tokensData?.seasons,
+    rewardsQuery.data?.seasons,
+    tokensQuery.data?.seasons,
   ]);
 
   const data = useMemo(() => {
-    if (!queryResult) return [];
-    const reversed = queryResult.reverse();
+    if (!queryResult) return { seasons: [] };
+    const reversed = queryResult?.reverse();
     switch (range) {
       case SeasonRange.ALL: {
-        return reversed;
+        return { seasons: reversed };
       }
       default: {
-        return reversed.slice(0, SEASON_RANGE_TO_COUNT[range] as number);
+        return {
+          seasons: reversed?.slice(0, SEASON_RANGE_TO_COUNT[range] as number),
+        };
       }
     }
   }, [queryResult, range]);
