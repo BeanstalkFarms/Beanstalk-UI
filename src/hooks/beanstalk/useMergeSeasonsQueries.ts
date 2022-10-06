@@ -23,7 +23,7 @@ export type MinimumViableQueryType<T extends MinimumViableSnapshotQuery> = {
 
 export type MergeSeasonsQueryProps<T extends MinimumViableSnapshotQuery> = {
   /*
-   * non-destructured value returned by useSeasonsQuery<T>
+   *
    */
   query: MinimumViableQueryType<T>;
   /*
