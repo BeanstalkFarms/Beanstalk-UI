@@ -55,11 +55,11 @@ const ProposalPage: React.FC = () => {
     <Container maxWidth="lg">
       <Stack gap={2}>
         <PageHeader returnPath="/governance" />
-        <Grid container direction={{ xs: 'column-reverse', md: 'row' }} spacing={2}>
-          <Grid item xs={12} md={8}>
+        <Grid container direction={{ xs: 'column-reverse', md: 'row' }} spacing={{ xs: 0, md: 2 }} gap={{ xs: 2, md: 0 }} maxWidth="100%">
+          <Grid item xs={12} md={8} maxWidth="100% !important">
             <ProposalContent proposal={proposal} />
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4} maxWidth="100%">
             <GovernanceActions proposal={proposal} />
           </Grid>
         </Grid>

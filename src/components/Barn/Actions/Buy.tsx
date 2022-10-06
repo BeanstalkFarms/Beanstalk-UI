@@ -152,7 +152,7 @@ const BuyForm : React.FC<
                   <Divider sx={{ my: 2, opacity: 0.4 }} />
                   <Box sx={{ pb: 1 }}>
                     <Typography variant="body2">
-                      Sprouts become <strong>Rinsable</strong> on a <Link href="https://docs.bean.money/additional-resources/glossary#pari-passu" target="_blank" rel="noreferrer" underline="hover">pari passu</Link> basis. Upon <strong>Rinse</strong>, each Sprout is redeemed for <span><TokenIcon token={BEAN[1]} style={{ height: IconSize.xs, marginTop: 2.6 }} /></span>1.
+                      Sprouts become <strong>Rinsable</strong> on a <Link href="https://docs.bean.money/protocol-resources/glossary#pari-passu" target="_blank" rel="noreferrer" underline="hover">pari passu</Link> basis. Upon <strong>Rinse</strong>, each Sprout is redeemed for <span><TokenIcon token={BEAN[1]} style={{ height: IconSize.xs, marginTop: 2.6 }} /></span>1.
                     </Typography>
                   </Box>
                 </TxnAccordion>

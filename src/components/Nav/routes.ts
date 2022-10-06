@@ -1,14 +1,14 @@
-import aboutIcon from '~/img/nav-icons/about.svg';
-import beanNFTIcon from '~/img/nav-icons/bean-nft.svg';
-import discordIcon from '~/img/nav-icons/discord.svg';
-import githubIcon from '~/img/nav-icons/github.svg';
-import governanceIcon from '~/img/nav-icons/governance.svg';
-import swapIcon from '~/img/nav-icons/trade.svg';
-import twitterIcon from '~/img/nav-icons/twitter.svg';
-import duneIcon from '~/img/nav-icons/dune.svg';
-import docsIcon from '~/img/nav-icons/docs.svg';
-import disclosuresIcon from '~/img/nav-icons/disclosures.svg';
-import analyticsIcon from '~/img/nav-icons/analytics.svg';
+import aboutIcon from '~/img/beanstalk/interface/nav/about.svg';
+import beanNFTIcon from '~/img/beanstalk/interface/nav/bean-nft.svg';
+import discordIcon from '~/img/beanstalk/interface/nav/discord.svg';
+import githubIcon from '~/img/beanstalk/interface/nav/github.svg';
+import governanceIcon from '~/img/beanstalk/interface/nav/governance.svg';
+import swapIcon from '~/img/beanstalk/interface/nav/trade.svg';
+import twitterIcon from '~/img/beanstalk/interface/nav/twitter.svg';
+import duneIcon from '~/img/beanstalk/interface/nav/dune.svg';
+import docsIcon from '~/img/beanstalk/interface/nav/docs.svg';
+import disclosuresIcon from '~/img/beanstalk/interface/nav/disclosures.svg';
+import analyticsIcon from '~/img/beanstalk/interface/nav/analytics.svg';
 
 export type RouteData = {
   /** If set, link to this internal path. */

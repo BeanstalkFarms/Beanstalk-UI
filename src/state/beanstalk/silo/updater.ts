@@ -36,9 +36,9 @@ export const useFetchBeanstalkSilo = () => {
         withdrawSeasons,
       ] = await Promise.all([
         // 0
-        beanstalk.totalStalk().then(tokenResult(STALK)),  // Includes Stalk from Earned Beans.
-        beanstalk.totalSeeds().then(tokenResult(SEEDS)),  // 
-        beanstalk.totalRoots().then(bigNumberResult),     //
+        beanstalk.totalStalk().then(tokenResult(STALK)),  // Does NOT include Grown Stalk
+        beanstalk.totalSeeds().then(tokenResult(SEEDS)),  // Does NOT include Plantable Seeds
+        beanstalk.totalRoots().then(bigNumberResult),     // 
         beanstalk.totalEarnedBeans().then(tokenResult(BEAN)),
         // 4
         Promise.all(

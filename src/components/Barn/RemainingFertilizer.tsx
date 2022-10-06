@@ -8,7 +8,7 @@ import useSeason from '~/hooks/beanstalk/useSeason';
 import { AppState } from '~/state';
 import { displayFullBN } from '~/util';
 import FertilizerImage from './FertilizerImage';
-import { BeanstalkPalette, FontSize } from '../App/muiTheme';
+import { FontSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
 
 const RemainingFertilizer: React.FC = () => {
@@ -63,7 +63,7 @@ const RemainingFertilizer: React.FC = () => {
                   <Typography
                     display="inline-block"
                     variant="bodySmall"
-                    color={BeanstalkPalette.logoGreen}
+                    color="primary"
                   >
                     {displayFullBN(recapFundedPct.times(100), 2)}% Recapitalized
                   </Typography>

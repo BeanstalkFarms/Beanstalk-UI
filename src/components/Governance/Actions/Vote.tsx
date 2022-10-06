@@ -1,4 +1,4 @@
-import { Button, LinearProgress, Stack, Tooltip, Typography } from '@mui/material';
+import { Button, CircularProgress, Divider, LinearProgress, Stack, Tooltip, Typography } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -10,14 +10,16 @@ import toast from 'react-hot-toast';
 import { useVotesQuery } from '~/generated/graphql';
 import DescriptionButton from '~/components/Common/DescriptionButton';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import {  displayFullBN, parseError } from '~/util';
+import { displayBN, displayFullBN, parseError } from '~/util';
 import TransactionToast from '~/components/Common/TxnToast';
 import { Proposal } from '~/util/Governance';
 import { AppState } from '~/state';
 import useAccount from '~/hooks/ledger/useAccount';
 import WalletButton from '~/components/Common/Connection/WalletButton';
-import { SNAPSHOT_LINK } from '~/constants';
+import { SNAPSHOT_LINK, ZERO_BN } from '~/constants';
 import Row from '~/components/Common/Row';
+import useProposalBlockData from '~/hooks/beanstalk/useProposalBlockData';
+import StatHorizontal from '~/components/Common/StatHorizontal';
 
 type VoteFormValues = {
   choice: number | undefined;
@@ -36,7 +38,11 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
   /// State
   const account = useAccount();
   const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
+  const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
 
+  /// Query Quorum
+  const { data: { totalStalk, quorum, quorumPct, votingPower, tag }, loading: loadingQuorum } = useProposalBlockData(proposal, account);
+  
   /// Time
   const today = new Date();
   const endDate = new Date(proposal.end * 1000);
@@ -50,7 +56,7 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
   /// Option isn't selected or the voting period has ended
   const canVote = farmerSilo.stalk.active.gt(0);
   const alreadyVotedThisChoice = (
-    existingChoice !== undefined 
+    existingChoice !== undefined
     && existingChoice === values.choice
   );
   const isClosed = differenceInTime <= 0;
@@ -67,9 +73,49 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
     <Form autoComplete="off">
       <Stack gap={1}>
         {/**
-          * Progress by choice
-          */}
+         * Progress by choice
+         */}
         <Stack px={1} pb={1} gap={1.5}>
+          {(votingPower && totalStalk) && (
+            <StatHorizontal
+              label="Voting Power"
+              labelTooltip={
+                <div>
+                  <Typography>A snapshot of your active STALK when voting on {tag} began.</Typography>
+                </div>
+              }
+            >
+              {displayBN(votingPower)} STALK&nbsp;&nbsp;·&nbsp;&nbsp;{displayBN(votingPower.div(totalStalk).multipliedBy(100))}%
+            </StatHorizontal>
+          )}
+          {(quorumPct && quorum) && (
+            <StatHorizontal
+              label="Quorum"
+              labelTooltip={
+                <Stack gap={0.5}>
+                  {quorum && (
+                    <StatHorizontal label="Stalk for Quorum">
+                      ~{displayFullBN(quorum, 2, 2)}
+                    </StatHorizontal>
+                  )}
+                  <StatHorizontal label="Eligible Stalk">
+                    ~{displayFullBN(totalStalk || ZERO_BN, 2, 2)}
+                  </StatHorizontal>
+                  <StatHorizontal label="Snapshot Block">
+                    {proposal.snapshot}
+                  </StatHorizontal>
+                </Stack>
+              }>
+              {loadingQuorum ? (
+                <CircularProgress size={16} />
+              ) : (
+                <>
+                  ~{displayFullBN(quorum, 0)} STALK&nbsp;&nbsp;·&nbsp;&nbsp;{(quorumPct * 100).toFixed(0)}%
+                </>
+              )}
+            </StatHorizontal>
+          )}
+          <Divider />
           {proposal.choices.map((choice: string, index: number) => (
             <Stack gap={0.5}>
               <Row columnGap={0.5} flexWrap="wrap" justifyContent="space-between">
@@ -78,21 +124,21 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
                     <Tooltip title={`You voted: ${proposal.choices![existingChoice - 1]}`}>
                       <span>✓&nbsp;</span>
                     </Tooltip>
-                  ) : null}
+                    ) : null}
                   {choice}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
                   {displayFullBN(new BigNumber(proposal.scores[index]), 0, 0)} STALK
                   <Typography
-                    display={proposal.scores_total > 0 ? 'inline' : 'none'}>•{((proposal.scores[index] / proposal.scores_total) * 100).toFixed(2)}%
+                    display={proposal.scores_total > 0 ? 'inline' : 'none'}> · {((proposal.scores[index] / proposal.scores_total) * 100).toFixed(2)}%
                   </Typography>
                 </Typography>
               </Row>
               <LinearProgress
                 variant="determinate"
                 value={(
-                  proposal.scores_total > 0 
-                    ? (proposal.scores[index] / proposal.scores_total) * 100 
+                  proposal.scores_total > 0
+                    ? (proposal.scores[index] / proposal.scores_total) * 100
                     : 0
                 )}
                 sx={{ height: '10px', borderRadius: 1 }}
@@ -136,7 +182,7 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
                   loading={isSubmitting}
                   disabled={isInvalid || isSubmitting}
                 >
-                  {canVote 
+                  {canVote
                     ? (
                       alreadyVotedThisChoice
                         ? `Already Voted: ${proposal.choices[existingChoice - 1]}`
@@ -174,10 +220,7 @@ const Vote: React.FC<{ proposal: Proposal }> = (props) => {
   const { data: signer } = useSigner();
 
   /// Query Votes
-  const { 
-    data: voteData,
-    refetch : refetchVotes,
-  } = useVotesQuery({
+  const { data: voteData, refetch: refetchVotes } = useVotesQuery({
     variables: {
       proposal_id: props.proposal?.id.toLowerCase() || '',
       voter_address: account || '',
@@ -188,9 +231,9 @@ const Vote: React.FC<{ proposal: Proposal }> = (props) => {
     nextFetchPolicy: 'network-only',
   });
   const existingChoice = voteData?.votes?.[0]?.choice;
-  
+
   /// Form setup
-  const initialValues: VoteFormValues = useMemo(() => ({ 
+  const initialValues: VoteFormValues = useMemo(() => ({
     choice: existingChoice
   }), [existingChoice]);
   const onSubmit = useCallback(

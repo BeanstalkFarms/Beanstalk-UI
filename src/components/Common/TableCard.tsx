@@ -11,7 +11,7 @@ import { displayBN } from '~/util';
 import { ZERO_BN } from '~/constants';
 import { Token } from '../../classes';
 import AuthEmptyState from './ZeroState/AuthEmptyState';
-import TablePagination from './TablePagination';
+import ArrowPagination from './ArrowPagination';
 import Fiat from './Fiat';
 import Row from '~/components/Common/Row';
 
@@ -102,7 +102,7 @@ const TableCard : React.FC<{
                 />
               );
             },
-            Pagination: TablePagination
+            Pagination: ArrowPagination
           }}
           initialState={{
             sorting: {

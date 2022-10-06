@@ -1,6 +1,6 @@
 {
   "name": "beanstalk-ui",
-  "version": "2.0.22",
+  "version": "2.0.24a",
   "private": true,
   "homepage": "https://app.bean.money",
   "dependencies": {
@@ -26,7 +26,7 @@
     "buffer": "^6.0.3",
     "d3-scale": "^4.0.2",
     "d3-time-format": "^4.1.0",
-    "ethers": "^5.6.8",
+    "ethers": "^5.7.1",
     "ethers-multicall": "^0.2.3",
     "events": "^3.3.0",
     "formik": "^2.2.9",

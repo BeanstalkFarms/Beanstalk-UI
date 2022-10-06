@@ -97,7 +97,7 @@ const strokeBuffer = 2;
 
 const strokes = [
   {
-    stroke: BeanstalkPalette.logoGreen,
+    stroke: BeanstalkPalette.theme.fall.brown,
     strokeWidth: 2,
   },
   {
