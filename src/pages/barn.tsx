@@ -9,7 +9,7 @@ import GuideButton from '~/components/Common/Guide/GuideButton';
 
 import { FC } from '~/types';
 
-const Barn: FC = () => (
+const Barn: FC<{}> = () => (
   <Container maxWidth="sm">
     <Stack gap={2}>
       <PageHeader

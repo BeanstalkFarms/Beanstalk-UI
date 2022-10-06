@@ -17,7 +17,7 @@ import { FC } from '~/types';
 
 export const tabLabels = ['All', 'Create', 'Fill', 'Cancel'];
 
-const MarketActivityPage: FC = () => {
+const MarketActivityPage: FC<{}> = () => {
   // Local State
   const [tab, handleChangeTab] = useTabs();
   const [scrollPosition, setScrollPosition] = useState<number | undefined>();

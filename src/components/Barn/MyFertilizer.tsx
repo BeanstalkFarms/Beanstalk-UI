@@ -32,7 +32,7 @@ enum TabState {
   USED = 1,
 }
 
-const MyFertilizer: FC = () => {
+const MyFertilizer: FC<{}> = () => {
   /// Data
   const beanstalkBarn = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
   const farmerBarn = useSelector<AppState, AppState['_farmer']['barn']>((state) => state._farmer.barn);

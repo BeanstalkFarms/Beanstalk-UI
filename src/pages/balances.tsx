@@ -12,7 +12,7 @@ import { HOW_TO_UNDERSTAND_BALANCES } from '~/util';
 
 import { FC } from '~/types';
 
-const BalancesPage: FC = () => {
+const BalancesPage: FC<{}> = () => {
   /// State
   const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);

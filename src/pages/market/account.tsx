@@ -20,7 +20,7 @@ import { FC } from '~/types';
 
 const SLUGS = ['orders', 'listings'];
 
-const MarketAccountPage: FC = () => {
+const MarketAccountPage: FC<{}> = () => {
   /// Theme
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));

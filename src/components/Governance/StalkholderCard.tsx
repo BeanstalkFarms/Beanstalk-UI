@@ -13,7 +13,7 @@ import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
 
-const StalkholderCard : FC = () => {
+const StalkholderCard : FC<{}> = () => {
   const account       = useAccount();
   const farmerSilo    = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   

@@ -14,7 +14,7 @@ import MarketCap from '~/components/Analytics/Bean/MarketCap';
 
 import { FC } from '~/types';
 
-const ForecastPage: FC = () => (
+const ForecastPage: FC<{}> = () => (
   <Container maxWidth="lg">
     <Stack gap={2}>
       <PageHeader

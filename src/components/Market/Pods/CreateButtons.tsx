@@ -8,7 +8,7 @@ import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
 
-const CreateButtons: FC = () => (
+const CreateButtons: FC<{}> = () => (
   <Row gap={1} alignItems="end" height="100%">
     <MoreDropdown />
     <Button

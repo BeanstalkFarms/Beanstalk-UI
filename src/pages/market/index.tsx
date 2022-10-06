@@ -16,7 +16,7 @@ import { FC } from '~/types';
 
 const SLUGS = ['buy', 'sell'];
 
-const PodMarketPage: FC = () => {
+const PodMarketPage: FC<{}> = () => {
   /// Tabs
   const [tab, handleChangeTab] = useTabs(SLUGS, 'view');
   const data = useMarketData();

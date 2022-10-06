@@ -7,7 +7,7 @@ import { BeanstalkPalette, FontSize, FontWeight } from '~/components/App/muiThem
  */
 import { FC } from '~/types';
 
-const MarkdownWrapper: FC = ({ children }) => (
+const MarkdownWrapper: FC<{}> = ({ children }) => (
   <MuiMarkdown
     overrides={{
       li: {

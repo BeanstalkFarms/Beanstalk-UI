@@ -21,7 +21,7 @@ import { bigNumberResult, Source } from '~/util';
 
 import { FC } from '~/types';
 
-const ListingPage: FC = () => {
+const ListingPage: FC<{}> = () => {
   const account = useAccount();
   const { id } = useParams<{ id: string }>();
   const { data: listing, source, loading, error } = usePodListing(id);

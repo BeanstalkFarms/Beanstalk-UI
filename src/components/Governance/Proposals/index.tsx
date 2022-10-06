@@ -11,7 +11,7 @@ import { FC } from '~/types';
 /// Variables
 const SLUGS = ['dao', 'beanstalk-farms', 'bean-sprout'];
 
-const Proposals: FC = () => {
+const Proposals: FC<{}> = () => {
   const [tab, handleChange] = useTabs(SLUGS, 'type');
 
   // Query Proposals

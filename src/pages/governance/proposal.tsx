@@ -15,7 +15,7 @@ import PageNotFound from '~/pages/error/404';
 
 import { FC } from '~/types';
 
-const ProposalPage: FC = () => {
+const ProposalPage: FC<{}> = () => {
   /// Routing
   const { id } = useParams<{ id: string }>();
 

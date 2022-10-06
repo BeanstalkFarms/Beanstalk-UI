@@ -8,7 +8,7 @@ import MarketActions from '../../components/Market/Pods/Actions';
 
 import { FC } from '~/types';
 
-const CreatePage: FC = () => (
+const CreatePage: FC<{}> = () => (
   <Container maxWidth="sm">
     <Stack spacing={2}>
       <PageHeader returnPath="/market/account" />

@@ -4,7 +4,7 @@ import React from 'react';
 
 import { FC } from '~/types';
 
-const AboutPage : FC = () => 
+const AboutPage : FC<{}> = () => 
   // const beanstalk = useBeanstalkContract();
 
   // const [] = useState(null)

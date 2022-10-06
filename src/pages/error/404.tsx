@@ -8,7 +8,7 @@ import forecast from '~/img/beanstalk/forecast-banner.svg';
 
 import { FC } from '~/types';
 
-const PageNotFound: FC = () => (
+const PageNotFound: FC<{}> = () => (
   <Container maxWidth="md">
     <Card sx={{ px: 4, py: 6 }}>
       <Stack direction="column" alignItems="center" justifyContent="center" gap={1}>

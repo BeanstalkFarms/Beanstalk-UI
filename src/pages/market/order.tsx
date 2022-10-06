@@ -20,7 +20,7 @@ import { Module, ModuleContent, ModuleHeader } from '~/components/Common/Module'
 
 import { FC } from '~/types';
 
-const OrderPage: FC = () => {
+const OrderPage: FC<{}> = () => {
   const account = useAccount();
   const { id } = useParams<{ id: string }>();
   const { data: order, source, loading, error } = usePodOrder(id);

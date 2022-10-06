@@ -3,7 +3,7 @@ import React from 'react';
 
 import { FC } from '~/types';
 
-const TxnHistory : FC = () => (
+const TxnHistory : FC<{}> = () => (
   <Box>Test</Box>
 );
 

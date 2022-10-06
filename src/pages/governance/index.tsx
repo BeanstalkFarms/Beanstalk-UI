@@ -11,7 +11,7 @@ import GuideButton from '~/components/Common/Guide/GuideButton';
 
 import { FC } from '~/types';
 
-const GovernancePage: FC = () => (
+const GovernancePage: FC<{}> = () => (
   <Container maxWidth="lg">
     <Stack gap={2}>
       <PageHeader

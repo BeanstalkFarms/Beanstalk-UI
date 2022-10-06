@@ -20,7 +20,7 @@ import { FC } from '~/types';
 
 const SLUGS = ['genesis', 'winter'];
 
-const NFTPage: FC = () => {
+const NFTPage: FC<{}> = () => {
   const account = useAccount();
   const theme = useTheme();
   const { data: signer } = useSigner();

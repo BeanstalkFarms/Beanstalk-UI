@@ -9,7 +9,7 @@ import { HOW_TO_TRANSFER_FARM_BALANCE, HOW_TO_TRADE_BEANS } from '~/util/Guides'
 
 import { FC } from '~/types';
 
-const SwapPage: FC = () => (
+const SwapPage: FC<{}> = () => (
   <Container maxWidth="sm">
     <Stack gap={2}>
       <PageHeader

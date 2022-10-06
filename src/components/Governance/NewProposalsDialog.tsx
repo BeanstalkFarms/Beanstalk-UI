@@ -17,7 +17,7 @@ import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
 
-const NewProposalsDialog: FC = () => {
+const NewProposalsDialog: FC<{}> = () => {
   /// Local state
   const [modalOpen, showModal, hideModal] = useToggle();
   const [unseenProposals, setUnseenProposals] = useState<ActiveProposal[]>([]);

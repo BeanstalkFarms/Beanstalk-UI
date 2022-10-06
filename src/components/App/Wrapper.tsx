@@ -12,7 +12,7 @@ import store from '~/state';
 
 import { FC } from '~/types';
 
-const Wrapper : FC = ({ children }) => (
+const Wrapper : FC<{}> = ({ children }) => (
   <HashRouter>
     <ReduxProvider store={store}>
       <ApolloProvider client={apolloClient}>

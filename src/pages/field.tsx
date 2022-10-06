@@ -48,7 +48,7 @@ const columns: DataGridProps['columns'] = [
   },
 ];
 
-const FieldPage: FC = () => {
+const FieldPage: FC<{}> = () => {
   const account = useAccount();
   const authState = !account ? 'disconnected' : 'ready';
   

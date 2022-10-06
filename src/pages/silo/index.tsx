@@ -25,7 +25,7 @@ import {
 
 import { FC } from '~/types';
 
-const SiloPage : FC = () => {
+const SiloPage : FC<{}> = () => {
   /// Helpers
   const getChainToken = useGetChainToken();
   

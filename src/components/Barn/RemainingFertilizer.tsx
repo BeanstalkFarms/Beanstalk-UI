@@ -13,7 +13,7 @@ import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
 
-const RemainingFertilizer: FC = () => {
+const RemainingFertilizer: FC<{}> = () => {
   // eslint-disable-next-line unused-imports/no-unused-vars
   const [humidity, nextDecreaseAmount] = useHumidity();
   const { recapFundedPct, remaining } = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);

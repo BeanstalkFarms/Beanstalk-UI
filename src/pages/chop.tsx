@@ -11,7 +11,7 @@ import { HOW_TO_CHOP_UNRIPE_BEANS } from '~/util/Guides';
 
 import { FC } from '~/types';
 
-const ChopPage: FC = () => (
+const ChopPage: FC<{}> = () => (
   <Container maxWidth="sm">
     <Stack spacing={2}>
       <PageHeader 

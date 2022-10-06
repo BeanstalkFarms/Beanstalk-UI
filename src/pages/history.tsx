@@ -21,7 +21,7 @@ const facetByTab = {
   2: EventCacheName.FIELD,
 };
 
-const TransactionHistoryPage: FC = () => {
+const TransactionHistoryPage: FC<{}> = () => {
   const account = useAccount();
   const [tab, setTab] = useState<0 | 1 | 2>(0);
   const events = useSelector<AppState, AppState['_farmer']['events2']>((state) => state._farmer.events2);
