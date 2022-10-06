@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Theme } from '@mui/material/styles';
 
 import App from '~/components/App';
@@ -27,13 +27,14 @@ if (import.meta.env.DEV) {
   window.addEventListener('unhandledrejection', ({ reason }) => showErrorOverlay(reason));
 }
 
-ReactDOM.render(
+const container = document.getElementById('app');
+const root = createRoot(container!);
+root.render(
   <React.StrictMode>
     <Wrapper>
       <App />
     </Wrapper>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );
 
 reportWebVitals();

@@ -112,10 +112,6 @@
     "vitest": "^0.21.0",
     "webpack-cli": "^4.9.2"
   },
-  "resolutions": {
-    "@types/react": "17.0.47",
-    "@types/react-dom": "17.0.17"
-  },
   "scripts": {
     "start": "vite --port 4173",
     "dev": "netlify dev --targetPort 4173",
