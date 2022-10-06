@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { bisector, extent, max, min } from 'd3-array';
+import { NumberValue } from 'd3-scale';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { AreaStack, Bar, Line, LinePath } from '@visx/shape';
 import { Group } from '@visx/group';
@@ -19,7 +20,7 @@ import { CURVES } from '~/components/Common/Charts/LineChart';
 import { FC } from '~/types';
 
 // ------------------------
-//       Stacked Area Chart
+//    Stacked Area Chart
 // ------------------------
 
 export type Scale = {
@@ -249,8 +250,8 @@ const Graph: FC<GraphProps> = (props) => {
     },
     [series]
   );
-  const xTickFormat = useCallback((_, i) => tickDates[i], [tickDates]);
-  const yTickFormat = useCallback((val) => displayBN(new BigNumber(val)), []);
+  const xTickFormat = useCallback((_: unknown, i: number) => tickDates[i], [tickDates]);
+  const yTickFormat = useCallback((val: NumberValue) => displayBN(new BigNumber(val.valueOf())), []);
 
   if (!series || series.length === 0) return null;
 

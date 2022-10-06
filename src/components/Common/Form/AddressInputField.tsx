@@ -51,7 +51,7 @@ const AddressInputFieldInner : FC<FieldProps & AddressInputFieldProps> = ({
 }) => {
   const chainId = useChainId();
   const isValid = field.value?.length === 42 && !meta.error;
-  const onChange = useCallback((e) => {
+  const onChange = useCallback((e: any) => {
     // Allow field to change if the value has been removed, or if
     // a valid address character has been input.
     if (!e.target.value || ETHEREUM_ADDRESS_CHARS.test(e.target.value)) {

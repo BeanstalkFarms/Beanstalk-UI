@@ -9,9 +9,9 @@ import React, {
 
 import { SpringRef, useSpringRef, useTransition } from 'react-spring';
 import { Lookup } from '@react-spring/types';
-export import { FC } from '~/types';
+import { FC } from '~/types';
 
-type SlideDirection = 'right' | 'left';
+export type SlideDirection = 'right' | 'left';
 
 export interface CarouselConfigProps {
   // disable translateX animation
@@ -78,7 +78,7 @@ const CarouselContext = createContext<CarouselContextReturn | undefined>(
   undefined
 );
 
-const CarouselProvider: FC<CarouselProps> = ({
+export const CarouselProvider: FC<CarouselProps> = ({
   total,
   children,
 }) => (

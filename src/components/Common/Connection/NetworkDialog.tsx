@@ -35,7 +35,7 @@ const NetworkDialog: FC<{
     }
   });
   const handleSwitch = useCallback(
-    (id) => () => {
+    (id: number) => () => {
       if (switchNetwork) {
         console.debug(`[NetworkButton] switching network => ${id}`);
         switchNetwork(id);
