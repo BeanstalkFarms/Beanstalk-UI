@@ -15,14 +15,16 @@ import ArrowPagination from './ArrowPagination';
 import Fiat from './Fiat';
 import Row from '~/components/Common/Row';
 
-const MAX_ROWS = 5;
-
 /**
  * Displays a <DataGrid /> with data about Crates. Attaches
  * a header with title, aggregate amount, and aggregate value.
  * Used to display deposits/withdrawals within the Silo.
  */
-const TableCard : React.FC<{
+import { FC } from '~/types';
+
+const MAX_ROWS = 5;
+
+const TableCard : FC<{
   /** Card title */
   title: string;
   /** Column setup */

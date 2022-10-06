@@ -4,6 +4,8 @@ import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '../
 import { ClaimStatus, COLLECTION_ADDRESS, Nft } from '../../util/BeaNFTs';
 import NFTImage from './NFTImage';
 
+import { FC } from '~/types';
+
 export interface NFTDialogProps {
   handleDialogClose: any;
   dialogOpen: boolean;
@@ -11,7 +13,7 @@ export interface NFTDialogProps {
   nft: Nft;
 }
 
-const NFTDialog: React.FC<NFTDialogProps> = ({
+const NFTDialog: FC<NFTDialogProps> = ({
   handleDialogClose,
   dialogOpen,
   handleMint,

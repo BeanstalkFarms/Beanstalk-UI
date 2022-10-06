@@ -10,6 +10,7 @@ import useMarketData from '~/hooks/beanstalk/useMarketData';
 import TabTable from '~/components/Common/Table/TabTable';
 import { Module, ModuleContent } from '~/components/Common/Module';
 import { BEAN, PODS } from '~/constants/tokens';
+import { FC } from '~/types';
 
 // TODO: dummy type
 export type WellActivityData = {
@@ -23,7 +24,8 @@ export type WellActivityData = {
 }
 
 const SLUGS = ['all', 'swaps', 'adds', 'removes'];
-const WellActivity: React.FC<{}> = () => {
+
+const WellActivity: FC<{}> = () => {
   const theme = useTheme();
   const [tab, handleChangeTab] = useTabs(SLUGS, 'bean');
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));

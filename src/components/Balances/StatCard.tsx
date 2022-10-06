@@ -2,7 +2,9 @@ import { Card, Stack } from '@mui/material';
 import React from 'react';
 import Stat, { StatProps } from '../Common/Stat';
 
-const StatCard : React.FC<StatProps> = ({
+import { FC } from '~/types';
+
+const StatCard : FC<StatProps> = ({
   children,
   ...props
 }) => (

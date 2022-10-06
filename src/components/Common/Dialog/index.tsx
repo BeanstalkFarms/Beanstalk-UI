@@ -5,12 +5,13 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { styled } from '@mui/styles';
 import { FontSize, IconSize } from '../../App/muiTheme';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
 
 export const StyledDialog = styled(Dialog)(() => ({
   '& .MuiDialogContent-root': {},
 }));
 
-export const StyledDialogTitle : React.FC<{
+export const StyledDialogTitle : FC<{
   id?: string;
   children?: React.ReactNode;
   onBack?: () => void;

@@ -19,6 +19,8 @@ import { displayBN, displayFullBN, toStringBaseUnitBN , PlotMap } from '~/util';
 import podIcon from '~/img/beanstalk/pod-icon.svg';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 const useStyles = makeStyles(() => ({
   tokenLogo: {
     width: IconSize.tokenSelect,
@@ -37,7 +39,7 @@ export interface PlotSelectProps {
   selected?: string | null;
 }
 
-const PlotSelect: React.FC<PlotSelectProps> = ({
+const PlotSelect: FC<PlotSelectProps> = ({
   plots,
   harvestableIndex,
   handlePlotSelect,

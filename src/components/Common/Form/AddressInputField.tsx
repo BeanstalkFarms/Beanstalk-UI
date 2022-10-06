@@ -21,6 +21,7 @@ import { CHAIN_INFO } from '~/constants';
 import OutputField from './OutputField';
 import { trimAddress } from '../../../util';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
 
 export type AddressInputFieldProps = (
   Partial<TextFieldProps>
@@ -39,7 +40,7 @@ const validateAddress = (account?: string) => (value: string) => {
   return error;
 };
 
-const AddressInputFieldInner : React.FC<FieldProps & AddressInputFieldProps> = ({
+const AddressInputFieldInner : FC<FieldProps & AddressInputFieldProps> = ({
   name,
   disabled,
   /// Formik
@@ -116,7 +117,7 @@ const AddressInputFieldInner : React.FC<FieldProps & AddressInputFieldProps> = (
   );
 };
 
-const AddressInputField : React.FC<AddressInputFieldProps> = ({
+const AddressInputField : FC<AddressInputFieldProps> = ({
   name,
   ...props
 }) => {

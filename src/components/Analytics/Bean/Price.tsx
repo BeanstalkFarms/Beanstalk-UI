@@ -9,6 +9,8 @@ import { Season, SeasonalPriceDocument } from '~/generated/graphql';
 import usePrice from '~/hooks/beanstalk/usePrice';
 import useSeason from '~/hooks/beanstalk/useSeason';
 
+import { FC } from '~/types';
+
 const getValue = (season: Season) => parseFloat(season.price);
 const formatValue = (value: number) => `$${value.toFixed(4)}`;
 const statProps = {
@@ -21,7 +23,7 @@ const lineChartProps : Partial<LineChartProps> = {
   yTickFormat: tickFormatBeanPrice
 };
 
-const Price: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({
+const Price: FC<{ height?: SeasonPlotBaseProps['height'] }> = ({
   height,
 }) => {
   const price = usePrice();

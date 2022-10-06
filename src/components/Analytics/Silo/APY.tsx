@@ -6,6 +6,8 @@ import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/Seas
 import { SeasonalApyDocument, SeasonalApyQuery } from '~/generated/graphql';
 import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
 
+import { FC } from '~/types';
+
 const formatValue = (value: number) => `${value.toFixed(2)}%`;
 const queryConfig = {
   variables: {
@@ -21,7 +23,7 @@ const metricToKey = {
   Stalk: 'twoSeedStalkAPY',
 };
 
-const APY: React.FC<{
+const APY: FC<{
   height?: SeasonPlotBaseProps['height'];
   metric: keyof typeof metricToKey
 }> = ({ 

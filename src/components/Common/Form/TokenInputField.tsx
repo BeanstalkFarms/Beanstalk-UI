@@ -14,6 +14,7 @@ import { FarmerBalances } from '~/state/farmer/balances';
 import NumberFormatInput from './NumberFormatInput';
 import FieldWrapper from './FieldWrapper';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
 
 export type TokenInputCustomProps = {
   /**
@@ -54,7 +55,7 @@ export type TokenInputProps = (
 
 export const VALID_INPUTS = /[0-9]*/;
 
-const TokenInput: React.FC<
+const TokenInput: FC<
   TokenInputProps & FieldProps
 > = ({
   /// Balances
@@ -268,7 +269,7 @@ const TokenInput: React.FC<
   );
 };
 
-const TokenInputField: React.FC<TokenInputProps> = ({ name, ...props }) => (
+const TokenInputField: FC<TokenInputProps> = ({ name, ...props }) => (
   <Field name={name}>
     {(fieldProps: FieldProps) => (
       <TokenInput

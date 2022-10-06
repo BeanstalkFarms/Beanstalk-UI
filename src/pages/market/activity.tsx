@@ -13,9 +13,11 @@ import Row from '~/components/Common/Row';
 import ActivityTableHeader from '~/components/Market/Pods/Tables/ActivityTableHeader';
 import ActivityTableRow from '~/components/Market/Pods/Tables/ActivityTableRow';
 
+import { FC } from '~/types';
+
 export const tabLabels = ['All', 'Create', 'Fill', 'Cancel'];
 
-const MarketActivityPage: React.FC = () => {
+const MarketActivityPage: FC = () => {
   // Local State
   const [tab, handleChangeTab] = useTabs();
   const [scrollPosition, setScrollPosition] = useState<number | undefined>();

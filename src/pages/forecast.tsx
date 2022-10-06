@@ -12,7 +12,9 @@ import PodRate from '~/components/Analytics/Field/PodRate';
 import LiquidityByState from '~/components/Forecast/LiquidityByState';
 import MarketCap from '~/components/Analytics/Bean/MarketCap';
 
-const ForecastPage: React.FC = () => (
+import { FC } from '~/types';
+
+const ForecastPage: FC = () => (
   <Container maxWidth="lg">
     <Stack gap={2}>
       <PageHeader

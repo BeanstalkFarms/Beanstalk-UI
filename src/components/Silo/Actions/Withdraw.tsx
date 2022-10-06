@@ -33,12 +33,13 @@ import { useFetchBeanstalkSilo } from '~/state/beanstalk/silo/updater';
 import IconWrapper from '../../Common/IconWrapper';
 import { IconSize } from '../../App/muiTheme';
 import useFarmerSilo from '~/hooks/farmer/useFarmerSilo';
+import { FC } from '~/types';
 
 // -----------------------------------------------------------------------
 
 type WithdrawFormValues = FormState;
 
-const WithdrawForm : React.FC<
+const WithdrawForm : FC<
   FormikProps<WithdrawFormValues> & {
     token: Token;
     siloBalances: FarmerSilo['balances'];
@@ -237,7 +238,7 @@ const WithdrawForm : React.FC<
 
 // -----------------------------------------------------------------------
 
-const Withdraw : React.FC<{ token: ERC20Token; }> = ({ token }) => {
+const Withdraw : FC<{ token: ERC20Token; }> = ({ token }) => {
   ///
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);

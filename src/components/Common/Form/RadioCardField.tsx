@@ -3,6 +3,8 @@ import { Field, FieldProps } from 'formik';
 import { Button, CardProps, Grid, GridProps, Stack, StackProps, Typography } from '@mui/material';
 import { BeanstalkPalette } from '../../App/muiTheme';
 
+import { FC } from '~/types';
+
 export type RadioCardFieldProps = {
   name: string;
   options: ({ 
@@ -12,7 +14,7 @@ export type RadioCardFieldProps = {
   })[];
 }
 
-const RadioCardField: React.FC<(
+const RadioCardField: FC<(
   RadioCardFieldProps & 
   StackProps & 
   CardProps & 

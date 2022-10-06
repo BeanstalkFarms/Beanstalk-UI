@@ -8,7 +8,9 @@ import TokenIcon from '../TokenIcon';
 import DropdownIcon from '../DropdownIcon';
 import NetworkDialog from './NetworkDialog';
 
-const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
+import { FC } from '~/types';
+
+const NetworkButton: FC<ButtonProps> = ({ ...props }) => {
   const { activeChain } = useNetwork();
 
   /// Dialog

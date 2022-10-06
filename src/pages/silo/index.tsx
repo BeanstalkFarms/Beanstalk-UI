@@ -23,7 +23,9 @@ import {
   HOW_TO_DEPOSIT_IN_THE_SILO
 } from '~/util/Guides';
 
-const SiloPage : React.FC = () => {
+import { FC } from '~/types';
+
+const SiloPage : FC = () => {
   /// Helpers
   const getChainToken = useGetChainToken();
   

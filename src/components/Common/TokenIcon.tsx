@@ -1,7 +1,9 @@
 import React from 'react';
 import Token from '~/classes/Token';
 
-const TokenIcon : React.FC<{
+import { FC } from '~/types';
+
+const TokenIcon : FC<{
   token: Token;
   style?: any;
 }> = ({ token, style }) => (

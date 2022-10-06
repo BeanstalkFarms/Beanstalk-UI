@@ -20,11 +20,13 @@ import { BEAN } from '~/constants/tokens';
 import { AppState } from '~/state';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 function getSunriseReward(now: DateTime) {
   return new BigNumber(100 * (1.01 ** (Math.min((now.minute * 60) + now.second, 300))));
 }
 
-const SunriseButton : React.FC = () => {
+const SunriseButton : FC = () => {
   /// Ledger
   const { data: signer }  = useSigner();
   const beanstalk         = useBeanstalkContract(signer);

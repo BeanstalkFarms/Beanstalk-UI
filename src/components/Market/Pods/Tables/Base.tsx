@@ -4,6 +4,8 @@ import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { BeanstalkPalette, FontSize } from '~/components/App/muiTheme';
 import ArrowPagination from '../../../Common/ArrowPagination';
 
+import { FC } from '~/types';
+
 const marketplaceTableStyle = {
   '& .MuiDataGrid-root': {
     outline: 'none',
@@ -77,7 +79,7 @@ export type MarketBaseTableProps = {
   maxRows?: number;
 }
 
-const MarketBaseTable: React.FC<
+const MarketBaseTable: FC<
   MarketBaseTableProps & 
   DataGridProps
 > = ({

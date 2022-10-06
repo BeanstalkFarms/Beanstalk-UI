@@ -21,15 +21,17 @@ import { BEAN, PODS, SEEDS, SPROUTS, STALK, USDC } from '~/constants/tokens';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import AddressIcon from '~/components/Common/AddressIcon';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
 
 // -----------------------------------------------------------------------
 
-const IconRow : React.FC<{ spacing?: number }> = ({ children, spacing = 0.75 }) => (
+const IconRow : FC<{ spacing?: number }> = ({ children, spacing = 0.75 }) => (
   <Row sx={{ height: '100%' }} spacing={spacing}>
     {children}
   </Row>
 );
-const ActionTokenImage : React.FC<{ token: Token }> = ({ token }) => (
+
+const ActionTokenImage : FC<{ token: Token }> = ({ token }) => (
   <img
     key={token.address}
     src={token.logo}
@@ -38,7 +40,7 @@ const ActionTokenImage : React.FC<{ token: Token }> = ({ token }) => (
   />
 );
 
-const SwapStep : React.FC<{ actions: SwapAction[] }> = ({ actions }) => {
+const SwapStep : FC<{ actions: SwapAction[] }> = ({ actions }) => {
   const data = actions.reduce((agg, a) => {
     if (!agg.in.addrs.has(a.tokenIn.address)) {
       agg.in.addrs.add(a.tokenIn.address);
@@ -72,7 +74,7 @@ const SwapStep : React.FC<{ actions: SwapAction[] }> = ({ actions }) => {
   );
 };
 
-const TxnStep : React.FC<{
+const TxnStep : FC<{
   type: ActionType;
   actions: Action[];
   highlighted: ActionType | undefined;
@@ -323,7 +325,7 @@ const EXECUTION_STEPS = [
 const TXN_PREVIEW_HEIGHT = 35;
 const TXN_PREVIEW_LINE_WIDTH = 5;
 
-const TxnPreview : React.FC<{
+const TxnPreview : FC<{
   actions: (Action | undefined)[]
 }> = ({
   actions

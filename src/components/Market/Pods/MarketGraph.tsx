@@ -26,7 +26,10 @@ import StatHorizontal from '~/components/Common/StatHorizontal';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN, PODS } from '~/constants/tokens';
 
+import { FC } from '~/types';
 import './MarketGraph.css';
+
+/// //////////////////////////////// WRAPPER ///////////////////////////////////
 
 const useStyles = makeStyles({
   relative: {
@@ -177,13 +180,13 @@ const rescaleXWithZoom = (scale: any, zoom: any) => {
 
 /// //////////////////////////////// COMPONENTS ///////////////////////////////////
 
-const TooltipCard : React.FC<CardProps> = ({ children, sx, ...props }) => (
+const TooltipCard : FC<CardProps> = ({ children, sx, ...props }) => (
   <Card sx={{ backgroundColor: BeanstalkPalette.lightestBlue, px: 0.5, py: 0.5, ...sx }} {...props}>
     {children}
   </Card>
 );
 
-const SelectedPointPopover : React.FC<{ 
+const SelectedPointPopover : FC<{ 
   selectedPoint: TooltipData;
   listings: PodListing[];
   orders: PodOrder[];
@@ -271,7 +274,7 @@ const SelectedPointPopover : React.FC<{
 
 /// //////////////////////////////// GRAPH ///////////////////////////////////
 
-const Graph: React.FC<GraphProps> = ({
+const Graph: FC<GraphProps> = ({
   height,
   width,
   listings,
@@ -788,9 +791,7 @@ const Graph: React.FC<GraphProps> = ({
   );
 };
 
-/// //////////////////////////////// WRAPPER ///////////////////////////////////
-
-const MarketGraph: React.FC<MarketGraphProps> = (props) => (
+const MarketGraph: FC<MarketGraphProps> = (props) => (
   <ParentSize debounceTime={50}>
     {({ width: visWidth, height: visHeight }) => (
       <Graph

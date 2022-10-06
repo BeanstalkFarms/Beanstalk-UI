@@ -11,7 +11,9 @@ import useToggle from '~/hooks/display/useToggle';
 import { RouteData } from './routes';
 import MenuItem from './MenuItem';
 
-const HoverMenu: React.FC<{
+import { FC } from '~/types';
+
+const HoverMenu: FC<{
   items: RouteData[];
 }> = ({
   children,

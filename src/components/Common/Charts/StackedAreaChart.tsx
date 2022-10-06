@@ -16,6 +16,11 @@ import BigNumber from 'bignumber.js';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { displayBN } from '~/util';
 import { CURVES } from '~/components/Common/Charts/LineChart';
+import { FC } from '~/types';
+
+// ------------------------
+//       Stacked Area Chart
+// ------------------------
 
 export type Scale = {
   xScale: ReturnType<typeof scaleLinear>;
@@ -111,7 +116,7 @@ const yTickLabelProps = () => ({
   textAnchor: 'end',
 } as const);
 
-const Graph: React.FC<GraphProps> = (props) => {
+const Graph: FC<GraphProps> = (props) => {
   const {
     // Chart sizing
     width,
@@ -391,11 +396,7 @@ const Graph: React.FC<GraphProps> = (props) => {
   );
 };
 
-// ------------------------
-//       Stacked Area Chart
-// ------------------------
-
-const StackedAreaChart: React.FC<LineChartProps> = (props) => (
+const StackedAreaChart: FC<LineChartProps> = (props) => (
   <ParentSize debounceTime={50}>
     {({ width: visWidth, height: visHeight }) => (
       <Graph

@@ -13,11 +13,13 @@ import { displayBN, displayFullBN } from '../../../../util';
 import { IconSize } from '../../../App/muiTheme';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 export type OrderDetailsProps = {
   podOrder: PodOrder | undefined;
 }
 
-const OrderDetails: React.FC<OrderDetailsProps> = ({
+const OrderDetails: FC<OrderDetailsProps> = ({
   podOrder,
 }) => {
   if (!podOrder) return null;

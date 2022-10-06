@@ -9,7 +9,9 @@ import ChopConditions from '../components/Chop/ChopConditions';
 import GuideButton from '~/components/Common/Guide/GuideButton';
 import { HOW_TO_CHOP_UNRIPE_BEANS } from '~/util/Guides';
 
-const ChopPage: React.FC = () => (
+import { FC } from '~/types';
+
+const ChopPage: FC = () => (
   <Container maxWidth="sm">
     <Stack spacing={2}>
       <PageHeader 

@@ -9,7 +9,9 @@ import { ETH } from '~/constants/tokens';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import Row from '~/components/Common/Row';
 
-const NetworkDialog: React.FC<{
+import { FC } from '~/types';
+
+const NetworkDialog: FC<{
   open: boolean;
   handleClose: () => void;
 }> = ({

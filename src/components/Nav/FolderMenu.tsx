@@ -24,7 +24,9 @@ import { PAGE_BORDER_COLOR } from '~/components/App/muiTheme';
  *             out of the button. See <PriceButton/> for example.
  * On mobile:  Clicking the Button shows a Drawer.
  */
-const FolderMenu: React.FC<{
+import { FC } from '~/types';
+
+const FolderMenu: FC<{
   startIcon?: any;
   buttonContent: JSX.Element;
   popoverContent: JSX.Element;

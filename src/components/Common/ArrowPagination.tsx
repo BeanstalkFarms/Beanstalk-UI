@@ -7,6 +7,8 @@ import { gridPageCountSelector, gridPageSelector, useGridApiContext, useGridSele
 import { BeanstalkPalette, FontSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 const useStyles = makeStyles({
   arrow: {
     fontSize: FontSize.lg,
@@ -14,7 +16,7 @@ const useStyles = makeStyles({
   }
 });
 
-const ArrowPagination: React.FC<{}> = () => {
+const ArrowPagination: FC<{}> = () => {
   const classes = useStyles();
   const apiRef = useGridApiContext();
   const page = useGridSelector(apiRef, gridPageSelector);

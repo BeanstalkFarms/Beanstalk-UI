@@ -3,7 +3,9 @@ import React from 'react';
 import { Token } from 'graphql';
 import Row from '~/components/Common/Row';
 
-export const ChipLabel : React.FC<{ name: string; token?: Token }> = ({ name, children }) => (
+export import { FC } from '~/types';
+
+const ChipLabel : FC<{ name: string; token?: Token }> = ({ name, children }) => (
   <Row gap={0.2}>
     {name}&nbsp;
     <Chip label={children} size="small" sx={{ fontWeight: 'bold' }} />

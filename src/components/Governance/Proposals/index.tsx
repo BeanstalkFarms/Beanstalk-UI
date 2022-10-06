@@ -6,10 +6,12 @@ import { useProposalsQuery } from '~/generated/graphql';
 import { Proposal, SNAPSHOT_SPACES } from '~/util/Governance';
 import { Module, ModuleContent, ModuleTabs } from '~/components/Common/Module';
 
+import { FC } from '~/types';
+
 /// Variables
 const SLUGS = ['dao', 'beanstalk-farms', 'bean-sprout'];
 
-const Proposals: React.FC = () => {
+const Proposals: FC = () => {
   const [tab, handleChange] = useTabs(SLUGS, 'type');
 
   // Query Proposals

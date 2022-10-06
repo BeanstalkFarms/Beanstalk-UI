@@ -4,7 +4,9 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { FontSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
 
-const StatHorizontal : React.FC<{
+import { FC } from '~/types';
+
+const StatHorizontal : FC<{
   label: string,
   labelTooltip?: string,
 }> = ({

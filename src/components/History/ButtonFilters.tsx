@@ -20,7 +20,9 @@ export interface ButtonTabsProps {
   title: string;
 }
 
-const ButtonFilters: React.FC<ButtonTabsProps> = ({title}) => {
+import { FC } from '~/types';
+
+const ButtonFilters: FC<ButtonTabsProps> = ({title}) => {
   const classes = useStyles();
   return (
     <Row gap={1}>

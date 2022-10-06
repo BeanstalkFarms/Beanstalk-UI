@@ -4,7 +4,9 @@ import { IconSize } from '~/components/App/muiTheme';
 import AddressIcon from './AddressIcon';
 import Row from '~/components/Common/Row';
 
-const FarmerChip : React.FC<{ account: string }> = ({ account }) => (
+import { FC } from '~/types';
+
+const FarmerChip : FC<{ account: string }> = ({ account }) => (
   <Button
     size="small"
     variant="outlined"

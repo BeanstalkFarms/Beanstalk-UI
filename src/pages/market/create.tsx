@@ -6,7 +6,9 @@ import {
 import PageHeader from '~/components/Common/PageHeader';
 import MarketActions from '../../components/Market/Pods/Actions';
 
-const CreatePage: React.FC = () => (
+import { FC } from '~/types';
+
+const CreatePage: FC = () => (
   <Container maxWidth="sm">
     <Stack spacing={2}>
       <PageHeader returnPath="/market/account" />

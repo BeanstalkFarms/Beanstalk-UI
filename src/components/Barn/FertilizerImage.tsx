@@ -8,6 +8,8 @@ import fertUsedImage from '~/img/tokens/fert-logo-used.svg';
 import { BeanstalkPalette } from '../App/muiTheme';
 import './FertilizerImage.css';
 
+import { FC } from '~/types';
+
 export type FertilizerState = 'unused' | 'active' | 'used'
 export const FERTILIZER_ICONS : { [key in FertilizerState]: string } = {
   unused: fertUnusedImage,
@@ -21,7 +23,7 @@ export type FertilizerImageProps = {
   id?: BigNumber;
 };
 
-const FertilizerImage : React.FC<FertilizerImageProps> = ({
+const FertilizerImage : FC<FertilizerImageProps> = ({
   state = 'unused',
   isNew = false,
   progress,

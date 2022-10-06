@@ -11,6 +11,8 @@ import { ClaimRewardsAction } from '../../lib/Beanstalk/Farm';
 import { hoverMap } from '../../constants/silo';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 export type RewardsBarProps = {
   beans: FarmerSiloRewards['beans'];
   stalk: FarmerSiloRewards['stalk'];
@@ -31,7 +33,7 @@ export type RewardsBarProps = {
   hideRevitalized?: boolean;
 };
 
-const RewardsBar: React.FC<RewardsBarProps & { compact?: boolean }> = (
+const RewardsBar: FC<RewardsBarProps & { compact?: boolean }> = (
   {
     beans,
     stalk,

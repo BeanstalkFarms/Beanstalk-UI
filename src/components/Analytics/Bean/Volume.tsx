@@ -5,6 +5,8 @@ import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/Seas
 import { SeasonalVolumeDocument, SeasonalVolumeQuery } from '~/generated/graphql';
 import useSeason from '~/hooks/beanstalk/useSeason';
 
+import { FC } from '~/types';
+
 const getValue = (season: SeasonalVolumeQuery['seasons'][number]) => parseFloat(season.hourlyVolumeUSD);
 const formatValue = (value: number) => `$${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const statProps = {
@@ -18,7 +20,7 @@ const lineChartProps : Partial<LineChartProps> = {
   yTickFormat: tickFormatUSD,
 };
 
-const Volume: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => {
+const Volume: FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => {
   const season = useSeason();
   return (
     <SeasonPlot

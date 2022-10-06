@@ -24,10 +24,11 @@ import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { BEAN, PODS } from '~/constants/tokens';
 import copy from '~/constants/copy';
-import FarmModeField from '../../Common/Form/FarmModeField';
-import TransactionToast from '../../Common/TxnToast';
-import { ZERO_BN } from '../../../constants';
-import TokenAdornment from '../../Common/Form/TokenAdornment';
+import FarmModeField from '~/components/Common/Form/FarmModeField';
+import TransactionToast from '~/components/Common/TxnToast';
+import { ZERO_BN } from '~/constants';
+import TokenAdornment from '~/components/Common/Form/TokenAdornment';
+import { FC } from '~/types';
 
 // -----------------------------------------------------------------------
 
@@ -38,7 +39,7 @@ type HarvestFormValues = {
 
 // -----------------------------------------------------------------------
 
-const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
+const HarvestForm: FC<FormikProps<HarvestFormValues> & {
   harvestablePods: BigNumber;
   farm: Farm;
 }> = ({
@@ -138,9 +139,7 @@ const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
   );
 };
 
-// -----------------------------------------------------------------------
-
-const Harvest: React.FC<{}> = () => {
+const Harvest: FC<{}> = () => {
   ///
   const { data: account } = useAccount();
   const provider = useProvider();

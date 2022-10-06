@@ -4,6 +4,7 @@ import { Field, FieldProps } from 'formik';
 import useToggle from '~/hooks/display/useToggle';
 import DescriptionButton from '../DescriptionButton';
 import PillDialogField from './PillDialogField';
+import { FC } from '~/types';
 
 export type PillSelectFieldProps = {
   /** Options */
@@ -23,7 +24,8 @@ export type PillSelectFieldProps = {
   /** */
   onChange?: (v: any) => void;
 };
-const PillSelectField : React.FC<PillSelectFieldProps> = ({
+
+const PillSelectField : FC<PillSelectFieldProps> = ({
   options,
   name,
   label,

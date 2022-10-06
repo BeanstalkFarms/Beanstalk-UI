@@ -11,9 +11,11 @@ import { ZERO_BN } from '~/constants';
 import useSiloTokenToFiat from '~/hooks/beanstalk/useSiloTokenToFiat';
 import TableCard from '../../Common/TableCard';
 
+import { FC } from '~/types';
+
 type RowData = WithdrawalCrate & { id: BigNumber };
 
-const Withdrawals : React.FC<{
+const Withdrawals : FC<{
   token: Token;
   siloBalance: FarmerSiloBalance | undefined;
 }> = ({

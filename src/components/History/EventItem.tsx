@@ -9,6 +9,7 @@ import { Event } from '~/lib/Beanstalk/EventProcessor';
 import TokenIcon from '../Common/TokenIcon';
 import useTokenMap from '../../hooks/chain/useTokenMap';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
 
 export interface EventItemProps {
   event: Event;
@@ -20,7 +21,7 @@ export interface EventItemProps {
  * - "in"  = I receive something.
  * - "out" = I spend something.
  */
-const TokenDisplay: React.FC<{
+const TokenDisplay: FC<{
   color?: 'green' | 'red';
   input?: [BigNumber, Token],
 }> = (props) => (
@@ -39,7 +40,7 @@ const TokenDisplay: React.FC<{
   </div>
 );
 
-const EventItem: React.FC<EventItemProps> = ({ event, account }) => {
+const EventItem: FC<EventItemProps> = ({ event, account }) => {
   // const [expanded, setExpanded] = useState(false);
   let eventTitle = `${event.event}`;
   let amountIn;

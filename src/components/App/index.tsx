@@ -52,9 +52,11 @@ import './App.css';
 import { PAGE_BG_COLOR } from './muiTheme';
 import useAccount from '~/hooks/ledger/useAccount';
 
+import { FC } from '~/types';
+
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
-const CustomToaster: React.FC<{ navHeight: number }> = ({ navHeight }) => (
+const CustomToaster: FC<{ navHeight: number }> = ({ navHeight }) => (
   <Toaster
     containerStyle={{
       top: navHeight + 10,

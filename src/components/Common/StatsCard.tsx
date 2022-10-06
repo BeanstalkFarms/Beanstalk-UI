@@ -7,6 +7,12 @@ import { displayFullBN } from '~/util';
 import { Token } from '~/classes';
 import { BeanstalkPalette }  from '~/components/App/muiTheme';
 
+/**
+ * Show a Card with multiple statistics inside.
+ * Shown at the bottom of the Balances page & Beanstalk total assets.
+ */
+import { FC } from '~/types';
+
 export type StatItem = {
   title: string;
   tooltip: string;
@@ -15,11 +21,7 @@ export type StatItem = {
   amountModifier?: BigNumber;
 }
 
-/**
- * Show a Card with multiple statistics inside.
- * Shown at the bottom of the Balances page & Beanstalk total assets.
- */
-const StatsCard: React.FC<{
+const StatsCard: FC<{
   stats: StatItem[];
 } & CardProps> = ({ stats }, props) => (
   <Card sx={{ p: 1, borderColor: BeanstalkPalette.lightestGrey }} {...props}>

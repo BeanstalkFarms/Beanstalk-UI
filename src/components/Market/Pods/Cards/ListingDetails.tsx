@@ -11,7 +11,9 @@ import { displayBN } from '~/util';
 import { PodListing } from '~/state/farmer/market';
 import Row from '~/components/Common/Row';
 
-const ListingDetails: React.FC<{
+import { FC } from '~/types';
+
+const ListingDetails: FC<{
   podListing: PodListing;
   harvestableIndex: BigNumber;
 }> = ({

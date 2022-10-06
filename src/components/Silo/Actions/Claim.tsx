@@ -39,6 +39,7 @@ import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import { BEAN_CRV3_LP } from '~/constants/tokens';
 import copy from '~/constants/copy';
+import { FC } from '~/types';
 
 // -----------------------------------------------------------------------
 
@@ -60,9 +61,7 @@ type ClaimFormValues = {
   }
 };
 
-// -----------------------------------------------------------------------
-
-const ClaimForm : React.FC<
+const ClaimForm : FC<
   FormikProps<ClaimFormValues> & {
     token: Token;
     claimableBalance: BigNumber;
@@ -265,7 +264,7 @@ const ClaimForm : React.FC<
 
 // -----------------------------------------------------------------------
 
-const Claim : React.FC<{
+const Claim : FC<{
   token: ERC20Token;
   siloBalance: FarmerSiloBalance;
 }> = ({

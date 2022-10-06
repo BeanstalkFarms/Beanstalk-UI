@@ -13,13 +13,15 @@ import { EventCacheName } from '../state/farmer/events2';
 import EmptyState from '../components/Common/ZeroState/EmptyState';
 import { Module, ModuleContent, ModuleTabs } from '~/components/Common/Module';
 
+import { FC } from '~/types';
+
 const facetByTab = {
   0: undefined,
   1: EventCacheName.SILO,
   2: EventCacheName.FIELD,
 };
 
-const TransactionHistoryPage: React.FC = () => {
+const TransactionHistoryPage: FC = () => {
   const account = useAccount();
   const [tab, setTab] = useState<0 | 1 | 2>(0);
   const events = useSelector<AppState, AppState['_farmer']['events2']>((state) => state._farmer.events2);

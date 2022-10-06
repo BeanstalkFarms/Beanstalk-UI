@@ -1,7 +1,9 @@
 import React from 'react';
 import { Card, CardProps } from '@mui/material';
 
-const EmbeddedCard: React.FC<CardProps> = ({ children, ...cardProps }) => (
+import { FC } from '~/types';
+
+const EmbeddedCard: FC<CardProps> = ({ children, ...cardProps }) => (
   <Card 
     {...cardProps} 
     sx={{ 

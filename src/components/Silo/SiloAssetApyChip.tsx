@@ -11,6 +11,8 @@ import { displayFullBN } from '~/util';
 import Stat from '../Common/Stat';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 
+import { FC } from '~/types';
+
 const TOOLTIP_COMPONENT_PROPS = {
   tooltip: {
     sx: {
@@ -26,7 +28,7 @@ type SiloAssetApyChipProps = {
   variant?: 'default' | 'labeled'
 };
 
-const SiloAssetApyChip: React.FC<SiloAssetApyChipProps> = ({ token, metric, variant = 'default' }) => {
+const SiloAssetApyChip: FC<SiloAssetApyChipProps> = ({ token, metric, variant = 'default' }) => {
   const { data: latestYield } = useAPY();
   const Bean = useChainConstant(BEAN);
   const isBean = metric === 'bean';

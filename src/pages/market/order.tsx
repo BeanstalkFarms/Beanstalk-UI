@@ -18,7 +18,9 @@ import OrderDetails from '../../components/Market/Pods/Cards/OrderDetails';
 import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
 import { Module, ModuleContent, ModuleHeader } from '~/components/Common/Module';
 
-const OrderPage: React.FC = () => {
+import { FC } from '~/types';
+
+const OrderPage: FC = () => {
   const account = useAccount();
   const { id } = useParams<{ id: string }>();
   const { data: order, source, loading, error } = usePodOrder(id);

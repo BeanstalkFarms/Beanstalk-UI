@@ -4,7 +4,9 @@ import Vote from '~/components/Governance/Actions/Vote';
 import { Module, ModuleContent, ModuleHeader } from '~/components/Common/Module';
 import { Proposal } from '~/util/Governance';
 
-const GovernanceActions : React.FC<{ proposal: Proposal }> = (props) => (
+import { FC } from '~/types';
+
+const GovernanceActions : FC<{ proposal: Proposal }> = (props) => (
   <Module sx={{ position: 'sticky', top: 120 }}>
     <ModuleHeader>
       <Typography variant="h4">Results</Typography>

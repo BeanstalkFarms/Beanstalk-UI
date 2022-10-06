@@ -8,7 +8,9 @@ import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
 
-const CancelListing : React.FC<{ id: string }> = ({ id }) => {
+import { FC } from '~/types';
+
+const CancelListing : FC<{ id: string }> = ({ id }) => {
   /// Helpers
   const navigate = useNavigate();
   

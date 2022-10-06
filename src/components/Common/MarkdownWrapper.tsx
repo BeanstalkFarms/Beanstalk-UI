@@ -5,7 +5,9 @@ import { BeanstalkPalette, FontSize, FontWeight } from '~/components/App/muiThem
 /**
  * Styles Markdown text to match MUI theme.
  */
-const MarkdownWrapper: React.FC = ({ children }) => (
+import { FC } from '~/types';
+
+const MarkdownWrapper: FC = ({ children }) => (
   <MuiMarkdown
     overrides={{
       li: {

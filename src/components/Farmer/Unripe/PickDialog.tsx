@@ -37,6 +37,10 @@ import Row from '~/components/Common/Row';
 
 // ----------------------------------------------------
 
+import { FC } from '~/types';
+
+// ----------------------------------------------------
+
 type UnripeKeys = (
   // Beans
   'circulatingBeans' |
@@ -94,9 +98,7 @@ const tokenOrZero = (amount: string | undefined, token: Token) => {
   return toTokenUnitsBN(amount, token.decimals);
 };
 
-// ----------------------------------------------------
-
-const PickBeansDialog: React.FC<{
+const PickBeansDialog: FC<{
   handleClose: any;
 } & DialogProps> = ({
   open,

@@ -6,7 +6,9 @@ import {
 } from '@mui/material';
 import forecast from '~/img/beanstalk/forecast-banner.svg';
 
-const PageNotFound: React.FC = () => (
+import { FC } from '~/types';
+
+const PageNotFound: FC = () => (
   <Container maxWidth="md">
     <Card sx={{ px: 4, py: 6 }}>
       <Stack direction="column" alignItems="center" justifyContent="center" gap={1}>

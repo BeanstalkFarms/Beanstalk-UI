@@ -3,6 +3,8 @@ import { Box, IconButton, Menu, Stack, Typography } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 
+import { FC } from '~/types';
+
 const PLACEMENTS = {
   'form-top-right': {
     position: 'absolute',
@@ -13,7 +15,7 @@ const PLACEMENTS = {
   },
 };
 
-const TxnSettings : React.FC<{
+const TxnSettings : FC<{
   placement?: 'form-top-right',
 }> = ({ 
   placement = 'form-top-right',

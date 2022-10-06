@@ -16,6 +16,7 @@ import { Module, ModuleTabs } from '~/components/Common/Module';
 import OverviewPlot from '~/components/Silo/OverviewPlot';
 import Stat from '~/components/Common/Stat';
 import useFarmerSiloOverview from '~/hooks/farmer/useFarmerSiloOverview';
+import { FC } from '~/types';
 
 const depositStats = (s: BigNumber, v: BigNumber[]) => (
   <Stat
@@ -51,7 +52,8 @@ const seedsStats = (s: BigNumber, v: BigNumber[]) => (
 );
 
 const SLUGS = ['deposits', 'stalk'];
-const Overview: React.FC<{
+
+const Overview: FC<{
   farmerSilo:     AppState['_farmer']['silo'];
   beanstalkSilo:  AppState['_beanstalk']['silo'];
   breakdown:      ReturnType<typeof useFarmerBalancesBreakdown>;

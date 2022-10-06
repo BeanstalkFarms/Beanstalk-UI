@@ -8,7 +8,9 @@ import OutputField from './OutputField';
 import { IconSize } from '../../App/muiTheme';
 import Row from '~/components/Common/Row';
 
-const TokenOutputField : React.FC<{
+import { FC } from '~/types';
+
+const TokenOutputField : FC<{
   /** */
   token: Token;
   /** The `amount` of `token` */

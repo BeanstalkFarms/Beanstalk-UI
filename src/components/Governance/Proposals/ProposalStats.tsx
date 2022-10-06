@@ -7,7 +7,9 @@ import Dot from '~/components/Common/Dot';
 import { ZERO_BN } from '~/constants';
 import Row from '~/components/Common/Row';
 
-const ProposalStats: React.FC<{
+import { FC } from '~/types';
+
+const ProposalStats: FC<{
   proposal: Proposal;
   differenceInTime?: number;
   totalStalk?: BigNumber;

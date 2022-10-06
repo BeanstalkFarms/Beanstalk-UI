@@ -5,6 +5,7 @@ import { ethers } from 'ethers';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import toast from 'react-hot-toast';
 import { useConnect } from 'wagmi';
+import BigNumber from 'bignumber.js';
 import {
   FormApprovingState, FormTokenState,
   SettingInput,
@@ -42,6 +43,7 @@ import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSumma
 import { ActionType } from '~/util/Actions';
 import WarningIcon from '~/components/Common/Alert/WarningIcon';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
 
 /// ---------------------------------------------------------------
 
@@ -76,9 +78,7 @@ const QUOTE_SETTINGS = {
 
 const Quoting = <CircularProgress variant="indeterminate" size="small" sx={{ width: 14, height: 14 }} />;
 
-/// ---------------------------------------------------------------
-
-const SwapForm: React.FC<FormikProps<SwapFormValues> & {
+const SwapForm: FC<FormikProps<SwapFormValues> & {
   balances: ReturnType<typeof useFarmerBalances>;
   beanstalk: Beanstalk;
   handleQuote: DirectionalQuoteHandler;
@@ -198,7 +198,7 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
   /// When amountIn changes, refresh amountOut
   /// Only refresh if amountIn was changed by user input,
   /// i.e. not by another hook
-  const handleChangeAmountIn = useCallback((_amountInClamped) => {
+  const handleChangeAmountIn = useCallback((_amountInClamped: BigNumber | undefined) => {
     console.debug('[TokenInput] handleChangeAmountIn', _amountInClamped);
     if (_amountInClamped) {
       getAmountOut(tokenIn, _amountInClamped);
@@ -206,7 +206,7 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
       setFieldValue('tokenOut.amount', undefined);
     }
   }, [tokenIn, getAmountOut, setFieldValue]);
-  const handleChangeAmountOut = useCallback((_amountOutClamped) => {
+  const handleChangeAmountOut = useCallback((_amountOutClamped: BigNumber | undefined) => {
     console.debug('[TokenInput] handleChangeAmountOut',   _amountOutClamped);
     if (_amountOutClamped) {
       console.debug('[TokenInput] getMinAmountIn', [tokenOut, _amountOutClamped]);
@@ -602,7 +602,8 @@ const isPair = (_tokenIn : Token, _tokenOut : Token, _pair : [Token, Token]) => 
  * USDC   -> USDT     exchange(USDC, USDT, 3POOL)
  * ...etc
  */
-const Swap: React.FC<{}> = () => {
+
+const Swap: FC<{}> = () => {
   ///
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);

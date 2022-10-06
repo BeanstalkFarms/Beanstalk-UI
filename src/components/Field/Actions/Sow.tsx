@@ -42,19 +42,20 @@ import { useFetchPools } from '~/state/bean/pools/updater';
 import { AppState } from '~/state';
 import { BEAN, ETH, PODS, WETH } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
-import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
-import { ActionType } from '../../../util/Actions';
-import { IconSize } from '../../App/muiTheme';
-import IconWrapper from '../../Common/IconWrapper';
-import TokenIcon from '../../Common/TokenIcon';
+import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
+import { ActionType } from '~/util/Actions';
+import { IconSize } from '~/components/App/muiTheme';
+import IconWrapper from '~/components/Common/IconWrapper';
+import TokenIcon from '~/components/Common/TokenIcon';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
 
 type SowFormValues = FormState & {
   settings: SlippageSettingsFragment;
   maxAmountIn: BigNumber | undefined;
 };
 
-const SowForm : React.FC<
+const SowForm : FC<
   FormikProps<SowFormValues>
   & {
     handleQuote: QuoteHandler;
@@ -293,7 +294,7 @@ const PREFERRED_TOKENS : PreferredToken[] = [
   }
 ];
 
-const Sow : React.FC<{}> = () => {
+const Sow : FC<{}> = () => {
   /// Form
   const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
 

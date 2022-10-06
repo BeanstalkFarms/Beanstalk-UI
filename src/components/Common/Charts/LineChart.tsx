@@ -19,6 +19,12 @@ import { Axis, Orientation, TickFormatter } from '@visx/axis';
 import { CurveFactory } from 'd3-shape';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 
+// ------------------------
+//       Line Chart
+// ------------------------
+
+import { FC } from '~/types';
+
 export const CURVES = {
   linear: curveLinear,
   step: curveStep,
@@ -131,7 +137,7 @@ const yTickLabelProps = () => ({
 //      Graph (Inner)
 // ------------------------
 
-const Graph: React.FC<GraphProps> = (props) => {
+const Graph: FC<GraphProps> = (props) => {
   const {
     // Chart sizing
     width,
@@ -375,11 +381,7 @@ const Graph: React.FC<GraphProps> = (props) => {
   );
 };
 
-// ------------------------
-//       Line Chart
-// ------------------------
-
-const LineChart: React.FC<LineChartProps> = (props) => (
+const LineChart: FC<LineChartProps> = (props) => (
   <ParentSize debounceTime={50}>
     {({ width: visWidth, height: visHeight }) => (
       <Graph

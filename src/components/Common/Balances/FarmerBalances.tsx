@@ -8,7 +8,9 @@ import TokenRow from '~/components/Common/Balances/TokenRow';
 
 // ------------------------------------------------------
 
-const FarmerBalances: React.FC<{
+import { FC } from '~/types';
+
+const FarmerBalances: FC<{
   breakdown: ReturnType<typeof useFarmerBalancesBreakdown>;
   whitelist: any;
 }> = ({

@@ -1,7 +1,9 @@
 import { Box } from '@mui/material';
 import React from 'react';
 
-const TxnHistory : React.FC = () => (
+import { FC } from '~/types';
+
+const TxnHistory : FC = () => (
   <Box>Test</Box>
 );
 

@@ -39,12 +39,13 @@ import { optimizeFromMode } from '~/util/Farm';
 import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN, parseError, displayTokenAmount, displayBN } from '~/util';
 import { AppState } from '~/state';
 import { BEAN, ETH, PODS, WETH } from '~/constants/tokens';
-import { ONE_BN, ZERO_BN } from '~/constants';
-import { POD_MARKET_TOOLTIPS } from '../../../../constants/tooltips';
-import { BeanstalkPalette, IconSize } from '../../../App/muiTheme';
-import SliderField from '../../../Common/Form/SliderField';
-import FieldWrapper from '../../../Common/Form/FieldWrapper';
-import IconWrapper from '../../../Common/IconWrapper';
+import { ONE_BN, ZERO_BN, POD_MARKET_TOOLTIPS } from '~/constants';
+import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
+import SliderField from '~/components/Common/Form/SliderField';
+import FieldWrapper from '~/components/Common/Form/FieldWrapper';
+import IconWrapper from '~/components/Common/IconWrapper';
+
+import { FC } from '~/types';
 
 export type CreateOrderFormValues = {
   placeInLine: BigNumber | null;
@@ -77,7 +78,7 @@ const PricePerPodInputProps = {
 
 const SLIDER_FIELD_KEYS = ['placeInLine'];
 
-const CreateOrderForm : React.FC<
+const CreateOrderForm : FC<
   FormikProps<CreateOrderFormValues>
   & {
     podLine: BigNumber;
@@ -238,7 +239,7 @@ const CreateOrderForm : React.FC<
 
 // ---------------------------------------------------
 
-const CreateOrder : React.FC<{}> = () => {
+const CreateOrder : FC<{}> = () => {
   ///
   const getChainToken = useGetChainToken();
   const Eth   = useChainConstant(ETH);

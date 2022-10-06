@@ -36,9 +36,10 @@ import useBDV from '~/hooks/beanstalk/useBDV';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { useFetchPools } from '~/state/bean/pools/updater';
 import { ActionType } from '~/util/Actions';
-import { IconSize } from '../../App/muiTheme';
-import IconWrapper from '../../Common/IconWrapper';
+import { IconSize } from '~/components/App/muiTheme';
+import IconWrapper from '~/components/Common/IconWrapper';
 import useFarmerSilo from '~/hooks/farmer/useFarmerSilo';
+import { FC } from '~/types';
 
 // -----------------------------------------------------------------------
 
@@ -60,7 +61,7 @@ const INIT_CONVERSION = {
   actions: []
 };
 
-const ConvertForm : React.FC<
+const ConvertForm : FC<
   FormikProps<ConvertFormValues> & {
     /** List of tokens that can be converted to. */
     tokenList: (ERC20Token | NativeToken)[];
@@ -341,7 +342,7 @@ const ConvertForm : React.FC<
 
 // -----------------------------------------------------------------------
 
-const Convert : React.FC<{
+const Convert : FC<{
   pool: Pool;
   fromToken: ERC20Token | NativeToken;
 }> = ({

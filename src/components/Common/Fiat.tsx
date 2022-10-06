@@ -9,7 +9,9 @@ import { displayBN, displayFullBN } from '~/util';
 import { ZERO_BN } from '~/constants';
 import Row from '~/components/Common/Row';
 
-const Fiat : React.FC<{
+import { FC } from '~/types';
+
+const Fiat : FC<{
   /* The USD value of `amount`. If provided, we don't try to derive via `siloTokenToFiat`. */
   value?: BigNumber,
   token?: Token,

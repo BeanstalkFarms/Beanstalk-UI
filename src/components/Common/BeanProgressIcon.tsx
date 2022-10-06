@@ -1,10 +1,12 @@
 import React from 'react';
 import { CircularProgress, CircularProgressProps, Stack } from '@mui/material';
 import beanCircleIcon from '~/img/tokens/bean-logo-circled.svg';
+import { FC } from '~/types';
 
 const PROGRESS_THICKNESS = 2;
 const PROGRESS_GAP = 3.5;
-const BeanProgressIcon : React.FC<CircularProgressProps & {
+
+const BeanProgressIcon : FC<CircularProgressProps & {
   size: number;
   enabled: boolean;
   progress?: number;

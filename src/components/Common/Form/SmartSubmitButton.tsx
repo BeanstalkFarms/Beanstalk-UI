@@ -20,17 +20,19 @@ import { FormState, FormTokenState } from '.';
 import WalletButton from '../Connection/WalletButton';
 import Row from '~/components/Common/Row';
 
-const CONTRACT_NAMES : { [address: string] : string } = {
-  [BEANSTALK_ADDRESSES[SupportedChainId.MAINNET]]: 'Beanstalk',
-  [BEANSTALK_FERTILIZER_ADDRESSES[SupportedChainId.MAINNET]]: 'Beanstalk Fertilizer',
-};
-
 /**
  * FIXME:
  * - Since this depends on `tokens` which is derived directly from
  *   form state, it changes every time an input value changes.
  */
-const SmartSubmitButton : React.FC<{
+import { FC } from '~/types';
+
+const CONTRACT_NAMES : { [address: string] : string } = {
+  [BEANSTALK_ADDRESSES[SupportedChainId.MAINNET]]: 'Beanstalk',
+  [BEANSTALK_FERTILIZER_ADDRESSES[SupportedChainId.MAINNET]]: 'Beanstalk Fertilizer',
+};
+
+const SmartSubmitButton : FC<{
   /**
    * The contract we're interacting with. Must approve 
    * `contract.address` to use `tokens`.

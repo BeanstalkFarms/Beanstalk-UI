@@ -33,12 +33,13 @@ import { FontSize, IconSize } from '~/components/App/muiTheme';
 import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
 import { ActionType } from '~/util/Actions';
 import TransactionToast from '~/components/Common/TxnToast';
+import { FC } from '~/types';
 
 export type TransferFormValues = FormState & {
   to: string;
 }
 
-const TransferForm: React.FC<FormikProps<TransferFormValues> & {
+const TransferForm: FC<FormikProps<TransferFormValues> & {
   token: Token;
   siloBalances: FarmerSilo['balances'];
   depositedBalance: BigNumber;
@@ -192,7 +193,7 @@ const TransferForm: React.FC<FormikProps<TransferFormValues> & {
   );
 };
 
-const Transfer: React.FC<{ token: ERC20Token; }> = ({ token }) => {
+const Transfer: FC<{ token: ERC20Token; }> = ({ token }) => {
   ///
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);

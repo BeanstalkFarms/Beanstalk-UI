@@ -21,6 +21,12 @@ import useAPY from '~/hooks/beanstalk/useAPY';
 import stalkIconBlue from '~/img/beanstalk/stalk-icon-blue.svg';
 import SiloAssetApyChip from './SiloAssetApyChip';
 
+/**
+ * Display a pseudo-table of Whitelisted Silo Tokens.
+ * This table is the entry point to deposit Beans, LP, etc.
+ */
+import { FC } from '~/types';
+
 const ARROW_CONTAINER_WIDTH = 20;
 const TOOLTIP_COMPONENT_PROPS = {
   tooltip: {
@@ -31,11 +37,7 @@ const TOOLTIP_COMPONENT_PROPS = {
   }
 };
 
-/**
- * Display a pseudo-table of Whitelisted Silo Tokens.
- * This table is the entry point to deposit Beans, LP, etc.
- */
-const Whitelist : React.FC<{
+const Whitelist : FC<{
   farmerSilo: AppState['_farmer']['silo'];
   config: {
     whitelist: Token[];

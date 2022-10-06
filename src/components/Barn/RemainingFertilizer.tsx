@@ -11,7 +11,9 @@ import FertilizerImage from './FertilizerImage';
 import { FontSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
 
-const RemainingFertilizer: React.FC = () => {
+import { FC } from '~/types';
+
+const RemainingFertilizer: FC = () => {
   // eslint-disable-next-line unused-imports/no-unused-vars
   const [humidity, nextDecreaseAmount] = useHumidity();
   const { recapFundedPct, remaining } = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);

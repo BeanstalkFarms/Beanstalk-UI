@@ -26,6 +26,7 @@ import { BEAN, SPROUTS } from '~/constants/tokens';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { ActionType } from '~/util/Actions';
 import copy from '~/constants/copy';
+import { FC } from '~/types';
 
 // ---------------------------------------------------
 
@@ -36,7 +37,7 @@ type RinseFormValues = {
 
 // ---------------------------------------------------
 
-const RinseForm : React.FC<
+const RinseForm : FC<
   FormikProps<RinseFormValues>
 > = ({
   values,
@@ -117,9 +118,7 @@ const RinseForm : React.FC<
   );
 };
 
-// ---------------------------------------------------
-
-const Rinse : React.FC<{}> = () => {
+const Rinse : FC<{}> = () => {
   /// Wallet connection
   const account = useAccount();
   const { data: signer } = useSigner();

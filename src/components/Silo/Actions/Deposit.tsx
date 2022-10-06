@@ -40,6 +40,7 @@ import { AppState } from '~/state';
 import { useFetchPools } from '~/state/bean/pools/updater';
 import { useFetchBeanstalkSilo } from '~/state/beanstalk/silo/updater';
 import useFarm from '~/hooks/sdk/useFarm';
+import { FC } from '~/types';
 
 // -----------------------------------------------------------------------
 
@@ -51,7 +52,7 @@ type DepositFormValues = FormState & {
 
 // -----------------------------------------------------------------------
 
-const DepositForm : React.FC<
+const DepositForm : FC<
   FormikProps<DepositFormValues> & {
     tokenList: (ERC20Token | NativeToken)[];
     whitelistedToken: ERC20Token | NativeToken;
@@ -191,7 +192,7 @@ const DepositForm : React.FC<
 
 // -----------------------------------------------------------------------
 
-const Deposit : React.FC<{
+const Deposit : FC<{
   pool: Pool;
   token: ERC20Token | NativeToken;
 }> = ({

@@ -19,7 +19,9 @@ import TableCard from '../../Common/TableCard';
 /**
  * Prep data to loading to a CratesCard.
  */
-const Deposits : React.FC<{
+import { FC } from '~/types';
+
+const Deposits : FC<{
   token: Token;
   siloBalance: FarmerSiloBalance | undefined;
 }> = ({

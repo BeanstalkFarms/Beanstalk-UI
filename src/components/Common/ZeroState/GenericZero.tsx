@@ -2,7 +2,9 @@ import { Card, CircularProgress, Container, Stack } from '@mui/material';
 import React from 'react';
 import PageHeaderSecondary from '../PageHeaderSecondary';
 
-const GenericZero : React.FC<{
+import { FC } from '~/types';
+
+const GenericZero : FC<{
   title?: string;
   returnPath?: string;
   loading?: boolean;

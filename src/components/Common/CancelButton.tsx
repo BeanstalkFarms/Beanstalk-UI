@@ -4,7 +4,9 @@ import {
   Stack, Typography,
 } from '@mui/material';
 
-const CancelButton: React.FC<ButtonProps & { buttonText?: string; }> = ({ onClick, buttonText }) => (
+import { FC } from '~/types';
+
+const CancelButton: FC<ButtonProps & { buttonText?: string; }> = ({ onClick, buttonText }) => (
   <Stack justifyContent="end" height="100%">
     <Button sx={{ p: 1 }} onClick={onClick} color="cancel">
       <Typography variant="h4">

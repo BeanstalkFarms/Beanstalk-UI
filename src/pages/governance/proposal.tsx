@@ -13,7 +13,9 @@ import { useProposalQuery } from '~/generated/graphql';
 import { Proposal } from '~/util/Governance';
 import PageNotFound from '~/pages/error/404';
 
-const ProposalPage: React.FC = () => {
+import { FC } from '~/types';
+
+const ProposalPage: FC = () => {
   /// Routing
   const { id } = useParams<{ id: string }>();
 

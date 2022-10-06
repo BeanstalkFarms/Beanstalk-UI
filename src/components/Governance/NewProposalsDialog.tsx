@@ -15,7 +15,9 @@ import { getDateCountdown } from '~/util/Time';
 import { getProposalTag } from '~/util/Governance';
 import Row from '~/components/Common/Row';
 
-const NewProposalsDialog: React.FC = () => {
+import { FC } from '~/types';
+
+const NewProposalsDialog: FC = () => {
   /// Local state
   const [modalOpen, showModal, hideModal] = useToggle();
   const [unseenProposals, setUnseenProposals] = useState<ActiveProposal[]>([]);

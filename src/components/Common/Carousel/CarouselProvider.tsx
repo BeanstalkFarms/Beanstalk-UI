@@ -9,6 +9,7 @@ import React, {
 
 import { SpringRef, useSpringRef, useTransition } from 'react-spring';
 import { Lookup } from '@react-spring/types';
+export import { FC } from '~/types';
 
 type SlideDirection = 'right' | 'left';
 
@@ -76,7 +77,8 @@ const useCarouselController = ({
 const CarouselContext = createContext<CarouselContextReturn | undefined>(
   undefined
 );
-export const CarouselProvider: React.FC<CarouselProps> = ({
+
+const CarouselProvider: FC<CarouselProps> = ({
   total,
   children,
 }) => (

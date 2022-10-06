@@ -11,7 +11,9 @@ import { STALK } from '~/constants/tokens';
 import TokenIcon from '~/components/Common/TokenIcon';
 import Row from '~/components/Common/Row';
 
-const StalkholderCard : React.FC = () => {
+import { FC } from '~/types';
+
+const StalkholderCard : FC = () => {
   const account       = useAccount();
   const farmerSilo    = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   

@@ -5,14 +5,16 @@ import { LineChartProps } from '~/components/Common/Charts/LineChart';
 import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/SeasonPlot';
 import { SeasonalDepositedSiloAssetDocument, SeasonalDepositedSiloAssetQuery } from '~/generated/graphql';
 import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
-import { toTokenUnitsBN } from '~/util';
+import { toTokenUnitsBN } from '~/util'; 
+
+import { FC } from '~/types';
 
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const lineChartProps : Partial<LineChartProps> = {
   yTickFormat: tickFormatTruncated
-}; 
+};
 
-const DepositedAsset: React.FC<{
+const DepositedAsset: FC<{
   height?: SeasonPlotBaseProps['height'];
   account: string;
   asset: Token;

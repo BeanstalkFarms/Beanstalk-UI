@@ -18,7 +18,9 @@ import Row from '~/components/Common/Row';
 
 // -----------------------------------------------------------------
 
-const WalletDialog: React.FC<{
+import { FC } from '~/types';
+
+const WalletDialog: FC<{
   handleClose: () => void;
   open: boolean;
   fullScreen: boolean;

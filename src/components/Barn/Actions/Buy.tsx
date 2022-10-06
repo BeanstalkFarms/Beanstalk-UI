@@ -40,6 +40,7 @@ import { BEAN, ETH, USDC, USDT, WETH } from '~/constants/tokens';
 import FertilizerItem from '../FertilizerItem';
 import { optimizeFromMode } from '~/util/Farm';
 import useAccount from '~/hooks/ledger/useAccount';
+import { FC } from '~/types';
 
 // ---------------------------------------------------
 
@@ -66,7 +67,7 @@ const TOKEN_LIST = [BEAN, USDC, ETH];
 
 // ---------------------------------------------------
 
-const BuyForm : React.FC<
+const BuyForm : FC<
   FormikProps<BuyFormValues>
   & {
     contract: ethers.Contract;
@@ -181,9 +182,7 @@ const BuyForm : React.FC<
   );
 };
 
-// ---------------------------------------------------
-
-const Buy : React.FC<{}> = () => {
+const Buy : FC<{}> = () => {
   // Wallet connection
   const account = useAccount();
   const { data: signer } = useSigner();

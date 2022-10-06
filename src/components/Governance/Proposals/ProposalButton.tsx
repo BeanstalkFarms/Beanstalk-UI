@@ -12,7 +12,9 @@ import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
 import { Proposal } from '~/util/Governance';
 import Row from '~/components/Common/Row';
 
-const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
+import { FC } from '~/types';
+
+const ProposalButton: FC<{ proposal: Proposal }> = ({ proposal }) => {
   /// State
   const account = useAccount();
   const totalStalk = useSelector<AppState, BigNumber>((state) => state._beanstalk.silo.stalk.total);

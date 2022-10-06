@@ -2,7 +2,9 @@ import React from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IconProps } from '@mui/material';
 
-const DropdownIcon : React.FC<{
+import { FC } from '~/types';
+
+const DropdownIcon : FC<{
   open: boolean;
   mode?: 'vertical' | 'right-rotate',
 } & IconProps> = ({

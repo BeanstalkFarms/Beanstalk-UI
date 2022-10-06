@@ -37,16 +37,17 @@ import { BEAN, ETH, PODS, WETH } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
 import { PodListing } from '~/state/farmer/market';
 import { optimizeFromMode } from '~/util/Farm';
-import TokenIcon from '../../../Common/TokenIcon';
-import { IconSize } from '../../../App/muiTheme';
+import TokenIcon from '~/components/Common/TokenIcon';
+import { IconSize } from '~/components/App/muiTheme';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
 
 export type FillListingFormValues = FormState & {
   settings: SlippageSettingsFragment;
   maxAmountIn: BigNumber | undefined;
 }
 
-const FillListingForm : React.FC<
+const FillListingForm : FC<
   FormikProps<FillListingFormValues>
   & {
     podListing: PodListing;
@@ -263,7 +264,7 @@ const PREFERRED_TOKENS : PreferredToken[] = [
   }
 ];
 
-const FillListing : React.FC<{
+const FillListing : FC<{
   podListing: PodListing
 }> = ({
   podListing

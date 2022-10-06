@@ -10,7 +10,9 @@ import client from '~/util/Client';
 import { apolloClient } from '~/graph/client';
 import store from '~/state';
 
-const Wrapper : React.FC = ({ children }) => (
+import { FC } from '~/types';
+
+const Wrapper : FC = ({ children }) => (
   <HashRouter>
     <ReduxProvider store={store}>
       <ApolloProvider client={apolloClient}>

@@ -6,7 +6,9 @@ import {
 import MoreDropdown from '~/components/Market/Pods/MoreDropdown';
 import Row from '~/components/Common/Row';
 
-const CreateButtons: React.FC = () => (
+import { FC } from '~/types';
+
+const CreateButtons: FC = () => (
   <Row gap={1} alignItems="end" height="100%">
     <MoreDropdown />
     <Button

@@ -27,7 +27,9 @@ import EmbeddedCard from '../Common/EmbeddedCard';
 import SiloAssetApyChip from './SiloAssetApyChip';
 import useWhitelist from '~/hooks/beanstalk/useWhitelist';
 
-const DepositRewards : React.FC<{ token: ERC20Token }> = ({ token }) => (
+import { FC } from '~/types';
+
+const DepositRewards : FC<{ token: ERC20Token }> = ({ token }) => (
   <Row gap={1} justifyContent="center">
     <Row gap={0.5} justifyContent="center">
       <Typography variant="bodyLarge">
@@ -53,7 +55,7 @@ const DepositRewards : React.FC<{ token: ERC20Token }> = ({ token }) => (
   </Row>
 );
 
-const SiloAssetOverviewCard: React.FC<{ token: ERC20Token }> = ({ token }) => {
+const SiloAssetOverviewCard: FC<{ token: ERC20Token }> = ({ token }) => {
   const { total, tvdByToken } = useTVD();
   const whitelist = useWhitelist();
 

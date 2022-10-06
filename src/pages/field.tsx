@@ -18,6 +18,8 @@ import useAccount from '../hooks/ledger/useAccount';
 import GuideButton from '~/components/Common/Guide/GuideButton';
 import { HOW_TO_HARVEST_PODS, HOW_TO_SOW_BEANS, HOW_TO_TRANSFER_PODS } from '~/util/Guides';
 
+import { FC } from '~/types';
+
 const columns: DataGridProps['columns'] = [
   {
     field: 'placeInLine',
@@ -46,7 +48,7 @@ const columns: DataGridProps['columns'] = [
   },
 ];
 
-const FieldPage: React.FC = () => {
+const FieldPage: FC = () => {
   const account = useAccount();
   const authState = !account ? 'disconnected' : 'ready';
   

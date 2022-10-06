@@ -17,6 +17,8 @@ import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { PodOrder } from '~/state/farmer/market';
 import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
 
+import { FC } from '~/types';
+
 const OPTIONS = [
   {
     title: 'Circulating Balance',
@@ -34,7 +36,7 @@ const OPTIONS = [
   },
 ];
 
-const CancelOrder : React.FC<{
+const CancelOrder : FC<{
   order: PodOrder,
 }> = ({ 
   order

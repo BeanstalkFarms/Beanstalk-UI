@@ -28,9 +28,9 @@ import { PlotMap , toStringBaseUnitBN , parseError, displayTokenAmount, displayB
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 
 import { BEAN, PODS } from '~/constants/tokens';
-import { ONE_BN, ZERO_BN } from '~/constants';
-import FieldWrapper from '../../../Common/Form/FieldWrapper';
-import { POD_MARKET_TOOLTIPS } from '../../../../constants/tooltips';
+import { ONE_BN, ZERO_BN, POD_MARKET_TOOLTIPS } from '~/constants';
+import FieldWrapper from '~/components/Common/Form/FieldWrapper';
+import { FC } from '~/types';
 
 export type CreateListingFormValues = {
   plot:        PlotFragment
@@ -67,7 +67,7 @@ const REQUIRED_KEYS = [
   'destination'
 ] as (keyof CreateListingFormValues)[];
 
-const CreateListingForm: React.FC<
+const CreateListingForm: FC<
   FormikProps<CreateListingFormValues> & {
     plots: PlotMap<BigNumber>;
     harvestableIndex: BigNumber;
@@ -176,7 +176,7 @@ const CreateListingForm: React.FC<
 
 // ---------------------------------------------------
 
-const CreateListing: React.FC<{}> = () => {
+const CreateListing: FC<{}> = () => {
   /// 
   const getChainToken = useGetChainToken();
   

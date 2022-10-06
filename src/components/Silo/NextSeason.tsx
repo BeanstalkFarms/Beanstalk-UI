@@ -6,17 +6,18 @@ import AccordionWrapper from '~/components/Common/Accordion/AccordionWrapper';
 import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
 import TokenIcon from '~/components/Common/TokenIcon';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
 
 // ---------------------------------------------------------------
 
-const Stat : React.FC<{ name: string }> = ({ children, name }) => (
+const Stat : FC<{ name: string }> = ({ children, name }) => (
   <Row justifyContent="space-between">
     <Typography variant="h4">{name}</Typography>
     <Typography variant="h4" textAlign="right">{children}</Typography>
   </Row>
 );
 
-const StatColumn : React.FC<{
+const StatColumn : FC<{
   title: string;
   icon: JSX.Element
 }> = ({
@@ -35,9 +36,7 @@ const StatColumn : React.FC<{
   </Grid>
 );
 
-// ---------------------------------------------------------------
-
-const NextSeason : React.FC<{ title: string | JSX.Element }> = ({ title }) => (
+const NextSeason : FC<{ title: string | JSX.Element }> = ({ title }) => (
   <AccordionWrapper>
     <Accordion>
       <StyledAccordionSummary

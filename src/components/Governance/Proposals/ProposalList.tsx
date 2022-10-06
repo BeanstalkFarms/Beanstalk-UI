@@ -4,7 +4,9 @@ import EmptyState from '~/components/Common/ZeroState/EmptyState';
 import ProposalButton from '~/components/Governance/Proposals/ProposalButton';
 import { Proposal } from '~/util/Governance';
 
-const ProposalList: React.FC<{ proposals: Proposal[] }> = (props) => {
+import { FC } from '~/types';
+
+const ProposalList: FC<{ proposals: Proposal[] }> = (props) => {
   // Null state
   if (!props.proposals) {
     return (

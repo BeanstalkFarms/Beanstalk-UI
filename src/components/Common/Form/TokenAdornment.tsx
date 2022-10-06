@@ -6,6 +6,8 @@ import Token from '~/classes/Token';
 import { IconSize } from '../../App/muiTheme';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 const useStyles = makeStyles(() => ({
   pill: {
     display: 'inline-flex',
@@ -33,7 +35,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const TokenAdornment : React.FC<
+const TokenAdornment : FC<
   {
     token: Token,
     buttonLabel?: string | JSX.Element;
