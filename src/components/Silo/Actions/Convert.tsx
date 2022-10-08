@@ -101,7 +101,8 @@ const ConvertForm : React.FC<
   let buttonLoading  = false;
   let buttonContent  = 'Convert';
   let bdvOut;     // the BDV received after re-depositing `amountOut` of `tokenOut`.
-  let deltaBDV;   // the change in BDV during the convert. should always be >= 0.
+  let bdvIn;
+  let deltaBDV : (BigNumber | undefined); // the change in BDV during the convert. should always be >= 0.
   let deltaStalk; // the change in Stalk during the convert. should always be >= 0.
   let deltaSeedsPerBDV; // change in seeds per BDV for this pathway. ex: bean (2 seeds) -> bean:3crv (4 seeds) = +2 seeds.
   let deltaSeeds; // the change in seeds during the convert.
@@ -170,6 +171,12 @@ const ConvertForm : React.FC<
         tokenOut.getSeeds(bdvOut)  // seeds for depositing this token with new BDV
           .minus(conversion.seeds.abs())   // seeds lost when converting
       );
+      //
+      console.log(`BDV: ${getBDV(tokenOut)}`);
+      console.log(`amountOut: ${amountOut}`);
+      console.log(`bdvIn: ${conversion.bdv}`);
+      console.log(`bdvOut: ${bdvOut}`);
+      console.log('Conversion: ', conversion);
     }
   }
   
@@ -226,6 +233,13 @@ const ConvertForm : React.FC<
           balanceLabel="Deposited Balance"
           state={values.tokens[0]}
           handleQuote={handleQuote}
+          displayQuote={(_amountOut) => (
+            (_amountOut && deltaBDV) && (
+              <Typography variant="body1">
+                ~{displayFullBN(conversion.bdv.abs(), 2)} BDV
+              </Typography>
+            )
+          )}
           tokenSelectLabel={tokenIn.symbol}
           disabled={(
             !values.maxAmountIn         // still loading `maxAmountIn`
@@ -263,6 +277,7 @@ const ConvertForm : React.FC<
             <TokenOutputField
               token={tokenOut}
               amount={amountOut || ZERO_BN}
+              amountSecondary={bdvOut ? `~${displayFullBN(bdvOut, 2)} BDV` : undefined}
             />
             <Stack direction={{ xs: 'column', md: 'row' }} gap={1} justifyContent="center">
               <Box sx={{ flex: 1 }}>
