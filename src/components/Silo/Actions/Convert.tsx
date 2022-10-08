@@ -155,9 +155,9 @@ const ConvertForm : React.FC<
     if (tokenOut && amountOut?.gt(0)) {
       isReady    = true;
       bdvOut     = getBDV(tokenOut).times(amountOut);
-      deltaBDV   = (
-        bdvOut
-          .minus(conversion.bdv.abs())
+      deltaBDV   = MaxBN(
+        bdvOut.minus(conversion.bdv.abs()),
+        ZERO_BN
       );
       deltaStalk = MaxBN(
         tokenOut.getStalk(deltaBDV),
@@ -285,9 +285,15 @@ const ConvertForm : React.FC<
                   token={STALK}
                   amount={deltaStalk || ZERO_BN}
                   amountTooltip={( 
-                    <>
-                      Converting will increase the BDV of your Deposit by {displayFullBN(deltaBDV || ZERO_BN, 6)}{deltaBDV?.gt(0) ? ', resulting in a gain of Stalk' : ''}.
-                    </>
+                    deltaBDV?.gt(0) ? (
+                      <>
+                        Converting will increase the BDV of your Deposit by {displayFullBN(deltaBDV || ZERO_BN, 6)}{deltaBDV?.gt(0) ? ', resulting in a gain of Stalk' : ''}.
+                      </>
+                    ) : (
+                      <>
+                        The BDV of your Deposit won&apos;t change with this Convert.
+                      </>
+                    )
                   )}
                 />
               </Box>
