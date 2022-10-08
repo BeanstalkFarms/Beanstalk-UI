@@ -40,6 +40,7 @@ import { BEAN, ETH, USDC, USDT, WETH } from '~/constants/tokens';
 import FertilizerItem from '../FertilizerItem';
 import { optimizeFromMode } from '~/util/Farm';
 import useAccount from '~/hooks/ledger/useAccount';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 // ---------------------------------------------------
 
@@ -184,34 +185,34 @@ const BuyForm : React.FC<
 // ---------------------------------------------------
 
 const Buy : React.FC<{}> = () => {
-  // Wallet connection
+  // Ledger
   const account = useAccount();
   const { data: signer } = useSigner();
   const provider = useProvider();
   const chainId = useChainId();
+  const fertContract = useFertilizerContract(signer);
+  const beanstalk = useBeanstalkContract(signer);
 
-  // Farmer data
+  /// Farmer
   const balances = useFarmerBalances();
-
-  // Data refreshing
   const [refetchFertilizer] = useFetchFarmerBarn();
   const [refetchBalances]   = useFetchFarmerBalances();
   const [refetchAllowances] = useFetchFarmerAllowances();
   
-  // Contracts
-  const fertContract = useFertilizerContract(signer);
-  const beanstalk = useBeanstalkContract(signer);
+  /// Farm
   const farm = useMemo(() => new Farm(provider), [provider]);
 
-  // Constants
+  // Tokens
   const Usdc = getChainConstant(USDC, chainId);
   const Bean = getChainConstant(BEAN,  chainId);
   const Eth  = getChainConstant(ETH,  chainId);
   const Weth = getChainConstant(WETH, chainId);
   const Usdt = getChainConstant(USDT, chainId);
+  
+  /// Form
+  const middleware = useFormMiddleware();
   const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
   const tokenOut = Usdc;
-
   const initialValues : BuyFormValues = useMemo(() => ({
     tokens: [
       {
@@ -221,6 +222,7 @@ const Buy : React.FC<{}> = () => {
     ],
   }), [baseToken]);
 
+  /// Handlers
   // Doesn't get called if tokenIn === tokenOut
   // aka if the user has selected USDC as input
   const handleQuote = useCallback<QuoteHandler>(async (_tokenIn, _amountIn, _tokenOut) => {
@@ -286,6 +288,8 @@ const Buy : React.FC<{}> = () => {
   const onSubmit = useCallback(async (values: BuyFormValues, formActions: FormikHelpers<BuyFormValues>) => {
     let txToast;
     try {
+      middleware.before();
+
       if (!beanstalk) throw new Error('Unable to access contracts');
       if (!account) throw new Error('Connect a wallet first.');
 
@@ -416,7 +420,7 @@ const Buy : React.FC<{}> = () => {
       txToast ? txToast.error(err) : toast.error(parseError(err));
       console.error(err);
     }
-  }, [beanstalk, account, Usdc, farm.contracts.curve.zap.callStatic, farm.contracts.curve.pools.beanCrv3.address, refetchFertilizer, refetchBalances, refetchAllowances, fertContract.address, Bean, Eth]);
+  }, [beanstalk, account, Usdc, farm.contracts.curve.zap.callStatic, farm.contracts.curve.pools.beanCrv3.address, refetchFertilizer, refetchBalances, refetchAllowances, fertContract.address, Bean, Eth, middleware]);
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>

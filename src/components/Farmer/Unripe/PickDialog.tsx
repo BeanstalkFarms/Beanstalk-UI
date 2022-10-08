@@ -34,6 +34,7 @@ import useAccount from '~/hooks/ledger/useAccount';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import UnripeTokenRow from './UnripeTokenRow';
 import Row from '~/components/Common/Row';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 // ----------------------------------------------------
 
@@ -112,15 +113,15 @@ const PickBeansDialog: React.FC<{
   const isMobile      = useMediaQuery(theme.breakpoints.down('md'));
   const [tab, setTab] = useState(0);
 
-  /// Chain
+  /// Tokens
   const getChainToken = useGetChainToken();
   const urBean        = getChainToken(UNRIPE_BEAN);
   const urBeanCRV3    = getChainToken(UNRIPE_BEAN_CRV3);
   
-  /// Farmer data
+  /// Farmer
   const [refetchFarmerSilo] = useFetchFarmerSilo();
 
-  /// Contracts
+  /// Ledger
   const account          = useAccount();
   const { data: signer } = useSigner();
   const beanstalk        = useBeanstalkContract(signer);
@@ -130,6 +131,9 @@ const PickBeansDialog: React.FC<{
   const [merkles, setMerkles]       = useState<PickMerkleResponse | null>(null);
   const [pickStatus, setPickStatus] = useState<null | 'picking' | 'success' | 'error'>(null);
   const [picked, setPicked]         = useState<[null, null] | [boolean, boolean]>([null, null]);
+
+  /// Form
+  const middleware = useFormMiddleware();
 
   /// Refresh 
   useEffect(() => {
@@ -176,6 +180,7 @@ const PickBeansDialog: React.FC<{
   /// Pick handlers
   const handlePick = useCallback((isDeposit : boolean) => () => {
     if (!merkles) return;
+    middleware.before();
 
     setPickStatus('picking');
     const data = [];
@@ -234,7 +239,7 @@ const PickBeansDialog: React.FC<{
         );
         setPickStatus('error');
       });
-  }, [merkles, picked, beanstalk, urBean.address, urBeanCRV3.address, refetchFarmerSilo]);
+  }, [merkles, picked, beanstalk, urBean.address, urBeanCRV3.address, refetchFarmerSilo, middleware]);
 
   /// Tab: Pick Overview
   const alreadyPicked = picked[0] === true || picked[1] === true;

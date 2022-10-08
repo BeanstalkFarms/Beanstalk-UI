@@ -39,6 +39,7 @@ import { ActionType } from '~/util/Actions';
 import { IconSize } from '../../App/muiTheme';
 import IconWrapper from '../../Common/IconWrapper';
 import useFarmerSilo from '~/hooks/farmer/useFarmerSilo';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 // -----------------------------------------------------------------------
 
@@ -348,13 +349,17 @@ const Convert : React.FC<{
   pool,
   fromToken
 }) => {
-  /// Chain Constants
+  /// Tokens
   const getChainToken = useGetChainToken();
   const Bean          = getChainToken(BEAN);
   const BeanCrv3      = getChainToken(BEAN_CRV3_LP);
   const urBean        = getChainToken(UNRIPE_BEAN);
   const urBeanCrv3    = getChainToken(UNRIPE_BEAN_CRV3);
 
+  /// Ledger
+  const { data: signer }  = useSigner();
+  const beanstalk         = useBeanstalkContract(signer);
+  
   /// Token List
   const [tokenList, initialTokenOut] = useMemo(() => {
     const allTokens = (fromToken === urBean || fromToken === urBeanCrv3)
@@ -382,11 +387,8 @@ const Convert : React.FC<{
   const [refetchFarmerSilo]     = useFetchFarmerSilo();
   const [refetchPools]          = useFetchPools();
 
-  /// Network
-  const { data: signer }  = useSigner();
-  const beanstalk         = useBeanstalkContract(signer);
-
-  /// Form setup
+  /// Form
+  const middleware    = useFormMiddleware();
   const initialValues : ConvertFormValues = useMemo(() => ({
     // Settings
     settings: {
@@ -421,6 +423,7 @@ const Convert : React.FC<{
   const onSubmit = useCallback(async (values: ConvertFormValues, formActions: FormikHelpers<ConvertFormValues>) => {
     let txToast;
     try {
+      middleware.before();
       if (!values.settings.slippage) throw new Error('No slippage value set.');
       if (!values.tokenOut) throw new Error('No output token selected');
       if (!values.tokens[0].amount?.gt(0)) throw new Error('No amount input');
@@ -543,7 +546,7 @@ const Convert : React.FC<{
       txToast ? txToast.error(err) : toast.error(parseError(err));
       formActions.setSubmitting(false);
     }
-  }, [farmerSiloBalances, farmerSilo.beans.earned, season, urBean, urBeanCrv3, Bean, BeanCrv3, beanstalk, refetchFarmerSilo, refetchPools, initialValues]);
+  }, [farmerSiloBalances, farmerSilo.beans.earned, season, urBean, urBeanCrv3, Bean, BeanCrv3, beanstalk, refetchFarmerSilo, refetchPools, initialValues, middleware]);
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>

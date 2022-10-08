@@ -33,6 +33,7 @@ import { FontSize, IconSize } from '~/components/App/muiTheme';
 import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
 import { ActionType } from '~/util/Actions';
 import TransactionToast from '~/components/Common/TxnToast';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 export type TransferFormValues = FormState & {
   to: string;
@@ -193,19 +194,21 @@ const TransferForm: React.FC<FormikProps<TransferFormValues> & {
 };
 
 const Transfer: React.FC<{ token: ERC20Token; }> = ({ token }) => {
-  ///
+  /// Ledger
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
 
-  ///
+  /// Beanstalk
   const season = useSeason();
+
+  /// Farmer
   const siloBalances = useFarmerSiloBalances();
   const [refetchFarmerSilo] = useFetchFarmerSilo();
   const [refetchSilo] = useFetchBeanstalkSilo();
 
-  // Form data
+  /// Form
+  const middleware = useFormMiddleware();
   const depositedBalance = siloBalances[token.address]?.deposited.amount;
-
   const initialValues: TransferFormValues = useMemo(() => ({
     tokens: [
       {
@@ -216,10 +219,12 @@ const Transfer: React.FC<{ token: ERC20Token; }> = ({ token }) => {
     to: ''
   }), [token]);
 
-  // Handlers
+  /// Handlers
   const onSubmit = useCallback(async (values: TransferFormValues, formActions: FormikHelpers<TransferFormValues>) => {
     let txToast;
     try {
+      middleware.before();
+
       const withdrawResult = BeanstalkSDK.Silo.Withdraw.withdraw(
         token,
         values.tokens,
@@ -293,6 +298,7 @@ const Transfer: React.FC<{ token: ERC20Token; }> = ({ token }) => {
     refetchFarmerSilo,
     refetchSilo,
     signer,
+    middleware,
   ]);
 
   return (

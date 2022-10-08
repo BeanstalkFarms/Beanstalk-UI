@@ -45,6 +45,7 @@ import { BeanstalkPalette, IconSize } from '../../../App/muiTheme';
 import SliderField from '../../../Common/Form/SliderField';
 import FieldWrapper from '../../../Common/Form/FieldWrapper';
 import IconWrapper from '../../../Common/IconWrapper';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 export type CreateOrderFormValues = {
   placeInLine: BigNumber | null;
@@ -239,28 +240,31 @@ const CreateOrderForm : React.FC<
 // ---------------------------------------------------
 
 const CreateOrder : React.FC<{}> = () => {
-  ///
+  /// Tokens
   const getChainToken = useGetChainToken();
   const Eth   = useChainConstant(ETH);
   const Bean  = getChainToken(BEAN);
   const Weth  = getChainToken(WETH);
   const tokenMap = useTokenMap<ERC20Token | NativeToken>([BEAN, ETH]);
 
-  ///
+  /// Ledger
   const { data: signer } = useSigner();
   const provider  = useProvider();
   const beanstalk = useBeanstalkContract(signer);
+
+  /// Farm
   const farm      = useMemo(() => new Farm(provider), [provider]);
 
-  ///
-  const balances       = useFarmerBalances();
+  /// Beanstalk
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);
   
-  ///
+  /// Farmer
+  const balances       = useFarmerBalances();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
   const [refetchFarmerMarket]   = useFetchFarmerMarket();
 
-  ///
+  /// Form
+  const middleware = useFormMiddleware();
   const initialValues: CreateOrderFormValues = useMemo(() => ({
     placeInLine: ZERO_BN,
     pricePerPod: null,
@@ -275,7 +279,8 @@ const CreateOrder : React.FC<{}> = () => {
     }
   }), [Eth]);
 
-  ///
+  /// Handlers
+
   const handleQuote = useCallback<QuoteHandler>(
     async (_tokenIn, _amountIn, _tokenOut) => {
       // tokenOut is fixed to BEAN.
@@ -303,10 +308,11 @@ const CreateOrder : React.FC<{}> = () => {
     [Weth, farm]
   );
 
-  ///
   const onSubmit = useCallback(async (values: CreateOrderFormValues, formActions: FormikHelpers<CreateOrderFormValues>) => {
     let txToast;
     try {
+      middleware.before();
+
       if (!values.settings.slippage) throw new Error('No slippage value set.');
       if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
       const tokenData = values.tokens[0];
@@ -385,7 +391,7 @@ const CreateOrder : React.FC<{}> = () => {
       txToast?.error(err) || toast.error(parseError(err));
       console.error(err);
     }
-  }, [Bean, Eth, balances, beanstalk, refetchFarmerBalances, refetchFarmerMarket]);
+  }, [Bean, Eth, balances, beanstalk, refetchFarmerBalances, refetchFarmerMarket, middleware]);
   
   return (
     <Formik<CreateOrderFormValues>

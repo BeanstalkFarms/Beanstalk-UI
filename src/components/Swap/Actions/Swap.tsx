@@ -42,6 +42,7 @@ import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSumma
 import { ActionType } from '~/util/Actions';
 import WarningIcon from '~/components/Common/Alert/WarningIcon';
 import Row from '~/components/Common/Row';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 /// ---------------------------------------------------------------
 
@@ -603,27 +604,32 @@ const isPair = (_tokenIn : Token, _tokenOut : Token, _pair : [Token, Token]) => 
  * ...etc
  */
 const Swap: React.FC<{}> = () => {
-  ///
+  /// Ledger
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
   const account = useAccount();
 
-  ///
+  /// Tokens
   const getChainToken = useGetChainToken();
   const Eth           = getChainToken(ETH);
   const Weth          = getChainToken(WETH);
   const Bean          = getChainToken(BEAN);
   const Crv3          = getChainToken(CRV3);
   const crv3Underlying = useMemo(() => new Set(CRV3_UNDERLYING.map(getChainToken)), [getChainToken]);
+
+  /// Token List
   const tokenMap      = useTokenMap<ERC20Token | NativeToken>(SUPPORTED_TOKENS);
   const tokenList     = useMemo(() => Object.values(tokenMap), [tokenMap]);
+
+  /// Farm
   const farm          = useFarm();
   
-  ///
+  /// Farmer
   const farmerBalances = useFarmerBalances();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
 
-  // Form setup
+  /// Form
+  const middleware = useFormMiddleware();
   const initialValues: SwapFormValues = useMemo(() => ({
     tokensIn: [
       {
@@ -641,6 +647,8 @@ const Swap: React.FC<{}> = () => {
       slippage: 0.1,
     }
   }), [Bean, Eth]);
+
+  /// Handlers
 
   const getPathway = useCallback((
     _tokenIn: Token,
@@ -855,6 +863,7 @@ const Swap: React.FC<{}> = () => {
     async (values: SwapFormValues, formActions: FormikHelpers<SwapFormValues>) => {
       let txToast;
       try {
+        middleware.before();
         const stateIn = values.tokensIn[0];
         const tokenIn = stateIn.token;
         const modeIn  = values.modeIn;
@@ -913,7 +922,7 @@ const Swap: React.FC<{}> = () => {
         formActions.setSubmitting(false);
       }
     },
-    [account, beanstalk, farmerBalances, handleEstimate, refetchFarmerBalances]
+    [account, beanstalk, farmerBalances, handleEstimate, refetchFarmerBalances, middleware]
   );
 
   return (
