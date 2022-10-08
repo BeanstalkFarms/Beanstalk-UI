@@ -51,6 +51,7 @@ import pageBackground from '~/img/beanstalk/interface/bg/fall@2x.png';
 import './App.css';
 import { PAGE_BG_COLOR } from './muiTheme';
 import useAccount from '~/hooks/ledger/useAccount';
+import EnforceNetwork from '~/components/App/EnforceNetwork';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -91,6 +92,9 @@ export default function App() {
   const account = useAccount();
   return (
     <>
+      {/* -----------------------
+        * Appplication Setup
+        * ----------------------- */}
       <CssBaseline />
       <AppUpdater />
       {/* -----------------------
@@ -101,26 +105,25 @@ export default function App() {
       {/* -----------------------
         * Beanstalk Updaters
         * ----------------------- */}
-      <BarnUpdater />
-      <FieldUpdater />
       <SiloUpdater />
+      <FieldUpdater />
+      <BarnUpdater />
       <SunUpdater />
       <GovernanceUpdater />
       {/* -----------------------
         * Farmer Updaters
         * ----------------------- */}
-      <FarmerFieldUpdater />
-      <FarmerBalancesUpdater />
-      <FarmerBarnUpdater />
-      <FarmerMarketUpdater />
       <FarmerSiloUpdater />
+      <FarmerFieldUpdater />
+      <FarmerBarnUpdater />
+      <FarmerBalancesUpdater />
+      <FarmerMarketUpdater />
       {/* -----------------------
-        * Content
+        * Routes & Content
         * ----------------------- */}
       <NavBar>{banner}</NavBar>
-      <CustomToaster
-        navHeight={navHeight}
-      />
+      <EnforceNetwork />
+      <CustomToaster navHeight={navHeight} />
       {account && <NewProposalsDialog />}
       <Box
         sx={{
