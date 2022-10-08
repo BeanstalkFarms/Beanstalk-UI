@@ -46,7 +46,7 @@ const NetworkDialog: React.FC<{
   return (
     <Dialog onClose={handleClose} open={open}>
       <StyledDialogTitle onClose={handleClose}>
-        Select chain
+        Select Network
       </StyledDialogTitle>
       <StyledDialogContent>
         <Stack gap={1}>

@@ -27,7 +27,6 @@ const IconWrapper : React.FC<{ boxSize: number } & BoxProps> = ({ boxSize, child
     alignItems="center"
     justifyContent="center"
     sx={{
-      mr: 1,
       ...sx
     }}
   >
