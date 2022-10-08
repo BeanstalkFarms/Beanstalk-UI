@@ -48,6 +48,7 @@ import { IconSize } from '../../App/muiTheme';
 import IconWrapper from '../../Common/IconWrapper';
 import TokenIcon from '../../Common/TokenIcon';
 import Row from '~/components/Common/Row';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 type SowFormValues = FormState & {
   settings: SlippageSettingsFragment;
@@ -294,9 +295,6 @@ const PREFERRED_TOKENS : PreferredToken[] = [
 ];
 
 const Sow : React.FC<{}> = () => {
-  /// Form
-  const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
-
   /// Tokens
   const getChainToken = useGetChainToken();
   const Bean          = getChainToken(BEAN);
@@ -307,20 +305,24 @@ const Sow : React.FC<{}> = () => {
   const { data: signer } = useSigner();
   const provider  = useProvider();
   const beanstalk = useBeanstalkContract(signer);
+
+  /// Farm
   const farm      = useMemo(() => new Farm(provider), [provider]);
 
-  /// Data
+  /// Beanstalk
   const weather = useSelector<AppState, AppState['_beanstalk']['field']['weather']['yield']>((state) => state._beanstalk.field.weather.yield);
   const soil    = useSelector<AppState, AppState['_beanstalk']['field']['soil']>((state) => state._beanstalk.field.soil);
   
-  /// Refetchers
+  /// Farmer
   const balances                = useFarmerBalances();
   const [refetchBeanstalkField] = useFetchBeanstalkField();
   const [refetchPools]          = useFetchPools();
   const [refetchFarmerField]    = useFetchFarmerField();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
 
-  /// Form setup
+  /// Form
+  const middleware = useFormMiddleware();
+  const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
   const initialValues : SowFormValues = useMemo(() => ({
     settings: {
       slippage: 0.1, // 0.1%
@@ -374,6 +376,8 @@ const Sow : React.FC<{}> = () => {
   const onSubmit = useCallback(async (values: SowFormValues, formActions: FormikHelpers<SowFormValues>) => {
     let txToast;
     try {
+      middleware.before();
+
       const formData = values.tokens[0];
       const tokenIn = formData.token;
       const amountBeans = tokenIn === Bean ? formData.amount : formData.amountOut;
@@ -450,7 +454,8 @@ const Sow : React.FC<{}> = () => {
     refetchFarmerField,
     refetchFarmerBalances,
     refetchBeanstalkField,
-    refetchPools
+    refetchPools,
+    middleware,
   ]);
 
   return (

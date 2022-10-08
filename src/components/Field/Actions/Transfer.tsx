@@ -2,6 +2,7 @@ import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
+import toast from 'react-hot-toast';
 import AddressInputField from '~/components/Common/Form/AddressInputField';
 import FieldWrapper from '~/components/Common/Form/FieldWrapper';
 import { PlotFragment, PlotSettingsFragment, SmartSubmitButton, TokenOutputField, TxnPreview, TxnSeparator } from '~/components/Common/Form';
@@ -14,9 +15,11 @@ import useFarmerPlots from '~/hooks/farmer/useFarmerPlots';
 import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import { PODS } from '~/constants/tokens';
 import { ZERO_BN } from '../../../constants';
-import { displayFullBN, toStringBaseUnitBN, trimAddress } from '../../../util';
+import { displayFullBN, parseError, toStringBaseUnitBN, trimAddress } from '../../../util';
 import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
 import { ActionType } from '../../../util/Actions';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
+import { useFetchFarmerField } from '~/state/farmer/field/updater';
 
 export type TransferFormValues = {
   plot: PlotFragment;
@@ -40,10 +43,8 @@ const TransferForm: React.FC<
   const plots = useFarmerPlots();
   const harvestableIndex = useHarvestableIndex();
 
-  /// Form Data
-  const plot = values.plot;
-
   /// Derived
+  const plot = values.plot;
   const isReady = (
     plot.index
     && values.to
@@ -111,11 +112,16 @@ const TransferForm: React.FC<
 };
 
 const Transfer: React.FC<{}> = () => {
+  /// Ledger
   const account = useAccount();
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
 
-  // Form setup
+  /// Farmer
+  const [refetchFarmerField] = useFetchFarmerField();
+
+  /// Form setup
+  const middleware = useFormMiddleware();
   const initialValues: TransferFormValues = useMemo(() => ({
     plot: {
       index: null,
@@ -130,42 +136,47 @@ const Transfer: React.FC<{}> = () => {
     },
   }), []);
 
+  /// Handlers
   const onSubmit = useCallback(async (values: TransferFormValues, formActions: FormikHelpers<TransferFormValues>) => {
-    if (!account) throw new Error('Connect a wallet first.');
-    const { to, plot: { index, start, end, amount } } = values;
-    if (!to || !index || !start || !end || !amount) throw new Error('Missing data.');
+    let txToast;
+    try {
+      middleware.before();
 
-    const call = beanstalk.transferPlot(
-      account,
-      to.toString(),
-      toStringBaseUnitBN(index, PODS.decimals),
-      toStringBaseUnitBN(start, PODS.decimals),
-      toStringBaseUnitBN(end,   PODS.decimals),
-    );
+      if (!account) throw new Error('Connect a wallet first.');
+      const { to, plot: { index, start, end, amount } } = values;
+      if (!to || !index || !start || !end || !amount) throw new Error('Missing data.');
 
-    const txToast = new TransactionToast({
-      loading: `Transferring ${displayFullBN(amount.abs(), PODS.decimals)} Pods to ${trimAddress(to, true)}...`,
-      success: 'Plot Transfer successful.',
-    });
+      const call = beanstalk.transferPlot(
+        account,
+        to.toString(),
+        toStringBaseUnitBN(index, PODS.decimals),
+        toStringBaseUnitBN(start, PODS.decimals),
+        toStringBaseUnitBN(end,   PODS.decimals),
+      );
 
-    /// TODO: refresh field
-    return call
-      .then((txn) => {
-        txToast.confirming(txn);
-        return txn.wait();
-      })
-      .then((receipt) => {
-        txToast.success(receipt);
-        formActions.resetForm();
-      })
-      .catch((err) => {
-        console.error(
-          txToast.error(err.error || err),
-        );
+      txToast = new TransactionToast({
+        loading: `Transferring ${displayFullBN(amount.abs(), PODS.decimals)} Pods to ${trimAddress(to, true)}...`,
+        success: 'Plot Transfer successful.',
       });
+
+      const txn = await call;
+      txToast.confirming(txn);
+
+      const receipt = await txn.wait();
+      await Promise.all([
+        refetchFarmerField(),
+      ]);
+
+      txToast.success(receipt);
+      formActions.resetForm();
+    } catch (e) {
+      txToast ? txToast.error(e) : toast.error(parseError(e));
+    }
   }, [
     account,
-    beanstalk
+    beanstalk,
+    refetchFarmerField,
+    middleware,
   ]);
 
   return (

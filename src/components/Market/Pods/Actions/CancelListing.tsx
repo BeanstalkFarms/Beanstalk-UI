@@ -7,6 +7,7 @@ import { useSigner } from '~/hooks/ledger/useSigner';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 const CancelListing : React.FC<{ id: string }> = ({ id }) => {
   /// Helpers
@@ -15,22 +16,26 @@ const CancelListing : React.FC<{ id: string }> = ({ id }) => {
   /// Local state
   const [loading, setLoading] = useState(false);
   
-  /// Contracts
+  /// Ledger
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
   
-  /// Refetch
+  /// Farmer
   const [refetchFarmerField]  = useFetchFarmerField();
   const [refetchFarmerMarket] = useFetchFarmerMarket();
 
+  /// Form
+  const middleware = useFormMiddleware();
+
   const onSubmit = useCallback(() => {
     (async () => {
-      let txToast;
+      const txToast = new TransactionToast({
+        loading: 'Cancelling Pod Listing...',
+        success: 'Cancellation successful.',
+      });
       try {
-        txToast = new TransactionToast({
-          loading: 'Cancelling Pod Listing...',
-          success: 'Cancellation successful.',
-        });
+        middleware.before();
+
         const txn = await beanstalk.cancelPodListing(id);
         txToast.confirming(txn);
 
@@ -42,12 +47,13 @@ const CancelListing : React.FC<{ id: string }> = ({ id }) => {
         txToast.success(receipt);
         navigate('/market/account');
       } catch (err) {
+        txToast.error(err);
         console.error(err);
       } finally {
         setLoading(false);
       }
     })();
-  }, [beanstalk, id, navigate, refetchFarmerField, refetchFarmerMarket]);
+  }, [beanstalk, id, navigate, refetchFarmerField, refetchFarmerMarket, middleware]);
 
   return (
     <LoadingButton

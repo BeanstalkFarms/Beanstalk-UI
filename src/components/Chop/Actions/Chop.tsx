@@ -37,6 +37,7 @@ import { AppState } from '~/state';
 import useUnripeUnderlyingMap from '~/hooks/beanstalk/useUnripeUnderlying';
 import Row from '~/components/Common/Row';
 import TransactionToast from '~/components/Common/TxnToast';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 type ChopFormValues = FormState & {
   destination: FarmToMode | undefined;
@@ -193,17 +194,18 @@ const PREFERRED_TOKENS : PreferredToken[] = [
 ];
 
 const Chop: React.FC<{}> = () => {
-  ///
+  /// Ledger
   const account           = useAccount();
   const { data: signer }  = useSigner();
   const beanstalk         = useBeanstalkContract(signer);
 
-  ///
-  const baseToken         = usePreferredToken(PREFERRED_TOKENS, 'use-best');
+  /// Farmer
   const farmerBalances    = useFarmerBalances();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
-
-  // Form setup
+  
+  /// Form
+  const middleware = useFormMiddleware();
+  const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
   const initialValues: ChopFormValues = useMemo(() => ({
     tokens: [
       {
@@ -214,6 +216,7 @@ const Chop: React.FC<{}> = () => {
     destination: FarmToMode.INTERNAL,
   }), [baseToken]);
 
+  /// Handlers
   const onSubmit = useCallback(
     async (
       values: ChopFormValues,
@@ -221,6 +224,8 @@ const Chop: React.FC<{}> = () => {
     ) => {
       let txToast;
       try {
+        middleware.before();
+
         if (!account) throw new Error('Connect a wallet first.');
         if (!values.destination) throw new Error('No destination selected.');
         const state = values.tokens[0];
@@ -253,6 +258,7 @@ const Chop: React.FC<{}> = () => {
       beanstalk,
       refetchFarmerBalances,
       farmerBalances,
+      middleware,
     ]
   );
 
