@@ -21,7 +21,7 @@ const StyledAccordionSummary : FC<{
     expandIcon={(
       <ExpandMoreIcon
         sx={{
-          color: BeanstalkPalette.darkBlue,
+          color: BeanstalkPalette.theme.fall.brown,
           fontSize: IconSize.xs
         }}
       />
@@ -33,7 +33,7 @@ const StyledAccordionSummary : FC<{
       <Typography
         variant="body1"
         sx={gradientText ? {
-          background: 'linear-gradient(90deg, rgba(70, 185, 85, 1.0) 0%, rgba(123, 97, 255, 1.0) 36.58%, rgba(31, 120, 180, 1.0) 96.2%)',
+          background: 'linear-gradient(90deg, rgba(185, 125, 70, 1.0) 23%, rgba(255, 173, 97, 1.0) 54%, rgba(177, 180, 31, 1.0) 20%)',
           '-webkit-background-clip': 'text',
           '-webkit-text-fill-color': 'transparent'
         } : null}

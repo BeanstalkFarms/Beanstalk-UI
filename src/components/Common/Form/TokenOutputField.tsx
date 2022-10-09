@@ -2,7 +2,7 @@ import { Box, CircularProgress, Tooltip, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import React from 'react';
 import { Token } from '~/classes';
-import { displayFullBN, displayUSD } from '~/util';
+import { displayFullBN } from '~/util';
 import TokenIcon from '../TokenIcon';
 import OutputField from './OutputField';
 import { IconSize } from '../../App/muiTheme';
@@ -16,7 +16,7 @@ const TokenOutputField : FC<{
   /** The `amount` of `token` */
   amount: BigNumber;
   /** The $ value (or other derived value) of the `amount` */
-  value?: BigNumber;
+  amountSecondary?: string | BigNumber;
   /** Annotate the token with some modifier ("Claimable", "Harvestable") */
   modifier?: string;
   /** Display as a delta (show +/-). */
@@ -30,7 +30,7 @@ const TokenOutputField : FC<{
 }> = ({
   token,
   amount,
-  value,
+  amountSecondary,
   modifier,
   amountTooltip = '',
   isDelta = true,
@@ -54,8 +54,8 @@ const TokenOutputField : FC<{
                 {prefix}&nbsp;{displayFullBN(amount.abs(), token.displayDecimals, token.displayDecimals)}
               </>
             )}
-            {value && (
-              <>&nbsp;&nbsp;<Typography display="inline" variant="bodySmall">(~{displayUSD(value)})</Typography></>
+            {amountSecondary && (
+              <>&nbsp;&nbsp;<Typography display="inline" variant="bodySmall">({typeof amountSecondary === 'string' ? amountSecondary : displayFullBN(amountSecondary, token.displayDecimals || 2)})</Typography></>
             )}
           </Typography>
         </Tooltip>

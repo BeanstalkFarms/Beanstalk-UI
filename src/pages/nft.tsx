@@ -240,7 +240,7 @@ const NFTPage: FC<{}> = () => {
         <PageHeader
           title="BeaNFTs"
           description="View and mint your BeaNFTs"
-          href="https://docs.bean.money/additional-resources/beanfts"
+          href="https://docs.bean.money/ecosystem/beanfts"
           control={
             <GuideButton
               title="The Farmers' Almanac: BeaNFT Guides"

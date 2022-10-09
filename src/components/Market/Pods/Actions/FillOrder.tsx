@@ -27,6 +27,7 @@ import { PodOrder } from '~/state/farmer/market';
 import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
 import { ActionType } from '~/util/Actions';
 import { FC } from '~/types';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 export type FillOrderFormValues = {
   plot: PlotFragment;
@@ -129,22 +130,24 @@ const FillOrderForm: FC<
   );
 };
 
-// ---------------------------------------------------
-
 const FillOrder: FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
-  ///
+  /// Tokens
   const Bean = useChainConstant(BEAN);
 
-  /// Data
-  const allPlots         = useFarmerPlots();
+  /// Ledger
+  const { data: signer } = useSigner();
+  const beanstalk = useBeanstalkContract(signer);
+
+  /// Beanstalk
   const harvestableIndex = useHarvestableIndex();
-  
-  /// Refetchers
-  // const [refetchBeanstalkField] = useFetchBeanstalkField();
+
+  /// Farmer
+  const allPlots = useFarmerPlots();
   const [refetchFarmerField]    = useFetchFarmerField();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
 
   /// Form
+  const middleware = useFormMiddleware();
   const initialValues: FillOrderFormValues = useMemo(() => ({
     plot: {
       index:  null,
@@ -158,13 +161,11 @@ const FillOrder: FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
     }
   }), []);
   
-  /// Chain
-  const { data: signer } = useSigner();
-  const beanstalk = useBeanstalkContract(signer);
-
+  /// Handlers
   const onSubmit = useCallback(async (values: FillOrderFormValues, formActions: FormikHelpers<FillOrderFormValues>) => {
     let txToast;
     try {
+      middleware.before();
       const { index, start, amount } = values.plot;
       if (!index) throw new Error('No plot selected');
       const numPods = allPlots[index];
@@ -222,7 +223,7 @@ const FillOrder: FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
     } finally {
       formActions.setSubmitting(false);
     }
-  }, [Bean, allPlots, beanstalk, podOrder.account, podOrder.maxPlaceInLine, podOrder.pricePerPod, refetchFarmerBalances, refetchFarmerField]);
+  }, [Bean, allPlots, beanstalk, podOrder.account, podOrder.maxPlaceInLine, podOrder.pricePerPod, refetchFarmerBalances, refetchFarmerField, middleware]);
 
   return (
     <Formik<FillOrderFormValues>

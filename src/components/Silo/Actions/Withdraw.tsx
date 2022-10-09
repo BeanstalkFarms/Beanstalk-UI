@@ -34,6 +34,7 @@ import IconWrapper from '../../Common/IconWrapper';
 import { IconSize } from '../../App/muiTheme';
 import useFarmerSilo from '~/hooks/farmer/useFarmerSilo';
 import { FC } from '~/types';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 // -----------------------------------------------------------------------
 
@@ -239,21 +240,22 @@ const WithdrawForm : FC<
 // -----------------------------------------------------------------------
 
 const Withdraw : FC<{ token: ERC20Token; }> = ({ token }) => {
-  ///
+  /// Ledger
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
   
-  ///
+  /// Beanstalk
   const season = useSeason();
   const withdrawSeasons = useSelector<AppState, BigNumber>((state) => state._beanstalk.silo.withdrawSeasons);
 
-  ///
+  /// Farmer
   const farmerSilo          = useFarmerSilo();
   const siloBalances        = farmerSilo.balances;
   const [refetchFarmerSilo] = useFetchFarmerSilo();
   const [refetchSilo]       = useFetchBeanstalkSilo();
   
-  /// Form data
+  /// Form
+  const middleware = useFormMiddleware();
   const depositedBalance = siloBalances[token.address]?.deposited.amount;
   const initialValues : WithdrawFormValues = useMemo(() => ({
     tokens: [
@@ -268,6 +270,8 @@ const Withdraw : FC<{ token: ERC20Token; }> = ({ token }) => {
   const onSubmit = useCallback(async (values: WithdrawFormValues, formActions: FormikHelpers<WithdrawFormValues>) => {
     let txToast;
     try {
+      middleware.before();
+
       const withdrawResult = BeanstalkSDK.Silo.Withdraw.withdraw(
         token,
         values.tokens,
@@ -358,6 +362,7 @@ const Withdraw : FC<{ token: ERC20Token; }> = ({ token }) => {
     season,
     refetchFarmerSilo,
     refetchSilo,
+    middleware,
   ]);
 
   return (

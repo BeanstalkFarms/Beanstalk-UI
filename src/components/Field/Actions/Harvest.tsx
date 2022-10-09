@@ -29,6 +29,7 @@ import TransactionToast from '~/components/Common/TxnToast';
 import { ZERO_BN } from '~/constants';
 import TokenAdornment from '~/components/Common/Form/TokenAdornment';
 import { FC } from '~/types';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 // -----------------------------------------------------------------------
 
@@ -145,21 +146,23 @@ const Harvest: FC<{}> = () => {
   const provider = useProvider();
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
+
+  /// Farm
   const farm = useMemo(() => new Farm(provider), [provider]);
 
-  ///
+  /// Farmer
+  const farmerField = useFarmerField();
   const [refetchFarmerField] = useFetchFarmerField();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
 
-  ///
-  const farmerField = useFarmerField();
-
   /// Form
+  const middleware = useFormMiddleware();
   const initialValues: HarvestFormValues = useMemo(() => ({
     amount: farmerField.harvestablePods || null,
     destination: undefined,
   }), [farmerField.harvestablePods]);
 
+  /// Handlers
   const onSubmit = useCallback(
     async (
       values: HarvestFormValues,
@@ -167,6 +170,7 @@ const Harvest: FC<{}> = () => {
     ) => {
       let txToast;
       try {
+        middleware.before();
         if (!farmerField.harvestablePods.gt(0)) throw new Error('No Harvestable Pods.');
         if (!farmerField.harvestablePlots) throw new Error('No Harvestable Plots.');
         if (!account?.address) throw new Error('Connect a wallet first.');
@@ -204,6 +208,7 @@ const Harvest: FC<{}> = () => {
       farmerField.harvestablePods,
       refetchFarmerBalances,
       refetchFarmerField,
+      middleware,
     ]
   );
 

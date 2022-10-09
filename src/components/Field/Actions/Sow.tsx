@@ -49,6 +49,7 @@ import IconWrapper from '~/components/Common/IconWrapper';
 import TokenIcon from '~/components/Common/TokenIcon';
 import Row from '~/components/Common/Row';
 import { FC } from '~/types';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 type SowFormValues = FormState & {
   settings: SlippageSettingsFragment;
@@ -252,7 +253,7 @@ const SowForm : FC<
                   <Divider sx={{ my: 2, opacity: 0.4 }} />
                   <Box pb={1}>
                     <Typography variant="body2" alignItems="center">
-                      Pods become <strong>Harvestable</strong> on a first in, first out <Link href="https://docs.bean.money/additional-resources/glossary#fifo" target="_blank" rel="noreferrer" underline="hover">(FIFO)</Link> basis. Upon <strong>Harvest</strong>, each Pod is redeemed for <span><TokenIcon token={BEAN[1]} css={{ height: IconSize.xs, marginTop: 2.6 }} /></span>1.
+                      Pods become <strong>Harvestable</strong> on a first in, first out <Link href="https://docs.bean.money/protocol-resources/glossary#fifo" target="_blank" rel="noreferrer" underline="hover">(FIFO)</Link> basis. Upon <strong>Harvest</strong>, each Pod is redeemed for <span><TokenIcon token={BEAN[1]} css={{ height: IconSize.xs, marginTop: 2.6 }} /></span>1.
                     </Typography>
                   </Box>
                 </AccordionDetails>
@@ -295,9 +296,6 @@ const PREFERRED_TOKENS : PreferredToken[] = [
 ];
 
 const Sow : FC<{}> = () => {
-  /// Form
-  const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
-
   /// Tokens
   const getChainToken = useGetChainToken();
   const Bean          = getChainToken(BEAN);
@@ -308,20 +306,24 @@ const Sow : FC<{}> = () => {
   const { data: signer } = useSigner();
   const provider  = useProvider();
   const beanstalk = useBeanstalkContract(signer);
+
+  /// Farm
   const farm      = useMemo(() => new Farm(provider), [provider]);
 
-  /// Data
+  /// Beanstalk
   const weather = useSelector<AppState, AppState['_beanstalk']['field']['weather']['yield']>((state) => state._beanstalk.field.weather.yield);
   const soil    = useSelector<AppState, AppState['_beanstalk']['field']['soil']>((state) => state._beanstalk.field.soil);
   
-  /// Refetchers
+  /// Farmer
   const balances                = useFarmerBalances();
   const [refetchBeanstalkField] = useFetchBeanstalkField();
   const [refetchPools]          = useFetchPools();
   const [refetchFarmerField]    = useFetchFarmerField();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
 
-  /// Form setup
+  /// Form
+  const middleware = useFormMiddleware();
+  const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
   const initialValues : SowFormValues = useMemo(() => ({
     settings: {
       slippage: 0.1, // 0.1%
@@ -375,6 +377,8 @@ const Sow : FC<{}> = () => {
   const onSubmit = useCallback(async (values: SowFormValues, formActions: FormikHelpers<SowFormValues>) => {
     let txToast;
     try {
+      middleware.before();
+
       const formData = values.tokens[0];
       const tokenIn = formData.token;
       const amountBeans = tokenIn === Bean ? formData.amount : formData.amountOut;
@@ -451,7 +455,8 @@ const Sow : FC<{}> = () => {
     refetchFarmerField,
     refetchFarmerBalances,
     refetchBeanstalkField,
-    refetchPools
+    refetchPools,
+    middleware,
   ]);
 
   return (

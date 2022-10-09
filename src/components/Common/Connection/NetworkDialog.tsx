@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { useNetwork } from 'wagmi';
-import { Alert, Button, Dialog, Stack, Typography, useMediaQuery } from '@mui/material';
+import { Alert, Button, Dialog, DialogProps, Stack, Typography, useMediaQuery } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { useTheme } from '@mui/material/styles';
 import { SWITCH_NETWORK_ERRORS } from '~/constants/wallets';
@@ -9,14 +9,13 @@ import { ETH } from '~/constants/tokens';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import Row from '~/components/Common/Row';
 
-import { FC } from '~/types';
-
-const NetworkDialog: FC<{
+const NetworkDialog: React.FC<DialogProps & {
   open: boolean;
-  handleClose: () => void;
+  handleClose?: () => void;
 }> = ({
   open,
-  handleClose
+  handleClose,
+  ...props
 }) => {
   /// Theme
   const theme = useTheme();
@@ -39,16 +38,16 @@ const NetworkDialog: FC<{
       if (switchNetwork) {
         console.debug(`[NetworkButton] switching network => ${id}`);
         switchNetwork(id);
-        handleClose();
+        handleClose?.();
       }
     },
     [switchNetwork, handleClose]
   );
 
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={handleClose} open={open} {...props}>
       <StyledDialogTitle onClose={handleClose}>
-        Select chain
+        Select Network
       </StyledDialogTitle>
       <StyledDialogContent>
         <Stack gap={1}>

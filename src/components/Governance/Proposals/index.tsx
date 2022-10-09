@@ -3,8 +3,9 @@ import useTabs from '~/hooks/display/useTabs';
 import BadgeTab from '~/components/Common/BadgeTab';
 import ProposalList from '~/components/Governance/Proposals/ProposalList';
 import { useProposalsQuery } from '~/generated/graphql';
-import { Proposal, SNAPSHOT_SPACES } from '~/util/Governance';
+import { Proposal } from '~/util/Governance';
 import { Module, ModuleContent, ModuleTabs } from '~/components/Common/Module';
+import { SNAPSHOT_SPACES } from '~/lib/Beanstalk/Governance';
 
 import { FC } from '~/types';
 

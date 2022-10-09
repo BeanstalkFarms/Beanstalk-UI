@@ -9,7 +9,7 @@ import { FC } from '~/types';
 const GovernanceActions : FC<{ proposal: Proposal }> = (props) => (
   <Module sx={{ position: 'sticky', top: 120 }}>
     <ModuleHeader>
-      <Typography variant="h4">Results</Typography>
+      <Typography variant="h4">Vote</Typography>
     </ModuleHeader>
     <ModuleContent>
       <Vote proposal={props.proposal} />

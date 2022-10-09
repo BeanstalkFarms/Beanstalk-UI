@@ -19,6 +19,8 @@ import TransactionToast from '../TxnToast';
 import { FormState, FormTokenState } from '.';
 import WalletButton from '../Connection/WalletButton';
 import Row from '~/components/Common/Row';
+import useChainId from '~/hooks/chain/useChainId';
+import NetworkButton from '~/components/Common/Connection/NetworkButton';
 
 /**
  * FIXME:
@@ -63,9 +65,10 @@ const SmartSubmitButton : FC<{
   children,
   ...props
 }) => {
-  const { explorer } = useChainConstant(CHAIN_INFO);
+  const { explorer } = useChainConstant(CHAIN_INFO); // fallback to mainnet
   const { values, setFieldValue } = useFormikContext<FormState>();
   const { status } = useConnect();
+  const chainId = useChainId();
   const getErc20Contract = useGetERC20Contract();
 
   // Convert the current `FormTokenState[]` into more convenient forms,
@@ -164,6 +167,18 @@ const SmartSubmitButton : FC<{
         type="button"
         disabled={false}
       />
+    );
+  }
+
+  if (!SupportedChainId[chainId]) {
+    return (
+      <NetworkButton
+        {...props}
+        showIcons={false}
+        type="button"
+      >
+        Switch Network
+      </NetworkButton>
     );
   }
 

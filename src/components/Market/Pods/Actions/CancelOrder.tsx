@@ -16,6 +16,7 @@ import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { PodOrder } from '~/state/farmer/market';
 import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 import { FC } from '~/types';
 
@@ -49,27 +50,31 @@ const CancelOrder : FC<{
   const [loading, setLoading] = useState(false);
   const [isOpen, show, hide]  = useToggle();
   
-  /// Contracts
+  /// Ledger
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
   
-  /// Refetch
+  /// Farmer
   const [refetchFarmerBalances]  = useFetchFarmerBalances();
   const [refetchFarmerMarket]    = useFetchFarmerMarket();
 
+  /// Form
+  const middleware = useFormMiddleware();
+
+  /// Handlers
   const onClick = useCallback(() => {
     setLoading(true);
     show();
   }, [show]);
   const onSubmit = useCallback((destination: FarmToMode) => () => {
     (async () => {
-      let txToast;
+      const txToast = new TransactionToast({
+        loading: 'Cancelling Pod Listing',
+        success: 'Cancellation successful.',
+      });
       try {
+        middleware.before();
         hide();
-        txToast = new TransactionToast({
-          loading: 'Cancelling Pod Listing',
-          success: 'Cancellation successful.',
-        });
         const txn = await beanstalk.cancelPodOrder(
           Bean.stringify(order.pricePerPod),
           Bean.stringify(order.maxPlaceInLine),
@@ -90,7 +95,7 @@ const CancelOrder : FC<{
         setLoading(false);
       }
     })();
-  }, [Bean, beanstalk, hide, navigate, order.maxPlaceInLine, order.pricePerPod, refetchFarmerBalances, refetchFarmerMarket]);
+  }, [Bean, beanstalk, hide, navigate, order.maxPlaceInLine, order.pricePerPod, refetchFarmerBalances, refetchFarmerMarket, middleware]);
 
   return (
     <>

@@ -8,7 +8,7 @@ import { FC } from '~/types';
 
 const StatHorizontal : FC<{
   label: string,
-  labelTooltip?: string,
+  labelTooltip?: string | React.ReactElement;
 }> = ({
   label,
   labelTooltip = '',

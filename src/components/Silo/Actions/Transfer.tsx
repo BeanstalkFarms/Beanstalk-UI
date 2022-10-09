@@ -34,6 +34,7 @@ import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSumma
 import { ActionType } from '~/util/Actions';
 import TransactionToast from '~/components/Common/TxnToast';
 import { FC } from '~/types';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 export type TransferFormValues = FormState & {
   to: string;
@@ -194,19 +195,21 @@ const TransferForm: FC<FormikProps<TransferFormValues> & {
 };
 
 const Transfer: FC<{ token: ERC20Token; }> = ({ token }) => {
-  ///
+  /// Ledger
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
 
-  ///
+  /// Beanstalk
   const season = useSeason();
+
+  /// Farmer
   const siloBalances = useFarmerSiloBalances();
   const [refetchFarmerSilo] = useFetchFarmerSilo();
   const [refetchSilo] = useFetchBeanstalkSilo();
 
-  // Form data
+  /// Form
+  const middleware = useFormMiddleware();
   const depositedBalance = siloBalances[token.address]?.deposited.amount;
-
   const initialValues: TransferFormValues = useMemo(() => ({
     tokens: [
       {
@@ -217,17 +220,20 @@ const Transfer: FC<{ token: ERC20Token; }> = ({ token }) => {
     to: ''
   }), [token]);
 
-  // Handlers
+  /// Handlers
   const onSubmit = useCallback(async (values: TransferFormValues, formActions: FormikHelpers<TransferFormValues>) => {
     let txToast;
     try {
+      middleware.before();
+
       const withdrawResult = BeanstalkSDK.Silo.Withdraw.withdraw(
         token,
         values.tokens,
         siloBalances[token.address]?.deposited.crates,
         season,
       );
-
+        
+      if (!signer) throw new Error('Missing signer');
       if (!withdrawResult) throw new Error('Nothing to Transfer.');
       if (!values.to) throw new Error('Please enter a valid recipient address.');
 
@@ -245,10 +251,12 @@ const Transfer: FC<{ token: ERC20Token; }> = ({ token }) => {
 
       /// Optimize the call used depending on the
       /// number of crates.
+      const sender = await signer.getAddress();
       if (seasons.length === 0) {
         throw new Error('Malformatted crates.');
       } else if (seasons.length === 1) {
         call = beanstalk.transferDeposit(
+          sender,
           values.to,
           token.address,
           seasons[0],
@@ -256,6 +264,7 @@ const Transfer: FC<{ token: ERC20Token; }> = ({ token }) => {
         );
       } else {
         call = beanstalk.transferDeposits(
+          sender,
           values.to,
           token.address,
           seasons,
@@ -289,6 +298,8 @@ const Transfer: FC<{ token: ERC20Token; }> = ({ token }) => {
     season,
     refetchFarmerSilo,
     refetchSilo,
+    signer,
+    middleware,
   ]);
 
   return (

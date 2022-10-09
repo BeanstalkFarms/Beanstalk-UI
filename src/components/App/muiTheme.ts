@@ -384,6 +384,9 @@ let muiTheme = createTheme({
             p: 0
           }
         }),
+        message: sx({
+          ml: 0.5
+        })
       }
     },
     MuiTooltip: {
@@ -415,6 +418,7 @@ let muiTheme = createTheme({
     },
     MuiAccordion: {
       defaultProps: {
+        disableGutters: true,
         elevation: 0,
       },
       styleOverrides: {
@@ -427,7 +431,7 @@ let muiTheme = createTheme({
           },
           style: {
             background: 'transparent',
-            borderColor: BeanstalkPalette.blue,
+            borderColor: BeanstalkPalette.lightBlue,
           },
         },
       ],

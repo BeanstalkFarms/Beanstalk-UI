@@ -40,6 +40,7 @@ import { BEAN, ETH, USDC, USDT, WETH } from '~/constants/tokens';
 import FertilizerItem from '../FertilizerItem';
 import { optimizeFromMode } from '~/util/Farm';
 import useAccount from '~/hooks/ledger/useAccount';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 import { FC } from '~/types';
 
 // ---------------------------------------------------
@@ -153,7 +154,7 @@ const BuyForm : FC<
                   <Divider sx={{ my: 2, opacity: 0.4 }} />
                   <Box sx={{ pb: 1 }}>
                     <Typography variant="body2">
-                      Sprouts become <strong>Rinsable</strong> on a <Link href="https://docs.bean.money/additional-resources/glossary#pari-passu" target="_blank" rel="noreferrer" underline="hover">pari passu</Link> basis. Upon <strong>Rinse</strong>, each Sprout is redeemed for <span><TokenIcon token={BEAN[1]} css={{ height: IconSize.xs, marginTop: 2.6 }} /></span>1.
+                      Sprouts become <strong>Rinsable</strong> on a <Link href="https://docs.bean.money/protocol-resources/glossary#pari-passu" target="_blank" rel="noreferrer" underline="hover">pari passu</Link> basis. Upon <strong>Rinse</strong>, each Sprout is redeemed for <span><TokenIcon token={BEAN[1]} css={{ height: IconSize.xs, marginTop: 2.6 }} /></span>1.
                     </Typography>
                   </Box>
                 </TxnAccordion>
@@ -188,29 +189,29 @@ const Buy : FC<{}> = () => {
   const { data: signer } = useSigner();
   const provider = useProvider();
   const chainId = useChainId();
+  const fertContract = useFertilizerContract(signer);
+  const beanstalk = useBeanstalkContract(signer);
 
-  // Farmer data
+  /// Farmer
   const balances = useFarmerBalances();
-
-  // Data refreshing
   const [refetchFertilizer] = useFetchFarmerBarn();
   const [refetchBalances]   = useFetchFarmerBalances();
   const [refetchAllowances] = useFetchFarmerAllowances();
   
-  // Contracts
-  const fertContract = useFertilizerContract(signer);
-  const beanstalk = useBeanstalkContract(signer);
+  /// Farm
   const farm = useMemo(() => new Farm(provider), [provider]);
 
-  // Constants
+  // Tokens
   const Usdc = getChainConstant(USDC, chainId);
   const Bean = getChainConstant(BEAN,  chainId);
   const Eth  = getChainConstant(ETH,  chainId);
   const Weth = getChainConstant(WETH, chainId);
   const Usdt = getChainConstant(USDT, chainId);
+  
+  /// Form
+  const middleware = useFormMiddleware();
   const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
   const tokenOut = Usdc;
-
   const initialValues : BuyFormValues = useMemo(() => ({
     tokens: [
       {
@@ -220,6 +221,7 @@ const Buy : FC<{}> = () => {
     ],
   }), [baseToken]);
 
+  /// Handlers
   // Doesn't get called if tokenIn === tokenOut
   // aka if the user has selected USDC as input
   const handleQuote = useCallback<QuoteHandler>(async (_tokenIn, _amountIn, _tokenOut) => {
@@ -285,6 +287,8 @@ const Buy : FC<{}> = () => {
   const onSubmit = useCallback(async (values: BuyFormValues, formActions: FormikHelpers<BuyFormValues>) => {
     let txToast;
     try {
+      middleware.before();
+
       if (!beanstalk) throw new Error('Unable to access contracts');
       if (!account) throw new Error('Connect a wallet first.');
 
@@ -415,7 +419,7 @@ const Buy : FC<{}> = () => {
       txToast ? txToast.error(err) : toast.error(parseError(err));
       console.error(err);
     }
-  }, [beanstalk, account, Usdc, farm.contracts.curve.zap.callStatic, farm.contracts.curve.pools.beanCrv3.address, refetchFertilizer, refetchBalances, refetchAllowances, fertContract.address, Bean, Eth]);
+  }, [beanstalk, account, Usdc, farm.contracts.curve.zap.callStatic, farm.contracts.curve.pools.beanCrv3.address, refetchFertilizer, refetchBalances, refetchAllowances, fertContract.address, Bean, Eth, middleware]);
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>

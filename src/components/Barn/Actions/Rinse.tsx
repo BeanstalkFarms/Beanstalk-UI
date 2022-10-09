@@ -27,6 +27,7 @@ import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { ActionType } from '~/util/Actions';
 import copy from '~/constants/copy';
 import { FC } from '~/types';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 // ---------------------------------------------------
 
@@ -122,23 +123,26 @@ const Rinse : FC<{}> = () => {
   /// Wallet connection
   const account = useAccount();
   const { data: signer } = useSigner();
+  const beanstalk = useBeanstalkContract(signer);
   
-  /// Farmer data
+  /// Farmer
   const farmerBarn          = useFarmerFertilizer();
   const [refetchFarmerBarn] = useFetchFarmerBarn();
   const [refetchBalances]   = useFetchFarmerBalances();
   
-  /// Contracts
-  const beanstalk = useBeanstalkContract(signer);
-
+  /// Form
+  const middleware = useFormMiddleware();
   const initialValues : RinseFormValues = useMemo(() => ({
     destination: undefined,
     amount: farmerBarn.fertilizedSprouts,
   }), [farmerBarn.fertilizedSprouts]);
 
+  /// Handlers
   const onSubmit = useCallback(async (values: RinseFormValues, formActions: FormikHelpers<RinseFormValues>) => {
     let txToast;
     try {
+      middleware.before();
+
       if (!farmerBarn.fertilizedSprouts) throw new Error('No Sprouts to Rinse.');
       if (!values.destination) throw new Error('No destination set.');
       if (!account) throw new Error('Connect a wallet first.');
@@ -176,6 +180,7 @@ const Rinse : FC<{}> = () => {
     farmerBarn?.fertilizedSprouts,
     refetchFarmerBarn,
     refetchBalances,
+    middleware,
   ]);
 
   return (
