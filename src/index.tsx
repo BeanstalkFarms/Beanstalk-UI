@@ -1,17 +1,11 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { Theme } from '@mui/material/styles';
 
 import App from '~/components/App';
 import Wrapper from '~/components/App/Wrapper';
 
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
 
 if (import.meta.env.DEV) {
   const showErrorOverlay = (err: any) => {

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { Box, Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, Link } from '@mui/material';
+import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, Link } from '@mui/material';
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
 import Token from '~/classes/Token';
 import { displayBN } from '~/util';
@@ -161,11 +161,10 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
                   {/* Icon & text left side */}
                   <Row justifyContent="center" gap={0}>
                     <ListItemIcon>
-                      <Box
-                        component="omg"
+                      <img
                         src={_token.logo}
                         alt=""
-                        className={{ 
+                        css={{ 
                           width: IconSize.tokenSelect,
                           height: IconSize.tokenSelect
                         }}
