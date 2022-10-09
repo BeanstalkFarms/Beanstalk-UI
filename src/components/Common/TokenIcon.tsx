@@ -10,7 +10,7 @@ const TokenIcon : FC<{
   <img
     src={token.logo}
     alt={token.symbol}
-    style={{
+    css={{
       height: '1em',
       width: 'auto',
       verticalAlign: 'top',
