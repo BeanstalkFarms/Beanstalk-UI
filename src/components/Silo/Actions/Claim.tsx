@@ -176,7 +176,7 @@ const ClaimForm : React.FC<
           // disableTokenSelect={true}
           quoteSettings={quoteSettings}
           handleQuote={handleQuote}
-          hideQuote
+          displayQuote={false}
         />
         <Stack gap={0}>
           {/* Setting: Destination */}
