@@ -33,13 +33,14 @@ import { FontSize, IconSize } from '~/components/App/muiTheme';
 import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
 import { ActionType } from '~/util/Actions';
 import TransactionToast from '~/components/Common/TxnToast';
+import { FC } from '~/types';
 import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 export type TransferFormValues = FormState & {
   to: string;
 }
 
-const TransferForm: React.FC<FormikProps<TransferFormValues> & {
+const TransferForm: FC<FormikProps<TransferFormValues> & {
   token: Token;
   siloBalances: FarmerSilo['balances'];
   depositedBalance: BigNumber;
@@ -155,7 +156,7 @@ const TransferForm: React.FC<FormikProps<TransferFormValues> & {
                             message: (
                               <>
                                 The following Deposits will be used:<br />
-                                <ul style={{ paddingLeft: '25px', marginTop: '10px', marginBottom: 0, fontSize: FontSize.sm }}>
+                                <ul css={{ paddingLeft: '25px', marginTop: '10px', marginBottom: 0, fontSize: FontSize.sm }}>
                                   {withdrawResult.deltaCrates.map((crate, index) => (
                                     <li key={index}>{displayTokenAmount(crate.amount, whitelistedToken)} from Deposits in Season {crate.season.toString()}</li>
                                   ))}
@@ -193,7 +194,7 @@ const TransferForm: React.FC<FormikProps<TransferFormValues> & {
   );
 };
 
-const Transfer: React.FC<{ token: ERC20Token; }> = ({ token }) => {
+const Transfer: FC<{ token: ERC20Token; }> = ({ token }) => {
   /// Ledger
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);

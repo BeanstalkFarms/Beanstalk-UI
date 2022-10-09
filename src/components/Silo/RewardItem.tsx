@@ -5,6 +5,8 @@ import BigNumber from 'bignumber.js';
 import { displayFullBN } from '../../util';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 export type RewardItemProps = {
   title: string;
   amount: BigNumber;
@@ -17,7 +19,7 @@ export type RewardItemProps = {
   compact?: boolean;
 }
 
-const RewardItem: React.FC<RewardItemProps> = ({
+const RewardItem: FC<RewardItemProps> = ({
   amount,
   tooltip,
   title,

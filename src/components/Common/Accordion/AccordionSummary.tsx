@@ -6,7 +6,9 @@ import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
 import IconWrapper from '../IconWrapper';
 import Row from '~/components/Common/Row';
 
-const StyledAccordionSummary : React.FC<{
+import { FC } from '~/types';
+
+const StyledAccordionSummary : FC<{
   title: string | JSX.Element;
   icon?: JSX.Element;
   gradientText?: boolean;

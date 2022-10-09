@@ -3,6 +3,8 @@ import { Link as Link2 } from 'react-router-dom';
 import React from 'react';
 import { FontSize } from '~/components/App/muiTheme';
 
+import { FC } from '~/types';
+
 const sx = {
   color: '#333',
   fontSize: FontSize.sm,
@@ -15,7 +17,7 @@ const sx = {
   backgroundColor: 'white',
 };
 
-const Banner : React.FC<
+const Banner : FC<
   LinkProps
   & { height: number }
   & { to?: string } // fixme

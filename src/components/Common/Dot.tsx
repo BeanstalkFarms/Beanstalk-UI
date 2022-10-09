@@ -1,7 +1,9 @@
 import React from 'react';
 import { Box, BoxProps } from '@mui/system';
 
-const Dot : React.FC<BoxProps & {
+import { FC } from '~/types';
+
+const Dot : FC<BoxProps & {
   color?: BoxProps['color'],
   size?: number;
 }> = ({

@@ -18,6 +18,8 @@ import { PodOrder } from '~/state/farmer/market';
 import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
 import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
+import { FC } from '~/types';
+
 const OPTIONS = [
   {
     title: 'Circulating Balance',
@@ -35,7 +37,7 @@ const OPTIONS = [
   },
 ];
 
-const CancelOrder : React.FC<{
+const CancelOrder : FC<{
   order: PodOrder,
 }> = ({ 
   order

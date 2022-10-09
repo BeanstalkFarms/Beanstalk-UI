@@ -7,10 +7,12 @@ import { Proposal } from '~/util/Governance';
 import { Module, ModuleContent, ModuleTabs } from '~/components/Common/Module';
 import { SNAPSHOT_SPACES } from '~/lib/Beanstalk/Governance';
 
+import { FC } from '~/types';
+
 /// Variables
 const SLUGS = ['dao', 'beanstalk-farms', 'bean-sprout'];
 
-const Proposals: React.FC = () => {
+const Proposals: FC<{}> = () => {
   const [tab, handleChange] = useTabs(SLUGS, 'type');
 
   // Query Proposals

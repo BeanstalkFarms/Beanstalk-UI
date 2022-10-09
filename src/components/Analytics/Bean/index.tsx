@@ -11,7 +11,9 @@ import Crosses from '~/components/Analytics/Bean/Crosses';
 import DeltaB from '~/components/Analytics/Bean/DeltaB';
 
 // const SLUGS = ['price', 'volume', 'liquidity', 'mktcap', 'supply', 'crosses'];
-const BeanAnalytics: React.FC<{}> = () => {
+import { FC } from '~/types';
+
+const BeanAnalytics: FC<{}> = () => {
   const [tab, handleChangeTab] = useTabs();
   return (
     <Card>

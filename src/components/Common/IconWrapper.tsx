@@ -19,7 +19,9 @@ import { Box, BoxProps } from '@mui/material';
  * always match, while giving us the flexibility to freely
  * adjust their icon sizes independently of one another.
  */
-const IconWrapper : React.FC<{ boxSize: number } & BoxProps> = ({ boxSize, children, sx }) => (
+import { FC } from '~/types';
+
+const IconWrapper : FC<{ boxSize: number } & BoxProps> = ({ boxSize, children, sx }) => (
   <Box
     width={boxSize}
     height={boxSize}

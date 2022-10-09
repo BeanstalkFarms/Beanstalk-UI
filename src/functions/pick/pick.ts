@@ -1,4 +1,6 @@
 import { Handler } from '@netlify/functions';
+import middy from 'middy';
+import { cors, rateLimit } from '~/functions/middleware';
 
 const unripeBean     = require('./unripe-beans-merkle.json');
 const unripeBean3CRV = require('./unripe-bean3crv-merkle.json');
@@ -17,7 +19,7 @@ export type PickMerkleResponse = {
 /**
  * Lookup Merkle leaves for a given `account`.
  */
-const handler : Handler = async (event) => {
+const _handler : Handler = async (event) => {
   const account = event.queryStringParameters?.account?.toLowerCase();
   if (!account) {
     return {
@@ -37,4 +39,6 @@ const handler : Handler = async (event) => {
   };
 };
 
-export { handler };
+export const handler = middy(_handler)
+  .use(cors({ origin: '*.bean.money' }))
+  .use(rateLimit());

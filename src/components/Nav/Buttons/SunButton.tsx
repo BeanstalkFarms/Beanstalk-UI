@@ -24,6 +24,8 @@ import FolderMenu from '../FolderMenu';
 import SeasonCard from '../../Sun/SeasonCard';
 import usePeg from '~/hooks/beanstalk/usePeg';
 
+import { FC } from '~/types';
+
 const castField = (data: SunButtonQuery['fields'][number]) => ({
   season:   new BigNumber(data.season),
   newSoil:  toTokenUnitsBN(data.newSoil, BEAN[1].decimals),
@@ -43,7 +45,7 @@ const castSeason = (data: SunButtonQuery['seasons'][number]) => ({
 
 const MAX_ITEMS = 8;
 
-const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
+const PriceButton: FC<ButtonProps> = ({ ...props }) => {
   /// DATA
   const season    = useSeason();
   const price     = usePrice();
@@ -91,7 +93,7 @@ const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
   const startIcon = isTiny ? undefined : (
     <img
       src={price.lte(1) || awaiting ? drySeasonIcon : rainySeasonIcon}
-      style={{
+      css={{
         width: 25,
         height: 25,
         animationName: awaiting ? 'rotate' : 'none',

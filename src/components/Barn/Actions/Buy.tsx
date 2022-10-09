@@ -41,6 +41,7 @@ import FertilizerItem from '../FertilizerItem';
 import { optimizeFromMode } from '~/util/Farm';
 import useAccount from '~/hooks/ledger/useAccount';
 import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
+import { FC } from '~/types';
 
 // ---------------------------------------------------
 
@@ -67,7 +68,7 @@ const TOKEN_LIST = [BEAN, USDC, ETH];
 
 // ---------------------------------------------------
 
-const BuyForm : React.FC<
+const BuyForm : FC<
   FormikProps<BuyFormValues>
   & {
     contract: ethers.Contract;
@@ -153,7 +154,7 @@ const BuyForm : React.FC<
                   <Divider sx={{ my: 2, opacity: 0.4 }} />
                   <Box sx={{ pb: 1 }}>
                     <Typography variant="body2">
-                      Sprouts become <strong>Rinsable</strong> on a <Link href="https://docs.bean.money/protocol-resources/glossary#pari-passu" target="_blank" rel="noreferrer" underline="hover">pari passu</Link> basis. Upon <strong>Rinse</strong>, each Sprout is redeemed for <span><TokenIcon token={BEAN[1]} style={{ height: IconSize.xs, marginTop: 2.6 }} /></span>1.
+                      Sprouts become <strong>Rinsable</strong> on a <Link href="https://docs.bean.money/protocol-resources/glossary#pari-passu" target="_blank" rel="noreferrer" underline="hover">pari passu</Link> basis. Upon <strong>Rinse</strong>, each Sprout is redeemed for <span><TokenIcon token={BEAN[1]} css={{ height: IconSize.xs, marginTop: 2.6 }} /></span>1.
                     </Typography>
                   </Box>
                 </TxnAccordion>
@@ -182,10 +183,8 @@ const BuyForm : React.FC<
   );
 };
 
-// ---------------------------------------------------
-
-const Buy : React.FC<{}> = () => {
-  // Ledger
+const Buy : FC<{}> = () => {
+  // Wallet connection
   const account = useAccount();
   const { data: signer } = useSigner();
   const provider = useProvider();

@@ -5,7 +5,9 @@ import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
 import { toTokenUnitsBN } from '~/util';
 import { STALK } from '~/constants/tokens';
 import { LineChartProps } from '~/components/Common/Charts/LineChart';
-import { tickFormatTruncated } from '~/components/Analytics/formatters';
+import { tickFormatTruncated } from '~/components/Analytics/formatters'; 
+
+import { FC } from '~/types';
 
 const getValue = (season: SnapshotData<SeasonalStalkQuery>) => toTokenUnitsBN(season.totalStalk, STALK.decimals).toNumber();
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
@@ -21,9 +23,9 @@ const queryConfig = {
 };
 const lineChartProps : Partial<LineChartProps> = {
   yTickFormat: tickFormatTruncated
-}; 
+};
 
-const Stalk: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => (
+const Stalk: FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => (
   <SeasonPlot<SeasonalStalkQuery>
     height={height}
     document={SeasonalStalkDocument}

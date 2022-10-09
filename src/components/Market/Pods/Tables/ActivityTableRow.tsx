@@ -10,6 +10,8 @@ import beanIcon from '~/img/tokens/bean-logo-circled.svg';
 import { MarketEvent } from '~/hooks/beanstalk/useMarketplaceEventData';
 import EntityIcon from '~/components/Market/Pods/EntityIcon';
 
+import { FC } from '~/types';
+
 // get current user's timezone
 const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZoneName;
 
@@ -20,7 +22,7 @@ const actionToModifier = {
   unknown: undefined,
 };
 
-const ActivityTableRow: React.FC<BoxProps & { event: MarketEvent }> = (props) => {
+const ActivityTableRow: FC<BoxProps & { event: MarketEvent }> = (props) => {
   // setup
   const e = props.event;
   const date = DateTime.fromMillis(Number(e.time) * 1000 as number);

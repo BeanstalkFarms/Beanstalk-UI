@@ -10,7 +10,9 @@ import PageHeader from '~/components/Common/PageHeader';
 import GuideButton from '~/components/Common/Guide/GuideButton';
 import { HOW_TO_UNDERSTAND_BALANCES } from '~/util';
 
-const BalancesPage: React.FC = () => {
+import { FC } from '~/types';
+
+const BalancesPage: FC<{}> = () => {
   /// State
   const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);

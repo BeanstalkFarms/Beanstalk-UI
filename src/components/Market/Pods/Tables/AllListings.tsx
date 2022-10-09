@@ -8,7 +8,9 @@ import { PodListing } from '~/state/farmer/market';
 import MarketBaseTable from './Base';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
 
-const AllListings : React.FC<{ data: ReturnType<typeof useMarketData> }> = ({ data }) => {
+import { FC } from '~/types';
+
+const AllListings : FC<{ data: ReturnType<typeof useMarketData> }> = ({ data }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 

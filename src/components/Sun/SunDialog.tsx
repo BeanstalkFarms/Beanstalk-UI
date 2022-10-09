@@ -2,7 +2,9 @@ import React from 'react';
 import { Button, Dialog, Stack, Typography } from '@mui/material';
 import { StyledDialogTitle, StyledDialogContent } from '~/components/Common/Dialog';
 
-const SunDialog: React.FC<{
+import { FC } from '~/types';
+
+const SunDialog: FC<{
   open: boolean;
   handleClose: () => void;
 }> = ({

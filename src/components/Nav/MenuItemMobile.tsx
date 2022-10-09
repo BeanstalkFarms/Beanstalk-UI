@@ -10,7 +10,9 @@ import Row from '~/components/Common/Row';
  * Use for mobile nav.
  *
  */
-const NavItemMobile: React.FC<{
+import { FC } from '~/types';
+
+const NavItemMobile: FC<{
   /**
    * Add an adornment to the MenuItem,
    * such as a dropdown arrow.

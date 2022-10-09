@@ -38,6 +38,10 @@ import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 // ----------------------------------------------------
 
+import { FC } from '~/types';
+
+// ----------------------------------------------------
+
 type UnripeKeys = (
   // Beans
   'circulatingBeans' |
@@ -95,9 +99,7 @@ const tokenOrZero = (amount: string | undefined, token: Token) => {
   return toTokenUnitsBN(amount, token.decimals);
 };
 
-// ----------------------------------------------------
-
-const PickBeansDialog: React.FC<{
+const PickBeansDialog: FC<{
   handleClose: any;
 } & DialogProps> = ({
   open,
@@ -263,7 +265,11 @@ const PickBeansDialog: React.FC<{
         Pick non-Deposited Unripe Beans and Unripe BEAN:3CRV LP
       </StyledDialogTitle>
       <Row gap={1} pb={2} pl={1} pr={3}>
-        <img src={pickImage} alt="pick" style={{ height: 120 }} />
+        <img
+          src={pickImage}
+          alt="pick"
+          css={{ height: 120 }}
+        />
         <Typography sx={{ fontSize: '15px' }} color="text.secondary">
           To claim non-Deposited Unripe Beans and Unripe BEAN:3CRV LP, they must be Picked. After Replant, you can Pick assets to your wallet, or Pick and Deposit them directly in the Silo.<br /><br />
           Unripe Deposited assets <b>do not need to be Picked</b> and will be automatically Deposited at Replant.<br /><br />
@@ -400,9 +406,6 @@ const PickBeansDialog: React.FC<{
       </StyledDialogTitle>
       <StyledDialogContent sx={{ width: isMobile ? null : '560px' }}>
         <Stack gap={0.8}>
-          {/* <code style={{ fontSize: 12, lineHeight: '14px' }}>
-            <pre>{JSON.stringify(merkles, null, 2)}</pre>
-          </code> */}
           {pickStatus === null ? (
             <>
               <DescriptionButton

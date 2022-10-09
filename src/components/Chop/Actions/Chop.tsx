@@ -36,6 +36,7 @@ import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { AppState } from '~/state';
 import useUnripeUnderlyingMap from '~/hooks/beanstalk/useUnripeUnderlying';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
 import TransactionToast from '~/components/Common/TxnToast';
 import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
@@ -43,7 +44,7 @@ type ChopFormValues = FormState & {
   destination: FarmToMode | undefined;
 };
 
-const ChopForm: React.FC<
+const ChopForm: FC<
   FormikProps<ChopFormValues> & {
     balances: ReturnType<typeof useFarmerBalances>;
     beanstalk: Beanstalk;
@@ -193,7 +194,7 @@ const PREFERRED_TOKENS : PreferredToken[] = [
   }
 ];
 
-const Chop: React.FC<{}> = () => {
+const Chop: FC<{}> = () => {
   /// Ledger
   const account           = useAccount();
   const { data: signer }  = useSigner();

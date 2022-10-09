@@ -39,7 +39,7 @@ const NetworkButton: React.FC<ButtonProps & {
         startIcon={showIcons && (
           <TokenIcon
             token={ETH[SupportedChainId.MAINNET]}
-            style={{ height: '1.4em' }}
+            css={{ height: '1.4em' }}
           />
         )}
         endIcon={showIcons && <DropdownIcon open={open} />}

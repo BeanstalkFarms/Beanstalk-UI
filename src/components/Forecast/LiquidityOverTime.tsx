@@ -7,6 +7,8 @@ import { SeasonalLiquidityDocument, SeasonalLiquidityQuery } from '~/generated/g
 import SeasonPlot from '~/components/Common/Charts/SeasonPlot';
 import useSeason from '~/hooks/beanstalk/useSeason';
 
+import { FC } from '~/types';
+
 /// Setup SeasonPlot
 const getValue = (season: SeasonalLiquidityQuery['seasons'][number]) => parseFloat(season.totalLiquidityUSD);
 const formatValue = (value: number) => (
@@ -25,7 +27,7 @@ const queryConfig = {
   context: { subgraph: 'bean' }
 };
 
-const LiquidityOverTime: React.FC<{} & CardProps> = ({ sx }) => {
+const LiquidityOverTime: FC<{} & CardProps> = ({ sx }) => {
   const beanPools = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
   const liquidity = Object.values(beanPools).reduce((prev, curr) => prev.plus(curr.liquidity), ZERO_BN);
   const season = useSeason();

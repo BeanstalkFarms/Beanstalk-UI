@@ -6,7 +6,9 @@ import { AppState } from '~/state';
 import { displayBN } from '~/util';
 import StatCard from '../StatCard';
 
-const PodCard: React.FC<{ state: AppState['_farmer']['field'] }> = ({ state }) => (
+import { FC } from '~/types';
+
+const PodCard: FC<{ state: AppState['_farmer']['field'] }> = ({ state }) => (
   <StatCard
     title="My Pods"
     amountIcon={<TokenIcon token={PODS} />}

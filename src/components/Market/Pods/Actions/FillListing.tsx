@@ -36,9 +36,10 @@ import { BEAN, ETH, PODS, WETH } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
 import { PodListing } from '~/state/farmer/market';
 import { optimizeFromMode } from '~/util/Farm';
-import TokenIcon from '../../../Common/TokenIcon';
-import { IconSize } from '../../../App/muiTheme';
+import TokenIcon from '~/components/Common/TokenIcon';
+import { IconSize } from '~/components/App/muiTheme';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
 import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 export type FillListingFormValues = FormState & {
@@ -46,7 +47,7 @@ export type FillListingFormValues = FormState & {
   maxAmountIn: BigNumber | undefined;
 }
 
-const FillListingForm : React.FC<
+const FillListingForm : FC<
   FormikProps<FillListingFormValues>
   & {
     podListing: PodListing;
@@ -193,7 +194,7 @@ const FillListingForm : React.FC<
                 <Row gap={0.5}>
                   <TokenIcon
                     token={PODS}
-                    style={{
+                    css={{
                       height: IconSize.small,
                     }}
                   />
@@ -264,7 +265,7 @@ const PREFERRED_TOKENS : PreferredToken[] = [
   }
 ];
 
-const FillListing : React.FC<{
+const FillListing : FC<{
   podListing: PodListing
 }> = ({
   podListing

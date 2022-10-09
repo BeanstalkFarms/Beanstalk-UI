@@ -9,7 +9,9 @@ import StalkholderCard from '~/components/Governance/StalkholderCard';
  import { HOW_TO_VOTE } from '~/util/Guides';
 import GuideButton from '~/components/Common/Guide/GuideButton';
 
-const GovernancePage: React.FC = () => (
+import { FC } from '~/types';
+
+const GovernancePage: FC<{}> = () => (
   <Container maxWidth="lg">
     <Stack gap={2}>
       <PageHeader

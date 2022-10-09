@@ -7,6 +7,7 @@ import { ethers } from 'ethers';
 import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
+
 import GasTag from '~/components/Common/GasTag';
 import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
 import { useSigner } from '~/hooks/ledger/useSigner';
@@ -20,14 +21,15 @@ import useAccount from '~/hooks/ledger/useAccount';
 import useBDV from '~/hooks/beanstalk/useBDV';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import { AppState } from '~/state';
-import TransactionToast from '../Common/TxnToast';
-import DescriptionButton from '../Common/DescriptionButton';
+import TransactionToast from '~/components/Common/TxnToast';
+import DescriptionButton from '~/components/Common/DescriptionButton';
 import RewardsBar, { RewardsBarProps } from './RewardsBar';
-import { hoverMap } from '../../constants/silo';
-import { BeanstalkPalette } from '../App/muiTheme';
+import { hoverMap } from '~/constants/silo';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 import useTimedRefresh from '~/hooks/app/useTimedRefresh';
 import useFarmerSiloBalances from '~/hooks/farmer/useFarmerSiloBalances';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
+import { FC } from '~/types';
 
 export type SendFormValues = {
   to?: string;
@@ -75,7 +77,7 @@ type ClaimGasResults = {
 
 // ------------------------------------------
 
-const ClaimRewardsForm : React.FC<
+const ClaimRewardsForm : FC<
   FormikProps<ClaimRewardsFormValues>
   & RewardsBarProps
   & {
@@ -211,7 +213,7 @@ const ClaimRewardsForm : React.FC<
   );
 };
 
-const RewardsDialog: React.FC<RewardsBarProps & {
+const RewardsDialog: FC<RewardsBarProps & {
   handleClose: () => void;
   open: boolean;
 }> = ({

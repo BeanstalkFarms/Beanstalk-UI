@@ -7,6 +7,8 @@ import { displayBN, displayFullBN } from '../../util';
 import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 export interface SeasonCardProps {
   season: BigNumber;
   rewardBeans: BigNumber | undefined;
@@ -18,7 +20,7 @@ export interface SeasonCardProps {
   isNew?: boolean;
 }
 
-const SeasonCard: React.FC<SeasonCardProps> = ({ 
+const SeasonCard: FC<SeasonCardProps> = ({ 
   season,
   rewardBeans,
   newSoil,

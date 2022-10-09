@@ -8,6 +8,8 @@ import useSeason from '~/hooks/beanstalk/useSeason';
 import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
 import { AppState } from '~/state';
 
+import { FC } from '~/types';
+
 const getValue = (snapshot: SnapshotData<SeasonalWeatherQuery>) => snapshot.weather;
 const formatValue = (value: number) => `${value.toFixed(0)}%`;
 const statProps = {
@@ -19,7 +21,7 @@ const lineChartProps : Partial<LineChartProps> = {
   yTickFormat: tickFormatPercentage
 };
 
-const Temperature: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => {
+const Temperature: FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => {
   const temperature = useSelector<AppState, AppState['_beanstalk']['field']['weather']['yield']>((state) => state._beanstalk.field.weather.yield);
   const season  = useSeason();
   return (

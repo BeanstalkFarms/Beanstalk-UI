@@ -16,7 +16,12 @@ export default defineConfig(({ command, mode }) => ({
     }
   },
   plugins: [
-    react(),
+    react({
+      // This definition ensures that the `css` prop from Emotion 
+      // works at build time. The one in tsconfig.json ensures that
+      // the IDE doesn't throw errors when using the prop.
+      jsxImportSource: '@emotion/react',
+    }),
     splitVendorChunkPlugin(),
     analyze({ limit: 10 }),
   ],

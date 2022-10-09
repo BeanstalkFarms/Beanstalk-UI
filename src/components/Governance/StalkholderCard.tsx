@@ -11,7 +11,9 @@ import { STALK } from '~/constants/tokens';
 import TokenIcon from '~/components/Common/TokenIcon';
 import Row from '~/components/Common/Row';
 
-const StalkholderCard : React.FC = () => {
+import { FC } from '~/types';
+
+const StalkholderCard : FC<{}> = () => {
   const account       = useAccount();
   const farmerSilo    = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   
@@ -29,7 +31,7 @@ const StalkholderCard : React.FC = () => {
         </Row>
         {account ? (
           <Row gap={0.5}>
-            <TokenIcon token={STALK} style={{ height: IconSize.small }} />
+            <TokenIcon token={STALK} css={{ height: IconSize.small }} />
             <Typography variant="bodyLarge">{displayBN(farmerSilo.stalk.active)} STALK</Typography>
           </Row>
         ) : (

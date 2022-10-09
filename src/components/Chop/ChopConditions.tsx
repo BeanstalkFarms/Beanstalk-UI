@@ -8,7 +8,9 @@ import { AppState } from '~/state';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import { UNRIPE_BEAN } from '~/constants/tokens';
 
-const ChopConditions: React.FC<{}> = () => {
+import { FC } from '~/types';
+
+const ChopConditions: FC<{}> = () => {
   const { fertilized, recapFundedPct, unfertilized } = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
   const pctDebtRepaid = fertilized.div(fertilized.plus(unfertilized));
   const unripeTokens = useSelector<AppState, AppState['_bean']['unripe']>((_state) => _state._bean.unripe);

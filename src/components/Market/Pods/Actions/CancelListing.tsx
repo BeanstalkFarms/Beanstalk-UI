@@ -9,7 +9,9 @@ import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
 import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
-const CancelListing : React.FC<{ id: string }> = ({ id }) => {
+import { FC } from '~/types';
+
+const CancelListing : FC<{ id: string }> = ({ id }) => {
   /// Helpers
   const navigate = useNavigate();
   

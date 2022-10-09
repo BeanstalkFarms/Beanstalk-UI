@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { bisector, extent, max, min } from 'd3-array';
+import { NumberValue } from 'd3-scale';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { AreaStack, Bar, Line, LinePath } from '@visx/shape';
 import { Group } from '@visx/group';
@@ -16,6 +17,11 @@ import BigNumber from 'bignumber.js';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { displayBN } from '~/util';
 import { CURVES } from '~/components/Common/Charts/LineChart';
+import { FC } from '~/types';
+
+// ------------------------
+//    Stacked Area Chart
+// ------------------------
 
 export type Scale = {
   xScale: ReturnType<typeof scaleLinear>;
@@ -111,7 +117,7 @@ const yTickLabelProps = () => ({
   textAnchor: 'end',
 } as const);
 
-const Graph: React.FC<GraphProps> = (props) => {
+const Graph: FC<GraphProps> = (props) => {
   const {
     // Chart sizing
     width,
@@ -244,8 +250,8 @@ const Graph: React.FC<GraphProps> = (props) => {
     },
     [series]
   );
-  const xTickFormat = useCallback((_, i) => tickDates[i], [tickDates]);
-  const yTickFormat = useCallback((val) => displayBN(new BigNumber(val)), []);
+  const xTickFormat = useCallback((_: unknown, i: number) => tickDates[i], [tickDates]);
+  const yTickFormat = useCallback((val: NumberValue) => displayBN(new BigNumber(val.valueOf())), []);
 
   if (!series || series.length === 0) return null;
 
@@ -391,11 +397,7 @@ const Graph: React.FC<GraphProps> = (props) => {
   );
 };
 
-// ------------------------
-//       Stacked Area Chart
-// ------------------------
-
-const StackedAreaChart: React.FC<LineChartProps> = (props) => (
+const StackedAreaChart: FC<LineChartProps> = (props) => (
   <ParentSize debounceTime={50}>
     {({ width: visWidth, height: visHeight }) => (
       <Graph

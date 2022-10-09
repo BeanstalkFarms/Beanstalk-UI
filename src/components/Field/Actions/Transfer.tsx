@@ -1,6 +1,6 @@
+import React, { useCallback, useMemo } from 'react';
 import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import React, { useCallback, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import toast from 'react-hot-toast';
 import AddressInputField from '~/components/Common/Form/AddressInputField';
@@ -13,13 +13,15 @@ import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useAccount from '~/hooks/ledger/useAccount';
 import useFarmerPlots from '~/hooks/farmer/useFarmerPlots';
 import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
+import { ZERO_BN } from '~/constants';
 import { PODS } from '~/constants/tokens';
-import { ZERO_BN } from '../../../constants';
-import { displayFullBN, parseError, toStringBaseUnitBN, trimAddress } from '../../../util';
-import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
-import { ActionType } from '../../../util/Actions';
+import { displayFullBN, parseError, toStringBaseUnitBN, trimAddress } from '~/util';
+import { ActionType } from '~/util/Actions';
+import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
 import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
+
+import { FC } from '~/types';
 
 export type TransferFormValues = {
   plot: PlotFragment;
@@ -31,7 +33,7 @@ export type TransferFormValues = {
 
 export interface SendFormProps {}
 
-const TransferForm: React.FC<
+const TransferForm: FC<
   SendFormProps &
   FormikProps<TransferFormValues>
 > = ({
@@ -111,7 +113,7 @@ const TransferForm: React.FC<
   );
 };
 
-const Transfer: React.FC<{}> = () => {
+const Transfer: FC<{}> = () => {
   /// Ledger
   const account = useAccount();
   const { data: signer } = useSigner();

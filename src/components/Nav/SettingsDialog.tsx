@@ -12,7 +12,9 @@ import { save } from '~/state';
 import { setNextSunrise, setRemainingUntilSunrise } from '~/state/beanstalk/sun/actions';
 import { clearApolloCache } from '~/util';
 
-const Split : React.FC = ({ children }) => (
+import { FC } from '~/types';
+
+const Split : FC<{}> = ({ children }) => (
   <Row justifyContent="space-between" gap={1}>
     {children}
   </Row>
@@ -45,7 +47,7 @@ const SelectInputProps = {
   }
 };
 
-const SettingsDialog : React.FC<{ open: boolean; onClose?: () => void; }> = ({ open, onClose }) => {
+const SettingsDialog : FC<{ open: boolean; onClose?: () => void; }> = ({ open, onClose }) => {
   const [denomination, setDenomination] = useSetting('denomination');
   const [subgraphEnv, setSubgraphEnv]   = useSetting('subgraphEnv');
   const dispatch = useDispatch();

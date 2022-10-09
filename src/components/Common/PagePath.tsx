@@ -2,12 +2,14 @@ import { Link, Typography } from '@mui/material';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
+import { FC } from '~/types';
+
 export type PathItem = {
   title: string;
   path: string;
 };
 
-const PagePath: React.FC<{
+const PagePath: FC<{
   items: PathItem[];
 }> = (props) => (
   <div>

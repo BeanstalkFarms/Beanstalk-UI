@@ -17,6 +17,8 @@ import { BeanstalkPalette } from '~/components/App/muiTheme';
 import Carousel from '~/components/Common/Carousel/Carousel';
 import EmbeddedCard from '~/components/Common/EmbeddedCard';
 
+import { FC } from '~/types';
+
 const depositCardContentByToken = {
   [BEAN[1].address]: {
     img: depositBeanImg,
@@ -104,7 +106,7 @@ const CarouselCard = styled(EmbeddedCard)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: { height: '535px' },
 }));
 
-const SiloCarousel: React.FC<{ token: ERC20Token }> = ({ token }) => {
+const SiloCarousel: FC<{ token: ERC20Token }> = ({ token }) => {
   const content = useCardContentWithToken(token);
 
   return (
@@ -117,7 +119,7 @@ const SiloCarousel: React.FC<{ token: ERC20Token }> = ({ token }) => {
                 <img
                   src={imageSrc}
                   alt=""
-                  style={{ objectFit: 'cover', height: '100%' }}
+                  css={{ objectFit: 'cover', height: '100%' }}
                 />
               </ImageWrapper>
             ))}

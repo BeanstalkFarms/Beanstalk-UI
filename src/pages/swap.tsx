@@ -7,7 +7,9 @@ import PageHeader from '~/components/Common/PageHeader';
 import GuideButton from '~/components/Common/Guide/GuideButton';
 import { HOW_TO_TRANSFER_FARM_BALANCE, HOW_TO_TRADE_BEANS } from '~/util/Guides';
 
-const SwapPage: React.FC = () => (
+import { FC } from '~/types';
+
+const SwapPage: FC<{}> = () => (
   <Container maxWidth="sm">
     <Stack gap={2}>
       <PageHeader

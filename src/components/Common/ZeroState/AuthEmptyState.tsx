@@ -8,7 +8,9 @@ import WalletButton from '~/components/Common/Connection/WalletButton';
  * takes into account authentication
  * status.
  * */
-const AuthEmptyState: React.FC<{
+import { FC } from '~/types';
+
+const AuthEmptyState: FC<{
   /** Card title */
   title?: string;
   /**

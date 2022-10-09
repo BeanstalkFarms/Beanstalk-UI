@@ -7,6 +7,13 @@ import { Stack, Typography } from '@mui/material';
 
 // ------------------------------------------------------
 
+/**
+ * Wrap the graph in a ParentSize handler.
+ */
+import { FC } from '~/types';
+
+// ------------------------------------------------------
+
 // react-spring transition definitions
 type AnimatedStyles = { startAngle: number; endAngle: number; opacity: number };
 
@@ -132,7 +139,7 @@ type PieCustomizationProps = {
   donutThickness?: number;
 }
 
-const Pie : React.FC<PieProps & PieCustomizationProps> = ({
+const Pie : FC<PieProps & PieCustomizationProps> = ({
   title,
   width,
   height,
@@ -197,12 +204,7 @@ const Pie : React.FC<PieProps & PieCustomizationProps> = ({
   );
 };
 
-// ------------------------------------------------------
-
-/**
- * Wrap the graph in a ParentSize handler.
- */
-const ResizablePieChart : React.FC<PieCustomizationProps> = (props) => (
+const ResizablePieChart : FC<PieCustomizationProps> = (props) => (
   <ParentSize debounceTime={50}>
     {({ width: visWidth, height: visHeight }) => (
       <Pie

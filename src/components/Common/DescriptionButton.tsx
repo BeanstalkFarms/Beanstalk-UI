@@ -13,8 +13,6 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { BeanstalkPalette, FontSize } from '~/components/App/muiTheme';
 import Row from '~/components/Common/Row';
 
-const GAP = 2;
-
 /**
  * Shows a standard Button with various slots for standard sizing
  * and positioning of elements, like tooltips and tags.
@@ -23,7 +21,11 @@ const GAP = 2;
  * PillSelectField (provides buttons for things like DestinationField)
  * Governance page
  */
-const DescriptionButton: React.FC<ButtonProps & {
+import { FC } from '~/types';
+
+const GAP = 2;
+
+const DescriptionButton: FC<ButtonProps & {
   /** Title */
   title?: string;
   /** Description displayed below the title. */

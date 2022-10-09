@@ -10,6 +10,8 @@ import { displayFullBN } from '~/util/Tokens';
 import { FormState, FormTokenState } from '.';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 type TokenQuoteProviderCustomProps = {
   /** Field name */
   name: string;
@@ -35,8 +37,6 @@ type TokenQuoteProviderProps = (
   & Partial<TokenInputProps>
 );
 
-// const Steps : React.FC<{ steps: }
-
 const DefaultQuoteDisplay = (amountOut: BigNumber | undefined, tokenOut: Token) => (
   amountOut ? (
     <Typography variant="body1">
@@ -45,7 +45,7 @@ const DefaultQuoteDisplay = (amountOut: BigNumber | undefined, tokenOut: Token) 
   ) : undefined
 );
 
-const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
+const TokenQuoteProvider : FC<TokenQuoteProviderProps> = ({
   /// Field
   name,
   state,

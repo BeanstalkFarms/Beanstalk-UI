@@ -55,3 +55,4 @@ export * from './wallets';
 export * from './links';
 export * from './values';
 export * from './rpc';
+export * from './tooltips';

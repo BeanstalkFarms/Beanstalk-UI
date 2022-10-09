@@ -21,7 +21,9 @@ import FolderMenu from '../FolderMenu';
 
 // ------------------------------------------------------------
 
-const PriceButton: React.FC<ButtonProps> = ({ ...props }) => {
+import { FC } from '~/types';
+
+const PriceButton: FC<ButtonProps> = ({ ...props }) => {
   // Data
   const pools     = usePools();
   const season    = useSeason();

@@ -1,5 +1,7 @@
 import { Handler } from '@netlify/functions';
 import axios from 'axios';
+import middy from 'middy';
+import { cors, rateLimit } from '~/functions/middleware';
 
 /// https://docs.etherscan.io/api-endpoints/gas-tracker#get-gas-oracle
 type EtherscanGasOracleResponse = {
@@ -53,7 +55,7 @@ const CORS_HEADERS = {
  * repeated requests to Etherscan. Apply refresh logic to in-memory cache
  * to ensure data doesn't become stale.
  */
-const handler: Handler = async (event) => {
+const _handler: Handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
@@ -100,4 +102,6 @@ const handler: Handler = async (event) => {
   };
 };
 
-export { handler };
+export const handler = middy(_handler)
+  .use(cors({ origin: '*.bean.money' }))
+  .use(rateLimit());

@@ -42,12 +42,13 @@ import { useFetchPools } from '~/state/bean/pools/updater';
 import { AppState } from '~/state';
 import { BEAN, ETH, PODS, WETH } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
-import StyledAccordionSummary from '../../Common/Accordion/AccordionSummary';
-import { ActionType } from '../../../util/Actions';
-import { IconSize } from '../../App/muiTheme';
-import IconWrapper from '../../Common/IconWrapper';
-import TokenIcon from '../../Common/TokenIcon';
+import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
+import { ActionType } from '~/util/Actions';
+import { IconSize } from '~/components/App/muiTheme';
+import IconWrapper from '~/components/Common/IconWrapper';
+import TokenIcon from '~/components/Common/TokenIcon';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
 import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 type SowFormValues = FormState & {
@@ -55,7 +56,7 @@ type SowFormValues = FormState & {
   maxAmountIn: BigNumber | undefined;
 };
 
-const SowForm : React.FC<
+const SowForm : FC<
   FormikProps<SowFormValues>
   & {
     handleQuote: QuoteHandler;
@@ -204,7 +205,7 @@ const SowForm : React.FC<
                 <Row gap={0.5}>
                   <TokenIcon
                     token={PODS}
-                    style={{
+                    css={{
                       height: IconSize.small,
                     }}
                   />
@@ -252,7 +253,7 @@ const SowForm : React.FC<
                   <Divider sx={{ my: 2, opacity: 0.4 }} />
                   <Box pb={1}>
                     <Typography variant="body2" alignItems="center">
-                      Pods become <strong>Harvestable</strong> on a first in, first out <Link href="https://docs.bean.money/protocol-resources/glossary#fifo" target="_blank" rel="noreferrer" underline="hover">(FIFO)</Link> basis. Upon <strong>Harvest</strong>, each Pod is redeemed for <span><TokenIcon token={BEAN[1]} style={{ height: IconSize.xs, marginTop: 2.6 }} /></span>1.
+                      Pods become <strong>Harvestable</strong> on a first in, first out <Link href="https://docs.bean.money/protocol-resources/glossary#fifo" target="_blank" rel="noreferrer" underline="hover">(FIFO)</Link> basis. Upon <strong>Harvest</strong>, each Pod is redeemed for <span><TokenIcon token={BEAN[1]} css={{ height: IconSize.xs, marginTop: 2.6 }} /></span>1.
                     </Typography>
                   </Box>
                 </AccordionDetails>
@@ -294,7 +295,7 @@ const PREFERRED_TOKENS : PreferredToken[] = [
   }
 ];
 
-const Sow : React.FC<{}> = () => {
+const Sow : FC<{}> = () => {
   /// Tokens
   const getChainToken = useGetChainToken();
   const Bean          = getChainToken(BEAN);

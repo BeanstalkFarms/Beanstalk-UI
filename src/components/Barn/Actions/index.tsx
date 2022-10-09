@@ -7,9 +7,11 @@ import Rinse from './Rinse';
 import Buy from './Buy';
 import { Module, ModuleContent, ModuleTabs } from '~/components/Common/Module';
 
+import { FC } from '~/types';
+
 const SLUGS = ['buy', 'rinse'];
 
-const BarnActions : React.FC<{}> = () => {
+const BarnActions : FC<{}> = () => {
   const [tab, handleChange] = useTabs(SLUGS, 'action');
   const farmerFertilizer = useFarmerFertilizer();
   return (

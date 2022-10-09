@@ -14,7 +14,9 @@ import MenuItem from '../../Nav/MenuItem';
 
 // -----------------------------------------------------------------
 
-const MoreDropdown: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props }) => {
+import { FC } from '~/types';
+
+const MoreDropdown: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props }) => {
   // Menu
   const [menuAnchor, toggleMenuAnchor] = useAnchor();
   const menuVisible = Boolean(menuAnchor);

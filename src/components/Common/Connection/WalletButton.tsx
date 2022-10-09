@@ -34,7 +34,9 @@ import AddressIcon from '~/components/Common/AddressIcon';
 import useGlobal from '~/hooks/app/useGlobal';
 import Row from '~/components/Common/Row';
 
-const WalletButton: React.FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props }) => {
+import { FC } from '~/types';
+
+const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props }) => {
   const account = useAccount();
   const { data: accountRaw } = useWagmiAccount();
   const { activeChain } = useNetwork();

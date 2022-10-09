@@ -16,7 +16,9 @@ import useChainConstant from '../../hooks/chain/useChainConstant';
 import { BEANSTALK_ADDRESSES, CHAIN_INFO } from '../../constants';
 import Row from '~/components/Common/Row';
 
-const NavDrawer: React.FC<{
+import { FC } from '~/types';
+
+const NavDrawer: FC<{
   open: boolean;
   hideDrawer: () => void;
 }> = ({

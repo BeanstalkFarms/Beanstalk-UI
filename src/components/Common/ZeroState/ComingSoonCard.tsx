@@ -3,10 +3,16 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Button, Card, Stack, Typography } from '@mui/material';
 import forecast from '~/img/beanstalk/forecast-banner.svg';
 
-const ComingSoonCard : React.FC<{ title: string }> = ({ title }) => (
+import { FC } from '~/types';
+
+const ComingSoonCard : FC<{ title: string }> = ({ title }) => (
   <Card sx={{ px: 4, py: 6 }}>
     <Stack direction="column" alignItems="center" justifyContent="center" gap={4}>
-      <img src={forecast} alt="Barn" style={{ maxWidth: 400 }} />
+      <img
+        src={forecast}
+        alt="Barn"
+        css={{ maxWidth: 400 }}
+      />
       <Typography variant="h1">The {title} page is coming soon</Typography>
       <Stack direction="column" gap={2}>
         <Button

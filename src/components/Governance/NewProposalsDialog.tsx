@@ -15,7 +15,9 @@ import { getDateCountdown } from '~/util/Time';
 import { getProposalTag } from '~/util/Governance';
 import Row from '~/components/Common/Row';
 
-const NewProposalsDialog: React.FC = () => {
+import { FC } from '~/types';
+
+const NewProposalsDialog: FC<{}> = () => {
   /// Local state
   const [modalOpen, showModal, hideModal] = useToggle();
   const [unseenProposals, setUnseenProposals] = useState<ActiveProposal[]>([]);
@@ -60,7 +62,7 @@ const NewProposalsDialog: React.FC = () => {
       <StyledDialogContent sx={{ px: 2, pt: 1, pb: 1 }}>
         <Box display="flex" alignItems="center" justifyContent="center" py={3}>
           <Row gap={0.3}>
-            <TokenIcon token={STALK} style={{ height: IconSize.small }} />
+            <TokenIcon token={STALK} css={{ height: IconSize.small }} />
             <Typography variant="bodyLarge" textAlign="center">
               {displayBN(farmerSilo.stalk.active)} STALK
             </Typography>

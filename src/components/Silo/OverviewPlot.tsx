@@ -12,6 +12,8 @@ import MockPlot from '~/components/Silo/MockPlot';
 import { SEEDS, STALK } from '~/constants/tokens';
 import { SeasonAggregation, SeasonRange, SEASON_RANGE_TO_COUNT } from '~/hooks/beanstalk/useSeasonsQuery';
 
+import { FC } from '~/types';
+
 export type OverviewPlotProps = {
   account: string | undefined;
   season: BigNumber;
@@ -23,7 +25,7 @@ export type OverviewPlotProps = {
   label: string;
 };
 
-const OverviewPlot: React.FC<OverviewPlotProps> = ({
+const OverviewPlot: FC<OverviewPlotProps> = ({
   account,
   season,
   current,

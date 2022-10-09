@@ -16,9 +16,11 @@ import PageHeader from '~/components/Common/PageHeader';
 import GuideButton from '~/components/Common/Guide/GuideButton';
 import { HOW_TO_MINT_BEANFTS } from '~/util/Guides';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
 
 const SLUGS = ['genesis', 'winter'];
-const NFTPage: React.FC = () => {
+
+const NFTPage: FC<{}> = () => {
   const account = useAccount();
   const theme = useTheme();
   const { data: signer } = useSigner();

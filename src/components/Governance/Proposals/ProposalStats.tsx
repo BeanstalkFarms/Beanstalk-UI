@@ -8,7 +8,9 @@ import { ZERO_BN } from '~/constants';
 import Row from '~/components/Common/Row';
 import StatHorizontal from '~/components/Common/StatHorizontal';
 
-const ProposalStats: React.FC<{
+import { FC } from '~/types';
+
+const ProposalStats: FC<{
   proposal: Proposal;
   totalStalk?: BigNumber;
   quorum?: BigNumber;

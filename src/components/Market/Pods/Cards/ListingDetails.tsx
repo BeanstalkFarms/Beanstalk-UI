@@ -11,7 +11,9 @@ import { displayBN } from '~/util';
 import { PodListing } from '~/state/farmer/market';
 import Row from '~/components/Common/Row';
 
-const ListingDetails: React.FC<{
+import { FC } from '~/types';
+
+const ListingDetails: FC<{
   podListing: PodListing;
   harvestableIndex: BigNumber;
 }> = ({
@@ -20,7 +22,11 @@ const ListingDetails: React.FC<{
 }) => (
   <Stack gap={2}>
     <Row gap={1}>
-      <img src={podListingIcon} style={{ width: IconSize.medium, height: IconSize.medium }} alt="Pod Listing" />
+      <img
+        src={podListingIcon}
+        css={{ width: IconSize.medium, height: IconSize.medium }}
+        alt="Pod Listing"
+      />
       <Typography variant="h4">Pod Listing</Typography>
       <Box sx={{ flex: 1, textAlign: 'right' }}>
         <FarmerChip account={podListing.account} />
@@ -31,11 +37,11 @@ const ListingDetails: React.FC<{
         <Typography>{displayBN(podListing.index.minus(harvestableIndex))}</Typography>
       </StatHorizontal>
       <StatHorizontal label="Price per Pod" labelTooltip="The number of Beans requested per Pod.">
-        <TokenIcon token={BEAN[1]} style={{ height: IconSize.xs }} />
+        <TokenIcon token={BEAN[1]} css={{ height: IconSize.xs }} />
         <Typography>{displayBN(podListing.pricePerPod)}</Typography>
       </StatHorizontal>
       <StatHorizontal label="Amount" labelTooltip="The number of Pods left to be purchased from this Listing.">
-        <TokenIcon token={PODS} style={{ height: IconSize.xs }} />
+        <TokenIcon token={PODS} css={{ height: IconSize.xs }} />
         <Typography>{displayBN(podListing.remainingAmount)}</Typography>
       </StatHorizontal>
       <StatHorizontal label="Expires in" labelTooltip="If the Pod Line moves forward by this amount, this listing will automatically expire.">

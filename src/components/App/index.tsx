@@ -1,7 +1,7 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { Box, CssBaseline, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { ToastBar, Toaster } from 'react-hot-toast';
 
 import NavBar from '~/components/Nav/NavBar';
@@ -53,9 +53,11 @@ import { PAGE_BG_COLOR } from './muiTheme';
 import useAccount from '~/hooks/ledger/useAccount';
 import EnforceNetwork from '~/components/App/EnforceNetwork';
 
+import { FC } from '~/types';
+
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
-const CustomToaster: React.FC<{ navHeight: number }> = ({ navHeight }) => (
+const CustomToaster: FC<{ navHeight: number }> = ({ navHeight }) => (
   <Toaster
     containerStyle={{
       top: navHeight + 10,
@@ -95,7 +97,6 @@ export default function App() {
       {/* -----------------------
         * Appplication Setup
         * ----------------------- */}
-      <CssBaseline />
       <AppUpdater />
       {/* -----------------------
         * Bean Updaters

@@ -8,6 +8,8 @@ import ResizablePieChart, { PieDataPoint } from '~/components/Common/Charts/PieC
 import StatCard from '../StatCard';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 export type StalkCardProps = (
   {
     token: typeof STALK;
@@ -25,7 +27,7 @@ const MAPPING = {
   earned: ['Earned', 'rgba(166, 206, 227, 0.5)'],
 };
 
-const SiloAssetCard: React.FC<StalkCardProps> = ({
+const SiloAssetCard: FC<StalkCardProps> = ({
   token,
   state,
 }) => {

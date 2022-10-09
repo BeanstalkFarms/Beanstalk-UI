@@ -7,7 +7,9 @@ import TokenIcon from '../TokenIcon';
 import Dot from '~/components/Common/Dot';
 import Row from '~/components/Common/Row';
 
-const TokenRow: React.FC<{
+import { FC } from '~/types';
+
+const TokenRow: FC<{
   /* Label */
   label: string;
   /* Display a tooltip when hovering over the label */
