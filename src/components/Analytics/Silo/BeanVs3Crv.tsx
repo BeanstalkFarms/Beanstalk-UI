@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { Card } from '@mui/material';
+import BigNumber from 'bignumber.js';
 import useSeasonsQuery, {
   SnapshotData,
 } from '~/hooks/beanstalk/useSeasonsQuery';
@@ -23,6 +24,7 @@ const assets = {
   bean: BEAN[1],
   bean3Crv: BEAN_CRV3_LP[1],
 };
+
 const account = BEANSTALK_ADDRESSES[1];
 
 const stylesConfig: ChartMultiStyles = {
@@ -36,21 +38,35 @@ const stylesConfig: ChartMultiStyles = {
   },
 };
 
+const queryConfig = {
+  bean: {
+    variables: {
+      season_gt: 6073,
+      siloAsset: `${account.toLowerCase()}-${assets.bean.address}`,
+    },
+  },
+  bean3Crv: {
+    variables: {
+      season_gt: 6073,
+      siloAsset: `${account.toLowerCase()}-${assets.bean3Crv.address}`,
+    },
+  },
+};
+
 const formatValue = (value: number) =>
   `${value.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
 
 const getStatValue = <T extends BaseDataPoint>(v?: T | T[]) => {
   if (!v) return 0;
   if (Array.isArray(v)) {
-    return (
-      v.reduce((acc, curr) => {
-        acc += curr.value;
-        return acc;
-      }, 0) / 2
-    );
+    return v.reduce((acc, curr) => {
+      acc += curr.value;
+      return acc;
+    }, 0);
   }
   if (v?.bean && v?.bean3Crv) {
-    return v.bean3Crv / v.bean;
+    const bean3CrvBeanVal = new BigNumber(v.bean3Crv).times(2);
+    return bean3CrvBeanVal.plus(v.bean).toNumber();
   }
   return 0;
 };
@@ -62,25 +78,7 @@ const getValue = (asset: ERC20Token) => {
 };
 
 const BeanVs3Crv: React.FC<{}> = () => {
-  // refactor me
   const timeTabParams = useTimeTabState();
-  const queryConfig = useMemo(
-    () => ({
-      bean: {
-        variables: {
-          season_gt: 6073,
-          siloAsset: `${account.toLowerCase()}-${assets.bean.address}`,
-        },
-      },
-      bean3Crv: {
-        variables: {
-          season_gt: 6073,
-          siloAsset: `${account.toLowerCase()}-${assets.bean3Crv.address}`,
-        },
-      },
-    }),
-    []
-  );
   const beanQuery = useSeasonsQuery<SeasonalDepositedSiloAssetQuery>(
     SeasonalDepositedSiloAssetDocument,
     timeTabParams[0][1],
@@ -104,20 +102,15 @@ const BeanVs3Crv: React.FC<{}> = () => {
     [bean3CrvQuery, beanQuery]
   );
 
-  const statProps = useMemo(
-    () => ({
-      title: 'Total Deposited Bean & Bean3Crv',
-      gap: 0.5,
-    }),
-    []
-  );
-
   return (
     <Card sx={{ pt: 2 }}>
       <SeasonPlotMulti
         queryData={queryParams}
         height={300}
-        StatProps={statProps}
+        StatProps={{
+          title: 'Total Deposited Bean & Bean3Crv',
+          gap: 0.5,
+        }}
         timeTabParams={timeTabParams}
         getStatValue={getStatValue}
         formatValue={formatValue}

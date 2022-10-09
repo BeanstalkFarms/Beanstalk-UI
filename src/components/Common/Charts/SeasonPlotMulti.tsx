@@ -2,10 +2,9 @@ import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Line } from '@visx/shape';
 import { TimeTabStateParams } from '~/hooks/app/useTimeTabState';
-import {
+import useGenerateMultiQuerySeries, {
   MergeSeasonsQueryProps,
-  useMergeSeasonsQueries,
-} from '~/hooks/beanstalk/useMergeSeasonsQueries';
+} from '~/hooks/beanstalk/useGenerateMultiQuerySeries';
 import { MinimumViableSnapshotQuery } from '~/hooks/beanstalk/useSeasonsQuery';
 
 import Row from '../Row';
@@ -63,7 +62,7 @@ export default function SeasonPlotMulti<T extends MinimumViableSnapshotQuery>({
     loading,
     error,
     keys,
-  } = useMergeSeasonsQueries(queryData, timeTabParams[0], stackedArea);
+  } = useGenerateMultiQuerySeries(queryData, timeTabParams[0], stackedArea);
 
   const handleCursor = useCallback(
     (dps?: BaseDataPoint | BaseDataPoint[]) => {

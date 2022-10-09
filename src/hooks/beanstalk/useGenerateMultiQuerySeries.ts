@@ -168,7 +168,8 @@ const generateSeriesData = <T extends MinimumViableSnapshotQuery, K extends Base
   return points;
 };
 
-export const useMergeSeasonsQueries = <T extends MinimumViableSnapshotQuery, K extends BaseDataPoint>(
+// generate multi query series
+const useGenerateMultiQuerySeries = <T extends MinimumViableSnapshotQuery, K extends BaseDataPoint>(
   params: MergeSeasonsQueryProps<T>[],
   timeTabState: TimeTabState,
   stackedArea?: boolean,
@@ -199,3 +200,5 @@ export const useMergeSeasonsQueries = <T extends MinimumViableSnapshotQuery, K e
 
   return { data: mergedData, error, loading, keys: dataKeys, stackedArea };
 };
+
+export default useGenerateMultiQuerySeries;
