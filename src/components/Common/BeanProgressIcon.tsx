@@ -35,7 +35,7 @@ const BeanProgressIcon : FC<CircularProgressProps & {
     <img
       src={beanCircleIcon}
       alt="Bean"
-      style={{ height: size }}
+      css={{ height: size }}
     />
   </Stack>
 );

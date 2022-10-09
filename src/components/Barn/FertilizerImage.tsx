@@ -51,7 +51,7 @@ const FertilizerImage : FC<FertilizerImageProps> = ({
         alt=""
         src={FERTILIZER_ICONS[state]}
         width="45%"
-        style={{ position: 'relative', zIndex: 2 }}
+        css={{ position: 'relative', zIndex: 2 }}
         className={isNew ? 'fert-anim bounce' : id ? 'fert-anim bounce-hover' : undefined}
       />
       {id ? (

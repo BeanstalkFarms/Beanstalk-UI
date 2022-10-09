@@ -64,7 +64,11 @@ const WalletDialog: FC<{
                       : connector.name}
                   </Typography>
                   {CONNECTOR_LOGOS[connector.name] && (
-                    <img src={CONNECTOR_LOGOS[connector.name]} alt="" style={{ height: 35 }} />
+                    <img
+                      src={CONNECTOR_LOGOS[connector.name]}
+                      alt=""
+                      css={{ height: 35 }}
+                    />
                   )}
                 </Row>
               </Button>

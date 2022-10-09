@@ -93,7 +93,7 @@ const PriceButton: FC<ButtonProps> = ({ ...props }) => {
   const startIcon = isTiny ? undefined : (
     <img
       src={price.lte(1) || awaiting ? drySeasonIcon : rainySeasonIcon}
-      style={{
+      css={{
         width: 25,
         height: 25,
         animationName: awaiting ? 'rotate' : 'none',

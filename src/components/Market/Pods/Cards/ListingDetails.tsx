@@ -22,7 +22,11 @@ const ListingDetails: FC<{
 }) => (
   <Stack gap={2}>
     <Row gap={1}>
-      <img src={podListingIcon} style={{ width: IconSize.medium, height: IconSize.medium }} alt="Pod Listing" />
+      <img
+        src={podListingIcon}
+        css={{ width: IconSize.medium, height: IconSize.medium }}
+        alt="Pod Listing"
+      />
       <Typography variant="h4">Pod Listing</Typography>
       <Box sx={{ flex: 1, textAlign: 'right' }}>
         <FarmerChip account={podListing.account} />

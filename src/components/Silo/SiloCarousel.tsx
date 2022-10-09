@@ -119,7 +119,7 @@ const SiloCarousel: FC<{ token: ERC20Token }> = ({ token }) => {
                 <img
                   src={imageSrc}
                   alt=""
-                  style={{ objectFit: 'cover', height: '100%' }}
+                  css={{ objectFit: 'cover', height: '100%' }}
                 />
               </ImageWrapper>
             ))}

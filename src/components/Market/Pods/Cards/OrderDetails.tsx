@@ -26,7 +26,11 @@ const OrderDetails: FC<OrderDetailsProps> = ({
   return (
     <Stack gap={2}>
       <Row gap={1}>
-        <img src={podOrderIcon} style={{ width: IconSize.medium, height: IconSize.medium }} alt="Pod Order" />
+        <img
+          src={podOrderIcon}
+          css={{ width: IconSize.medium, height: IconSize.medium }}
+          alt="Pod Order"
+        />
         <Typography variant="h4">Pod Order</Typography>
         <Box sx={{ flex: 1, textAlign: 'right' }}>
           <FarmerChip account={podOrder.account} />

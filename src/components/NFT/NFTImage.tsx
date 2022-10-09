@@ -28,7 +28,7 @@ const NFTImage: FC<NFTContentProps> = ({
           src={`${BASE_IPFS_LINK}${nft.imageIpfsHash}`}
           alt=""
           width="100%"
-          style={{ display: 'block', borderRadius: '7px', aspectRatio: '1/1' }}
+          css={{ display: 'block', borderRadius: '7px', aspectRatio: '1/1' }}
         />
       </Box>
       {!loaded && (

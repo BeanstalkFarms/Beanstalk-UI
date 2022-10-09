@@ -184,7 +184,11 @@ const SmartSubmitButton : FC<{
         >
           <StyledDialogTitle id="customized-dialog-title" sx={{ fontSize: 20 }} onClose={handleClose}>
             <Row gap={1}>
-              <img src={nextApprovalToken.logo} style={{ height: '1.5em' }} alt={nextApprovalToken.symbol} />
+              <img
+                src={nextApprovalToken.logo}
+                css={{ height: '1.5em' }}
+                alt={nextApprovalToken.symbol}
+              />
               <span>
                 Approve {nextApprovalToken.symbol}
               </span>

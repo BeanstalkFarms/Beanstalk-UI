@@ -671,7 +671,7 @@ const Graph: FC<GraphProps> = ({
                 onMouseLeave={() => {
                   if (zoom.isDragging) zoom.dragEnd();
                 }}
-                style={{
+                css={{
                   cursor: (
                     selectedPoint 
                       ? 'default'         // when selected, freeze cursor
@@ -724,8 +724,7 @@ const Graph: FC<GraphProps> = ({
                   top={tooltipTop}
                   width={tooltipWidth}
                   applyPositionStyle
-                  style={{
-                    // This needs to stay as `style` for override purposes
+                  css={{
                     padding: 0,
                     backgroundColor: 'transparent',
                     boxShadow: 'none',

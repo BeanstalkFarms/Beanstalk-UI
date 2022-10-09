@@ -190,7 +190,7 @@ const Whitelist : FC<{
                       <img
                         src={token.logo}
                         alt={token.name}
-                        style={{ height: IconSize.medium, display: 'inline' }}
+                        css={{ height: IconSize.medium, display: 'inline' }}
                       />
                       <Typography color="black" display="inline">
                         {token.name}

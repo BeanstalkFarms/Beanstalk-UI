@@ -79,7 +79,11 @@ const NetworkDialog: FC<{
                     {TESTNET_RPC_ADDRESSES[chain.id]}
                   </Typography>
                 ) : (
-                  <img src={ETH[chain.id as keyof typeof ETH]?.logo || ETH[SupportedChainId.MAINNET].logo} alt="" style={{ height: 35 }} />
+                  <img
+                    src={ETH[chain.id as keyof typeof ETH]?.logo || ETH[SupportedChainId.MAINNET].logo}
+                    alt=""
+                    css={{ height: 35 }}
+                  />
                 )}
               </Row>
             </Button>

@@ -1,5 +1,6 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
+import { Box } from '@mui/material';
 import logo from '~/img/tokens/bean-logo.svg';
 import { Token } from '~/classes';
 import useSiloTokenToFiat from '~/hooks/beanstalk/useSiloTokenToFiat';
@@ -46,10 +47,18 @@ const Fiat : FC<{
     <Row display="inline-flex" sx={{ verticalAlign: 'top', position: 'relative', }}>
       {denomination === 'bdv' ? (
         <>
-          <img
+          <Box
+            component="img"
             src={logo}
             alt="BEAN"
-            style={{ height: '1em', marginRight: '0.25em', display: 'inline', position: 'relative', top: 0, left: 0 }}
+            sx={{
+              height: '1em',
+              marginRight: '0.25em',
+              display: 'inline',
+              position: 'relative',
+              top: 0,
+              left: 0
+            }}
           />
           <span>
             {displayValue}

@@ -15,7 +15,11 @@ const useBanner = () => {
           height={BANNER_HEIGHT}
           to="/governance"
         >
-          <img src={snapshotLogo} alt="Snapshot" style={{ height: 14, marginBottom: -2 }} />&nbsp;&nbsp;
+          <img
+            src={snapshotLogo}
+            alt="Snapshot"
+            css={{ height: 14, marginBottom: -2 }}
+          />&nbsp;&nbsp;
           {activeProposals.length} governance proposals are live.&nbsp;<strong>Vote now &rarr;</strong>
         </Banner>
       );
@@ -26,7 +30,11 @@ const useBanner = () => {
           height={BANNER_HEIGHT}
           to={`/governance/${activeProposals[0].id}`}
         >
-          <img src={snapshotLogo} alt="Snapshot" style={{ height: 14, marginBottom: -2 }} />&nbsp;&nbsp;
+          <img
+            src={snapshotLogo}
+            alt="Snapshot"
+            css={{ height: 14, marginBottom: -2 }}
+          />&nbsp;&nbsp;
           {activeProposals[0].title} is live.&nbsp;<strong>Vote now &rarr;</strong>
         </Banner>
       );

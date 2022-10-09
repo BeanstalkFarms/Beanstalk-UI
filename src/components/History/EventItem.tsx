@@ -28,11 +28,11 @@ const TokenDisplay: FC<{
   <div>
     {props.input ? (
       <Row gap={0.3}>
-        <Typography variant="body1" style={{ color: props.color }}>
+        <Typography variant="body1" color={props.color}>
           {props.color === 'red' ? '-' : '+'}
         </Typography>
         <TokenIcon token={props.input[1]} />
-        <Typography variant="body1" style={{ color: props.color }}>
+        <Typography variant="body1" color={props.color}>
           {`${displayBN(props.input[0])}`}
         </Typography>
       </Row>

@@ -36,7 +36,7 @@ const ActionTokenImage : FC<{ token: Token }> = ({ token }) => (
     key={token.address}
     src={token.logo}
     alt={token.name}
-    style={{ height: '100%' }}
+    css={{ height: '100%' }}
   />
 );
 
@@ -96,7 +96,6 @@ const TxnStep : FC<{
       const a = actions[0] as ReceiveTokenAction;
       step = (
         <IconRow spacing={0.5}>
-          {/* <TokenIcon token={a.token} style={{ height: '100%' }} /> */}
           {a.destination !== undefined ? (
             a.destination === FarmToMode.INTERNAL
               ? <Typography>🚜</Typography>
@@ -113,7 +112,11 @@ const TxnStep : FC<{
     case ActionType.CLAIM_WITHDRAWAL:
       step = (
         <IconRow>
-          <img src={siloIcon} style={{ height: '100%' }} alt="" />
+          <img
+            src={siloIcon}
+            css={{ height: '100%' }}
+            alt=""
+          />
           {(actions as SiloDepositAction[]).map((a) => (
             <ActionTokenImage key={a.token.address} token={a.token} />
           ))}
@@ -224,14 +227,22 @@ const TxnStep : FC<{
         <IconRow>
           <TokenIcon token={USDC[SupportedChainId.MAINNET]} css={{ height: '100%', marginTop: 0, }} />
           <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
-          <img src={FERTILIZER_ICONS.unused} alt="FERT" style={{ height: '100%' }} />
+          <img
+            src={FERTILIZER_ICONS.unused}
+            alt="FERT"
+            css={{ height: '100%' }}
+          />
         </IconRow>
       );
       break;
     case ActionType.RECEIVE_FERT_REWARDS:
       step = (
         <IconRow>
-          <img src={FERTILIZER_ICONS.active} alt="FERT" style={{ height: '100%' }} />
+          <img
+            src={FERTILIZER_ICONS.active}
+            alt="FERT"
+            css={{ height: '100%' }}
+          />
           <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
           <TokenIcon token={SPROUTS} css={{ height: '100%', marginTop: 0, }} />
         </IconRow>
