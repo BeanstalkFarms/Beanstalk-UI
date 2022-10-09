@@ -35,14 +35,14 @@ const DepositRewards : FC<{ token: ERC20Token }> = ({ token }) => (
       <Typography variant="bodyLarge">
         <TokenIcon
           token={STALK}
-          style={{ marginTop: '7px', height: '0.7em' }}
+          css={{ marginTop: '7px', height: '0.7em' }}
         />
         {token.rewards?.stalk}
       </Typography>
       <Typography variant="bodyLarge">
         <TokenIcon
           token={SEEDS}
-          style={{ marginTop: '4px', fontSize: 'inherit' }}
+          css={{ marginTop: '4px', fontSize: 'inherit' }}
         />
         {token.rewards?.seeds}
       </Typography>

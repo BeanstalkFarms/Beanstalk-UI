@@ -206,7 +206,7 @@ const Whitelist : FC<{
                       <Tooltip placement="right" title={<>1 {token.symbol} = {displayFullBN(getBDV(token))} BDV</>}>
                         <Typography display="inline" color="black">
                           <TokenIcon token={STALK} />{token.rewards?.stalk}{' '}
-                          <TokenIcon token={SEEDS} style={{ marginTop: 1.5 }} />{token.rewards?.seeds}
+                          <TokenIcon token={SEEDS} css={{ marginTop: 1.5 }} />{token.rewards?.seeds}
                         </Typography>
                       </Tooltip>
                       <Row gap={0.25}>

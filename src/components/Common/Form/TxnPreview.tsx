@@ -123,7 +123,7 @@ const TxnStep : FC<{
     case ActionType.TRANSFER:
       step = (
         <IconRow>
-          <TokenIcon token={(actions[0] as SiloTransitAction).token} style={{ height: '100%' }} />
+          <TokenIcon token={(actions[0] as SiloTransitAction).token} css={{ height: '100%' }} />
         </IconRow>
       );
       break;
@@ -131,15 +131,15 @@ const TxnStep : FC<{
       step = (
         <IconRow spacing={0}>
           <Typography fontWeight="bold" sx={{ fontSize: 20 }}>{(actions[0] as SiloRewardsAction).stalk.lt(0) ? '🔥' : '+'}</Typography>
-          <TokenIcon token={STALK} style={{ height: '100%' }} />
-          <TokenIcon token={SEEDS} style={{ height: '100%' }} />
+          <TokenIcon token={STALK} css={{ height: '100%' }} />
+          <TokenIcon token={SEEDS} css={{ height: '100%' }} />
         </IconRow>
       );
       break;
     case ActionType.IN_TRANSIT:
       step = (
         <IconRow>
-          <TokenIcon token={(actions[0] as SiloTransitAction).token} style={{ height: '100%' }} />
+          <TokenIcon token={(actions[0] as SiloTransitAction).token} css={{ height: '100%' }} />
         </IconRow>
       );
       break;
@@ -148,7 +148,7 @@ const TxnStep : FC<{
     case ActionType.BUY_BEANS:
       step = (
         <IconRow>
-          <TokenIcon token={(actions[0] as SiloTransitAction).token} style={{ height: '100%' }} />
+          <TokenIcon token={(actions[0] as SiloTransitAction).token} css={{ height: '100%' }} />
         </IconRow>
       );
       break;
@@ -156,35 +156,35 @@ const TxnStep : FC<{
       step = (
         <IconRow spacing={0.3}>
           <Typography fontWeight="bold" sx={{ fontSize: 20 }}>🔥</Typography>
-          <TokenIcon token={BEAN[1]} style={{ height: '100%' }} />
+          <TokenIcon token={BEAN[1]} css={{ height: '100%' }} />
         </IconRow>
       );
       break;
       case ActionType.HARVEST:
         step = (
           <IconRow>
-            <TokenIcon token={PODS} style={{ height: '100%' }} />
+            <TokenIcon token={PODS} css={{ height: '100%' }} />
           </IconRow>
         );
         break;
     case ActionType.RECEIVE_PODS:
       step = (
         <IconRow>
-          <TokenIcon token={PODS} style={{ height: '100%' }} />
+          <TokenIcon token={PODS} css={{ height: '100%' }} />
         </IconRow>
       );
       break;
     case ActionType.RECEIVE_BEANS:
       step = (
         <IconRow>
-          <TokenIcon token={BEAN[1]} style={{ height: '100%' }} />
+          <TokenIcon token={BEAN[1]} css={{ height: '100%' }} />
         </IconRow>
       );
       break;
     case ActionType.TRANSFER_PODS:
       step = (
         <IconRow>
-          <TokenIcon token={PODS} style={{ height: '100%' }} />
+          <TokenIcon token={PODS} css={{ height: '100%' }} />
         </IconRow>
       );
       break;
@@ -193,21 +193,21 @@ const TxnStep : FC<{
     case ActionType.CREATE_ORDER:
       step = (
         <IconRow>
-          <TokenIcon token={BEAN[1]} style={{ height: '100%', marginTop: 0, }} />
+          <TokenIcon token={BEAN[1]} css={{ height: '100%', marginTop: 0, }} />
           <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
-          <TokenIcon token={PODS} style={{ height: '100%', marginTop: 0, }} />
+          <TokenIcon token={PODS} css={{ height: '100%', marginTop: 0, }} />
         </IconRow>
       );
       break;
     // FIXME: better way to reduce duplicate code here?
     case ActionType.BUY_PODS:
       step = (
-        <TokenIcon token={PODS} style={{ height: '100%', marginTop: 0, }} />
+        <TokenIcon token={PODS} css={{ height: '100%', marginTop: 0, }} />
       );
       break;
     case ActionType.SELL_PODS:
       step = (
-        <TokenIcon token={PODS} style={{ height: '100%', marginTop: 0, }} />
+        <TokenIcon token={PODS} css={{ height: '100%', marginTop: 0, }} />
       );
       break;
 
@@ -215,14 +215,14 @@ const TxnStep : FC<{
     case ActionType.RINSE:
       step = (
         <IconRow>
-          <TokenIcon token={SPROUTS} style={{ height: '100%' }} />
+          <TokenIcon token={SPROUTS} css={{ height: '100%' }} />
         </IconRow>
       );
       break;
     case ActionType.BUY_FERTILIZER:
       step = (
         <IconRow>
-          <TokenIcon token={USDC[SupportedChainId.MAINNET]} style={{ height: '100%', marginTop: 0, }} />
+          <TokenIcon token={USDC[SupportedChainId.MAINNET]} css={{ height: '100%', marginTop: 0, }} />
           <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
           <img src={FERTILIZER_ICONS.unused} alt="FERT" style={{ height: '100%' }} />
         </IconRow>
@@ -233,7 +233,7 @@ const TxnStep : FC<{
         <IconRow>
           <img src={FERTILIZER_ICONS.active} alt="FERT" style={{ height: '100%' }} />
           <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
-          <TokenIcon token={SPROUTS} style={{ height: '100%', marginTop: 0, }} />
+          <TokenIcon token={SPROUTS} css={{ height: '100%', marginTop: 0, }} />
         </IconRow>
       );
       break;
@@ -242,7 +242,7 @@ const TxnStep : FC<{
     case ActionType.END_TOKEN:
       step = (
         <IconRow>
-          <TokenIcon token={(actions[0] as SiloTransitAction).token} style={{ height: '100%' }} />
+          <TokenIcon token={(actions[0] as SiloTransitAction).token} css={{ height: '100%' }} />
         </IconRow>
       );
       break;

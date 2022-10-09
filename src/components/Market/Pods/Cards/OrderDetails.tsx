@@ -45,11 +45,11 @@ const OrderDetails: FC<OrderDetailsProps> = ({
           </Tooltip>
         </StatHorizontal>
         <StatHorizontal label="Price per Pod" labelTooltip="The number of Beans offered per Pod.">
-          <TokenIcon token={BEAN[1]} style={{ height: IconSize.xs }} />
+          <TokenIcon token={BEAN[1]} css={{ height: IconSize.xs }} />
           <Typography>{displayBN(podOrder.pricePerPod)}</Typography>
         </StatHorizontal>
         <StatHorizontal label="Amount" labelTooltip="The number of Pods left to be sold to this Order.">
-          <TokenIcon token={PODS} style={{ height: IconSize.xs }} />
+          <TokenIcon token={PODS} css={{ height: IconSize.xs }} />
           <Typography>{displayBN(podOrder.remainingAmount)}</Typography>
         </StatHorizontal>
       </Stack>

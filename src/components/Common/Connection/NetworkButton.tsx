@@ -29,7 +29,7 @@ const NetworkButton: FC<ButtonProps> = ({ ...props }) => {
         startIcon={(
           <TokenIcon
             token={ETH[SupportedChainId.MAINNET]}
-            style={{ height: '1.4em' }}
+            css={{ height: '1.4em' }}
           />
         )}
         endIcon={<DropdownIcon open={open} />}

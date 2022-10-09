@@ -67,7 +67,7 @@ const TokenOutputField : FC<{
           {token.logo && (
             <TokenIcon
               token={token}
-              style={{
+              css={{
                 height: IconSize.small,
               }}
             />

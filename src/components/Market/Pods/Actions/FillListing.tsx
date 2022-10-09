@@ -193,7 +193,7 @@ const FillListingForm : FC<
                 <Row gap={0.5}>
                   <TokenIcon
                     token={PODS}
-                    style={{
+                    css={{
                       height: IconSize.small,
                     }}
                   />

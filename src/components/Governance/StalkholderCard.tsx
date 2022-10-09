@@ -31,7 +31,7 @@ const StalkholderCard : FC<{}> = () => {
         </Row>
         {account ? (
           <Row gap={0.5}>
-            <TokenIcon token={STALK} style={{ height: IconSize.small }} />
+            <TokenIcon token={STALK} css={{ height: IconSize.small }} />
             <Typography variant="bodyLarge">{displayBN(farmerSilo.stalk.active)} STALK</Typography>
           </Row>
         ) : (

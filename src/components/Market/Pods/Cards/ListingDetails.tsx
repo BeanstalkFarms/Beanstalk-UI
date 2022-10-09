@@ -33,11 +33,11 @@ const ListingDetails: FC<{
         <Typography>{displayBN(podListing.index.minus(harvestableIndex))}</Typography>
       </StatHorizontal>
       <StatHorizontal label="Price per Pod" labelTooltip="The number of Beans requested per Pod.">
-        <TokenIcon token={BEAN[1]} style={{ height: IconSize.xs }} />
+        <TokenIcon token={BEAN[1]} css={{ height: IconSize.xs }} />
         <Typography>{displayBN(podListing.pricePerPod)}</Typography>
       </StatHorizontal>
       <StatHorizontal label="Amount" labelTooltip="The number of Pods left to be purchased from this Listing.">
-        <TokenIcon token={PODS} style={{ height: IconSize.xs }} />
+        <TokenIcon token={PODS} css={{ height: IconSize.xs }} />
         <Typography>{displayBN(podListing.remainingAmount)}</Typography>
       </StatHorizontal>
       <StatHorizontal label="Expires in" labelTooltip="If the Pod Line moves forward by this amount, this listing will automatically expire.">

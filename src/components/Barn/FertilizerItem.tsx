@@ -108,7 +108,7 @@ const FertilizerItem: FC<FertilizerData & {
               Sprouts
             </Typography>
             <Row alignItems="center" gap={0.2}>
-              <TokenIcon token={SPROUTS} style={{ width: '14px' }} />
+              <TokenIcon token={SPROUTS} css={{ width: '14px' }} />
               <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
                 {sprouts ? displayBN(sprouts) : '?'}
               </Typography>
