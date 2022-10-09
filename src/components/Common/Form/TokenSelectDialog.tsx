@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, Link } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { Box, Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, Link } from '@mui/material';
 import { StyledDialog, StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
 import Token from '~/classes/Token';
 import { displayBN } from '~/util';
@@ -10,13 +9,6 @@ import { FarmerBalances } from '~/state/farmer/balances';
 import { FarmerSilo } from '~/state/farmer/silo';
 import { BeanstalkPalette, FontSize, IconSize } from '../../App/muiTheme';
 import Row from '~/components/Common/Row';
-
-const useStyles = makeStyles(() => ({
-  tokenLogo: {
-    width: IconSize.tokenSelect,
-    height: IconSize.tokenSelect,
-  }
-}));
 
 export enum TokenSelectMode { MULTI, SINGLE }
 
@@ -72,7 +64,6 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
   tokenList,
   mode = TokenSelectMode.MULTI,
 }) => {
-  const classes = useStyles();
   /** keep an internal copy of selected tokens */
   const [selectedInternal, setSelectedInternal] = useState<Set<Token>>(new Set());
 
@@ -170,7 +161,15 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
                   {/* Icon & text left side */}
                   <Row justifyContent="center" gap={0}>
                     <ListItemIcon>
-                      <img src={_token.logo} alt="" className={classes.tokenLogo} />
+                      <Box
+                        component="omg"
+                        src={_token.logo}
+                        alt=""
+                        className={{ 
+                          width: IconSize.tokenSelect,
+                          height: IconSize.tokenSelect
+                        }}
+                      />
                     </ListItemIcon>
                     <ListItemText
                       primary={_token.symbol}

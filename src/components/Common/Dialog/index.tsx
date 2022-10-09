@@ -2,14 +2,11 @@ import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton, DialogTitleProps, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { styled } from '@mui/styles';
 import { FontSize, IconSize } from '../../App/muiTheme';
 import Row from '~/components/Common/Row';
 import { FC } from '~/types';
 
-export const StyledDialog = styled(Dialog)(() => ({
-  '& .MuiDialogContent-root': {},
-}));
+export const StyledDialog = Dialog;
 
 export const StyledDialogTitle : FC<{
   id?: string;

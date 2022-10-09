@@ -14,7 +14,6 @@ import { Zoom, applyMatrixToPoint } from '@visx/zoom';
 import { ProvidedZoom, TransformMatrix } from '@visx/zoom/lib/types';
 import { voronoi, VoronoiPolygon } from '@visx/voronoi';
 import CloseIcon from '@mui/icons-material/Close';
-import { makeStyles } from '@mui/styles';
 import BigNumber from 'bignumber.js';
 import { Link as RouterLink } from 'react-router-dom';
 import { PodListing, PodOrder } from '~/state/farmer/market';
@@ -25,35 +24,8 @@ import Row from '~/components/Common/Row';
 import StatHorizontal from '~/components/Common/StatHorizontal';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN, PODS } from '~/constants/tokens';
-
 import { FC } from '~/types';
 import './MarketGraph.css';
-
-/// //////////////////////////////// WRAPPER ///////////////////////////////////
-
-const useStyles = makeStyles({
-  relative: {
-    position: 'relative'
-  },
-  listingBox: {
-    backgroundColor: '#b3cde3',
-    border: '1px solid #333',
-    boxShadow: 'rgb(33 33 33 / 20%) 0px 1px 2px',
-    padding: '0.3rem 0.5rem',
-    borderRadius: 10,
-    pointerEvents: 'auto',
-    zIndex: 99999,
-  },
-  orderBox: {
-    backgroundColor: '#ccebc5',
-    border: '2px solid #333',
-    boxShadow: 'rgb(33 33 33 / 20%) 0px 1px 2px',
-    padding: '0.3rem 0.5rem',
-    borderRadius: 10,
-    pointerEvents: 'auto',
-    zIndex: 99999,
-  },
-});
 
 /// //////////////////////////////// TYPES ///////////////////////////////////
 
@@ -282,8 +254,6 @@ const Graph: FC<GraphProps> = ({
   maxPlaceInLine,
   maxPlotSize,
 }) => {
-  const classes = useStyles();
-
   ///
   const innerWidth  = width -  (margin.left + margin.right);
   const innerHeight = height - (margin.top  + margin.bottom);
@@ -652,7 +622,7 @@ const Graph: FC<GraphProps> = ({
         scaleYMax={scaleYMax}
       >
         {(zoom) => (
-          <div className={classes.relative}>
+          <Box sx={{ position: 'relative' }}>
             <svg
               width={width}
               height={height}
@@ -784,7 +754,7 @@ const Graph: FC<GraphProps> = ({
                 onClose={() => setSelectedPoint(undefined)}
               />
             )}
-          </div>
+          </Box>
         )}
       </Zoom>
     </>

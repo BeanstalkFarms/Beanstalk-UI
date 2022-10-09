@@ -3,17 +3,9 @@ import { ContractReceipt, ContractTransaction } from 'ethers';
 import toast from 'react-hot-toast';
 import { Box, IconButton, Link, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { makeStyles } from '@mui/styles';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import { parseError } from '~/util';
 import { CHAIN_INFO } from '~/constants/chains';
-
-const useStyles = makeStyles({
-  errorMessage: {
-    wordBreak: 'break-all',
-    '&:first-letter': { textTransform: 'capitalize' },
-  }
-});
 
 function dismissErrors(id?: any) {
   if (id) {
@@ -24,7 +16,6 @@ function dismissErrors(id?: any) {
 }
 
 export function ToastAlert({ desc, hash, msg, id }: { desc?: string, hash?: string, msg?: string, id?: any }) {
-  const classes = useStyles();
   const handleClick = useCallback(() => (id !== null ? dismissErrors(id) : dismissErrors()), [id]);
   const chainInfo = useChainConstant(CHAIN_INFO);
   return (
@@ -40,9 +31,15 @@ export function ToastAlert({ desc, hash, msg, id }: { desc?: string, hash?: stri
           )}
         </span>
         {msg && (
-          <span className={classes.errorMessage}>
+          <Box
+            display="inline"
+            sx={{ 
+              wordBreak: 'break-all',
+              '&:first-letter': { textTransform: 'capitalize' },
+            }}
+          >
             {msg}
-          </span>
+          </Box>
         )}
       </Typography>
       {msg && (

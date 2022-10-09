@@ -10,7 +10,6 @@ import {
   useMediaQuery
 } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { makeStyles } from '@mui/styles';
 import { useTheme } from '@mui/material/styles';
 import { BEAN, PODS } from '~/constants/tokens';
 import useFarmerListings from '~/hooks/farmer/useFarmerListings';
@@ -20,13 +19,6 @@ import podIcon from '~/img/beanstalk/pod-icon.svg';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
-
-const useStyles = makeStyles(() => ({
-  tokenLogo: {
-    width: IconSize.tokenSelect,
-    height: IconSize.tokenSelect,
-  }
-}));
 
 export interface PlotSelectProps {
   /** A farmer's plots */
@@ -45,7 +37,6 @@ const PlotSelect: FC<PlotSelectProps> = ({
   handlePlotSelect,
   selected
 }) => {
-  const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -88,7 +79,15 @@ const PlotSelect: FC<PlotSelectProps> = ({
           <Row justifyContent="space-between" sx={{ width: '100%' }}>
             <Row justifyContent="center">
               <ListItemIcon sx={{ pr: 1 }}>
-                <img src={podIcon} alt="" className={classes.tokenLogo} />
+                <Box
+                  component="img"
+                  src={podIcon}
+                  alt=""
+                  sx={{
+                    width: IconSize.tokenSelect,
+                    height: IconSize.tokenSelect,
+                  }}
+                />
               </ListItemIcon>
               <ListItemText
                 primary="PODS"
