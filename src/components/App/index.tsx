@@ -1,7 +1,7 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { Box, CssBaseline, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { ToastBar, Toaster } from 'react-hot-toast';
 
 import NavBar from '~/components/Nav/NavBar';
@@ -93,7 +93,6 @@ export default function App() {
   const account = useAccount();
   return (
     <>
-      <CssBaseline />
       <AppUpdater />
       {/* -----------------------
         * Bean Updaters

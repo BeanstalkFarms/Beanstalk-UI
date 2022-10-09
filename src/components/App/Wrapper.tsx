@@ -3,7 +3,8 @@ import { HashRouter } from 'react-router-dom';
 import { Provider as ReduxProvider } from 'react-redux';
 import { ApolloProvider } from '@apollo/client';
 import { WagmiConfig } from 'wagmi';
-import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
 
 import theme from '~/components/App/muiTheme';
 import client from '~/util/Client';
@@ -16,13 +17,12 @@ const Wrapper : FC<{}> = ({ children }) => (
   <HashRouter>
     <ReduxProvider store={store}>
       <ApolloProvider client={apolloClient}>
-        <StyledEngineProvider injectFirst>
+        <WagmiConfig client={client}>
           <ThemeProvider theme={theme}>
-            <WagmiConfig client={client}>
-              {children}
-            </WagmiConfig>
+            <CssBaseline />
+            {children}
           </ThemeProvider>
-        </StyledEngineProvider>
+        </WagmiConfig>
       </ApolloProvider>
     </ReduxProvider>
   </HashRouter>
