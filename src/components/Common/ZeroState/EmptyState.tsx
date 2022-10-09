@@ -1,16 +1,18 @@
 import React from 'react';
 import { Box, BoxProps, Typography } from '@mui/material';
 
-export interface CardEmptyStateProps {
-  message: string;
-}
-
 /**
  * Similar to AuthEmptyState, but
  * does not take into account
  * authentication status.
  * */
-const EmptyState: React.FC<CardEmptyStateProps & BoxProps> = ({
+import { FC } from '~/types';
+
+export interface CardEmptyStateProps {
+  message: string;
+}
+
+const EmptyState: FC<CardEmptyStateProps & BoxProps> = ({
   message,
   height
 }) => (

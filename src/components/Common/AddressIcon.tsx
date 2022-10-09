@@ -5,9 +5,11 @@ import useAccount from '~/hooks/ledger/useAccount';
 import { IconSize } from '~/components/App/muiTheme';
 import { BEANSTALK_ADDRESSES } from '~/constants';
 
+import { FC } from '~/types';
+
 const FALLBACK_ADDRESS = BEANSTALK_ADDRESSES[1];
 
-const AddressIcon : React.FC<BoxProps & {
+const AddressIcon : FC<BoxProps & {
   size?: number;
   address?: string;
 }> = ({

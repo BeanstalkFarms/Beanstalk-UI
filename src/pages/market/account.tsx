@@ -16,9 +16,11 @@ import AddressIcon from '~/components/Common/AddressIcon';
 import MyOrdersTable from '~/components/Market/Pods/Tables/MyOrders';
 import MyListingsTable from '~/components/Market/Pods/Tables/MyListings';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
 
 const SLUGS = ['orders', 'listings'];
-const MarketAccountPage: React.FC = () => {
+
+const MarketAccountPage: FC<{}> = () => {
   /// Theme
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));

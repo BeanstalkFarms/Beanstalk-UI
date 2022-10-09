@@ -2,8 +2,16 @@
   "compilerOptions": {
     "baseUrl": "./",
     "target": "ESNext",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "types": ["vite/client", "vitest/globals"],
+    "jsxImportSource": "@emotion/react",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "types": [
+      "vite/client",
+      "vitest/globals",
+    ],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": true,

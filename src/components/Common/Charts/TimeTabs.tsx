@@ -3,6 +3,8 @@ import { Button, Divider, StackProps, Typography } from '@mui/material';
 import { SeasonAggregation, SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 const AGGREGATION = [
   { label: 'HR', index: 0 },
   { label: 'DAY', index: 1 },
@@ -23,7 +25,7 @@ export interface TimeTabProps {
   windows?: boolean;
 }
 
-const TimeTabs: React.FC<
+const TimeTabs: FC<
   TimeTabProps & 
   StackProps
 > = ({ 

@@ -8,7 +8,15 @@ import TokenIcon from '../TokenIcon';
 import DropdownIcon from '../DropdownIcon';
 import NetworkDialog from './NetworkDialog';
 
-const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
+const NetworkButton: React.FC<ButtonProps & {
+  showIcons?: boolean;
+  wrongNetworkText?: string;
+}> = ({ 
+  showIcons = true,
+  wrongNetworkText = 'Switch Network',
+  children,
+  ...props
+}) => {
   const { activeChain } = useNetwork();
 
   /// Dialog
@@ -16,7 +24,11 @@ const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
   const open = Boolean(anchor);
   
   if (!activeChain) return null;
-  const text = SupportedChainId[activeChain.id] ? activeChain.name : 'Switch Network';
+  const text = (
+    SupportedChainId[activeChain.id]
+      ? activeChain.name 
+      : wrongNetworkText
+  );
   
   return (
     <>
@@ -24,13 +36,13 @@ const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
         disableFocusRipple
         variant="contained"
         color="light"
-        startIcon={(
+        startIcon={showIcons && (
           <TokenIcon
             token={ETH[SupportedChainId.MAINNET]}
-            style={{ height: '1.4em' }}
+            css={{ height: '1.4em' }}
           />
         )}
-        endIcon={<DropdownIcon open={open} />}
+        endIcon={showIcons && <DropdownIcon open={open} />}
         onClick={toggleAnchor}
         {...props}
         sx={{
@@ -52,9 +64,11 @@ const NetworkButton: React.FC<ButtonProps> = ({ ...props }) => {
           ...props.sx
         }}
       >
-        <Typography variant="bodyMedium" sx={{ display: { lg: 'block', xs: 'none' } }}>
-          {text}
-        </Typography>
+        {children || (
+          <Typography variant="bodyMedium" sx={{ display: { lg: 'block', xs: 'none' } }}>
+            {text}
+          </Typography>
+        )}
       </Button>
       <NetworkDialog
         open={open}

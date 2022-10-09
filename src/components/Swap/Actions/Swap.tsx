@@ -5,6 +5,7 @@ import { ethers } from 'ethers';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import toast from 'react-hot-toast';
 import { useConnect } from 'wagmi';
+import BigNumber from 'bignumber.js';
 import {
   FormApprovingState, FormTokenState,
   SettingInput,
@@ -42,6 +43,8 @@ import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSumma
 import { ActionType } from '~/util/Actions';
 import WarningIcon from '~/components/Common/Alert/WarningIcon';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 /// ---------------------------------------------------------------
 
@@ -76,9 +79,7 @@ const QUOTE_SETTINGS = {
 
 const Quoting = <CircularProgress variant="indeterminate" size="small" sx={{ width: 14, height: 14 }} />;
 
-/// ---------------------------------------------------------------
-
-const SwapForm: React.FC<FormikProps<SwapFormValues> & {
+const SwapForm: FC<FormikProps<SwapFormValues> & {
   balances: ReturnType<typeof useFarmerBalances>;
   beanstalk: Beanstalk;
   handleQuote: DirectionalQuoteHandler;
@@ -198,7 +199,7 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
   /// When amountIn changes, refresh amountOut
   /// Only refresh if amountIn was changed by user input,
   /// i.e. not by another hook
-  const handleChangeAmountIn = useCallback((_amountInClamped) => {
+  const handleChangeAmountIn = useCallback((_amountInClamped: BigNumber | undefined) => {
     console.debug('[TokenInput] handleChangeAmountIn', _amountInClamped);
     if (_amountInClamped) {
       getAmountOut(tokenIn, _amountInClamped);
@@ -206,7 +207,7 @@ const SwapForm: React.FC<FormikProps<SwapFormValues> & {
       setFieldValue('tokenOut.amount', undefined);
     }
   }, [tokenIn, getAmountOut, setFieldValue]);
-  const handleChangeAmountOut = useCallback((_amountOutClamped) => {
+  const handleChangeAmountOut = useCallback((_amountOutClamped: BigNumber | undefined) => {
     console.debug('[TokenInput] handleChangeAmountOut',   _amountOutClamped);
     if (_amountOutClamped) {
       console.debug('[TokenInput] getMinAmountIn', [tokenOut, _amountOutClamped]);
@@ -602,28 +603,34 @@ const isPair = (_tokenIn : Token, _tokenOut : Token, _pair : [Token, Token]) => 
  * USDC   -> USDT     exchange(USDC, USDT, 3POOL)
  * ...etc
  */
-const Swap: React.FC<{}> = () => {
-  ///
+
+const Swap: FC<{}> = () => {
+  /// Ledger
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
   const account = useAccount();
 
-  ///
+  /// Tokens
   const getChainToken = useGetChainToken();
   const Eth           = getChainToken(ETH);
   const Weth          = getChainToken(WETH);
   const Bean          = getChainToken(BEAN);
   const Crv3          = getChainToken(CRV3);
   const crv3Underlying = useMemo(() => new Set(CRV3_UNDERLYING.map(getChainToken)), [getChainToken]);
+
+  /// Token List
   const tokenMap      = useTokenMap<ERC20Token | NativeToken>(SUPPORTED_TOKENS);
   const tokenList     = useMemo(() => Object.values(tokenMap), [tokenMap]);
+
+  /// Farm
   const farm          = useFarm();
   
-  ///
+  /// Farmer
   const farmerBalances = useFarmerBalances();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
 
-  // Form setup
+  /// Form
+  const middleware = useFormMiddleware();
   const initialValues: SwapFormValues = useMemo(() => ({
     tokensIn: [
       {
@@ -641,6 +648,8 @@ const Swap: React.FC<{}> = () => {
       slippage: 0.1,
     }
   }), [Bean, Eth]);
+
+  /// Handlers
 
   const getPathway = useCallback((
     _tokenIn: Token,
@@ -855,6 +864,7 @@ const Swap: React.FC<{}> = () => {
     async (values: SwapFormValues, formActions: FormikHelpers<SwapFormValues>) => {
       let txToast;
       try {
+        middleware.before();
         const stateIn = values.tokensIn[0];
         const tokenIn = stateIn.token;
         const modeIn  = values.modeIn;
@@ -913,7 +923,7 @@ const Swap: React.FC<{}> = () => {
         formActions.setSubmitting(false);
       }
     },
-    [account, beanstalk, farmerBalances, handleEstimate, refetchFarmerBalances]
+    [account, beanstalk, farmerBalances, handleEstimate, refetchFarmerBalances, middleware]
   );
 
   return (

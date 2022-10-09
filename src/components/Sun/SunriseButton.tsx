@@ -20,11 +20,13 @@ import { BEAN } from '~/constants/tokens';
 import { AppState } from '~/state';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 function getSunriseReward(now: DateTime) {
   return new BigNumber(100 * (1.01 ** (Math.min((now.minute * 60) + now.second, 300))));
 }
 
-const SunriseButton : React.FC = () => {
+const SunriseButton : FC<{}> = () => {
   /// Ledger
   const { data: signer }  = useSigner();
   const beanstalk         = useBeanstalkContract(signer);
@@ -90,7 +92,7 @@ const SunriseButton : React.FC = () => {
                 <StyledDialogContent sx={{ p: 1 }}>
                   <Stack gap={2}>
                     <Stack justifyContent="center" gap={2} py={2}>
-                      <img src={sunIcon} alt="Sunrise" style={{ height: IconSize.large }} />
+                      <img src={sunIcon} alt="Sunrise" css={{ height: IconSize.large }} />
                       <Stack gap={1}>
                         {awaiting ? (
                           <Row justifyContent="center">
@@ -98,7 +100,7 @@ const SunriseButton : React.FC = () => {
                           </Row>
                         ) : (
                           <Row justifyContent="center">
-                            <Typography textAlign="center" variant="body1">Sunrise available&nbsp;<span style={{ display: 'inline' }}><SunriseCountdown /></span>.</Typography>
+                            <Typography textAlign="center" variant="body1">Sunrise available&nbsp;<span css={{ display: 'inline' }}><SunriseCountdown /></span>.</Typography>
                           </Row>
                         )}
                         <Row justifyContent="center">
@@ -148,11 +150,11 @@ const SunriseButton : React.FC = () => {
               >
                 {!disabled ? (
                   <>
-                    <img src={sunIcon} alt="" style={{ height: 28 }} />&nbsp;
+                    <img src={sunIcon} alt="" css={{ height: 28 }} />&nbsp;
                     Sunrise
                   </>
                 ) : (
-                  <>Sunrise available&nbsp;<span style={{ display: 'inline' }}><SunriseCountdown /></span></>
+                  <>Sunrise available&nbsp;<span css={{ display: 'inline' }}><SunriseCountdown /></span></>
                 )}
               </LoadingButton>
             </Form>

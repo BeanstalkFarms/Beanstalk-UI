@@ -40,6 +40,8 @@ import { AppState } from '~/state';
 import { useFetchPools } from '~/state/bean/pools/updater';
 import { useFetchBeanstalkSilo } from '~/state/beanstalk/silo/updater';
 import useFarm from '~/hooks/sdk/useFarm';
+import { FC } from '~/types';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 // -----------------------------------------------------------------------
 
@@ -51,7 +53,7 @@ type DepositFormValues = FormState & {
 
 // -----------------------------------------------------------------------
 
-const DepositForm : React.FC<
+const DepositForm : FC<
   FormikProps<DepositFormValues> & {
     tokenList: (ERC20Token | NativeToken)[];
     whitelistedToken: ERC20Token | NativeToken;
@@ -191,7 +193,7 @@ const DepositForm : React.FC<
 
 // -----------------------------------------------------------------------
 
-const Deposit : React.FC<{
+const Deposit : FC<{
   pool: Pool;
   token: ERC20Token | NativeToken;
 }> = ({
@@ -208,6 +210,7 @@ const Deposit : React.FC<{
 
   /// FIXME: name
   /// FIXME: finish deposit functionality for other tokens
+  const middleware = useFormMiddleware();
   const initTokenList = useMemo(() => (whitelistedToken === Bean ? [
     BEAN,
     ETH,
@@ -426,17 +429,18 @@ const Deposit : React.FC<{
       pool,
       getChainToken,
       Weth,
-      balances
+      balances,
     ]
   );
 
   const onSubmit = useCallback(async (values: DepositFormValues, formActions: FormikHelpers<DepositFormValues>) => {
     let txToast;
     try {
-      if (!values.settings.slippage) throw new Error('No slippage value set.');
+      middleware.before();
+      if (!values.settings.slippage) throw new Error('No slippage value set');
       const formData = values.tokens[0];
       if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
-      if (!formData?.amount || formData.amount.eq(0)) throw new Error('No amount set');
+      if (!formData?.amount || formData.amount.eq(0)) throw new Error('Enter an amount to deposit');
 
       // FIXME: getting BDV per amount here
       const { amount } = BeanstalkSDK.Silo.Deposit.deposit(
@@ -530,6 +534,7 @@ const Deposit : React.FC<{
     refetchFarmerBalances,
     refetchPools,
     refetchSilo,
+    middleware,
   ]);
 
   return (

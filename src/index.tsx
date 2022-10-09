@@ -1,17 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { Theme } from '@mui/material/styles';
+import { createRoot } from 'react-dom/client';
 
 import App from '~/components/App';
 import Wrapper from '~/components/App/Wrapper';
 
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
 
 if (import.meta.env.DEV) {
   const showErrorOverlay = (err: any) => {
@@ -27,13 +21,14 @@ if (import.meta.env.DEV) {
   window.addEventListener('unhandledrejection', ({ reason }) => showErrorOverlay(reason));
 }
 
-ReactDOM.render(
+const container = document.getElementById('app');
+const root = createRoot(container!);
+root.render(
   <React.StrictMode>
     <Wrapper>
       <App />
     </Wrapper>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );
 
 reportWebVitals();

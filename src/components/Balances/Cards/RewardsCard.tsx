@@ -1,4 +1,6 @@
-// const RewardsCard: React.FC<{
+// import { FC } from '~/types';
+
+// const RewardsCard: FC<{
 //   farmerSilo: AppState['_farmer']['silo'];
 //   farmerField: AppState['_farmer']['field'];
 // }> = ({

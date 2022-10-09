@@ -7,7 +7,9 @@ import BarnActions from '~/components/Barn/Actions';
 import GuideButton from '~/components/Common/Guide/GuideButton';
  import { HOW_TO_BUY_FERTILIZER, HOW_TO_RINSE_SPROUTS, HOW_TO_TRANSFER_FERTILIZER, HOW_TO_TRADE_FERTILIZER } from '~/util/Guides';
 
-const Barn: React.FC = () => (
+import { FC } from '~/types';
+
+const Barn: FC<{}> = () => (
   <Container maxWidth="sm">
     <Stack gap={2}>
       <PageHeader

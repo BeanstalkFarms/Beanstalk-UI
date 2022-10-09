@@ -4,6 +4,8 @@ import { BASE_IPFS_LINK, BEANFT_GENESIS_ADDRESSES, BEANFT_WINTER_ADDRESSES } fro
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { Nft } from '~/util';
 
+import { FC } from '~/types';
+
 export interface NFTContentProps {
   nft: Nft;
 }
@@ -14,7 +16,7 @@ export const nftCollections: {[c: string]: string} = {
   Winter: BEANFT_WINTER_ADDRESSES[1]
 };
 
-const NFTImage: React.FC<NFTContentProps> = ({
+const NFTImage: FC<NFTContentProps> = ({
   nft,
 }) => {
   const [loaded, setLoaded] = useState<boolean>(false);
@@ -26,7 +28,7 @@ const NFTImage: React.FC<NFTContentProps> = ({
           src={`${BASE_IPFS_LINK}${nft.imageIpfsHash}`}
           alt=""
           width="100%"
-          style={{ display: 'block', borderRadius: '7px', aspectRatio: '1/1' }}
+          css={{ display: 'block', borderRadius: '7px', aspectRatio: '1/1' }}
         />
       </Box>
       {!loaded && (

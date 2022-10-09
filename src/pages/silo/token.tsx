@@ -20,6 +20,8 @@ import {
 import SiloAssetOverviewCard from '~/components/Silo/SiloAssetOverviewCard';
 import PagePath from '~/components/Common/PagePath';
 
+import { FC } from '~/types';
+
 // max width for only token page.
 const TOKEN_PAGE_MAX_WIDTH = 1400;
 const guides = [
@@ -30,7 +32,7 @@ const guides = [
   HOW_TO_CLAIM_WITHDRAWALS,
 ];
 
-const TokenPage: React.FC<{}> = () => {
+const TokenPage: FC<{}> = () => {
   // Constants
   const whitelist = useWhitelist();
   const pools = usePools();
@@ -77,7 +79,7 @@ const TokenPage: React.FC<{}> = () => {
         <PageHeaderSecondary
           title={whitelistedToken.name}
           titleAlign="left"
-          icon={<TokenIcon style={{ marginTop: 3 }} token={whitelistedToken} />}
+          icon={<TokenIcon css={{ marginTop: 3 }} token={whitelistedToken} />}
           returnPath="/silo"
           hideBackButton
           control={

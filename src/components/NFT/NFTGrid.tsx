@@ -5,12 +5,14 @@ import NFTDetails from './NFTDetails';
 import { BeanstalkPalette } from '../App/muiTheme';
 import EmptyState from '../Common/ZeroState/EmptyState';
 
+import { FC } from '~/types';
+
 export interface NFTGridProps {
   nfts: Nft[] | null;
   handleDialogOpen: any;
 }
 
-const NFTGrid: React.FC<NFTGridProps> = ({
+const NFTGrid: FC<NFTGridProps> = ({
  nfts,
  handleDialogOpen,
 }) => {

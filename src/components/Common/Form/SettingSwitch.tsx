@@ -4,7 +4,9 @@ import { Switch, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import Row from '~/components/Common/Row';
 
-const SettingSwitch : React.FC<{
+import { FC } from '~/types';
+
+const SettingSwitch : FC<{
   name: string;
   label: string;
 }> = ({

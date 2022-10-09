@@ -34,6 +34,11 @@ import useAccount from '~/hooks/ledger/useAccount';
 import { useFetchFarmerSilo } from '~/state/farmer/silo/updater';
 import UnripeTokenRow from './UnripeTokenRow';
 import Row from '~/components/Common/Row';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
+
+// ----------------------------------------------------
+
+import { FC } from '~/types';
 
 // ----------------------------------------------------
 
@@ -94,9 +99,7 @@ const tokenOrZero = (amount: string | undefined, token: Token) => {
   return toTokenUnitsBN(amount, token.decimals);
 };
 
-// ----------------------------------------------------
-
-const PickBeansDialog: React.FC<{
+const PickBeansDialog: FC<{
   handleClose: any;
 } & DialogProps> = ({
   open,
@@ -112,15 +115,15 @@ const PickBeansDialog: React.FC<{
   const isMobile      = useMediaQuery(theme.breakpoints.down('md'));
   const [tab, setTab] = useState(0);
 
-  /// Chain
+  /// Tokens
   const getChainToken = useGetChainToken();
   const urBean        = getChainToken(UNRIPE_BEAN);
   const urBeanCRV3    = getChainToken(UNRIPE_BEAN_CRV3);
   
-  /// Farmer data
+  /// Farmer
   const [refetchFarmerSilo] = useFetchFarmerSilo();
 
-  /// Contracts
+  /// Ledger
   const account          = useAccount();
   const { data: signer } = useSigner();
   const beanstalk        = useBeanstalkContract(signer);
@@ -130,6 +133,9 @@ const PickBeansDialog: React.FC<{
   const [merkles, setMerkles]       = useState<PickMerkleResponse | null>(null);
   const [pickStatus, setPickStatus] = useState<null | 'picking' | 'success' | 'error'>(null);
   const [picked, setPicked]         = useState<[null, null] | [boolean, boolean]>([null, null]);
+
+  /// Form
+  const middleware = useFormMiddleware();
 
   /// Refresh 
   useEffect(() => {
@@ -176,6 +182,7 @@ const PickBeansDialog: React.FC<{
   /// Pick handlers
   const handlePick = useCallback((isDeposit : boolean) => () => {
     if (!merkles) return;
+    middleware.before();
 
     setPickStatus('picking');
     const data = [];
@@ -234,7 +241,7 @@ const PickBeansDialog: React.FC<{
         );
         setPickStatus('error');
       });
-  }, [merkles, picked, beanstalk, urBean.address, urBeanCRV3.address, refetchFarmerSilo]);
+  }, [merkles, picked, beanstalk, urBean.address, urBeanCRV3.address, refetchFarmerSilo, middleware]);
 
   /// Tab: Pick Overview
   const alreadyPicked = picked[0] === true || picked[1] === true;
@@ -258,7 +265,11 @@ const PickBeansDialog: React.FC<{
         Pick non-Deposited Unripe Beans and Unripe BEAN:3CRV LP
       </StyledDialogTitle>
       <Row gap={1} pb={2} pl={1} pr={3}>
-        <img src={pickImage} alt="pick" style={{ height: 120 }} />
+        <img
+          src={pickImage}
+          alt="pick"
+          css={{ height: 120 }}
+        />
         <Typography sx={{ fontSize: '15px' }} color="text.secondary">
           To claim non-Deposited Unripe Beans and Unripe BEAN:3CRV LP, they must be Picked. After Replant, you can Pick assets to your wallet, or Pick and Deposit them directly in the Silo.<br /><br />
           Unripe Deposited assets <b>do not need to be Picked</b> and will be automatically Deposited at Replant.<br /><br />
@@ -395,9 +406,6 @@ const PickBeansDialog: React.FC<{
       </StyledDialogTitle>
       <StyledDialogContent sx={{ width: isMobile ? null : '560px' }}>
         <Stack gap={0.8}>
-          {/* <code style={{ fontSize: 12, lineHeight: '14px' }}>
-            <pre>{JSON.stringify(merkles, null, 2)}</pre>
-          </code> */}
           {pickStatus === null ? (
             <>
               <DescriptionButton

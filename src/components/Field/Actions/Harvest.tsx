@@ -24,10 +24,12 @@ import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { BEAN, PODS } from '~/constants/tokens';
 import copy from '~/constants/copy';
-import FarmModeField from '../../Common/Form/FarmModeField';
-import TransactionToast from '../../Common/TxnToast';
-import { ZERO_BN } from '../../../constants';
-import TokenAdornment from '../../Common/Form/TokenAdornment';
+import FarmModeField from '~/components/Common/Form/FarmModeField';
+import TransactionToast from '~/components/Common/TxnToast';
+import { ZERO_BN } from '~/constants';
+import TokenAdornment from '~/components/Common/Form/TokenAdornment';
+import { FC } from '~/types';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 // -----------------------------------------------------------------------
 
@@ -38,7 +40,7 @@ type HarvestFormValues = {
 
 // -----------------------------------------------------------------------
 
-const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
+const HarvestForm: FC<FormikProps<HarvestFormValues> & {
   harvestablePods: BigNumber;
   farm: Farm;
 }> = ({
@@ -138,29 +140,29 @@ const HarvestForm: React.FC<FormikProps<HarvestFormValues> & {
   );
 };
 
-// -----------------------------------------------------------------------
-
-const Harvest: React.FC<{}> = () => {
+const Harvest: FC<{}> = () => {
   ///
   const { data: account } = useAccount();
   const provider = useProvider();
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
+
+  /// Farm
   const farm = useMemo(() => new Farm(provider), [provider]);
 
-  ///
+  /// Farmer
+  const farmerField = useFarmerField();
   const [refetchFarmerField] = useFetchFarmerField();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
 
-  ///
-  const farmerField = useFarmerField();
-
   /// Form
+  const middleware = useFormMiddleware();
   const initialValues: HarvestFormValues = useMemo(() => ({
     amount: farmerField.harvestablePods || null,
     destination: undefined,
   }), [farmerField.harvestablePods]);
 
+  /// Handlers
   const onSubmit = useCallback(
     async (
       values: HarvestFormValues,
@@ -168,6 +170,7 @@ const Harvest: React.FC<{}> = () => {
     ) => {
       let txToast;
       try {
+        middleware.before();
         if (!farmerField.harvestablePods.gt(0)) throw new Error('No Harvestable Pods.');
         if (!farmerField.harvestablePlots) throw new Error('No Harvestable Plots.');
         if (!account?.address) throw new Error('Connect a wallet first.');
@@ -205,6 +208,7 @@ const Harvest: React.FC<{}> = () => {
       farmerField.harvestablePods,
       refetchFarmerBalances,
       refetchFarmerField,
+      middleware,
     ]
   );
 

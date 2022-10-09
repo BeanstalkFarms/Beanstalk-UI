@@ -10,7 +10,9 @@ import BeanstalkBalances from '~/components/Common/Balances/BeanstalkBalances';
 import useBeanstalkSiloBreakdown from '~/hooks/beanstalk/useBeanstalkBalancesBreakdown';
 import { NEW_BN } from '~/constants';
 
-const LiquidityByState: React.FC<CardProps> = ({ sx }) => {
+import { FC } from '~/types';
+
+const LiquidityByState: FC<CardProps> = ({ sx }) => {
   const breakdown = useBeanstalkSiloBreakdown();
   const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>((state) => state._beanstalk.field);

@@ -5,12 +5,14 @@ import { ClaimStatus, Nft } from '../../util/BeaNFTs';
 import NFTImage from './NFTImage';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 export interface NFTContentProps {
   collection: string;
   nft: Nft;
 }
 
-const NFTDetails: React.FC<NFTContentProps> = ({ nft, collection }) => (
+const NFTDetails: FC<NFTContentProps> = ({ nft, collection }) => (
   <Stack gap={1} sx={{ width: '100%', aspectRatio: '1/1' }}>
     <NFTImage nft={nft} />
     <Row alignItems="start" justifyContent="space-between">

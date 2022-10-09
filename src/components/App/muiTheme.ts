@@ -384,6 +384,9 @@ let muiTheme = createTheme({
             p: 0
           }
         }),
+        message: sx({
+          ml: 0.5
+        })
       }
     },
     MuiTooltip: {

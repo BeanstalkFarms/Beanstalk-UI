@@ -14,11 +14,13 @@ import AdvancedButton from './AdvancedButton';
 import SliderField from './SliderField';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 const SLIDER_FIELD_KEYS = ['plot.start', 'plot.end'];
 const InputPropsLeft  = { endAdornment: 'Start' };
 const InputPropsRight = { endAdornment: 'End' };
 
-const PlotInputField : React.FC<{
+const PlotInputField : FC<{
   /** All plots that are selectable via the input field */
   plots: PlotMap<BigNumber>,
   /** The maximum number of pods that can be entered into the input */

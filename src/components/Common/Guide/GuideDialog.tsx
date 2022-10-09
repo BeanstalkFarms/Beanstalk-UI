@@ -4,7 +4,9 @@ import { StyledDialog, StyledDialogTitle, StyledDialogContent } from '~/componen
 import { GuideProps } from '~/components/Common/Guide/GuideButton';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 
-const GuideDialog: React.FC<DialogProps & GuideProps> = (props) => (
+import { FC } from '~/types';
+
+const GuideDialog: FC<DialogProps & GuideProps> = (props) => (
   <StyledDialog onClose={props.onClose} open={props.open} fullWidth>
     <StyledDialogTitle onClose={props.onClose as any}>{props.title}</StyledDialogTitle>
     <StyledDialogContent>

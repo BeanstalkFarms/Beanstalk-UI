@@ -9,6 +9,8 @@ import { SeasonalDeltaBDocument, SeasonalDeltaBQuery } from '~/generated/graphql
 import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
 import { toTokenUnitsBN } from '~/util';
 
+import { FC } from '~/types';
+
 const getValue = (season: SnapshotData<SeasonalDeltaBQuery>) => toTokenUnitsBN(season.deltaB, BEAN[1].decimals).toNumber();
 const formatValue = (value: number) => `${value.toLocaleString('en-us', { maximumFractionDigits: 2 })}`;
 const statProps = {
@@ -20,7 +22,7 @@ const lineChartProps : Partial<LineChartProps> = {
   yTickFormat: tickFormatLocale
 };
 
-const DeltaB: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({
+const DeltaB: FC<{ height?: SeasonPlotBaseProps['height'] }> = ({
   height,
 }) => (
   <SeasonPlot<SeasonalDeltaBQuery>

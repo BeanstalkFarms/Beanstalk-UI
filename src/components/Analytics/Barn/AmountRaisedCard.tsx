@@ -6,11 +6,13 @@ import { displayBN } from '../../../util';
 import { BeanstalkPalette } from '../../App/muiTheme';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 export type AmountRaisedProps = {
   totalRaised: BigNumber;
 }
 
-const AmountRaisedCard: React.FC<AmountRaisedProps> =
+const AmountRaisedCard: FC<AmountRaisedProps> =
   ({
      totalRaised
    }) => {

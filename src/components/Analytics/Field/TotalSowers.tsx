@@ -6,6 +6,8 @@ import { SeasonalTotalSowersDocument, SeasonalTotalSowersQuery } from '~/generat
 import useSeason from '~/hooks/beanstalk/useSeason';
 import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
 
+import { FC } from '~/types';
+
 const getValue = (season: SnapshotData<SeasonalTotalSowersQuery>) => season.totalNumberOfSowers;
 const formatValue = (value: number) => `${value}`;
 const statProps = {
@@ -18,7 +20,7 @@ const lineChartProps : Partial<LineChartProps> = {
   yTickFormat: tickFormatLocale
 };
 
-const TotalSowers: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => {
+const TotalSowers: FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => {
   const season  = useSeason();
   return (
     <SeasonPlot<SeasonalTotalSowersQuery>

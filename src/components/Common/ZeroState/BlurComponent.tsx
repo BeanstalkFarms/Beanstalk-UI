@@ -1,7 +1,9 @@
 import React from 'react';
 import { Stack, Typography, StackProps } from '@mui/material';
 
-const BlurComponent : React.FC<StackProps & { blur?: number; opacity?: number }> = ({ children, opacity = 0.4, blur = 8, sx }) => (
+import { FC } from '~/types';
+
+const BlurComponent : FC<StackProps & { blur?: number; opacity?: number }> = ({ children, opacity = 0.4, blur = 8, sx }) => (
   <Stack
     sx={{
       width: '100%',

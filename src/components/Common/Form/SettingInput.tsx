@@ -4,7 +4,9 @@ import { TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import Row from '~/components/Common/Row';
 
-const SettingInput : React.FC<{
+import { FC } from '~/types';
+
+const SettingInput : FC<{
   name: string;
   label: string;
   endAdornment?: React.ReactNode;

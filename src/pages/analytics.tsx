@@ -6,7 +6,9 @@ import SiloAnalytics from '~/components/Analytics/Silo';
 
 import PageHeader from '~/components/Common/PageHeader';
 
-const AnalyticsPage: React.FC<{}> = () => (
+import { FC } from '~/types';
+
+const AnalyticsPage: FC<{}> = () => (
   <Container maxWidth="lg">
     <Stack gap={2}>
       <PageHeader

@@ -3,7 +3,9 @@ import { Button, ButtonProps, Typography } from '@mui/material';
 import DropdownIcon from '../DropdownIcon';
 import Row from '~/components/Common/Row';
 
-const AdvancedButton : React.FC<{ 
+import { FC } from '~/types';
+
+const AdvancedButton : FC<{ 
   open: boolean;
 } & ButtonProps> = ({
   open,

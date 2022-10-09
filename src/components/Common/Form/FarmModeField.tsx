@@ -6,7 +6,9 @@ import AddressIcon from '../AddressIcon';
 import PillSelectField, { PillSelectFieldProps } from './PillSelectField';
 import { IconSize } from '../../App/muiTheme';
 
-const FarmModeField : React.FC<
+import { FC } from '~/types';
+
+const FarmModeField : FC<
   Partial<PillSelectFieldProps>
   & {
     name : string;

@@ -4,9 +4,11 @@ import useTabs from '~/hooks/display/useTabs';
 import CreateOrder from './CreateOrder';
 import CreateListing from './CreateListing';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
 
 const SLUGS = ['order', 'list'];
-const MarketActions : React.FC<{}> = () => {
+
+const MarketActions : FC<{}> = () => {
   const [tab, handleChange] = useTabs(SLUGS, 'action');
   return (
     <Card sx={{ position: 'relative' }}>

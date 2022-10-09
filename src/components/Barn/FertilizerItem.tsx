@@ -10,6 +10,8 @@ import { FertilizerTooltip } from './FertilizerItemTooltips';
 import { ZERO_BN } from '~/constants';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 export type FertilizerData = {
   /**
    * The ID of this Fertilizer 1155 token.
@@ -46,7 +48,7 @@ export type FertilizerData = {
   season?: BigNumber;
 }
 
-const FertilizerItem: React.FC<FertilizerData & {
+const FertilizerItem: FC<FertilizerData & {
   /**
    * Customize the Fertilizer image used.
    * Fertilizer can be `unused` -> `active` -> `used`.
@@ -106,7 +108,7 @@ const FertilizerItem: React.FC<FertilizerData & {
               Sprouts
             </Typography>
             <Row alignItems="center" gap={0.2}>
-              <TokenIcon token={SPROUTS} style={{ width: '14px' }} />
+              <TokenIcon token={SPROUTS} css={{ width: '14px' }} />
               <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
                 {sprouts ? displayBN(sprouts) : '?'}
               </Typography>

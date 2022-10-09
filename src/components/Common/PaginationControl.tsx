@@ -7,6 +7,8 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { BeanstalkPalette } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 const PaginationItem = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isActive',
 })<{ isActive: boolean }>(({ isActive }) => sx({
@@ -20,7 +22,7 @@ const PaginationItem = styled(Box, {
   cursor: 'pointer',
 }));
 
-const PaginationArrow: React.FC<{
+const PaginationArrow: FC<{
   disabled: boolean;
   isRightArrow?: boolean;
   onClick: () => void;
@@ -47,7 +49,7 @@ interface Props {
   };
 }
 
-const PaginationControl: React.FC<Props> = ({
+const PaginationControl: FC<Props> = ({
   total,
   page,
   onPageClick,

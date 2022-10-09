@@ -4,7 +4,9 @@ import DropdownIcon from '../DropdownIcon';
 import { IconSize } from '../../App/muiTheme';
 import Row from '~/components/Common/Row';
 
-const PillRow : React.FC<{
+import { FC } from '~/types';
+
+const PillRow : FC<{
   label: string;
   tooltip?: string;
   isOpen?: boolean;

@@ -10,6 +10,8 @@ import AuthEmptyState from '../../../Common/ZeroState/AuthEmptyState';
 import ArrowPagination from '../../../Common/ArrowPagination';
 import { AppState } from '~/state';
 
+import { FC } from '~/types';
+
 const components = {
   NoRowsOverlay() {
     return (
@@ -19,7 +21,7 @@ const components = {
   Pagination: ArrowPagination,
 };
 
-const MyOrdersTable : React.FC<{}> = () => {
+const MyOrdersTable : FC<{}> = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   /// Data

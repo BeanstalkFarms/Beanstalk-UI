@@ -7,7 +7,9 @@ import useGasToUSD from '~/hooks/ledger/useGasToUSD';
 import { AppState } from '~/state';
 import { displayUSD } from '~/util';
 
-const GasTag : React.FC<{
+import { FC } from '~/types';
+
+const GasTag : FC<{
   gasLimit: BigNumber | null;
 }> = ({
   gasLimit

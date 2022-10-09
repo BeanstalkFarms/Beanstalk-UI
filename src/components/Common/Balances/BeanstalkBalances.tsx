@@ -8,7 +8,9 @@ import TokenRow from '~/components/Common/Balances/TokenRow';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import { BEAN } from '~/constants/tokens';
 
-const BeanstalkBalances: React.FC<{
+import { FC } from '~/types';
+
+const BeanstalkBalances: FC<{
   breakdown: ReturnType<typeof useBeanstalkSiloBreakdown>;
 }> = ({
   breakdown,

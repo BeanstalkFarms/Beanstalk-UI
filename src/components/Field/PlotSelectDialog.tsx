@@ -6,6 +6,8 @@ import { StyledDialogContent, StyledDialogTitle } from '../Common/Dialog';
 import PlotSelect from '../Common/Form/PlotSelect';
 import EmptyState from '../Common/ZeroState/EmptyState';
 
+import { FC } from '~/types';
+
 export interface PlotSelectDialogProps {
   /** Closes dialog */
   handleClose: any;
@@ -19,7 +21,7 @@ export interface PlotSelectDialogProps {
   selected?: string | null;
 }
 
-const PlotSelectDialog: React.FC<PlotSelectDialogProps & DialogProps> = ({
+const PlotSelectDialog: FC<PlotSelectDialogProps & DialogProps> = ({
   // Custom
   handleClose,
   handlePlotSelect,

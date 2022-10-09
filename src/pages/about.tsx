@@ -2,7 +2,9 @@
 // import { useBeanstalkContract } from '~/hooks/useContract';
 import React from 'react';
 
-const AboutPage : React.FC = () => 
+import { FC } from '~/types';
+
+const AboutPage : FC<{}> = () => 
   // const beanstalk = useBeanstalkContract();
 
   // const [] = useState(null)

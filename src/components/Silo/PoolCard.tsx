@@ -11,7 +11,9 @@ import { BeanstalkPalette } from '../App/muiTheme';
 /**
  * Displays data about a Pool containing Beans and other assets.
  */
-const PoolCard: React.FC<{
+import { FC } from '~/types';
+
+const PoolCard: FC<{
   pool: Pool;
   poolState: BeanPoolState;
   ButtonProps?: MuiButtonProps & LinkProps;

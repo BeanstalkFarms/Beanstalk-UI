@@ -5,7 +5,9 @@ import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { tabLabels } from '~/pages/market/activity';
 import Row from '~/components/Common/Row';
 
-const ActivityTableHeader: React.FC<BoxProps & { tab: number; handleChangeTab: any }> = (props) => {
+import { FC } from '~/types';
+
+const ActivityTableHeader: FC<BoxProps & { tab: number; handleChangeTab: any }> = (props) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   return (

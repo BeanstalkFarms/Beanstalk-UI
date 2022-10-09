@@ -25,7 +25,9 @@ import SettingsDialog from '~/components/Nav/SettingsDialog';
 import useGlobal from '~/hooks/app/useGlobal';
 import Row from '~/components/Common/Row';
 
-const AboutButton: React.FC<ButtonProps> = ({ sx }) => {
+import { FC } from '~/types';
+
+const AboutButton: FC<ButtonProps> = ({ sx }) => {
   /// Theme
   const theme = useTheme();
   const isMedium = useMediaQuery(theme.breakpoints.down('lg')); // trim additional account text at medium

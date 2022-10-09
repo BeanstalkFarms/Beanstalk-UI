@@ -39,6 +39,8 @@ import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import { BEAN_CRV3_LP } from '~/constants/tokens';
 import copy from '~/constants/copy';
+import { FC } from '~/types';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 // -----------------------------------------------------------------------
 
@@ -60,9 +62,7 @@ type ClaimFormValues = {
   }
 };
 
-// -----------------------------------------------------------------------
-
-const ClaimForm : React.FC<
+const ClaimForm : FC<
   FormikProps<ClaimFormValues> & {
     token: Token;
     claimableBalance: BigNumber;
@@ -175,7 +175,7 @@ const ClaimForm : React.FC<
           // disableTokenSelect={true}
           quoteSettings={quoteSettings}
           handleQuote={handleQuote}
-          hideQuote
+          displayQuote={false}
         />
         <Stack gap={0}>
           {/* Setting: Destination */}
@@ -265,7 +265,7 @@ const ClaimForm : React.FC<
 
 // -----------------------------------------------------------------------
 
-const Claim : React.FC<{
+const Claim : FC<{
   token: ERC20Token;
   siloBalance: FarmerSiloBalance;
 }> = ({
@@ -276,6 +276,7 @@ const Claim : React.FC<{
   const { data: signer } = useSigner();
   const provider = useProvider();
   const farm = useMemo(() => new Farm(provider), [provider]);
+  const middleware = useFormMiddleware();
 
   /// Contracts
   const beanstalk = useBeanstalkContract(signer);
@@ -303,11 +304,12 @@ const Claim : React.FC<{
   const onSubmit = useCallback(async (values: ClaimFormValues, formActions: FormikHelpers<ClaimFormValues>) => {
     let txToast;
     try {
+      middleware.before();
       const crates = siloBalance?.claimable?.crates;
-      if (!crates || crates.length === 0) throw new Error('No claimable crates.');
-      if (!values.destination) throw new Error('No destination selected.');
-      const tokenOut = (values.tokenOut || token);
-      if (!tokenOut) throw new Error('No output token selected.');
+      if (!crates || crates.length === 0) throw new Error('Nothing to claim');
+      if (!values.destination) throw new Error('Select a balance to claim to');
+      const tokenOut = (values.tokenOut || token); // FIXME: `token` will always be set
+      if (!tokenOut) throw new Error('Select an output token');
 
       txToast = new TransactionToast({
         loading: `Claiming ${displayTokenAmount(claimableBalance, token)} from the Silo...`,
@@ -378,6 +380,7 @@ const Claim : React.FC<{
     token,
     refetchFarmerSilo,
     refetchFarmerBalances,
+    middleware
   ]);
 
   return (
