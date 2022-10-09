@@ -153,6 +153,8 @@ export const FontWeight = {
   bold: 700
 };
 
+export const XXLWidth = 1400;
+
 // FIXME: changes to createTheme don't hot reload.
 let muiTheme = createTheme({
   breakpoints: {

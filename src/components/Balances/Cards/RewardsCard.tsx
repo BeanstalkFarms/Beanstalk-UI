@@ -79,5 +79,3 @@
 //     </Grid>
 //   </Card>
 // );
-
-export default null;
