@@ -19,9 +19,8 @@ import {
 } from '~/util/Guides';
 import SiloAssetOverviewCard from '~/components/Silo/SiloAssetOverviewCard';
 import PagePath from '~/components/Common/PagePath';
+import { XXLWidth } from '~/components/App/muiTheme';
 
-// max width for only token page.
-const TOKEN_PAGE_MAX_WIDTH = 1400;
 const guides = [
   HOW_TO_DEPOSIT_IN_THE_SILO,
   HOW_TO_CONVERT_DEPOSITS,
@@ -62,7 +61,7 @@ const TokenPage: React.FC<{}> = () => {
 
   return (
     <Container
-      sx={{ maxWidth: `${TOKEN_PAGE_MAX_WIDTH}px !important`, width: '100%' }}
+      sx={{ maxWidth: `${XXLWidth}px !important`, width: '100%' }}
     >
       <Stack gap={2} width="100%">
         <PagePath

@@ -1,3 +1,47 @@
+import { Card, Grid, Stack, Typography } from '@mui/material';
+import React from 'react';
+import useChainId from '~/hooks/chain/useChainId';
+import beanCircleIcon from '~/img/tokens/bean-logo-circled.svg';
+import { getChainConstant } from '~/util';
+import { BEAN } from '~/constants/tokens';
+
+const RewardsCard: React.FC<{}> = () => {
+  const chainId = useChainId();
+
+  const beanToken = getChainConstant(BEAN, chainId);
+
+  return (
+    <Card sx={{ p: 2 }}>
+      <Stack
+        spacing={2}
+        width="100%"
+        sx={({ breakpoints }) => ({
+          [breakpoints.up('md')]: {
+            maxWidth: '360px',
+          },
+          width: '100%',
+        })}
+      >
+        <Typography variant="h4">Rewards</Typography>
+        <Stack spacing={1} width="100%">
+          <Grid container width="100%">
+            <Grid item xs={4}>
+              <Stack>
+                <Typography component="span" variant="bodyLarge">
+                  <img alt="" src={beanCircleIcon} height="18px" />
+                  {/* {farmerSilo.balances[beanToken.address]} */}
+                </Typography>
+              </Stack>
+            </Grid>
+          </Grid>
+        </Stack>
+      </Stack>
+    </Card>
+  );
+};
+
+export default RewardsCard;
+
 // const RewardsCard: React.FC<{
 //   farmerSilo: AppState['_farmer']['silo'];
 //   farmerField: AppState['_farmer']['field'];
@@ -77,5 +121,3 @@
 //     </Grid>
 //   </Card>
 // );
-
-export default null;
