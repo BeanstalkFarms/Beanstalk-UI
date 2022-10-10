@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { Box } from '@mui/material';
 import Banner from '~/components/Nav/Banner';
 import { BANNER_HEIGHT } from '~/hooks/app/usePageDimensions';
 import { AppState } from '~/state';
@@ -35,7 +36,12 @@ const useBanner = () => {
             alt="Snapshot"
             css={{ height: 14, marginBottom: -2 }}
           />&nbsp;&nbsp;
-          {activeProposals[0].title} is live.&nbsp;<strong>Vote now &rarr;</strong>
+          <Box display={{ xs: 'inline', md: 'none' }}>
+            {activeProposals[0].title.substring(0, 35)}...&nbsp;<strong>Vote now &rarr;</strong>
+          </Box>
+          <Box display={{ xs: 'none', md: 'inline' }}>
+            {activeProposals[0].title} is live.&nbsp;<strong>Vote now &rarr;</strong>
+          </Box>
         </Banner>
       );
     }
