@@ -1,58 +1,52 @@
 import React, { useCallback, useMemo } from 'react';
-import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { AreaStack, Line, LinePath } from '@visx/shape';
 import { Group } from '@visx/group';
 
-import { CurveFactory } from 'd3-shape';
 import { LinearGradient } from '@visx/gradient';
 import BigNumber from 'bignumber.js';
-import { Axis, Orientation, TickFormatter } from '@visx/axis';
+import { Axis, Orientation } from '@visx/axis';
 import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
-import { NumberLike } from '@visx/scale';
 import { Box, Stack, Typography } from '@mui/material';
+import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import {
-  CURVES,
-  DataRegion,
-  Scale,
-} from '~/components/Common/Charts/LineChart';
+
 import { displayBN } from '~/util';
 import ChartPropProvider, {
+  BaseChartProps,
   BaseDataPoint,
-  ChartMultiStyles,
-  ProvidedChartProps,
+  ExploitLine,
+  ProviderChartProps,
 } from './ChartPropProvider';
 import Row from '../Row';
 import { defaultValueFormatter } from './SeasonPlot';
 
-export type ChartMultiProps = {
-  curve?: CurveFactory | keyof typeof CURVES;
-  isTWAP?: boolean;
-  stylesConfig?: ChartMultiStyles;
-  onCursor?: (dps?: BaseDataPoint | BaseDataPoint[]) => void;
-  children?: (
-    props: GraphProps & {
-      scales: Scale[];
-      dataRegion: DataRegion;
-    }
-  ) => React.ReactElement | null;
-  tooltip?: boolean | (({ d }: { d?: BaseDataPoint }) => JSX.Element);
-  yTickFormat?: TickFormatter<NumberLike>;
+export type StackedAreaTooltip =
+  | boolean
+  | (({ d }: { d?: BaseDataPoint }) => JSX.Element | null);
+
+export type StackedAreaDisplayValue = (v: BaseDataPoint) => number;
+
+export type StackedAreaChartTypeProps = {
+  tooltip?: StackedAreaTooltip;
+  getDisplayValue: StackedAreaDisplayValue;
 };
 
-export type MultiStackedAreaChartProps = {
-  series: BaseDataPoint[][];
-  keys: string[];
-  formatValue?: (value: number) => string | JSX.Element;
-} & Omit<ChartMultiProps, 'children'>;
+type StackedAreaProps = Omit<BaseChartProps, 'tooltip' | 'getDisplayValue'> &
+  StackedAreaChartTypeProps;
 
 type GraphProps = {
   width: number;
   height: number;
-} & MultiStackedAreaChartProps &
-  ProvidedChartProps;
+} & Props;
 
-function Graph(props: GraphProps) {
+type Props = {
+  width: number;
+  height: number;
+} & Omit<BaseChartProps, 'tooltip' | 'getDisplayValue'> &
+  StackedAreaChartTypeProps &
+  ProviderChartProps;
+
+const Graph = (props: GraphProps) => {
   const {
     // Chart sizing
     width,
@@ -63,6 +57,7 @@ function Graph(props: GraphProps) {
     keys,
     tooltip = false,
     onCursor,
+    getDisplayValue,
     formatValue = defaultValueFormatter,
     isTWAP,
     stylesConfig,
@@ -134,16 +129,24 @@ function Graph(props: GraphProps) {
       const { left, top } = containerBounds;
       const containerX = ('clientX' in event ? event.clientX : 0) - left;
       const containerY = ('clientY' in event ? event.clientY : 0) - top;
-      const pointerData = getPointerValue(event, scales, series);
+      const pointerData = getPointerValue(event, scales, series)[0];
 
       showTooltip({
         tooltipLeft: containerX,
         tooltipTop: containerY,
-        tooltipData: pointerData[0],
+        tooltipData: pointerData,
       });
-      onCursor?.(pointerData[0]);
+      onCursor?.(pointerData.season, getDisplayValue(pointerData));
     },
-    [containerBounds, series, getPointerValue, onCursor, scales, showTooltip]
+    [
+      containerBounds,
+      getPointerValue,
+      scales,
+      series,
+      showTooltip,
+      onCursor,
+      getDisplayValue,
+    ]
   );
 
   // tick format + styles
@@ -306,27 +309,25 @@ function Graph(props: GraphProps) {
       </svg>
     </div>
   );
-}
+};
 
-// ------------------------
-//       Stacked Area Chart
-// ------------------------
-
-const MultiStackedAreaChart: React.FC<MultiStackedAreaChartProps> = (props) => (
+const StackedAreaGraph: React.FC<StackedAreaProps> = (props) => (
   <ChartPropProvider>
-    {({ ...sharedChartProps }) => (
+    {({ ...providerProps }) => {
       <ParentSize debounceTime={50}>
         {({ width: visWidth, height: visHeight }) => (
           <Graph
+            {...providerProps}
+            {...props}
             width={visWidth}
             height={visHeight}
-            {...sharedChartProps}
-            {...props}
-          />
+          >
+            {(childProps) => <ExploitLine {...childProps} />}
+          </Graph>
         )}
-      </ParentSize>
-    )}
+      </ParentSize>;
+    }}
   </ChartPropProvider>
 );
 
-export default MultiStackedAreaChart;
+export default StackedAreaGraph;

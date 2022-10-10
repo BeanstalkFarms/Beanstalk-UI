@@ -12,13 +12,13 @@ import {
 } from '~/generated/graphql';
 import { toTokenUnitsBN } from '~/util';
 import useTimeTabState from '~/hooks/app/useTimeTabState';
-import SeasonPlotMulti from '~/components/Common/Charts/SeasonPlotMulti';
 import { ERC20Token } from '~/classes/Token';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import {
   BaseDataPoint,
   ChartMultiStyles,
 } from '~/components/Common/Charts/ChartPropProvider';
+import BaseSeasonPlot from '~/components/Common/Charts/BaseSeasonPlot';
 
 const assets = {
   bean: BEAN[1],
@@ -104,7 +104,7 @@ const BeanVs3Crv: React.FC<{}> = () => {
 
   return (
     <Card sx={{ pt: 2 }}>
-      <SeasonPlotMulti
+      <BaseSeasonPlot
         queryData={queryParams}
         height={300}
         StatProps={{
@@ -112,10 +112,10 @@ const BeanVs3Crv: React.FC<{}> = () => {
           gap: 0.5,
         }}
         timeTabParams={timeTabParams}
-        getStatValue={getStatValue}
         formatValue={formatValue}
         stackedArea
         ChartProps={{
+          getDisplayValue: getStatValue,
           stylesConfig: stylesConfig,
           tooltip: true,
         }}

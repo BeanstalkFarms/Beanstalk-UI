@@ -7,11 +7,8 @@ import useSeasonsQuery, {  MinimumViableSnapshot, MinimumViableSnapshotQuery, Se
 import { secondsToDate, sortSeasons } from '~/util';
 
 type SeasonData = (Omit<MinimumViableSnapshot, 'id'> & any);
-interface MergedSeasonsQueryData {
-  [season: number]: SeasonData;
-}
 
-export type MergeSeasonsQueryProps<T extends MinimumViableSnapshotQuery> = {
+export type SeasonsQueryItem<T extends MinimumViableSnapshotQuery> = {
   /*
    * non-destructured value returned by useSeasonsQuery<T>
    */
@@ -23,40 +20,53 @@ export type MergeSeasonsQueryProps<T extends MinimumViableSnapshotQuery> = {
   /**
    * key of data
    */
-  key: string;
+  key?: string;
 }
 
-const generateStackedAreaSeriesData = <T extends MinimumViableSnapshotQuery, K extends BaseDataPoint>(
-  params: MergeSeasonsQueryProps<T>[], 
-  seasonAggregation: SeasonAggregation, 
-  keys: string[],
-) => {
-  const points: K[] = [];
-  // merge
-  const queryData: MergedSeasonsQueryData = {};
-  params.forEach(({ query, getValue, key }) => {
+/**
+ * merges data from multiple instances of useSeasonsQuery
+ * returns data in expected format for stacked area chart K[];
+ */
+const reduceSeasonsQueries = <T extends MinimumViableSnapshotQuery>(params: SeasonsQueryItem<T>[], keys: string[]) => {
+  const seasonsRecord: Record<number, SeasonData> = {};
+  params.forEach((param, i) => {
+    const { query, getValue } = param;
+    const key = keys[i];
     // if no seasons data, skip
     if (!query?.data?.seasons) return;
     query.data.seasons.forEach((s) => {
       // if no season data, skip
       if (!s) return;
-      const prev = queryData[s.season];
+      const prev = seasonsRecord[s.season];
       if (!prev) {
-        queryData[s.season] = {
+        seasonsRecord[s.season] = {
           season: s.season,
           timestamp: s.timestamp,
           [key]: getValue(s)
         };
       } else {
-        queryData[s.season] = {
-          ...queryData[s.season],
+        seasonsRecord[s.season] = {
+          ...seasonsRecord[s.season],
           [key]: getValue(s)
         };
       }
     });
   });
+  return Object.values(seasonsRecord);
+};
 
-  const seasonsData = Object.values(queryData);
+/**
+ * Combines data from n queries and generates series data for stacked area charts.
+ * Returns K[][] such that K = BaseDataPoint and where where K[] is sorted by season in ascending order
+ * Note: Although Stacked area charts expect K[] as input, we return K[][] so we can share functions for line and stacked area charts
+ */
+const generateStackedAreaSeriesData = <T extends MinimumViableSnapshotQuery>(
+  params: SeasonsQueryItem<T>[], 
+  seasonAggregation: SeasonAggregation, 
+  keys: string[],
+) => {
+  const seasonsData = reduceSeasonsQueries(params, keys);
+  const points: BaseDataPoint[] = [];
 
   if (seasonAggregation === SeasonAggregation.DAY) {
     const data = seasonsData.reverse();
@@ -70,7 +80,7 @@ const generateStackedAreaSeriesData = <T extends MinimumViableSnapshotQuery, K e
     let d: Date | undefined; // current date for this avg
     let s: number | undefined; // current season for this avg
 
-    const copy = { ...agg }; // copy of agg to reset values in agg
+    const copy = { ...agg }; // copy of agg to reset values in agg after every iteration
 
     for (let k = lastIndex; k >= 0; k -= 1) {
       const season = data[k];
@@ -91,7 +101,7 @@ const generateStackedAreaSeriesData = <T extends MinimumViableSnapshotQuery, K e
           season: s as number,
           date: d as Date,
           ...agg,
-        } as K);
+        } as BaseDataPoint);
         agg = { ...copy };
         j = 0;
       } else {
@@ -105,21 +115,23 @@ const generateStackedAreaSeriesData = <T extends MinimumViableSnapshotQuery, K e
         ...seasonData,
         season: seasonData.season as number,
         date: secondsToDate(seasonData.timestamp)
-      } as unknown as K);
+      } as BaseDataPoint);
     }
   }
-
-  // console.log('points: ', points);
   
   return [points.sort(sortSeasons)];
 };
 
-const generateSeriesData = <T extends MinimumViableSnapshotQuery, K extends BaseDataPoint>(
-  params: MergeSeasonsQueryProps<T>[], 
+/**
+ * generates series data for line charts
+ * Returns K[][] such that K = { season: number; date: Date; value: number } and where K[] is sorted by season in ascending order
+ */
+const generateSeriesData = <T extends MinimumViableSnapshotQuery>(
+  params: SeasonsQueryItem<T>[], 
   seasonAggregation: SeasonAggregation,
 ) => {
-  const points: K[][] = params.map(({ query, getValue }) => {
-    const _points: K[] = [];
+  const points: BaseDataPoint[][] = params.map(({ query, getValue }) => {
+    const _points: BaseDataPoint[] = [];
     const data = query.data;
     if (!data || !data.seasons.length) return [];
     const lastIndex = data.seasons.length - 1;
@@ -145,7 +157,7 @@ const generateSeriesData = <T extends MinimumViableSnapshotQuery, K extends Base
             season: s as number,
             date: d as Date,
             value: new BigNumber(v).div(j + 1).toNumber(),
-          } as unknown as K);
+          } as unknown as BaseDataPoint);
           v = 0;
           j = 0;
         } else {
@@ -160,7 +172,7 @@ const generateSeriesData = <T extends MinimumViableSnapshotQuery, K extends Base
           season: season.season as number,
           date: secondsToDate(season.timestamp),
           value: getValue(season),
-        } as unknown as K);
+        } as unknown as BaseDataPoint);
       }
     }
     return _points.sort(sortSeasons);
@@ -168,18 +180,22 @@ const generateSeriesData = <T extends MinimumViableSnapshotQuery, K extends Base
   return points;
 };
 
-// generate multi query series
-const useGenerateMultiQuerySeries = <T extends MinimumViableSnapshotQuery, K extends BaseDataPoint>(
-  params: MergeSeasonsQueryProps<T>[],
-  timeTabState: TimeTabState,
-  stackedArea?: boolean,
-): {
-  data: K[][];
+export type ChartSeriesParams = {
+  data: BaseDataPoint[][];
   error: ApolloError[] | undefined;
   keys: string[];
   loading: boolean;
   stackedArea?: boolean;
-} => {
+}
+
+/**
+ * Generates series data for line & stacked area charts.
+ */
+const useGenerateChartSeries = <T extends MinimumViableSnapshotQuery>(
+  params: SeasonsQueryItem<T>[],
+  timeTabState: TimeTabState,
+  stackedArea?: boolean,
+): ChartSeriesParams => {
   const loading = !!(params.find((p) => p.query.loading));
 
   const error = useMemo(() => {
@@ -189,16 +205,15 @@ const useGenerateMultiQuerySeries = <T extends MinimumViableSnapshotQuery, K ext
     return errs.length ? errs : undefined;
   }, [params]);
 
-  const [mergedData, dataKeys] = useMemo(() => {
-    const _keys = params.map(({ key }) => key);
+  const mergeData = useMemo(() => {
+    const _keys = params.map((param, i) => param.key ?? i.toString());
     const series = stackedArea 
       ? generateStackedAreaSeriesData(params, timeTabState[0], _keys)
       : generateSeriesData(params, timeTabState[0]);
-    
-    return [series, _keys] as [K[][], string[]];
+    return { data: series, keys: _keys };
   }, [params, stackedArea, timeTabState]);
 
-  return { data: mergedData, error, loading, keys: dataKeys, stackedArea };
+  return { ...mergeData, error, loading };
 };
 
-export default useGenerateMultiQuerySeries;
+export default useGenerateChartSeries;

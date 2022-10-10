@@ -1,54 +1,75 @@
 import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
-import { Line } from '@visx/shape';
 import { TimeTabStateParams } from '~/hooks/app/useTimeTabState';
-import useGenerateMultiQuerySeries, {
-  MergeSeasonsQueryProps,
-} from '~/hooks/beanstalk/useGenerateMultiQuerySeries';
+import useGenerateChartSeries, {
+  SeasonsQueryItem,
+} from '~/hooks/beanstalk/useGenerateChartSeries';
 import { MinimumViableSnapshotQuery } from '~/hooks/beanstalk/useSeasonsQuery';
 
 import Row from '../Row';
 import Stat, { StatProps } from '../Stat';
-import { defaultValueFormatter, SeasonPlotBaseProps } from './SeasonPlot';
-import MultiStackedAreaChart, {
-  ChartMultiProps,
-} from './MultiStackedAreaChart';
+import { defaultValueFormatter } from './SeasonPlot';
 import TimeTabs from './TimeTabs';
-import { BaseDataPoint } from './ChartPropProvider';
-import MultiLineChart from './MultiLineChart';
-import { BeanstalkPalette } from '~/components/App/muiTheme';
+import { BaseChartProps, BaseDataPoint } from './ChartPropProvider';
+import MultiLineGraph, {
+  LineChartGetDisplayValue,
+  LineChartTooltip,
+} from './MultiLineChart';
+import StackedAreaGraph, {
+  StackedAreaDisplayValue,
+  StackedAreaTooltip,
+} from './StackedAreaGraph';
 
-type StatPropsMulti = {
-  StatProps?: Omit<StatProps, 'amount' | 'subtitle'>;
-  getStatValue: (d: BaseDataPoint | BaseDataPoint[]) => number;
+type BaseSeasonPlotProps = {
+  /**
+   * The value displayed when the chart isn't being hovered.
+   * If not provided, uses the `value` of the last data point if available,
+   * otherwise returns 0.
+   */
+  defaultValue?: number;
+  /**
+   * The season displayed when the chart isn't being hovered.
+   * If not provided, uses the `season` of the last data point if available,
+   * otherwise returns 0.
+   */
+  defaultSeason?: number;
+  /**
+   * Height applied to the chart range. Can be a fixed
+   * pixel number or a percent if the parent element has a constrained height.
+   */
+  height?: number | string;
+  /**
+   * True if this plot should be a StackedAreaChart
+   */
+  stackedArea?: boolean;
+  /**
+   *
+   */
+  timeTabParams: TimeTabStateParams;
 };
 
-type SeasonPlotMultiBaseProps<K extends MinimumViableSnapshotQuery> = Omit<
-  SeasonPlotBaseProps,
-  'document'
-> &
-  StatPropsMulti & {
-    queryData: MergeSeasonsQueryProps<K>[];
-    ChartProps?: ChartMultiProps;
-    timeTabParams: TimeTabStateParams;
-    formatValue?: (value: number) => string | JSX.Element;
-  };
+type Props<T extends MinimumViableSnapshotQuery> = BaseSeasonPlotProps & {
+  queryData: SeasonsQueryItem<T>[];
+  formatValue?: (value: number) => string | JSX.Element;
+  StatProps?: Omit<StatProps, 'amount' | 'subtitle'>;
+  ChartProps: Omit<BaseChartProps, 'series' | 'keys'>;
+};
 
-export default function SeasonPlotMulti<T extends MinimumViableSnapshotQuery>({
-  // use mergeSeasonsQueries
-  queryData,
-  // season plot base props
-  defaultValue: _defaultValue,
-  defaultSeason: _defaultSeason,
-  height = '175px',
-  stackedArea,
-  formatValue = defaultValueFormatter,
-  // stat props
-  getStatValue,
-  StatProps: statProps, // renamed to prevent type collision
-  ChartProps: chartProps,
-  timeTabParams,
-}: SeasonPlotMultiBaseProps<T>) {
+function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
+  const {
+    //
+    queryData,
+    // season plot base props
+    defaultValue: _defaultValue,
+    defaultSeason: _defaultSeason,
+    height = '175px',
+    stackedArea = false,
+    formatValue = defaultValueFormatter,
+    // stat props
+    StatProps: statProps, // renamed to prevent type collision
+    ChartProps: chartProps,
+    timeTabParams,
+  } = props;
   /// Display values
   const [displayValue, setDisplayValue] = useState<number | undefined>(
     undefined
@@ -62,23 +83,19 @@ export default function SeasonPlotMulti<T extends MinimumViableSnapshotQuery>({
     loading,
     error,
     keys,
-  } = useGenerateMultiQuerySeries(queryData, timeTabParams[0], stackedArea);
+  } = useGenerateChartSeries(queryData, timeTabParams[0], stackedArea);
 
   const handleCursor = useCallback(
-    (dps?: BaseDataPoint | BaseDataPoint[]) => {
-      if (!dps) {
+    (season: number | undefined, v?: number | undefined) => {
+      if (!season || !v) {
         setDisplaySeason(undefined);
         setDisplayValue(undefined);
         return;
       }
-      if (Array.isArray(dps)) {
-        dps.length && setDisplaySeason(dps[0].season);
-      } else if (dps.season) {
-        dps.season && setDisplaySeason(dps.season);
-      }
-      setDisplayValue(getStatValue(dps));
+      setDisplaySeason(season);
+      setDisplayValue(v);
     },
-    [getStatValue]
+    []
   );
 
   const seriesInput = useMemo(() => series, [series]);
@@ -87,25 +104,27 @@ export default function SeasonPlotMulti<T extends MinimumViableSnapshotQuery>({
   const defaults = useMemo(() => {
     let defaultValue = _defaultValue ?? 0;
     let defaultSeason = _defaultSeason ?? 0;
-
-    if (!defaultValue || !defaultSeason) {
-      if (stackedArea && seriesInput.length) {
+    let getVal = chartProps.getDisplayValue;
+    if ((!defaultValue || !defaultSeason) && seriesInput.length) {
+      if (stackedArea) {
+        getVal = getVal as (v: BaseDataPoint) => number;
         const _seriesInput = seriesInput[seriesInput.length - 1];
         if (_seriesInput.length) {
-          defaultValue = getStatValue(_seriesInput[_seriesInput.length - 1]);
+          defaultValue = getVal(_seriesInput[_seriesInput.length - 1]);
           defaultSeason = _seriesInput[seriesInput.length - 1].season;
         }
-      } else if (seriesInput.length > 0) {
+      } else {
+        getVal = getVal as (v: BaseDataPoint[]) => number;
         if (seriesInput.every((s) => 'season' in s)) {
           const lineSeriesInput = seriesInput.map((s) => s[s.length - 1]);
-          defaultValue = getStatValue(lineSeriesInput);
+          defaultValue = getVal(lineSeriesInput);
           defaultSeason = lineSeriesInput[lineSeriesInput.length - 1].season;
         }
       }
     }
 
     return { defaultValue, defaultSeason };
-  }, [_defaultSeason, _defaultValue, getStatValue, seriesInput, stackedArea]);
+  }, [_defaultSeason, _defaultValue, chartProps, seriesInput, stackedArea]);
 
   return (
     <>
@@ -150,38 +169,30 @@ export default function SeasonPlotMulti<T extends MinimumViableSnapshotQuery>({
             )}
           </Stack>
         ) : stackedArea ? (
-          <MultiStackedAreaChart
+          <StackedAreaGraph
             series={seriesInput}
             keys={keys}
             onCursor={handleCursor}
-            formatValue={formatValue}
             {...chartProps}
+            getDisplayValue={
+              chartProps.getDisplayValue as StackedAreaDisplayValue
+            }
+            tooltip={chartProps.tooltip as StackedAreaTooltip}
           />
         ) : (
-          <MultiLineChart
+          <MultiLineGraph
             series={seriesInput}
             keys={keys}
             onCursor={handleCursor}
-            formatValue={formatValue}
             {...chartProps}
-          >
-            {(props) => {
-              if (!props.scales.length) return null;
-              const x = props.scales[0].xScale(6074) as number;
-              return x ? (
-                <Line
-                  from={{ x, y: props.dataRegion.yTop }}
-                  to={{ x, y: props.dataRegion.yBottom }}
-                  stroke={BeanstalkPalette.logoGreen}
-                  strokeDasharray={4}
-                  strokeDashoffset={2}
-                  strokeWidth={1}
-                />
-              ) : null;
-            }}
-          </MultiLineChart>
+            tooltip={chartProps.tooltip as LineChartTooltip}
+            getDisplayValue={
+              chartProps.getDisplayValue as LineChartGetDisplayValue
+            }
+          />
         )}
       </Box>
     </>
   );
 }
+export default BaseSeasonPlot;

@@ -48,8 +48,6 @@ export type SeasonPlotBaseProps = {
   stackedArea?: boolean;
 };
 
-export type SeasonPlotValueProps<T extends MinimumViableSnapshotQuery> = {};
-
 type SeasonPlotFinalProps<T extends MinimumViableSnapshotQuery> =
   SeasonPlotBaseProps & {
     /**

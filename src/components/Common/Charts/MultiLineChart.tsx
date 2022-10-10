@@ -1,39 +1,36 @@
 import React, { useCallback, useMemo } from 'react';
-import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { LinePath, Line } from '@visx/shape';
 import { Group } from '@visx/group';
-import { scaleLinear } from '@visx/scale';
 import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
-
+import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { Axis, Orientation } from '@visx/axis';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import ChartPropProvider, {
+  BaseChartProps,
   BaseDataPoint,
-  ProvidedChartProps,
+  ExploitLine,
+  ProviderChartProps,
 } from './ChartPropProvider';
-import { ChartMultiProps } from './MultiStackedAreaChart';
 
-export type Scale = {
-  xScale: ReturnType<typeof scaleLinear>;
-  yScale: ReturnType<typeof scaleLinear>;
+export type LineChartTooltip =
+  | boolean
+  | (({ d }: { d?: BaseDataPoint[] }) => JSX.Element | null);
+
+export type LineChartGetDisplayValue = (v: BaseDataPoint[]) => number;
+
+export type LineChartTypeProps = {
+  tooltip?: LineChartTooltip;
+  getDisplayValue: LineChartGetDisplayValue;
 };
 
-export type DataRegion = {
-  yTop: number;
-  yBottom: number;
-};
-
-export type MultiLineChartProps = {
-  series: BaseDataPoint[][];
-  keys: string[];
-  formatValue?: (value: number) => string | JSX.Element;
-} & ChartMultiProps;
+type LineChartProps = Omit<BaseChartProps, 'tooltip' | 'getDisplayValue'> &
+  LineChartTypeProps;
 
 type GraphProps = {
   width: number;
   height: number;
-} & MultiLineChartProps &
-  ProvidedChartProps;
+} & LineChartProps &
+  ProviderChartProps;
 
 // ------------------------
 //      Graph (Inner)
@@ -53,6 +50,7 @@ const Graph: React.FC<GraphProps> = (props) => {
     isTWAP,
     curve: _curve,
     children,
+    getDisplayValue,
     yTickFormat,
     common,
     accessors,
@@ -102,9 +100,18 @@ const Graph: React.FC<GraphProps> = (props) => {
         tooltipLeft: containerX, // in pixels
         tooltipTop: containerY, // in pixels
       });
-      onCursor?.(pointerData);
+      const season = pointerData.length ? pointerData[0].season : undefined;
+      onCursor?.(season, getDisplayValue(pointerData));
     },
-    [containerBounds, getPointerValue, scales, series, showTooltip, onCursor]
+    [
+      containerBounds,
+      getPointerValue,
+      scales,
+      series,
+      showTooltip,
+      onCursor,
+      getDisplayValue,
+    ]
   );
 
   // const yTickNum = height > 180 ? undefined : 5;
@@ -247,27 +254,23 @@ const Graph: React.FC<GraphProps> = (props) => {
   );
 };
 
-// ------------------------
-//       Line Chart
-// ------------------------
-
-const MultiLineChart: React.FC<MultiLineChartProps> = (props) => (
+const MultiLineGraph: React.FC<LineChartProps> = (props) => (
   <ChartPropProvider>
-    {({ ...propProviderProps }) => (
+    {({ ...providerProps }) => {
       <ParentSize debounceTime={50}>
         {({ width: visWidth, height: visHeight }) => (
           <Graph
+            {...providerProps}
+            {...props}
             width={visWidth}
             height={visHeight}
-            {...props}
-            {...propProviderProps}
           >
-            {props.children}
+            {(childProps) => <ExploitLine {...childProps} />}
           </Graph>
         )}
-      </ParentSize>
-    )}
+      </ParentSize>;
+    }}
   </ChartPropProvider>
 );
 
-export default MultiLineChart;
+export default MultiLineGraph;
