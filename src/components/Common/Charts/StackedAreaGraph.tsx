@@ -14,39 +14,18 @@ import { displayBN } from '~/util';
 import ChartPropProvider, {
   BaseChartProps,
   BaseDataPoint,
-  ExploitLine,
   ProviderChartProps,
 } from './ChartPropProvider';
 import Row from '../Row';
 import { defaultValueFormatter } from './SeasonPlot';
 
-export type StackedAreaTooltip =
-  | boolean
-  | (({ d }: { d?: BaseDataPoint }) => JSX.Element | null);
-
-export type StackedAreaDisplayValue = (v: BaseDataPoint) => number;
-
-export type StackedAreaChartTypeProps = {
-  tooltip?: StackedAreaTooltip;
-  getDisplayValue: StackedAreaDisplayValue;
-};
-
-type StackedAreaProps = Omit<BaseChartProps, 'tooltip' | 'getDisplayValue'> &
-  StackedAreaChartTypeProps;
-
-type GraphProps = {
-  width: number;
-  height: number;
-} & Props;
-
 type Props = {
   width: number;
   height: number;
-} & Omit<BaseChartProps, 'tooltip' | 'getDisplayValue'> &
-  StackedAreaChartTypeProps &
+} & BaseChartProps &
   ProviderChartProps;
 
-const Graph = (props: GraphProps) => {
+const Graph = (props: Props) => {
   const {
     // Chart sizing
     width,
@@ -56,11 +35,12 @@ const Graph = (props: GraphProps) => {
     curve: _curve,
     keys,
     tooltip = false,
+    isTWAP,
+    stylesConfig,
+    children,
     onCursor,
     getDisplayValue,
     formatValue = defaultValueFormatter,
-    isTWAP,
-    stylesConfig,
     // chart prop provider
     common,
     accessors,
@@ -78,6 +58,8 @@ const Graph = (props: GraphProps) => {
     () => (series.length && series[0]?.length ? series[0] : []),
     [series]
   );
+
+  console.log('data: ', data);
 
   // generate scales
   const scales = useMemo(
@@ -136,7 +118,7 @@ const Graph = (props: GraphProps) => {
         tooltipTop: containerY,
         tooltipData: pointerData,
       });
-      onCursor?.(pointerData.season, getDisplayValue(pointerData));
+      onCursor?.(pointerData.season, getDisplayValue([pointerData]));
     },
     [
       containerBounds,
@@ -202,6 +184,7 @@ const Graph = (props: GraphProps) => {
             fill="transparent"
             rx={14}
           />
+          {children && children({ scales, dataRegion, ...props })}
           <AreaStack<BaseDataPoint>
             top={common.margin.top}
             left={common.margin.left}
@@ -299,7 +282,7 @@ const Graph = (props: GraphProps) => {
                       ))}
                     </Stack>
                   ) : (
-                    tooltip({ d: tooltipData })
+                    tooltip({ d: [tooltipData] })
                   )}
                 </TooltipInPortal>
               </div>
@@ -311,22 +294,20 @@ const Graph = (props: GraphProps) => {
   );
 };
 
-const StackedAreaGraph: React.FC<StackedAreaProps> = (props) => (
+const StackedAreaGraph: React.FC<BaseChartProps> = (props) => (
   <ChartPropProvider>
-    {({ ...providerProps }) => {
+    {({ ...providerProps }) => (
       <ParentSize debounceTime={50}>
         {({ width: visWidth, height: visHeight }) => (
           <Graph
-            {...providerProps}
-            {...props}
             width={visWidth}
             height={visHeight}
-          >
-            {(childProps) => <ExploitLine {...childProps} />}
-          </Graph>
+            {...providerProps}
+            {...props}
+          />
         )}
-      </ParentSize>;
-    }}
+      </ParentSize>
+    )}
   </ChartPropProvider>
 );
 

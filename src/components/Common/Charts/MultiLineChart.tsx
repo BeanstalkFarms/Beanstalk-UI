@@ -12,31 +12,17 @@ import ChartPropProvider, {
   ProviderChartProps,
 } from './ChartPropProvider';
 
-export type LineChartTooltip =
-  | boolean
-  | (({ d }: { d?: BaseDataPoint[] }) => JSX.Element | null);
-
-export type LineChartGetDisplayValue = (v: BaseDataPoint[]) => number;
-
-export type LineChartTypeProps = {
-  tooltip?: LineChartTooltip;
-  getDisplayValue: LineChartGetDisplayValue;
-};
-
-type LineChartProps = Omit<BaseChartProps, 'tooltip' | 'getDisplayValue'> &
-  LineChartTypeProps;
-
-type GraphProps = {
+type Props = {
   width: number;
   height: number;
-} & LineChartProps &
+} & BaseChartProps &
   ProviderChartProps;
 
 // ------------------------
 //      Graph (Inner)
 // ------------------------
 
-const Graph: React.FC<GraphProps> = (props) => {
+const Graph: React.FC<Props> = (props) => {
   const {
     // Chart sizing
     stylesConfig,
@@ -254,22 +240,22 @@ const Graph: React.FC<GraphProps> = (props) => {
   );
 };
 
-const MultiLineGraph: React.FC<LineChartProps> = (props) => (
+const MultiLineGraph: React.FC<BaseChartProps> = (props) => (
   <ChartPropProvider>
-    {({ ...providerProps }) => {
+    {({ ...providerProps }) => (
       <ParentSize debounceTime={50}>
         {({ width: visWidth, height: visHeight }) => (
           <Graph
-            {...providerProps}
-            {...props}
             width={visWidth}
             height={visHeight}
+            {...providerProps}
+            {...props}
           >
             {(childProps) => <ExploitLine {...childProps} />}
           </Graph>
         )}
-      </ParentSize>;
-    }}
+      </ParentSize>
+    )}
   </ChartPropProvider>
 );
 

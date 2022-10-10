@@ -13,11 +13,7 @@ import {
 import { toTokenUnitsBN } from '~/util';
 import useTimeTabState from '~/hooks/app/useTimeTabState';
 import { ERC20Token } from '~/classes/Token';
-import { BeanstalkPalette } from '~/components/App/muiTheme';
-import {
-  BaseDataPoint,
-  ChartMultiStyles,
-} from '~/components/Common/Charts/ChartPropProvider';
+import { BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
 import BaseSeasonPlot from '~/components/Common/Charts/BaseSeasonPlot';
 
 const assets = {
@@ -26,17 +22,6 @@ const assets = {
 };
 
 const account = BEANSTALK_ADDRESSES[1];
-
-const stylesConfig: ChartMultiStyles = {
-  bean: {
-    stroke: BeanstalkPalette.logoGreen,
-    fillPrimary: BeanstalkPalette.lightGreen,
-  },
-  bean3Crv: {
-    stroke: BeanstalkPalette.darkBlue,
-    fillPrimary: BeanstalkPalette.lightBlue,
-  },
-};
 
 const queryConfig = {
   bean: {
@@ -56,17 +41,12 @@ const queryConfig = {
 const formatValue = (value: number) =>
   `${value.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
 
-const getStatValue = <T extends BaseDataPoint>(v?: T | T[]) => {
-  if (!v) return 0;
-  if (Array.isArray(v)) {
-    return v.reduce((acc, curr) => {
-      acc += curr.value;
-      return acc;
-    }, 0);
-  }
-  if (v?.bean && v?.bean3Crv) {
-    const bean3CrvBeanVal = new BigNumber(v.bean3Crv).times(2);
-    return bean3CrvBeanVal.plus(v.bean).toNumber();
+const getStatValue = <T extends BaseDataPoint>(v?: T[]) => {
+  if (!v?.length) return 0;
+  const value = v[0];
+  if (value?.bean && value?.bean3Crv) {
+    const bean3CrvBeanVal = new BigNumber(value.bean3Crv).times(2);
+    return bean3CrvBeanVal.plus(value.bean).toNumber();
   }
   return 0;
 };
@@ -116,7 +96,6 @@ const BeanVs3Crv: React.FC<{}> = () => {
         stackedArea
         ChartProps={{
           getDisplayValue: getStatValue,
-          stylesConfig: stylesConfig,
           tooltip: true,
         }}
       />

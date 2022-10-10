@@ -10,15 +10,9 @@ import Row from '../Row';
 import Stat, { StatProps } from '../Stat';
 import { defaultValueFormatter } from './SeasonPlot';
 import TimeTabs from './TimeTabs';
-import { BaseChartProps, BaseDataPoint } from './ChartPropProvider';
-import MultiLineGraph, {
-  LineChartGetDisplayValue,
-  LineChartTooltip,
-} from './MultiLineChart';
-import StackedAreaGraph, {
-  StackedAreaDisplayValue,
-  StackedAreaTooltip,
-} from './StackedAreaGraph';
+import { BaseChartProps, ExploitLine } from './ChartPropProvider';
+import MultiLineGraph from './MultiLineChart';
+import StackedAreaGraph from './StackedAreaGraph';
 
 type BaseSeasonPlotProps = {
   /**
@@ -104,22 +98,18 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
   const defaults = useMemo(() => {
     let defaultValue = _defaultValue ?? 0;
     let defaultSeason = _defaultSeason ?? 0;
-    let getVal = chartProps.getDisplayValue;
+    const getVal = chartProps.getDisplayValue;
     if ((!defaultValue || !defaultSeason) && seriesInput.length) {
       if (stackedArea) {
-        getVal = getVal as (v: BaseDataPoint) => number;
         const _seriesInput = seriesInput[seriesInput.length - 1];
         if (_seriesInput.length) {
-          defaultValue = getVal(_seriesInput[_seriesInput.length - 1]);
+          defaultValue = getVal([_seriesInput[_seriesInput.length - 1]]);
           defaultSeason = _seriesInput[seriesInput.length - 1].season;
         }
-      } else {
-        getVal = getVal as (v: BaseDataPoint[]) => number;
-        if (seriesInput.every((s) => 'season' in s)) {
-          const lineSeriesInput = seriesInput.map((s) => s[s.length - 1]);
-          defaultValue = getVal(lineSeriesInput);
-          defaultSeason = lineSeriesInput[lineSeriesInput.length - 1].season;
-        }
+      } else if (seriesInput.every((s) => 'season' in s)) {
+        const lineSeriesInput = seriesInput.map((s) => s[s.length - 1]);
+        defaultValue = getVal(lineSeriesInput);
+        defaultSeason = lineSeriesInput[lineSeriesInput.length - 1].season;
       }
     }
 
@@ -173,23 +163,21 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
             series={seriesInput}
             keys={keys}
             onCursor={handleCursor}
+            formatValue={formatValue}
             {...chartProps}
-            getDisplayValue={
-              chartProps.getDisplayValue as StackedAreaDisplayValue
-            }
-            tooltip={chartProps.tooltip as StackedAreaTooltip}
-          />
+          >
+            {(childProps) => <ExploitLine {...childProps} />}
+          </StackedAreaGraph>
         ) : (
           <MultiLineGraph
             series={seriesInput}
             keys={keys}
             onCursor={handleCursor}
+            formatValue={formatValue}
             {...chartProps}
-            tooltip={chartProps.tooltip as LineChartTooltip}
-            getDisplayValue={
-              chartProps.getDisplayValue as LineChartGetDisplayValue
-            }
-          />
+          >
+            {(childProps) => <ExploitLine {...childProps} />}
+          </MultiLineGraph>
         )}
       </Box>
     </>

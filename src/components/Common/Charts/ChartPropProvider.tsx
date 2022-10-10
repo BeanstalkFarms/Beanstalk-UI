@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Series, CurveFactory } from 'd3-shape';
 import { bisector, extent, min, max } from 'd3-array';
 import { SeriesPoint } from '@visx/shape/lib/types';
@@ -17,8 +17,6 @@ import {
   curveMonotoneX,
 } from '@visx/curve';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import { LineChartTypeProps } from './MultiLineChart';
-import { StackedAreaChartTypeProps } from './StackedAreaGraph';
 
 // -------------------------------------------------------------------------
 // --------------------------------- TYPES ---------------------------------
@@ -135,11 +133,13 @@ export type BaseChartProps = {
   isTWAP?: boolean;
   stylesConfig?: ChartMultiStyles;
   stackedArea?: boolean;
+  tooltip?: boolean | (({ d }: { d?: BaseDataPoint[] }) => JSX.Element | null);
+  getDisplayValue: (v: BaseDataPoint[]) => number;
   onCursor?: (season: number | undefined, v?: number | undefined) => void;
   children?: (props: ChartChildParams) => React.ReactElement | null;
   yTickFormat?: TickFormatter<NumberLike>;
   formatValue?: (value: number) => string | JSX.Element;
-} & (LineChartTypeProps | StackedAreaChartTypeProps);
+};
 
 // -------------------------------------------------------------------------
 // -------------------------------- COMMON ---------------------------------
@@ -163,12 +163,14 @@ const margin = {
 
 const defaultChartStyles: ChartMultiStyles = {
   'chart-primary': {
-    stroke: BeanstalkPalette.logoGreen,
-    fillPrimary: BeanstalkPalette.lightGreen,
+    stroke: BeanstalkPalette.theme.fall.brown,
+    fillPrimary: BeanstalkPalette.theme.fall.lightBrown,
+    strokeWidth: 1,
   },
   'chart-secondary': {
-    stroke: BeanstalkPalette.darkBlue,
-    fillPrimary: BeanstalkPalette.lightBlue,
+    stroke: BeanstalkPalette.yellow,
+    fillPrimary: BeanstalkPalette.lightYellow,
+    strokeWidth: 1,
   },
   'chart-tertiary': {
     stroke: BeanstalkPalette.grey,
@@ -437,9 +439,9 @@ type ChartWrapperProps = {
   children: (props: ProviderChartProps) => React.ReactNode;
 };
 
-const ChartPropProvider: React.FC<ChartWrapperProps> = ({ children }) => (
-  <>
-    {children({
+const ChartPropProvider: React.FC<ChartWrapperProps> = ({ children }) => {
+  const props = useMemo(
+    () => ({
       common: {
         strokeBuffer,
         margin,
@@ -470,9 +472,17 @@ const ChartPropProvider: React.FC<ChartWrapperProps> = ({ children }) => (
         getPointerValue,
         getCurve,
       },
-    })}
-  </>
-);
+    }),
+    []
+  );
+  return (
+    <>
+      {children({
+        ...props,
+      })}
+    </>
+  );
+};
 
 export default ChartPropProvider;
 
