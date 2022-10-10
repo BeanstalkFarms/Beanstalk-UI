@@ -43,6 +43,7 @@ type ChartStyleConfig = {
   to: string;
   from: string;
   stroke: string;
+  strokeWidth: number;
 };
 
 type ChartSharedValuesProps = {
@@ -165,12 +166,12 @@ const defaultChartStyles: ChartMultiStyles = {
   'chart-primary': {
     stroke: BeanstalkPalette.theme.fall.brown,
     fillPrimary: BeanstalkPalette.theme.fall.lightBrown,
-    strokeWidth: 1,
+    strokeWidth: 2,
   },
   'chart-secondary': {
     stroke: BeanstalkPalette.yellow,
     fillPrimary: BeanstalkPalette.lightYellow,
-    strokeWidth: 1,
+    strokeWidth: 2,
   },
   'chart-tertiary': {
     stroke: BeanstalkPalette.grey,
@@ -185,10 +186,17 @@ const defaultChartStyles: ChartMultiStyles = {
 const getChartStyles = (config?: ChartMultiStyles) => {
   const style = config || defaultChartStyles;
   const styles = Object.entries(style).map(
-    ([k, { stroke, fillPrimary, fillSecondary }]) => {
+    ([k, { stroke, fillPrimary, fillSecondary, strokeWidth }]) => {
       const primary = fillPrimary || stroke;
       const secondary = fillSecondary || fillPrimary;
-      return { id: k, to: primary, from: secondary, stroke };
+      const _strokeWidth = strokeWidth ?? 1;
+      return {
+        id: k,
+        to: primary,
+        from: secondary,
+        stroke,
+        strokeWidth: _strokeWidth,
+      };
     }
   );
   const getStyle = (k: string, i: number) => {

@@ -12,7 +12,7 @@ import { defaultValueFormatter } from './SeasonPlot';
 import TimeTabs from './TimeTabs';
 import { BaseChartProps, ExploitLine } from './ChartPropProvider';
 import MultiLineGraph from './MultiLineChart';
-import StackedAreaGraph from './StackedAreaGraph';
+import StackedAreaChart from './StackedAreaChart';
 
 type BaseSeasonPlotProps = {
   /**
@@ -96,24 +96,33 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
 
   /// If one of the defaults is missing, use the last data point.
   const defaults = useMemo(() => {
-    let defaultValue = _defaultValue ?? 0;
-    let defaultSeason = _defaultSeason ?? 0;
+    const d = {
+      value: _defaultValue ?? 0,
+      season: _defaultSeason ?? 0,
+    };
     const getVal = chartProps.getDisplayValue;
-    if ((!defaultValue || !defaultSeason) && seriesInput.length) {
-      if (stackedArea) {
-        const _seriesInput = seriesInput[seriesInput.length - 1];
-        if (_seriesInput.length) {
-          defaultValue = getVal([_seriesInput[_seriesInput.length - 1]]);
-          defaultSeason = _seriesInput[seriesInput.length - 1].season;
+    const seriesLen = seriesInput.length;
+    if (!seriesLen || d.value || d.season) return d;
+    if (stackedArea) {
+      const stacked = seriesInput[0];
+      if (!stacked.length) return d;
+      const currStacked = stacked[seriesLen - 1];
+      if (currStacked && 'season' in currStacked) {
+        d.value = getVal([currStacked]);
+        d.season = currStacked.season;
+      }
+    } else {
+      const lineData = seriesInput.map((s) => s[s.length - 1]);
+      if (lineData && lineData.length) {
+        d.value = getVal(lineData);
+        const curr = lineData[0];
+        if (curr && 'season' in curr) {
+          d.season = curr.season;
         }
-      } else if (seriesInput.every((s) => 'season' in s)) {
-        const lineSeriesInput = seriesInput.map((s) => s[s.length - 1]);
-        defaultValue = getVal(lineSeriesInput);
-        defaultSeason = lineSeriesInput[lineSeriesInput.length - 1].season;
       }
     }
 
-    return { defaultValue, defaultSeason };
+    return d;
   }, [_defaultSeason, _defaultValue, chartProps, seriesInput, stackedArea]);
 
   return (
@@ -130,12 +139,12 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
                   thickness={5}
                 />
               ) : (
-                formatValue(displayValue ?? defaults.defaultValue)
+                formatValue(displayValue ?? defaults.value)
               )
             }
             subtitle={`Season ${(displaySeason !== undefined
               ? displaySeason
-              : defaults.defaultSeason
+              : defaults.season
             ).toFixed()}`}
           />
         ) : null}
@@ -159,7 +168,7 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
             )}
           </Stack>
         ) : stackedArea ? (
-          <StackedAreaGraph
+          <StackedAreaChart
             series={seriesInput}
             keys={keys}
             onCursor={handleCursor}
@@ -167,7 +176,7 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
             {...chartProps}
           >
             {(childProps) => <ExploitLine {...childProps} />}
-          </StackedAreaGraph>
+          </StackedAreaChart>
         ) : (
           <MultiLineGraph
             series={seriesInput}

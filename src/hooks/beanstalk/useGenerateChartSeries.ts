@@ -167,7 +167,7 @@ const generateSeriesData = <T extends MinimumViableSnapshotQuery>(
       }
     } else {
       for (const season of data.seasons) {
-        if (!season) continue;
+        if (!season || !season.season) continue;
         _points.push({
           season: season.season as number,
           date: secondsToDate(season.timestamp),
