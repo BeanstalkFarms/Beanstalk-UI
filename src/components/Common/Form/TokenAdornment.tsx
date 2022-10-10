@@ -30,10 +30,10 @@ const TokenAdornment : FC<
           cursor: 'pointer',
           border: '1px solid transparent',
           fontWeight: 'normal',
-          backgroundColor: 'primary.light',
-          '&:hover': {
-            backgroundColor: 'primary.light',
-          }
+          // backgroundColor: 'primary.light',
+          // '&:hover': {
+          //   backgroundColor: 'primary.light',
+          // }
         }}
         // If no click handler is provided, disable so that
         // no mouse events work (i.e. no hover bg)
