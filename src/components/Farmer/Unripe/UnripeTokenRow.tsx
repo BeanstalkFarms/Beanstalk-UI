@@ -11,7 +11,9 @@ import { Token } from '~/classes';
 import { displayFullBN } from '../../../util';
 import Row from '~/components/Common/Row';
 
-const UnripeTokenRow: React.FC<{
+import { FC } from '~/types';
+
+const UnripeTokenRow: FC<{
   name: string;
   amount: BigNumber;
   bdv?: BigNumber;

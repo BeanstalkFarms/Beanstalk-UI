@@ -6,6 +6,8 @@ import { SeasonalCrossesDocument, SeasonalCrossesQuery } from '~/generated/graph
 import useSeason from '~/hooks/beanstalk/useSeason';
 import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
 
+import { FC } from '~/types';
+
 const getValue = (season: SnapshotData<SeasonalCrossesQuery>) => season.totalCrosses;
 const formatValue = (value: number) => `${value}`;
 const statProps = {
@@ -19,7 +21,7 @@ const lineChartProps : Partial<LineChartProps> = {
   yTickFormat: tickFormatLocale
 };
 
-const Crosses: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => {
+const Crosses: FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => {
   const season = useSeason();
   return (
     <SeasonPlot<SeasonalCrossesQuery>

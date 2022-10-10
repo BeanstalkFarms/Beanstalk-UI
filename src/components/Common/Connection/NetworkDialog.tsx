@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { useNetwork } from 'wagmi';
-import { Alert, Button, Dialog, Stack, Typography, useMediaQuery } from '@mui/material';
+import { Alert, Button, Dialog, DialogProps, Stack, Typography, useMediaQuery } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { useTheme } from '@mui/material/styles';
 import { SWITCH_NETWORK_ERRORS } from '~/constants/wallets';
@@ -9,12 +9,13 @@ import { ETH } from '~/constants/tokens';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import Row from '~/components/Common/Row';
 
-const NetworkDialog: React.FC<{
+const NetworkDialog: React.FC<DialogProps & {
   open: boolean;
-  handleClose: () => void;
+  handleClose?: () => void;
 }> = ({
   open,
-  handleClose
+  handleClose,
+  ...props
 }) => {
   /// Theme
   const theme = useTheme();
@@ -33,20 +34,20 @@ const NetworkDialog: React.FC<{
     }
   });
   const handleSwitch = useCallback(
-    (id) => () => {
+    (id: number) => () => {
       if (switchNetwork) {
         console.debug(`[NetworkButton] switching network => ${id}`);
         switchNetwork(id);
-        handleClose();
+        handleClose?.();
       }
     },
     [switchNetwork, handleClose]
   );
 
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={handleClose} open={open} {...props}>
       <StyledDialogTitle onClose={handleClose}>
-        Select chain
+        Select Network
       </StyledDialogTitle>
       <StyledDialogContent>
         <Stack gap={1}>
@@ -77,7 +78,11 @@ const NetworkDialog: React.FC<{
                     {TESTNET_RPC_ADDRESSES[chain.id]}
                   </Typography>
                 ) : (
-                  <img src={ETH[chain.id as keyof typeof ETH]?.logo || ETH[SupportedChainId.MAINNET].logo} alt="" style={{ height: 35 }} />
+                  <img
+                    src={ETH[chain.id as keyof typeof ETH]?.logo || ETH[SupportedChainId.MAINNET].logo}
+                    alt=""
+                    css={{ height: 35 }}
+                  />
                 )}
               </Row>
             </Button>

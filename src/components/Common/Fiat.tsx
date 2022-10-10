@@ -1,5 +1,6 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
+import { Box } from '@mui/material';
 import logo from '~/img/tokens/bean-logo.svg';
 import { Token } from '~/classes';
 import useSiloTokenToFiat from '~/hooks/beanstalk/useSiloTokenToFiat';
@@ -9,7 +10,9 @@ import { displayBN, displayFullBN } from '~/util';
 import { ZERO_BN } from '~/constants';
 import Row from '~/components/Common/Row';
 
-const Fiat : React.FC<{
+import { FC } from '~/types';
+
+const Fiat : FC<{
   /* The USD value of `amount`. If provided, we don't try to derive via `siloTokenToFiat`. */
   value?: BigNumber,
   token?: Token,
@@ -44,10 +47,18 @@ const Fiat : React.FC<{
     <Row display="inline-flex" sx={{ verticalAlign: 'top', position: 'relative', }}>
       {denomination === 'bdv' ? (
         <>
-          <img
+          <Box
+            component="img"
             src={logo}
             alt="BEAN"
-            style={{ height: '1em', marginRight: '0.25em', display: 'inline', position: 'relative', top: 0, left: 0 }}
+            sx={{
+              height: '1em',
+              marginRight: '0.25em',
+              display: 'inline',
+              position: 'relative',
+              top: 0,
+              left: 0
+            }}
           />
           <span>
             {displayValue}

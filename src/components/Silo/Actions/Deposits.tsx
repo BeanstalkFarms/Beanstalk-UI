@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import { useAccount } from 'wagmi';
-import { Tooltip, Typography } from '@mui/material';
+import { Stack, Tooltip, Typography } from '@mui/material';
 import { GridColumns } from '@mui/x-data-grid';
 import { Token } from '~/classes';
 import { FarmerSiloBalance } from '~/state/farmer/silo';
@@ -15,11 +15,14 @@ import useChainConstant from '~/hooks/chain/useChainConstant';
 import COLUMNS from '~/components/Common/Table/cells';
 import Fiat from '~/components/Common/Fiat';
 import TableCard from '../../Common/TableCard';
+import StatHorizontal from '~/components/Common/StatHorizontal';
 
 /**
  * Prep data to loading to a CratesCard.
  */
-const Deposits : React.FC<{
+import { FC } from '~/types';
+
+const Deposits : FC<{
   token: Token;
   siloBalance: FarmerSiloBalance | undefined;
 }> = ({
@@ -52,10 +55,17 @@ const Deposits : React.FC<{
         <Tooltip
           placement="bottom"
           title={(
-            <>
-              <Typography>BDV at Deposit: {displayFullBN(params.row.bdv, token.displayDecimals)}</Typography>
-              <Typography>Current Value: <Fiat amount={params.row.amount} token={Bean} /></Typography>
-            </>
+            <Stack gap={0.5}>
+              <StatHorizontal label="BDV when Deposited">
+                {displayFullBN(params.row.bdv.div(params.row.amount), 6)}
+              </StatHorizontal>
+              <StatHorizontal label="Total BDV">
+                {displayFullBN(params.row.bdv, token.displayDecimals)}
+              </StatHorizontal>
+              <StatHorizontal label="Current Value">
+                <Fiat amount={params.row.amount} token={Bean} />
+              </StatHorizontal>
+            </Stack>
           )}
         >
           <span>
@@ -80,11 +90,15 @@ const Deposits : React.FC<{
           <Tooltip
             placement="bottom"
             title={(
-              <span>
-                <Typography>{displayBN(params.row.stalk)} Stalk at Deposit</Typography>
-                <Typography>{displayBN(accruedStalk)} Stalk grown since Deposit</Typography>
-                <Typography color="gray">Earning {displayBN(seedsPerSeason)} Stalk per Season</Typography>
-              </span>
+              <Stack gap={0.5}>
+                <StatHorizontal label="Stalk at Deposit">
+                  {displayFullBN(params.row.stalk, 2, 2)}
+                </StatHorizontal>
+                <StatHorizontal label="Stalk grown since Deposit">
+                  {displayFullBN(accruedStalk, 2, 2)}
+                </StatHorizontal>
+                {/* <Typography color="gray">Earning {displayBN(seedsPerSeason)} Stalk per Season</Typography> */}
+              </Stack>
             )}
           >
             <span>

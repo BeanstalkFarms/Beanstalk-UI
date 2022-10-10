@@ -1,11 +1,13 @@
+import middy from 'middy';
 import { Handler } from '@netlify/functions';
+import { cors, rateLimit } from '~/functions/middleware';
 
 const unripe = require('./unripe.json');
 
 /**
  * Lookup Unripe Bean and Unripe LP count for the provided `account`.
  */
-const handler: Handler = async (event) => {
+const _handler: Handler = async (event) => {
   const account = event.queryStringParameters?.account?.toLowerCase();
   if (!account) {
     return {
@@ -13,6 +15,7 @@ const handler: Handler = async (event) => {
       body: 'Account parameter required',
     };
   }
+
   return {
     statusCode: 200,
     headers: {
@@ -22,4 +25,6 @@ const handler: Handler = async (event) => {
   };
 };
 
-export { handler };
+export const handler = middy(_handler)
+  .use(cors({ origin: '*.bean.money' }))
+  .use(rateLimit());

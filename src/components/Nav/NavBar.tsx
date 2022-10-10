@@ -15,7 +15,9 @@ import HoverMenu from './HoverMenu';
 import { NAV_BORDER_HEIGHT, NAV_ELEM_HEIGHT, NAV_HEIGHT } from '~/hooks/app/usePageDimensions';
 import Row from '~/components/Common/Row';
 
-const NavBar: React.FC<{}> = ({ children }) => (
+import { FC } from '~/types';
+
+const NavBar: FC<{}> = ({ children }) => (
   <AppBar
     // Using position: sticky means that
     // the main content region will always start

@@ -7,6 +7,11 @@ import { useFormikContext } from 'formik';
 import throttle from 'lodash/throttle';
 import BigNumber from 'bignumber.js';
 
+/**
+ * Double Slider: the form must have min & max value
+ */
+import { FC } from '~/types';
+
 type SliderFieldProps = {
   initialState: number[] | number;
   /**
@@ -24,10 +29,7 @@ type SliderFieldProps = {
   throttleMs?: number;
 };
 
-/**
- * Double Slider: the form must have min & max value
- */
-const SliderField : React.FC<
+const SliderField : FC<
   SliderFieldProps
   & SliderProps// Formik Field
 > = ({

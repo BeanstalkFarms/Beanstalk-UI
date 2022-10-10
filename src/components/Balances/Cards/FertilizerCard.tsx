@@ -6,7 +6,9 @@ import StatCard from '../StatCard';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { PODS } from '~/constants/tokens';
 
-const FertilizerCard: React.FC<{}> = () => {
+import { FC } from '~/types';
+
+const FertilizerCard: FC<{}> = () => {
   return (
     <StatCard title="My Fertilizer" amountIcon={<TokenIcon token={PODS} />} amount="109,364">
       {/* <Box display="flex" justifyContent="center">

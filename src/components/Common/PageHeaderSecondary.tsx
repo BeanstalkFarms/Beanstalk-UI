@@ -5,7 +5,9 @@ import React from 'react';
 import { BeanstalkPalette, IconSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
 
-const PageHeaderSecondary: React.FC<{
+import { FC } from '~/types';
+
+const PageHeaderSecondary: FC<{
   /** The Field: The Decentralized Credit Facility */
   title?: string | JSX.Element;
   /** Align text within the title. */

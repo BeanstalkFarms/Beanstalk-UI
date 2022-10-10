@@ -17,7 +17,6 @@ import {
   TxnSettings
 } from '~/components/Common/Form';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
-import useChainId from '~/hooks/chain/useChainId';
 import useFarmerBalances from '~/hooks/farmer/useFarmerBalances';
 import { QuoteHandler } from '~/hooks/ledger/useQuote';
 import useTokenMap from '~/hooks/chain/useTokenMap';
@@ -37,16 +36,18 @@ import { BEAN, ETH, PODS, WETH } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
 import { PodListing } from '~/state/farmer/market';
 import { optimizeFromMode } from '~/util/Farm';
-import TokenIcon from '../../../Common/TokenIcon';
-import { IconSize } from '../../../App/muiTheme';
+import TokenIcon from '~/components/Common/TokenIcon';
+import { IconSize } from '~/components/App/muiTheme';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 export type FillListingFormValues = FormState & {
   settings: SlippageSettingsFragment;
   maxAmountIn: BigNumber | undefined;
 }
 
-const FillListingForm : React.FC<
+const FillListingForm : FC<
   FormikProps<FillListingFormValues>
   & {
     podListing: PodListing;
@@ -64,18 +65,20 @@ const FillListingForm : React.FC<
   handleQuote,
   farm,
 }) => {
+  /// State
   const [isTokenSelectVisible, handleOpen, hideTokenSelect] = useToggle();
   
   /// Chain
-  const chainId       = useChainId();
   const getChainToken = useGetChainToken();
   const Bean          = getChainToken(BEAN);
   const Eth           = getChainToken<NativeToken>(ETH);
   const Weth          = getChainToken<ERC20Token>(WETH);
   const erc20TokenMap = useTokenMap<ERC20Token | NativeToken>([BEAN, ETH, WETH]);
-
-  /// FIXME: bump up to form parent ??
+  
+  /// Farmer
   const balances       = useFarmerBalances();
+
+  /// Beanstalk
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(
     (state) => state._beanstalk.field
   );
@@ -89,7 +92,6 @@ const FillListingForm : React.FC<
     : values.tokens[0].amountOut;
   const tokenInBalance = balances[tokenIn.address];
 
-  /// Calculations
   const isReady       = amountIn?.gt(0) && amountOut?.gt(0);
   const isSubmittable = isReady;
   const podsPurchased = amountOut?.div(podListing.pricePerPod) || ZERO_BN;
@@ -192,7 +194,7 @@ const FillListingForm : React.FC<
                 <Row gap={0.5}>
                   <TokenIcon
                     token={PODS}
-                    style={{
+                    css={{
                       height: IconSize.small,
                     }}
                   />
@@ -263,14 +265,11 @@ const PREFERRED_TOKENS : PreferredToken[] = [
   }
 ];
 
-const FillListing : React.FC<{
+const FillListing : FC<{
   podListing: PodListing
 }> = ({
   podListing
 }) => {
-  /// Form
-  const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
-  
   /// Tokens
   const getChainToken = useGetChainToken();
   const Bean          = getChainToken(BEAN);
@@ -281,15 +280,18 @@ const FillListing : React.FC<{
   const { data: signer } = useSigner();
   const provider  = useProvider();
   const beanstalk = useBeanstalkContract(signer);
+
+  /// Farm
   const farm      = useMemo(() => new Farm(provider), [provider]);
 
-  /// Data
-  // const [refetchBeanstalkField] = useFetchBeanstalkField();
+  /// Farmer
   const balances                = useFarmerBalances();
   const [refetchFarmerField]    = useFetchFarmerField();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
 
-  ///
+  /// Form
+  const middleware = useFormMiddleware();
+  const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
   const initialValues: FillListingFormValues = useMemo(() => ({
     settings: {
       slippage: 0.1
@@ -343,6 +345,7 @@ const FillListing : React.FC<{
   const onSubmit = useCallback(async (values: FillListingFormValues, formActions: FormikHelpers<FillListingFormValues>) => {
     let txToast;
     try {
+      middleware.before();
       const formData    = values.tokens[0];
       const tokenIn     = formData.token;
       const amountBeans = tokenIn === Bean ? formData.amount : formData.amountOut;
@@ -433,7 +436,7 @@ const FillListing : React.FC<{
     } finally {
       formActions.setSubmitting(false);
     }
-  }, [Bean, podListing, signer, Eth, Weth, beanstalk, refetchFarmerField, refetchFarmerBalances, balances]);
+  }, [Bean, podListing, signer, Eth, Weth, beanstalk, refetchFarmerField, refetchFarmerBalances, balances, middleware]);
 
   return (
     <Formik<FillListingFormValues>

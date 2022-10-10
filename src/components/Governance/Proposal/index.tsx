@@ -4,7 +4,9 @@ import MarkdownWrapper from '~/components/Common/MarkdownWrapper';
 import ProposalStats from '~/components/Governance/Proposals/ProposalStats';
 import { Proposal } from '~/util/Governance';
 
-const ProposalContent: React.FC<{proposal: Proposal}> = (props) => (
+import { FC } from '~/types';
+
+const ProposalContent: FC<{proposal: Proposal}> = (props) => (
   <Card sx={{ p: 2 }}>
     <Stack gap={1}>
       {/* Title & stats */}

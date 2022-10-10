@@ -5,6 +5,8 @@ import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/Seas
 import { SeasonalRRoRDocument, SeasonalRRoRQuery } from '~/generated/graphql';
 import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
 
+import { FC } from '~/types';
+
 const getValue = (season: SnapshotData<SeasonalRRoRQuery>) => parseFloat(season.realRateOfReturn) * 100;
 const formatValue = (value: number) => `${value.toFixed(2)}%`;
 const statProps = {
@@ -16,7 +18,7 @@ const lineChartProps : Partial<LineChartProps> = {
   yTickFormat: tickFormatPercentage
 };
 
-const RRoR: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => (
+const RRoR: FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => (
   <SeasonPlot<SeasonalRRoRQuery>
     height={height}
     document={SeasonalRRoRDocument}

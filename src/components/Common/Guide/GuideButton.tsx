@@ -8,12 +8,14 @@ import GuideDialog from '~/components/Common/Guide/GuideDialog';
 import useToggle from '~/hooks/display/useToggle';
 import { Guide } from '~/util/Guides';
 
+import { FC } from '~/types';
+
 export type GuideProps = {
   title: string;
   guides: Guide[];
 }
 
-const GuideButton: React.FC<{ title: string; guides: Guide[] }> = (props) => {
+const GuideButton: FC<{ title: string; guides: Guide[] }> = (props) => {
   const [isOpen, show, hide] = useToggle();
   return (
     <>

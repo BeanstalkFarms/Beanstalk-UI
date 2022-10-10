@@ -7,6 +7,8 @@ import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
 import { LineChartProps } from '~/components/Common/Charts/LineChart';
 import { tickFormatPercentage } from '~/components/Analytics/formatters';
 
+import { FC } from '~/types';
+
 const getValue = (season: SnapshotData<SeasonalPodRateQuery>) => parseFloat(season.podRate) * 100;
 const formatValue = (value: number) => `${value.toFixed(2)}%`;
 const statProps = {
@@ -19,7 +21,7 @@ const lineChartProps : Partial<LineChartProps> = {
   yTickFormat: tickFormatPercentage
 };
 
-const PodRate: React.FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => {
+const PodRate: FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => {
   const podRate = usePodRate();
   const season  = useSeason();
   return (

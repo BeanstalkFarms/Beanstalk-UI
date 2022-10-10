@@ -21,6 +21,12 @@ import useAPY from '~/hooks/beanstalk/useAPY';
 import stalkIconBlue from '~/img/beanstalk/stalk-icon-blue.svg';
 import SiloAssetApyChip from './SiloAssetApyChip';
 
+/**
+ * Display a pseudo-table of Whitelisted Silo Tokens.
+ * This table is the entry point to deposit Beans, LP, etc.
+ */
+import { FC } from '~/types';
+
 const ARROW_CONTAINER_WIDTH = 20;
 const TOOLTIP_COMPONENT_PROPS = {
   tooltip: {
@@ -31,11 +37,7 @@ const TOOLTIP_COMPONENT_PROPS = {
   }
 };
 
-/**
- * Display a pseudo-table of Whitelisted Silo Tokens.
- * This table is the entry point to deposit Beans, LP, etc.
- */
-const Whitelist : React.FC<{
+const Whitelist : FC<{
   farmerSilo: AppState['_farmer']['silo'];
   config: {
     whitelist: Token[];
@@ -188,7 +190,7 @@ const Whitelist : React.FC<{
                       <img
                         src={token.logo}
                         alt={token.name}
-                        style={{ height: IconSize.medium, display: 'inline' }}
+                        css={{ height: IconSize.medium, display: 'inline' }}
                       />
                       <Typography color="black" display="inline">
                         {token.name}
@@ -204,7 +206,7 @@ const Whitelist : React.FC<{
                       <Tooltip placement="right" title={<>1 {token.symbol} = {displayFullBN(getBDV(token))} BDV</>}>
                         <Typography display="inline" color="black">
                           <TokenIcon token={STALK} />{token.rewards?.stalk}{' '}
-                          <TokenIcon token={SEEDS} style={{ marginTop: 1.5 }} />{token.rewards?.seeds}
+                          <TokenIcon token={SEEDS} css={{ marginTop: 1.5 }} />{token.rewards?.seeds}
                         </Typography>
                       </Tooltip>
                       <Row gap={0.25}>

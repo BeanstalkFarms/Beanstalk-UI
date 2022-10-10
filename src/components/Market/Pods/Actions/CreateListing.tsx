@@ -28,9 +28,10 @@ import { PlotMap , toStringBaseUnitBN , parseError, displayTokenAmount, displayB
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 
 import { BEAN, PODS } from '~/constants/tokens';
-import { ONE_BN, ZERO_BN } from '~/constants';
-import FieldWrapper from '../../../Common/Form/FieldWrapper';
-import { POD_MARKET_TOOLTIPS } from '../../../../constants/tooltips';
+import { ONE_BN, ZERO_BN, POD_MARKET_TOOLTIPS } from '~/constants';
+import FieldWrapper from '~/components/Common/Form/FieldWrapper';
+import { FC } from '~/types';
+import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 export type CreateListingFormValues = {
   plot:        PlotFragment
@@ -67,7 +68,7 @@ const REQUIRED_KEYS = [
   'destination'
 ] as (keyof CreateListingFormValues)[];
 
-const CreateListingForm: React.FC<
+const CreateListingForm: FC<
   FormikProps<CreateListingFormValues> & {
     plots: PlotMap<BigNumber>;
     harvestableIndex: BigNumber;
@@ -176,22 +177,23 @@ const CreateListingForm: React.FC<
 
 // ---------------------------------------------------
 
-const CreateListing: React.FC<{}> = () => {
-  /// 
+const CreateListing: FC<{}> = () => {
+  /// Tokens
   const getChainToken = useGetChainToken();
   
-  ///
+  /// Ledger
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
   
-  ///
-  const plots            = useFarmerPlots();
+  /// Beanstalk
   const harvestableIndex = useHarvestableIndex();
   
-  ///
+  /// Farmer
+  const plots            = useFarmerPlots();
   const [refetchFarmerMarket] = useFetchFarmerMarket();
-
-  ///
+  
+  /// Form
+  const middleware = useFormMiddleware();
   const initialValues: CreateListingFormValues = useMemo(() => ({
     plot: {
       index:       null,
@@ -212,7 +214,7 @@ const CreateListing: React.FC<{}> = () => {
     const Bean = getChainToken(BEAN);
     let txToast;
     try {
-      // if (REQUIRED_KEYS.some((k) => values[k] === null)) throw new Error('Missing data');
+      middleware.before();
       const { plot: { index, start, end, amount }, pricePerPod, expiresAt, destination } = values;
       if (!index || !start || !end || !amount || !pricePerPod || !expiresAt || !destination) throw new Error('Missing data');
 
@@ -238,7 +240,7 @@ const CreateListing: React.FC<{}> = () => {
         toStringBaseUnitBN(start,       Bean.decimals),   // relative start index
         toStringBaseUnitBN(amount,      Bean.decimals),   // relative amount
         toStringBaseUnitBN(pricePerPod, Bean.decimals),   // price per pod
-        toStringBaseUnitBN(maxHarvestableIndex, Bean.decimals),   // absolute index of expiry
+        toStringBaseUnitBN(maxHarvestableIndex, Bean.decimals), // absolute index of expiry
         destination,
       );
       txToast.confirming(txn);
@@ -254,7 +256,7 @@ const CreateListing: React.FC<{}> = () => {
       txToast?.error(err) || toast.error(parseError(err));
       console.error(err);
     }
-  }, [beanstalk, getChainToken, harvestableIndex, plots, refetchFarmerMarket]);
+  }, [beanstalk, getChainToken, harvestableIndex, plots, refetchFarmerMarket, middleware]);
 
   return (
     <Formik<CreateListingFormValues>

@@ -2,38 +2,24 @@ import React, { useCallback, useMemo } from 'react';
 import { Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { makeStyles } from '@mui/styles';
 import { gridPageCountSelector, gridPageSelector, useGridApiContext, useGridSelector } from '@mui/x-data-grid';
 import { BeanstalkPalette, FontSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
 
-const useStyles = makeStyles({
-  arrow: {
-    fontSize: FontSize.lg,
-    cursor: 'pointer',
-  }
-});
-
-const ArrowPagination: React.FC<{}> = () => {
-  const classes = useStyles();
+const ArrowPagination: FC<{}> = () => {
   const apiRef = useGridApiContext();
   const page = useGridSelector(apiRef, gridPageSelector);
   const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-  // const [params, update] = useSearchParams();
 
-   const handleBack = useCallback(() => {
+  const handleBack = useCallback(() => {
     if (page > 0) {
-      // update({ t: (page - 1).toString() });
       apiRef.current.setPage(page - 1);
     }
   }, [apiRef, page]);
 
   const handleForward = useCallback(() => {
-    // if (props.fetchMore && page + 1 === pageCount) {
-    //   props.fetchMore();
-    // }
     if (page < pageCount) {
-      // update({ t: (page + 1).toString() });
       apiRef.current.setPage(page + 1);
     }
   }, [apiRef, page, pageCount]);
@@ -44,9 +30,10 @@ const ArrowPagination: React.FC<{}> = () => {
   return (
     <Row gap={0.5}>
       <ArrowBackIcon
-        className={classes.arrow}
         onClick={handleBack}
         sx={{
+          fontSize: FontSize.lg,
+          cursor: 'pointer',
           color: page === 0 ? 'gray' : null,
           '&:hover': {
             color: page === 0 ? 'gray' : BeanstalkPalette.logoGreen,
@@ -57,9 +44,10 @@ const ArrowPagination: React.FC<{}> = () => {
         Page {page + 1} of {pageCount === 0 ? pageCount + 1 : pageCount}
       </Typography>
       <ArrowForwardIcon
-        className={classes.arrow}
         onClick={handleForward}
         sx={{
+          fontSize: FontSize.lg,
+          cursor: 'pointer',
           color: hasNextPage ? null : 'gray',
           '&:hover': {
             color: page === pageCount - 1 || pageCount === 0 ? 'gray' : BeanstalkPalette.logoGreen,

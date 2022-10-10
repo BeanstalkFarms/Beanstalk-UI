@@ -10,7 +10,9 @@ import { Proposal } from '~/util/Governance';
 import Row from '~/components/Common/Row';
 import useProposalQuorum from '~/hooks/beanstalk/useProposalBlockData';
 
-const ProposalButton: React.FC<{ proposal: Proposal }> = ({ proposal }) => {
+import { FC } from '~/types';
+
+const ProposalButton: FC<{ proposal: Proposal }> = ({ proposal }) => {
   /// State
   const account = useAccount();
 

@@ -12,7 +12,9 @@ import { displayBN } from '~/util';
 import { SupportedChainId } from '~/constants';
 import { AppState } from '~/state';
 
-const BarnraiseAnalytics: React.FC<{}> = () => {
+import { FC } from '~/types';
+
+const BarnraiseAnalytics: FC<{}> = () => {
   const fertilizer = useSelector<
     AppState,
     AppState['_beanstalk']['barn']

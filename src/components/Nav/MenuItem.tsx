@@ -10,7 +10,9 @@ import { RouteData } from './routes';
 import { FontSize, IconSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
 
-const MenuItem : React.FC<{
+import { FC } from '~/types';
+
+const MenuItem : FC<{
   item: RouteData;
   onClick?: (event: React.MouseEvent<any>) => void;
 }> = ({

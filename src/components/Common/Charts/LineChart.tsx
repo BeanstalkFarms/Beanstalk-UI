@@ -15,8 +15,13 @@ import {
 } from '@visx/curve';
 import { Axis, Orientation, TickFormatter } from '@visx/axis';
 import { CurveFactory } from 'd3-shape';
+import { NumberValue } from 'd3-scale';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import ChartPropProvider, { BaseDataPoint, ProviderChartProps } from './ChartPropProvider';
+
+// ------------------------
+//       Line Chart
+// ------------------------
 
 export const CURVES = {
   linear: curveLinear,
@@ -155,13 +160,10 @@ const Graph: React.FC<GraphProps> = (props) => {
 
   // const yTickNum = height > 180 ? undefined : 5;
   const xTickNum = width > 700 ? undefined : Math.floor(width / 70);
-  const xTickFormat = useCallback(
-    (v) => {
-      const d = scales[0].dScale.invert(v);
-      return `${d.getMonth() + 1}/${d.getDate()}`;
-    },
-    [scales]
-  );
+  const xTickFormat = useCallback((v: NumberValue) => {
+    const d = scales[0].dScale.invert(v);
+    return `${d.getMonth() + 1}/${d.getDate()}`;
+  }, [scales]);
 
   // Empty state
   if (!series || series.length === 0) return null;
@@ -285,10 +287,6 @@ const Graph: React.FC<GraphProps> = (props) => {
     </div>
   );
 };
-
-// ------------------------
-//       Line Chart
-// ------------------------
 
 const LineChart: React.FC<LineChartProps> = (props) => (
   <ChartPropProvider>

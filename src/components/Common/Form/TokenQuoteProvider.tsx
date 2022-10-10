@@ -5,10 +5,12 @@ import BigNumber from 'bignumber.js';
 import TokenInputField, { TokenInputProps } from '~/components/Common/Form/TokenInputField';
 import TokenAdornment from '~/components/Common/Form/TokenAdornment';
 import useQuote, { QuoteHandler, QuoteSettings } from '~/hooks/ledger/useQuote';
-import { ERC20Token, NativeToken } from '~/classes/Token';
+import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import { displayFullBN } from '~/util/Tokens';
 import { FormState, FormTokenState } from '.';
 import Row from '~/components/Common/Row';
+
+import { FC } from '~/types';
 
 type TokenQuoteProviderCustomProps = {
   /** Field name */
@@ -26,7 +28,7 @@ type TokenQuoteProviderCustomProps = {
   /** */
   handleQuote: QuoteHandler;
   /** */
-  hideQuote?: boolean;
+  displayQuote?: false | ((state: BigNumber | undefined, tokenOut: Token) => React.ReactElement | undefined)
   /** */
   quoteSettings?: Partial<QuoteSettings>
 };
@@ -35,9 +37,15 @@ type TokenQuoteProviderProps = (
   & Partial<TokenInputProps>
 );
 
-// const Steps : React.FC<{ steps: }
+const DefaultQuoteDisplay = (amountOut: BigNumber | undefined, tokenOut: Token) => (
+  amountOut ? (
+    <Typography variant="body1">
+      ≈ {displayFullBN(amountOut, tokenOut.displayDecimals)} {tokenOut.symbol}
+    </Typography>
+  ) : undefined
+);
 
-const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
+const TokenQuoteProvider : FC<TokenQuoteProviderProps> = ({
   /// Field
   name,
   state,
@@ -49,7 +57,7 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
   tokenSelectLabel,
   /// Quoting
   handleQuote,
-  hideQuote = false,
+  displayQuote: _displayQuote,
   quoteSettings,
   /// Other props
   ...props
@@ -57,6 +65,8 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
   // Setup a price quote for this token
   const [result, quoting, getAmountOut] = useQuote(tokenOut, handleQuote, quoteSettings);
   const { isSubmitting, setFieldValue } = useFormikContext<FormState>();
+
+  const displayQuote = _displayQuote === undefined ? DefaultQuoteDisplay : _displayQuote;
 
   // Run getAmountOut when selected token changes.
   // ------------------------------------------
@@ -124,25 +134,15 @@ const TokenQuoteProvider : React.FC<TokenQuoteProviderProps> = ({
   // use state.amountOut instead of amountOut to hide Quote display
   // when the user switches selected tokens.
   const Quote = useMemo(() => (
-    hideQuote ? undefined : (
+    displayQuote ? (
       <Row gap={0.5} sx={{ display: { xs: 'none', md: 'flex' } }}>
-        {state.amountOut && (
-          <Typography variant="body1">
-            ≈ {displayFullBN(state.amountOut, tokenOut.displayDecimals)} {tokenOut.symbol}
-          </Typography>
-        )}
+        {displayQuote(state.amountOut, tokenOut)}
         {quoting && (
           <CircularProgress variant="indeterminate" size="small" sx={{ width: 14, height: 14 }} />
         )}
       </Row>
-    )
-  ), [
-    state.amountOut,
-    quoting,
-    tokenOut.displayDecimals,
-    tokenOut.symbol,
-    hideQuote
-  ]);
+    ) : undefined
+  ), [displayQuote, state.amountOut, tokenOut, quoting]);
 
   return (  
     <TokenInputField

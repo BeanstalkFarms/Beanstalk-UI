@@ -1,5 +1,7 @@
 import { Handler } from '@netlify/functions';
 import { ethers } from 'ethers';
+import middy from 'middy';
+import { cors, rateLimit } from '~/functions/middleware';
 import { ERC20__factory } from '~/generated';
 
 const provider = new ethers.providers.AlchemyProvider(1, process.env.VITE_ALCHEMY_API_KEY);
@@ -9,7 +11,7 @@ const bean     = ERC20__factory.connect(address, provider);
 /**
  * Load the latest Bean supply from Ethereum.
  */
-const handler: Handler = async () => {
+const _handler: Handler = async (event) => {
   try {
     return {
       statusCode: 200,
@@ -23,4 +25,6 @@ const handler: Handler = async () => {
   }
 };
 
-export { handler };
+export const handler = middy(_handler)
+  .use(cors())
+  .use(rateLimit());

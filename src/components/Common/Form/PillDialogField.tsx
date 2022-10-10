@@ -3,7 +3,9 @@ import React from 'react';
 import { StyledDialog, StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import PillRow from './PillRow';
 
-const PillDialogField : React.FC<{
+import { FC } from '~/types';
+
+const PillDialogField : FC<{
   isOpen: boolean;
   show: () => void;
   hide: () => void;

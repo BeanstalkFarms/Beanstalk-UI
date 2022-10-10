@@ -19,18 +19,22 @@ import TransactionToast from '../TxnToast';
 import { FormState, FormTokenState } from '.';
 import WalletButton from '../Connection/WalletButton';
 import Row from '~/components/Common/Row';
-
-const CONTRACT_NAMES : { [address: string] : string } = {
-  [BEANSTALK_ADDRESSES[SupportedChainId.MAINNET]]: 'Beanstalk',
-  [BEANSTALK_FERTILIZER_ADDRESSES[SupportedChainId.MAINNET]]: 'Beanstalk Fertilizer',
-};
+import useChainId from '~/hooks/chain/useChainId';
+import NetworkButton from '~/components/Common/Connection/NetworkButton';
 
 /**
  * FIXME:
  * - Since this depends on `tokens` which is derived directly from
  *   form state, it changes every time an input value changes.
  */
-const SmartSubmitButton : React.FC<{
+import { FC } from '~/types';
+
+const CONTRACT_NAMES : { [address: string] : string } = {
+  [BEANSTALK_ADDRESSES[SupportedChainId.MAINNET]]: 'Beanstalk',
+  [BEANSTALK_FERTILIZER_ADDRESSES[SupportedChainId.MAINNET]]: 'Beanstalk Fertilizer',
+};
+
+const SmartSubmitButton : FC<{
   /**
    * The contract we're interacting with. Must approve 
    * `contract.address` to use `tokens`.
@@ -61,9 +65,10 @@ const SmartSubmitButton : React.FC<{
   children,
   ...props
 }) => {
-  const { explorer } = useChainConstant(CHAIN_INFO);
+  const { explorer } = useChainConstant(CHAIN_INFO); // fallback to mainnet
   const { values, setFieldValue } = useFormikContext<FormState>();
   const { status } = useConnect();
+  const chainId = useChainId();
   const getErc20Contract = useGetERC20Contract();
 
   // Convert the current `FormTokenState[]` into more convenient forms,
@@ -165,6 +170,18 @@ const SmartSubmitButton : React.FC<{
     );
   }
 
+  if (!SupportedChainId[chainId]) {
+    return (
+      <NetworkButton
+        {...props}
+        showIcons={false}
+        type="button"
+      >
+        Switch Network
+      </NetworkButton>
+    );
+  }
+
   return (
     <>
       {(nextApprovalToken && contract?.address) && (
@@ -182,7 +199,11 @@ const SmartSubmitButton : React.FC<{
         >
           <StyledDialogTitle id="customized-dialog-title" sx={{ fontSize: 20 }} onClose={handleClose}>
             <Row gap={1}>
-              <img src={nextApprovalToken.logo} style={{ height: '1.5em' }} alt={nextApprovalToken.symbol} />
+              <img
+                src={nextApprovalToken.logo}
+                css={{ height: '1.5em' }}
+                alt={nextApprovalToken.symbol}
+              />
               <span>
                 Approve {nextApprovalToken.symbol}
               </span>

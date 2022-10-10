@@ -3,7 +3,9 @@ import React from 'react';
 import { Module, ModuleContent, ModuleHeader } from '~/components/Common/Module';
 import Swap from '~/components/Swap/Actions/Swap';
 
-const SwapActions : React.FC<{}> = () => (
+import { FC } from '~/types';
+
+const SwapActions : FC<{}> = () => (
   <Module>
     <ModuleHeader>
       <Typography variant="h4">Swap</Typography>  

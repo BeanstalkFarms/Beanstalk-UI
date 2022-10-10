@@ -9,6 +9,8 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import React from 'react';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 export type StatProps = {
   /** Statistic title */
   title: JSX.Element | string;
@@ -34,7 +36,7 @@ export type StatProps = {
   gap?: StackProps['gap'];
 };
 
-const Stat: React.FC<StatProps> = ({
+const Stat: FC<StatProps> = ({
   title,
   titleIcon,
   titleTooltip = '',

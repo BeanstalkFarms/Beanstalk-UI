@@ -9,11 +9,13 @@ import useWhitelist from '../../hooks/beanstalk/useWhitelist';
 import WalletButton from '../Common/Connection/WalletButton';
 import useAccount from '~/hooks/ledger/useAccount';
 
+import { FC } from '~/types';
+
 export interface TotalBalanceCardProps {
   breakdown: ReturnType<typeof useFarmerBalancesBreakdown>;
 }
 
-const TotalBalanceCard: React.FC<TotalBalanceCardProps> = ({ breakdown }) => {
+const TotalBalanceCard: FC<TotalBalanceCardProps> = ({ breakdown }) => {
   const account = useAccount();
   return (
     <Box>

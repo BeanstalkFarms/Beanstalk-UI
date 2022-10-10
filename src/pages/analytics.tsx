@@ -7,7 +7,9 @@ import BeanVs3Crv from '~/components/Analytics/Silo/BeanVs3Crv';
 
 import PageHeader from '~/components/Common/PageHeader';
 
-const AnalyticsPage: React.FC<{}> = () => (
+import { FC } from '~/types';
+
+const AnalyticsPage: FC<{}> = () => (
   <Container maxWidth="lg">
     <Stack gap={2}>
       <PageHeader

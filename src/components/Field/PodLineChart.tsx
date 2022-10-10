@@ -4,10 +4,10 @@ import {  Bar } from '@visx/shape';
 import { scaleLinear } from '@visx/scale';
 import { withTooltip } from '@visx/tooltip';
 import BigNumber from 'bignumber.js';
-/* @ts-ignore */
 import { Stack, Tooltip, Typography } from '@mui/material';
 import { PlotMap, displayBN } from '~/util';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
 
 type GraphProps = {
   width: number;
@@ -52,7 +52,7 @@ const plotMarker2 = (width: number, height: number) => (
   </svg>
 );
 
-const PodLineChart: React.FC<GraphProps> = withTooltip(({
+const PodLineChart: FC<GraphProps> = withTooltip(({
   width,
   harvestableIndex,
   height,
@@ -107,7 +107,8 @@ const PodLineChart: React.FC<GraphProps> = withTooltip(({
 /**
  * Wrap the graph in a ParentSize handler.
  */
-const SimplePodLineChart: React.FC<{
+
+const SimplePodLineChart: FC<{
   harvestableIndex: BigNumber;
   farmerPlots: PlotMap<BigNumber>;
   podLineSize: BigNumber;

@@ -4,7 +4,9 @@ import { BeanstalkPalette } from '~/components/App/muiTheme';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { PODS } from '~/constants/tokens';
 
-const EntityIcon : React.FC<{ size?: number, type: 'listing' | 'order' }> = ({ size = 25, type }) => (
+import { FC } from '~/types';
+
+const EntityIcon : FC<{ size?: number, type: 'listing' | 'order' }> = ({ size = 25, type }) => (
   <Stack
     alignItems="center"
     justifyContent="center"

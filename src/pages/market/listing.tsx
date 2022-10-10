@@ -19,7 +19,9 @@ import useAccount from '~/hooks/ledger/useAccount';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { bigNumberResult, Source } from '~/util';
 
-const ListingPage: React.FC = () => {
+import { FC } from '~/types';
+
+const ListingPage: FC<{}> = () => {
   const account = useAccount();
   const { id } = useParams<{ id: string }>();
   const { data: listing, source, loading, error } = usePodListing(id);

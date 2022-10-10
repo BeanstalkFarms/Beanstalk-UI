@@ -14,8 +14,6 @@ import Transfer from './Transfer';
 import Convert from './Convert';
 import { Module, ModuleTabs, ModuleContent } from '~/components/Common/Module';
 
-const SLUGS = ['deposit', 'convert', 'transfer', 'withdraw', 'claim'];
-
 /**
  * Show the three primary Silo actions: Deposit, Withdraw, Claim.
  * Displays two components:
@@ -25,7 +23,11 @@ const SLUGS = ['deposit', 'convert', 'transfer', 'withdraw', 'claim'];
  *     selected tab. The Withdrawals table also displays an aggregated
  *     "claimable" row and is shown for both Withdraw & Claim tabs.
  */
-const SiloActions : React.FC<{
+import { FC } from '~/types';
+
+const SLUGS = ['deposit', 'convert', 'transfer', 'withdraw', 'claim'];
+
+const SiloActions : FC<{
   pool: Pool;
   token: ERC20Token;
   siloBalance: FarmerSiloBalance;

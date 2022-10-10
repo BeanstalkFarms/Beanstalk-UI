@@ -11,7 +11,9 @@ import WarningIcon from '~/components/Common/Alert/WarningIcon';
 import APY from '~/components/Analytics/Silo/APY';
 
 // const SLUGS = ['deposited_bean','deposited_lp','deposited_urbean','deposited_urlp','stalk','seeds',];
-const SiloAnalytics: React.FC<{}> = () => {
+import { FC } from '~/types';
+
+const SiloAnalytics: FC<{}> = () => {
   const [tab, handleChangeTab] = useTabs();
   return (
     <Card>

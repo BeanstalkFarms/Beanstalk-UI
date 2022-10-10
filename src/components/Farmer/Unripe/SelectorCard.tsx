@@ -3,6 +3,8 @@ import { Card, Stack, Typography } from '@mui/material';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 export type SelectorCardProps = {
   title: string;
   description: string;
@@ -10,7 +12,7 @@ export type SelectorCardProps = {
   recommendOption?: boolean;
 }
 
-const SelectorCard: React.FC<SelectorCardProps> = ({
+const SelectorCard: FC<SelectorCardProps> = ({
   title,
   description,
   handleClick,

@@ -6,7 +6,9 @@ import EastIcon from '@mui/icons-material/East';
 import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
 
-const PageHeader : React.FC<{
+import { FC } from '~/types';
+
+const PageHeader : FC<{
   /** The Field: The Decentralized Credit Facility */
   title?: any;
   /** "Earn yield through lending beans..." */

@@ -2,7 +2,9 @@ import { StackProps } from '@mui/material';
 import React from 'react';
 import Row from '~/components/Common/Row';
 
-const OutputField : React.FC<{
+import { FC } from '~/types';
+
+const OutputField : FC<{
   isNegative?: boolean;
 } & StackProps> = ({
   //

@@ -21,24 +21,26 @@ import { BEAN, PODS, SEEDS, SPROUTS, STALK, USDC } from '~/constants/tokens';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import AddressIcon from '~/components/Common/AddressIcon';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
 
 // -----------------------------------------------------------------------
 
-const IconRow : React.FC<{ spacing?: number }> = ({ children, spacing = 0.75 }) => (
+const IconRow : FC<{ spacing?: number }> = ({ children, spacing = 0.75 }) => (
   <Row sx={{ height: '100%' }} spacing={spacing}>
     {children}
   </Row>
 );
-const ActionTokenImage : React.FC<{ token: Token }> = ({ token }) => (
+
+const ActionTokenImage : FC<{ token: Token }> = ({ token }) => (
   <img
     key={token.address}
     src={token.logo}
     alt={token.name}
-    style={{ height: '100%' }}
+    css={{ height: '100%' }}
   />
 );
 
-const SwapStep : React.FC<{ actions: SwapAction[] }> = ({ actions }) => {
+const SwapStep : FC<{ actions: SwapAction[] }> = ({ actions }) => {
   const data = actions.reduce((agg, a) => {
     if (!agg.in.addrs.has(a.tokenIn.address)) {
       agg.in.addrs.add(a.tokenIn.address);
@@ -72,7 +74,7 @@ const SwapStep : React.FC<{ actions: SwapAction[] }> = ({ actions }) => {
   );
 };
 
-const TxnStep : React.FC<{
+const TxnStep : FC<{
   type: ActionType;
   actions: Action[];
   highlighted: ActionType | undefined;
@@ -94,7 +96,6 @@ const TxnStep : React.FC<{
       const a = actions[0] as ReceiveTokenAction;
       step = (
         <IconRow spacing={0.5}>
-          {/* <TokenIcon token={a.token} style={{ height: '100%' }} /> */}
           {a.destination !== undefined ? (
             a.destination === FarmToMode.INTERNAL
               ? <Typography>🚜</Typography>
@@ -111,7 +112,11 @@ const TxnStep : React.FC<{
     case ActionType.CLAIM_WITHDRAWAL:
       step = (
         <IconRow>
-          <img src={siloIcon} style={{ height: '100%' }} alt="" />
+          <img
+            src={siloIcon}
+            css={{ height: '100%' }}
+            alt=""
+          />
           {(actions as SiloDepositAction[]).map((a) => (
             <ActionTokenImage key={a.token.address} token={a.token} />
           ))}
@@ -121,7 +126,7 @@ const TxnStep : React.FC<{
     case ActionType.TRANSFER:
       step = (
         <IconRow>
-          <TokenIcon token={(actions[0] as SiloTransitAction).token} style={{ height: '100%' }} />
+          <TokenIcon token={(actions[0] as SiloTransitAction).token} css={{ height: '100%' }} />
         </IconRow>
       );
       break;
@@ -129,15 +134,15 @@ const TxnStep : React.FC<{
       step = (
         <IconRow spacing={0}>
           <Typography fontWeight="bold" sx={{ fontSize: 20 }}>{(actions[0] as SiloRewardsAction).stalk.lt(0) ? '🔥' : '+'}</Typography>
-          <TokenIcon token={STALK} style={{ height: '100%' }} />
-          <TokenIcon token={SEEDS} style={{ height: '100%' }} />
+          <TokenIcon token={STALK} css={{ height: '100%' }} />
+          <TokenIcon token={SEEDS} css={{ height: '100%' }} />
         </IconRow>
       );
       break;
     case ActionType.IN_TRANSIT:
       step = (
         <IconRow>
-          <TokenIcon token={(actions[0] as SiloTransitAction).token} style={{ height: '100%' }} />
+          <TokenIcon token={(actions[0] as SiloTransitAction).token} css={{ height: '100%' }} />
         </IconRow>
       );
       break;
@@ -146,7 +151,7 @@ const TxnStep : React.FC<{
     case ActionType.BUY_BEANS:
       step = (
         <IconRow>
-          <TokenIcon token={(actions[0] as SiloTransitAction).token} style={{ height: '100%' }} />
+          <TokenIcon token={(actions[0] as SiloTransitAction).token} css={{ height: '100%' }} />
         </IconRow>
       );
       break;
@@ -154,35 +159,35 @@ const TxnStep : React.FC<{
       step = (
         <IconRow spacing={0.3}>
           <Typography fontWeight="bold" sx={{ fontSize: 20 }}>🔥</Typography>
-          <TokenIcon token={BEAN[1]} style={{ height: '100%' }} />
+          <TokenIcon token={BEAN[1]} css={{ height: '100%' }} />
         </IconRow>
       );
       break;
       case ActionType.HARVEST:
         step = (
           <IconRow>
-            <TokenIcon token={PODS} style={{ height: '100%' }} />
+            <TokenIcon token={PODS} css={{ height: '100%' }} />
           </IconRow>
         );
         break;
     case ActionType.RECEIVE_PODS:
       step = (
         <IconRow>
-          <TokenIcon token={PODS} style={{ height: '100%' }} />
+          <TokenIcon token={PODS} css={{ height: '100%' }} />
         </IconRow>
       );
       break;
     case ActionType.RECEIVE_BEANS:
       step = (
         <IconRow>
-          <TokenIcon token={BEAN[1]} style={{ height: '100%' }} />
+          <TokenIcon token={BEAN[1]} css={{ height: '100%' }} />
         </IconRow>
       );
       break;
     case ActionType.TRANSFER_PODS:
       step = (
         <IconRow>
-          <TokenIcon token={PODS} style={{ height: '100%' }} />
+          <TokenIcon token={PODS} css={{ height: '100%' }} />
         </IconRow>
       );
       break;
@@ -191,21 +196,21 @@ const TxnStep : React.FC<{
     case ActionType.CREATE_ORDER:
       step = (
         <IconRow>
-          <TokenIcon token={BEAN[1]} style={{ height: '100%', marginTop: 0, }} />
+          <TokenIcon token={BEAN[1]} css={{ height: '100%', marginTop: 0, }} />
           <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
-          <TokenIcon token={PODS} style={{ height: '100%', marginTop: 0, }} />
+          <TokenIcon token={PODS} css={{ height: '100%', marginTop: 0, }} />
         </IconRow>
       );
       break;
     // FIXME: better way to reduce duplicate code here?
     case ActionType.BUY_PODS:
       step = (
-        <TokenIcon token={PODS} style={{ height: '100%', marginTop: 0, }} />
+        <TokenIcon token={PODS} css={{ height: '100%', marginTop: 0, }} />
       );
       break;
     case ActionType.SELL_PODS:
       step = (
-        <TokenIcon token={PODS} style={{ height: '100%', marginTop: 0, }} />
+        <TokenIcon token={PODS} css={{ height: '100%', marginTop: 0, }} />
       );
       break;
 
@@ -213,25 +218,33 @@ const TxnStep : React.FC<{
     case ActionType.RINSE:
       step = (
         <IconRow>
-          <TokenIcon token={SPROUTS} style={{ height: '100%' }} />
+          <TokenIcon token={SPROUTS} css={{ height: '100%' }} />
         </IconRow>
       );
       break;
     case ActionType.BUY_FERTILIZER:
       step = (
         <IconRow>
-          <TokenIcon token={USDC[SupportedChainId.MAINNET]} style={{ height: '100%', marginTop: 0, }} />
+          <TokenIcon token={USDC[SupportedChainId.MAINNET]} css={{ height: '100%', marginTop: 0, }} />
           <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
-          <img src={FERTILIZER_ICONS.unused} alt="FERT" style={{ height: '100%' }} />
+          <img
+            src={FERTILIZER_ICONS.unused}
+            alt="FERT"
+            css={{ height: '100%' }}
+          />
         </IconRow>
       );
       break;
     case ActionType.RECEIVE_FERT_REWARDS:
       step = (
         <IconRow>
-          <img src={FERTILIZER_ICONS.active} alt="FERT" style={{ height: '100%' }} />
+          <img
+            src={FERTILIZER_ICONS.active}
+            alt="FERT"
+            css={{ height: '100%' }}
+          />
           <DoubleArrowIcon sx={{ color: 'text.secondary', fontSize: 14 }} />
-          <TokenIcon token={SPROUTS} style={{ height: '100%', marginTop: 0, }} />
+          <TokenIcon token={SPROUTS} css={{ height: '100%', marginTop: 0, }} />
         </IconRow>
       );
       break;
@@ -240,7 +253,7 @@ const TxnStep : React.FC<{
     case ActionType.END_TOKEN:
       step = (
         <IconRow>
-          <TokenIcon token={(actions[0] as SiloTransitAction).token} style={{ height: '100%' }} />
+          <TokenIcon token={(actions[0] as SiloTransitAction).token} css={{ height: '100%' }} />
         </IconRow>
       );
       break;
@@ -323,7 +336,7 @@ const EXECUTION_STEPS = [
 const TXN_PREVIEW_HEIGHT = 35;
 const TXN_PREVIEW_LINE_WIDTH = 5;
 
-const TxnPreview : React.FC<{
+const TxnPreview : FC<{
   actions: (Action | undefined)[]
 }> = ({
   actions

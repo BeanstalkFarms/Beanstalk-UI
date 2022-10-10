@@ -18,6 +18,7 @@ import useAccount from '~/hooks/ledger/useAccount';
 import WalletButton from '~/components/Common/Connection/WalletButton';
 import { SNAPSHOT_LINK, ZERO_BN } from '~/constants';
 import Row from '~/components/Common/Row';
+import { FC } from '~/types';
 import useProposalBlockData from '~/hooks/beanstalk/useProposalBlockData';
 import StatHorizontal from '~/components/Common/StatHorizontal';
 
@@ -25,7 +26,7 @@ type VoteFormValues = {
   choice: number | undefined;
 };
 
-const VoteForm: React.FC<FormikProps<VoteFormValues> & {
+const VoteForm: FC<FormikProps<VoteFormValues> & {
   proposal: Proposal;
   existingChoice: number | undefined;
 }> = ({
@@ -215,7 +216,7 @@ const VoteForm: React.FC<FormikProps<VoteFormValues> & {
 
 // ---------------------------------------------------
 
-const Vote: React.FC<{ proposal: Proposal }> = (props) => {
+const Vote: FC<{ proposal: Proposal }> = (props) => {
   const account = useAccount();
   const { data: signer } = useSigner();
 

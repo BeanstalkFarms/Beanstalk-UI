@@ -12,9 +12,11 @@ import GuideButton from '~/components/Common/Guide/GuideButton';
 import { HOW_TO_BUY_PODS, HOW_TO_SELL_PODS } from '~/util';
 import Centered from '~/components/Common/ZeroState/Centered';
 import { ChipLabel, StyledTab } from '~/components/Common/Tabs';
+import { FC } from '~/types';
 
 const SLUGS = ['buy', 'sell'];
-const PodMarketPage: React.FC = () => {
+
+const PodMarketPage: FC<{}> = () => {
   /// Tabs
   const [tab, handleChangeTab] = useTabs(SLUGS, 'view');
   const data = useMarketData();

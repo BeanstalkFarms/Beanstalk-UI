@@ -25,12 +25,14 @@ import { FontSize } from '../App/muiTheme';
 import { FertilizerBalance } from '~/state/farmer/barn';
 import Row from '~/components/Common/Row';
 
+import { FC } from '~/types';
+
 enum TabState {
   ACTIVE = 0,
   USED = 1,
 }
 
-const MyFertilizer: React.FC = () => {
+const MyFertilizer: FC<{}> = () => {
   /// Data
   const beanstalkBarn = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
   const farmerBarn = useSelector<AppState, AppState['_farmer']['barn']>((state) => state._farmer.barn);

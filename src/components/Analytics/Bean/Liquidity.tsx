@@ -5,6 +5,8 @@ import SeasonPlot, { SeasonPlotBaseProps } from '~/components/Common/Charts/Seas
 import { SeasonalLiquidityDocument, SeasonalLiquidityQuery } from '~/generated/graphql';
 import useSeason from '~/hooks/beanstalk/useSeason';
 
+import { FC } from '~/types';
+
 const getValue = (season: SeasonalLiquidityQuery['seasons'][number]) => parseFloat(season.totalLiquidityUSD);
 const formatValue = (value: number) => `$${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const statProps = {
@@ -20,7 +22,7 @@ const lineChartProps : Partial<LineChartProps> = {
   yTickFormat: tickFormatUSD,
 };
 
-const Liquidity: React.FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => {
+const Liquidity: FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => {
   const season = useSeason();
   return (
     <SeasonPlot

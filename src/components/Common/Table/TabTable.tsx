@@ -3,6 +3,8 @@ import { Box } from '@mui/material';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { BeanstalkPalette, FontSize } from '~/components/App/muiTheme';
 
+import { FC } from '~/types';
+
 const wellTableBaseStyle = {
   '& .MuiDataGrid-root': {
     outline: 'none',
@@ -85,7 +87,7 @@ export type MarketBaseTableProps = {
   maxRows?: number;
 }
 
-const TabTable: React.FC<
+const TabTable: FC<
   MarketBaseTableProps &
   DataGridProps
 > = ({

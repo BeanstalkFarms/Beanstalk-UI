@@ -5,13 +5,15 @@ import { displayBN } from '../../util';
 import { AppState } from '../../state';
 import { FontSize } from '../App/muiTheme';
 
+import { FC } from '~/types';
+
 export interface FieldConditionsProps {
   beanstalkField: AppState['_beanstalk']['field'];
   // farmerField: AppState['_farmer']['field'];
   // podLine: BigNumber;
 }
 
-const FieldConditions: React.FC<FieldConditionsProps> = ({
+const FieldConditions: FC<FieldConditionsProps> = ({
  beanstalkField,
  // farmerField,
  // podLine,

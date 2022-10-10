@@ -13,7 +13,9 @@ import {
 /**
  * 
  */
-const LinkButton: React.FC<{ to: string; title: string, tag?: string }> = ({ to, title, tag }) => {
+import { FC } from '~/types';
+
+const LinkButton: FC<{ to: string; title: string, tag?: string }> = ({ to, title, tag }) => {
   const resolved = useResolvedPath(to);
   const match    = useMatch({ path: resolved.pathname, end: true });
   

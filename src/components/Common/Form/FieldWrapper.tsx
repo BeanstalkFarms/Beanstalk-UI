@@ -3,7 +3,9 @@ import { Box, Tooltip, Typography } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { FontSize } from '../../App/muiTheme';
 
-const FieldWrapper : React.FC<{
+import { FC } from '~/types';
+
+const FieldWrapper : FC<{
   label?: ReactNode | string;
   tooltip?: string
 }> = ({

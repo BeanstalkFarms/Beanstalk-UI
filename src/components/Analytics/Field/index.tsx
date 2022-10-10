@@ -11,7 +11,9 @@ import TotalSowers from './TotalSowers';
 import RRoR from './RRoR';
 
 // const SLUGS = ['rror', 'weather', 'pods', 'podrate', 'sown', 'harvested', 'sowers'];
-const FieldAnalytics: React.FC<{}> = () => {
+import { FC } from '~/types';
+
+const FieldAnalytics: FC<{}> = () => {
   const [tab, handleChangeTab] = useTabs();
   return (
     <Card>

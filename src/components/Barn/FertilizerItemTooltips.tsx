@@ -29,14 +29,14 @@ export const MY_FERTILIZER: FertilizerTooltip = {
       <Row justifyContent="space-between">
         <Typography>Sprouts:</Typography>
         <Row alignItems="center" gap={0.2}>
-          <TokenIcon token={SPROUTS} style={{ width: '14px' }} />
+          <TokenIcon token={SPROUTS} css={{ width: '14px' }} />
           <Typography>{displayBN(unfertilized)}</Typography>
         </Row>
       </Row>
       <Row justifyContent="space-between">
         <Typography>Rinsable Sprouts:</Typography>
         <Row alignItems="center" gap={0.2}>
-          <TokenIcon token={RINSABLE_SPROUTS} style={{ width: '14px' }} />
+          <TokenIcon token={RINSABLE_SPROUTS} css={{ width: '14px' }} />
           <Typography>{displayBN(fertilized)}</Typography>
         </Row>
       </Row>
