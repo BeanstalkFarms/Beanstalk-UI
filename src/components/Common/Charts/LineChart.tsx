@@ -1,11 +1,9 @@
 import React, { useCallback, useMemo } from 'react';
-import { bisector, extent, max, min } from 'd3-array';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import { LinePath, Bar, Line } from '@visx/shape';
+import { LinePath, Line } from '@visx/shape';
 import { Group } from '@visx/group';
-import { scaleLinear, scaleTime, NumberLike } from '@visx/scale';
-import { localPoint } from '@visx/event';
-import { useTooltip } from '@visx/tooltip';
+import { scaleLinear, NumberLike } from '@visx/scale';
+import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
 import {
   curveLinear,
   curveStep,
@@ -18,6 +16,7 @@ import {
 import { Axis, Orientation, TickFormatter } from '@visx/axis';
 import { CurveFactory } from 'd3-shape';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
+import ChartPropProvider, { BaseDataPoint, ProviderChartProps } from './ChartPropProvider';
 
 export const CURVES = {
   linear: curveLinear,
@@ -56,7 +55,7 @@ export type LineChartProps = {
 type GraphProps = {
   width: number;
   height: number;
-} & LineChartProps;
+} & LineChartProps & ProviderChartProps
 
 // ------------------------
 //           Data
@@ -67,29 +66,6 @@ export type DataPoint = {
   value: number;
   date: Date;
 };
-
-// data accessors
-const getX = (d: DataPoint) => d.season;
-const getD = (d: DataPoint) => d.date;
-const getY = (d: DataPoint) => d.value;
-const bisectSeason = bisector<DataPoint, number>((d) => d.season).left;
-
-// ------------------------
-//        Plot Sizing
-// ------------------------
-
-const margin = {
-  top: 10,
-  bottom: 9,
-  left: 0,
-  right: 0,
-};
-
-const axisHeight = 21;
-
-// How much padding to add to edges so that the stroke doesn't get
-// partially cut off by the bottom axis
-const strokeBuffer = 2;
 
 // ------------------------
 //      Fonts & Colors
@@ -110,25 +86,6 @@ const strokes = [
   },
 ];
 
-// AXIS
-const axisColor = BeanstalkPalette.lightGrey;
-const tickLabelColor = BeanstalkPalette.lightGrey;
-const xTickLabelProps = () =>
-  ({
-    fill: tickLabelColor,
-    fontSize: 12,
-    fontFamily: 'Futura PT',
-    textAnchor: 'middle',
-  } as const);
-
-const yTickLabelProps = () =>
-  ({
-    fill: tickLabelColor,
-    fontSize: 12,
-    fontFamily: 'Futura PT',
-    textAnchor: 'end',
-  } as const);
-
 // ------------------------
 //      Graph (Inner)
 // ------------------------
@@ -139,126 +96,61 @@ const Graph: React.FC<GraphProps> = (props) => {
     width,
     height,
     // Line Chart Props
-    series,
+    series: _series,
     onCursor,
     isTWAP,
     curve: _curve = 'linear',
     children,
     yTickFormat,
+    common, 
+    accessors,
+    utils
   } = props;
+  const { margin, axisHeight, axisColor, yAxisWidth, xTickLabelProps, yTickLabelProps } = common;
+  const { getX, getY } = accessors;
+  const { generateScale, getCurve, getPointerValue } = utils;
 
-  // When positioning the circle that accompanies the cursor,
-  // use this dataset to decide where it goes. (There is one
-  // circle but potentially multiple series).
-  const data = series[0];
-  const curve = typeof _curve === 'string' ? CURVES[_curve] : _curve;
-  const yAxisWidth = 57;
+  const series = useMemo(() => _series as unknown as BaseDataPoint[][], [_series]);
+  const curve = getCurve(_curve);
+
+  // tooltip
+  const { containerBounds, containerRef } = useTooltipInPortal(
+    { scroll: true, detectBounds: true }
+  );
 
   const {
     showTooltip,
     hideTooltip,
     tooltipData,
-    tooltipTop = 0,
     tooltipLeft = 0,
-  } = useTooltip<DataPoint[] | undefined>();
+  } = useTooltip<BaseDataPoint[] | undefined>();
 
-  // Scales
   const scales = useMemo(
-    () =>
-      series.map((_data) => {
-        const xDomain = extent(_data, getX) as [number, number];
-        const xScale = scaleLinear<number>({
-          domain: xDomain,
-        });
-        const dScale = scaleTime({
-          domain: extent(_data, getD) as [Date, Date],
-          range: xDomain,
-        });
-
-        /// Used for price graphs which should always show y = 1.
-        /// Sets the yScale so that 1 is always perfectly in the middle.
-        let yScale;
-        if (isTWAP) {
-          const yMin = min(_data, getY);
-          const yMax = max(_data, getY);
-          const biggestDifference = Math.max(
-            Math.abs(1 - (yMin as number)),
-            Math.abs(1 - (yMax as number))
-          );
-          yScale = scaleLinear<number>({
-            domain: [
-              Math.max(1 - biggestDifference, 0), // TWAP can't go below zero
-              1 + biggestDifference,
-            ],
-          });
-        }
-
-        /// Min/max y scaling
-        else {
-          yScale = scaleLinear<number>({
-            domain: [min(_data, getY) as number, max(_data, getY) as number],
-          });
-        }
-
-        /// Set ranges
-        xScale.range([0, width - yAxisWidth]);
-        yScale.range([
-          height - axisHeight - margin.bottom - strokeBuffer, // bottom edge
-          margin.top,
-        ]);
-
-        return {
-          xScale,
-          dScale,
-          yScale,
-        };
-      }),
-    [series, isTWAP, width, height]
-  );
+    () => generateScale(series, height, width, ['value'], false, isTWAP), 
+  [height, isTWAP, series, generateScale, width]);
 
   // Handlers
   const handleMouseLeave = useCallback(() => {
     hideTooltip();
     onCursor?.(undefined);
   }, [hideTooltip, onCursor]);
-  const handleTooltip = useCallback(
+
+  const handlePointerMove = useCallback(
     (
-      event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>
+      event: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>
     ) => {
-      const { x } = localPoint(event) || { x: 0 };
-
-      // for each series
-      const ds = scales.map((scale, i) => {
-        const x0 = scale.xScale.invert(x); // get Date corresponding to pixel coordinate x
-        const index = bisectSeason(data, x0, 1); // find the closest index of x0 within data
-
-        const d0 = series[i][index - 1]; // value at x0 - 1
-        const d1 = series[i][index]; // value at x0
-
-        //     |   6   |  | 3 |
-        // [(d0)-------(x0)---(d1)]
-        // default to the left endpoint
-        let d = d0;
-        if (d1 && getX(d1)) {
-          // use d1 if x0 is closer to d1
-          d =
-            x0.valueOf() - getX(d0).valueOf() >
-            getX(d1).valueOf() - x0.valueOf()
-              ? d1
-              : d0;
-        }
-
-        return d;
-      });
-
+      const { left, top } = containerBounds;
+      const containerX = ('clientX' in event ? event.clientX : 0) - left;
+      const containerY = ('clientY' in event ? event.clientY : 0) - top;
+      const pointerData = getPointerValue(event, scales, series);
       showTooltip({
-        tooltipData: ds,
-        tooltipLeft: x, // in pixels
-        tooltipTop: scales[0].yScale(getY(ds[0])), // in pixels
+        tooltipData: pointerData,
+        tooltipLeft: containerX, // in pixels
+        tooltipTop: containerY, // in pixels
       });
-      onCursor?.(ds);
+      onCursor?.(pointerData as unknown as DataPoint[]);
     },
-    [showTooltip, onCursor, data, scales, series]
+    [containerBounds, getPointerValue, scales, series, showTooltip, onCursor]
   );
 
   // const yTickNum = height > 180 ? undefined : 5;
@@ -287,7 +179,22 @@ const Graph: React.FC<GraphProps> = (props) => {
   };
 
   return (
-    <>
+    <div style={{ position: 'relative' }}>
+      <div 
+        style={{
+          position: 'absolute',
+          bottom: dataRegion.yTop,
+          left: 0,
+          width: width - common.yAxisWidth,
+          height: dataRegion.yBottom - dataRegion.yTop,
+          zIndex: 9,
+        }}
+        ref={containerRef}
+        onTouchStart={handlePointerMove}
+        onTouchMove={handlePointerMove}
+        onMouseMove={handlePointerMove}
+        onMouseLeave={handleMouseLeave}
+      />
       <svg width={width} height={height}>
         {/**
          * Lines
@@ -355,35 +262,27 @@ const Graph: React.FC<GraphProps> = (props) => {
               strokeWidth={1}
               pointerEvents="none"
             />
-            <circle
-              cx={tooltipLeftAttached}
-              cy={tooltipTop}
-              r={4}
-              fill="black"
-              fillOpacity={0.1}
-              stroke="black"
-              strokeOpacity={0.1}
-              strokeWidth={2}
-              pointerEvents="none"
-            />
+            {tooltipData.map((td, i) => {
+              const tdTop = scales[i].yScale(getY(td));
+              return (
+                <circle
+                  cx={tooltipLeftAttached}
+                  cy={tdTop}
+                  r={4}
+                  fill="black"
+                  fillOpacity={0.1}
+                  stroke="black"
+                  strokeOpacity={0.1}
+                  strokeWidth={2}
+                  pointerEvents="none"
+              />
+              );
+            })}
+           
           </g>
         )}
-        {/* Overlay to handle tooltip.
-         * Needs to be the last item to maintain mouse control. */}
-        <Bar
-          x={0}
-          y={0}
-          width={width - yAxisWidth}
-          height={height}
-          fill="transparent"
-          rx={14}
-          onTouchStart={handleTooltip}
-          onTouchMove={handleTooltip}
-          onMouseMove={handleTooltip}
-          onMouseLeave={handleMouseLeave}
-        />
       </svg>
-    </>
+    </div>
   );
 };
 
@@ -392,13 +291,18 @@ const Graph: React.FC<GraphProps> = (props) => {
 // ------------------------
 
 const LineChart: React.FC<LineChartProps> = (props) => (
-  <ParentSize debounceTime={50}>
-    {({ width: visWidth, height: visHeight }) => (
-      <Graph width={visWidth} height={visHeight} {...props}>
-        {props.children}
-      </Graph>
+  <ChartPropProvider>
+    {({ ...providerProps }) => (
+      <ParentSize debounceTime={50}>
+        {({ width: visWidth, height: visHeight }) => (
+          <Graph width={visWidth} height={visHeight} {...providerProps} {...props}>
+            {props.children}
+          </Graph>
+        )}
+      </ParentSize>
     )}
-  </ParentSize>
+
+  </ChartPropProvider>
 );
 
 export default LineChart;

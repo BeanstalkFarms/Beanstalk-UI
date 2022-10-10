@@ -99,6 +99,7 @@ type UtilProps = {
     seriesData: BaseDataPoint[][],
     height: number,
     width: number,
+    keys: string[],
     stackedArea?: boolean,
     isTWAP?: boolean
   ) => Scales[];
@@ -184,12 +185,12 @@ const defaultChartStyles: ChartMultiStyles = {
  * get chart styles for given key
  */
 const getChartStyles = (config?: ChartMultiStyles) => {
-  const style = config || defaultChartStyles;
+  const style = config ?? defaultChartStyles;
   const styles = Object.entries(style).map(
     ([k, { stroke, fillPrimary, fillSecondary, strokeWidth }]) => {
       const primary = fillPrimary || stroke;
       const secondary = fillSecondary || fillPrimary;
-      const _strokeWidth = strokeWidth ?? 1;
+      const _strokeWidth = strokeWidth ?? 2;
       return {
         id: k,
         to: primary,
@@ -305,7 +306,39 @@ const getYMin = (d: BaseDataPoint) =>
   Object.entries(d).reduce((acc, [k, v]) => {
     if (k in baseDataPoint) return acc;
     return Math.min(acc, v as number);
-  }, 0);
+  }, Infinity);
+
+/**
+ * calculates yDomain.domain[0] of stacked area data.
+ * Returns the minimum value of a key with the largest collective sum
+ */
+type YDomainCache = { cum: number; lowest: number };
+const getStackedAreaYDomainMin = (data: BaseDataPoint[], keys: string[]) => {
+  const start = { cum: 0, lowest: Infinity };
+  const map = new Map<string, YDomainCache>(keys.map((key) => [key, start] as [string, YDomainCache]));
+  data.forEach((d) => {
+    keys.forEach((k) => {
+      if (k in d) {
+        const curr = (k in d) ? d[k] : 0;
+        const stored = map.get(k);
+        if (stored) {
+          map.set(k, { 
+            cum: stored.cum + curr, 
+            lowest: curr !== 0 ? Math.min(stored.lowest, curr) : stored.lowest });
+        }
+      }
+    });
+  });
+  let cache = { cum: 0, lowest: Infinity };
+  Array.from(map.entries()).forEach(([_k, { cum, lowest }]) => {
+    if (!cache.cum) {
+      cache = { cum, lowest };
+    } else if (cum > cache.cum) {
+        cache = { cum, lowest };
+    }
+  });
+  return !Number.isFinite(cache.lowest) ? 0 : cache.lowest;
+};
 
 /**
  * returns the maximum value amongst relavent keys of a BaseDataPoint
@@ -326,8 +359,9 @@ const generateScale = (
   seriesData: BaseDataPoint[][],
   height: number,
   width: number,
+  keys: string[],
   stackedArea?: boolean,
-  isTWAP?: boolean
+  isTWAP?: boolean,
 ) =>
   seriesData.map((data) => {
     // generate yScale
@@ -342,11 +376,10 @@ const generateScale = (
 
     // generate yScale
     let yScale;
-    // if stacked area, get min and max of Y of T instead of T['value']
-    const [y1, y2] = stackedArea ? [getYMin, getYMax] : [getY, getY];
+
     if (isTWAP) {
-      const yMin = min(data, y1);
-      const yMax = max(data, y2);
+      const yMin = min(data, getY);
+      const yMax = max(data, getY);
       const biggestDifference = Math.max(
         Math.abs(1 - (yMin as number)),
         Math.abs(1 - (yMax as number))
@@ -355,11 +388,13 @@ const generateScale = (
         domain: [1 - biggestDifference, 1 + biggestDifference],
       });
     } else {
+      const y1Min = stackedArea ? getStackedAreaYDomainMin(data, keys) : min(data, getY) as number;
+      const multiple = stackedArea ? [0.95, 1.05] : [1, 1];
       yScale = scaleLinear<number>({
         clamp: !!stackedArea,
         domain: [
-          0.95 * (min(data, y1) as number),
-          1.05 * (max(data, y2) as number),
+          multiple[0] * y1Min as number,
+          multiple[1] * (max(data, getYMax) as number),
         ],
       });
     }

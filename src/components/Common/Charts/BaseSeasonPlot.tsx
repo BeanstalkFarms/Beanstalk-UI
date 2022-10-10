@@ -11,7 +11,7 @@ import Stat, { StatProps } from '../Stat';
 import { defaultValueFormatter } from './SeasonPlot';
 import TimeTabs from './TimeTabs';
 import { BaseChartProps, ExploitLine } from './ChartPropProvider';
-import MultiLineGraph from './MultiLineChart';
+import MultiLineChart from './MultiLineChart';
 import StackedAreaChart from './StackedAreaChart';
 
 type BaseSeasonPlotProps = {
@@ -178,7 +178,7 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
             {(childProps) => <ExploitLine {...childProps} />}
           </StackedAreaChart>
         ) : (
-          <MultiLineGraph
+          <MultiLineChart
             series={seriesInput}
             keys={keys}
             onCursor={handleCursor}
@@ -186,7 +186,7 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
             {...chartProps}
           >
             {(childProps) => <ExploitLine {...childProps} />}
-          </MultiLineGraph>
+          </MultiLineChart>
         )}
       </Box>
     </>

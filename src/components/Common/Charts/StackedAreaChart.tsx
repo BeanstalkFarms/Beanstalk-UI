@@ -61,8 +61,8 @@ const Graph = (props: Props) => {
 
   // generate scales
   const scales = useMemo(
-    () => generateScale(series, height, width, true, isTWAP),
-    [generateScale, series, height, width, isTWAP]
+    () => generateScale(series, height, width, keys, true, isTWAP),
+    [generateScale, series, height, width, isTWAP, keys]
   );
 
   // generate ticks
@@ -194,25 +194,28 @@ const Graph = (props: Props) => {
             y1={(d) => scales[0].yScale(getY1(d)) ?? 0}
           >
             {({ stacks, path }) =>
-              stacks.map((stack, i) => (
-                <>
-                  <path
-                    key={`stack-${stack.key}`}
-                    d={path(stack) || ''}
-                    stroke="transparent"
-                    fill={`url(#${getStyle(`${stack.key}`, i).id})`}
-                  />
-                  <LinePath<BaseDataPoint>
-                    stroke={getStyle(`${stack.key}`, i).stroke}
-                    strokeWidth={getStyle(`${stack.key}`, i).strokeWidth}
-                    key={`line-${i}`}
-                    curve={curveType}
-                    data={generatePathFromStack(stack)}
-                    x={(d) => scales[0].xScale(getX(d)) ?? 0}
-                    y={(d) => scales[0].yScale(getY(d)) ?? 0}
-                  />
-                </>
-              ))
+              stacks.map((stack, i) => 
+              
+                 (
+                   <>
+                     <path
+                       key={`stack-${stack.key}`}
+                       d={path(stack) || ''}
+                       stroke="transparent"
+                       fill={`url(#${getStyle(`${stack.key}`, i).id})`}
+                    />
+                     <LinePath<BaseDataPoint>
+                       stroke={getStyle(`${stack.key}`, i).stroke}
+                       strokeWidth={getStyle(`${stack.key}`, i).strokeWidth}
+                       key={`line-${i}`}
+                       curve={curveType}
+                       data={generatePathFromStack(stack)}
+                       x={(d) => scales[0].xScale(getX(d)) ?? 0}
+                       y={(d) => scales[0].yScale(getY(d)) ?? 0}
+                    />
+                   </>
+                )
+              )
             }
           </AreaStack>
         </Group>

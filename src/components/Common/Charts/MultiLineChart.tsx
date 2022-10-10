@@ -49,12 +49,12 @@ const Graph: React.FC<Props> = (props) => {
 
   // Scales
   const scales = useMemo(
-    () => generateScale(series, height, width, false, isTWAP),
-    [generateScale, height, isTWAP, series, width]
+    () => generateScale(series, height, width, keys, false, isTWAP),
+    [generateScale, height, isTWAP, series, width, keys]
   );
 
   // tooltip
-  const { TooltipInPortal, containerBounds, containerRef } = useTooltipInPortal(
+  const { containerBounds, containerRef } = useTooltipInPortal(
     { scroll: true, detectBounds: true }
   );
 
@@ -173,7 +173,7 @@ const Graph: React.FC<Props> = (props) => {
               x={(d) => scales[index].xScale(getX(d)) ?? 0}
               y={(d) => scales[index].yScale(getY(d)) ?? 0}
               stroke={getStyle('', index).stroke}
-              strokeWidth={1}
+              strokeWidth={getStyle('', index).strokeWidth}
             />
           ))}
         </Group>
@@ -240,7 +240,7 @@ const Graph: React.FC<Props> = (props) => {
   );
 };
 
-const MultiLineGraph: React.FC<BaseChartProps> = (props) => (
+const MultiLineChart: React.FC<BaseChartProps> = (props) => (
   <ChartPropProvider>
     {({ ...providerProps }) => (
       <ParentSize debounceTime={50}>
@@ -259,4 +259,4 @@ const MultiLineGraph: React.FC<BaseChartProps> = (props) => (
   </ChartPropProvider>
 );
 
-export default MultiLineGraph;
+export default MultiLineChart;
