@@ -69,6 +69,7 @@ const Overview: FC<{
   //
   const account = useAccount();
   const { data, loading } = useFarmerSiloOverview(account);
+  console.log('DATA', data);
 
   //
   const ownership = (

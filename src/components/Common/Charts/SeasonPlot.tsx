@@ -183,6 +183,7 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
   }
 
   const seriesInput = useMemo(() => [series], [series]);
+  console.log('SERIES INPUT', seriesInput);
 
   return (
     <>
