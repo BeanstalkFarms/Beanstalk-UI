@@ -6,6 +6,7 @@ import governanceIcon from '~/img/beanstalk/interface/nav/governance.svg';
 import swapIcon from '~/img/beanstalk/interface/nav/trade.svg';
 import twitterIcon from '~/img/beanstalk/interface/nav/twitter.svg';
 import duneIcon from '~/img/beanstalk/interface/nav/dune.svg';
+import immunefiIcon from '~/img/beanstalk/interface/nav/immunefi.svg';
 import docsIcon from '~/img/beanstalk/interface/nav/docs.svg';
 import disclosuresIcon from '~/img/beanstalk/interface/nav/disclosures.svg';
 import analyticsIcon from '~/img/beanstalk/interface/nav/analytics.svg';
@@ -102,6 +103,12 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       title: 'Disclosures',
       href: 'https://docs.bean.money/disclosures',
       icon: disclosuresIcon
+    },
+    {
+      path: 'bugbounty',
+      title: 'Bug Bounty',
+      href: 'https://immunefi.com/bounty/beanstalk',
+      icon: immunefiIcon
     },
     {
       path: 'discord',
