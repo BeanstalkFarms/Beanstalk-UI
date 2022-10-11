@@ -131,7 +131,7 @@ const Graph = (props: Props) => {
 
   // tick format + styles
   const xTickFormat = useCallback((_: any, i: number) => tickDates[i], [tickDates]);
-  const yTickFormat = useCallback((val: number) => displayBN(new BigNumber(val)), []);
+  const yTickFormat = useCallback((val: any) => displayBN(new BigNumber(val)), []);
 
   const { styles, getStyle } = useMemo(() => {
     const { getChartStyles } = common;
