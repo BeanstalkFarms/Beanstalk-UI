@@ -4,6 +4,7 @@ import { Group } from '@visx/group';
 import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { Axis, Orientation } from '@visx/axis';
+import { NumberValue } from 'd3-scale';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import ChartPropProvider, {
   BaseChartProps,
@@ -103,7 +104,7 @@ const Graph: React.FC<Props> = (props) => {
   // const yTickNum = height > 180 ? undefined : 5;
   const xTickNum = width > 700 ? undefined : Math.floor(width / 70);
   const xTickFormat = useCallback(
-    (v) => {
+    (v: NumberValue) => {
       const d = scales[0].dScale.invert(v);
       return `${d.getMonth() + 1}/${d.getDate()}`;
     },
