@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Container, Grid, Stack, Typography } from '@mui/material';
+import { Card, Container, Grid, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import { PODS, SEEDS, STALK, SPROUTS } from '~/constants/tokens';
@@ -11,6 +11,7 @@ import { HOW_TO_UNDERSTAND_BALANCES } from '~/util';
 import UserBalancesCard from '~/components/Balances/Cards/UserBalancesCard';
 import { XXLWidth } from '~/components/App/muiTheme';
 import UserBalancesCharts from '~/components/Balances/UserBalancesCharts';
+import RewardsModule from '~/components/Balances/RewardsModule';
 
 const BalancesPage: React.FC = () => {
   /// State
@@ -89,9 +90,7 @@ const BalancesPage: React.FC = () => {
             <UserBalancesCharts />
           </Grid>
           <Grid item xs={12} md={4}>
-            <Card sx={{ p: 2 }}>
-              <Typography variant="h4">Rewards</Typography>
-            </Card>
+            <RewardsModule />
           </Grid>
         </Grid>
       </Stack>
