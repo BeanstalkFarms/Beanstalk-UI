@@ -1,16 +1,16 @@
 import React from 'react';
-import { Card, Container, Stack } from '@mui/material';
+import { Card, Container, Grid, Stack, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
-import TotalBalanceCard from '~/components/Balances/TotalBalancesCard';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import { PODS, SEEDS, STALK, SPROUTS } from '~/constants/tokens';
 import { AppState } from '~/state';
-import StatsCard, { StatItem } from '~/components/Common/StatsCard';
+import { StatItem } from '~/components/Common/StatsCard';
 import PageHeader from '~/components/Common/PageHeader';
 import GuideButton from '~/components/Common/Guide/GuideButton';
 import { HOW_TO_UNDERSTAND_BALANCES } from '~/util';
 import UserBalancesCard from '~/components/Balances/Cards/UserBalancesCard';
 import { XXLWidth } from '~/components/App/muiTheme';
+import UserBalancesCharts from '~/components/Balances/UserBalancesCharts';
 
 import { FC } from '~/types';
 
@@ -86,10 +86,16 @@ const BalancesPage: FC<{}> = () => {
         <Card sx={{ p: 2 }}>
           <UserBalancesCard />
         </Card>
-        <Card sx={{ p: 2 }}>
-          <TotalBalanceCard breakdown={breakdown} />
-          <StatsCard stats={STAT_ITEMS} />
-        </Card>
+        <Grid container direction="row" spacing={2}>
+          <Grid item xs={12} md={8}>
+            <UserBalancesCharts />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Card sx={{ p: 2 }}>
+              <Typography variant="h4">Rewards</Typography>
+            </Card>
+          </Grid>
+        </Grid>
       </Stack>
     </Container>
   );
