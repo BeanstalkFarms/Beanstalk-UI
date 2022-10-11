@@ -103,7 +103,7 @@ const Graph: React.FC<Props> = (props) => {
   // const yTickNum = height > 180 ? undefined : 5;
   const xTickNum = width > 700 ? undefined : Math.floor(width / 70);
   const xTickFormat = useCallback(
-    (v: number) => {
+    (v: any) => {
       const d = scales[0].dScale.invert(v);
       return `${d.getMonth() + 1}/${d.getDate()}`;
     },
