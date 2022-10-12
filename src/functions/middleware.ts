@@ -10,8 +10,8 @@ const checkRateLimit = LRL({ interval: 60 * 1000 }).check;
 
 export const rateLimit = (max = 12) : middy.MiddlewareObject<Event, Response> => ({
   before: async (request, next) => {
-    const ip = request.event.headers['client-ip'];
-    if (!ip) throw new createError.Unauthorized();
+    const ip = request.event.headers['x-nf-client-connection-ip'] || request.event.headers['client-ip'];
+    if (!ip) throw new createError.InternalServerError();
     try {
       await checkRateLimit(max, ip);
     } catch (error) {
