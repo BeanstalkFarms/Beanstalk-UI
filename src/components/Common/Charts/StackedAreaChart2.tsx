@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { bisector, extent, max, min } from 'd3-array';
+import { bisector, extent, max } from 'd3-array';
 import { NumberValue } from 'd3-scale';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { Bar, Line, LinePath } from '@visx/shape';
@@ -86,6 +86,7 @@ export type TokenStacks = 'bean' | 'urBean' | 'bean3crv' | 'urBean3crv';
 // data accessors
 const getX = (d: DataPoint2) => d?.season;
 const getY = (d: DataPoint2) => d?.value;
+const getYByAsset = (d: DataPoint2, asset: TokenStacks) => d[asset];
 const bisectSeason = bisector<DataPoint2, number>(
   (d) => d.season
 ).left;
@@ -176,7 +177,8 @@ const Graph: FC<GraphProps> = (props) => {
     // y-scale
     const yScale = scaleLinear<number>({
       domain: [
-        0.95 * (min(_data, getY) as number),
+        // 0.95 * (min(_data, getY) as number),
+        0,
         1.05 * (max(_data, getY) as number)
       ],
       clamp: true
@@ -319,13 +321,13 @@ const Graph: FC<GraphProps> = (props) => {
         {/* </Group> */}
         <Group width={width - yAxisWidth} height={dataRegion.yBottom - dataRegion.yTop}>
           {children && children({ scales, dataRegion, ...props })}
-          {series.map((_data, index) => (
+          {keys.map((key: string, index) => (
             <LinePath<DataPoint2>
               key={index}
               curve={curveLinear}
-              data={_data}
-              x={(d) => scales[index].xScale(getX(d)) ?? 0}
-              y={(d) => scales[index].yScale(getY(d)) ?? 0}
+              data={series[0]}
+              x={(d) => scales[0].xScale(getX(d)) ?? 0}
+              y={(d) => scales[0].yScale(getYByAsset(d, key as TokenStacks)) ?? 0}
               {...strokes[index]}
               />
             ))}
