@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Card,
   InputAdornment,
@@ -41,11 +41,14 @@ const BalanceCalculator: React.FC<{
     setAmount(newValue ? newValue.toString() : '');
   };
 
-  useEffect(() => {
-    if (!active && amount) {
+  const handleSetActive = () => {
+    if (active) {
       setAmount('');
+      setActive(false);
+    } else {
+      setActive(true);
     }
-  }, [active, amount, setAmount]);
+  };
 
   return (
     <Card
@@ -54,7 +57,6 @@ const BalanceCalculator: React.FC<{
         py: 1.5,
         background: BeanstalkPalette.lightYellow,
         border: 'none',
-        maxWidth: '360px',
         width: '100%',
       }}
     >
@@ -67,7 +69,14 @@ const BalanceCalculator: React.FC<{
             transform: `rotate(${active ? '180deg' : 0})`,
             cursor: 'pointer',
           }}
-          onClick={() => setActive(!active)}
+          onClick={() => {
+            if (active) {
+              setAmount('');
+              setActive(false);
+            } else {
+              setActive(true);
+            }
+          }}
         />
         {!active ? (
           <Typography textAlign="center" color="primary">

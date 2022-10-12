@@ -74,10 +74,10 @@ const BalancesPage: FC<{}> = () => {
           <UserBalancesCard />
         </Card>
         <Grid container direction="row" spacing={2}>
-          <Grid item xs={12} md={8.4}>
+          <Grid item xs={12} md={8}>
             <UserBalancesCharts />
           </Grid>
-          <Grid item xs={12} md={3.6}>
+          <Grid item xs={12} md={4}>
             <RewardsModule />
           </Grid>
         </Grid>
