@@ -70,9 +70,18 @@ const strokes = [
 
 export type DataPoint = {
   season: number;
-  value: number;
-  date?: Date;
+  value:  number;
+  date:  Date;
 };
+
+export type DataPoint2 = {
+  season: number;
+  date: Date;
+  bean: BigNumber;
+  urBean: BigNumber;
+  bean3crv: BigNumber;
+  urBean3crv: BigNumber;
+}
 
 // data accessors
 const getX = (d: DataPoint) => d?.season;
@@ -132,6 +141,7 @@ const Graph: FC<GraphProps> = (props) => {
   // use this dataset to decide where it goes. (There is one
   // circle but potentially multiple series).
   const data = series[0];
+  console.log('STACKED AREA DATA', data);
 
   const keys = ['value'];
   const yAxisWidth = 57;

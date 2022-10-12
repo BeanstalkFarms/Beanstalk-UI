@@ -1,50 +1,131 @@
-import React from 'react';
-import { Box, Card, CardProps, Typography } from '@mui/material';
-import { useSelector } from 'react-redux';
-import { AppState } from '~/state';
-import { ZERO_BN } from '../../constants';
-import { SeasonalLiquidityDocument, SeasonalLiquidityQuery } from '~/generated/graphql';
-import SeasonPlot from '~/components/Common/Charts/SeasonPlot';
-import useSeason from '~/hooks/beanstalk/useSeason';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Box, CircularProgress, Stack, Typography } from '@mui/material';
+import BigNumber from 'bignumber.js';
 
-/// Setup SeasonPlot
-const getValue = (season: SeasonalLiquidityQuery['seasons'][number]) => parseFloat(season.totalLiquidityUSD);
-const formatValue = (value: number) => (
-  <Typography variant="h2" color="text.primary">
-    ${value.toLocaleString('en-US', { maximumFractionDigits: 2 })}
-  </Typography>
-);
-const StatProps = {
-  title: 'Liquidity',
-  gap: 0.25,
-  color: 'primary',
-  sx: { ml: 0 },
-};
-const queryConfig = {
-  variables: { season_gt: 6073 },
-  context: { subgraph: 'bean' }
+import browserUsage, { BrowserUsage } from '@visx/mock-data/lib/mocks/browserUsage';
+import { DataPoint  } from '~/components/Common/Charts/LineChart';
+import TimeTabs, { TimeTabState } from '~/components/Common/Charts/TimeTabs';
+import WalletButton from '~/components/Common/Connection/WalletButton';
+import Row from '~/components/Common/Row';
+import TokenIcon from '~/components/Common/TokenIcon';
+import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
+import MockPlot from '~/components/Silo/MockPlot';
+import { SEEDS, STALK } from '~/constants/tokens';
+import { SeasonAggregation, SeasonRange, SEASON_RANGE_TO_COUNT } from '~/hooks/beanstalk/useSeasonsQuery';
+
+import { FC } from '~/types';
+import StackedAreaChart from '~/components/Common/Charts/StackedAreaChart';
+
+type BrowserNames = keyof BrowserUsage;
+const data2 = browserUsage;
+// console.log('MOCK', data2);
+
+export type BalancesOverTimeProps = {
+  account: string | undefined;
+  season: BigNumber;
+  current: BigNumber[];
+  series: DataPoint[][];
+  stats: (season: BigNumber, value: BigNumber[]) => React.ReactElement;
+  empty: boolean;
+  loading: boolean;
+  label: string;
 };
 
-const BalancesOverTime: React.FC<{} & CardProps> = ({ sx }) => {
-  const beanPools = useSelector<AppState, AppState['_bean']['pools']>((state) => state._bean.pools);
-  const liquidity = Object.values(beanPools).reduce((prev, curr) => prev.plus(curr.liquidity), ZERO_BN);
-  const season = useSeason();
+const BalancesOverTime: FC<BalancesOverTimeProps> = ({
+  account,
+  season,
+  current,
+  series,
+  stats,
+  loading,
+  empty,
+  label,
+}) => {
+  const [displaySeason, setDisplaySeason] = useState<BigNumber>(season);
+  const [displayValue, setDisplayValue] = useState<BigNumber[]>(current);
+
+  useEffect(() => setDisplayValue(current), [current]);
+  useEffect(() => setDisplaySeason(season), [season]);
+
+  const handleCursor = useCallback(
+    (dps?: DataPoint[]) => {
+      setDisplaySeason(dps ? new BigNumber(dps[0].season) : season);
+      setDisplayValue(dps ? dps.map((dp) => new BigNumber(dp.value)) : current);
+    },
+    [current, season]
+  );
+
+  const [tabState, setTimeTab] = useState<TimeTabState>([SeasonAggregation.HOUR, SeasonRange.WEEK]);
+  const handleChangeTimeTab = useCallback(
+    (tabs: TimeTabState) => {
+      setTimeTab(tabs);
+    },
+    []
+  );
+
+  const filteredSeries = useMemo(() => {
+    if (tabState[1] !== SeasonRange.ALL) {
+      return series.map((s) => s.slice(-(SEASON_RANGE_TO_COUNT[tabState[1]] as number)));
+    }
+    return series;
+  }, [series, tabState]);
+
+  const ready = (
+    account
+    && !loading
+    && !empty
+  );
+
+  console.log('FILTERED', filteredSeries);
+
   return (
-    <Card sx={{ width: '100%', pt: 2, ...sx }}>
-      <Box sx={{ position: 'relative' }}>
-        <SeasonPlot
-          document={SeasonalLiquidityDocument}
-          height={250}
-          defaultSeason={season?.gt(0) ? season.toNumber() : 0}
-          defaultValue={liquidity.toNumber()}
-          getValue={getValue}
-          formatValue={formatValue}
-          StatProps={StatProps}
-          queryConfig={queryConfig}
-          stackedArea
-        />
+    <>
+      <Row alignItems="flex-start" justifyContent="space-between" pr={2}>
+        <Stack
+          direction={{ xs: 'column', md: 'row' }}
+          gap={{ xs: 1, md: 0 }}
+          sx={{ px: 2, pb: { xs: 2, md: 0 } }}
+          alignItems="flex-start"
+        >
+          {stats(displaySeason, displayValue)}
+        </Stack>
+        <Stack alignItems="right">
+          <TimeTabs
+            state={tabState}
+            setState={handleChangeTimeTab}
+            aggregation={false}
+          />
+        </Stack>
+      </Row>
+      <Box sx={{ width: '100%', height: '220px', position: 'relative' }}>
+        {ready ? (
+          <StackedAreaChart
+            series={filteredSeries}
+            onCursor={handleCursor as any}
+          />
+        ) : (
+          <>
+            <MockPlot />
+            <BlurComponent>
+              <Stack justifyContent="center" alignItems="center" height="100%" gap={1}>
+                {!account ? (
+                  <>
+                    <Typography variant="body1" color="gray">Your {label} will appear here.</Typography>
+                    <WalletButton showFullText color="primary" sx={{ height: 45 }} />
+                  </>
+                ) : loading ? (
+                  <CircularProgress variant="indeterminate" thickness={4} color="primary" />
+                ) : empty ? (
+                  <Typography variant="body1" color="gray">
+                    Receive <TokenIcon token={STALK} />Stalk and <TokenIcon token={SEEDS} />Seeds for Depositing whitelisted assets in the Silo. Stalkholders earn a portion of new Bean mints. Seeds grow into Stalk every Season.
+                  </Typography>
+                ) : null}
+              </Stack>
+            </BlurComponent>
+          </>
+        )}
       </Box>
-    </Card>
+    </>
   );
 };
 

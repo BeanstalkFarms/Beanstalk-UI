@@ -9,7 +9,7 @@ const useFarmerSiloOverview = (account: string | undefined) => {
   const priceQuery = useSeasonsQuery(SeasonalPriceDocument, SeasonRange.ALL);
 
   const [stalkData, seedsData] = useInterpolateStalk(siloRewardsQuery);
-  const depositData = useInterpolateDeposits(siloAssetsQuery, priceQuery);
+  const depositData = useInterpolateDeposits(siloAssetsQuery, priceQuery, true);
 
   return {
     data: {

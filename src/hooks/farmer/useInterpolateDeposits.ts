@@ -3,11 +3,13 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useFarmerSiloAssetSnapshotsQuery, useSeasonalPriceQuery } from '~/generated/graphql';
 import { AppState } from '~/state';
-import { interpolateFarmerDepositedValue, Snapshot } from '~/util/Interpolate';
+import { interpolateFarmerAssetBalances, interpolateFarmerDepositedValue, Snapshot } from '~/util/Interpolate';
 
 const useInterpolateDeposits = (
   siloAssetsQuery: ReturnType<typeof useFarmerSiloAssetSnapshotsQuery>,
   priceQuery: ReturnType<typeof useSeasonalPriceQuery>,
+  /** Show balance for each deposited asset instead of total deposited value. */
+  byAssetType?: boolean
 ) => {
   const unripe = useSelector<AppState, AppState['_bean']['unripe']>((state) => state._bean.unripe);
   return useMemo(() => {
@@ -40,11 +42,16 @@ const useInterpolateDeposits = (
       return prev;
     }, [] as Snapshot[]).sort((a, b) => a.season - b.season);
 
+    if (byAssetType) {
+      return interpolateFarmerAssetBalances(snapshots, priceQuery.data.seasons);
+    }
+
     return interpolateFarmerDepositedValue(snapshots, priceQuery.data.seasons);
   }, [
+    byAssetType,
     unripe,
-    priceQuery.loading, 
-    priceQuery.data, 
+    priceQuery.loading,
+    priceQuery.data,
     siloAssetsQuery.data,
   ]);
 };
