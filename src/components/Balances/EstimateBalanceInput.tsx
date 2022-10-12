@@ -23,7 +23,7 @@ const textFieldSx = {
   },
 };
 
-const BalanceCalculator: React.FC<{
+const EstimateBalanceInput: React.FC<{
   amount: string;
   setAmount: React.Dispatch<React.SetStateAction<string>>;
   active: boolean;
@@ -108,4 +108,4 @@ const BalanceCalculator: React.FC<{
     </Card>
   );
 };
-export default BalanceCalculator;
+export default EstimateBalanceInput;

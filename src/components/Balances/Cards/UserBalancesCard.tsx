@@ -9,7 +9,7 @@ import TokenIcon from '~/components/Common/TokenIcon';
 import { PODS, SEEDS, SPROUTS, STALK } from '~/constants/tokens';
 import { AppState } from '~/state';
 import { displayFullBN } from '~/util';
-import BalanceCalculator from '../BalanceCalculator';
+import EstimateBalanceInput from '../EstimateBalanceInput';
 import { ZERO_BN } from '~/constants';
 import BalanceStat from '../BalanceStat';
 
@@ -34,31 +34,48 @@ const UserBalancesCard: React.FC<{}> = () => {
 
   const options = [
     {
-      title: 'Stalk',
-      token: STALK,
-      tooltip: 'hello',
-      amount: valueOrZeroBN(farmerSilo.stalk.total),
-      style: { marginLeft: '-5px' },
+      tooltip: <Typography>STALK & SEEDS</Typography>,
+      tokens: [
+        {
+          title: 'Stalk',
+          token: STALK,
+          amount: valueOrZeroBN(farmerSilo.stalk.total),
+          amountModifier: undefined,
+          style: { marginLeft: '-5px' },
+        },
+        {
+          title: 'Seeds',
+          token: SEEDS,
+          amount: valueOrZeroBN(farmerSilo.seeds.total),
+          amountModifier: undefined,
+          style: {},
+        },
+      ],
     },
     {
-      title: 'Seeds',
-      token: SEEDS,
-      tooltip: 'hello',
-      amount: valueOrZeroBN(farmerSilo.seeds.total),
+      tooltip: <Typography>PODS</Typography>,
+      tokens: [
+        {
+          title: 'Pods',
+          token: PODS,
+          tooltip: 'hello',
+          amount: valueOrZeroBN(farmerField.pods),
+          amountModifier: valueOrZeroBN(farmerField.harvestablePods, true),
+          style: {},
+        },
+      ],
     },
     {
-      title: 'Pods',
-      token: PODS,
-      tooltip: 'hello',
-      amount: valueOrZeroBN(farmerField.pods),
-      amountModifier: valueOrZeroBN(farmerField.harvestablePods, true),
-    },
-    {
-      title: 'Sprouts',
-      token: SPROUTS,
-      tooltip: 'hello',
-      amount: valueOrZeroBN(farmerBarn.unfertilizedSprouts),
-      amountModifier: valueOrZeroBN(farmerBarn.fertilizedSprouts, true),
+      tooltip: <Typography>SPROUTS</Typography>,
+      tokens: [
+        {
+          title: 'Sprouts',
+          token: SPROUTS,
+          amount: valueOrZeroBN(farmerBarn.unfertilizedSprouts),
+          amountModifier: valueOrZeroBN(farmerBarn.fertilizedSprouts, true),
+          style: {},
+        },
+      ],
     },
   ];
 
@@ -75,51 +92,71 @@ const UserBalancesCard: React.FC<{}> = () => {
       <Stack width="100%" alignSelf="flex-start" gap={2}>
         <Typography variant="h4">Beanstalk Balances</Typography>
         <Grid container spacing={2} width="100%">
-          {options.map((option, i) => (
-            <Grid item xs={6} md={3} width="100%" key={`bStat-${i}`}>
-              <OnClickTooltip tooltip={option.tooltip}>
-                <BalanceStat
-                  variant="h4"
-                  gap={0.5}
-                  title={
-                    <Row gap={0.2}>
-                      <TokenIcon
-                        token={option.token}
-                        css={{ height: '20px', ...option.style }}
+          {options.map((group, i) => (
+            <Grid
+              item
+              xs={group.tokens.length * 6}
+              md={group.tokens.length * 3}
+              width="100%"
+              key={`bStat-${i}`}
+            >
+              <OnClickTooltip tooltip={group.tooltip}>
+                <Grid container width="100%" spacing={2}>
+                  {group.tokens.map((item, k) => (
+                    <Grid item xs={6} key={`tokenstat-${k}`}>
+                      <BalanceStat
+                        variant="h4"
+                        gap={0.5}
+                        title={
+                          <Row gap={0.2}>
+                            <TokenIcon
+                              token={item.token}
+                              css={{ height: '20px', ...item.style }}
+                            />
+                            <Typography>{item.title}</Typography>
+                            <ExpandCircleDownOutlinedIcon
+                              fontSize="inherit"
+                              color="primary"
+                            />
+                          </Row>
+                        }
+                        amount={
+                          <>
+                            {displayFullBN(
+                              item.amount ?? ZERO_BN,
+                              item.token?.displayDecimals ?? 2
+                            )}
+                            {item.amountModifier && (
+                              <Typography
+                                color="primary"
+                                variant="h4"
+                                sx={{ whiteSpace: 'nowrap' }}
+                              >
+                                +{' '}
+                                {displayFullBN(
+                                  item.amountModifier,
+                                  item.token?.displayDecimals ?? 2
+                                )}
+                              </Typography>
+                            )}
+                          </>
+                        }
+                        estimates={getEstimates()}
                       />
-                      <Typography>{option.title}</Typography>
-                      <ExpandCircleDownOutlinedIcon
-                        fontSize="inherit"
-                        color="primary"
-                      />
-                    </Row>
-                  }
-                  amount={
-                    <>
-                      {displayFullBN(
-                        option.amount ?? ZERO_BN,
-                        option.token?.displayDecimals ?? 2
-                      )}
-                      {option.amountModifier && (
-                        <Typography color="primary" variant="h4" sx={{ whiteSpace: 'nowrap' }}>
-                          +{' '}
-                          {displayFullBN(
-                            option.amountModifier,
-                            option.token?.displayDecimals ?? 2
-                          )}
-                        </Typography>
-                      )}
-                    </>
-                  }
-                  estimates={getEstimates()}
-                />
+                    </Grid>
+                  ))}
+                </Grid>
               </OnClickTooltip>
             </Grid>
           ))}
         </Grid>
       </Stack>
-      <Stack display={{ xs: 'none', md: 'flex' }}>
-        <BalanceCalculator
+      <Stack
+        display={{ xs: 'none', lg: 'flex' }}
+        width="100%"
+        maxWidth={{ xs: '100%', lg: '340px' }}
+      >
+        <EstimateBalanceInput
           active={active}
           setActive={setActive}
           amount={displayAmount}

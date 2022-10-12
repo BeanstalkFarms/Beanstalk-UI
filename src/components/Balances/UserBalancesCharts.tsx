@@ -44,7 +44,7 @@ const UserBalancesCharts: React.FC<{}> = () => {
   const season = useSeason();
 
   return (
-    <Module>
+    <Module sx={{ width: '100%' }}>
       <ModuleHeader>
         <Typography variant="h4">Deposited Balance</Typography>
       </ModuleHeader>

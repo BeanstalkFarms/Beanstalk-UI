@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Container, Grid, Stack } from '@mui/material';
+import { Card, Container, Stack } from '@mui/material';
 import UserBalancesCard from '~/components/Balances/Cards/UserBalancesCard';
 import { XXLWidth } from '~/components/App/muiTheme';
 import UserBalancesCharts from '~/components/Balances/UserBalancesCharts';
@@ -13,14 +13,17 @@ const BalancesPage: FC<{}> = () => (
       <Card sx={{ p: 2 }}>
         <UserBalancesCard />
       </Card>
-      <Grid container direction="row" spacing={2}>
-        <Grid item xs={12} md={8}>
-          <UserBalancesCharts />
-        </Grid>
-        <Grid item xs={12} md={4}>
+
+      <Stack direction={{ xs: 'column', lg: 'row' }} gap={2} width="100%">
+        <UserBalancesCharts />
+        <Stack
+          width="100%"
+          maxWidth={{ xs: '100%', lg: '360px' }}
+          sx={{ flexShrink: 0 }}
+        >
           <RewardsModule />
-        </Grid>
-      </Grid>
+        </Stack>
+      </Stack>
     </Stack>
   </Container>
 );
