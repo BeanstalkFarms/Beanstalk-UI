@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { bisector, extent, max } from 'd3-array';
 import { NumberValue } from 'd3-scale';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import { Bar, Line, LinePath } from '@visx/shape';
+import { AreaStack, Bar, Line, LinePath } from '@visx/shape';
 import { Group } from '@visx/group';
 import { scaleLinear } from '@visx/scale';
 import { localPoint } from '@visx/event';
@@ -13,6 +13,7 @@ import {
 import { Axis, Orientation } from '@visx/axis';
 import { CurveFactory } from 'd3-shape';
 import BigNumber from 'bignumber.js';
+import { LinearGradient } from '@visx/gradient';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { displayBN } from '~/util';
 import { CURVES } from '~/components/Common/Charts/LineChart';
@@ -48,18 +49,44 @@ type GraphProps = {
   height: number;
 } & StackedAreaProps;
 
-const strokes = [
+const fills = [
   {
-    stroke: BeanstalkPalette.theme.fall.brown,
+    fill: BeanstalkPalette.theme.fall.brown,
+  },
+  {
+    fill: BeanstalkPalette.darkBlue,
+  },
+  {
+    fill: BeanstalkPalette.lightGrey,
+  },
+  {
+    fill: BeanstalkPalette.trueRed,
+  },
+];
+
+const fillColors = [
+  BeanstalkPalette.lightGreen,
+  BeanstalkPalette.lightBrown,
+  BeanstalkPalette.lightestRed,
+  BeanstalkPalette.lightestBlue
+];
+
+const lineColors = [
+  {
+    stroke: BeanstalkPalette.logoGreen,
     strokeWidth: 1,
   },
   {
-    stroke: BeanstalkPalette.darkBlue,
+    stroke: BeanstalkPalette.brown,
     strokeWidth: 1,
   },
   {
-    stroke: BeanstalkPalette.lightGrey,
-    strokeWidth: 0.5,
+    stroke: BeanstalkPalette.trueRed,
+    strokeWidth: 1,
+  },
+  {
+    stroke: BeanstalkPalette.blue,
+    strokeWidth: 1,
   },
 ];
 
@@ -111,7 +138,6 @@ export const backgroundColor = '#da7cff';
 export const labelColor = '#340098';
 const axisColor = BeanstalkPalette.lightGrey;
 const tickLabelColor = BeanstalkPalette.lightGrey;
-const colors = [backgroundColor, labelColor, BeanstalkPalette.logoGreen, BeanstalkPalette.trueRed];
 
 const xTickLabelProps = () => ({
   fill: tickLabelColor,
@@ -288,37 +314,47 @@ const Graph: FC<GraphProps> = (props) => {
         {/**
          * Chart
          */}
-        {/* <Group width={width - yAxisWidth} height={dataRegion.yBottom - dataRegion.yTop}> */}
-        {/*  <LinearGradient from={BeanstalkPalette.theme.fall.lightBrown} to={BeanstalkPalette.theme.fall.lightBrown} id="stacked-area-brown" /> */}
-        {/*  <rect x={0} y={0} width={width} height={height} fill="transparent" rx={14} /> */}
-        {/*  <AreaStack<DataPoint2> */}
-        {/*    top={margin.top} */}
-        {/*    left={margin.left} */}
-        {/*    keys={keys} */}
-        {/*    data={data} */}
-        {/*    height={height} */}
-        {/*    x={(d) => scales[0].xScale(getX(d.data)) ?? 0} */}
-        {/*    y0={(d) => { */}
-        {/*      console.log('DATAPOINT', d) */}
-        {/*      return scales[0].yScale(d[0]) ?? 0 */}
-        {/*    }} */}
-        {/*    y1={(d) => scales[0].yScale(d[1]) ?? 0} */}
-        {/*  > */}
-        {/*    {({ stacks, path }) => */}
-        {/*      stacks.map((stack, i) => ( */}
-        {/*        <path */}
-        {/*          key={`stack-${stack.key}`} */}
-        {/*          d={path(stack) || ''} */}
-        {/*          // stroke={BeanstalkPalette.logoGreen} */}
-        {/*          fill="url(#stacked-area-brown)" */}
-        {/*          // fill={colors[i]} */}
-        {/*          onClick={() => { */}
-        {/*          }} */}
-        {/*        /> */}
-        {/*      )) */}
-        {/*    } */}
-        {/*  </AreaStack> */}
-        {/* </Group> */}
+        <Group width={width - yAxisWidth} height={dataRegion.yBottom - dataRegion.yTop}>
+          {keys.map((key, index) => (
+            <>
+              <LinearGradient
+                from={fillColors[index]}
+                to={fillColors[index]}
+                id={key}
+                />
+              <rect x={0} y={0} width={width} height={height} fill="transparent" rx={14} />
+              <AreaStack<DataPoint2>
+                top={margin.top}
+                left={margin.left}
+                keys={keys}
+                data={data}
+                height={height}
+                x={(d) => scales[0].xScale(getX(d.data)) ?? 0}
+                y0={(d) => {
+                    console.log('DATAPOINT', d);
+                    return scales[0].yScale(0) ?? 0;
+                  }}
+                y1={(d) => scales[0].yScale(getYByAsset(d.data, key as TokenStacks)) ?? 0}
+                >
+                {({ stacks, path }) =>
+                    stacks.map((stack, i) => (
+                      <path
+                        key={`stack-${key}`}
+                        d={path(stack) || ''}
+                        // stroke={BeanstalkPalette.logoGreen}
+                        fill={`url(#${key})`}
+                        // fill={fills[index].fill}
+                        onClick={() => {
+                        }}
+                      />
+                    ))
+                  }
+              </AreaStack>
+            </>
+            )
+          )}
+
+        </Group>
         <Group width={width - yAxisWidth} height={dataRegion.yBottom - dataRegion.yTop}>
           {children && children({ scales, dataRegion, ...props })}
           {keys.map((key: string, index) => (
@@ -328,9 +364,9 @@ const Graph: FC<GraphProps> = (props) => {
               data={series[0]}
               x={(d) => scales[0].xScale(getX(d)) ?? 0}
               y={(d) => scales[0].yScale(getYByAsset(d, key as TokenStacks)) ?? 0}
-              {...strokes[index]}
-              />
-            ))}
+              {...lineColors[index]}
+            />
+          ))}
         </Group>
         {/**
          * Axis
