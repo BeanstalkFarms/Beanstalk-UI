@@ -10,7 +10,6 @@ import EstimateBalanceInput from '../EstimateBalanceInput';
 import { ZERO_BN } from '~/constants';
 import BalanceStat from '../BalanceStat';
 import { Module, ModuleContent } from '~/components/Common/Module';
-import PodsBalance from '../tooltips/PodsBalance';
 import useAccount from '~/hooks/ledger/useAccount';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 
@@ -82,7 +81,8 @@ const UserBalancesCard: React.FC<{}> = () => {
 
   const podsAndSproutsOptions = [
     {
-      popperEl: <PodsBalance />,
+      // popperEl: <PodsBalance />,
+      popperEl: <Typography>PODS</Typography>,
       token: {
         title: 'Pods',
         token: PODS,

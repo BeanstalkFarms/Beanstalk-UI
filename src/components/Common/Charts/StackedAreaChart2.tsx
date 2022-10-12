@@ -135,7 +135,7 @@ const Graph: FC<GraphProps> = (props) => {
   // use this dataset to decide where it goes. (There is one
   // circle but potentially multiple series).
   const data = series[0];
-  console.log('STACKED AREA DATA', data);
+  // console.log('STACKED AREA DATA', data);
 
   const keys = ['value'];
   const yAxisWidth = 57;
