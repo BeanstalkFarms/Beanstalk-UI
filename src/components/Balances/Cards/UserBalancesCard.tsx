@@ -14,6 +14,7 @@ import { ZERO_BN } from '~/constants';
 import BalanceStat from '../BalanceStat';
 import { Module, ModuleContent } from '~/components/Common/Module';
 import PodsBalance from '../tooltips/PodsBalance';
+import useAccount from '~/hooks/ledger/useAccount';
 
 const valueOrZeroBN = (value?: BigNumber, returnUndef?: boolean) => {
   const returnVal = returnUndef ? undefined : ZERO_BN;
@@ -21,6 +22,7 @@ const valueOrZeroBN = (value?: BigNumber, returnUndef?: boolean) => {
 };
 
 const UserBalancesCard: React.FC<{}> = () => {
+  const account = useAccount();
   /// State
   const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>(
     (state) => state._farmer.silo
@@ -33,6 +35,8 @@ const UserBalancesCard: React.FC<{}> = () => {
   );
   const [displayAmount, setDisplayAmount] = useState<string>('');
   const [active, setActive] = useState(false);
+
+  const canOpenTooltip = account !== undefined;
 
   const options = [
     {
@@ -105,10 +109,18 @@ const UserBalancesCard: React.FC<{}> = () => {
                   width="100%"
                   key={`bStat-${i}`}
                 >
-                  <OnClickTooltip tooltip={group.tooltip}>
+                  <OnClickTooltip
+                    tooltip={group.tooltip}
+                    openCondition={canOpenTooltip}
+                  >
                     <Grid container width="100%" spacing={2}>
                       {group.tokens.map((item, k) => (
-                        <Grid item xs={6} key={`tokenstat-${k}`}>
+                        <Grid
+                          item
+                          xs={6}
+                          key={`tokenstat-${k}`}
+                          sx={{ maxWidth: '100% !important' }}
+                        >
                           <BalanceStat
                             variant="h4"
                             gap={0.5}

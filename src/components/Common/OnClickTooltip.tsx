@@ -28,8 +28,15 @@ const OnClickTooltip: React.FC<{
   children: JSX.Element | string;
   disableAnimate?: boolean;
   sx?: React.CSSProperties | SxProps<Theme>;
-}> = ({ children, tooltip, disableAnimate = false, sx }) => {
+  /** additional conditions to prevent opening */
+  openCondition?: boolean;
+}> = ({ children, tooltip, disableAnimate = false, openCondition, sx }) => {
   const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    if (openCondition !== undefined && !openCondition) return;
+    setOpen(true);
+  };
 
   return (
     <>
@@ -55,7 +62,7 @@ const OnClickTooltip: React.FC<{
           title={tooltip ?? ''}
         >
           <Component
-            onClick={() => setOpen(true)}
+            onClick={handleOpen}
             sx={{
               ...sx,
               ':hover': {
