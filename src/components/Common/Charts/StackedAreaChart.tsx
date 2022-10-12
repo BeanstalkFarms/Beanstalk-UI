@@ -296,6 +296,7 @@ const Graph = (props: Props) => {
   );
 };
 
+// For reference on how to use this chart, refer to BeanVs3Crv.tsx
 const StackedAreaChart: React.FC<BaseChartProps> = (props) => (
   <ChartPropProvider>
     {({ ...providerProps }) => (
