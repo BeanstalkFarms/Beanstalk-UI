@@ -3,15 +3,15 @@
 #       as the unique ID, but the subgraph tracks `{account}-{index}`.
 query PodListing($index: BigInt) {
   podListings(
-    where: { index: $index },
-    first: 1,
-    orderBy: createdAt,
-    orderDirection: desc,
+    where: { index: $index }
+    first: 1
+    orderBy: createdAt
+    orderDirection: desc
   ) {
     ...PodListing
-#    transaction {
-#      id
-#      timestamp
-#    }
+    #    transaction {
+    #      id
+    #      timestamp
+    #    }
   }
 }
