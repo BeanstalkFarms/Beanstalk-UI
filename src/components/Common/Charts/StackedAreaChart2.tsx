@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { bisector, extent, max, min } from 'd3-array';
 import { NumberValue } from 'd3-scale';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import { AreaStack, Bar, Line, LinePath } from '@visx/shape';
+import { Bar, Line, LinePath } from '@visx/shape';
 import { Group } from '@visx/group';
 import { scaleLinear } from '@visx/scale';
 import { localPoint } from '@visx/event';
@@ -12,7 +12,6 @@ import {
 } from '@visx/curve';
 import { Axis, Orientation } from '@visx/axis';
 import { CurveFactory } from 'd3-shape';
-import { LinearGradient } from '@visx/gradient';
 import BigNumber from 'bignumber.js';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { displayBN } from '~/util';
@@ -82,6 +81,7 @@ export type DataPoint2 = {
   urBean3crv: number;
 
 }
+export type TokenStacks = 'bean' | 'urBean' | 'bean3crv' | 'urBean3crv';
 
 // data accessors
 const getX = (d: DataPoint2) => d?.season;
@@ -110,6 +110,7 @@ export const backgroundColor = '#da7cff';
 export const labelColor = '#340098';
 const axisColor = BeanstalkPalette.lightGrey;
 const tickLabelColor = BeanstalkPalette.lightGrey;
+const colors = [backgroundColor, labelColor, BeanstalkPalette.logoGreen, BeanstalkPalette.trueRed];
 
 const xTickLabelProps = () => ({
   fill: tickLabelColor,
@@ -285,33 +286,37 @@ const Graph: FC<GraphProps> = (props) => {
         {/**
          * Chart
          */}
-        <Group width={width - yAxisWidth} height={dataRegion.yBottom - dataRegion.yTop}>
-          <LinearGradient from={BeanstalkPalette.theme.fall.lightBrown} to={BeanstalkPalette.theme.fall.lightBrown} id="stacked-area-brown" />
-          <rect x={0} y={0} width={width} height={height} fill="transparent" rx={14} />
-          <AreaStack<DataPoint2>
-            top={margin.top}
-            left={margin.left}
-            keys={keys}
-            data={data}
-            height={height}
-            x={(d) => scales[0].xScale(getX(d.data)) ?? 0}
-            y0={(d) => scales[0].yScale(d[0]) ?? 0}
-            y1={(d) => scales[0].yScale(d[1]) ?? 0}
-          >
-            {({ stacks, path }) =>
-              stacks.map((stack) => (
-                <path
-                  key={`stack-${stack.key}`}
-                  d={path(stack) || ''}
-                  // stroke={BeanstalkPalette.logoGreen}
-                  fill="url(#stacked-area-brown)"
-                  onClick={() => {
-                  }}
-                />
-              ))
-            }
-          </AreaStack>
-        </Group>
+        {/* <Group width={width - yAxisWidth} height={dataRegion.yBottom - dataRegion.yTop}> */}
+        {/*  <LinearGradient from={BeanstalkPalette.theme.fall.lightBrown} to={BeanstalkPalette.theme.fall.lightBrown} id="stacked-area-brown" /> */}
+        {/*  <rect x={0} y={0} width={width} height={height} fill="transparent" rx={14} /> */}
+        {/*  <AreaStack<DataPoint2> */}
+        {/*    top={margin.top} */}
+        {/*    left={margin.left} */}
+        {/*    keys={keys} */}
+        {/*    data={data} */}
+        {/*    height={height} */}
+        {/*    x={(d) => scales[0].xScale(getX(d.data)) ?? 0} */}
+        {/*    y0={(d) => { */}
+        {/*      console.log('DATAPOINT', d) */}
+        {/*      return scales[0].yScale(d[0]) ?? 0 */}
+        {/*    }} */}
+        {/*    y1={(d) => scales[0].yScale(d[1]) ?? 0} */}
+        {/*  > */}
+        {/*    {({ stacks, path }) => */}
+        {/*      stacks.map((stack, i) => ( */}
+        {/*        <path */}
+        {/*          key={`stack-${stack.key}`} */}
+        {/*          d={path(stack) || ''} */}
+        {/*          // stroke={BeanstalkPalette.logoGreen} */}
+        {/*          fill="url(#stacked-area-brown)" */}
+        {/*          // fill={colors[i]} */}
+        {/*          onClick={() => { */}
+        {/*          }} */}
+        {/*        /> */}
+        {/*      )) */}
+        {/*    } */}
+        {/*  </AreaStack> */}
+        {/* </Group> */}
         <Group width={width - yAxisWidth} height={dataRegion.yBottom - dataRegion.yTop}>
           {children && children({ scales, dataRegion, ...props })}
           {series.map((_data, index) => (
@@ -322,8 +327,8 @@ const Graph: FC<GraphProps> = (props) => {
               x={(d) => scales[index].xScale(getX(d)) ?? 0}
               y={(d) => scales[index].yScale(getY(d)) ?? 0}
               {...strokes[index]}
-            />
-          ))}
+              />
+            ))}
         </Group>
         {/**
          * Axis
