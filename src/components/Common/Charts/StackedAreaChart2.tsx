@@ -69,18 +69,23 @@ const strokes = [
 // ------------------------
 
 export type DataPoint2 = {
-  season: number;
+  /** Date */
   date: Date;
+  /** Season */
+  season: number;
+  /** Total deposited value. */
+  value: number;
+  // stacked areas
   bean: number;
   urBean: number;
   bean3crv: number;
   urBean3crv: number;
-  totalValue: number;
+
 }
 
 // data accessors
 const getX = (d: DataPoint2) => d?.season;
-const getY = (d: DataPoint2) => d?.totalValue;
+const getY = (d: DataPoint2) => d?.value;
 const bisectSeason = bisector<DataPoint2, number>(
   (d) => d.season
 ).left;

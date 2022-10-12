@@ -180,7 +180,7 @@ export const interpolateFarmerAssetBalances = (
   let j = 0;
   const minSeason = snapshots[j].season;
   const maxSeason = prices[prices.length - 1].season;
-  const currBDV : BigNumber = ZERO_BN;
+  let currBDV : BigNumber = ZERO_BN;
   let nextSeason : number | undefined = minSeason;
 
   // Initialize zero balances for each silo asset
@@ -241,10 +241,10 @@ export const interpolateFarmerAssetBalances = (
       urBean: siloTokenBalances[UNRIPE_BEAN[1].address].toNumber(),
       bean3crv: siloTokenBalances[BEAN_CRV3_LP[1].address].toNumber(),
       urBean3crv: siloTokenBalances[UNRIPE_BEAN_CRV3[1].address].toNumber(),
-      totalValue: thisBDV.multipliedBy(new BigNumber(thisPrice.price)).toNumber()
+      value: thisBDV.multipliedBy(new BigNumber(thisPrice.price)).toNumber()
     });
 
-    // currBDV = thisBDV;
+    currBDV = thisBDV;
   }
 
   return addBufferSeasons2(points, bufferSeasons);
