@@ -78,11 +78,11 @@ const BalancesOverTime: FC<BalancesOverTimeProps> = ({
 
   return (
     <>
-      <Row alignItems="flex-start" justifyContent="space-between" pr={2}>
+      <Row alignItems="flex-start" justifyContent="space-between" pr={2} pb={1}>
         <Stack
           direction={{ xs: 'column', md: 'row' }}
           gap={{ xs: 1, md: 0 }}
-          sx={{ px: 2, pb: { xs: 2, md: 0 } }}
+          sx={{ px: 0, pb: { xs: 2, md: 0 } }}
           alignItems="flex-start"
         >
           {stats(displaySeason, displayValue)}

@@ -4,7 +4,7 @@ import { NumberValue } from 'd3-scale';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { AreaStack, Bar, Line, LinePath } from '@visx/shape';
 import { Group } from '@visx/group';
-import { scaleLinear } from '@visx/scale';
+import { scaleLinear, scaleOrdinal } from '@visx/scale';
 import { localPoint } from '@visx/event';
 import { useTooltip } from '@visx/tooltip';
 import {
@@ -14,6 +14,7 @@ import { Axis, Orientation } from '@visx/axis';
 import { CurveFactory } from 'd3-shape';
 import BigNumber from 'bignumber.js';
 import { LinearGradient } from '@visx/gradient';
+
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { displayBN } from '~/util';
 import { CURVES } from '~/components/Common/Charts/LineChart';
@@ -308,9 +309,18 @@ const Graph: FC<GraphProps> = (props) => {
       - strokeBuffer
   };
 
+  // key
+  const ordinalColorScale = scaleOrdinal({
+    domain: keys,
+    range: fillColors,
+  });
+
+  const legendGlyphSize = 15;
+
   return (
     <>
-      <svg width={width} height={height}>
+
+      <svg width={width} height={height} style={{ position: 'absolute', top: 0, zIndex: 'auto' }}>
         {/**
          * Chart
          */}
@@ -321,7 +331,7 @@ const Graph: FC<GraphProps> = (props) => {
                 from={fillColors[index]}
                 to={fillColors[index]}
                 id={key}
-                />
+              />
               <rect x={0} y={0} width={width} height={height} fill="transparent" rx={14} />
               <AreaStack<DataPoint2>
                 top={margin.top}
@@ -334,23 +344,22 @@ const Graph: FC<GraphProps> = (props) => {
                 y1={(d) => scales[0].yScale(getYByAsset(d.data, key as TokenStacks)) ?? 0}
                 >
                 {({ stacks, path }) =>
-                    stacks.map((stack, i) => (
-                      <path
-                        key={`stack-${key}`}
-                        d={path(stack) || ''}
-                        // stroke={BeanstalkPalette.logoGreen}
-                        fill={`url(#${key})`}
-                        // fill={fills[index].fill}
-                        onClick={() => {
-                        }}
-                      />
-                    ))
-                  }
+                  stacks.map((stack, i) => (
+                    <path
+                      key={`stack-${key}`}
+                      d={path(stack) || ''}
+                      // stroke={BeanstalkPalette.logoGreen}
+                      fill={`url(#${key})`}
+                      // fill={fills[index].fill}
+                      onClick={() => {
+                      }}
+                    />
+                  ))
+                }
               </AreaStack>
             </>
             )
           )}
-
         </Group>
         <Group width={width - yAxisWidth} height={dataRegion.yBottom - dataRegion.yTop}>
           {children && children({ scales, dataRegion, ...props })}
