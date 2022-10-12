@@ -20,7 +20,7 @@ import { HOW_TO_HARVEST_PODS, HOW_TO_SOW_BEANS, HOW_TO_TRANSFER_PODS } from '~/u
 
 import { FC } from '~/types';
 
-const columns: DataGridProps['columns'] = [
+export const podlineColumns: DataGridProps['columns'] = [
   {
     field: 'placeInLine',
     headerName: 'Place In Line',
@@ -104,7 +104,7 @@ const FieldPage: FC<{}> = () => {
           state={authState}
           amount={farmerField.pods}
           rows={rows}
-          columns={columns}
+          columns={podlineColumns}
           sort={{ field: 'placeInLine', sort: 'asc' }}
           token={PODS}
         />

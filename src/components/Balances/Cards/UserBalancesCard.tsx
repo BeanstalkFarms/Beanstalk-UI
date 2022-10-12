@@ -1,5 +1,5 @@
-import { Grid, Stack, Typography } from '@mui/material';
 import React, { useState } from 'react';
+import { Grid, Stack, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import ExpandCircleDownOutlinedIcon from '@mui/icons-material/ExpandCircleDownOutlined';
 import BigNumber from 'bignumber.js';
@@ -13,6 +13,7 @@ import EstimateBalanceInput from '../EstimateBalanceInput';
 import { ZERO_BN } from '~/constants';
 import BalanceStat from '../BalanceStat';
 import { Module, ModuleContent } from '~/components/Common/Module';
+import PodsBalance from '../tooltips/PodsBalance';
 
 const valueOrZeroBN = (value?: BigNumber, returnUndef?: boolean) => {
   const returnVal = returnUndef ? undefined : ZERO_BN;
@@ -54,12 +55,11 @@ const UserBalancesCard: React.FC<{}> = () => {
       ],
     },
     {
-      tooltip: <Typography>PODS</Typography>,
+      tooltip: <PodsBalance />,
       tokens: [
         {
           title: 'Pods',
           token: PODS,
-          tooltip: 'hello',
           amount: valueOrZeroBN(farmerField.pods),
           amountModifier: valueOrZeroBN(farmerField.harvestablePods, true),
           style: {},

@@ -6,6 +6,7 @@ import {
   ClickAwayListener,
 } from '@mui/material';
 import React, { useState } from 'react';
+import { BeanstalkPalette } from '../App/muiTheme';
 
 const Component = React.forwardRef(
   (
@@ -36,6 +37,14 @@ const OnClickTooltip: React.FC<{
         <Tooltip
           PopperProps={{
             disablePortal: true,
+            sx: {
+              // apply arbitrary max width. Width needs to be controlled by title component
+              '& .MuiTooltip-tooltip': {
+                maxWidth: '600px !important',
+                padding: '0px',
+                background: `${BeanstalkPalette.lightYellow} !important`,
+              },
+            },
           }}
           onClose={() => setOpen(false)}
           open={open}
@@ -46,12 +55,12 @@ const OnClickTooltip: React.FC<{
           title={tooltip ?? ''}
         >
           <Component
-            onClick={() => setOpen(!open)}
+            onClick={() => setOpen(true)}
             sx={{
               ...sx,
               ':hover': {
                 transform: !disableAnimate ? 'scale(1.04)' : undefined,
-                transition: !disableAnimate ? 'all .2s ease 0s' : undefined,
+                transition: !disableAnimate ? 'all .3s ease 0s' : undefined,
               },
               cursor: 'pointer',
             }}

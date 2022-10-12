@@ -309,15 +309,6 @@ export const RewardsFormField: React.FC<
     []
   );
 
-  /// Used to grey out text in rewards bar.
-  // Prioritizes selected action over hovered.
-  const action =
-    selectedAction !== undefined
-      ? selectedAction
-      : hoveredAction !== undefined
-      ? hoveredAction
-      : undefined;
-
   // Checks if the current hoverState includes a given ClaimRewardsAction
   const isHovering = (c: ClaimRewardsAction) => {
     if (selectedAction !== undefined) {
