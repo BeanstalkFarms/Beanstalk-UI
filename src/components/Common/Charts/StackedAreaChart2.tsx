@@ -172,7 +172,7 @@ const Graph: FC<GraphProps> = (props) => {
   const keys = Object.keys(series[0][0]).filter((a) =>
     a !== 'season' &&
     a !== 'date' &&
-    a !== 'totalValue'
+    a !== 'value'
   );
   const yAxisWidth = 57;
 
@@ -330,10 +330,7 @@ const Graph: FC<GraphProps> = (props) => {
                 data={data}
                 height={height}
                 x={(d) => scales[0].xScale(getX(d.data)) ?? 0}
-                y0={(d) => {
-                    console.log('DATAPOINT', d);
-                    return scales[0].yScale(0) ?? 0;
-                  }}
+                y0={(d) => scales[0].yScale(0) ?? 0}
                 y1={(d) => scales[0].yScale(getYByAsset(d.data, key as TokenStacks)) ?? 0}
                 >
                 {({ stacks, path }) =>
@@ -408,17 +405,19 @@ const Graph: FC<GraphProps> = (props) => {
               strokeWidth={1}
               pointerEvents="none"
             />
-            <circle
-              cx={tooltipLeftAttached}
-              cy={tooltipTop}
-              r={4}
-              fill="black"
-              fillOpacity={0.1}
-              stroke="black"
-              strokeOpacity={0.1}
-              strokeWidth={2}
-              pointerEvents="none"
-            />
+            {/* {keys.map((key) => ( */}
+            {/*  <circle */}
+            {/*    cx={tooltipLeftAttached} */}
+            {/*    cy={tooltipTop} */}
+            {/*    r={4} */}
+            {/*    fill="black" */}
+            {/*    fillOpacity={0.1} */}
+            {/*    stroke="black" */}
+            {/*    strokeOpacity={0.1} */}
+            {/*    strokeWidth={2} */}
+            {/*    pointerEvents="none" */}
+            {/*  /> */}
+            {/* ))} */}
           </g>
         )}
         {/* Overlay to handle tooltip.
