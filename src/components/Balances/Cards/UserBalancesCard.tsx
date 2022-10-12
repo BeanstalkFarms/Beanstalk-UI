@@ -1,29 +1,53 @@
 import React, { useState } from 'react';
-import { Grid, Stack, Typography } from '@mui/material';
+import { Box, Divider, Grid, Stack, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
-import ExpandCircleDownOutlinedIcon from '@mui/icons-material/ExpandCircleDownOutlined';
 import BigNumber from 'bignumber.js';
-import OnClickTooltip from '~/components/Common/OnClickTooltip';
+import AnimatedPopper from '~/components/Common/AnimatedPopper';
 import Row from '~/components/Common/Row';
-import TokenIcon from '~/components/Common/TokenIcon';
 import { PODS, SEEDS, SPROUTS, STALK } from '~/constants/tokens';
 import { AppState } from '~/state';
-import { displayFullBN } from '~/util';
 import EstimateBalanceInput from '../EstimateBalanceInput';
 import { ZERO_BN } from '~/constants';
 import BalanceStat from '../BalanceStat';
 import { Module, ModuleContent } from '~/components/Common/Module';
 import PodsBalance from '../tooltips/PodsBalance';
 import useAccount from '~/hooks/ledger/useAccount';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const valueOrZeroBN = (value?: BigNumber, returnUndef?: boolean) => {
   const returnVal = returnUndef ? undefined : ZERO_BN;
   return value?.gt(0) ? value : returnVal;
 };
 
+const ResponsiveDivider = () => (
+  <>
+    <Box display={{ xs: 'none', md: 'block' }}>
+      <Divider
+        sx={{
+          color: BeanstalkPalette.lightYellow,
+          height: '45px',
+          alignSelf: 'flex-end',
+          marginBottom: '5px',
+        }}
+        orientation="vertical"
+      />
+    </Box>
+    <Box width="100%" display={{ xs: 'block', md: 'none' }}>
+      <Divider
+        sx={{
+          color: BeanstalkPalette.lightYellow,
+          width: '100%',
+          height: '1px',
+          my: 2,
+        }}
+        orientation="horizontal"
+      />
+    </Box>
+  </>
+);
+
 const UserBalancesCard: React.FC<{}> = () => {
   const account = useAccount();
-  /// State
   const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>(
     (state) => state._farmer.silo
   );
@@ -36,51 +60,44 @@ const UserBalancesCard: React.FC<{}> = () => {
   const [displayAmount, setDisplayAmount] = useState<string>('');
   const [active, setActive] = useState(false);
 
-  const canOpenTooltip = account !== undefined;
+  const canPerformActions = account !== undefined;
 
-  const options = [
+  const stalkAndSeedsOption = {
+    popperEl: <Typography>STALK & SEEDS</Typography>,
+    tokens: [
+      {
+        title: 'Stalk',
+        token: STALK,
+        amount: valueOrZeroBN(farmerSilo.stalk.total),
+        amountModifier: undefined,
+      },
+      {
+        title: 'Seeds',
+        token: SEEDS,
+        amount: valueOrZeroBN(farmerSilo.seeds.total),
+        amountModifier: undefined,
+      },
+    ],
+  };
+
+  const podsAndSproutsOptions = [
     {
-      tooltip: <Typography>STALK & SEEDS</Typography>,
-      tokens: [
-        {
-          title: 'Stalk',
-          token: STALK,
-          amount: valueOrZeroBN(farmerSilo.stalk.total),
-          amountModifier: undefined,
-          style: { marginLeft: '-5px' },
-        },
-        {
-          title: 'Seeds',
-          token: SEEDS,
-          amount: valueOrZeroBN(farmerSilo.seeds.total),
-          amountModifier: undefined,
-          style: {},
-        },
-      ],
+      popperEl: <PodsBalance />,
+      token: {
+        title: 'Pods',
+        token: PODS,
+        amount: valueOrZeroBN(farmerField.pods),
+        amountModifier: valueOrZeroBN(farmerField.harvestablePods, true),
+      },
     },
     {
-      tooltip: <PodsBalance />,
-      tokens: [
-        {
-          title: 'Pods',
-          token: PODS,
-          amount: valueOrZeroBN(farmerField.pods),
-          amountModifier: valueOrZeroBN(farmerField.harvestablePods, true),
-          style: {},
-        },
-      ],
-    },
-    {
-      tooltip: <Typography>SPROUTS</Typography>,
-      tokens: [
-        {
-          title: 'Sprouts',
-          token: SPROUTS,
-          amount: valueOrZeroBN(farmerBarn.unfertilizedSprouts),
-          amountModifier: valueOrZeroBN(farmerBarn.fertilizedSprouts, true),
-          style: {},
-        },
-      ],
+      popperEl: <Typography>SPROUTS</Typography>,
+      token: {
+        title: 'Sprouts',
+        token: SPROUTS,
+        amount: valueOrZeroBN(farmerBarn.unfertilizedSprouts),
+        amountModifier: valueOrZeroBN(farmerBarn.fertilizedSprouts, true),
+      },
     },
   ];
 
@@ -100,73 +117,63 @@ const UserBalancesCard: React.FC<{}> = () => {
             <Typography variant="h4" sx={{ pb: 0.5 }}>
               Beanstalk Balances
             </Typography>
-            <Grid container spacing={2} width="100%">
-              {options.map((group, i) => (
-                <Grid
-                  item
-                  xs={group.tokens.length * 6}
-                  md={group.tokens.length * 3}
-                  width="100%"
-                  key={`bStat-${i}`}
-                >
-                  <OnClickTooltip
-                    tooltip={group.tooltip}
-                    openCondition={canOpenTooltip}
-                  >
-                    <Grid container width="100%" spacing={2}>
-                      {group.tokens.map((item, k) => (
-                        <Grid
-                          item
-                          xs={6}
-                          key={`tokenstat-${k}`}
-                          sx={{ maxWidth: '100% !important' }}
-                        >
-                          <BalanceStat
-                            variant="h4"
-                            gap={0.5}
-                            title={
-                              <Row gap={0.2}>
-                                <TokenIcon
-                                  token={item.token}
-                                  css={{ height: '20px', ...item.style }}
-                                />
-                                <Typography>{item.title}</Typography>
-                                <ExpandCircleDownOutlinedIcon
-                                  fontSize="inherit"
-                                  color="primary"
-                                />
-                              </Row>
-                            }
-                            amount={
-                              <>
-                                {displayFullBN(
-                                  item.amount ?? ZERO_BN,
-                                  item.token?.displayDecimals ?? 2
-                                )}
-                                {item.amountModifier && (
-                                  <Typography
-                                    color="primary"
-                                    variant="h4"
-                                    sx={{ whiteSpace: 'nowrap' }}
-                                  >
-                                    +{' '}
-                                    {displayFullBN(
-                                      item.amountModifier,
-                                      item.token?.displayDecimals ?? 2
-                                    )}
-                                  </Typography>
-                                )}
-                              </>
-                            }
-                            estimates={getEstimates()}
-                          />
-                        </Grid>
-                      ))}
-                    </Grid>
-                  </OnClickTooltip>
+            <Stack>
+              {/* stalk and seeds */}
+              <Grid container>
+                <>
+                  <Grid item xs={12} md={5.5}>
+                    <AnimatedPopper
+                      id="stalkAndSeeds"
+                      popperEl={stalkAndSeedsOption.popperEl}
+                      openCondition={canPerformActions}
+                    >
+                      <Grid container>
+                        {stalkAndSeedsOption.tokens.map((item) => (
+                          <Grid
+                            item
+                            xs={6}
+                            key={item.title}
+                            width="100%"
+                            sx={{ maxWidth: '100% !important' }}
+                          >
+                            <BalanceStat {...item} estimates={getEstimates()} />
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </AnimatedPopper>
+                  </Grid>
+                  <ResponsiveDivider />
+                </>
+                {/* width of 6.4 to take into account width of divider */}
+                {/* pods and sprouts */}
+                <Grid item xs={12} md={6.4}>
+                  <Grid container spacing={2}>
+                    {podsAndSproutsOptions.map((opt, k) => (
+                      <Grid
+                        item
+                        xs={6}
+                        key={k}
+                        sx={{ maxWidth: '100% !important' }}
+                      >
+                        <Stack alignItems={{ xs: 'flex-start', md: 'center' }}>
+                          <AnimatedPopper
+                            id={`${opt.token.title}-popper`}
+                            popperEl={opt.popperEl}
+                            openCondition={canPerformActions}
+                          >
+                            <BalanceStat
+                              {...opt.token}
+                              estimates={getEstimates()}
+                              alignItems={{ xs: 'flex-start', md: 'center' }}
+                            />
+                          </AnimatedPopper>
+                        </Stack>
+                      </Grid>
+                    ))}
+                  </Grid>
                 </Grid>
-              ))}
-            </Grid>
+              </Grid>
+            </Stack>
           </Stack>
           <Stack
             display={{ xs: 'none', lg: 'flex' }}

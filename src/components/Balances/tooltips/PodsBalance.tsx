@@ -49,7 +49,12 @@ const PodsBalance: React.FC<{}> = () => {
   }, [beanstalkField.harvestableIndex, farmerField.plots, harvestablePods]);
 
   return (
-    <Stack spacing={1} pt={2} px={2}>
+    <Stack
+      spacing={1}
+      py={2}
+      px={2}
+      sx={{ backgroundColor: BeanstalkPalette.lightYellow }}
+    >
       <Stack>
         <Typography variant="bodySmall">
           <TokenIcon token={PODS} /> PODS
