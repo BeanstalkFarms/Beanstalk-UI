@@ -2,8 +2,10 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 
-import browserUsage, { BrowserUsage } from '@visx/mock-data/lib/mocks/browserUsage';
-import { DataPoint  } from '~/components/Common/Charts/LineChart';
+import browserUsage, {
+  BrowserUsage,
+} from '@visx/mock-data/lib/mocks/browserUsage';
+import { DataPoint } from '~/components/Common/Charts/LineChart';
 import TimeTabs, { TimeTabState } from '~/components/Common/Charts/TimeTabs';
 import WalletButton from '~/components/Common/Connection/WalletButton';
 import Row from '~/components/Common/Row';
@@ -11,10 +13,17 @@ import TokenIcon from '~/components/Common/TokenIcon';
 import BlurComponent from '~/components/Common/ZeroState/BlurComponent';
 import MockPlot from '~/components/Silo/MockPlot';
 import { SEEDS, STALK } from '~/constants/tokens';
-import { SeasonAggregation, SeasonRange, SEASON_RANGE_TO_COUNT } from '~/hooks/beanstalk/useSeasonsQuery';
+import {
+  SeasonAggregation,
+  SeasonRange,
+  SEASON_RANGE_TO_COUNT,
+} from '~/hooks/beanstalk/useSeasonsQuery';
 
 import { FC } from '~/types';
-import StackedAreaChart, { DataPoint2 } from '~/components/Common/Charts/StackedAreaChart';
+
+import StackedAreaChart2, {
+  DataPoint2,
+} from '../Common/Charts/StackedAreaChart2';
 
 type BrowserNames = keyof BrowserUsage;
 const data2 = browserUsage;
@@ -55,26 +64,24 @@ const BalancesOverTime: FC<BalancesOverTimeProps> = ({
     [current, season]
   );
 
-  const [tabState, setTimeTab] = useState<TimeTabState>([SeasonAggregation.HOUR, SeasonRange.WEEK]);
-  const handleChangeTimeTab = useCallback(
-    (tabs: TimeTabState) => {
-      setTimeTab(tabs);
-    },
-    []
-  );
+  const [tabState, setTimeTab] = useState<TimeTabState>([
+    SeasonAggregation.HOUR,
+    SeasonRange.WEEK,
+  ]);
+  const handleChangeTimeTab = useCallback((tabs: TimeTabState) => {
+    setTimeTab(tabs);
+  }, []);
 
   const filteredSeries = useMemo(() => {
     if (tabState[1] !== SeasonRange.ALL) {
-      return series.map((s) => s.slice(-(SEASON_RANGE_TO_COUNT[tabState[1]] as number)));
+      return series.map((s) =>
+        s.slice(-(SEASON_RANGE_TO_COUNT[tabState[1]] as number))
+      );
     }
     return series;
   }, [series, tabState]);
 
-  const ready = (
-    account
-    && !loading
-    && !empty
-  );
+  const ready = account && !loading && !empty;
 
   return (
     <>
@@ -97,7 +104,7 @@ const BalancesOverTime: FC<BalancesOverTimeProps> = ({
       </Row>
       <Box sx={{ width: '100%', height: '220px', position: 'relative' }}>
         {ready ? (
-          <StackedAreaChart
+          <StackedAreaChart2
             series={filteredSeries}
             onCursor={handleCursor as any}
           />
@@ -105,17 +112,36 @@ const BalancesOverTime: FC<BalancesOverTimeProps> = ({
           <>
             <MockPlot />
             <BlurComponent>
-              <Stack justifyContent="center" alignItems="center" height="100%" gap={1}>
+              <Stack
+                justifyContent="center"
+                alignItems="center"
+                height="100%"
+                gap={1}
+              >
                 {!account ? (
                   <>
-                    <Typography variant="body1" color="gray">Your {label} will appear here.</Typography>
-                    <WalletButton showFullText color="primary" sx={{ height: 45 }} />
+                    <Typography variant="body1" color="gray">
+                      Your {label} will appear here.
+                    </Typography>
+                    <WalletButton
+                      showFullText
+                      color="primary"
+                      sx={{ height: 45 }}
+                    />
                   </>
                 ) : loading ? (
-                  <CircularProgress variant="indeterminate" thickness={4} color="primary" />
+                  <CircularProgress
+                    variant="indeterminate"
+                    thickness={4}
+                    color="primary"
+                  />
                 ) : empty ? (
                   <Typography variant="body1" color="gray">
-                    Receive <TokenIcon token={STALK} />Stalk and <TokenIcon token={SEEDS} />Seeds for Depositing whitelisted assets in the Silo. Stalkholders earn a portion of new Bean mints. Seeds grow into Stalk every Season.
+                    Receive <TokenIcon token={STALK} />
+                    Stalk and <TokenIcon token={SEEDS} />
+                    Seeds for Depositing whitelisted assets in the Silo.
+                    Stalkholders earn a portion of new Bean mints. Seeds grow
+                    into Stalk every Season.
                   </Typography>
                 ) : null}
               </Stack>

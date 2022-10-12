@@ -5,9 +5,6 @@ import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdow
 import { PODS, SEEDS, STALK, SPROUTS } from '~/constants/tokens';
 import { AppState } from '~/state';
 import { StatItem } from '~/components/Common/StatsCard';
-import PageHeader from '~/components/Common/PageHeader';
-import GuideButton from '~/components/Common/Guide/GuideButton';
-import { HOW_TO_UNDERSTAND_BALANCES } from '~/util';
 import UserBalancesCard from '~/components/Balances/Cards/UserBalancesCard';
 import { XXLWidth } from '~/components/App/muiTheme';
 import UserBalancesCharts from '~/components/Balances/UserBalancesCharts';
@@ -73,25 +70,14 @@ const BalancesPage: FC<{}> = () => {
   return (
     <Container sx={{ maxWidth: `${XXLWidth}px !important`, width: '100%' }}>
       <Stack gap={2}>
-        <PageHeader
-          title="Balances"
-          description="View your Beanstalk assets"
-          href="https://docs.bean.money/protocol-resources/asset-states"
-          control={
-            <GuideButton
-              title="The Farmers' Almanac: Balances Guides"
-              guides={[HOW_TO_UNDERSTAND_BALANCES]}
-            />
-          }
-        />
         <Card sx={{ p: 2 }}>
           <UserBalancesCard />
         </Card>
         <Grid container direction="row" spacing={2}>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={8.4}>
             <UserBalancesCharts />
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={3.6}>
             <RewardsModule />
           </Grid>
         </Grid>

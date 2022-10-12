@@ -1,10 +1,9 @@
 import {
-  Box,
-  ClickAwayListener,
   Stack,
   SxProps,
   Theme,
   Tooltip,
+  ClickAwayListener,
 } from '@mui/material';
 import React, { useState } from 'react';
 
@@ -24,15 +23,15 @@ const Component = React.forwardRef(
 );
 
 const OnClickTooltip: React.FC<{
-  children: React.ReactNode;
   tooltip?: JSX.Element | string;
+  children: JSX.Element | string;
   disableAnimate?: boolean;
   sx?: React.CSSProperties | SxProps<Theme>;
 }> = ({ children, tooltip, disableAnimate = false, sx }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <Box>
+    <>
       <ClickAwayListener onClickAway={() => setOpen(false)}>
         <Tooltip
           PopperProps={{
@@ -40,11 +39,11 @@ const OnClickTooltip: React.FC<{
           }}
           onClose={() => setOpen(false)}
           open={open}
+          placement="bottom"
           disableFocusListener
           disableHoverListener
           disableTouchListener
-          title={tooltip ?? <div> hello </div>}
-          placement="bottom"
+          title={tooltip ?? <div style={{ zIndex: 999 }}> hello </div>}
         >
           <Component
             onClick={() => setOpen(!open)}
@@ -61,7 +60,7 @@ const OnClickTooltip: React.FC<{
           </Component>
         </Tooltip>
       </ClickAwayListener>
-    </Box>
+    </>
   );
 };
 

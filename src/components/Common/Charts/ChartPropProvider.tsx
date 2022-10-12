@@ -315,16 +315,19 @@ const getYMin = (d: BaseDataPoint) =>
 type YDomainCache = { cum: number; lowest: number };
 const getStackedAreaYDomainMin = (data: BaseDataPoint[], keys: string[]) => {
   const start = { cum: 0, lowest: Infinity };
-  const map = new Map<string, YDomainCache>(keys.map((key) => [key, start] as [string, YDomainCache]));
+  const map = new Map<string, YDomainCache>(
+    keys.map((key) => [key, start] as [string, YDomainCache])
+  );
   data.forEach((d) => {
     keys.forEach((k) => {
       if (k in d) {
-        const curr = (k in d) ? d[k] : 0;
+        const curr = k in d ? d[k] : 0;
         const stored = map.get(k);
         if (stored) {
-          map.set(k, { 
-            cum: stored.cum + curr, 
-            lowest: curr !== 0 ? Math.min(stored.lowest, curr) : stored.lowest });
+          map.set(k, {
+            cum: stored.cum + curr,
+            lowest: curr !== 0 ? Math.min(stored.lowest, curr) : stored.lowest,
+          });
         }
       }
     });
@@ -334,7 +337,7 @@ const getStackedAreaYDomainMin = (data: BaseDataPoint[], keys: string[]) => {
     if (!cache.cum) {
       cache = { cum, lowest };
     } else if (cum > cache.cum) {
-        cache = { cum, lowest };
+      cache = { cum, lowest };
     }
   });
   return !Number.isFinite(cache.lowest) ? 0 : cache.lowest;
@@ -361,7 +364,7 @@ const generateScale = (
   width: number,
   keys: string[],
   stackedArea?: boolean,
-  isTWAP?: boolean,
+  isTWAP?: boolean
 ) =>
   seriesData.map((data) => {
     // generate yScale
@@ -388,12 +391,14 @@ const generateScale = (
         domain: [1 - biggestDifference, 1 + biggestDifference],
       });
     } else {
-      const y1Min = stackedArea ? getStackedAreaYDomainMin(data, keys) : min(data, getY) as number;
+      const y1Min = stackedArea
+        ? getStackedAreaYDomainMin(data, keys)
+        : (min(data, getY) as number);
       const multiple = stackedArea ? [0.95, 1.05] : [1, 1];
       yScale = scaleLinear<number>({
         clamp: !!stackedArea,
         domain: [
-          multiple[0] * y1Min as number,
+          (multiple[0] * y1Min) as number,
           multiple[1] * (max(data, getYMax) as number),
         ],
       });

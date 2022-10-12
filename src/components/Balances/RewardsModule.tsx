@@ -1,8 +1,12 @@
 import { Typography } from '@mui/material';
 import React from 'react';
-import { Module, ModuleContent, ModuleHeader } from '~/components/Common/Module';
+import {
+  Module,
+  ModuleContent,
+  ModuleHeader,
+} from '~/components/Common/Module';
 
-const RewardsModule : React.FC<{}> = ({
+const RewardsModule: React.FC<{ children?: React.ReactNode }> = ({
   children,
   ...props
 }) => (

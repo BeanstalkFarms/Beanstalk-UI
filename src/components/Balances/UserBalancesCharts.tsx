@@ -1,7 +1,11 @@
 import { Typography } from '@mui/material';
 import React, { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
-import { Module, ModuleContent, ModuleHeader } from '~/components/Common/Module';
+import {
+  Module,
+  ModuleContent,
+  ModuleHeader,
+} from '~/components/Common/Module';
 import BalancesOverTime from '~/components/Balances/BalancesOverTime';
 import useAccount from '~/hooks/ledger/useAccount';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
@@ -14,14 +18,15 @@ import { DataPoint2 } from '~/components/Common/Charts/StackedAreaChart2';
 const depositStats = (s: BigNumber, v: BigNumber[]) => (
   <Stat
     title="Value Deposited"
-    titleTooltip={(
+    titleTooltip={
       <>
         Shows the historical value of your Silo Deposits. <br />
         <Typography variant="bodySmall">
-          Note: Unripe assets are valued based on the current Chop Rate. Earned Beans are shown upon Plant.
+          Note: Unripe assets are valued based on the current Chop Rate. Earned
+          Beans are shown upon Plant.
         </Typography>
       </>
-    )}
+    }
     subtitle={`Season ${s.toString()}`}
     amount={displayUSD(v[0])}
     color="primary"
@@ -31,13 +36,13 @@ const depositStats = (s: BigNumber, v: BigNumber[]) => (
   />
 );
 
-const UserBalancesCharts : React.FC<{}> = () => {
+const UserBalancesCharts: React.FC<{}> = () => {
   //
   const account = useAccount();
   const { data, loading } = useFarmerBalancesOverview(account);
-  const breakdown     = useFarmerBalancesBreakdown();
-  const season        = useSeason();
-  
+  const breakdown = useFarmerBalancesBreakdown();
+  const season = useSeason();
+
   return (
     <Module>
       <ModuleHeader>
@@ -47,12 +52,13 @@ const UserBalancesCharts : React.FC<{}> = () => {
         <BalancesOverTime
           label="Silo Deposits"
           account={account}
-          current={useMemo(() => ([
-            breakdown.states.deposited.value
-          ]), [breakdown.states.deposited.value])}
-          series={useMemo(() => ([
-            data.deposits
-          ]), [data.deposits]) as DataPoint2[][]}
+          current={useMemo(
+            () => [breakdown.states.deposited.value],
+            [breakdown.states.deposited.value]
+          )}
+          series={
+            useMemo(() => [data.deposits], [data.deposits]) as DataPoint2[][]
+          }
           season={season}
           stats={depositStats}
           loading={loading}

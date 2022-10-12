@@ -1,28 +1,111 @@
-import { Card, Stack, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
+import {
+  Card,
+  InputAdornment,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import ChangeHistoryOutlinedIcon from '@mui/icons-material/ChangeHistoryOutlined';
+import BigNumber from 'bignumber.js';
+import { useSelector } from 'react-redux';
 import { BeanstalkPalette } from '../App/muiTheme';
+import { AppState } from '~/state';
+import { displayFullBN } from '~/util';
+import { NEW_BN } from '~/constants';
 
-const BalanceCalculator: React.FC<{}> = () => (
-  <Card
-    sx={{
-      px: 2,
-      py: 1.5,
-      background: BeanstalkPalette.lightYellow,
-      border: 'none',
-      maxWidth: '440px',
-    }}
-  >
-    <Stack spacing={1} alignItems="center">
-      <ChangeHistoryOutlinedIcon
-        color="primary"
-        sx={{ width: '20px', height: '20px' }}
-      />
-      <Typography textAlign="center" color="primary">
-        How might my balances change if Beanstalk grows next season?
-      </Typography>
-    </Stack>
-  </Card>
-);
+const textFieldSx = {
+  background: 'white',
+  fontSize: '1rem !important',
+  '& .MuiInputBase-root': {
+    maxHeight: '40px',
+    fontSize: '1rem',
+  },
+};
 
+const BalanceCalculator: React.FC<{
+  amount: string;
+  setAmount: React.Dispatch<React.SetStateAction<string>>;
+  active: boolean;
+  setActive: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ active, amount, setActive, setAmount }) => {
+  const totalBeanSupply: BigNumber = useSelector<
+    AppState,
+    AppState['_bean']['token']['supply']
+  >((state) => state._bean.token.supply);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const newValue = e.target.value ? new BigNumber(e.target.value) : null;
+    setAmount(newValue ? newValue.toString() : '');
+  };
+
+  useEffect(() => {
+    if (!active && amount) {
+      setAmount('');
+    }
+  }, [active, amount, setAmount]);
+
+  return (
+    <Card
+      sx={{
+        px: 2,
+        py: 1.5,
+        background: BeanstalkPalette.lightYellow,
+        border: 'none',
+        maxWidth: '360px',
+        width: '100%',
+      }}
+    >
+      <Stack spacing={1} alignItems="center">
+        <ChangeHistoryOutlinedIcon
+          color="primary"
+          sx={{
+            width: '20px',
+            height: '20px',
+            transform: `rotate(${active ? '180deg' : 0})`,
+            cursor: 'pointer',
+          }}
+          onClick={() => setActive(!active)}
+        />
+        {!active ? (
+          <Typography textAlign="center" color="primary">
+            How might my balances change if Beanstalk grows next season?
+          </Typography>
+        ) : (
+          <Stack spacing={1}>
+            <Typography textAlign="center">If Beanstalk minted</Typography>
+            <TextField
+              type="text"
+              value={amount}
+              onChange={handleChange}
+              placeholder="0"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Typography fontWeight={450} color="black">
+                      Beans
+                    </Typography>
+                  </InputAdornment>
+                ),
+              }}
+              sx={textFieldSx}
+            />
+            <Typography textAlign="center" sx={{ whiteSpace: 'nowrap' }}>
+              next Season, a total Supply of{' '}
+              <strong>
+                {`${
+                  totalBeanSupply !== NEW_BN
+                    ? displayFullBN(totalBeanSupply, 2)
+                    : '0'
+                }`}
+              </strong>
+            </Typography>
+          </Stack>
+        )}
+      </Stack>
+    </Card>
+  );
+};
 export default BalanceCalculator;
