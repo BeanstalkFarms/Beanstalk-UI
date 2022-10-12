@@ -226,7 +226,7 @@ export const interpolateFarmerAssetBalances = (
         if (tokenAddr) {
           siloTokenBalances[tokenAddr] = siloTokenBalances[tokenAddr]?.plus(
             toTokenUnitsBN(snapshots[j].hourlyDepositedBDV, BEAN[1].decimals)
-              .multipliedBy(new BigNumber(thisPrice.price)).toNumber()
+              .multipliedBy(new BigNumber(thisPrice.price))
           );
         }
       }
@@ -236,10 +236,10 @@ export const interpolateFarmerAssetBalances = (
     points.push({
       season: s,
       date:   thisTimestamp.toJSDate(),
-      bean: siloTokenBalances[BEAN[1].address],
-      urBean: siloTokenBalances[UNRIPE_BEAN[1].address],
-      bean3crv: siloTokenBalances[BEAN_CRV3_LP[1].address],
-      urBean3crv: siloTokenBalances[UNRIPE_BEAN_CRV3[1].address],
+      bean: siloTokenBalances[BEAN[1].address].toNumber(),
+      urBean: siloTokenBalances[UNRIPE_BEAN[1].address].toNumber(),
+      bean3crv: siloTokenBalances[BEAN_CRV3_LP[1].address].toNumber(),
+      urBean3crv: siloTokenBalances[UNRIPE_BEAN_CRV3[1].address].toNumber(),
     });
 
     // currBDV = thisBDV;

@@ -3,9 +3,10 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useFarmerSiloAssetSnapshotsQuery, useSeasonalPriceQuery } from '~/generated/graphql';
 import { AppState } from '~/state';
-import { interpolateFarmerDepositedValue, Snapshot } from '~/util/Interpolate';
+import { interpolateFarmerAssetBalances, Snapshot } from '~/util/Interpolate';
 
-const useInterpolateDeposits = (
+// TODO: Duplicate code useInterpolateDeposits
+const useInterpolateDepositsByAssetType = (
   siloAssetsQuery: ReturnType<typeof useFarmerSiloAssetSnapshotsQuery>,
   priceQuery: ReturnType<typeof useSeasonalPriceQuery>,
 ) => {
@@ -40,13 +41,8 @@ const useInterpolateDeposits = (
       return prev;
     }, [] as Snapshot[]).sort((a, b) => a.season - b.season);
 
-    return interpolateFarmerDepositedValue(snapshots, priceQuery.data.seasons);
-  }, [
-    unripe,
-    priceQuery.loading,
-    priceQuery.data,
-    siloAssetsQuery.data,
-  ]);
+    return interpolateFarmerAssetBalances(snapshots, priceQuery.data.seasons);
+  }, [unripe, priceQuery.loading, priceQuery.data, siloAssetsQuery.data]);
 };
 
-export default useInterpolateDeposits;
+export default useInterpolateDepositsByAssetType;

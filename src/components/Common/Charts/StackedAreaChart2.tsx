@@ -34,8 +34,8 @@ export type DataRegion = {
 }
 
 export type LineChartProps = {
-  series: (DataPoint[])[];
-  onCursor: (ds?: DataPoint[]) => void;
+  series: (DataPoint2[])[];
+  onCursor: (ds?: DataPoint2[]) => void;
   curve?: CurveFactory | (keyof typeof CURVES);
   isTWAP?: boolean;
   children?: (props: GraphProps & {
@@ -68,16 +68,19 @@ const strokes = [
 //           Data
 // ------------------------
 
-export type DataPoint = {
+export type DataPoint2 = {
   season: number;
-  value:  number;
-  date:  Date;
-};
+  date: Date;
+  bean: number;
+  urBean: number;
+  bean3crv: number;
+  urBean3crv: number;
+}
 
 // data accessors
-const getX = (d: DataPoint) => d?.season;
-const getY = (d: DataPoint) => d?.value;
-const bisectSeason = bisector<DataPoint, number>(
+const getX = (d: DataPoint2) => d?.season;
+const getY = (d: DataPoint2) => d?.bean;
+const bisectSeason = bisector<DataPoint2, number>(
   (d) => d.season
 ).left;
 
@@ -146,7 +149,7 @@ const Graph: FC<GraphProps> = (props) => {
     tooltipData,
     tooltipTop = 0,
     tooltipLeft = 0,
-  } = useTooltip<DataPoint[] | undefined>();
+  } = useTooltip<DataPoint2[] | undefined>();
 
   /**
    * Build scales.
@@ -289,7 +292,7 @@ const Graph: FC<GraphProps> = (props) => {
         <Group width={width - yAxisWidth} height={dataRegion.yBottom - dataRegion.yTop}>
           <LinearGradient from={BeanstalkPalette.theme.fall.lightBrown} to={BeanstalkPalette.theme.fall.lightBrown} id="stacked-area-brown" />
           <rect x={0} y={0} width={width} height={height} fill="transparent" rx={14} />
-          <AreaStack<DataPoint>
+          <AreaStack<DataPoint2>
             top={margin.top}
             left={margin.left}
             keys={keys}
@@ -316,7 +319,7 @@ const Graph: FC<GraphProps> = (props) => {
         <Group width={width - yAxisWidth} height={dataRegion.yBottom - dataRegion.yTop}>
           {children && children({ scales, dataRegion, ...props })}
           {series.map((_data, index) => (
-            <LinePath<DataPoint>
+            <LinePath<DataPoint2>
               key={index}
               curve={curveLinear}
               data={_data}
@@ -398,7 +401,7 @@ const Graph: FC<GraphProps> = (props) => {
   );
 };
 
-const StackedAreaChart: FC<LineChartProps> = (props) => (
+const StackedAreaChart2: FC<LineChartProps> = (props) => (
   <ParentSize debounceTime={50}>
     {({ width: visWidth, height: visHeight }) => (
       <Graph
@@ -412,4 +415,4 @@ const StackedAreaChart: FC<LineChartProps> = (props) => (
   </ParentSize>
 );
 
-export default StackedAreaChart;
+export default StackedAreaChart2;

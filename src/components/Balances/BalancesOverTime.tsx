@@ -14,7 +14,7 @@ import { SEEDS, STALK } from '~/constants/tokens';
 import { SeasonAggregation, SeasonRange, SEASON_RANGE_TO_COUNT } from '~/hooks/beanstalk/useSeasonsQuery';
 
 import { FC } from '~/types';
-import StackedAreaChart from '~/components/Common/Charts/StackedAreaChart';
+import StackedAreaChart, { DataPoint2 } from '~/components/Common/Charts/StackedAreaChart';
 
 type BrowserNames = keyof BrowserUsage;
 const data2 = browserUsage;
@@ -24,7 +24,7 @@ export type BalancesOverTimeProps = {
   account: string | undefined;
   season: BigNumber;
   current: BigNumber[];
-  series: DataPoint[][];
+  series: DataPoint2[][];
   stats: (season: BigNumber, value: BigNumber[]) => React.ReactElement;
   empty: boolean;
   loading: boolean;
@@ -75,8 +75,6 @@ const BalancesOverTime: FC<BalancesOverTimeProps> = ({
     && !loading
     && !empty
   );
-
-  console.log('FILTERED', filteredSeries);
 
   return (
     <>

@@ -1,23 +1,21 @@
 import { SeasonalPriceDocument, useFarmerSiloAssetSnapshotsQuery, useFarmerSiloRewardsQuery } from '~/generated/graphql';
 import useSeasonsQuery, { SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
-import useInterpolateDeposits from '~/hooks/farmer/useInterpolateDeposits';
-import useInterpolateStalk from '~/hooks/farmer/useInterpolateStalk';
+import useInterpolateDepositsByAssetType from '~/hooks/farmer/useInterpolateDepositsByAssetType';
 
-const useFarmerSiloOverview = (account: string | undefined) => {
+// TODO: Duplicate code useFarmerSiloOverview
+// Why? here, depositData is type DataPoint2[][]
+// and in useFarmerSiloOverview depositData is
+// type DataPoint[][]
+const useFarmerBalancesOverview = (account: string | undefined) => {
   const siloRewardsQuery = useFarmerSiloRewardsQuery({ variables: { account: account || '' }, skip: !account, fetchPolicy: 'cache-and-network' });
   const siloAssetsQuery = useFarmerSiloAssetSnapshotsQuery({ variables: { account: account || '' }, skip: !account, fetchPolicy: 'cache-and-network' });
   const priceQuery = useSeasonsQuery(SeasonalPriceDocument, SeasonRange.ALL);
 
-  const [stalkData, seedsData] = useInterpolateStalk(siloRewardsQuery);
-
-  // passing byAssetTypes turns this into a DataPoint2[][]
-  const depositData = useInterpolateDeposits(siloAssetsQuery, priceQuery);
+  const depositData = useInterpolateDepositsByAssetType(siloAssetsQuery, priceQuery);
 
   return {
     data: {
       deposits: depositData,
-      stalk: stalkData,
-      seeds: seedsData,
     },
     loading: (
       siloRewardsQuery.loading
@@ -28,4 +26,4 @@ const useFarmerSiloOverview = (account: string | undefined) => {
   };
 };
 
-export default useFarmerSiloOverview;
+export default useFarmerBalancesOverview;

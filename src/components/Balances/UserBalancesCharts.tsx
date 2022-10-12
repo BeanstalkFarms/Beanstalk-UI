@@ -4,11 +4,12 @@ import BigNumber from 'bignumber.js';
 import { Module, ModuleContent, ModuleHeader } from '~/components/Common/Module';
 import BalancesOverTime from '~/components/Balances/BalancesOverTime';
 import useAccount from '~/hooks/ledger/useAccount';
-import useFarmerSiloOverview from '~/hooks/farmer/useFarmerSiloOverview';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import useSeason from '~/hooks/beanstalk/useSeason';
 import Stat from '~/components/Common/Stat';
 import { displayUSD } from '~/util';
+import useFarmerBalancesOverview from '~/hooks/farmer/useFarmerBalancesOverview';
+import { DataPoint2 } from '~/components/Common/Charts/StackedAreaChart2';
 
 const depositStats = (s: BigNumber, v: BigNumber[]) => (
   <Stat
@@ -33,7 +34,7 @@ const depositStats = (s: BigNumber, v: BigNumber[]) => (
 const UserBalancesCharts : React.FC<{}> = () => {
   //
   const account = useAccount();
-  const { data, loading } = useFarmerSiloOverview(account);
+  const { data, loading } = useFarmerBalancesOverview(account);
   const breakdown     = useFarmerBalancesBreakdown();
   const season        = useSeason();
   
@@ -51,7 +52,7 @@ const UserBalancesCharts : React.FC<{}> = () => {
           ]), [breakdown.states.deposited.value])}
           series={useMemo(() => ([
             data.deposits
-          ]), [data.deposits])}
+          ]), [data.deposits]) as DataPoint2[][]}
           season={season}
           stats={depositStats}
           loading={loading}
