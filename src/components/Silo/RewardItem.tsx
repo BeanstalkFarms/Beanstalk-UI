@@ -10,14 +10,16 @@ import { FC } from '~/types';
 export type RewardItemProps = {
   title: string;
   amount: BigNumber;
-  tooltip: string;
+  tooltip?: string;
   icon?: string;
   /** If isClaimable === false, grey out the RewardItem. */
   isClaimable?: boolean;
   /** */
   // eslint-disable-next-line
   compact?: boolean;
-}
+  titleBelow?: boolean;
+  titleColor?: string;
+};
 
 const RewardItem: FC<RewardItemProps> = ({
   amount,
@@ -25,16 +27,10 @@ const RewardItem: FC<RewardItemProps> = ({
   title,
   icon,
   isClaimable,
-}) => (
-  <Box sx={{ flex: { lg: 'auto', xs: 1 }, opacity: isClaimable === false ? 0.2 : 1 }}>
-    <Tooltip title={tooltip} placement="top">
-      <Typography>
-        {title}
-        <HelpOutlineIcon
-          sx={{ display: 'inline', mb: 0.5, fontSize: '11px' }}
-        />
-      </Typography>
-    </Tooltip>
+  titleBelow = false,
+  titleColor,
+}) => {
+  const Amount = () => (
     <Row gap={0.4}>
       {icon && <img src={icon} alt="" height="16px" />}
       {amount && (
@@ -43,7 +39,32 @@ const RewardItem: FC<RewardItemProps> = ({
         </Typography>
       )}
     </Row>
-  </Box>
-);
+  );
 
+  const Title = () => (
+    <Tooltip title={tooltip ?? ''} placement="top">
+      <Typography sx={{ color: titleColor }}>
+        {title}
+        {tooltip && (
+          <HelpOutlineIcon
+            sx={{ display: 'inline', mb: 0.5, fontSize: '11px' }}
+          />
+        )}
+      </Typography>
+    </Tooltip>
+  );
+
+  return (
+    <Box
+      sx={{
+        flex: { lg: 'auto', xs: 1 },
+        opacity: isClaimable === false ? 0.2 : 1,
+      }}
+    >
+      {!titleBelow && <Title />}
+      <Amount />
+      {titleBelow && <Title />}
+    </Box>
+  );
+};
 export default RewardItem;

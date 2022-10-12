@@ -41,15 +41,6 @@ const BalanceCalculator: React.FC<{
     setAmount(newValue ? newValue.toString() : '');
   };
 
-  const handleSetActive = () => {
-    if (active) {
-      setAmount('');
-      setActive(false);
-    } else {
-      setActive(true);
-    }
-  };
-
   return (
     <Card
       sx={{
