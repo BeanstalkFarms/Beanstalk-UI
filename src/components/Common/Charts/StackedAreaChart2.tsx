@@ -33,7 +33,7 @@ export type DataRegion = {
   yBottom: number;
 }
 
-export type LineChartProps = {
+export type StackedAreaProps = {
   series: (DataPoint2[])[];
   onCursor: (ds?: DataPoint2[]) => void;
   curve?: CurveFactory | (keyof typeof CURVES);
@@ -47,7 +47,7 @@ export type LineChartProps = {
 type GraphProps = {
   width: number;
   height: number;
-} & LineChartProps;
+} & StackedAreaProps;
 
 const strokes = [
   {
@@ -75,11 +75,12 @@ export type DataPoint2 = {
   urBean: number;
   bean3crv: number;
   urBean3crv: number;
+  totalValue: number;
 }
 
 // data accessors
 const getX = (d: DataPoint2) => d?.season;
-const getY = (d: DataPoint2) => d?.bean;
+const getY = (d: DataPoint2) => d?.totalValue;
 const bisectSeason = bisector<DataPoint2, number>(
   (d) => d.season
 ).left;
@@ -94,9 +95,7 @@ const margin = {
   left: 0,
   right: 0,
 };
-
 const axisHeight = 21;
-
 // How much padding to add to edges so that the stroke doesn't get
 // partially cut off by the bottom axis
 const strokeBuffer = 2;
@@ -106,13 +105,13 @@ export const backgroundColor = '#da7cff';
 export const labelColor = '#340098';
 const axisColor = BeanstalkPalette.lightGrey;
 const tickLabelColor = BeanstalkPalette.lightGrey;
+
 const xTickLabelProps = () => ({
   fill: tickLabelColor,
   fontSize: 12,
   fontFamily: 'Futura PT',
   textAnchor: 'middle',
 } as const);
-
 const yTickLabelProps = () => ({
   fill: tickLabelColor,
   fontSize: 12,
@@ -129,7 +128,6 @@ const Graph: FC<GraphProps> = (props) => {
     series,
     onCursor,
     children,
-    isTWAP,
   } = props;
   // When positioning the circle that accompanies the cursor,
   // use this dataset to decide where it goes. (There is one
@@ -137,7 +135,12 @@ const Graph: FC<GraphProps> = (props) => {
   const data = series[0];
   console.log('STACKED AREA DATA', data);
 
-  const keys = ['value'];
+  // ex: ['bean', 'urBean', 'bean3crv', 'urBean3Crv'];
+  const keys = Object.keys(series[0][0]).filter((a) =>
+    a !== 'season' &&
+    a !== 'date' &&
+    a !== 'totalValue'
+  );
   const yAxisWidth = 57;
 
   /**
@@ -158,39 +161,27 @@ const Graph: FC<GraphProps> = (props) => {
    *  "range"  = pixel values
    */
   const scales = useMemo(() => series.map((_data) => {
+    // x-scale
     const xScale = scaleLinear<number>({
       domain: extent(_data, getX) as [number, number],
     });
-
-    let yScale;
-
-    if (isTWAP) {
-      const yMin = min(_data, getY);
-      const yMax = max(_data, getY);
-      const biggestDifference = Math.max(Math.abs(1 - (yMin as number)), Math.abs(1 - (yMax as number)));
-      yScale = scaleLinear<number>({
-        domain: [1 - biggestDifference, 1 + biggestDifference],
-      });
-    } else {
-      yScale = scaleLinear<number>({
-        // domain: [0, max(_data, getY) as number],
-        domain: [
-          0.95 * (min(_data, getY) as number),
-          1.05 * (max(_data, getY) as number)
-        ],
-        clamp: true
-      });
-    }
-
     xScale.range([0, width - yAxisWidth]);
 
+    // y-scale
+    const yScale = scaleLinear<number>({
+      domain: [
+        0.95 * (min(_data, getY) as number),
+        1.05 * (max(_data, getY) as number)
+      ],
+      clamp: true
+    });
     yScale.range([
       height - axisHeight - margin.bottom - strokeBuffer, // bottom edge
       margin.top,
     ]);
 
     return { xScale, yScale };
-  }), [series, height, isTWAP, width]);
+  }), [series, height, width]);
 
   const handleTooltip = useCallback(
     (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
@@ -401,7 +392,7 @@ const Graph: FC<GraphProps> = (props) => {
   );
 };
 
-const StackedAreaChart2: FC<LineChartProps> = (props) => (
+const StackedAreaChart2: FC<StackedAreaProps> = (props) => (
   <ParentSize debounceTime={50}>
     {({ width: visWidth, height: visHeight }) => (
       <Graph

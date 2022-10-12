@@ -14,7 +14,7 @@ import { SEEDS, STALK } from '~/constants/tokens';
 import { SeasonAggregation, SeasonRange, SEASON_RANGE_TO_COUNT } from '~/hooks/beanstalk/useSeasonsQuery';
 
 import { FC } from '~/types';
-import StackedAreaChart, { DataPoint2 } from '~/components/Common/Charts/StackedAreaChart';
+import StackedAreaChart2, { DataPoint2 } from '~/components/Common/Charts/StackedAreaChart2';
 
 type BrowserNames = keyof BrowserUsage;
 const data2 = browserUsage;
@@ -97,7 +97,7 @@ const BalancesOverTime: FC<BalancesOverTimeProps> = ({
       </Row>
       <Box sx={{ width: '100%', height: '220px', position: 'relative' }}>
         {ready ? (
-          <StackedAreaChart
+          <StackedAreaChart2
             series={filteredSeries}
             onCursor={handleCursor as any}
           />

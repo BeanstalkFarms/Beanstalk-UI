@@ -180,7 +180,7 @@ export const interpolateFarmerAssetBalances = (
   let j = 0;
   const minSeason = snapshots[j].season;
   const maxSeason = prices[prices.length - 1].season;
-  // let currBDV : BigNumber = ZERO_BN;
+  const currBDV : BigNumber = ZERO_BN;
   let nextSeason : number | undefined = minSeason;
 
   // Initialize zero balances for each silo asset
@@ -205,7 +205,7 @@ export const interpolateFarmerAssetBalances = (
     const thisPrice = prices[currPriceIndex];
     const nextPrice = prices[currPriceIndex + 1];
     const thisTimestamp = DateTime.fromJSDate(secondsToDate(thisPrice.timestamp));
-    // let thisBDV = currBDV;
+    let thisBDV = currBDV;
 
     // If there's another price and the season associated with the price is
     // either [the price for this season OR in the past], we'll save this price
@@ -221,6 +221,7 @@ export const interpolateFarmerAssetBalances = (
       // tokens in the same season. Loop through all deposits of any token in season `s`
       // and sum up their BDV as `thisBDV`. Note that this assumes snapshots are sorted by season ascending.
       for (j; snapshots[j]?.season === nextSeason; j += 1) {
+        thisBDV = thisBDV.plus(toTokenUnitsBN(snapshots[j].hourlyDepositedBDV, BEAN[1].decimals));
         // @ts-ignore
         const tokenAddr = snapshots[j]?.id.match(/-(.*)-/).pop();
         if (tokenAddr) {
@@ -240,6 +241,7 @@ export const interpolateFarmerAssetBalances = (
       urBean: siloTokenBalances[UNRIPE_BEAN[1].address].toNumber(),
       bean3crv: siloTokenBalances[BEAN_CRV3_LP[1].address].toNumber(),
       urBean3crv: siloTokenBalances[UNRIPE_BEAN_CRV3[1].address].toNumber(),
+      totalValue: thisBDV.multipliedBy(new BigNumber(thisPrice.price)).toNumber()
     });
 
     // currBDV = thisBDV;
