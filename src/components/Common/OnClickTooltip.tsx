@@ -43,7 +43,7 @@ const OnClickTooltip: React.FC<{
           disableFocusListener
           disableHoverListener
           disableTouchListener
-          title={tooltip ?? <div style={{ zIndex: 999 }}> hello </div>}
+          title={tooltip ?? ''}
         >
           <Component
             onClick={() => setOpen(!open)}

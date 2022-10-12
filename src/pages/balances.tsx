@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Container, Stack } from '@mui/material';
+import { Container, Stack } from '@mui/material';
 import UserBalancesCard from '~/components/Balances/Cards/UserBalancesCard';
 import { XXLWidth } from '~/components/App/muiTheme';
 import UserBalancesCharts from '~/components/Balances/UserBalancesCharts';
@@ -10,9 +10,7 @@ import { FC } from '~/types';
 const BalancesPage: FC<{}> = () => (
   <Container sx={{ maxWidth: `${XXLWidth}px !important`, width: '100%' }}>
     <Stack gap={2}>
-      <Card sx={{ p: 2 }}>
-        <UserBalancesCard />
-      </Card>
+      <UserBalancesCard />
 
       <Stack direction={{ xs: 'column', lg: 'row' }} gap={2} width="100%">
         <UserBalancesCharts />

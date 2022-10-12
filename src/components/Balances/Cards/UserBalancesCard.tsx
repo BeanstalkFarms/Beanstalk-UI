@@ -12,6 +12,7 @@ import { displayFullBN } from '~/util';
 import EstimateBalanceInput from '../EstimateBalanceInput';
 import { ZERO_BN } from '~/constants';
 import BalanceStat from '../BalanceStat';
+import { Module, ModuleContent } from '~/components/Common/Module';
 
 const valueOrZeroBN = (value?: BigNumber, returnUndef?: boolean) => {
   const returnVal = returnUndef ? undefined : ZERO_BN;
@@ -88,82 +89,88 @@ const UserBalancesCard: React.FC<{}> = () => {
   };
 
   return (
-    <Row width="100%" justifyContent="space-between" gap={2}>
-      <Stack width="100%" alignSelf="flex-start" gap={2}>
-        <Typography variant="h4">Beanstalk Balances</Typography>
-        <Grid container spacing={2} width="100%">
-          {options.map((group, i) => (
-            <Grid
-              item
-              xs={group.tokens.length * 6}
-              md={group.tokens.length * 3}
-              width="100%"
-              key={`bStat-${i}`}
-            >
-              <OnClickTooltip tooltip={group.tooltip}>
-                <Grid container width="100%" spacing={2}>
-                  {group.tokens.map((item, k) => (
-                    <Grid item xs={6} key={`tokenstat-${k}`}>
-                      <BalanceStat
-                        variant="h4"
-                        gap={0.5}
-                        title={
-                          <Row gap={0.2}>
-                            <TokenIcon
-                              token={item.token}
-                              css={{ height: '20px', ...item.style }}
-                            />
-                            <Typography>{item.title}</Typography>
-                            <ExpandCircleDownOutlinedIcon
-                              fontSize="inherit"
-                              color="primary"
-                            />
-                          </Row>
-                        }
-                        amount={
-                          <>
-                            {displayFullBN(
-                              item.amount ?? ZERO_BN,
-                              item.token?.displayDecimals ?? 2
-                            )}
-                            {item.amountModifier && (
-                              <Typography
-                                color="primary"
-                                variant="h4"
-                                sx={{ whiteSpace: 'nowrap' }}
-                              >
-                                +{' '}
+    <Module sx={{ zIndex: 1 }}>
+      <ModuleContent px={2} py={2}>
+        <Row width="100%" justifyContent="space-between" gap={2}>
+          <Stack width="100%" alignSelf="flex-start" gap={1}>
+            <Typography variant="h4" sx={{ pb: 0.5 }}>
+              Beanstalk Balances
+            </Typography>
+            <Grid container spacing={2} width="100%">
+              {options.map((group, i) => (
+                <Grid
+                  item
+                  xs={group.tokens.length * 6}
+                  md={group.tokens.length * 3}
+                  width="100%"
+                  key={`bStat-${i}`}
+                >
+                  <OnClickTooltip tooltip={group.tooltip}>
+                    <Grid container width="100%" spacing={2}>
+                      {group.tokens.map((item, k) => (
+                        <Grid item xs={6} key={`tokenstat-${k}`}>
+                          <BalanceStat
+                            variant="h4"
+                            gap={0.5}
+                            title={
+                              <Row gap={0.2}>
+                                <TokenIcon
+                                  token={item.token}
+                                  css={{ height: '20px', ...item.style }}
+                                />
+                                <Typography>{item.title}</Typography>
+                                <ExpandCircleDownOutlinedIcon
+                                  fontSize="inherit"
+                                  color="primary"
+                                />
+                              </Row>
+                            }
+                            amount={
+                              <>
                                 {displayFullBN(
-                                  item.amountModifier,
+                                  item.amount ?? ZERO_BN,
                                   item.token?.displayDecimals ?? 2
                                 )}
-                              </Typography>
-                            )}
-                          </>
-                        }
-                        estimates={getEstimates()}
-                      />
+                                {item.amountModifier && (
+                                  <Typography
+                                    color="primary"
+                                    variant="h4"
+                                    sx={{ whiteSpace: 'nowrap' }}
+                                  >
+                                    +{' '}
+                                    {displayFullBN(
+                                      item.amountModifier,
+                                      item.token?.displayDecimals ?? 2
+                                    )}
+                                  </Typography>
+                                )}
+                              </>
+                            }
+                            estimates={getEstimates()}
+                          />
+                        </Grid>
+                      ))}
                     </Grid>
-                  ))}
+                  </OnClickTooltip>
                 </Grid>
-              </OnClickTooltip>
+              ))}
             </Grid>
-          ))}
-        </Grid>
-      </Stack>
-      <Stack
-        display={{ xs: 'none', lg: 'flex' }}
-        width="100%"
-        maxWidth={{ xs: '100%', lg: '340px' }}
-      >
-        <EstimateBalanceInput
-          active={active}
-          setActive={setActive}
-          amount={displayAmount}
-          setAmount={setDisplayAmount}
-        />
-      </Stack>
-    </Row>
+          </Stack>
+          <Stack
+            display={{ xs: 'none', lg: 'flex' }}
+            maxWidth={{ xs: '100%', lg: '340px' }}
+            width="100%"
+          >
+            <EstimateBalanceInput
+              active={active}
+              setActive={setActive}
+              amount={displayAmount}
+              setAmount={setDisplayAmount}
+            />
+          </Stack>
+        </Row>
+      </ModuleContent>
+    </Module>
   );
 };
 
