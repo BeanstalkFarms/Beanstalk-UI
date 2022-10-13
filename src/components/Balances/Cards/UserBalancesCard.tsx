@@ -12,6 +12,7 @@ import BalanceStat from '../BalanceStat';
 import { Module, ModuleContent } from '~/components/Common/Module';
 import useAccount from '~/hooks/ledger/useAccount';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
+import PodsBalance from '../tooltips/PodsBalance';
 
 const valueOrZeroBN = (value?: BigNumber, returnUndef?: boolean) => {
   const returnVal = returnUndef ? undefined : ZERO_BN;
@@ -61,43 +62,33 @@ const UserBalancesCard: React.FC<{}> = () => {
 
   const canPerformActions = account !== undefined;
 
-  const stalkAndSeedsOption = {
-    popperEl: <Typography>STALK & SEEDS</Typography>,
-    tokens: [
-      {
-        title: 'Stalk',
-        token: STALK,
-        amount: valueOrZeroBN(farmerSilo.stalk.total),
-        amountModifier: undefined,
-      },
-      {
-        title: 'Seeds',
-        token: SEEDS,
-        amount: valueOrZeroBN(farmerSilo.seeds.total),
-        amountModifier: undefined,
-      },
-    ],
-  };
+  const stalkAndSeedsOption = [
+    {
+      title: 'Stalk',
+      token: STALK,
+      amount: valueOrZeroBN(farmerSilo.stalk.total),
+      amountModifier: undefined,
+    },
+    {
+      title: 'Seeds',
+      token: SEEDS,
+      amount: valueOrZeroBN(farmerSilo.seeds.total),
+      amountModifier: undefined,
+    },
+  ];
 
   const podsAndSproutsOptions = [
     {
-      // popperEl: <PodsBalance />,
-      popperEl: <Typography>PODS</Typography>,
-      token: {
-        title: 'Pods',
-        token: PODS,
-        amount: valueOrZeroBN(farmerField.pods),
-        amountModifier: valueOrZeroBN(farmerField.harvestablePods, true),
-      },
+      title: 'Pods',
+      token: PODS,
+      amount: valueOrZeroBN(farmerField.pods),
+      amountModifier: valueOrZeroBN(farmerField.harvestablePods, true),
     },
     {
-      popperEl: <Typography>SPROUTS</Typography>,
-      token: {
-        title: 'Sprouts',
-        token: SPROUTS,
-        amount: valueOrZeroBN(farmerBarn.unfertilizedSprouts),
-        amountModifier: valueOrZeroBN(farmerBarn.fertilizedSprouts, true),
-      },
+      title: 'Sprouts',
+      token: SPROUTS,
+      amount: valueOrZeroBN(farmerBarn.unfertilizedSprouts),
+      amountModifier: valueOrZeroBN(farmerBarn.fertilizedSprouts, true),
     },
   ];
 
@@ -124,11 +115,11 @@ const UserBalancesCard: React.FC<{}> = () => {
                   <Grid item xs={12} md={5.5}>
                     <AnimatedPopper
                       id="stalkAndSeeds"
-                      popperEl={stalkAndSeedsOption.popperEl}
-                      openCondition={canPerformActions}
+                      popperEl={<Typography>stalk and seeds</Typography>}
+                      disabled={!canPerformActions}
                     >
                       <Grid container>
-                        {stalkAndSeedsOption.tokens.map((item) => (
+                        {stalkAndSeedsOption.map((item) => (
                           <Grid
                             item
                             xs={6}
@@ -157,12 +148,18 @@ const UserBalancesCard: React.FC<{}> = () => {
                       >
                         <Stack alignItems={{ xs: 'flex-start', md: 'center' }}>
                           <AnimatedPopper
-                            id={`${opt.token.title}-popper`}
-                            popperEl={opt.popperEl}
-                            openCondition={canPerformActions}
+                            id={`${opt.title}-popper`}
+                            disabled={!canPerformActions}
+                            popperEl={
+                              opt.token.address === PODS.address ? (
+                                <PodsBalance />
+                              ) : (
+                                <Typography>sprouts</Typography>
+                              )
+                            }
                           >
                             <BalanceStat
-                              {...opt.token}
+                              {...opt}
                               estimates={getEstimates()}
                               alignItems={{ xs: 'flex-start', md: 'center' }}
                             />

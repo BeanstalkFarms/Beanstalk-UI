@@ -1,9 +1,9 @@
-import { Typography, Stack, Box } from '@mui/material';
+import { Typography, Stack, Box, Card } from '@mui/material';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-import { useAccount } from 'wagmi';
 import BigNumber from 'bignumber.js';
+import { DataGrid } from '@mui/x-data-grid';
 import { ZERO_BN } from '~/constants';
 import { AppState } from '~/state';
 import { displayBN, displayFullBN } from '~/util';
@@ -11,23 +11,11 @@ import TokenIcon from '~/components/Common/TokenIcon';
 import { PODS } from '~/constants/tokens';
 import Row from '~/components/Common/Row';
 import { podlineColumns } from '~/pages/field';
-import TableCard from '~/components/Common/TableCard';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import PointIndicator from '~/img/misc/point-indicator.svg';
-
-const PlaceInLineBar: React.FC<{}> = () => (
-  <Box
-    sx={{
-      width: 'calc(100% - 14px)',
-      position: 'absolute',
-      backgroundColor: '#7F5533B2',
-      height: '10px',
-      borderRadius: '20px',
-      top: 0,
-      left: '7px',
-    }}
-  />
-);
+import AuthEmptyState from '~/components/Common/ZeroState/AuthEmptyState';
+import ArrowPagination from '~/components/Common/ArrowPagination';
+import { tableStyle } from '~/components/Common/Table/styles';
 
 const PlacesInLine: React.FC<{}> = () => {
   const { plots } = useSelector<AppState, AppState['_farmer']['field']>(
@@ -62,7 +50,17 @@ const PlacesInLine: React.FC<{}> = () => {
   return (
     <Stack spacing={1}>
       <Row position="relative" sx={{ width: '100%' }}>
-        <PlaceInLineBar />
+        <Box
+          sx={{
+            width: 'calc(100% - 14px)',
+            position: 'absolute',
+            backgroundColor: '#7F5533B2',
+            height: '10px',
+            borderRadius: '20px',
+            top: 0,
+            left: '7px',
+          }}
+        />
         <Box width="100%" height="10px">
           {relativePlotPositions.map((posPct: number, i) => (
             <img
@@ -87,15 +85,9 @@ const PlacesInLine: React.FC<{}> = () => {
   );
 };
 
-type PodLineRow = {
-  id: BigNumber | string;
-  placeInLine: BigNumber;
-  amount: BigNumber;
-};
+const MAX_ROWS = 5;
 
 const PodsBalance: React.FC<{}> = () => {
-  const account = useAccount();
-  const authState = !account ? 'disconnected' : 'ready';
   const { pods, plots, harvestablePods } = useSelector<
     AppState,
     AppState['_farmer']['field']
@@ -105,8 +97,8 @@ const PodsBalance: React.FC<{}> = () => {
     AppState['_beanstalk']['field']
   >((state) => state._beanstalk.field);
 
-  const rows: PodLineRow[] = useMemo(() => {
-    const data: PodLineRow[] = [];
+  const rows: any[] = useMemo(() => {
+    const data: any[] = [];
     if (harvestablePods?.gt(0)) {
       data.push({
         id: harvestablePods,
@@ -126,52 +118,78 @@ const PodsBalance: React.FC<{}> = () => {
     return data;
   }, [harvestableIndex, plots, harvestablePods]);
 
+  const tableHeight = useMemo(() => {
+    if (!rows || rows.length === 0) return '300px';
+    return 60.5 + 6 + 39 - 5 + Math.min(rows.length, MAX_ROWS) * 36;
+  }, [rows]);
+
   return (
-    <Stack
-      spacing={1}
-      py={2}
-      px={2}
-      sx={{ backgroundColor: BeanstalkPalette.lightYellow }}
-    >
-      <Stack>
-        <Typography variant="bodySmall">
-          <TokenIcon token={PODS} /> PODS
-        </Typography>
-        <Typography variant="h4" component="span">
-          {displayFullBN(pods || ZERO_BN, 2)}
-        </Typography>
+    <Card sx={{ pt: 2, backgroundColor: BeanstalkPalette.lightYellow }}>
+      <Stack spacing={1}>
+        <Stack spacing={1} sx={{ px: 2 }}>
+          <Stack>
+            <Typography variant="bodySmall">
+              <TokenIcon token={PODS} /> PODS
+            </Typography>
+            <Typography variant="h4" component="span">
+              {displayFullBN(pods || ZERO_BN, 2)}
+            </Typography>
+          </Stack>
+          <Typography>
+            The Beanstalk-native debt asset, Harvestable on a FIFO basis.
+          </Typography>
+          <Stack pt={1}>
+            <PlacesInLine />
+          </Stack>
+        </Stack>
+        <Box
+          sx={{
+            height: tableHeight,
+            width: '100%',
+            ...tableStyle,
+            px: 2,
+            backgroundColor: BeanstalkPalette.lightYellow,
+          }}
+        >
+          <DataGrid
+            columns={podlineColumns}
+            disableSelectionOnClick
+            disableColumnMenu
+            density="compact"
+            pageSize={MAX_ROWS}
+            rows={rows}
+            components={{
+              NoRowsOverlay() {
+                return (
+                  <AuthEmptyState
+                    message="Your pods will appear here."
+                    hideWalletButton
+                  />
+                );
+              },
+              Pagination: ArrowPagination,
+            }}
+            initialState={{
+              sorting: {
+                sortModel: [{ field: 'placeInLine', sort: 'asc' }],
+              },
+            }}
+            sx={{
+              '& .MuiDataGrid-root .MuiDataGrid-row': {
+                ':first-child': {
+                  color: harvestablePods?.gt(0)
+                    ? BeanstalkPalette.theme.fall.brown
+                    : undefined,
+                },
+              },
+              '& .MuiDataGrid-footerContainer': {
+                justifyContent: 'center',
+              },
+            }}
+          />
+        </Box>
       </Stack>
-
-      <Typography>
-        The Beanstalk-native debt asset, Harvestable on a FIFO basis.
-      </Typography>
-      <Stack pt={1}>
-        <PlacesInLine />
-      </Stack>
-      <TableCard
-        title="Pod Balance"
-        state={authState}
-        rows={rows}
-        columns={podlineColumns}
-        sort={{ field: 'placeInLine', sort: 'asc' }}
-        token={PODS}
-        onlyTable
-        tableCss={{
-          backgroundColor: BeanstalkPalette.lightYellow,
-          paddingLeft: '0px !important',
-          paddingRight: '0px !important',
-          '& .MuiDataGrid-root .MuiDataGrid-row': {
-            ':first-child': {
-              color: BeanstalkPalette.theme.fall.brown,
-
-              // color: harvestablePods?.gt(0)
-              //   ? BeanstalkPalette.theme.fall.brown
-              //   : undefined,
-            },
-          },
-        }}
-      />
-    </Stack>
+    </Card>
   );
 };
 

@@ -6,16 +6,16 @@ const AnimatedPopper: React.FC<{
   popperEl: JSX.Element;
   id: string;
   disableAnimate?: boolean;
-  openCondition?: boolean;
+  disabled?: boolean;
   sx?: React.CSSProperties | SxProps<Theme>;
-}> = ({ children, popperEl, id, disableAnimate, openCondition, sx }) => {
+}> = ({ children, popperEl, id, disableAnimate, disabled, sx }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
 
   const open = Boolean(anchorEl);
   const _id = open ? `simple-popover-${id}` : undefined;
 
   const handleOpen = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (openCondition === false) return;
+    if (disabled) return;
     setAnchorEl(e.currentTarget);
   };
 
