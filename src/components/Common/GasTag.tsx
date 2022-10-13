@@ -8,6 +8,7 @@ import { AppState } from '~/state';
 import { displayUSD } from '~/util';
 
 import { FC } from '~/types';
+import StatHorizontal from '~/components/Common/StatHorizontal';
 
 const GasTag : FC<{
   gasLimit: BigNumber | null;
@@ -20,9 +21,15 @@ const GasTag : FC<{
   return (
     <Tooltip title={(
       <>
-        Gas limit: {gasLimit?.toString() || '?'}<br />
-        Base fee: {prices?.gas.safe || '?'} gwei<br />
-        ETH price: ${prices?.ethusd || '?'}<br />
+        <StatHorizontal label="Gas limit">
+          {gasLimit?.toString() || '?'}
+        </StatHorizontal>
+        <StatHorizontal label="Base fee">
+          {prices?.gas.safe || '?'} gwei
+        </StatHorizontal>
+        <StatHorizontal label="ETH price">
+          ${prices?.ethusd || '?'}
+        </StatHorizontal>
         {prices?.lastRefreshed && (
           <>
             <Divider color="secondary" sx={{ my: 1 }} />
@@ -33,8 +40,8 @@ const GasTag : FC<{
         )}
       </>
     )}>
-      <Box sx={{ px: 1, py: 0.5 }}>
-        ⛽&nbsp;{gasUSD ? displayUSD(gasUSD) : '$-.--'}
+      <Box sx={{ px: 1, py: 0.5, minWidth: 80, textAlign: 'right' }}>
+        ⛽&nbsp;{gasUSD && !gasUSD.isNaN() ? displayUSD(gasUSD) : '$-.--'}
       </Box>
     </Tooltip>
   );

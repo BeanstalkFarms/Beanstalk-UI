@@ -1,342 +1,233 @@
 import React, { useCallback, useMemo } from 'react';
-import { bisector, extent, max, min } from 'd3-array';
-import { NumberValue } from 'd3-scale';
-import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import { AreaStack, Bar, Line, LinePath } from '@visx/shape';
+import { AreaStack, Line, LinePath } from '@visx/shape';
 import { Group } from '@visx/group';
-import { scaleLinear } from '@visx/scale';
-import { localPoint } from '@visx/event';
-import { useTooltip } from '@visx/tooltip';
-import {
-  curveLinear,
-} from '@visx/curve';
-import { Axis, Orientation } from '@visx/axis';
-import { CurveFactory } from 'd3-shape';
+
 import { LinearGradient } from '@visx/gradient';
 import BigNumber from 'bignumber.js';
+import { Axis, Orientation } from '@visx/axis';
+import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
+import { Box, Stack, Typography } from '@mui/material';
+import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
+
 import { displayBN } from '~/util';
-import { CURVES } from '~/components/Common/Charts/LineChart';
-import { FC } from '~/types';
+import ChartPropProvider, {
+  BaseChartProps,
+  BaseDataPoint,
+  ProviderChartProps,
+} from './ChartPropProvider';
+import Row from '../Row';
+import { defaultValueFormatter } from './SeasonPlot';
 
-// ------------------------
-//    Stacked Area Chart
-// ------------------------
-
-export type Scale = {
-  xScale: ReturnType<typeof scaleLinear>;
-  yScale: ReturnType<typeof scaleLinear>;
-}
-
-export type DataRegion = {
-  yTop: number;
-  yBottom: number;
-}
-
-export type LineChartProps = {
-  series: (DataPoint[])[];
-  onCursor: (ds?: DataPoint[]) => void;
-  curve?: CurveFactory | (keyof typeof CURVES);
-  isTWAP?: boolean;
-  children?: (props: GraphProps & {
-    scales: Scale[];
-    dataRegion: DataRegion;
-  }) => React.ReactElement | null;
-};
-
-type GraphProps = {
+type Props = {
   width: number;
   height: number;
-} & LineChartProps;
+} & BaseChartProps &
+  ProviderChartProps;
 
-const strokes = [
-  {
-    stroke: BeanstalkPalette.theme.fall.brown,
-    strokeWidth: 1,
-  },
-  {
-    stroke: BeanstalkPalette.darkBlue,
-    strokeWidth: 1,
-  },
-  {
-    stroke: BeanstalkPalette.lightGrey,
-    strokeWidth: 0.5,
-  },
-];
-
-// ------------------------
-//           Data
-// ------------------------
-
-export type DataPoint = {
-  season: number;
-  value: number;
-  date?: Date;
-};
-
-// data accessors
-const getX = (d: DataPoint) => d?.season;
-const getY = (d: DataPoint) => d?.value;
-const bisectSeason = bisector<DataPoint, number>(
-  (d) => d.season
-).left;
-
-// ------------------------
-//        Plot Sizing
-// ------------------------
-
-const margin = {
-  top: 10,
-  bottom: 9,
-  left: 0,
-  right: 0,
-};
-
-const axisHeight = 21;
-
-// How much padding to add to edges so that the stroke doesn't get
-// partially cut off by the bottom axis
-const strokeBuffer = 2;
-
-// AXIS
-export const backgroundColor = '#da7cff';
-export const labelColor = '#340098';
-const axisColor = BeanstalkPalette.lightGrey;
-const tickLabelColor = BeanstalkPalette.lightGrey;
-const xTickLabelProps = () => ({
-  fill: tickLabelColor,
-  fontSize: 12,
-  fontFamily: 'Futura PT',
-  textAnchor: 'middle',
-} as const);
-
-const yTickLabelProps = () => ({
-  fill: tickLabelColor,
-  fontSize: 12,
-  fontFamily: 'Futura PT',
-  textAnchor: 'end',
-} as const);
-
-const Graph: FC<GraphProps> = (props) => {
+const Graph = (props: Props) => {
   const {
     // Chart sizing
     width,
     height,
-    // Line Chart Props
+    // props
     series,
-    onCursor,
-    children,
+    curve: _curve,
+    keys,
+    tooltip = false,
     isTWAP,
+    stylesConfig,
+    children,
+    onCursor,
+    getDisplayValue,
+    formatValue = defaultValueFormatter,
+    // chart prop provider
+    common,
+    accessors,
+    utils,
   } = props;
-  // When positioning the circle that accompanies the cursor,
-  // use this dataset to decide where it goes. (There is one
-  // circle but potentially multiple series).
-  const data = series[0];
+  const { getX, getY0, getY, getY1 } = accessors;
+  const { generateScale, generatePathFromStack, getPointerValue, getCurve } =
+    utils;
 
-  const keys = ['value'];
-  const yAxisWidth = 57;
+  // get curve type
+  const curveType = useMemo(() => getCurve(_curve), [_curve, getCurve]);
 
-  /**
-   *
-   */
+  // data for stacked area chart will always be T[];
+  const data = useMemo(
+    () => (series.length && series[0]?.length ? series[0] : []),
+    [series]
+  );
+
+  // generate scales
+  const scales = useMemo(
+    () => generateScale(series, height, width, keys, true, isTWAP),
+    [generateScale, series, height, width, isTWAP, keys]
+  );
+
+  // generate ticks
+  const [tickSeasons, tickDates] = useMemo(() => {
+    const interval = Math.ceil(data.length / 12);
+    const shift = Math.ceil(interval / 3); // slight shift on tick labels
+    return data.reduce<[number[], string[]]>(
+      (prev, curr, i) => {
+        if (i % interval === shift) {
+          prev[0].push(curr.season);
+          prev[1].push(
+            curr.date
+              ? `${curr.date.getMonth() + 1}/${curr.date.getDate()}`
+              : curr.season.toString() // fallback to season if no date provided
+          );
+        }
+        return prev;
+      },
+      [[], []]
+    );
+  }, [data]);
+
+  // tooltip
+  const { TooltipInPortal, containerBounds, containerRef } = useTooltipInPortal(
+    { scroll: true, detectBounds: true }
+  );
   const {
     showTooltip,
     hideTooltip,
     tooltipData,
     tooltipTop = 0,
     tooltipLeft = 0,
-  } = useTooltip<DataPoint[] | undefined>();
-
-  /**
-   * Build scales.
-   * In both cases:
-   *  "domain" = values shown on the graph (dates, numbers)
-   *  "range"  = pixel values
-   */
-  const scales = useMemo(() => series.map((_data) => {
-    const xScale = scaleLinear<number>({
-      domain: extent(_data, getX) as [number, number],
-    });
-
-    let yScale;
-
-    if (isTWAP) {
-      const yMin = min(_data, getY);
-      const yMax = max(_data, getY);
-      const biggestDifference = Math.max(Math.abs(1 - (yMin as number)), Math.abs(1 - (yMax as number)));
-      yScale = scaleLinear<number>({
-        domain: [1 - biggestDifference, 1 + biggestDifference],
-      });
-    } else {
-      yScale = scaleLinear<number>({
-        // domain: [0, max(_data, getY) as number],
-        domain: [
-          0.95 * (min(_data, getY) as number),
-          1.05 * (max(_data, getY) as number)
-        ],
-        clamp: true
-      });
-    }
-
-    xScale.range([0, width - yAxisWidth]);
-
-    yScale.range([
-      height - axisHeight - margin.bottom - strokeBuffer, // bottom edge
-      margin.top,
-    ]);
-
-    return { xScale, yScale };
-  }), [series, height, isTWAP, width]);
-
-  const handleTooltip = useCallback(
-    (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
-      const { x } = localPoint(event) || { x: 0 }; // x0 + x1 + ... + xn = width of chart (~ 1123 px on my screen) ||| ex 956
-
-      // for each series
-      const ds = scales.map((scale, i) => {
-        const x0 = scale.xScale.invert(x);   // get Date (season) corresponding to pixel coordinate x ||| ex: 6145.742342789
-        const index = bisectSeason(series[i], x0, 1);  // find the closest index of x0 within data
-
-        const d0 = series[i][index - 1];  // value at x0 - 1
-        const d1 = series[i][index];      // value at x0
-
-        //     |   6   |  | 3 |
-        // [(d0)-------(x0)---(d1)]
-        // default to the left endpoint
-        let d = d0;
-        if (d1 && getX(d1)) {
-          // use d1 if x0 is closer to d1
-          d = (x0.valueOf() - getX(d0).valueOf()) > (getX(d1).valueOf() - x0.valueOf())
-            ? d1
-            : d0;
-        }
-
-        return d;
-      });
-
-      showTooltip({
-        tooltipData: ds,
-        tooltipLeft: x, // in pixels
-        tooltipTop: scales[0].yScale(getY(ds[0])), // in pixels
-      });
-      onCursor(ds);
-    },
-    [showTooltip, onCursor, scales, series],
-  );
+  } = useTooltip<BaseDataPoint | undefined>();
 
   const handleMouseLeave = useCallback(() => {
     hideTooltip();
-    onCursor(undefined);
+    onCursor?.(undefined);
   }, [hideTooltip, onCursor]);
 
-  const [
-    tickSeasons,
-    tickDates,
-  ] = useMemo(
-    () => {
-      const interval = Math.ceil(series[0].length / 12);
-      const shift = Math.ceil(interval / 3); // slight shift on tick labels
-      return series[0].reduce<[number[], string[]]>((prev, curr, i) => {
-        if (i % interval === shift) {
-          prev[0].push(curr.season);
-          prev[1].push(
-            curr.date
-              ? `${(curr.date).getMonth() + 1}/${(curr.date).getDate()}`
-              : curr.season.toString() // fallback to season if no date provided
-          );
-        }
-        return prev;
-      }, [[], []]);
+  const handlePointerMove = useCallback(
+    (
+      event: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>
+    ) => {
+      const { left, top } = containerBounds;
+      const containerX = ('clientX' in event ? event.clientX : 0) - left;
+      const containerY = ('clientY' in event ? event.clientY : 0) - top;
+      const pointerData = getPointerValue(event, scales, series)[0];
+
+      showTooltip({
+        tooltipLeft: containerX,
+        tooltipTop: containerY,
+        tooltipData: pointerData,
+      });
+      onCursor?.(pointerData.season, getDisplayValue([pointerData]));
     },
-    [series]
+    [
+      containerBounds,
+      getPointerValue,
+      scales,
+      series,
+      showTooltip,
+      onCursor,
+      getDisplayValue,
+    ]
   );
-  const xTickFormat = useCallback((_: unknown, i: number) => tickDates[i], [tickDates]);
-  const yTickFormat = useCallback((val: NumberValue) => displayBN(new BigNumber(val.valueOf())), []);
 
-  if (!series || series.length === 0) return null;
+  // tick format + styles
+  const xTickFormat = useCallback((_: any, i: number) => tickDates[i], [tickDates]);
+  const yTickFormat = useCallback((val: any) => displayBN(new BigNumber(val)), []);
 
-  //
-  const tooltipLeftAttached = tooltipData ? scales[0].xScale(getX(tooltipData[0])) : undefined;
+  const { styles, getStyle } = useMemo(() => {
+    const { getChartStyles } = common;
+    return getChartStyles(stylesConfig);
+  }, [common, stylesConfig]);
 
-  /**
-   * Height: `height` (controlled by container)
-   * Width:  `width`  (controlled by container)
-   *
-   * ----------------------------------
-   * |                                |
-   * |           plot                 |
-   * |                                |
-   * ----------------------------------
-   * |           axes                 |
-   * ----------------------------------
-   */
+  if (data.length === 0) return null;
+
   const dataRegion = {
-    yTop: margin.top, // chart edge to data region first pixel
+    yTop: common.margin.top, // chart edge to data region first pixel
     yBottom:
-      height // chart edge to data region first pixel
-      - axisHeight // chart edge to data region first pixel
-      - margin.bottom  // chart edge to data region first pixel
-      - strokeBuffer
+      height - // chart edge to data region first pixel
+      common.axisHeight - // chart edge to data region first pixel
+      common.margin.bottom - // chart edge to data region first pixel
+      common.strokeBuffer,
   };
 
   return (
-    <>
+    <div style={{ position: 'relative' }}>
+      <div
+        style={{
+          position: 'absolute',
+          bottom: dataRegion.yTop,
+          left: 0,
+          width: width - common.yAxisWidth,
+          height: dataRegion.yBottom - dataRegion.yTop,
+          zIndex: 9,
+        }}
+        ref={containerRef}
+        onTouchStart={handlePointerMove}
+        onTouchMove={handlePointerMove}
+        onMouseMove={handlePointerMove}
+        onMouseLeave={handleMouseLeave}
+      />
       <svg width={width} height={height}>
-        {/**
-         * Chart
-         */}
-        <Group width={width - yAxisWidth} height={dataRegion.yBottom - dataRegion.yTop}>
-          <LinearGradient from={BeanstalkPalette.theme.fall.lightBrown} to={BeanstalkPalette.theme.fall.lightBrown} id="stacked-area-brown" />
-          <rect x={0} y={0} width={width} height={height} fill="transparent" rx={14} />
-          <AreaStack<DataPoint>
-            top={margin.top}
-            left={margin.left}
+        <Group
+          width={width - common.yAxisWidth}
+          height={dataRegion.yBottom - dataRegion.yTop}
+        >
+          {styles.map((s) => (
+            <LinearGradient {...s} key={s.id} />
+          ))}
+          <rect
+            x={0}
+            y={0}
+            width={width}
+            height={height}
+            fill="transparent"
+            rx={14}
+          />
+          {children && children({ scales, dataRegion, ...props })}
+          <AreaStack<BaseDataPoint>
+            top={common.margin.top}
+            left={common.margin.left}
             keys={keys}
             data={data}
             height={height}
             x={(d) => scales[0].xScale(getX(d.data)) ?? 0}
-            y0={(d) => scales[0].yScale(d[0]) ?? 0}
-            y1={(d) => scales[0].yScale(d[1]) ?? 0}
+            y0={(d) => scales[0].yScale(getY0(d)) ?? 0}
+            y1={(d) => scales[0].yScale(getY1(d)) ?? 0}
           >
             {({ stacks, path }) =>
-              stacks.map((stack) => (
-                <path
-                  key={`stack-${stack.key}`}
-                  d={path(stack) || ''}
-                  // stroke={BeanstalkPalette.logoGreen}
-                  fill="url(#stacked-area-brown)"
-                  onClick={() => {
-                  }}
-                />
-              ))
+              stacks.map((stack, i) => 
+              
+                 (
+                   <>
+                     <path
+                       key={`stack-${stack.key}`}
+                       d={path(stack) || ''}
+                       stroke="transparent"
+                       fill={`url(#${getStyle(`${stack.key}`, i).id})`}
+                    />
+                     <LinePath<BaseDataPoint>
+                       stroke={getStyle(`${stack.key}`, i).stroke}
+                       strokeWidth={getStyle(`${stack.key}`, i).strokeWidth}
+                       key={`line-${i}`}
+                       curve={curveType}
+                       data={generatePathFromStack(stack)}
+                       x={(d) => scales[0].xScale(getX(d)) ?? 0}
+                       y={(d) => scales[0].yScale(getY(d)) ?? 0}
+                    />
+                   </>
+                )
+              )
             }
           </AreaStack>
         </Group>
-        <Group width={width - yAxisWidth} height={dataRegion.yBottom - dataRegion.yTop}>
-          {children && children({ scales, dataRegion, ...props })}
-          {series.map((_data, index) => (
-            <LinePath<DataPoint>
-              key={index}
-              curve={curveLinear}
-              data={_data}
-              x={(d) => scales[index].xScale(getX(d)) ?? 0}
-              y={(d) => scales[index].yScale(getY(d)) ?? 0}
-              {...strokes[index]}
-            />
-          ))}
-        </Group>
-        {/**
-         * Axis
-         */}
         <g transform={`translate(0, ${dataRegion.yBottom})`}>
           <Axis
             key="axis"
             orientation={Orientation.bottom}
             scale={scales[0].xScale}
-            stroke={axisColor}
+            stroke={common.axisColor}
             tickFormat={xTickFormat}
-            tickStroke={axisColor}
-            tickLabelProps={xTickLabelProps}
+            tickStroke={common.axisColor}
+            tickLabelProps={common.xTickLabelProps}
             tickValues={tickSeasons}
           />
         </g>
@@ -345,70 +236,82 @@ const Graph: FC<GraphProps> = (props) => {
             key="axis"
             orientation={Orientation.right}
             scale={scales[0].yScale}
-            stroke={axisColor}
+            stroke={common.axisColor}
             tickFormat={yTickFormat}
-            tickStroke={axisColor}
-            tickLabelProps={yTickLabelProps}
+            tickStroke={common.axisColor}
+            tickLabelProps={common.yTickLabelProps}
             numTicks={6}
             strokeWidth={0}
           />
         </g>
-        {/**
-         * Cursor
-         */}
         {tooltipData && (
-          <g>
-            <Line
-              from={{ x: tooltipLeft, y: dataRegion.yTop }}
-              to={{ x: tooltipLeft, y: dataRegion.yBottom }}
-              stroke={BeanstalkPalette.lightGrey}
-              strokeWidth={1}
-              pointerEvents="none"
-            />
-            <circle
-              cx={tooltipLeftAttached}
-              cy={tooltipTop}
-              r={4}
-              fill="black"
-              fillOpacity={0.1}
-              stroke="black"
-              strokeOpacity={0.1}
-              strokeWidth={2}
-              pointerEvents="none"
-            />
-          </g>
+          <>
+            <g>
+              <Line
+                from={{ x: tooltipLeft, y: dataRegion.yTop }}
+                to={{ x: tooltipLeft, y: dataRegion.yBottom }}
+                stroke={BeanstalkPalette.lightGrey}
+                strokeWidth={1}
+                pointerEvents="none"
+              />
+            </g>
+            {tooltip ? (
+              <div>
+                <TooltipInPortal
+                  key={Math.random()}
+                  left={tooltipLeft}
+                  top={tooltipTop}
+                >
+                  {typeof tooltip === 'boolean' ? (
+                    <Stack gap={0.5}>
+                      {keys.map((key, i) => (
+                        <Row justifyContent="space-between" gap={2}>
+                          <Row gap={1}>
+                            <Box
+                              sx={{
+                                width: '12px',
+                                height: '12px',
+                                borderRadius: '50%',
+                                background: getStyle(key, i).stroke,
+                              }}
+                            />
+                            <Typography>{key}</Typography>
+                          </Row>
+                          <Typography textAlign="right">
+                            {formatValue(tooltipData[key])}
+                          </Typography>
+                        </Row>
+                      ))}
+                    </Stack>
+                  ) : (
+                    tooltip({ d: [tooltipData] })
+                  )}
+                </TooltipInPortal>
+              </div>
+            ) : null}
+          </>
         )}
-        {/* Overlay to handle tooltip.
-          * Needs to be the last item to maintain mouse control. */}
-        <Bar
-          x={0}
-          y={0}
-          width={width}
-          height={height}
-          fill="transparent"
-          rx={14}
-          onTouchStart={handleTooltip}
-          onTouchMove={handleTooltip}
-          onMouseMove={handleTooltip}
-          onMouseLeave={handleMouseLeave}
-        />
       </svg>
-    </>
+    </div>
   );
 };
 
-const StackedAreaChart: FC<LineChartProps> = (props) => (
-  <ParentSize debounceTime={50}>
-    {({ width: visWidth, height: visHeight }) => (
-      <Graph
-        width={visWidth}
-        height={visHeight}
-        {...props}
-      >
-        {props.children}
-      </Graph>
+// For reference on how to use this chart, refer to BeanVs3Crv.tsx
+const StackedAreaChart: React.FC<BaseChartProps> = (props) => (
+  <ChartPropProvider>
+    {({ ...providerProps }) => (
+      <ParentSize debounceTime={50}>
+        {({ width: visWidth, height: visHeight }) => (
+          <Graph
+            width={visWidth}
+            height={visHeight}
+            {...providerProps}
+            {...props}
+          />
+        )}
+      </ParentSize>
     )}
-  </ParentSize>
+  </ChartPropProvider>
 );
 
 export default StackedAreaChart;

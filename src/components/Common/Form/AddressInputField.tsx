@@ -15,6 +15,7 @@ import { Field, FieldProps } from 'formik';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTheme } from '@mui/material/styles';
+import { ethers } from 'ethers';
 import useChainId from '~/hooks/chain/useChainId';
 import useAccount from '~/hooks/ledger/useAccount';
 import { CHAIN_INFO } from '~/constants';
@@ -32,10 +33,13 @@ export const ETHEREUM_ADDRESS_CHARS = /([0][x]?[a-fA-F0-9]{0,42})$/;
 
 const validateAddress = (account?: string) => (value: string) => {
   let error;
-  if (account && value?.toLowerCase() === account.toLowerCase()) {
+  if (!value) {
+    error = 'Enter an address';
+  } else if (account && value?.toLowerCase() === account.toLowerCase()) {
     error = 'Cannot Transfer to yourself';
-  } else if (!ETHEREUM_ADDRESS_CHARS.test(value)) {
-    error = 'Invalid address';
+  // } else if (!ETHEREUM_ADDRESS_CHARS.test(value)) {
+  } else if (!ethers.utils.isAddress(value)) {
+    error = 'Enter a valid address';
   }
   return error;
 };
@@ -58,6 +62,8 @@ const AddressInputFieldInner : FC<FieldProps & AddressInputFieldProps> = ({
       field.onChange(e);
     }
   }, [field]);
+
+  //
   const InputProps = useMemo(() => ({
     startAdornment: meta.value ? (
       <InputAdornment position="start">
@@ -110,9 +116,13 @@ const AddressInputFieldInner : FC<FieldProps & AddressInputFieldProps> = ({
         onBlur={field.onBlur}
         onChange={onChange}
       />
-      <Box sx={{ px: 0.5 }}>
-        <Typography fontSize="bodySmall" textAlign="right" color="text.secondary">{meta.error}</Typography>
-      </Box>
+      {meta.touched && (
+        <Box sx={{ px: 0.5 }}>
+          <Typography fontSize="bodySmall" textAlign="right" color="text.secondary">
+            {meta.error}
+          </Typography>
+        </Box>
+      )}
     </Stack>
   );
 };
@@ -122,11 +132,11 @@ const AddressInputField : FC<AddressInputFieldProps> = ({
   ...props
 }) => {
   const account = useAccount();
+  const validate = useMemo(() => validateAddress(account), [account]);
   return (
     <Field
       name={name}
-      validate={validateAddress(account)}
-      validateOnChange={false}
+      validate={validate}
       validateOnBlur
     >
       {(fieldProps: FieldProps) => (

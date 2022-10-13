@@ -45,12 +45,12 @@ export type TokenInputCustomProps = {
   /**
    *
    */
-  handleChange?: (finalValue: BigNumber | undefined) => void;
+  onChange?: (finalValue: BigNumber | undefined) => void;
 };
 
 export type TokenInputProps = (
   TokenInputCustomProps // custom
-  & Partial<TextFieldProps>  // MUI TextField
+  & Partial<Omit<TextFieldProps, 'onChange'>>  // MUI TextField
 );
 
 export const VALID_INPUTS = /[0-9]*/;
@@ -69,7 +69,7 @@ const TokenInput: FC<
   field,
   form,
   /// TextField props
-  handleChange: _handleChange,
+  onChange,
   placeholder,
   disabled,
   sx,
@@ -113,15 +113,15 @@ const TokenInput: FC<
 
   const clamp = useCallback((amount: BigNumber | null) => {
     const max = _max === 'use-balance' ? balance : _max; // fallback to balance
-    console.debug('[TokenInputField] clamp: ', {
-      amount,
-      max,
-      balance,
+    console.debug(`[TokenInputField@${field.name}] clamp: `, {
+      amount: amount?.toString(),
+      max: max?.toString(),
+      balance: balance?.toString(),
     });
     if (!amount) return undefined; // if no amount, exit
     if (max?.lt(amount)) return max; // clamp @ max
     return amount; // no max; always return amount
-  }, [_max, balance]);
+  }, [_max, balance, field.name]);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     /// If e.target.value is non-empty string, parse it into a BigNumber.
@@ -147,9 +147,9 @@ const TokenInput: FC<
     if (newValue === null || !newValue.eq(field.value)) {
       const clampedValue = clamp(newValue);
       form.setFieldValue(field.name, clampedValue);
-      _handleChange?.(clampedValue); // bubble up if necessary
+      onChange?.(clampedValue); // bubble up if necessary
     }
-  }, [form, field.name, field.value, _handleChange, clamp]);
+  }, [form, field.name, field.value, onChange, clamp]);
 
   // 
   const handleMax = useCallback(() => {
@@ -161,9 +161,9 @@ const TokenInput: FC<
         clampedValue,
       });
       form.setFieldValue(field.name, clampedValue);
-      _handleChange?.(clampedValue);  // bubble up if necessary
+      onChange?.(clampedValue);  // bubble up if necessary
     }
-  }, [balance, clamp, form, field.name, _handleChange]);
+  }, [form, field.name,balance, onChange, clamp]);
 
   // Ignore scroll events on the input. Prevents
   // accidentally scrolling up/down the number input.
@@ -199,12 +199,11 @@ const TokenInput: FC<
       }
     }
     else if (field.value.toString() !== displayAmount) {
-      console.debug('[TokenInputField] field.value or displayAmount changed:', {
+      console.debug(`[TokenInputField/${field.name}] field.value or displayAmount changed:`, {
         name: field.name,
         value: field.value,
         valueString: field.value?.toString(),
         displayAmount: displayAmount,
-        updatingDisplayValue: field.value?.toString() !== displayAmount,
       });
       setDisplayAmount(field.value.toString()); 
     }

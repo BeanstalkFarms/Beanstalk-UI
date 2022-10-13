@@ -1,4 +1,4 @@
-import { Box, Dialog, Stack, Tooltip, useMediaQuery } from '@mui/material';
+import { Box, Dialog, Stack, useMediaQuery } from '@mui/material';
 import { Field, FieldProps, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo, useState } from 'react';
 import { LoadingButton } from '@mui/lab';
@@ -8,6 +8,7 @@ import BigNumber from 'bignumber.js';
 import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
 
+import { useProvider } from 'wagmi';
 import GasTag from '~/components/Common/GasTag';
 import { StyledDialogActions, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
 import { useSigner } from '~/hooks/ledger/useSigner';
@@ -161,29 +162,27 @@ const ClaimRewardsForm : FC<
                     const disabled = !calls || calls[option.value].enabled === false;
                     const hovered = isHovering(option.value) && !disabled;
                     return (
-                      <Tooltip title={!disabled || isMobile ? '' : 'Nothing to claim'}>
-                        <div>
-                          <DescriptionButton
-                            key={option.value}
-                            title={option.title}
-                            description={isMobile ? undefined : `${option.description}`}
-                            titleTooltip={isMobile ? `${option.description}` : undefined}
-                            tag={<GasTag gasLimit={gas?.[option.value] || null} />}
-                            // Button
-                            fullWidth
-                            onClick={set(option.value)}
-                            onMouseOver={onMouseOver(option.value)}
-                            onMouseLeave={onMouseOutContainer}
-                            isSelected={hovered}
-                            disabled={disabled}
-                            sx={{
-                              '&:disabled': {
-                                borderColor: BeanstalkPalette.lightestGrey,
-                              },
-                            }}
-                          />
-                        </div>
-                      </Tooltip>
+                      <div key={option.value}>
+                        <DescriptionButton
+                          key={option.value}
+                          title={option.title}
+                          description={isMobile ? undefined : `${option.description}`}
+                          titleTooltip={isMobile ? `${option.description}` : undefined}
+                          tag={<GasTag gasLimit={gas?.[option.value] || null} />}
+                          // Button
+                          fullWidth
+                          onClick={set(option.value)}
+                          onMouseOver={onMouseOver(option.value)}
+                          onMouseLeave={onMouseOutContainer}
+                          isSelected={hovered}
+                          disabled={disabled}
+                          sx={{
+                            '&:disabled': {
+                              borderColor: BeanstalkPalette.lightestGrey,
+                            },
+                          }}
+                        />
+                      </div>
                     );
                   })}
                 </Stack>
@@ -221,23 +220,22 @@ const RewardsDialog: FC<RewardsBarProps & {
   open,
   ...rewardsBarProps
 }) => {
-  /// Wallet
-  const account           = useAccount();
-  const { data: signer }  = useSigner();
+  /// Ledger
+  const account = useAccount();
+  const { data: signer } = useSigner();
+  const provider = useProvider();
+  const beanstalk = useBeanstalkContract(signer);
 
   /// Helpers
   const unripeTokens      = useTokenMap(UNRIPE_TOKENS);
   
-  /// Farmer data
+  /// Farmer
   const farmerSilo        = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   const siloBalances      = farmerSilo.balances;
   const [fetchFarmerSilo] = useFetchFarmerSilo();
 
-  // Beanstalk data
+  // Beanstalk
   const getBDV = useBDV();
-  
-  /// Contracts
-  const beanstalk = useBeanstalkContract(signer);
 
   /// Form
   const initialValues: ClaimRewardsFormValues = useMemo(() => ({
@@ -267,26 +265,7 @@ const RewardsDialog: FC<RewardsBarProps & {
         execute:     () => beanstalk.plant(),
         enabled:     farmerSilo.seeds.earned.gt(0),
       },
-      [ClaimRewardsAction.ENROOT_AND_MOW]: {
-        estimateGas: () => beanstalk.estimateGas.farm([
-          // PLANT_AND_MOW
-          beanstalk.interface.encodeFunctionData('plant', undefined),
-          // ENROOT_AND_MOW
-          ...enrootData,
-        ]),
-        execute: () => beanstalk.farm([
-          // PLANT_AND_MOW
-          beanstalk.interface.encodeFunctionData('plant', undefined),
-          // ENROOT_AND_MOW
-          ...enrootData,
-        ]),
-        enabled: (
-          farmerSilo.stalk.grown.gt(0)
-          || farmerSilo.seeds.earned.gt(0)
-          || enrootData.length > 0
-        ),
-      },
-      /* (
+      [ClaimRewardsAction.ENROOT_AND_MOW]: (
         enrootData.length > 1
           /// use `farm()` if multiple crates
           ? {
@@ -310,7 +289,7 @@ const RewardsDialog: FC<RewardsBarProps & {
             }),
             enabled: enrootData.length > 0,
           }
-      ), */
+      ),
       [ClaimRewardsAction.CLAIM_ALL]: {
         estimateGas: () => beanstalk.estimateGas.farm([
           // PLANT_AND_MOW
@@ -348,7 +327,7 @@ const RewardsDialog: FC<RewardsBarProps & {
       {}
     ));
     setGas(_gas);
-  }, [account, beanstalk, farmerSilo.seeds.earned, farmerSilo.stalk.grown, getBDV, signer, siloBalances, unripeTokens]);
+  }, [account, beanstalk, farmerSilo.seeds.earned, farmerSilo.stalk.grown, getBDV, provider, signer, siloBalances, unripeTokens]);
 
   useTimedRefresh(estimateGas, 20 * 1000, open);
 
@@ -388,11 +367,6 @@ const RewardsDialog: FC<RewardsBarProps & {
       open={open}
       fullWidth
       maxWidth="md"
-      // PaperProps={{
-      //   sx: {
-      //     width: '550px'
-      //   }
-      // }}
     >
       <StyledDialogTitle onClose={handleClose}>Claim Rewards</StyledDialogTitle>
       <Formik initialValues={initialValues} onSubmit={onSubmit}>

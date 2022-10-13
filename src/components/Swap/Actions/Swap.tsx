@@ -383,7 +383,7 @@ const SwapForm: FC<FormikProps<SwapFormValues> & {
                 ? Quoting 
                 : undefined
             }
-            handleChange={handleChangeAmountIn}
+            onChange={handleChangeAmountIn}
             error={
               !noBalance && !enoughBalanceCheck
             }
@@ -431,7 +431,7 @@ const SwapForm: FC<FormikProps<SwapFormValues> & {
                 ? Quoting 
                 : undefined
             }
-            handleChange={handleChangeAmountOut}
+            onChange={handleChangeAmountOut}
           />
           <FarmModeField
             name="modeOut"
