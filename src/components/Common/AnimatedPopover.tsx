@@ -1,14 +1,23 @@
 import React, { useState } from 'react';
 import { SxProps, Theme, Popover, Box } from '@mui/material';
 
-const AnimatedPopper: React.FC<{
+const AnimatedPopover: React.FC<{
   children: React.ReactNode;
   popperEl: JSX.Element;
   id: string;
   disableAnimate?: boolean;
   disabled?: boolean;
   sx?: React.CSSProperties | SxProps<Theme>;
-}> = ({ children, popperEl, id, disableAnimate, disabled, sx }) => {
+  scale?: number;
+}> = ({
+  children,
+  popperEl,
+  id,
+  disableAnimate,
+  disabled,
+  sx,
+  scale = 1.04,
+}) => {
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
 
   const open = Boolean(anchorEl);
@@ -24,7 +33,7 @@ const AnimatedPopper: React.FC<{
       <Box
         sx={{
           ':hover': {
-            transform: !disableAnimate ? 'scale(1.03)' : undefined,
+            transform: !disableAnimate ? `scale(${scale})` : undefined,
             transition: !disableAnimate ? 'all .3s ease 0s' : undefined,
             transformOrigin: 'top center',
           },
@@ -55,4 +64,4 @@ const AnimatedPopper: React.FC<{
   );
 };
 
-export default AnimatedPopper;
+export default AnimatedPopover;
