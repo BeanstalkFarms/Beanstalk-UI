@@ -23,11 +23,11 @@ import { BeanstalkPalette } from '~/components/App/muiTheme';
 // -------------------------------------------------------------------------
 
 export type BaseDataPoint = {
-  [key: string]: number;
-} & {
   season: number;
   date: Date;
-};
+  value: number;
+
+} & {[key: string]: number;};
 
 export type ChartMultiStyles = {
   [key: string]: {

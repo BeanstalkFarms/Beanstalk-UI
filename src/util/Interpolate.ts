@@ -5,16 +5,16 @@ import { TokenMap, ZERO_BN } from '~/constants';
 import { BEAN, SEEDS, SILO_WHITELIST, STALK } from '~/constants/tokens';
 import { FarmerSiloRewardsQuery, SeasonalPriceQuery } from '~/generated/graphql';
 import { secondsToDate, toTokenUnitsBN } from '~/util';
-import DataPoint from '~/constants/charts';
+import { BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
 
 export type Snapshot = { id: string; season: number, timestamp: string, hourlyDepositedBDV: string };
 
 export const addBufferSeasons = (
-  points: SeasonDataPoint[],
+  points: BaseDataPoint[],
   num: number = 24
 ) => {
   if (points.length === 0) return [];
-  const d = DateTime.fromJSDate(points[0].date);
+  const d = DateTime.fromJSDate(points[0].date as Date);
   const n = (
     points[0].season < num
       ? Math.max(points[0].season - 1, 0) // season 1 = fill with 0 points
@@ -31,7 +31,7 @@ export const addBufferSeasons = (
 };
 
 export const addBufferSeasons2 = (
-  points: SeasonDataPoint[],
+  points: BaseDataPoint[],
   num: number = 24
 ) => {
   if (points.length === 0) return [];
@@ -46,7 +46,7 @@ export const addBufferSeasons2 = (
       season: points[0].season + (i - n),
       date:   d.plus({ hours: i - n }).toJSDate(),
       value: 0,
-      tokens: SILO_WHITELIST.reduce<TokenMap<number>>((prev, curr) => {
+      ...SILO_WHITELIST.reduce<TokenMap<number>>((prev, curr) => {
         prev[curr[1].address] = 0;
         return prev;
       }, {}),
@@ -70,8 +70,8 @@ export const interpolateFarmerStalk = (
   let nextSeason : number | undefined = minSeason;
   
   // Add buffer points before the first snapshot
-  const stalk : SeasonDataPoint[] = [];
-  const seeds : SeasonDataPoint[] = [];
+  const stalk : BaseDataPoint[] = [];
+  const seeds : BaseDataPoint[] = [];
   
   for (let s = minSeason; s <= maxSeason; s += 1) {
     if (s === nextSeason) {
@@ -200,7 +200,7 @@ export const interpolateFarmerAssetBalances = (
 
   // if the subgraph misses some prices or something happens in the frontend
   // we use the last known price until we encounter a price at the current season
-  const points : DataPoint[] = [];
+  const points : BaseDataPoint[] = [];
 
   for (let s = minSeason; s <= maxSeason; s += 1) {
     const thisPrice = prices[currPriceIndex];
@@ -234,15 +234,16 @@ export const interpolateFarmerAssetBalances = (
       nextSeason = snapshots[j]?.season || undefined; // next season for which BDV changes
     }
 
-    points.push({
+    const dataPoint: BaseDataPoint = {
       season: s,
-      date:   thisTimestamp.toJSDate(),
-      tokens: SILO_WHITELIST.reduce<TokenMap<number>>((prev, curr) => {
+      date: thisTimestamp.toJSDate(),
+      value: thisBDV.multipliedBy(new BigNumber(thisPrice.price)).toNumber(),
+      ...SILO_WHITELIST.reduce<TokenMap<number>>((prev, curr) => {
         prev[curr[1].address] = siloTokenBalances[curr[1].address].toNumber();
         return prev;
       }, {}),
-      value: thisBDV.multipliedBy(new BigNumber(thisPrice.price)).toNumber()
-    });
+    };
+    points.push(dataPoint);
 
     currBDV = thisBDV;
   }

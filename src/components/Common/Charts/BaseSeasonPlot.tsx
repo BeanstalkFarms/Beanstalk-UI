@@ -1,16 +1,15 @@
 import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
+import { ApolloError } from '@apollo/client';
 import { TimeTabStateParams } from '~/hooks/app/useTimeTabState';
-import useGenerateChartSeries, {
-  SeasonsQueryItem,
-} from '~/hooks/beanstalk/useGenerateChartSeries';
-import { MinimumViableSnapshotQuery } from '~/hooks/beanstalk/useSeasonsQuery';
+
+import { MinimumViableSnapshotQuery, SEASON_RANGE_TO_COUNT, SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
 
 import Row from '../Row';
 import Stat, { StatProps } from '../Stat';
 import { defaultValueFormatter } from './SeasonPlot';
 import TimeTabs from './TimeTabs';
-import { BaseChartProps, ExploitLine } from './ChartPropProvider';
+import { BaseChartProps, BaseDataPoint, ExploitLine } from './ChartPropProvider';
 import MultiLineChart from './MultiLineChart';
 import StackedAreaChart from './StackedAreaChart';
 
@@ -42,8 +41,15 @@ type BaseSeasonPlotProps = {
   timeTabParams: TimeTabStateParams;
 };
 
+export type QueryData = {
+    data: BaseDataPoint[][];
+    loading: boolean;
+    error: ApolloError[] | undefined;
+    keys: string[];
+  }
+
 type Props<T extends MinimumViableSnapshotQuery> = BaseSeasonPlotProps & {
-  queryData: SeasonsQueryItem<T>[];
+  queryData?: QueryData;
   formatValue?: (value: number) => string | JSX.Element;
   StatProps?: Omit<StatProps, 'amount' | 'subtitle'>;
   ChartProps: Omit<BaseChartProps, 'series' | 'keys'>;
@@ -72,13 +78,6 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
     undefined
   );
 
-  const {
-    data: series,
-    loading,
-    error,
-    keys,
-  } = useGenerateChartSeries(queryData, timeTabParams[0], stackedArea);
-
   const handleCursor = useCallback(
     (season: number | undefined, v?: number | undefined) => {
       if (!season || !v) {
@@ -92,7 +91,14 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
     []
   );
 
-  const seriesInput = useMemo(() => series, [series]);
+  const seriesInput = useMemo(() => queryData?.data, [queryData?.data]);
+
+  // const filteredSeries = useMemo(() => {
+  //   if (tabState[1] !== SeasonRange.ALL) {
+  //     return series.map((s) => s.slice(-(SEASON_RANGE_TO_COUNT[tabState[1]] as number)));
+  //   }
+  //   return series;
+  // }, [series, tabState]);
 
   /// If one of the defaults is missing, use the last data point.
   const defaults = useMemo(() => {
@@ -101,7 +107,7 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
       season: _defaultSeason ?? 0,
     };
     const getVal = chartProps.getDisplayValue;
-    const seriesLen = seriesInput.length;
+    const seriesLen = seriesInput?.length;
     if (!seriesLen || d.value || d.season) return d;
     if (stackedArea) {
       const stacked = seriesInput[0];
@@ -125,6 +131,22 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
     return d;
   }, [_defaultSeason, _defaultValue, chartProps, seriesInput, stackedArea]);
 
+  // filter data using selected time tab
+  const filteredSeries = useMemo(() => {
+    if (timeTabParams[0][1] !== SeasonRange.ALL) {
+      if (seriesInput) {
+        return seriesInput.map((s) =>
+          s.slice(-(SEASON_RANGE_TO_COUNT[timeTabParams[0][1]] as number)
+        ));
+      }
+    }
+    return [];
+  }, [seriesInput, timeTabParams]);
+
+  if (!seriesInput || !queryData) {
+    return null;
+  }
+
   return (
     <>
       <Row justifyContent="space-between" sx={{ px: 2 }}>
@@ -132,7 +154,7 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
           <Stat
             {...statProps}
             amount={
-              loading ? (
+              queryData?.loading ? (
                 <CircularProgress
                   variant="indeterminate"
                   size="1.18em"
@@ -153,13 +175,17 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
           alignSelf="flex-start"
           sx={{ py: statProps ? undefined : 2 }}
         >
-          <TimeTabs state={timeTabParams[0]} setState={timeTabParams[1]} />
+          <TimeTabs
+            state={timeTabParams[0]}
+            setState={timeTabParams[1]}
+            aggregation={false}
+          />
         </Stack>
       </Row>
       <Box width="100%" sx={{ height, position: 'relative' }}>
-        {loading || seriesInput?.length === 0 || error ? (
+        {queryData.loading || seriesInput.length === 0 || queryData.error ? (
           <Stack height="100%" alignItems="center" justifyContent="center">
-            {error ? (
+            {queryData.error ? (
               <Typography>
                 An error occurred while loading this data.
               </Typography>
@@ -169,8 +195,8 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
           </Stack>
         ) : stackedArea ? (
           <StackedAreaChart
-            series={seriesInput}
-            keys={keys}
+            series={filteredSeries}
+            keys={queryData.keys}
             onCursor={handleCursor}
             formatValue={formatValue}
             {...chartProps}
@@ -179,8 +205,8 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
           </StackedAreaChart>
         ) : (
           <MultiLineChart
-            series={seriesInput}
-            keys={keys}
+            series={filteredSeries}
+            keys={queryData.keys}
             onCursor={handleCursor}
             formatValue={formatValue}
             {...chartProps}

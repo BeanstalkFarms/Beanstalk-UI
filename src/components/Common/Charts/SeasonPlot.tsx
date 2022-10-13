@@ -5,10 +5,11 @@ import { StatProps } from '~/components/Common/Stat';
 import useSeasonsQuery, {
   MinimumViableSnapshotQuery,
 } from '~/hooks/beanstalk/useSeasonsQuery';
-import BaseSeasonPlot from './BaseSeasonPlot';
-import useTimeTabState from '~/hooks/app/useTimeTabState';
-import { BaseChartProps, BaseDataPoint } from './ChartPropProvider';
 import DataPoint from '~/constants/charts';
+import useGenerateChartSeries from '~/hooks/beanstalk/useGenerateChartSeries';
+import { BaseChartProps, BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
+import useTimeTabState from '~/hooks/app/useTimeTabState';
+import BaseSeasonPlot, { QueryData } from '~/components/Common/Charts/BaseSeasonPlot';
 
 export const defaultValueFormatter = (value: number) => value.toFixed(4);
 
@@ -89,9 +90,11 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
     [seasonsQuery, getValue]
   );
 
+  const queryData: QueryData = useGenerateChartSeries(queryParams, timeTabParams[0], stackedArea);
+
   return (
     <BaseSeasonPlot
-      queryData={queryParams}
+      queryData={queryData}
       height={height}
       StatProps={statProps}
       timeTabParams={timeTabParams}
