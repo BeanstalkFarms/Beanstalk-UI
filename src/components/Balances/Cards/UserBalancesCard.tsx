@@ -14,6 +14,7 @@ import useAccount from '~/hooks/ledger/useAccount';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import PodsBalance from '../poppers/PodsBalance';
 import SproutsBalance from '../poppers/SproutsBalance';
+import StalkAndSeedsBalance from '../poppers/StalkAndSeedsBalance';
 
 const valueOrZeroBN = (value?: BigNumber, returnUndef?: boolean) => {
   const returnVal = returnUndef ? undefined : ZERO_BN;
@@ -118,7 +119,7 @@ const UserBalancesCard: React.FC<{}> = () => {
               <Grid item xs={12} md={5.5}>
                 <AnimatedPopper
                   id="stalkAndSeeds"
-                  popperEl={<Typography>stalk and seeds</Typography>}
+                  popperEl={<StalkAndSeedsBalance />}
                   disabled={!canPerformActions}
                 >
                   <Grid container spacing={2}>

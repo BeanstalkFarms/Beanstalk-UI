@@ -30,7 +30,7 @@ const BalancePopper: React.FC<{
     }}
   >
     <Stack width="100%" spacing={2}>
-      <Row spacing={2} sx={{ px: 2 }}>
+      <Row gap={2} sx={{ px: 2 }} alignItems="flex-start">
         {items.map((item) => (
           <Stack
             sx={{ maxWidth: `${100 / items.length}%`, width: '100%' }}
@@ -42,10 +42,19 @@ const BalancePopper: React.FC<{
               <Typography variant="bodySmall">
                 <TokenIcon token={item.token} /> {item.title}
               </Typography>
-              <Typography variant="h3" component="span">
+              <Typography
+                variant="h3"
+                component="span"
+                sx={{ display: 'inline-flex' }}
+              >
                 {displayFullBN(item.amount || ZERO_BN, 2)}
                 {item.pct && (
-                  <Typography color="grey" variant="h3" fontWeight={400}>
+                  <Typography
+                    variant="h3"
+                    fontWeight={400}
+                    ml="5px"
+                    sx={{ color: BeanstalkPalette.grey }}
+                  >
                     ~{item.pct.toFixed(4)}%
                   </Typography>
                 )}
