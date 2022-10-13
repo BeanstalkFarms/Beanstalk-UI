@@ -9,7 +9,6 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { useHotkeys } from 'react-hotkeys-hook';
 import DropdownIcon from '~/components/Common/DropdownIcon';
 import useToggle from '~/hooks/display/useToggle';
 import useAnchor from '~/hooks/display/useAnchor';
@@ -63,7 +62,6 @@ const FolderMenu: FC<{
   const isOpen = Boolean(anchorEl || drawerOpen);
 
   const open = useCallback(() => {
-    onOpen?.();
     if (isMobile) {
       toggleAnchor(undefined); // force close menu if screen size has chnaged
       openDrawer();
@@ -71,6 +69,7 @@ const FolderMenu: FC<{
       closeDrawer(); // force close drawer if screen size has changed
       toggleAnchor({ currentTarget: button.current });
     }
+    onOpen?.();
   }, [closeDrawer, isMobile, onOpen, openDrawer, toggleAnchor]);
 
   const close = useCallback(() => {
@@ -86,10 +85,10 @@ const FolderMenu: FC<{
   };
 
   // Hotkeys
-  useHotkeys(hotkey || '', () => {
-    console.debug('toggle');
-    isOpen ? close() : open();
-  }, {}, [isOpen, open, close]);
+  // useHotkeys(hotkey || '', () => {
+  //   console.debug('toggle');
+  //   isOpen ? close() : open();
+  // }, {}, [isOpen, open, close]);
 
   const content = (
     <Box>
@@ -97,7 +96,7 @@ const FolderMenu: FC<{
         color="light"
         startIcon={startIcon}
         endIcon={<DropdownIcon open={isOpen} />}
-        onClick={open}
+        onClick={isOpen ? close : open}
         disableRipple
         ref={(r) => {
           button.current = r;
