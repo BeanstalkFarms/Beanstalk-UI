@@ -16,7 +16,7 @@ type BalanceToken = {
   pct?: BigNumber | undefined;
 };
 
-const BalancePopper: React.FC<{
+const BalancePopover: React.FC<{
   children: React.ReactNode;
   items: BalanceToken[];
   gap?: number;
@@ -69,4 +69,4 @@ const BalancePopper: React.FC<{
   </Card>
 );
 
-export default BalancePopper;
+export default BalancePopover;

@@ -7,9 +7,11 @@ import RewardsModule from '~/components/Balances/RewardsModule';
 
 import { FC } from '~/types';
 
+import TokenBalancesModule from '~/components/Balances/TokenBalancesModule';
+
 const BalancesPage: FC<{}> = () => (
   <Container sx={{ maxWidth: `${XXLWidth}px !important`, width: '100%' }}>
-    <Stack gap={2}>
+    <Stack spacing={2}>
       <UserBalancesCard />
 
       <Stack direction={{ xs: 'column', lg: 'row' }} gap={2} width="100%">
@@ -22,6 +24,8 @@ const BalancesPage: FC<{}> = () => (
           <RewardsModule />
         </Stack>
       </Stack>
+
+      <TokenBalancesModule />
     </Stack>
   </Container>
 );

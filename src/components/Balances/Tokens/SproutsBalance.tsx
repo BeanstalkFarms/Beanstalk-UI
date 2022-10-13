@@ -9,7 +9,7 @@ import { RINSABLE_SPROUTS, SPROUTS } from '~/constants/tokens';
 import { FertilizerBalance } from '~/state/farmer/barn';
 import { AppState } from '~/state';
 import { displayFullBN, MinBN } from '~/util';
-import BalancePopper from './BalancePopper';
+import BalancePopover from './BalancePopover';
 import FertilizerItem from '~/components/Barn/FertilizerItem';
 import EmptyState from '~/components/Common/ZeroState/EmptyState';
 import { MY_FERTILIZER } from '~/components/Barn/FertilizerItemTooltips';
@@ -37,12 +37,13 @@ const SproutsBalance: React.FC<{}> = () => {
 
   const filteredBalances = useMemo(
     () =>
-      farmerBarn.balances?.filter((balance) => !pctRepaid(balance).gte(1)) || [],
+      farmerBarn.balances?.filter((balance) => !pctRepaid(balance).gte(1)) ||
+      [],
     [farmerBarn.balances, pctRepaid]
   );
 
   return (
-    <BalancePopper
+    <BalancePopover
       items={[
         {
           token: SPROUTS,
@@ -128,7 +129,7 @@ const SproutsBalance: React.FC<{}> = () => {
           </Stack>
         </Stack>
       </Stack>
-    </BalancePopper>
+    </BalancePopover>
   );
 };
 

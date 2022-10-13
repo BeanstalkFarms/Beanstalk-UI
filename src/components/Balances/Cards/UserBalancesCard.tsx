@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Divider, Grid, Stack, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
-import AnimatedPopper from '~/components/Common/AnimatedPopper';
+import AnimatedPopover from '~/components/Common/AnimatedPopover';
 import Row from '~/components/Common/Row';
 import { PODS, SEEDS, SPROUTS, STALK } from '~/constants/tokens';
 import { AppState } from '~/state';
@@ -12,9 +12,9 @@ import BalanceStat from '../BalanceStat';
 import { Module, ModuleContent } from '~/components/Common/Module';
 import useAccount from '~/hooks/ledger/useAccount';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import PodsBalance from '../poppers/PodsBalance';
-import SproutsBalance from '../poppers/SproutsBalance';
-import StalkAndSeedsBalance from '../poppers/StalkAndSeedsBalance';
+import PodsBalance from '../Tokens/PodsBalance';
+import SproutsBalance from '../Tokens/SproutsBalance';
+import StalkAndSeedsBalance from '../Tokens/StalkAndSeedsBalance';
 
 const valueOrZeroBN = (value?: BigNumber, returnUndef?: boolean) => {
   const returnVal = returnUndef ? undefined : ZERO_BN;
@@ -117,10 +117,11 @@ const UserBalancesCard: React.FC<{}> = () => {
             {/* stalk and seeds */}
             <Grid container>
               <Grid item xs={12} md={5.5}>
-                <AnimatedPopper
+                <AnimatedPopover
                   id="stalkAndSeeds"
                   popperEl={<StalkAndSeedsBalance />}
                   disabled={!canPerformActions}
+                  scale={1.02}
                 >
                   <Grid container spacing={2}>
                     {stalkAndSeedsOption.map((item) => (
@@ -135,7 +136,7 @@ const UserBalancesCard: React.FC<{}> = () => {
                       </Grid>
                     ))}
                   </Grid>
-                </AnimatedPopper>
+                </AnimatedPopover>
               </Grid>
               <ResponsiveDivider />
               {/* pods and sprouts */}
@@ -150,7 +151,7 @@ const UserBalancesCard: React.FC<{}> = () => {
                       sx={{ maxWidth: '100% !important' }}
                     >
                       <Stack alignItems={{ xs: 'flex-start', md: 'center' }}>
-                        <AnimatedPopper
+                        <AnimatedPopover
                           id={`${opt.title}-popper`}
                           disabled={!canPerformActions}
                           popperEl={
@@ -166,7 +167,7 @@ const UserBalancesCard: React.FC<{}> = () => {
                             estimates={getEstimates()}
                             alignItems={{ xs: 'flex-start', md: 'center' }}
                           />
-                        </AnimatedPopper>
+                        </AnimatedPopover>
                       </Stack>
                     </Grid>
                   ))}

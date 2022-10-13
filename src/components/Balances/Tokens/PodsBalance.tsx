@@ -14,7 +14,7 @@ import PointIndicator from '~/img/misc/point-indicator.svg';
 import AuthEmptyState from '~/components/Common/ZeroState/AuthEmptyState';
 import ArrowPagination from '~/components/Common/ArrowPagination';
 import { tableStyle } from '~/components/Common/Table/styles';
-import BalancePopper from './BalancePopper';
+import BalancePopover from './BalancePopover';
 
 const plotsTableStyle = {
   '& .MuiDataGrid-columnHeaderTitle': {
@@ -132,7 +132,7 @@ const PodsBalance: React.FC<{}> = () => {
   }, [rows]);
 
   return (
-    <BalancePopper
+    <BalancePopover
       items={[
         {
           token: PODS,
@@ -201,7 +201,7 @@ const PodsBalance: React.FC<{}> = () => {
           />
         </Box>
       </Stack>
-    </BalancePopper>
+    </BalancePopover>
   );
 };
 

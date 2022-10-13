@@ -7,8 +7,8 @@ import { ZERO_BN } from '~/constants';
 import { SEEDS, STALK } from '~/constants/tokens';
 import useDimensions from '~/hooks/app/useDimensions';
 import { AppState } from '~/state';
-import { displayFullBN } from '~/util';
-import BalancePopper from './BalancePopper';
+import { displayFullBN, displayStalk } from '~/util';
+import BalancePopover from './BalancePopover';
 
 const colors = [
   BeanstalkPalette.logoGreen,
@@ -92,56 +92,54 @@ const StalkSVG: React.FC<{
 };
 
 const StalkAndSeedsBalance: React.FC<{}> = () => {
-  const { stalk: farmerStalk, seeds: farmerSeeds } = useSelector<
-    AppState,
-    AppState['_farmer']['silo']
-  >((state) => state._farmer.silo);
-  const { stalk: beanstalkStalk } = useSelector<
-    AppState,
-    AppState['_beanstalk']['silo']
-  >((state) => state._beanstalk.silo);
+  const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>(
+    (state) => state._farmer.silo
+  );
+  const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>(
+    (state) => state._beanstalk.silo
+  );
 
   const container = useRef<HTMLDivElement | null>(null);
 
   const ownership =
-    farmerStalk?.active.gt(0) && beanstalkStalk.total?.gt(0)
-      ? farmerStalk.active.div(beanstalkStalk.total)
+    farmerSilo.stalk?.active.gt(0) && beanstalkSilo.stalk.total?.gt(0)
+      ? farmerSilo.stalk.active.div(beanstalkSilo.stalk.total)
       : ZERO_BN;
 
   const items = [
     {
       title: 'STALK',
       token: STALK,
-      amount: farmerStalk.total,
-      pct: ownership,
+      amount: farmerSilo.stalk.total,
+      pct: ownership.times(100),
       description:
         'Stalk entitles the holder to a share of future Bean mints and participation in governance.',
     },
     {
       title: 'SEEDS',
       token: SEEDS,
-      amount: farmerSeeds.total,
+      amount: farmerSilo.seeds.total,
       description: 'Seeds yield 1/10000 Grown Stalk every Season.',
     },
   ];
 
   const stalkInfo = [
     {
-      amount: farmerStalk.active,
+      amount: displayFullBN(farmerSilo.stalk.active, 2),
       text: 'from initial deposits',
     },
     {
-      amount: farmerStalk.grown,
+      amount: displayFullBN(farmerSilo.stalk.grown, 2),
       text: 'grown from Seeds',
     },
     {
-      amount: farmerStalk.total.dividedBy(10_000),
+      amount: displayStalk(farmerSilo.seeds.active.times(1 / 10_000)),
       text: 'per Season from Seeds',
     },
   ];
 
   return (
-    <BalancePopper items={items} maxWidth={490}>
+    <BalancePopover items={items} maxWidth={490}>
       <Stack sx={{ px: 2, pb: 2 }} spacing={2}>
         <Stack spacing={0.5}>
           {stalkInfo.map(({ amount, text }, i) => (
@@ -156,7 +154,7 @@ const StalkAndSeedsBalance: React.FC<{}> = () => {
               />
               <Typography component="span" variant="bodySmall">
                 <Typography variant="bodySmall" fontWeight={FontWeight.bold}>
-                  {displayFullBN(amount, 2)}
+                  {amount}
                 </Typography>{' '}
                 STALK {text}
               </Typography>
@@ -167,7 +165,7 @@ const StalkAndSeedsBalance: React.FC<{}> = () => {
           <StalkSVG containerRef={container} />
         </div>
       </Stack>
-    </BalancePopper>
+    </BalancePopover>
   );
 };
 
