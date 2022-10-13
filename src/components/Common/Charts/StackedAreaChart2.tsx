@@ -22,10 +22,11 @@ import { displayBN } from '~/util';
 import { CURVES } from '~/components/Common/Charts/LineChart';
 import { FC } from '~/types';
 import { Module, ModuleContent } from '~/components/Common/Module';
-import { TokenMap } from '~/constants';
 import { SILO_WHITELIST } from '~/constants/tokens';
 import useTokenMap from '~/hooks/chain/useTokenMap';
 import Row from '~/components/Common/Row';
+import { ZERO_BN } from '~/constants';
+import DataPoint from '~/constants/charts';
 
 // ------------------------
 //    Stacked Area Chart
@@ -42,8 +43,8 @@ export type DataRegion = {
 }
 
 export type StackedAreaProps = {
-  series: (DataPoint2[])[];
-  onCursor: (ds?: DataPoint2) => void;
+  series: (DataPoint[])[];
+  onCursor: (ds?: DataPoint) => void;
   curve?: CurveFactory | (keyof typeof CURVES);
   isTWAP?: boolean;
   children?: (props: GraphProps & {
@@ -102,24 +103,24 @@ const lineColors = [
 //           Data
 // ------------------------
 
-export type DataPoint2 = {
-  /** Date */
-  date: Date;
-  /** Season */
-  season: number;
-  /** Total deposited value. */
-  value: number;
-  tokens: TokenMap<number>
-}
+// export type DataPoint2 = {
+//   /** Date */
+//   date: Date;
+//   /** Season */
+//   season: number;
+//   /** Total deposited value. */
+//   value: number;
+//   tokens: TokenMap<number>
+// }
 
 const siloAddrs = SILO_WHITELIST.map((t) => t[1].address);
 export type TokenStacks = typeof siloAddrs[number];
 
 // data accessors
-const getX = (d: DataPoint2) => d?.season;
-const getY = (d: DataPoint2) => d?.value;
-const getYByAsset = (d: DataPoint2, asset: TokenStacks) => d?.tokens[asset];
-const bisectSeason = bisector<DataPoint2, number>(
+const getX = (d: DataPoint) => d?.season;
+const getY = (d: DataPoint) => d?.value;
+const getYByAsset = (d: DataPoint, asset: TokenStacks) => (d?.tokens ? d?.tokens[asset] : 0);
+const bisectSeason = bisector<DataPoint, number>(
   (d) => d.season
 ).left;
 
@@ -217,7 +218,7 @@ const Graph: FC<GraphProps> = (props) => {
     tooltipData,
     tooltipTop = 0,
     tooltipLeft = 0,
-  } = useTooltip<DataPoint2 | undefined>();
+  } = useTooltip<DataPoint | undefined>();
 
   const handleTooltip = useCallback(
     (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
@@ -331,7 +332,7 @@ const Graph: FC<GraphProps> = (props) => {
                 id={key}
                 />
               <rect x={0} y={0} width={width} height={height} fill="transparent" rx={14} />
-              <AreaStack<DataPoint2>
+              <AreaStack<DataPoint>
                 top={margin.top}
                 left={margin.left}
                 keys={keys}
@@ -362,7 +363,7 @@ const Graph: FC<GraphProps> = (props) => {
         <Group width={width - yAxisWidth} height={dataRegion.yBottom - dataRegion.yTop}>
           {children && children({ scales, dataRegion, ...props })}
           {keys.map((key: string, index) => (
-            <LinePath<DataPoint2>
+            <LinePath<DataPoint>
               key={index}
               curve={curveLinear}
               data={series[0]}
@@ -472,7 +473,7 @@ const Graph: FC<GraphProps> = (props) => {
                                 {siloTokens[label.text.toLowerCase()]?.symbol}
                               </Typography>
                               <Typography>
-                                ${displayBN(new BigNumber(tooltipData.tokens[label.text.toLowerCase()]))}
+                                ${displayBN(tooltipData.tokens ? new BigNumber(tooltipData.tokens[label.text.toLowerCase()]) : ZERO_BN)}
                               </Typography>
                             </Row>
                           </LegendLabel>

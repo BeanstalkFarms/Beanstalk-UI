@@ -5,7 +5,7 @@ import { TokenMap, ZERO_BN } from '~/constants';
 import { BEAN, SEEDS, SILO_WHITELIST, STALK } from '~/constants/tokens';
 import { FarmerSiloRewardsQuery, SeasonalPriceQuery } from '~/generated/graphql';
 import { secondsToDate, toTokenUnitsBN } from '~/util';
-import { DataPoint2 } from '~/components/Common/Charts/StackedAreaChart2';
+import DataPoint from '~/constants/charts';
 
 export type Snapshot = { id: string; season: number, timestamp: string, hourlyDepositedBDV: string };
 
@@ -31,7 +31,7 @@ export const addBufferSeasons = (
 };
 
 export const addBufferSeasons2 = (
-  points: DataPoint2[],
+  points: SeasonDataPoint[],
   num: number = 24
 ) => {
   if (points.length === 0) return [];
@@ -200,7 +200,7 @@ export const interpolateFarmerAssetBalances = (
 
   // if the subgraph misses some prices or something happens in the frontend
   // we use the last known price until we encounter a price at the current season
-  const points : DataPoint2[] = [];
+  const points : DataPoint[] = [];
 
   for (let s = minSeason; s <= maxSeason; s += 1) {
     const thisPrice = prices[currPriceIndex];

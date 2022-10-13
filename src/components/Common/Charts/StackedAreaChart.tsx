@@ -18,6 +18,7 @@ import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { displayBN } from '~/util';
 import { CURVES } from '~/components/Common/Charts/LineChart';
 import { FC } from '~/types';
+import DataPoint from '~/constants/charts';
 
 // ------------------------
 //    Stacked Area Chart
@@ -67,12 +68,6 @@ const strokes = [
 // ------------------------
 //           Data
 // ------------------------
-
-export type DataPoint = {
-  season: number;
-  value: number;
-  date?: Date;
-};
 
 // data accessors
 const getX = (d: DataPoint) => d?.season;

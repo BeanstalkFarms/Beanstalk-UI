@@ -18,6 +18,7 @@ import { CurveFactory } from 'd3-shape';
 import { NumberValue } from 'd3-scale';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import ChartPropProvider, { BaseDataPoint, ProviderChartProps } from './ChartPropProvider';
+import DataPoint from '~/constants/charts';
 
 // ------------------------
 //       Line Chart
@@ -65,12 +66,6 @@ type GraphProps = {
 // ------------------------
 //           Data
 // ------------------------
-
-export type DataPoint = {
-  season: number;
-  value: number;
-  date: Date;
-};
 
 // ------------------------
 //      Fonts & Colors
