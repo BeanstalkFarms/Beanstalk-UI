@@ -29,11 +29,7 @@ const EstimateBalanceInput: React.FC<{
   active: boolean;
   setActive: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ active, amount, setActive, setAmount }) => {
-  const totalBeanSupply: BigNumber = useSelector<
-    AppState,
-    AppState['_bean']['token']['supply']
-  >((state) => state._bean.token.supply);
-
+  const totalBeanSupply: BigNumber = useSelector<AppState, AppState['_bean']['token']['supply']>((state) => state._bean.token.supply);
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -43,22 +39,15 @@ const EstimateBalanceInput: React.FC<{
 
   return (
     <Card
-      sx={{
-        px: 2,
-        py: 1.5,
-        background: BeanstalkPalette.lightYellow,
-        border: 'none',
-        width: '100%',
+      sx={{ 
+        px: 2, py: 1.5, background: BeanstalkPalette.lightYellow, border: 'none', width: '100%',
       }}
     >
       <Stack spacing={1} alignItems="center">
         <ChangeHistoryOutlinedIcon
           color="primary"
-          sx={{
-            width: '20px',
-            height: '20px',
-            transform: `rotate(${active ? '180deg' : 0})`,
-            cursor: 'pointer',
+          sx={{ 
+            width: '20px', height: '20px', transform: `rotate(${active ? '180deg' : 0})`, cursor: 'pointer',
           }}
           onClick={() => {
             if (active) {
@@ -95,11 +84,7 @@ const EstimateBalanceInput: React.FC<{
             <Typography textAlign="center" sx={{ whiteSpace: 'nowrap' }}>
               next Season, a total Supply of{' '}
               <strong>
-                {`${
-                  totalBeanSupply !== NEW_BN
-                    ? displayFullBN(totalBeanSupply, 2)
-                    : '0'
-                }`}
+                {`${totalBeanSupply !== NEW_BN ? displayFullBN(totalBeanSupply, 2) : '0'}`}
               </strong>
             </Typography>
           </Stack>

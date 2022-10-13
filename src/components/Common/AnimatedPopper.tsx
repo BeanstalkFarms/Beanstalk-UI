@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SxProps, Theme, Popover, Box, Card } from '@mui/material';
+import { SxProps, Theme, Popover, Box } from '@mui/material';
 
 const AnimatedPopper: React.FC<{
   children: React.ReactNode;
@@ -48,9 +48,8 @@ const AnimatedPopper: React.FC<{
           vertical: 'top',
           horizontal: 'left',
         }}
-        sx={{}}
       >
-        <Card>{popperEl}</Card>
+        {popperEl}
       </Popover>
     </>
   );

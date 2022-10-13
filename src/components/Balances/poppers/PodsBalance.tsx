@@ -1,31 +1,39 @@
-import { Typography, Stack, Box, Card } from '@mui/material';
+import { Typography, Stack, Box, Divider } from '@mui/material';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import BigNumber from 'bignumber.js';
 import { DataGrid } from '@mui/x-data-grid';
-import { ZERO_BN } from '~/constants';
 import { AppState } from '~/state';
-import { displayBN, displayFullBN } from '~/util';
-import TokenIcon from '~/components/Common/TokenIcon';
+import { displayBN, PlotMap } from '~/util';
 import { PODS } from '~/constants/tokens';
 import Row from '~/components/Common/Row';
 import { podlineColumns } from '~/pages/field';
-import { BeanstalkPalette } from '~/components/App/muiTheme';
+import { BeanstalkPalette, FontSize } from '~/components/App/muiTheme';
 import PointIndicator from '~/img/misc/point-indicator.svg';
 import AuthEmptyState from '~/components/Common/ZeroState/AuthEmptyState';
 import ArrowPagination from '~/components/Common/ArrowPagination';
 import { tableStyle } from '~/components/Common/Table/styles';
+import BalancePopper from './BalancePopper';
 
-const PlacesInLine: React.FC<{}> = () => {
-  const { plots } = useSelector<AppState, AppState['_farmer']['field']>(
-    (state) => state._farmer.field
-  );
-  const { podLine, harvestableIndex } = useSelector<
-    AppState,
-    AppState['_beanstalk']['field']
-  >((state) => state._beanstalk.field);
+const plotsTableStyle = {
+  '& .MuiDataGrid-columnHeaderTitle': {
+    fontWeight: 450,
+    fontSize: `${FontSize.sm} !important`,
+  },
+  '& .MuiDataGrid-footerContainer': {
+    justifyContent: 'center',
+  },
+  '& .MuiTypography-root': {
+    fontSize: FontSize.sm,
+  },
+};
 
+const PlacesInLine: React.FC<{
+  plots: PlotMap<BigNumber>;
+  podLine: BigNumber;
+  harvestableIndex: BigNumber;
+}> = ({ plots, podLine, harvestableIndex }) => {
   // calculate the relative position of each plot (place in line / line length)
   const relativePlotPositions = useMemo(() => {
     const data: number[] = [];
@@ -78,8 +86,8 @@ const PlacesInLine: React.FC<{}> = () => {
         </Box>
       </Row>
       <Row width="100%" justifyContent="space-between">
-        <Typography>0</Typography>
-        <Typography>{displayBN(podLine)}</Typography>
+        <Typography variant="bodySmall">0</Typography>
+        <Typography variant="bodySmall">{displayBN(podLine)}</Typography>
       </Row>
     </Stack>
   );
@@ -92,7 +100,7 @@ const PodsBalance: React.FC<{}> = () => {
     AppState,
     AppState['_farmer']['field']
   >((state) => state._farmer.field);
-  const { harvestableIndex } = useSelector<
+  const { harvestableIndex, podLine } = useSelector<
     AppState,
     AppState['_beanstalk']['field']
   >((state) => state._beanstalk.field);
@@ -120,35 +128,39 @@ const PodsBalance: React.FC<{}> = () => {
 
   const tableHeight = useMemo(() => {
     if (!rows || rows.length === 0) return '300px';
-    return 60.5 + 6 + 39 - 5 + Math.min(rows.length, MAX_ROWS) * 36;
+    return 58 + 39 + Math.min(rows.length, MAX_ROWS) * 36;
   }, [rows]);
 
   return (
-    <Card sx={{ pt: 2, backgroundColor: BeanstalkPalette.lightYellow }}>
+    <BalancePopper
+      items={[
+        {
+          token: PODS,
+          title: 'PODS',
+          amount: pods,
+          description:
+            'The Beanstalk-native debt asset, Harvestable on a FIFO basis.',
+        },
+      ]}
+    >
       <Stack spacing={1}>
-        <Stack spacing={1} sx={{ px: 2 }}>
-          <Stack>
-            <Typography variant="bodySmall">
-              <TokenIcon token={PODS} /> PODS
-            </Typography>
-            <Typography variant="h4" component="span">
-              {displayFullBN(pods || ZERO_BN, 2)}
-            </Typography>
-          </Stack>
-          <Typography>
-            The Beanstalk-native debt asset, Harvestable on a FIFO basis.
-          </Typography>
-          <Stack pt={1}>
-            <PlacesInLine />
-          </Stack>
+        <Stack px={2} spacing={1}>
+          <PlacesInLine
+            podLine={podLine}
+            plots={plots}
+            harvestableIndex={harvestableIndex}
+          />
+          <Divider
+            sx={{ width: '100%', color: BeanstalkPalette.lightYellow }}
+          />
         </Stack>
         <Box
           sx={{
             height: tableHeight,
             width: '100%',
             ...tableStyle,
-            px: 2,
             backgroundColor: BeanstalkPalette.lightYellow,
+            px: 1,
           }}
         >
           <DataGrid
@@ -175,21 +187,21 @@ const PodsBalance: React.FC<{}> = () => {
               },
             }}
             sx={{
-              '& .MuiDataGrid-root .MuiDataGrid-row': {
+              '& .MuiDataGrid-root, .MuiDataGrid-row, .MuiDataGrid-cell': {
+                maxHeight: '27px !important',
+                minHeight: '27px !important',
                 ':first-child': {
                   color: harvestablePods?.gt(0)
                     ? BeanstalkPalette.theme.fall.brown
                     : undefined,
                 },
               },
-              '& .MuiDataGrid-footerContainer': {
-                justifyContent: 'center',
-              },
+              ...plotsTableStyle,
             }}
           />
         </Box>
       </Stack>
-    </Card>
+    </BalancePopper>
   );
 };
 

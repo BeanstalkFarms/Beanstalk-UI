@@ -12,7 +12,8 @@ import BalanceStat from '../BalanceStat';
 import { Module, ModuleContent } from '~/components/Common/Module';
 import useAccount from '~/hooks/ledger/useAccount';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import PodsBalance from '../tooltips/PodsBalance';
+import PodsBalance from '../poppers/PodsBalance';
+import SproutsBalance from '../poppers/SproutsBalance';
 
 const valueOrZeroBN = (value?: BigNumber, returnUndef?: boolean) => {
   const returnVal = returnUndef ? undefined : ZERO_BN;
@@ -47,7 +48,7 @@ const ResponsiveDivider = () => (
 );
 
 const UserBalancesCard: React.FC<{}> = () => {
-  const account = useAccount();
+  // state
   const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>(
     (state) => state._farmer.silo
   );
@@ -57,11 +58,15 @@ const UserBalancesCard: React.FC<{}> = () => {
   const farmerBarn = useSelector<AppState, AppState['_farmer']['barn']>(
     (state) => state._farmer.barn
   );
+  const account = useAccount();
+
   const [displayAmount, setDisplayAmount] = useState<string>('');
   const [active, setActive] = useState(false);
 
+  // helpers
   const canPerformActions = account !== undefined;
 
+  // options
   const stalkAndSeedsOption = [
     {
       title: 'Stalk',
@@ -108,69 +113,65 @@ const UserBalancesCard: React.FC<{}> = () => {
             <Typography variant="h4" sx={{ pb: 0.5 }}>
               Beanstalk Balances
             </Typography>
-            <Stack>
-              {/* stalk and seeds */}
-              <Grid container>
-                <>
-                  <Grid item xs={12} md={5.5}>
-                    <AnimatedPopper
-                      id="stalkAndSeeds"
-                      popperEl={<Typography>stalk and seeds</Typography>}
-                      disabled={!canPerformActions}
-                    >
-                      <Grid container>
-                        {stalkAndSeedsOption.map((item) => (
-                          <Grid
-                            item
-                            xs={6}
-                            key={item.title}
-                            width="100%"
-                            sx={{ maxWidth: '100% !important' }}
-                          >
-                            <BalanceStat {...item} estimates={getEstimates()} />
-                          </Grid>
-                        ))}
-                      </Grid>
-                    </AnimatedPopper>
-                  </Grid>
-                  <ResponsiveDivider />
-                </>
-                {/* width of 6.4 to take into account width of divider */}
-                {/* pods and sprouts */}
-                <Grid item xs={12} md={6.4}>
+            {/* stalk and seeds */}
+            <Grid container>
+              <Grid item xs={12} md={5.5}>
+                <AnimatedPopper
+                  id="stalkAndSeeds"
+                  popperEl={<Typography>stalk and seeds</Typography>}
+                  disabled={!canPerformActions}
+                >
                   <Grid container spacing={2}>
-                    {podsAndSproutsOptions.map((opt, k) => (
+                    {stalkAndSeedsOption.map((item) => (
                       <Grid
                         item
                         xs={6}
-                        key={k}
+                        key={item.title}
+                        width="100%"
                         sx={{ maxWidth: '100% !important' }}
                       >
-                        <Stack alignItems={{ xs: 'flex-start', md: 'center' }}>
-                          <AnimatedPopper
-                            id={`${opt.title}-popper`}
-                            disabled={!canPerformActions}
-                            popperEl={
-                              opt.token.address === PODS.address ? (
-                                <PodsBalance />
-                              ) : (
-                                <Typography>sprouts</Typography>
-                              )
-                            }
-                          >
-                            <BalanceStat
-                              {...opt}
-                              estimates={getEstimates()}
-                              alignItems={{ xs: 'flex-start', md: 'center' }}
-                            />
-                          </AnimatedPopper>
-                        </Stack>
+                        <BalanceStat {...item} estimates={getEstimates()} />
                       </Grid>
                     ))}
                   </Grid>
+                </AnimatedPopper>
+              </Grid>
+              <ResponsiveDivider />
+              {/* pods and sprouts */}
+              {/* width of 6.4 to take into account width of divider */}
+              <Grid item xs={12} md={6.4}>
+                <Grid container spacing={2}>
+                  {podsAndSproutsOptions.map((opt, k) => (
+                    <Grid
+                      item
+                      xs={6}
+                      key={k}
+                      sx={{ maxWidth: '100% !important' }}
+                    >
+                      <Stack alignItems={{ xs: 'flex-start', md: 'center' }}>
+                        <AnimatedPopper
+                          id={`${opt.title}-popper`}
+                          disabled={!canPerformActions}
+                          popperEl={
+                            opt.token === PODS ? (
+                              <PodsBalance />
+                            ) : (
+                              <SproutsBalance />
+                            )
+                          }
+                        >
+                          <BalanceStat
+                            {...opt}
+                            estimates={getEstimates()}
+                            alignItems={{ xs: 'flex-start', md: 'center' }}
+                          />
+                        </AnimatedPopper>
+                      </Stack>
+                    </Grid>
+                  ))}
                 </Grid>
               </Grid>
-            </Stack>
+            </Grid>
           </Stack>
           <Stack
             display={{ xs: 'none', lg: 'flex' }}
