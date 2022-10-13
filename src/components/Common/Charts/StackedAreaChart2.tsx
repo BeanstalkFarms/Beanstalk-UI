@@ -2,11 +2,11 @@ import React, { useCallback, useMemo } from 'react';
 import { bisector, extent, max } from 'd3-array';
 import { NumberValue } from 'd3-scale';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import { AreaStack, Bar, Line, LinePath } from '@visx/shape';
+import { AreaStack, Bar, LinePath } from '@visx/shape';
 import { Group } from '@visx/group';
 import { scaleLinear, scaleOrdinal } from '@visx/scale';
 import { localPoint } from '@visx/event';
-import { useTooltip } from '@visx/tooltip';
+import { Tooltip, useTooltip } from '@visx/tooltip';
 import {
   curveLinear,
 } from '@visx/curve';
@@ -15,10 +15,15 @@ import { CurveFactory } from 'd3-shape';
 import BigNumber from 'bignumber.js';
 import { LinearGradient } from '@visx/gradient';
 
+import { LegendItem, LegendLabel, LegendOrdinal } from '@visx/legend';
+import { Typography } from '@mui/material';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import { displayBN } from '~/util';
 import { CURVES } from '~/components/Common/Charts/LineChart';
 import { FC } from '~/types';
+import { Module, ModuleContent } from '~/components/Common/Module';
+import { TokenMap } from '~/constants';
+import { SILO_WHITELIST } from '~/constants/tokens';
 
 // ------------------------
 //    Stacked Area Chart
@@ -36,7 +41,7 @@ export type DataRegion = {
 
 export type StackedAreaProps = {
   series: (DataPoint2[])[];
-  onCursor: (ds?: DataPoint2[]) => void;
+  onCursor: (ds?: DataPoint2) => void;
   curve?: CurveFactory | (keyof typeof CURVES);
   isTWAP?: boolean;
   children?: (props: GraphProps & {
@@ -102,19 +107,16 @@ export type DataPoint2 = {
   season: number;
   /** Total deposited value. */
   value: number;
-  // stacked areas
-  bean: number;
-  urBean: number;
-  bean3crv: number;
-  urBean3crv: number;
-
+  tokens: TokenMap<number>
 }
-export type TokenStacks = 'bean' | 'urBean' | 'bean3crv' | 'urBean3crv';
+
+const siloAddrs = SILO_WHITELIST.map((t) => t[1].address);
+export type TokenStacks = typeof siloAddrs[number];
 
 // data accessors
 const getX = (d: DataPoint2) => d?.season;
 const getY = (d: DataPoint2) => d?.value;
-const getYByAsset = (d: DataPoint2, asset: TokenStacks) => d[asset];
+const getYByAsset = (d: DataPoint2, asset: TokenStacks) => d?.tokens[asset];
 const bisectSeason = bisector<DataPoint2, number>(
   (d) => d.season
 ).left;
@@ -170,23 +172,8 @@ const Graph: FC<GraphProps> = (props) => {
   console.log('STACKED AREA DATA', data);
 
   // ex: ['bean', 'urBean', 'bean3crv', 'urBean3Crv'];
-  const keys = Object.keys(series[0][0]).filter((a) =>
-    a !== 'season' &&
-    a !== 'date' &&
-    a !== 'value'
-  );
+  const keys = siloAddrs;
   const yAxisWidth = 57;
-
-  /**
-   *
-   */
-  const {
-    showTooltip,
-    hideTooltip,
-    tooltipData,
-    tooltipTop = 0,
-    tooltipLeft = 0,
-  } = useTooltip<DataPoint2[] | undefined>();
 
   /**
    * Build scales.
@@ -218,38 +205,44 @@ const Graph: FC<GraphProps> = (props) => {
     return { xScale, yScale };
   }), [series, height, width]);
 
+  /**
+   *
+   */
+  const {
+    showTooltip,
+    hideTooltip,
+    tooltipData,
+    tooltipTop = 0,
+    tooltipLeft = 0,
+  } = useTooltip<DataPoint2 | undefined>();
+
   const handleTooltip = useCallback(
     (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
       const { x } = localPoint(event) || { x: 0 }; // x0 + x1 + ... + xn = width of chart (~ 1123 px on my screen) ||| ex 956
 
-      // for each series
-      const ds = scales.map((scale, i) => {
-        const x0 = scale.xScale.invert(x);   // get Date (season) corresponding to pixel coordinate x ||| ex: 6145.742342789
-        const index = bisectSeason(series[i], x0, 1);  // find the closest index of x0 within data
+      const x0 = scales[0].xScale.invert(x);   // get Date (season) corresponding to pixel coordinate x ||| ex: 6145.742342789
+      const index = bisectSeason(series[0], x0, 1);  // find the closest index of x0 within data
 
-        const d0 = series[i][index - 1];  // value at x0 - 1
-        const d1 = series[i][index];      // value at x0
+      const d0 = series[0][index - 1];  // value at x0 - 1
+      const d1 = series[0][index];      // value at x0
 
-        //     |   6   |  | 3 |
-        // [(d0)-------(x0)---(d1)]
-        // default to the left endpoint
-        let d = d0;
-        if (d1 && getX(d1)) {
-          // use d1 if x0 is closer to d1
-          d = (x0.valueOf() - getX(d0).valueOf()) > (getX(d1).valueOf() - x0.valueOf())
-            ? d1
-            : d0;
-        }
-
-        return d;
-      });
+      //     |   6   |  | 3 |
+      // [(d0)-------(x0)---(d1)]
+      // default to the left endpoint
+      let d = d0;
+      if (d1 && getX(d1)) {
+        // use d1 if x0 is closer to d1
+        d = (x0.valueOf() - getX(d0).valueOf()) > (getX(d1).valueOf() - x0.valueOf())
+          ? d1
+          : d0;
+      }
 
       showTooltip({
-        tooltipData: ds,
-        tooltipLeft: x, // in pixels
-        tooltipTop: scales[0].yScale(getY(ds[0])), // in pixels
+        tooltipData: d,
+        tooltipLeft: x - 75, // in pixels
+        tooltipTop: scales[0].yScale(getY(d)) - 90, // in pixels
       });
-      onCursor(ds);
+      onCursor(d);
     },
     [showTooltip, onCursor, scales, series],
   );
@@ -286,7 +279,7 @@ const Graph: FC<GraphProps> = (props) => {
   if (!series || series.length === 0) return null;
 
   //
-  const tooltipLeftAttached = tooltipData ? scales[0].xScale(getX(tooltipData[0])) : undefined;
+  // const tooltipLeftAttached = tooltipData ? scales[0].xScale(getX(tooltipData[0])) : undefined;
 
   /**
    * Height: `height` (controlled by container)
@@ -309,7 +302,7 @@ const Graph: FC<GraphProps> = (props) => {
       - strokeBuffer
   };
 
-  // key
+  // legend
   const ordinalColorScale = scaleOrdinal({
     domain: keys,
     range: fillColors,
@@ -331,7 +324,7 @@ const Graph: FC<GraphProps> = (props) => {
                 from={fillColors[index]}
                 to={fillColors[index]}
                 id={key}
-              />
+                />
               <rect x={0} y={0} width={width} height={height} fill="transparent" rx={14} />
               <AreaStack<DataPoint2>
                 top={margin.top}
@@ -344,18 +337,18 @@ const Graph: FC<GraphProps> = (props) => {
                 y1={(d) => scales[0].yScale(getYByAsset(d.data, key as TokenStacks)) ?? 0}
                 >
                 {({ stacks, path }) =>
-                  stacks.map((stack, i) => (
-                    <path
-                      key={`stack-${key}`}
-                      d={path(stack) || ''}
-                      // stroke={BeanstalkPalette.logoGreen}
-                      fill={`url(#${key})`}
-                      // fill={fills[index].fill}
-                      onClick={() => {
-                      }}
-                    />
-                  ))
-                }
+                    stacks.map((stack, i) => (
+                      <path
+                        key={`stack-${key}`}
+                        d={path(stack) || ''}
+                        // stroke={BeanstalkPalette.logoGreen}
+                        fill={`url(#${key})`}
+                        // fill={fills[index].fill}
+                        onClick={() => {
+                        }}
+                      />
+                    ))
+                  }
               </AreaStack>
             </>
             )
@@ -407,26 +400,13 @@ const Graph: FC<GraphProps> = (props) => {
          */}
         {tooltipData && (
           <g>
-            <Line
-              from={{ x: tooltipLeft, y: dataRegion.yTop }}
-              to={{ x: tooltipLeft, y: dataRegion.yBottom }}
-              stroke={BeanstalkPalette.lightGrey}
-              strokeWidth={1}
-              pointerEvents="none"
-            />
-            {/* {keys.map((key) => ( */}
-            {/*  <circle */}
-            {/*    cx={tooltipLeftAttached} */}
-            {/*    cy={tooltipTop} */}
-            {/*    r={4} */}
-            {/*    fill="black" */}
-            {/*    fillOpacity={0.1} */}
-            {/*    stroke="black" */}
-            {/*    strokeOpacity={0.1} */}
-            {/*    strokeWidth={2} */}
-            {/*    pointerEvents="none" */}
-            {/*  /> */}
-            {/* ))} */}
+            {/* <Line */}
+            {/*  from={{ x: tooltipLeft, y: dataRegion.yTop }} */}
+            {/*  to={{ x: tooltipLeft, y: dataRegion.yBottom }} */}
+            {/*  stroke={BeanstalkPalette.lightGrey} */}
+            {/*  strokeWidth={1} */}
+            {/*  pointerEvents="none" */}
+            {/* /> */}
           </g>
         )}
         {/* Overlay to handle tooltip.
@@ -444,6 +424,49 @@ const Graph: FC<GraphProps> = (props) => {
           onMouseLeave={handleMouseLeave}
         />
       </svg>
+      {tooltipData && (
+        <div>
+          <Tooltip
+            left={tooltipLeft}
+            top={tooltipTop}
+            // unstyled
+          >
+            <Module sx={{ pt: 1, width: 'max-content', zIndex: -1 }}>
+              <Typography />
+              <ModuleContent>
+                <LegendOrdinal
+                  scale={ordinalColorScale}
+                  labelFormat={(label) => `${label.toUpperCase()}`}
+                  style={{ position: 'absolute', top: 0, zIndex: -1, }}
+                >
+                  {(labels) => (
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      {labels.map((label, i) => (
+                        <LegendItem
+                          key={`legend-quantile-${i}`}
+                          margin="0 0 1.5px 1.5px"
+                        >
+                          <svg width={legendGlyphSize} height={legendGlyphSize}>
+                            <rect
+                              fill={label.value}
+                              width={legendGlyphSize}
+                              height={legendGlyphSize}
+                              {...lineColors[i]}
+                            />
+                          </svg>
+                          <LegendLabel align="left" margin="0 0 0 4px">
+                            {label.text}
+                          </LegendLabel>
+                        </LegendItem>
+                      ))}
+                    </div>
+                  )}
+                </LegendOrdinal>
+              </ModuleContent>
+            </Module>
+          </Tooltip>
+        </div>
+      )}
     </>
   );
 };

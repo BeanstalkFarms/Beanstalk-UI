@@ -2,8 +2,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 
-import browserUsage, { BrowserUsage } from '@visx/mock-data/lib/mocks/browserUsage';
-import { DataPoint  } from '~/components/Common/Charts/LineChart';
 import TimeTabs, { TimeTabState } from '~/components/Common/Charts/TimeTabs';
 import WalletButton from '~/components/Common/Connection/WalletButton';
 import Row from '~/components/Common/Row';
@@ -15,10 +13,6 @@ import { SeasonAggregation, SeasonRange, SEASON_RANGE_TO_COUNT } from '~/hooks/b
 
 import { FC } from '~/types';
 import StackedAreaChart2, { DataPoint2 } from '~/components/Common/Charts/StackedAreaChart2';
-
-type BrowserNames = keyof BrowserUsage;
-const data2 = browserUsage;
-// console.log('MOCK', data2);
 
 export type BalancesOverTimeProps = {
   account: string | undefined;
@@ -48,9 +42,9 @@ const BalancesOverTime: FC<BalancesOverTimeProps> = ({
   useEffect(() => setDisplaySeason(season), [season]);
 
   const handleCursor = useCallback(
-    (dps?: DataPoint[]) => {
-      setDisplaySeason(dps ? new BigNumber(dps[0].season) : season);
-      setDisplayValue(dps ? dps.map((dp) => new BigNumber(dp.value)) : current);
+    (dps?: DataPoint2) => {
+      setDisplaySeason(dps ? new BigNumber(dps?.season) : season);
+      setDisplayValue(dps ? [new BigNumber(dps?.value)] : current);
     },
     [current, season]
   );

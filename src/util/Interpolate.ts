@@ -1,11 +1,11 @@
 import BigNumber from 'bignumber.js';
 import { DateTime } from 'luxon';
 import { SeasonDataPoint } from '~/components/Common/Charts/SeasonPlot';
-import { ZERO_BN } from '~/constants';
-import { BEAN, BEAN_CRV3_LP, SEEDS, SILO_WHITELIST, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
+import { TokenMap, ZERO_BN } from '~/constants';
+import { BEAN, SEEDS, SILO_WHITELIST, STALK } from '~/constants/tokens';
 import { FarmerSiloRewardsQuery, SeasonalPriceQuery } from '~/generated/graphql';
 import { secondsToDate, toTokenUnitsBN } from '~/util';
-import { DataPoint2 } from '~/components/Common/Charts/StackedAreaChart';
+import { DataPoint2 } from '~/components/Common/Charts/StackedAreaChart2';
 
 export type Snapshot = { id: string; season: number, timestamp: string, hourlyDepositedBDV: string };
 
@@ -45,10 +45,11 @@ export const addBufferSeasons2 = (
     ...new Array(n).fill(null).map((_, i) => ({
       season: points[0].season + (i - n),
       date:   d.plus({ hours: i - n }).toJSDate(),
-      bean:  0,
-      urBean: 0,
-      bean3crv: 0,
-      urBean3crv: 0
+      value: 0,
+      tokens: SILO_WHITELIST.reduce<TokenMap<number>>((prev, curr) => {
+        prev[curr[1].address] = 0;
+        return prev;
+      }, {}),
     })),
     ...points,
   ];
@@ -222,8 +223,7 @@ export const interpolateFarmerAssetBalances = (
       // and sum up their BDV as `thisBDV`. Note that this assumes snapshots are sorted by season ascending.
       for (j; snapshots[j]?.season === nextSeason; j += 1) {
         thisBDV = thisBDV.plus(toTokenUnitsBN(snapshots[j].hourlyDepositedBDV, BEAN[1].decimals));
-        // @ts-ignore
-        const tokenAddr = snapshots[j]?.id.match(/-(.*)-/).pop();
+        const tokenAddr = snapshots[j]?.id.match(/-(.*)-/)?.pop();
         if (tokenAddr) {
           siloTokenBalances[tokenAddr] = siloTokenBalances[tokenAddr]?.plus(
             toTokenUnitsBN(snapshots[j].hourlyDepositedBDV, BEAN[1].decimals)
@@ -237,10 +237,10 @@ export const interpolateFarmerAssetBalances = (
     points.push({
       season: s,
       date:   thisTimestamp.toJSDate(),
-      bean: siloTokenBalances[BEAN[1].address].toNumber(),
-      urBean: siloTokenBalances[UNRIPE_BEAN[1].address].toNumber(),
-      bean3crv: siloTokenBalances[BEAN_CRV3_LP[1].address].toNumber(),
-      urBean3crv: siloTokenBalances[UNRIPE_BEAN_CRV3[1].address].toNumber(),
+      tokens: SILO_WHITELIST.reduce<TokenMap<number>>((prev, curr) => {
+        prev[curr[1].address] = siloTokenBalances[curr[1].address].toNumber();
+        return prev;
+      }, {}),
       value: thisBDV.multipliedBy(new BigNumber(thisPrice.price)).toNumber()
     });
 
