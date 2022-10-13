@@ -186,7 +186,7 @@ const defaultChartStyles: ChartMultiStyles = {
  */
 const getChartStyles = (config?: ChartMultiStyles) => {
   const style = config ?? defaultChartStyles;
-  const styles = Object.entries(style)?.map(
+  const styles = Object.entries(style).map(
     ([k, { stroke, fillPrimary, fillSecondary, strokeWidth }]) => {
       const primary = fillPrimary || stroke;
       const secondary = fillSecondary || fillPrimary;
@@ -315,9 +315,9 @@ const getYMin = (d: BaseDataPoint) =>
 type YDomainCache = { cum: number; lowest: number };
 const getStackedAreaYDomainMin = (data: BaseDataPoint[], keys: string[]) => {
   const start = { cum: 0, lowest: Infinity };
-  const map = new Map<string, YDomainCache>(keys?.map((key) => [key, start] as [string, YDomainCache]));
-  data?.forEach((d) => {
-    keys?.forEach((k) => {
+  const map = new Map<string, YDomainCache>(keys.map((key) => [key, start] as [string, YDomainCache]));
+  data.forEach((d) => {
+    keys.forEach((k) => {
       if (k in d) {
         const curr = (k in d) ? d[k] : 0;
         const stored = map.get(k);
@@ -330,7 +330,7 @@ const getStackedAreaYDomainMin = (data: BaseDataPoint[], keys: string[]) => {
     });
   });
   let cache = { cum: 0, lowest: Infinity };
-  Array.from(map.entries())?.forEach(([_k, { cum, lowest }]) => {
+  Array.from(map.entries()).forEach(([_k, { cum, lowest }]) => {
     if (!cache.cum) {
       cache = { cum, lowest };
     } else if (cum > cache.cum) {
@@ -363,7 +363,7 @@ const generateScale = (
   stackedArea?: boolean,
   isTWAP?: boolean,
 ) =>
-  seriesData?.map((data) => {
+  seriesData.map((data) => {
     // generate yScale
     const xDomain = extent(data, getX) as [number, number];
     const xScale = scaleLinear<number>({ domain: xDomain });

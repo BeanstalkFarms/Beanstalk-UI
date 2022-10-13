@@ -58,21 +58,6 @@ type GraphProps = {
   height: number;
 } & StackedAreaProps;
 
-const fills = [
-  {
-    fill: BeanstalkPalette.theme.fall.brown,
-  },
-  {
-    fill: BeanstalkPalette.darkBlue,
-  },
-  {
-    fill: BeanstalkPalette.lightGrey,
-  },
-  {
-    fill: BeanstalkPalette.trueRed,
-  },
-];
-
 const fillColors = [
   BeanstalkPalette.lightGreen,
   BeanstalkPalette.lightBrown,
@@ -99,20 +84,6 @@ const lineColors = [
   },
 ];
 
-// ------------------------
-//           Data
-// ------------------------
-
-// export type DataPoint2 = {
-//   /** Date */
-//   date: Date;
-//   /** Season */
-//   season: number;
-//   /** Total deposited value. */
-//   value: number;
-//   tokens: TokenMap<number>
-// }
-
 const siloAddrs = SILO_WHITELIST.map((t) => t[1].address);
 export type TokenStacks = typeof siloAddrs[number];
 
@@ -120,9 +91,7 @@ export type TokenStacks = typeof siloAddrs[number];
 const getX = (d: DataPoint) => d?.season;
 const getY = (d: DataPoint) => d?.value;
 const getYByAsset = (d: DataPoint, asset: TokenStacks) => (d?.tokens ? d?.tokens[asset] : 0);
-const bisectSeason = bisector<DataPoint, number>(
-  (d) => d.season
-).left;
+const bisectSeason = bisector<DataPoint, number>((d) => d.season).left;
 
 // ------------------------
 //        Plot Sizing
@@ -173,9 +142,8 @@ const Graph: FC<GraphProps> = (props) => {
   // use this dataset to decide where it goes. (There is one
   // circle but potentially multiple series).
   const data = series[0];
-  console.log('STACKED AREA DATA', data);
 
-  // ex: ['bean', 'urBean', 'bean3crv', 'urBean3Crv'];
+  // ex: ['0x234234', 'urBean', 'bean3crv', 'urBean3Crv'];
   const keys = siloAddrs;
   const yAxisWidth = 57;
 
@@ -240,11 +208,10 @@ const Graph: FC<GraphProps> = (props) => {
           ? d1
           : d0;
       }
-      console.log('SCALE VALUE', scales[0].yScale(getY(d)));
 
       showTooltip({
         tooltipData: d,
-        tooltipLeft: x - 75, // in pixels
+        tooltipLeft: x - 120, // in pixels
         // tooltipTop: scales[0].yScale(getY(d)) - 90, // in pixels
         tooltipTop: scales[0].yScale(getY(d)) - 140, // in pixels
       });
@@ -419,7 +386,6 @@ const Graph: FC<GraphProps> = (props) => {
                 pointerEvents="none"
               />
             ))}
-
           </g>
         )}
         {/* Overlay to handle tooltip.

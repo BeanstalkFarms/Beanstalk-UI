@@ -12,13 +12,14 @@ import { SEEDS, STALK } from '~/constants/tokens';
 import { SeasonAggregation, SeasonRange, SEASON_RANGE_TO_COUNT } from '~/hooks/beanstalk/useSeasonsQuery';
 
 import { FC } from '~/types';
-import StackedAreaChart2, { DataPoint2 } from '~/components/Common/Charts/StackedAreaChart2';
+import StackedAreaChart2 from '~/components/Common/Charts/StackedAreaChart2';
+import DataPoint from '~/constants/charts';
 
 export type BalancesOverTimeProps = {
   account: string | undefined;
   season: BigNumber;
   current: BigNumber[];
-  series: DataPoint2[][];
+  series: DataPoint[][];
   stats: (season: BigNumber, value: BigNumber[]) => React.ReactElement;
   empty: boolean;
   loading: boolean;
@@ -42,7 +43,7 @@ const BalancesOverTime: FC<BalancesOverTimeProps> = ({
   useEffect(() => setDisplaySeason(season), [season]);
 
   const handleCursor = useCallback(
-    (dps?: DataPoint2) => {
+    (dps?: DataPoint) => {
       setDisplaySeason(dps ? new BigNumber(dps?.season) : season);
       setDisplayValue(dps ? [new BigNumber(dps?.value)] : current);
     },

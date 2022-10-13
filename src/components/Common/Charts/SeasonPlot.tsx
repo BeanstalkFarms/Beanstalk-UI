@@ -2,13 +2,13 @@ import React, { useCallback, useMemo } from 'react';
 import { DocumentNode } from 'graphql';
 import { QueryOptions } from '@apollo/client';
 import { StatProps } from '~/components/Common/Stat';
-import { DataPoint } from '~/components/Common/Charts/LineChart';
 import useSeasonsQuery, {
   MinimumViableSnapshotQuery,
 } from '~/hooks/beanstalk/useSeasonsQuery';
 import BaseSeasonPlot from './BaseSeasonPlot';
 import useTimeTabState from '~/hooks/app/useTimeTabState';
 import { BaseChartProps, BaseDataPoint } from './ChartPropProvider';
+import DataPoint from '~/constants/charts';
 
 export const defaultValueFormatter = (value: number) => value.toFixed(4);
 
