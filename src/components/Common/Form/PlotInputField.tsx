@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
+import { flushSync } from 'react-dom';
 import BigNumber from 'bignumber.js';
 import { useFormikContext } from 'formik';
 import { Box, Grid, Typography } from '@mui/material';
@@ -93,8 +94,8 @@ const PlotInputField : FC<{
     return amount;
   }, [max]);
 
-  /// Update amount
-  const handleChangeAmount = useCallback((amount: BigNumber | undefined) => {
+  /// Update `start` and `end` based on `amount`
+  const onChangeAmount = useCallback((amount: BigNumber | undefined) => {
     if (!amount) {
       /// If the user clears the amount input, set start/end to the end
       /// of the Plot; amount will get set to zero by below effect
@@ -119,12 +120,18 @@ const PlotInputField : FC<{
 
   /// Select a new plot
   const handlePlotSelect = useCallback((index: string) => {
-    const _numPods = new BigNumber(plots[index]);
-    const clamped  = clamp(_numPods);
-    setFieldValue('plot.index',  index);     //  
-    setFieldValue('plot.amount', clamped);   // total num
-    handleChangeAmount(clamped);             // setup start/end index appropriately
-  }, [clamp, handleChangeAmount, plots, setFieldValue]);
+    const numPodsClamped  = clamp(new BigNumber(plots[index]));
+    // FIXME: React 18 introduced an infinite loop into the interaction
+    // between PlotInputField and TokenInputField. Usage of flushSync is
+    // a hotfix; we should study interaction more deeply and refactory.
+    flushSync(() => {
+      setFieldValue('plot.index',  index);     
+      onChangeAmount(numPodsClamped); // setup start/end index appropriately
+    });
+    flushSync(() => {
+      setFieldValue('plot.amount', numPodsClamped);
+    });
+  }, [clamp, onChangeAmount, plots, setFieldValue]);
 
   /// Update amount when an endpoint changes via the advanced controls
   /// If one of end/start change, so does the amount input.
@@ -155,7 +162,7 @@ const PlotInputField : FC<{
         balance={numPods}
         hideBalance={!plot.index}
         balanceLabel={plot.index ? 'Plot Size' : undefined}
-        handleChange={handleChangeAmount}
+        onChange={onChangeAmount}
         quote={plot.index ? Quote : undefined}
       />
       {values.settings.showRangeSelect && (
