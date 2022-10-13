@@ -24,6 +24,8 @@ import { FC } from '~/types';
 import { Module, ModuleContent } from '~/components/Common/Module';
 import { TokenMap } from '~/constants';
 import { SILO_WHITELIST } from '~/constants/tokens';
+import useTokenMap from '~/hooks/chain/useTokenMap';
+import Row from '~/components/Common/Row';
 
 // ------------------------
 //    Stacked Area Chart
@@ -156,6 +158,7 @@ const yTickLabelProps = () => ({
 } as const);
 
 const Graph: FC<GraphProps> = (props) => {
+  const siloTokens = useTokenMap(SILO_WHITELIST);
   const {
     // Chart sizing
     width,
@@ -236,11 +239,13 @@ const Graph: FC<GraphProps> = (props) => {
           ? d1
           : d0;
       }
+      console.log('SCALE VALUE', scales[0].yScale(getY(d)));
 
       showTooltip({
         tooltipData: d,
         tooltipLeft: x - 75, // in pixels
-        tooltipTop: scales[0].yScale(getY(d)) - 90, // in pixels
+        // tooltipTop: scales[0].yScale(getY(d)) - 90, // in pixels
+        tooltipTop: scales[0].yScale(getY(d)) - 140, // in pixels
       });
       onCursor(d);
     },
@@ -279,7 +284,7 @@ const Graph: FC<GraphProps> = (props) => {
   if (!series || series.length === 0) return null;
 
   //
-  // const tooltipLeftAttached = tooltipData ? scales[0].xScale(getX(tooltipData[0])) : undefined;
+  const tooltipLeftAttached = tooltipData ? scales[0].xScale(getX(tooltipData)) : undefined;
 
   /**
    * Height: `height` (controlled by container)
@@ -400,13 +405,20 @@ const Graph: FC<GraphProps> = (props) => {
          */}
         {tooltipData && (
           <g>
-            {/* <Line */}
-            {/*  from={{ x: tooltipLeft, y: dataRegion.yTop }} */}
-            {/*  to={{ x: tooltipLeft, y: dataRegion.yBottom }} */}
-            {/*  stroke={BeanstalkPalette.lightGrey} */}
-            {/*  strokeWidth={1} */}
-            {/*  pointerEvents="none" */}
-            {/* /> */}
+            {keys.map((addr) => (
+              <circle
+                cx={tooltipLeftAttached}
+                cy={scales[0].yScale(getYByAsset(tooltipData, addr))}
+                r={2}
+                fill="black"
+                fillOpacity={0.1}
+                stroke="black"
+                strokeOpacity={0.1}
+                strokeWidth={1}
+                pointerEvents="none"
+              />
+            ))}
+
           </g>
         )}
         {/* Overlay to handle tooltip.
@@ -431,7 +443,7 @@ const Graph: FC<GraphProps> = (props) => {
             top={tooltipTop}
             // unstyled
           >
-            <Module sx={{ pt: 1, width: 'max-content', zIndex: -1 }}>
+            <Module sx={{ pt: 1, zIndex: -1 }}>
               <Typography />
               <ModuleContent>
                 <LegendOrdinal
@@ -455,7 +467,14 @@ const Graph: FC<GraphProps> = (props) => {
                             />
                           </svg>
                           <LegendLabel align="left" margin="0 0 0 4px">
-                            {label.text}
+                            <Row justifyContent="space-between" width="100%" gap={3}>
+                              <Typography>
+                                {siloTokens[label.text.toLowerCase()]?.symbol}
+                              </Typography>
+                              <Typography>
+                                ${displayBN(new BigNumber(tooltipData.tokens[label.text.toLowerCase()]))}
+                              </Typography>
+                            </Row>
                           </LegendLabel>
                         </LegendItem>
                       ))}
