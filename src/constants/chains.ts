@@ -1,5 +1,3 @@
-import ethereumLogoUrl from '~/img/tokens/eth-logo.svg';
-
 /**
  * Guide to adding a new chain:
  * 1. Pick a chainId and add to SupportedChainId
@@ -82,34 +80,3 @@ export interface L2ChainInfo extends BaseChainInfo {
   readonly statusPage?: string
   readonly defaultListUrl: string
 }
-
-export type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } 
-& { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
-& { readonly [chainId in SupportedL2ChainId]: L2ChainInfo }
-
-/**
- * FIXME: this was forked from Uniswap's uI but we only use `explorer` here.
- */
-export const CHAIN_INFO : ChainInfoMap = {
-  [SupportedChainId.MAINNET]: {
-    networkType: NetworkType.L1,
-    explorer: 'https://etherscan.io',
-    label: 'Ethereum',
-    logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-  },
-  [SupportedChainId.LOCALHOST]: {
-    networkType: NetworkType.L1,
-    explorer: 'https://etherscan.io',
-    label: 'Localhost',
-    logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'Localhost Ether', symbol: 'locETH', decimals: 18 },
-  },
-  [SupportedChainId.CUJO]: {
-    networkType: NetworkType.L1,
-    explorer: 'https://etherscan.io',
-    label: 'Harhat',
-    logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'Hardhat Ether', symbol: 'hETH', decimals: 18 },
-  }
-};

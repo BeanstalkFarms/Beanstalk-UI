@@ -1,11 +1,12 @@
 import { Handler } from '@netlify/functions';
 import { ethers } from 'ethers';
 import middy from 'middy';
+import { BEANSTALK_PRICE_ADDRESSES } from '~/constants/addresses';
 import { cors, rateLimit } from '~/functions/middleware';
 import { BeanstalkPrice__factory } from '~/generated';
 
 const provider = new ethers.providers.AlchemyProvider(1, process.env.VITE_ALCHEMY_API_KEY);
-const address  = '0xA57289161FF18D67A68841922264B317170b0b81';
+const address  = BEANSTALK_PRICE_ADDRESSES[1];
 const contract = BeanstalkPrice__factory.connect(address, provider);
 
 /**
@@ -21,9 +22,9 @@ const _handler: Handler = async () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        price: bp.price.toString(),
-        liquidity: bp.liquidity.toString(),
-        deltaB: bp.deltaB.toString(),
+        price:      bp.price.toString(),
+        liquidity:  bp.liquidity.toString(),
+        deltaB:     bp.deltaB.toString(),
         ps: bp.ps.map((pool) => ({
           pool:       pool.pool,
           tokens:     pool.tokens.map((token) => token.toString()),
@@ -37,11 +38,12 @@ const _handler: Handler = async () => {
   } catch (e) {
     console.error(e);
     return {
-      statusCode: 403
+      statusCode: 403,
+      body: e?.toString(),
     };
   }
 };
 
 export const handler = middy(_handler)
-  .use(cors())
+  .use(cors({ origin: '*' }))
   .use(rateLimit());

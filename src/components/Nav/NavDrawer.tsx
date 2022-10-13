@@ -10,10 +10,10 @@ import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
 import beanstalkLogo from '~/img/tokens/bean-logo-circled.svg';
 import ROUTES from './routes';
 import MenuItemMobile from './MenuItemMobile';
-import DropdownIcon from '../Common/DropdownIcon';
-import useToggle from '../../hooks/display/useToggle';
-import useChainConstant from '../../hooks/chain/useChainConstant';
-import { BEANSTALK_ADDRESSES, CHAIN_INFO } from '../../constants';
+import DropdownIcon from '~/components/Common/DropdownIcon';
+import useToggle from '~/hooks/display/useToggle';
+import useChainConstant from '~/hooks/chain/useChainConstant';
+import { BEANSTALK_ADDRESSES, CHAIN_INFO } from '~/constants';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';

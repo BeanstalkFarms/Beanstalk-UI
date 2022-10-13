@@ -25,7 +25,7 @@ import disconnectIcon from '~/img/beanstalk/interface/nav/disconnect.svg';
 import useAnchor from '~/hooks/display/useAnchor';
 import useToggle from '~/hooks/display/useToggle';
 import useAccount from '~/hooks/ledger/useAccount';
-import { CHAIN_INFO } from '~/constants/chains';
+import { CHAIN_INFO } from '~/constants';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import WalletDialog from './WalletDialog';
 import DropdownIcon from '~/components/Common/DropdownIcon';
