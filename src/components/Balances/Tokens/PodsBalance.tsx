@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import BigNumber from 'bignumber.js';
 import { DataGrid } from '@mui/x-data-grid';
 import { AppState } from '~/state';
-import { displayBN, PlotMap } from '~/util';
+import { displayBN, displayFullBN, PlotMap } from '~/util';
 import { PODS } from '~/constants/tokens';
 import Row from '~/components/Common/Row';
 import { podlineColumns } from '~/pages/field';
@@ -140,6 +140,9 @@ const PodsBalance: React.FC<{}> = () => {
           amount: pods,
           description:
             'The Beanstalk-native debt asset, Harvestable on a FIFO basis.',
+          amountModifier: harvestablePods?.gt(0)
+            ? `+${displayFullBN(harvestablePods, 0)} Harvestable`
+            : undefined,
         },
       ]}
     >

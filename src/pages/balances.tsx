@@ -1,18 +1,19 @@
 import React from 'react';
 import { Container, Stack } from '@mui/material';
-import UserBalancesCard from '~/components/Balances/Cards/UserBalancesCard';
+
 import { XXLWidth } from '~/components/App/muiTheme';
 import UserBalancesCharts from '~/components/Balances/UserBalancesCharts';
-import RewardsModule from '~/components/Balances/RewardsModule';
+import SiloRewards from '~/components/Balances/SiloRewards';
 
 import { FC } from '~/types';
 
-import TokenBalancesModule from '~/components/Balances/TokenBalancesModule';
+import ValuedTokenBalances from '~/components/Balances/ValuedTokenBalances';
+import BeanstalkTokenBalances from '~/components/Balances/BeanstalkTokenBalances';
 
 const BalancesPage: FC<{}> = () => (
   <Container sx={{ maxWidth: `${XXLWidth}px !important`, width: '100%' }}>
     <Stack spacing={2}>
-      <UserBalancesCard />
+      <BeanstalkTokenBalances />
 
       <Stack direction={{ xs: 'column', lg: 'row' }} gap={2} width="100%">
         <UserBalancesCharts />
@@ -21,11 +22,11 @@ const BalancesPage: FC<{}> = () => (
           maxWidth={{ xs: '100%', lg: '360px' }}
           sx={{ flexShrink: 0 }}
         >
-          <RewardsModule />
+          <SiloRewards />
         </Stack>
       </Stack>
 
-      <TokenBalancesModule />
+      <ValuedTokenBalances />
     </Stack>
   </Container>
 );

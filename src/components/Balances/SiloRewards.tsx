@@ -293,8 +293,8 @@ const RewardsContent: React.FC<{}> = () => {
   );
 };
 
-const RewardsModule: React.FC<{}> = () => (
-  <Module sx={{ height: '100%' }}>
+const SiloRewards: React.FC<{}> = () => (
+  <Module>
     <ModuleHeader>
       <Typography variant="h4">Rewards</Typography>
     </ModuleHeader>
@@ -304,4 +304,4 @@ const RewardsModule: React.FC<{}> = () => (
   </Module>
 );
 
-export default RewardsModule;
+export default SiloRewards;

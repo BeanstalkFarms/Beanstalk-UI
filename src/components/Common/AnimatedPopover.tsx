@@ -36,11 +36,12 @@ const AnimatedPopover: React.FC<{
             transform: !disableAnimate ? `scale(${scale})` : undefined,
             transition: !disableAnimate ? 'all .3s ease 0s' : undefined,
             transformOrigin: 'top center',
+            height: '100%',
           },
           cursor: 'pointer',
           ...sx,
         }}
-        onClick={handleOpen}
+        onClick={(e) => handleOpen(e)}
       >
         {children}
       </Box>

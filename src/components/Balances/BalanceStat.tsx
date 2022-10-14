@@ -1,10 +1,4 @@
-import {
-  Chip,
-  Stack,
-  StackProps,
-  Typography,
-  TypographyVariant,
-} from '@mui/material';
+import { Chip, Stack, StackProps, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import React from 'react';
 import ExpandCircleDownOutlinedIcon from '@mui/icons-material/ExpandCircleDownOutlined';
@@ -17,10 +11,8 @@ import Row from '../Common/Row';
 import TokenIcon from '../Common/TokenIcon';
 
 export type BalanceEstimateProps = {
-  delta: number | undefined;
-  variant?: TypographyVariant;
+  delta: BigNumber | undefined;
   name: string;
-  isDescending?: boolean;
 };
 
 export type BalanceStatProps = {
@@ -67,30 +59,33 @@ const BalanceStat: React.FC<BalanceStatProps> = ({
     />
     <Stack display={{ xs: 'none', md: 'flex' }}>
       {estimates &&
-        estimates.map(({ delta, name, isDescending = false, variant }, i) => (
-          <Chip
-            key={`${i}-balance-stat`}
-            variant="filled"
-            label={
-              <Typography
-                color="primary"
-                variant={variant ?? 'bodySmall'}
-                sx={{
-                  whiteSpace: 'nowrap',
-                  fontWeight: 700,
-                }}
-              >
-                {`${isDescending ? '-' : '+'} ${delta} ${name}`}
-              </Typography>
-            }
-            sx={{
-              py: 1,
-              width: 'max-content',
-              background: BeanstalkPalette.lightYellow,
-            }}
-            size="small"
-          />
-        ))}
+        estimates.map((est, i) => {
+          const { delta, name } = est;
+          return delta && !delta?.abs().eq(0) ? (
+            <Chip
+              key={`${i}-balance-stat`}
+              variant="filled"
+              label={
+                <Typography
+                  color="primary"
+                  variant="bodySmall"
+                  sx={{
+                    fontWeight: 700,
+                  }}
+                >
+                  {`${displayFullBN(delta, 0)} ${name}`}
+                </Typography>
+              }
+              sx={{
+                py: 1,
+                display: 'flex',
+                width: 'max-content',
+                background: BeanstalkPalette.lightYellow,
+              }}
+              size="small"
+            />
+          ) : null;
+        })}
     </Stack>
   </Stack>
 );

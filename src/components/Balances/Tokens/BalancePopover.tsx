@@ -14,6 +14,7 @@ type BalanceToken = {
   amount: BigNumber | undefined;
   description: string;
   pct?: BigNumber | undefined;
+  amountModifier?: string;
 };
 
 const BalancePopover: React.FC<{
@@ -54,8 +55,18 @@ const BalancePopover: React.FC<{
                     fontWeight={400}
                     ml="5px"
                     sx={{ color: BeanstalkPalette.grey }}
+                    component="span"
                   >
                     ~{item.pct.toFixed(4)}%
+                    {item.amountModifier && (
+                      <Typography
+                        variant="h3"
+                        fontWeight={400}
+                        sx={{ color: BeanstalkPalette.theme.fall.brown }}
+                      >
+                        {item.amountModifier}
+                      </Typography>
+                    )}
                   </Typography>
                 )}
               </Typography>

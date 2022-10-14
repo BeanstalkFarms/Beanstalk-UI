@@ -51,6 +51,9 @@ const SproutsBalance: React.FC<{}> = () => {
           amount: farmerBarn.unfertilizedSprouts,
           description:
             'Sprouts represent how many Beans there are left to be earned from Fertilizer. Sprouts become Rinsable on a pari passu basis.',
+          amountModifier: farmerBarn.fertilizedSprouts?.gt(0)
+            ? `+${displayFullBN(farmerBarn.fertilizedSprouts, 0)} Rinsable`
+            : undefined,
         },
       ]}
       maxWidth={490}
