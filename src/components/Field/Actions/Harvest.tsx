@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
+import { Accordion, AccordionDetails, Box, Stack, Typography } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
 import { useAccount, useProvider } from 'wagmi';
@@ -30,6 +30,8 @@ import { ZERO_BN } from '~/constants';
 import TokenAdornment from '~/components/Common/Form/TokenAdornment';
 import { FC } from '~/types';
 import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
+import Row from '~/components/Common/Row';
+import TokenIcon from '~/components/Common/TokenIcon';
 
 // -----------------------------------------------------------------------
 
@@ -37,6 +39,60 @@ type HarvestFormValues = {
   amount: BigNumber;
   destination: FarmToMode | undefined;
 }
+
+type Props = FormikProps<HarvestFormValues> & {
+  harvestablePods: BigNumber;
+  farm: Farm;
+}
+
+const QuickHarvestForm: FC<Props> = ({
+  // Custom
+  harvestablePods,
+  // Formike
+  values,
+  isSubmitting
+}) => {
+    /// Derived
+    const amount = harvestablePods;
+    const isSubmittable = (
+      amount
+      && amount.gt(0)
+      && values.destination !== undefined
+    );
+
+    return (
+      <Form autoComplete="off" noValidate>
+        <Stack gap={1}>
+          <Row width="100%" justifyContent="space-between">
+            <Typography variant="bodySmall" color="primary">
+              Harvestable Pods
+            </Typography>
+            <Typography component="span" variant="h3">
+              <TokenIcon token={PODS} />
+              {displayFullBN(amount, 0)}
+            </Typography>
+          </Row>
+          <Stack sx={{ ml: '-5px' }}>
+            <FarmModeField
+              name="destination"    
+            />
+          </Stack>
+          <SmartSubmitButton
+            loading={isSubmitting}
+            disabled={!isSubmittable || isSubmitting}
+            type="submit"
+            variant="contained"
+            color="primary"
+            size="medium"
+            tokens={[]}
+            mode="auto"
+        >
+            Harvest
+          </SmartSubmitButton>
+        </Stack>
+      </Form>
+    );
+};
 
 // -----------------------------------------------------------------------
 
@@ -140,7 +196,7 @@ const HarvestForm: FC<FormikProps<HarvestFormValues> & {
   );
 };
 
-const Harvest: FC<{}> = () => {
+const Harvest: FC<{isQuickHarvest?: boolean}> = ({ isQuickHarvest }) => {
   ///
   const { data: account } = useAccount();
   const provider = useProvider();
@@ -216,11 +272,19 @@ const Harvest: FC<{}> = () => {
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {(formikProps) => (
         <Stack spacing={1}>
-          <HarvestForm
-            harvestablePods={farmerField.harvestablePods}
-            farm={farm}
-            {...formikProps}
+          {isQuickHarvest ? (
+            <QuickHarvestForm 
+              harvestablePods={farmerField.harvestablePods}
+              farm={farm}
+              {...formikProps}
+            />
+          ) : (
+            <HarvestForm
+              harvestablePods={farmerField.harvestablePods}
+              farm={farm}
+              {...formikProps}
           />
+          )}
         </Stack>
       )}
     </Formik>
