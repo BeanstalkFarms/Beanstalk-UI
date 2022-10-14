@@ -2,8 +2,7 @@ import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
 import { ApolloError } from '@apollo/client';
 import { TimeTabStateParams } from '~/hooks/app/useTimeTabState';
-
-import { MinimumViableSnapshotQuery, SEASON_RANGE_TO_COUNT, SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
+import { MinimumViableSnapshotQuery } from '~/hooks/beanstalk/useSeasonsQuery';
 
 import Row from '../Row';
 import Stat, { StatProps } from '../Stat';
@@ -93,13 +92,6 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
 
   const seriesInput = useMemo(() => queryData?.data, [queryData?.data]);
 
-  // const filteredSeries = useMemo(() => {
-  //   if (tabState[1] !== SeasonRange.ALL) {
-  //     return series.map((s) => s.slice(-(SEASON_RANGE_TO_COUNT[tabState[1]] as number)));
-  //   }
-  //   return series;
-  // }, [series, tabState]);
-
   /// If one of the defaults is missing, use the last data point.
   const defaults = useMemo(() => {
     const d = {
@@ -130,18 +122,6 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
 
     return d;
   }, [_defaultSeason, _defaultValue, chartProps, seriesInput, stackedArea]);
-
-  // filter data using selected time tab
-  const filteredSeries = useMemo(() => {
-    if (timeTabParams[0][1] !== SeasonRange.ALL) {
-      if (seriesInput) {
-        return seriesInput.map((s) =>
-          s.slice(-(SEASON_RANGE_TO_COUNT[timeTabParams[0][1]] as number)
-        ));
-      }
-    }
-    return [];
-  }, [seriesInput, timeTabParams]);
 
   if (!seriesInput || !queryData) {
     return null;
@@ -195,7 +175,7 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
           </Stack>
         ) : stackedArea ? (
           <StackedAreaChart
-            series={filteredSeries}
+            series={seriesInput}
             keys={queryData.keys}
             onCursor={handleCursor}
             formatValue={formatValue}
@@ -205,7 +185,7 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
           </StackedAreaChart>
         ) : (
           <MultiLineChart
-            series={filteredSeries}
+            series={seriesInput}
             keys={queryData.keys}
             onCursor={handleCursor}
             formatValue={formatValue}

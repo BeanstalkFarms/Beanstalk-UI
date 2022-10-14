@@ -1,6 +1,5 @@
 import BigNumber from 'bignumber.js';
 import { DateTime } from 'luxon';
-import { SeasonDataPoint } from '~/components/Common/Charts/SeasonPlot';
 import { TokenMap, ZERO_BN } from '~/constants';
 import { BEAN, SEEDS, SILO_WHITELIST, STALK } from '~/constants/tokens';
 import { FarmerSiloRewardsQuery, SeasonalPriceQuery } from '~/generated/graphql';
@@ -42,15 +41,18 @@ export const addBufferSeasons2 = (
       : num
   );
   return [
-    ...new Array(n).fill(null).map((_, i) => ({
-      season: points[0].season + (i - n),
-      date:   d.plus({ hours: i - n }).toJSDate(),
-      value: 0,
-      ...SILO_WHITELIST.reduce<TokenMap<number>>((prev, curr) => {
-        prev[curr[1].address] = 0;
-        return prev;
-      }, {}),
-    })),
+    ...new Array(n).fill(null).map((_, i) => {
+      const dataPoint: BaseDataPoint = {
+        season: points[0].season + (i - n),
+        date: d.plus({ hours: i - n }).toJSDate(),
+        value: 0,
+        ...SILO_WHITELIST.reduce<TokenMap<number>>((prev, curr) => {
+          prev[curr[1].address] = 0;
+          return prev;
+        }, {}),
+      } as BaseDataPoint;
+      return dataPoint;
+    }),
     ...points,
   ];
 };
@@ -91,12 +93,12 @@ export const interpolateFarmerStalk = (
       season: s,
       date:   currTimestamp.toJSDate(),
       value:  currStalk.toNumber(),
-    });
+    } as BaseDataPoint);
     seeds.push({
       season: s,
       date:   currTimestamp.toJSDate(),
       value:  currSeeds.toNumber(),
-    });
+    } as BaseDataPoint);
   }
   
   return [
@@ -130,7 +132,7 @@ export const interpolateFarmerDepositedValue = (
   
   // if the subgraph misses some prices or something happens in the frontend
   // we use the last known price until we encounter a price at the current season
-  const points : SeasonDataPoint[] = [];
+  const points : BaseDataPoint[] = [];
 
   for (let s = minSeason; s <= maxSeason; s += 1) {
     const thisPrice = prices[currPriceIndex];
@@ -161,7 +163,7 @@ export const interpolateFarmerDepositedValue = (
       season: s,
       date:   thisTimestamp.toJSDate(),
       value:  thisBDV.multipliedBy(new BigNumber(thisPrice.price)).toNumber(),
-    });
+    } as BaseDataPoint);
 
     currBDV = thisBDV;
   }
@@ -242,7 +244,7 @@ export const interpolateFarmerAssetBalances = (
         prev[curr[1].address] = siloTokenBalances[curr[1].address].toNumber();
         return prev;
       }, {}),
-    };
+    } as BaseDataPoint;
     points.push(dataPoint);
 
     currBDV = thisBDV;

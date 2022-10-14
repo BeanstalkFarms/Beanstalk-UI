@@ -5,7 +5,6 @@ import { StatProps } from '~/components/Common/Stat';
 import useSeasonsQuery, {
   MinimumViableSnapshotQuery,
 } from '~/hooks/beanstalk/useSeasonsQuery';
-import DataPoint from '~/constants/charts';
 import useGenerateChartSeries from '~/hooks/beanstalk/useGenerateChartSeries';
 import { BaseChartProps, BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
 import useTimeTabState from '~/hooks/app/useTimeTabState';
@@ -13,7 +12,7 @@ import BaseSeasonPlot, { QueryData } from '~/components/Common/Charts/BaseSeason
 
 export const defaultValueFormatter = (value: number) => value.toFixed(4);
 
-export type SeasonDataPoint = DataPoint;
+export type SeasonDataPoint = BaseDataPoint;
 
 export type SeasonPlotBaseProps = {
   /** */
