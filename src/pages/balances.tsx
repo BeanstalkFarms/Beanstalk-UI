@@ -10,6 +10,7 @@ import { FC } from '~/types';
 import ValuedTokenBalances from '~/components/Balances/ValuedTokenBalances';
 import BeanstalkTokenBalances from '~/components/Balances/BeanstalkTokenBalances';
 import QuickHarvest from '~/components/Balances/Actions/QuickHarvest';
+import QuickRinse from '~/components/Balances/Actions/QuickRinse';
 
 const BalancesPage: FC<{}> = () => (
   <Container sx={{ maxWidth: `${XXLWidth}px !important`, width: '100%' }}>
@@ -22,8 +23,10 @@ const BalancesPage: FC<{}> = () => (
           width="100%"
           maxWidth={{ xs: '100%', lg: '360px' }}
           sx={{ flexShrink: 0 }}
+          spacing={1}
         >
           <QuickHarvest />
+          <QuickRinse />
           <SiloRewards />
         </Stack>
       </Stack>

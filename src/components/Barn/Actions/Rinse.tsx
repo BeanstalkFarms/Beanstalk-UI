@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Box, Stack } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import toast from 'react-hot-toast';
@@ -28,6 +28,8 @@ import { ActionType } from '~/util/Actions';
 import copy from '~/constants/copy';
 import { FC } from '~/types';
 import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
+import Row from '~/components/Common/Row';
+import TokenIcon from '~/components/Common/TokenIcon';
 
 // ---------------------------------------------------
 
@@ -37,6 +39,56 @@ type RinseFormValues = {
 };
 
 // ---------------------------------------------------
+
+const QuickRinseForm: FC<
+  FormikProps<RinseFormValues>
+> = ({
+  values,
+  isSubmitting
+}) => {
+  /// Extract
+  const amountSprouts = values.amount;
+  const isSubmittable = (
+    amountSprouts?.gt(0)
+    && values.destination !== undefined
+  );
+
+  return (
+    <Form autoComplete="off" noValidate>
+      <Stack gap={1}>
+        <Row justifyContent="space-between">
+          <Typography variant="bodySmall" color="primary">
+            Rinsable Sprouts
+          </Typography>
+          <Typography component="span" variant="h3">
+            <Box mr={0.5} display="inline">
+              <TokenIcon token={SPROUTS} />
+            </Box>
+            {displayFullBN(amountSprouts, 0)}
+          </Typography>
+        </Row>
+        <Stack sx={{ ml: '-5px' }}>
+          <FarmModeField
+            name="destination"    
+            />
+        </Stack>
+        {/* Submit */}
+        <SmartSubmitButton
+          loading={isSubmitting}
+          disabled={!isSubmittable}
+          type="submit"
+          variant="contained"
+          color="primary"
+          size="medium"
+          tokens={[]}
+          mode="auto"
+        >
+          Rinse
+        </SmartSubmitButton>
+      </Stack>
+    </Form>
+  );
+};
 
 const RinseForm : FC<
   FormikProps<RinseFormValues>
@@ -119,7 +171,7 @@ const RinseForm : FC<
   );
 };
 
-const Rinse : FC<{}> = () => {
+const Rinse : FC<{ quick?: boolean }> = ({ quick }) => {
   /// Wallet connection
   const account = useAccount();
   const { data: signer } = useSigner();
@@ -185,11 +237,12 @@ const Rinse : FC<{}> = () => {
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit} enableReinitialize>
-      {(formikProps) => (
-        <RinseForm
-          {...formikProps}
-        />
-      )}
+      {(formikProps) => 
+        (quick 
+          ? <QuickRinseForm {...formikProps} /> 
+          : <RinseForm {...formikProps} />
+        )
+      }
     </Formik>
   );
 };

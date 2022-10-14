@@ -10,22 +10,22 @@ const QuickHarvest: React.FC<{}> = () => {
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
   const harvestable = farmerField.harvestablePods;
 
-  return harvestable?.gt(0) ? (
+  return harvestable?.eq(0) ? (
     <Card>
       <Stack spacing={1} sx={{ p: 2 }}>
-        <Typography component="span" variant="h4">
-          <Row>
-            <Box 
-              width="8px" 
-              height="8px" 
-              sx={{ 
+        <Row spacing={0.5}>
+          <Box 
+            width="8px" 
+            height="8px" 
+            sx={{ 
                 borderRadius: '50%', 
                 background: BeanstalkPalette.theme.fall.brown
               }}
             />
+          <Typography variant="h4">
             Quick Harvest
-          </Row>
-        </Typography>
+          </Typography>
+        </Row>
         <Harvest isQuickHarvest />
       </Stack>
     </Card>

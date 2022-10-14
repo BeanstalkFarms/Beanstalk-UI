@@ -68,7 +68,9 @@ const QuickHarvestForm: FC<Props> = ({
               Harvestable Pods
             </Typography>
             <Typography component="span" variant="h3">
-              <TokenIcon token={PODS} />
+              <Box mr={0.5} display="inline">
+                <TokenIcon token={PODS} />
+              </Box>
               {displayFullBN(amount, 0)}
             </Typography>
           </Row>
@@ -96,10 +98,7 @@ const QuickHarvestForm: FC<Props> = ({
 
 // -----------------------------------------------------------------------
 
-const HarvestForm: FC<FormikProps<HarvestFormValues> & {
-  harvestablePods: BigNumber;
-  farm: Farm;
-}> = ({
+const HarvestForm: FC<Props> = ({
   // Custom
   harvestablePods,
   // Formik
