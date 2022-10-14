@@ -149,3 +149,15 @@ export const CRYPTO_FACTORY_ADDRESSES = {
 export const CURVE_ZAP_ADDRESSES = {
   [SupportedChainId.MAINNET]: '0xA79828DF1850E8a3A3064576f380D90aECDD3359'.toLowerCase()
 };
+
+export const DAI_CHAINLINK_ADDRESSES = {
+  [SupportedChainId.MAINNET]: '0xaed0c38402a5d19df6e4c03f4e2dced6e29c1ee9'.toLowerCase()
+};
+
+export const USDT_CHAINLINK_ADDRESSES = {
+  [SupportedChainId.MAINNET]: '0x3e7d1eab13ad0104d2750b8863b489d65364e32d'.toLowerCase()
+};
+
+export const USDC_CHAINLINK_ADDRESSES = {
+  [SupportedChainId.MAINNET]: '0x8fffffd4afb6115b954bd326cbe7b4ba576818f6'.toLowerCase()
+};

@@ -13,6 +13,7 @@ import { Module, ModuleContent, ModuleHeader } from '../Common/Module';
 import BalanceTable, { BalanceRow } from './BalanceTable';
 import PointImg from '~/img/misc/point-indicator.svg';
 import Row from '../Common/Row';
+import useCrvUnderlyingPrices from '~/hooks/beanstalk/useCrvUnderlyingPrices';
 
 const sortable = {
   BEAN: 0,
@@ -90,6 +91,8 @@ const TokenBalancesModule: React.FC<{}> = () => {
   const farmerBalances = useFarmerBalances();
   const getChainToken = useGetChainToken();
 
+  const prices3Crv = useCrvUnderlyingPrices();
+
   const getBalances = useCallback(
     (addr: string) => {
       if (!farmerBalances) return { farm: ZERO_BN, circulating: ZERO_BN };
@@ -105,15 +108,16 @@ const TokenBalancesModule: React.FC<{}> = () => {
   const balanceData = useMemo(() => {
     const balanceMap: { [addr: string]: BalanceItem } = {};
 
-    // assuming 3crv underlying is $1. Need to get accurate data here
     tokenList.forEach((_token) => {
       const token = getChainToken(_token);
       const balance = getBalances(token.address);
+      const value = prices3Crv[token.address] ?? ZERO_BN;
+      console.log(`${token.symbol}: ${value}`);
       balanceMap[token.address] = {
         token,
         circulating: {
           amount: balance.circulating,
-          value: balance.circulating,
+          value: balance.circulating.multipliedBy(value),
         },
         farm: { amount: balance.farm, value: balance.farm },
       };
@@ -126,12 +130,13 @@ const TokenBalancesModule: React.FC<{}> = () => {
       const whitelisted = whitelist[addr];
       if (!whitelisted) return;
       const token = getChainToken(whitelisted);
+
       const external = circulating[addr];
       balanceMap[addr] = {
         token,
         circulating: {
           amount: external?.amount ?? ZERO_BN,
-          value: external?.amount ?? ZERO_BN,
+          value: external?.value ?? ZERO_BN,
         },
         farm: { amount, value },
       };
@@ -142,7 +147,7 @@ const TokenBalancesModule: React.FC<{}> = () => {
         sortable[a.token.symbol as keyof typeof sortable] -
         sortable[b.token.symbol as keyof typeof sortable]
     );
-  }, [tokenList, breakdown, getChainToken, getBalances, whitelist]);
+  }, [tokenList, breakdown.states.farm.byToken, breakdown.states.circulating.byToken, getChainToken, getBalances, prices3Crv, whitelist]);
 
   return (
     <Stack direction={{ xs: 'column', lg: 'row' }} gap={2} width="100%">
