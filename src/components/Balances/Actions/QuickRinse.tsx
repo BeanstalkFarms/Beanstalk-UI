@@ -1,8 +1,9 @@
-import { Card, Stack, Typography, Box } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import Rinse from '~/components/Barn/Actions/Rinse';
+import { Module, ModuleContent, ModuleHeader } from '~/components/Common/Module';
 import Row from '~/components/Common/Row';
 import { AppState } from '~/state';
 
@@ -10,9 +11,9 @@ const QuickRinse: React.FC<{}> = () => {
   const farmerBarn = useSelector<AppState, AppState['_farmer']['barn']>((state) => state._farmer.barn);
   const rinsable = farmerBarn.fertilizedSprouts;
 
-  return rinsable?.gt(0) ? (
-    <Card>
-      <Stack sx={{ p: 2 }}>
+  return !rinsable?.eq(0) ? (
+    <Module>
+      <ModuleHeader>
         <Row spacing={0.5} width="100%">
           <Box 
             width="8px" 
@@ -26,9 +27,11 @@ const QuickRinse: React.FC<{}> = () => {
             Quick Rinse
           </Typography>
         </Row>
+      </ModuleHeader>
+      <ModuleContent>
         <Rinse quick />
-      </Stack>
-    </Card>
+      </ModuleContent>
+    </Module>
     ) : null;
 };
 

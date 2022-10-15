@@ -63,21 +63,24 @@ const QuickHarvestForm: FC<Props> = ({
     return (
       <Form autoComplete="off" noValidate>
         <Stack gap={1}>
-          <Row width="100%" justifyContent="space-between">
-            <Typography variant="bodySmall" color="primary">
-              Harvestable Pods
-            </Typography>
-            <Typography component="span" variant="h3">
-              <Box mr={0.5} display="inline">
-                <TokenIcon token={PODS} />
-              </Box>
-              {displayFullBN(amount, 0)}
-            </Typography>
-          </Row>
-          <Stack sx={{ ml: '-5px' }}>
-            <FarmModeField
-              name="destination"    
+          <Stack px={0.5}>
+            <Row width="100%" justifyContent="space-between">
+              <Typography variant="bodySmall" color="primary">
+                Harvestable Pods
+              </Typography>
+              <Typography component="span" variant="h3">
+                <Box mr={0.5} display="inline">
+                  <TokenIcon token={PODS} />
+                </Box>
+                {displayFullBN(amount, 0)}
+              </Typography>
+            </Row>
+            <Stack sx={{ ml: '-5px' }}>
+              <FarmModeField
+                name="destination"    
+                labelProps={{ variant: 'bodySmall' }}
             />
+            </Stack>
           </Stack>
           <SmartSubmitButton
             loading={isSubmitting}
@@ -195,7 +198,7 @@ const HarvestForm: FC<Props> = ({
   );
 };
 
-const Harvest: FC<{isQuickHarvest?: boolean}> = ({ isQuickHarvest }) => {
+const Harvest: FC<{ quick?: boolean }> = ({ quick }) => {
   ///
   const { data: account } = useAccount();
   const provider = useProvider();
@@ -271,7 +274,7 @@ const Harvest: FC<{isQuickHarvest?: boolean}> = ({ isQuickHarvest }) => {
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {(formikProps) => (
         <Stack spacing={1}>
-          {isQuickHarvest ? (
+          {quick ? (
             <QuickHarvestForm 
               harvestablePods={farmerField.harvestablePods}
               farm={farm}

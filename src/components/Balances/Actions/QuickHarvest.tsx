@@ -1,7 +1,8 @@
-import { Card, Stack, Typography, Box } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
+import { Module, ModuleContent, ModuleHeader } from '~/components/Common/Module';
 import Row from '~/components/Common/Row';
 import Harvest from '~/components/Field/Actions/Harvest';
 import { AppState } from '~/state';
@@ -11,8 +12,8 @@ const QuickHarvest: React.FC<{}> = () => {
   const harvestable = farmerField.harvestablePods;
 
   return harvestable?.eq(0) ? (
-    <Card>
-      <Stack spacing={1} sx={{ p: 2 }}>
+    <Module>
+      <ModuleHeader>
         <Row spacing={0.5}>
           <Box 
             width="8px" 
@@ -26,9 +27,11 @@ const QuickHarvest: React.FC<{}> = () => {
             Quick Harvest
           </Typography>
         </Row>
-        <Harvest isQuickHarvest />
-      </Stack>
-    </Card>
+      </ModuleHeader>
+      <ModuleContent>
+        <Harvest quick />
+      </ModuleContent>
+    </Module>
   ) : null;
 };
 

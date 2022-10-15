@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Stack, Typography } from '@mui/material';
+import { Stack, Typography, TypographyProps } from '@mui/material';
 import { Field, FieldProps } from 'formik';
 import useToggle from '~/hooks/display/useToggle';
 import DescriptionButton from '../DescriptionButton';
@@ -14,11 +14,14 @@ export type PillSelectFieldProps = {
     icon: string | ReactNode;
     pill: string | ReactNode;
     value: any;
+    titleProps?: TypographyProps;
   })[]
   /** Field name */
   name: string;
   /** Field label */
   label: string;
+  /** Field label props */
+  labelProps?: Omit<TypographyProps, 'color'>
   /** Tooltip */
   tooltip?: string,
   /** */
@@ -29,6 +32,7 @@ const PillSelectField : FC<PillSelectFieldProps> = ({
   options,
   name,
   label,
+  labelProps,
   tooltip,
   onChange,
 }) => {
@@ -51,6 +55,7 @@ const PillSelectField : FC<PillSelectFieldProps> = ({
             tooltip={tooltip}
             pill={pill}
             pl={0.5}
+            labelProps={labelProps}
           >
             {/* Dialog contents */}
             <Stack gap={1}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, StackProps, Tooltip, Typography } from '@mui/material';
+import { Button, StackProps, Tooltip, Typography, TypographyProps } from '@mui/material';
 import DropdownIcon from '../DropdownIcon';
 import { IconSize } from '../../App/muiTheme';
 import Row from '~/components/Common/Row';
@@ -12,6 +12,7 @@ const PillRow : FC<{
   isOpen?: boolean;
   onClick: () => void;
   isDropdown?: boolean;
+  labelProps?: Omit<TypographyProps, 'color'>;
 } & StackProps> = ({
   label,
   tooltip = '',
@@ -33,7 +34,7 @@ const PillRow : FC<{
     {...props}
   >
     <Tooltip title={tooltip}>
-      <Typography color="gray">
+      <Typography color="gray" {...props.labelProps}>
         {label}
       </Typography>
     </Tooltip>

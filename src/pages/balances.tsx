@@ -16,9 +16,10 @@ const BalancesPage: FC<{}> = () => (
   <Container sx={{ maxWidth: `${XXLWidth}px !important`, width: '100%' }}>
     <Stack spacing={2}>
       <BeanstalkTokenBalances />
-
       <Stack direction={{ xs: 'column', lg: 'row' }} gap={2} width="100%">
         <UserBalancesCharts />
+
+        {/* Actions */}
         <Stack
           width="100%"
           maxWidth={{ xs: '100%', lg: '360px' }}

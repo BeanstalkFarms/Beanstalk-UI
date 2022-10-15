@@ -63,10 +63,6 @@ const AdjustBalancesInput: React.FC<{
     setActive(!active);
   };
 
-  const formattedValue = amount
-    ? displayFullBN(new BigNumber(amount), 0).toString()
-    : undefined;
-
   return (
     <Card
       sx={{

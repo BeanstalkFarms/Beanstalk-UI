@@ -1,13 +1,12 @@
+import React, { useCallback, useState } from 'react';
 import {
-  Box,
-  Button,
   Grid,
+  Button,
   Stack,
   Tooltip,
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Field, FieldProps } from 'formik';
 import { useTheme } from '@mui/material/styles';
@@ -36,6 +35,7 @@ import { UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
 import DescriptionButton from '../Common/DescriptionButton';
 import GasTag from '../Common/GasTag';
 import { hoverMap } from '~/constants/silo';
+import MountedAccordion from '../Common/Accordion/MountedAccordion';
 
 const options = [
   {
@@ -62,13 +62,13 @@ const options = [
   },
 ];
 
-const ClaimRewardsContent: React.FC<ClaimRewardsFormParams> = ({
-  submitForm,
-  isSubmitting,
-  values,
-  gas,
-  calls,
-}) => {
+// somewhat duplicated code from Rewards Dialog
+const ClaimRewardsContent: React.FC<
+  ClaimRewardsFormParams & {
+    open: boolean;
+    show: () => void;
+  }
+> = ({ submitForm, isSubmitting, values, gas, calls, open, show }) => {
   // helpers
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -108,79 +108,94 @@ const ClaimRewardsContent: React.FC<ClaimRewardsFormParams> = ({
     return hoveredAction && hoverMap[hoveredAction].includes(c);
   };
 
+  const handleOnClick = () => {
+    if (!open) {
+      show();
+      return;
+    }
+    submitForm();
+  };
+
   return (
     <Stack gap={1.5}>
-      <Field name="action">
-        {(fieldProps: FieldProps<any>) => {
-          const set = (v: any) => () => {
-            // if user clicks on the selected action, unselect the action
-            if (
-              fieldProps.form.values.action !== undefined &&
-              v === fieldProps.form.values.action
-            ) {
-              fieldProps.form.setFieldValue('action', undefined);
-            } else {
-              fieldProps.form.setFieldValue('action', v);
-            }
-          };
-          return (
-            <Stack gap={1}>
-              {options.map((option) => {
-                /// hide this option if user has no deposited unripe assets
-                if (unripeDepositedBalance?.eq(0) && option.hideIfNoUnripe) {
-                  return null;
-                }
-                const disabled =
-                  !calls || calls[option.value].enabled === false;
-                const hovered = isHovering(option.value) && !disabled;
+      <MountedAccordion open={open}>
+        <Field name="action">
+          {(fieldProps: FieldProps<any>) => {
+            const set = (v: any) => () => {
+              // if user clicks on the selected action, unselect the action
+              if (
+                fieldProps.form.values.action !== undefined &&
+                v === fieldProps.form.values.action
+              ) {
+                fieldProps.form.setFieldValue('action', undefined);
+              } else {
+                fieldProps.form.setFieldValue('action', v);
+              }
+            };
+            return (
+              <Stack gap={1}>
+                {options.map((option) => {
+                  /// hide this option if user has no deposited unripe assets
+                  if (unripeDepositedBalance?.eq(0) && option.hideIfNoUnripe) {
+                    return null;
+                  }
+                  const disabled =
+                    !calls || calls[option.value].enabled === false;
+                  const hovered = isHovering(option.value) && !disabled;
 
-                return (
-                  <Tooltip
-                    title={!disabled || isMobile ? '' : 'Nothing to claim'}
-                  >
-                    <div>
-                      <DescriptionButton
-                        key={option.value}
-                        title={option.title}
-                        description={
-                          isMobile ? undefined : `${option.description}`
-                        }
-                        titleTooltip={
-                          isMobile ? `${option.description}` : undefined
-                        }
-                        tag={<GasTag gasLimit={gas?.[option.value] || null} />}
-                        // Button
-                        fullWidth
-                        onClick={set(option.value)}
-                        onMouseOver={onMouseOver(option.value)}
-                        onMouseLeave={onMouseOutContainer}
-                        isSelected={hovered}
-                        disabled={disabled}
-                        sx={{
-                          padding: '12.5px 10px !important',
-                          '&:disabled': {
-                            borderColor: BeanstalkPalette.lightestGrey,
-                          },
-                        }}
-                      />
-                    </div>
-                  </Tooltip>
-                );
-              })}
-            </Stack>
-          );
-        }}
-      </Field>
+                  return (
+                    <Tooltip
+                      title={!disabled || isMobile ? '' : 'Nothing to claim'}
+                    >
+                      <div>
+                        <DescriptionButton
+                          key={option.value}
+                          title={option.title}
+                          description={
+                            isMobile ? undefined : `${option.description}`
+                          }
+                          titleTooltip={
+                            isMobile ? `${option.description}` : undefined
+                          }
+                          tag={
+                            <GasTag gasLimit={gas?.[option.value] || null} />
+                          }
+                          // Button
+                          fullWidth
+                          onClick={set(option.value)}
+                          onMouseOver={onMouseOver(option.value)}
+                          onMouseLeave={onMouseOutContainer}
+                          isSelected={hovered}
+                          disabled={disabled}
+                          sx={{
+                            padding: '12.5px 10px !important',
+                            '&:disabled': {
+                              borderColor: BeanstalkPalette.lightestGrey,
+                            },
+                          }}
+                        />
+                      </div>
+                    </Tooltip>
+                  );
+                })}
+              </Stack>
+            );
+          }}
+        </Field>
+      </MountedAccordion>
       <LoadingButton
         type="submit"
         variant="contained"
         fullWidth
         size="medium"
         loading={isSubmitting}
-        disabled={isSubmitting || values.action === undefined}
-        onClick={submitForm}
+        disabled={open && (isSubmitting || values.action === undefined)}
+        onClick={handleOnClick}
+        endIcon={!open ? <DropdownIcon open={false} /> : null}
       >
-        {selectedAction === undefined
+        {!open
+          ? 'Claim Rewards'
+          : selectedAction === undefined
           ? 'Select Claim type'
           : `${options[selectedAction].title}`}
       </LoadingButton>
@@ -194,100 +209,100 @@ const RewardsContent: React.FC<{}> = () => {
   );
   const breakdown = useFarmerBalancesBreakdown();
   const { revitalizedStalk, revitalizedSeeds } = useRevitalized();
-  const [open, show, hide] = useToggle();
+  const [open, show] = useToggle();
 
   return (
-    <Stack gap={2}>
-      <Stack spacing={0.6}>
-        <Typography>Rewards from Silo Seigniorage</Typography>
-        <Grid container>
-          <Grid item xs={4}>
-            <RewardItem
-              title="Earned Beans"
-              amount={farmerSilo.beans.earned}
-              icon={beanIcon}
-              titleColor={BeanstalkPalette.theme.fall.brown}
-              titleBelow
-            />
+    <Stack spacing={1}>
+      <Stack gap={2} px={0.5}>
+        <Stack spacing={0.6}>
+          <Typography>Rewards from Silo Seigniorage</Typography>
+          <Grid container width="100%" justifyContent="flex-start">
+            <Grid item xs={4}>
+              <RewardItem
+                title="Earned Beans"
+                amount={farmerSilo.beans.earned}
+                icon={beanIcon}
+                titleColor={BeanstalkPalette.theme.fall.brown}
+                titleBelow
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <RewardItem
+                title="Earned Stalk"
+                amount={farmerSilo.stalk.earned}
+                icon={stalkIcon}
+                titleColor={BeanstalkPalette.theme.fall.brown}
+                titleBelow
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <RewardItem
+                title="Plantable Seeds"
+                amount={farmerSilo.seeds.earned}
+                icon={seedIcon}
+                titleColor={BeanstalkPalette.lightGrey}
+                titleBelow
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <RewardItem
-              title="Earned Stalk"
-              amount={farmerSilo.stalk.earned}
-              icon={stalkIcon}
-              titleColor={BeanstalkPalette.theme.fall.brown}
-              titleBelow
-            />
+        </Stack>
+        <Stack spacing={0.6}>
+          <Typography>Stalk grown from Seeds</Typography>
+          <Grid container>
+            <Grid item xs={4}>
+              <RewardItem
+                title="Grown Stalk"
+                amount={farmerSilo.stalk.grown}
+                icon={stalkIcon}
+                titleColor={BeanstalkPalette.lightGrey}
+                titleBelow
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <RewardItem
-              title="Plantable Seeds"
-              amount={farmerSilo.seeds.earned}
-              icon={seedIcon}
-              titleColor={BeanstalkPalette.lightGrey}
-              titleBelow
-            />
+        </Stack>
+        <Stack spacing={0.6}>
+          <Typography>Stalk and Seeds from Unripe Assets</Typography>
+          <Grid container>
+            <Grid item xs={4}>
+              <RewardItem
+                title="Revitalized Stalk"
+                amount={revitalizedStalk}
+                icon={stalkIcon}
+                titleColor={BeanstalkPalette.lightGrey}
+                titleBelow
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <RewardItem
+                title="Revitalized Seed"
+                amount={revitalizedSeeds}
+                icon={seedIcon}
+                titleColor={BeanstalkPalette.lightGrey}
+                titleBelow
+              />
+            </Grid>
           </Grid>
-        </Grid>
+        </Stack>
+        {open && (
+          <RewardsForm>
+            {(props) => (
+              <ClaimRewardsContent open={open} show={show} {...props} />
+            )}
+          </RewardsForm>
+        )}
       </Stack>
-      <Stack spacing={0.6}>
-        <Typography>Stalk grown from Seeds</Typography>
-        <Grid container>
-          <Grid item xs={4}>
-            <RewardItem
-              title="Grown Stalk"
-              amount={farmerSilo.stalk.grown}
-              icon={stalkIcon}
-              titleColor={BeanstalkPalette.lightGrey}
-              titleBelow
-            />
-          </Grid>
-        </Grid>
-      </Stack>
-      <Stack spacing={0.6}>
-        <Typography>Stalk and Seeds from Unripe Assets</Typography>
-        <Grid container>
-          <Grid item xs={4}>
-            <RewardItem
-              title="Revitalized Stalk"
-              amount={revitalizedStalk}
-              icon={stalkIcon}
-              titleColor={BeanstalkPalette.lightGrey}
-              titleBelow
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <RewardItem
-              title="Revitalized Seed"
-              amount={revitalizedSeeds}
-              icon={seedIcon}
-              titleColor={BeanstalkPalette.lightGrey}
-              titleBelow
-            />
-          </Grid>
-        </Grid>
-      </Stack>
-      {open && (
-        <RewardsForm>
-          {(props) => <ClaimRewardsContent {...props} />}
-        </RewardsForm>
-      )}
+      {/* dupliate button here b/c submit button has be within formik context */}
       {!open && (
-        <Box width={{ xs: '100%', lg: 'auto' }}>
-          <Button
-            size="medium"
-            variant="contained"
-            sx={{ width: '100%', whiteSpace: 'nowrap' }}
-            endIcon={!open ? <DropdownIcon open={false} /> : null}
-            onClick={() => {
-              if (open) hide();
-              else show();
-            }}
-            disabled={breakdown.totalValue?.eq(0)}
-          >
-            {!open ? 'Claim Rewards' : 'Claim All'}
-          </Button>
-        </Box>
+        <Button
+          size="medium"
+          variant="contained"
+          sx={{ width: '100%', whiteSpace: 'nowrap' }}
+          endIcon={!open ? <DropdownIcon open={false} /> : null}
+          onClick={show}
+          disabled={breakdown.totalValue?.eq(0)}
+        >
+          Claim Rewards
+        </Button>
       )}
     </Stack>
   );
@@ -298,7 +313,7 @@ const SiloRewards: React.FC<{}> = () => (
     <ModuleHeader>
       <Typography variant="h4">Rewards</Typography>
     </ModuleHeader>
-    <ModuleContent px={2} pb={2}>
+    <ModuleContent>
       <RewardsContent />
     </ModuleContent>
   </Module>
