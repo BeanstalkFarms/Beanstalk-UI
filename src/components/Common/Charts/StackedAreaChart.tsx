@@ -18,6 +18,8 @@ import ChartPropProvider, {
 } from './ChartPropProvider';
 import Row from '../Row';
 import { defaultValueFormatter } from './SeasonPlot';
+import useTokenMap from '~/hooks/chain/useTokenMap';
+import { SILO_WHITELIST } from '~/constants/tokens';
 
 type Props = {
   width: number;
@@ -26,6 +28,7 @@ type Props = {
   ProviderChartProps;
 
 const Graph = (props: Props) => {
+  const siloTokens = useTokenMap(SILO_WHITELIST);
   const {
     // Chart sizing
     width,
@@ -46,7 +49,7 @@ const Graph = (props: Props) => {
     accessors,
     utils,
   } = props;
-  const { getX, getY0, getY, getY1 } = accessors;
+  const { getX, getY0, getY, getY1, getYByAsset } = accessors;
   const { generateScale, generatePathFromStack, getPointerValue, getCurve } =
     utils;
 
@@ -107,8 +110,8 @@ const Graph = (props: Props) => {
       event: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>
     ) => {
       const { left, top } = containerBounds;
-      const containerX = ('clientX' in event ? event.clientX : 0) - left;
-      const containerY = ('clientY' in event ? event.clientY : 0) - top;
+      const containerX = ('clientX' in event ? event.clientX : 0) - left + (keys.length === 1 ? 0 : -100);
+      const containerY = ('clientY' in event ? event.clientY : 0) - top - 140;
       const pointerData = getPointerValue(event, scales, series)[0];
 
       showTooltip({
@@ -118,21 +121,16 @@ const Graph = (props: Props) => {
       });
       onCursor?.(pointerData.season, getDisplayValue([pointerData]));
     },
-    [
-      containerBounds,
-      getPointerValue,
-      scales,
-      series,
-      showTooltip,
-      onCursor,
-      getDisplayValue,
-    ]
+    [containerBounds, keys.length, getPointerValue, scales, series, showTooltip, onCursor, getDisplayValue]
   );
+
+  const tooltipLeftAttached = tooltipData ? scales[0].xScale(getX(tooltipData)) : undefined;
 
   // tick format + styles
   const xTickFormat = useCallback((_: any, i: number) => tickDates[i], [tickDates]);
   const yTickFormat = useCallback((val: any) => displayBN(new BigNumber(val)), []);
 
+  // styles are defined in ChartPropProvider as defaultChartStyles
   const { styles, getStyle } = useMemo(() => {
     const { getChartStyles } = common;
     return getChartStyles(stylesConfig);
@@ -171,53 +169,72 @@ const Graph = (props: Props) => {
           width={width - common.yAxisWidth}
           height={dataRegion.yBottom - dataRegion.yTop}
         >
-          {styles.map((s) => (
-            <LinearGradient {...s} key={s.id} />
+          {keys.map((key, index) => (
+            <>
+              <LinearGradient
+                to={styles[index]?.to}
+                from={styles[index]?.from}
+                toOpacity={0.5}
+                fromOpacity={0.3}
+                id={key}
+              />
+              <rect
+                x={0}
+                y={0}
+                width={width}
+                height={height}
+                fill="transparent"
+                rx={14}
+              />
+              {children && children({ scales, dataRegion, ...props })}
+              <AreaStack<BaseDataPoint>
+                top={common.margin.top}
+                left={common.margin.left}
+                keys={keys}
+                data={data}
+                height={height}
+                x={(d) => scales[0].xScale(getX(d.data)) ?? 0}
+                y0={(d) => scales[0].yScale(0) ?? 0}
+                y1={(d) => scales[0].yScale(getYByAsset(d.data, key)) ?? 0}
+              >
+                {({ stacks, path }) =>
+                  stacks.map((stack, _index) => (
+                    <>
+                      <path
+                        key={`stack-${stack.key}`}
+                        d={path(stack) || ''}
+                        stroke="transparent"
+                        fill={`url(#${key})`}
+                        />
+                      <LinePath<BaseDataPoint>
+                        stroke={styles[index]?.stroke}
+                        strokeWidth={1}
+                        key={`${key}`}
+                        curve={curveType}
+                        data={data}
+                        x={(d) => scales[0].xScale(getX(d)) ?? 0}
+                        y={(d) => scales[0].yScale(getYByAsset(d, key)) ?? 0}
+                        />
+                      {keys.length > 1 && tooltipData && (
+                        <circle
+                          cx={tooltipLeftAttached}
+                          cy={scales[0].yScale(getYByAsset(tooltipData, key))}
+                          r={2}
+                          fill="black"
+                          fillOpacity={0.1}
+                          stroke="black"
+                          strokeOpacity={0.1}
+                          strokeWidth={1}
+                          pointerEvents="none"
+                        />
+                      )}
+                    </>
+                    )
+                  )
+                }
+              </AreaStack>
+            </>
           ))}
-          <rect
-            x={0}
-            y={0}
-            width={width}
-            height={height}
-            fill="transparent"
-            rx={14}
-          />
-          {children && children({ scales, dataRegion, ...props })}
-          <AreaStack<BaseDataPoint>
-            top={common.margin.top}
-            left={common.margin.left}
-            keys={keys}
-            data={data}
-            height={height}
-            x={(d) => scales[0].xScale(getX(d.data)) ?? 0}
-            y0={(d) => scales[0].yScale(getY0(d)) ?? 0}
-            y1={(d) => scales[0].yScale(getY1(d)) ?? 0}
-          >
-            {({ stacks, path }) =>
-              stacks.map((stack, i) => 
-              
-                 (
-                   <>
-                     <path
-                       key={`stack-${stack.key}`}
-                       d={path(stack) || ''}
-                       stroke="transparent"
-                       fill={`url(#${getStyle(`${stack.key}`, i).id})`}
-                    />
-                     <LinePath<BaseDataPoint>
-                       stroke={getStyle(`${stack.key}`, i).stroke}
-                       strokeWidth={getStyle(`${stack.key}`, i).strokeWidth}
-                       key={`line-${i}`}
-                       curve={curveType}
-                       data={generatePathFromStack(stack)}
-                       x={(d) => scales[0].xScale(getX(d)) ?? 0}
-                       y={(d) => scales[0].yScale(getY(d)) ?? 0}
-                    />
-                   </>
-                )
-              )
-            }
-          </AreaStack>
         </Group>
         <g transform={`translate(0, ${dataRegion.yBottom})`}>
           <Axis
@@ -246,15 +263,18 @@ const Graph = (props: Props) => {
         </g>
         {tooltipData && (
           <>
-            <g>
-              <Line
-                from={{ x: tooltipLeft, y: dataRegion.yTop }}
-                to={{ x: tooltipLeft, y: dataRegion.yBottom }}
-                stroke={BeanstalkPalette.lightGrey}
-                strokeWidth={1}
-                pointerEvents="none"
-              />
-            </g>
+            {/* only show vertical cursor line if there is one stack */}
+            {keys.length === 1 && (
+              <g>
+                <Line
+                  from={{ x: tooltipLeft, y: dataRegion.yTop }}
+                  to={{ x: tooltipLeft, y: dataRegion.yBottom }}
+                  stroke={BeanstalkPalette.lightGrey}
+                  strokeWidth={1}
+                  pointerEvents="none"
+                />
+              </g>
+            )}
             {tooltip ? (
               <div>
                 <TooltipInPortal
@@ -264,7 +284,7 @@ const Graph = (props: Props) => {
                 >
                   {typeof tooltip === 'boolean' ? (
                     <Stack gap={0.5}>
-                      {keys.map((key, i) => (
+                      {keys.map((key, index) => (
                         <Row justifyContent="space-between" gap={2}>
                           <Row gap={1}>
                             <Box
@@ -272,10 +292,12 @@ const Graph = (props: Props) => {
                                 width: '12px',
                                 height: '12px',
                                 borderRadius: '50%',
-                                background: getStyle(key, i).stroke,
+                                background: getStyle(key, index).to,
+                                border: 1,
+                                borderColor: getStyle(key, index).stroke
                               }}
                             />
-                            <Typography>{key}</Typography>
+                            <Typography>{siloTokens[key]?.symbol}</Typography>
                           </Row>
                           <Typography textAlign="right">
                             {formatValue(tooltipData[key])}
@@ -296,6 +318,7 @@ const Graph = (props: Props) => {
   );
 };
 
+// For reference on how to use this chart, refer to BeanVs3Crv.tsx
 const StackedAreaChart: React.FC<BaseChartProps> = (props) => (
   <ChartPropProvider>
     {({ ...providerProps }) => (

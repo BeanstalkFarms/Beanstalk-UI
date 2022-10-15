@@ -1,3 +1,4 @@
+export {};
 // import { FC } from '~/types';
 
 // const RewardsCard: FC<{
