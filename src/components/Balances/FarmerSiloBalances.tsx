@@ -225,7 +225,7 @@ const BalancesTable: React.FC<{}> = () => {
 };
 const FarmerSiloBalances: React.FC<{}> = () => (
   <Stack gap={2}>
-    <Typography variant="h4">DepositedBalances</Typography>
+    <Typography variant="h4">Deposited Balances</Typography>
     <Stack spacing={2}>
       <EmbeddedCard sx={{ pt: 2, mb: 0.5 }}>
         <UserBalancesCharts />
