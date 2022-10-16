@@ -18,7 +18,6 @@ import { BEAN, PODS, SEEDS, SPROUTS, STALK } from '~/constants/tokens';
 import { AppState } from '~/state';
 import { NEW_BN, ZERO_BN } from '~/constants';
 import BalanceStat from './BalanceStat';
-import { Module, ModuleContent } from '~/components/Common/Module';
 import useAccount from '~/hooks/ledger/useAccount';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import PodsBalance from './Tokens/PodsBalance';
@@ -238,128 +237,124 @@ const BeanstalkTokenBalances: React.FC<{}> = () => {
   const canPerformActions = account !== undefined;
 
   return (
-    <Module>
-      <ModuleContent px={2} py={2}>
-        <Row width="100%" justifyContent="space-between" gap={2}>
-          <Stack width="100%" alignSelf="flex-start" gap={2}>
-            <Typography variant="h4">Beanstalk Balances</Typography>
-            {/* Stalk and Seeds */}
-            <Grid container>
-              <Grid item xs={12} md={5.5}>
-                <AnimatedPopover
-                  id="stalkAndSeeds"
-                  popperEl={<StalkAndSeedsBalance />}
-                  disabled={!canPerformActions}
-                  scale={1.02}
-                >
-                  <Grid container spacing={2}>
-                    {/* Stalk */}
-                    <Grid item xs={6}>
-                      <BalanceStat
-                        title="Stalk"
-                        token={STALK}
-                        amount={farmerSilo.stalk.total ?? ZERO_BN}
-                        amountModifier={
-                          stalkOwnership?.gt(0)
-                            ? `~${displayFullBN(stalkOwnership.times(100), 4)}%`
-                            : undefined
-                        }
-                        modifierProps={{
-                          sx: { color: BeanstalkPalette.grey },
-                        }}
-                        estimates={active ? estimates.stalk : undefined}
-                      />
-                    </Grid>
-                    {/* Seeds */}
-                    <Grid item xs={6}>
-                      <BalanceStat
-                        title="Seeds"
-                        token={SEEDS}
-                        amount={farmerSilo.seeds.total ?? ZERO_BN}
-                        estimates={active ? estimates.seeds : undefined}
-                      />
-                    </Grid>
-                  </Grid>
-                </AnimatedPopover>
-              </Grid>
-              <FlexDivider />
-              {/* pods */}
-              {/* width of 6.4 to take into account width of divider */}
-              <Grid item xs={12} md={6.4}>
-                <Grid container spacing={2}>
-                  <Grid item width="100%" xs={6}>
-                    <AnimatedPopover
-                      id="pods"
-                      popperEl={<PodsBalance />}
-                      disabled={account === undefined}
-                    >
-                      <Stack alignItems={{ xs: 'flex-start', md: 'center' }}>
-                        <Box>
-                          <BalanceStat
-                            title="Pods"
-                            token={PODS}
-                            amount={farmerField.pods ?? ZERO_BN}
-                            amountModifier={
-                              farmerField.harvestablePods?.gt(0)
-                                ? `+${displayFullBN(
-                                    farmerField.harvestablePods,
-                                    PODS.displayDecimals
-                                  )}`
-                                : undefined
-                            }
-                            estimates={active ? estimates.pods : undefined}
-                            alignItems="flex-start"
-                          />
-                        </Box>
-                      </Stack>
-                    </AnimatedPopover>
-                  </Grid>
-                  {/* sprouts */}
-                  <Grid item width="100%" xs={6}>
-                    <AnimatedPopover
-                      id="sprouts"
-                      popperEl={<SproutsBalance />}
-                      disabled={account === undefined}
-                      // alignItems={{ xs: 'flex-start', md: 'center' }}
-                    >
-                      <Stack alignItems={{ xs: 'flex-start', md: 'center' }}>
-                        <BalanceStat
-                          title="Sprouts"
-                          token={SPROUTS}
-                          amount={farmerField.pods ?? ZERO_BN}
-                          amountModifier={
-                            farmerBarn.fertilizedSprouts?.gt(0)
-                              ? `+${displayFullBN(
-                                  farmerBarn.fertilizedSprouts,
-                                  SPROUTS.displayDecimals
-                                )}`
-                              : undefined
-                          }
-                          estimates={active ? estimates.sprouts : undefined}
-                          alignItems="flex-start"
-                        />
-                      </Stack>
-                    </AnimatedPopover>
-                  </Grid>
+    <Row width="100%" justifyContent="space-between" gap={2}>
+      <Stack width="100%" alignSelf="flex-start" gap={2}>
+        <Typography variant="h4">Beanstalk Balances</Typography>
+        {/* Stalk and Seeds */}
+        <Grid container>
+          <Grid item xs={12} md={5.5}>
+            <AnimatedPopover
+              id="stalkAndSeeds"
+              popperEl={<StalkAndSeedsBalance />}
+              disabled={!canPerformActions}
+              scale={1.02}
+            >
+              <Grid container spacing={2}>
+                {/* Stalk */}
+                <Grid item xs={6}>
+                  <BalanceStat
+                    title="Stalk"
+                    token={STALK}
+                    amount={farmerSilo.stalk.total ?? ZERO_BN}
+                    amountModifier={
+                      stalkOwnership?.gt(0)
+                        ? `~${displayFullBN(stalkOwnership.times(100), 4)}%`
+                        : undefined
+                    }
+                    modifierProps={{
+                      sx: { color: BeanstalkPalette.grey },
+                    }}
+                    estimates={active ? estimates.stalk : undefined}
+                  />
+                </Grid>
+                {/* Seeds */}
+                <Grid item xs={6}>
+                  <BalanceStat
+                    title="Seeds"
+                    token={SEEDS}
+                    amount={farmerSilo.seeds.total ?? ZERO_BN}
+                    estimates={active ? estimates.seeds : undefined}
+                  />
                 </Grid>
               </Grid>
+            </AnimatedPopover>
+          </Grid>
+          <FlexDivider />
+          {/* pods */}
+          {/* width of 6.4 to take into account width of divider */}
+          <Grid item xs={12} md={6.4}>
+            <Grid container spacing={2}>
+              <Grid item width="100%" xs={6}>
+                <AnimatedPopover
+                  id="pods"
+                  popperEl={<PodsBalance />}
+                  disabled={account === undefined}
+                >
+                  <Stack alignItems={{ xs: 'flex-start', md: 'center' }}>
+                    <Box>
+                      <BalanceStat
+                        title="Pods"
+                        token={PODS}
+                        amount={farmerField.pods ?? ZERO_BN}
+                        amountModifier={
+                          farmerField.harvestablePods?.gt(0)
+                            ? `+${displayFullBN(
+                                farmerField.harvestablePods,
+                                PODS.displayDecimals
+                              )}`
+                            : undefined
+                        }
+                        estimates={active ? estimates.pods : undefined}
+                        alignItems="flex-start"
+                      />
+                    </Box>
+                  </Stack>
+                </AnimatedPopover>
+              </Grid>
+              {/* sprouts */}
+              <Grid item width="100%" xs={6}>
+                <AnimatedPopover
+                  id="sprouts"
+                  popperEl={<SproutsBalance />}
+                  disabled={account === undefined}
+                  // alignItems={{ xs: 'flex-start', md: 'center' }}
+                >
+                  <Stack alignItems={{ xs: 'flex-start', md: 'center' }}>
+                    <BalanceStat
+                      title="Sprouts"
+                      token={SPROUTS}
+                      amount={farmerField.pods ?? ZERO_BN}
+                      amountModifier={
+                        farmerBarn.fertilizedSprouts?.gt(0)
+                          ? `+${displayFullBN(
+                              farmerBarn.fertilizedSprouts,
+                              SPROUTS.displayDecimals
+                            )}`
+                          : undefined
+                      }
+                      estimates={active ? estimates.sprouts : undefined}
+                      alignItems="flex-start"
+                    />
+                  </Stack>
+                </AnimatedPopover>
+              </Grid>
             </Grid>
-          </Stack>
-          <Stack
-            display={{ xs: 'none', lg: 'flex' }}
-            maxWidth={{ xs: '100%', lg: '340px' }}
-            width="100%"
-          >
-            <AdjustBalancesInput
-              active={active}
-              setActive={setActive}
-              amount={mintAmount}
-              setAmount={setMintAmount}
-            />
-          </Stack>
-        </Row>
-      </ModuleContent>
-    </Module>
+          </Grid>
+        </Grid>
+      </Stack>
+      <Stack
+        display={{ xs: 'none', lg: 'flex' }}
+        maxWidth={{ xs: '100%', lg: '340px' }}
+        width="100%"
+      >
+        <AdjustBalancesInput
+          active={active}
+          setActive={setActive}
+          amount={mintAmount}
+          setAmount={setMintAmount}
+        />
+      </Stack>
+    </Row>
   );
 };
 

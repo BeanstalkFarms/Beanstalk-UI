@@ -1,42 +1,42 @@
 import React from 'react';
-import { Container, Stack } from '@mui/material';
+import { Box, Card, Container, Stack } from '@mui/material';
 
 import { XXLWidth } from '~/components/App/muiTheme';
-import SiloRewards from '~/components/Balances/SiloRewards';
 
 import { FC } from '~/types';
 
 import ValuedTokenBalances from '~/components/Balances/ValuedTokenBalances';
 import BeanstalkTokenBalances from '~/components/Balances/BeanstalkTokenBalances';
-import QuickHarvest from '~/components/Balances/Actions/QuickHarvest';
-import QuickRinse from '~/components/Balances/Actions/QuickRinse';
 import FarmerSiloBalances from '~/components/Balances/FarmerSiloBalances';
+import BalanceActions from '~/components/Balances/Actions/BalanceActions';
 
 const BalancesPage: FC<{}> = () => (
   <Container sx={{ maxWidth: `${XXLWidth}px !important`, width: '100%' }}>
-    <Stack spacing={2} width="100%">
-      <BeanstalkTokenBalances />
-      <Stack direction={{ xs: 'column', lg: 'row' }} gap={2}>
-        <Stack width="100%" gap={2}>
-          {/* <UserBalancesCharts /> */}
-          <FarmerSiloBalances />
+    <Stack gap={2}>
+      {/* Beanstalk Tokens e.g. Stalk, Seeds, Pods, & Sprouts Balances */}
+      <Card sx={{ p: 2 }}>
+        <BeanstalkTokenBalances />
+      </Card>
+      <Stack direction="row" gap={2}>
+        <Stack sx={{ minWidth: 0 }} width="100%" gap={2}>
+          {/* Deposit Balances */}
+          <Card sx={{ p: 2 }}>
+            <FarmerSiloBalances />
+          </Card>
+          {/* Actions: Quick Harvest, Quick Rinse, & Silo Rewards */}
+          <Box display={{ xs: 'block', lg: 'none' }}>
+            <BalanceActions />
+          </Box>
+          {/* Farm & Circulating Balances */}
           <ValuedTokenBalances />
         </Stack>
-        {/* Actions */}
-        <Stack
-          width="100%"
-          maxWidth={{ xs: '100%', lg: '360px' }}
-          sx={{ flexShrink: 0 }}
-          spacing={1}
-        >
-          <QuickHarvest />
-          <QuickRinse />
-          <SiloRewards />
-        </Stack>
+        {/* Actions: Quick Harvest, Quick Rinse, & Silo Rewards */}
+        <Box display={{ xs: 'none', lg: 'block' }}>
+          <BalanceActions />
+        </Box>
       </Stack>
-
     </Stack>
   </Container>
-);  
+);
 
 export default BalancesPage;
