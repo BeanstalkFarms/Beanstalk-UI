@@ -7,7 +7,6 @@ import useWhitelist from '~/hooks/beanstalk/useWhitelist';
 import TokenRow from '~/components/Common/Balances/TokenRow';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import { BEAN } from '~/constants/tokens';
-
 import { FC } from '~/types';
 
 const BeanstalkBalances: FC<{
