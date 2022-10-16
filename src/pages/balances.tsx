@@ -1,14 +1,11 @@
 import React from 'react';
 import { Box, Card, Container, Stack } from '@mui/material';
-
 import { XXLWidth } from '~/components/App/muiTheme';
-
 import { FC } from '~/types';
-
 import ValuedTokenBalances from '~/components/Balances/ValuedTokenBalances';
 import BeanstalkTokenBalances from '~/components/Balances/BeanstalkTokenBalances';
 import FarmerSiloBalances from '~/components/Balances/FarmerSiloBalances';
-import BalanceActions from '~/components/Balances/Actions/BalanceActions';
+import BalanceActions from '~/components/Balances/Actions';
 
 const BalancesPage: FC<{}> = () => (
   <Container sx={{ maxWidth: `${XXLWidth}px !important`, width: '100%' }}>
@@ -31,7 +28,7 @@ const BalancesPage: FC<{}> = () => (
           <ValuedTokenBalances />
         </Stack>
         {/* Actions: Quick Harvest, Quick Rinse, & Silo Rewards */}
-        <Box display={{ xs: 'none', lg: 'block' }}>
+        <Box display={{ xs: 'none', lg: 'block' }} sx={{ position: 'relative' }}>
           <BalanceActions />
         </Box>
       </Stack>

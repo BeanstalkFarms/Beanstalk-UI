@@ -9,11 +9,11 @@ import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import useTokenMap from '~/hooks/chain/useTokenMap';
 import useFarmerBalances from '~/hooks/farmer/useFarmerBalances';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
-import PointImg from '~/img/misc/point-indicator.svg';
 import Row from '../Common/Row';
 import useCrvUnderlyingPrices from '~/hooks/beanstalk/useCrvUnderlyingPrices';
 import { displayFullBN } from '~/util';
 import { BeanstalkPalette } from '../App/muiTheme';
+import AddressIcon from '~/components/Common/AddressIcon';
 
 const sortMap = {
   BEAN: 0,
@@ -190,6 +190,7 @@ const ValuedTokenBalances: React.FC<{}> = () => {
 
     const farm = Object.entries(breakdown.states.farm.byToken);
     const circulating = breakdown.states.circulating.byToken;
+    
     farm.forEach(([addr, { value, amount }]) => {
       const whitelisted = whitelist[addr];
       if (!whitelisted) return;
@@ -240,11 +241,12 @@ const ValuedTokenBalances: React.FC<{}> = () => {
       <BalanceTable
         rows={balanceData.external.data}
         title={
-          <Typography variant="h4" component="span">
-            <Row alignItems="center">
-              <img src={PointImg} alt="" /> Circulating Balance
-            </Row>
-          </Typography>
+          <Row gap={0.5}>
+            <AddressIcon size={16} />
+            <Typography variant="h4" component="span">
+              Circulating Balance
+            </Typography>
+          </Row>
         }
         noBalances={!balanceData.external.hasBalances}
         pageName="Circulating"
