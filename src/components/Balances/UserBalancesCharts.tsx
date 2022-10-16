@@ -1,6 +1,4 @@
-import { Typography } from '@mui/material';
 import React, { useMemo } from 'react';
-import { Module, ModuleContent, ModuleHeader } from '~/components/Common/Module';
 import useAccount from '~/hooks/ledger/useAccount';
 import useFarmerBalancesOverview from '~/hooks/farmer/useFarmerBalancesOverview';
 import { BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
@@ -39,35 +37,28 @@ const UserBalancesCharts: React.FC<{}> = () => {
   }, [seriesInput, timeTabParams]);
 
   const queryData: QueryData = {
-    data: filteredSeries,
+    data: filteredSeries as BaseDataPoint[][],
     loading: loading,
     keys: SILO_WHITELIST.map((t) => t[1].address),
     error: undefined
   };
 
   return (
-    <Module sx={{ width: '100%' }}>
-      <ModuleHeader>
-        <Typography variant="h4">Deposited Balance</Typography>
-      </ModuleHeader>
-      <ModuleContent px={0} pb={2}>
-        <BaseSeasonPlot
-          queryData={queryData}
-          height={300}
-          StatProps={{
-            title: 'Total Deposited Value',
-            gap: 0.5,
-          }}
-          timeTabParams={timeTabParams}
-          formatValue={formatValue}
-          stackedArea
-          ChartProps={{
-            getDisplayValue: getStatValue,
-            tooltip: true,
-          }}
-        />
-      </ModuleContent>
-    </Module>
+    <BaseSeasonPlot
+      queryData={queryData}
+      height={300}
+      StatProps={{
+        title: 'Total Deposited Value',
+        gap: 0.5,
+      }}
+      timeTabParams={timeTabParams}
+      formatValue={formatValue}
+      stackedArea
+      ChartProps={{
+        getDisplayValue: getStatValue,
+        tooltip: true,
+      }}
+    />
   );
 };
 

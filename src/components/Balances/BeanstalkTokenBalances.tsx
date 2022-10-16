@@ -222,6 +222,20 @@ const BeanstalkTokenBalances: React.FC<{}> = () => {
     mintAmount,
   ]);
 
+  const datasss = useMemo(() => {
+    const stk = farmerSilo.stalk;
+    const activeStalks = stk.active.toNumber();
+    const a = stk.earned.toNumber();
+    const b = stk.grown.toNumber();
+    const c = stk.total.toNumber();
+    console.log('-------------');
+    console.log('active: ', activeStalks);
+    console.log('earned: ', a);
+    console.log('grown: ', b);
+    console.log('total: ', c);
+    console.log('-------------');
+  }, [farmerSilo.stalk]);
+
   // helpers
   const canPerformActions = account !== undefined;
 
@@ -272,7 +286,7 @@ const BeanstalkTokenBalances: React.FC<{}> = () => {
   ];
 
   return (
-    <Module>
+    <Module sx={{ boxSizing: 'border-box' }}>
       <ModuleContent px={2} py={2}>
         <Row width="100%" justifyContent="space-between" gap={2}>
           <Stack width="100%" alignSelf="flex-start" gap={1}>
