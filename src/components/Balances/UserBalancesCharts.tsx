@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { Box, Stack, Typography } from '@mui/material';
 import useAccount from '~/hooks/ledger/useAccount';
 import useFarmerBalancesOverview from '~/hooks/farmer/useFarmerBalancesOverview';
 import { BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
@@ -6,6 +7,9 @@ import useTimeTabState from '~/hooks/app/useTimeTabState';
 import BaseSeasonPlot, { QueryData } from '~/components/Common/Charts/BaseSeasonPlot';
 import { SILO_WHITELIST } from '~/constants/tokens';
 import { SEASON_RANGE_TO_COUNT, SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery';
+import MockPlot from '../Silo/MockPlot';
+import BlurComponent from '../Common/ZeroState/BlurComponent';
+import WalletButton from '../Common/Connection/WalletButton';
 
 const UserBalancesCharts: React.FC<{}> = () => {
   //
@@ -44,21 +48,37 @@ const UserBalancesCharts: React.FC<{}> = () => {
   };
 
   return (
-    <BaseSeasonPlot
-      queryData={queryData}
-      height={300}
-      StatProps={{
-        title: 'Total Deposited Value',
-        gap: 0.5,
-      }}
-      timeTabParams={timeTabParams}
-      formatValue={formatValue}
-      stackedArea
-      ChartProps={{
-        getDisplayValue: getStatValue,
-        tooltip: true,
-      }}
-    />
+    <Box sx={{ width: '100%', height: '398px', position: 'relative' }}>
+      {account !== undefined ? (
+        <BaseSeasonPlot
+          queryData={queryData}
+          height={300}
+          StatProps={{
+            title: 'Total Deposited Value',
+            gap: 0.5,
+          }}
+          timeTabParams={timeTabParams}
+          formatValue={formatValue}
+          stackedArea
+          ChartProps={{
+            getDisplayValue: getStatValue,
+            tooltip: true,
+          }}
+        />
+      ) : (
+        <>
+          <MockPlot />
+          <BlurComponent>
+            <Stack justifyContent="center" alignItems="center" height="100%" gap={1}> 
+              <>
+                <Typography variant="body1" color="gray">Your deposits will appear here.</Typography>
+                <WalletButton showFullText color="primary" sx={{ height: 45 }} />
+              </>
+            </Stack>
+          </BlurComponent>
+        </>
+      )}
+    </Box>
   );
 };
 

@@ -97,7 +97,7 @@ const AdjustBalancesInput: React.FC<{
               If Beanstalk minted
             </Typography>
             <TextField
-              type="text"
+              type="number"
               value={amount}
               onChange={handleChange}
               placeholder="0"
@@ -116,7 +116,7 @@ const AdjustBalancesInput: React.FC<{
             <Typography
               textAlign="center"
               color="primary"
-              sx={{ whiteSpace: 'no-wrap' }}
+              sx={{ whiteSpace: 'nowrap' }}
             >
               next Season, a total Supply of{' '}
               <strong>
@@ -207,10 +207,10 @@ const BeanstalkTokenBalances: React.FC<{}> = () => {
 
     const rinsable = sproutsOwnership.gt(0)
       ? allocation.times(sproutsOwnership)
-      : undefined;
+      : new BigNumber(0);
     const placeInLine = Object.values(farmerField.plots).length
       ? allocation.times(-1)
-      : undefined;
+      : new BigNumber(-0);
     const plantableSeeds = seigniorage.times(bean.rewards?.stalk ?? ZERO_BN);
     const grownStalk = farmerSilo.seeds.active.div(10_000);
 
@@ -255,7 +255,11 @@ const BeanstalkTokenBalances: React.FC<{}> = () => {
                   <BalanceStat
                     title="Stalk"
                     token={STALK}
-                    amount={farmerSilo.stalk.total ?? ZERO_BN}
+                    amount={
+                      farmerSilo.stalk.total?.gt(0)
+                        ? farmerSilo.stalk.total
+                        : ZERO_BN
+                    }
                     amountModifier={
                       stalkOwnership?.gt(0)
                         ? `~${displayFullBN(stalkOwnership.times(100), 4)}%`
@@ -272,7 +276,11 @@ const BeanstalkTokenBalances: React.FC<{}> = () => {
                   <BalanceStat
                     title="Seeds"
                     token={SEEDS}
-                    amount={farmerSilo.seeds.total ?? ZERO_BN}
+                    amount={
+                      farmerSilo.seeds.total?.gt(0)
+                        ? farmerSilo.seeds.total
+                        : ZERO_BN
+                    }
                     estimates={active ? estimates.seeds : undefined}
                   />
                 </Grid>
@@ -295,7 +303,9 @@ const BeanstalkTokenBalances: React.FC<{}> = () => {
                       <BalanceStat
                         title="Pods"
                         token={PODS}
-                        amount={farmerField.pods ?? ZERO_BN}
+                        amount={
+                          farmerField.pods?.gt(0) ? farmerField.pods : ZERO_BN
+                        }
                         amountModifier={
                           farmerField.harvestablePods?.gt(0)
                             ? `+${displayFullBN(
@@ -317,13 +327,14 @@ const BeanstalkTokenBalances: React.FC<{}> = () => {
                   id="sprouts"
                   popperEl={<SproutsBalance />}
                   disabled={account === undefined}
-                  // alignItems={{ xs: 'flex-start', md: 'center' }}
                 >
                   <Stack alignItems={{ xs: 'flex-start', md: 'center' }}>
                     <BalanceStat
                       title="Sprouts"
                       token={SPROUTS}
-                      amount={farmerField.pods ?? ZERO_BN}
+                      amount={
+                        farmerField.pods?.gt(0) ? farmerField.pods : ZERO_BN
+                      }
                       amountModifier={
                         farmerBarn.fertilizedSprouts?.gt(0)
                           ? `+${displayFullBN(

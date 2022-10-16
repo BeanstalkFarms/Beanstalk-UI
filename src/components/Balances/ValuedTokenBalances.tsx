@@ -1,6 +1,6 @@
 import { Typography, Stack, Grid, Card } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import React, { useCallback,  useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { ERC20Token, NativeToken } from '~/classes/Token';
 import { ZERO_BN } from '~/constants';
 import { CRV3_UNDERLYING } from '~/constants/tokens';
@@ -46,95 +46,102 @@ const BalanceTable: React.FC<{
   <Card sx={{ width: '100%' }}>
     <Stack height="100%" p={2} spacing={1.5}>
       {title}
-      <Stack spacing={1} height="100%">
+      <Stack spacing={1} height="384px">
         {noBalances ? (
-          <Stack
-            justifyContent="center"
-            alignItems="center"
-            height="100%"
-      >
-            <Typography
-              variant="bodySmall"
-              sx={{ color: BeanstalkPalette.lightGrey }}
-        >
-              {`You don't have any tokens in your ${pageName} Balance`}
-            </Typography>
-          </Stack>
-    ) : (
-      <>
-        <Grid container direction="row">
-          <Grid item xs={6} sm={5}>
+          <Stack justifyContent="center" alignItems="center" height="100%">
             <Typography
               variant="bodySmall"
               sx={{ color: BeanstalkPalette.lightGrey }}
             >
-              Token
+              {`You don't have any tokens in your ${pageName} Balance`}
             </Typography>
-          </Grid>
-          <Grid item xs={6} sm={4.5}>
-            <Stack textAlign={{ xs: 'right', sm: 'left' }}>
-              <Typography
-                variant="bodySmall"
-                sx={{ color: BeanstalkPalette.lightGrey }}
-              >
-                Amount
-              </Typography>
-            </Stack>
-          </Grid>
-          <Grid item xs={0} sm={2.5} display={{ xs: 'none', sm: 'block' }}>
-            <Stack>
-              <Typography
-                variant="bodySmall"
-                textAlign="right"
-                sx={{ color: BeanstalkPalette.lightGrey }}
-              >
-                Value
-              </Typography>
-            </Stack>
-          </Grid>
-        </Grid>
-        {rows.map(({ token, amount, value }, i) => (
-          <Stack
-            sx={{
-              px: '20px',
-              py: '10px',
-              borderRadius: '6px',
-              border: `1px solid ${BeanstalkPalette.lightestGrey}`,
-            }}
-            key={i}
-          >
-            <Grid container direction="row" spacing={2} alignItems="center">
+          </Stack>
+        ) : (
+          <>
+            <Grid container direction="row" sx={{ px: 1 }}>
               <Grid item xs={6} sm={5}>
-                <Row gap={1} alignItems="center">
-                  <img
-                    src={token.logo}
-                    alt=""
-                    height="20px"
-                    width="20px"
-                    style={{ borderRadius: '50%' }}
-                  />
-                  <Typography variant="bodySmall">{token.symbol}</Typography>
-                </Row>
+                <Typography
+                  variant="bodySmall"
+                  sx={{ color: BeanstalkPalette.lightGrey }}
+                >
+                  Token
+                </Typography>
               </Grid>
               <Grid item xs={6} sm={4.5}>
                 <Stack textAlign={{ xs: 'right', sm: 'left' }}>
-                  <Typography variant="bodySmall">
-                    {displayFullBN(amount, token.displayDecimals)}{' '}{token.symbol}
+                  <Typography
+                    variant="bodySmall"
+                    sx={{
+                      color: BeanstalkPalette.lightGrey,
+                      pl: 1,
+                    }}
+                  >
+                    Amount
                   </Typography>
                 </Stack>
               </Grid>
               <Grid item xs={0} sm={2.5} display={{ xs: 'none', sm: 'block' }}>
                 <Stack>
-                  <Typography variant="bodySmall" textAlign="right">
-                    ${displayFullBN(value, 2)}
+                  <Typography
+                    variant="bodySmall"
+                    textAlign="right"
+                    sx={{ color: BeanstalkPalette.lightGrey }}
+                  >
+                    Value
                   </Typography>
                 </Stack>
               </Grid>
             </Grid>
-          </Stack>
-        ))}
-      </>
-    )}
+            {rows.map(({ token, amount, value }, i) => (
+              <Stack
+                sx={{
+                  px: '20px',
+                  py: '10px',
+                  borderRadius: '6px',
+                  border: `1px solid ${BeanstalkPalette.lightestGrey}`,
+                }}
+                key={i}
+              >
+                <Grid container direction="row" spacing={2} alignItems="center">
+                  <Grid item xs={6} sm={5}>
+                    <Row gap={1} alignItems="center">
+                      <img
+                        src={token.logo}
+                        alt=""
+                        height="20px"
+                        width="20px"
+                        style={{ borderRadius: '50%' }}
+                      />
+                      <Typography variant="bodySmall">
+                        {token.symbol}
+                      </Typography>
+                    </Row>
+                  </Grid>
+                  <Grid item xs={6} sm={4.5}>
+                    <Stack textAlign={{ xs: 'right', sm: 'left' }}>
+                      <Typography variant="bodySmall">
+                        {displayFullBN(amount, token.displayDecimals)}{' '}
+                        {token.symbol}
+                      </Typography>
+                    </Stack>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={0}
+                    sm={2.5}
+                    display={{ xs: 'none', sm: 'block' }}
+                  >
+                    <Stack>
+                      <Typography variant="bodySmall" textAlign="right">
+                        ${displayFullBN(value, 2)}
+                      </Typography>
+                    </Stack>
+                  </Grid>
+                </Grid>
+              </Stack>
+            ))}
+          </>
+        )}
       </Stack>
     </Stack>
   </Card>
@@ -154,10 +161,10 @@ const ValuedTokenBalances: React.FC<{}> = () => {
   const prices3Crv = useCrvUnderlyingPrices();
 
   const getBalances = useCallback(
-    (addr: string) => ({ 
-      farm: farmerBalances?.[addr]?.internal ?? ZERO_BN, 
-      circulating: farmerBalances?.[addr]?.external ?? ZERO_BN
-    }), 
+    (addr: string) => ({
+      farm: farmerBalances?.[addr]?.internal ?? ZERO_BN,
+      circulating: farmerBalances?.[addr]?.external ?? ZERO_BN,
+    }),
     [farmerBalances]
   );
 
@@ -169,13 +176,13 @@ const ValuedTokenBalances: React.FC<{}> = () => {
       const token = getChainToken(_token);
       const balance = getBalances(token.address);
       const value = prices3Crv[token.address] ?? ZERO_BN;
-      internal[token.address] = { 
-        token, 
-        amount: balance.farm, 
-        value: balance.farm 
+      internal[token.address] = {
+        token,
+        amount: balance.farm,
+        value: balance.farm,
       };
       external[token.address] = {
-        token, 
+        token,
         amount: balance.circulating,
         value: balance.circulating.multipliedBy(value),
       };
@@ -188,12 +195,12 @@ const ValuedTokenBalances: React.FC<{}> = () => {
       if (!whitelisted) return;
       const token = getChainToken(whitelisted);
       internal[addr] = {
-        token, 
-        amount, 
-        value
+        token,
+        amount,
+        value,
       };
       external[addr] = {
-        token, 
+        token,
         amount: circulating[addr]?.amount ?? ZERO_BN,
         value: circulating[addr]?.value ?? ZERO_BN,
       };
@@ -203,13 +210,13 @@ const ValuedTokenBalances: React.FC<{}> = () => {
     const _external = Object.values(external).sort(sortTokens);
 
     return {
-      internal: { 
+      internal: {
         data: _internal,
-        hasBalances: !!(_internal.find((r) => !r.amount.eq(ZERO_BN)))
+        hasBalances: !!_internal.find((r) => !r.amount.eq(ZERO_BN)),
       },
-      external: { 
+      external: {
         data: _external,
-        hasBalances: !!(_external.find((r) => !r.amount.eq(ZERO_BN)))
+        hasBalances: !!_external.find((r) => !r.amount.eq(ZERO_BN)),
       },
     };
   }, [
@@ -225,13 +232,13 @@ const ValuedTokenBalances: React.FC<{}> = () => {
   return (
     <Stack direction={{ xs: 'column', lg: 'row' }} gap={2} width="100%">
       <BalanceTable
-        rows={balanceData.internal.data} 
+        rows={balanceData.internal.data}
         title={<Typography variant="h4">🚜 Farm Balance</Typography>}
-        noBalances={!balanceData.internal.hasBalances} 
-        pageName="Farm" 
+        noBalances={!balanceData.internal.hasBalances}
+        pageName="Farm"
       />
-      <BalanceTable 
-        rows={balanceData.external.data} 
+      <BalanceTable
+        rows={balanceData.external.data}
         title={
           <Typography variant="h4" component="span">
             <Row alignItems="center">
@@ -239,8 +246,8 @@ const ValuedTokenBalances: React.FC<{}> = () => {
             </Row>
           </Typography>
         }
-        noBalances={!balanceData.external.hasBalances} 
-        pageName="Circulating" 
+        noBalances={!balanceData.external.hasBalances}
+        pageName="Circulating"
       />
     </Stack>
   );

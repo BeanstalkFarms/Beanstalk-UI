@@ -58,6 +58,11 @@ const AnimatedPopover: React.FC<{
           vertical: 'top',
           horizontal: 'left',
         }}
+        sx={{
+          '& .MuiPaper-root': {
+            boxShadow: 'none'
+          }
+        }}
       >
         {popperEl}
       </Popover>

@@ -14,7 +14,6 @@ import { LoadingButton } from '@mui/lab';
 import {
   Module,
   ModuleContent,
-  ModuleHeader,
 } from '~/components/Common/Module';
 import beanIcon from '~/img/tokens/bean-logo-circled.svg';
 import stalkIcon from '~/img/beanstalk/stalk-icon.svg';
@@ -22,20 +21,20 @@ import seedIcon from '~/img/beanstalk/seed-icon.svg';
 
 import useRevitalized from '~/hooks/farmer/useRevitalized';
 import { AppState } from '~/state';
-import RewardItem from '../Silo/RewardItem';
-import { BeanstalkPalette } from '../App/muiTheme';
+import RewardItem from '../../Silo/RewardItem';
+import { BeanstalkPalette } from '../../App/muiTheme';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import DropdownIcon from '~/components/Common/DropdownIcon';
 import useToggle from '~/hooks/display/useToggle';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import useFarmerSiloBalances from '~/hooks/farmer/useFarmerSiloBalances';
-import RewardsForm, { ClaimRewardsFormParams } from '../Silo/RewardsForm';
+import RewardsForm, { ClaimRewardsFormParams } from '../../Silo/RewardsForm';
 import { ClaimRewardsAction } from '~/lib/Beanstalk/Farm';
 import { UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
-import DescriptionButton from '../Common/DescriptionButton';
-import GasTag from '../Common/GasTag';
+import DescriptionButton from '../../Common/DescriptionButton';
+import GasTag from '../../Common/GasTag';
 import { hoverMap } from '~/constants/silo';
-import MountedAccordion from '../Common/Accordion/MountedAccordion';
+import MountedAccordion from '../../Common/Accordion/MountedAccordion';
 
 const options = [
   {
@@ -310,10 +309,10 @@ const RewardsContent: React.FC<{}> = () => {
 
 const SiloRewards: React.FC<{}> = () => (
   <Module>
-    <ModuleHeader>
-      <Typography variant="h4">Rewards</Typography>
-    </ModuleHeader>
-    <ModuleContent>
+    <ModuleContent pt={1.5}>
+      <Stack px={0.5} pb={1}>
+        <Typography variant="h4">Rewards</Typography>
+      </Stack>
       <RewardsContent />
     </ModuleContent>
   </Module>

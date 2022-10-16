@@ -27,6 +27,9 @@ const plotsTableStyle = {
   '& .MuiTypography-root': {
     fontSize: FontSize.sm,
   },
+  '& .MuiDataGrid-virtualScroller': {
+    overflowY: 'hidden'
+  }
 };
 
 const PlacesInLine: React.FC<{
@@ -47,7 +50,7 @@ const PlacesInLine: React.FC<{
           .toNumber();
 
         // if there is less than 1% difference in relative distance between plots,
-        // it will cover the previous plot image, so we add 1%
+        // we add 1% to prevent it from covering the previous plot
         data.push(curr - prev < 1 ? curr + 1 : curr);
         prev = curr;
       });
@@ -128,7 +131,10 @@ const PodsBalance: React.FC<{}> = () => {
 
   const tableHeight = useMemo(() => {
     if (!rows || rows.length === 0) return '300px';
-    return 58 + 39 + Math.min(rows.length, MAX_ROWS) * 36;
+    // 58: height of pagination
+    // 39: height of header
+    // 27: height of cell
+    return 58 + 39 + Math.min(rows.length, MAX_ROWS) * 27;
   }, [rows]);
 
   return (

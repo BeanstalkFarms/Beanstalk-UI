@@ -110,7 +110,7 @@ const BalancesTable: React.FC<{}> = () => {
               sx={{
                 textAlign: 'left',
                 px: 2,
-                py: 1.5,
+                py: 1,
                 borderColor: BeanstalkPalette.lightestGrey,
               }}
             >

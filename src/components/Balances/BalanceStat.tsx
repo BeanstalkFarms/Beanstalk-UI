@@ -70,7 +70,7 @@ const BalanceStat: React.FC<BalanceStatProps> = ({
       <Stack spacing={0.6}>
         {estimates &&
           estimates.map((values, i) => {
-            if (!values?.delta) return null;
+            if (values?.delta === undefined) return null;
             const prefix = values.descending ? '-' : '+';
             return (
               <Chip
@@ -83,7 +83,7 @@ const BalanceStat: React.FC<BalanceStatProps> = ({
                       variant="bodySmall"
                       sx={{
                         fontWeight: 700,
-                        whiteSpace: 'wrap',
+                        whiteSpace: 'nowrap',
                       }}
                     >
                       {`${prefix} ${displayFullBN(values.delta.abs(), 0)} ${
