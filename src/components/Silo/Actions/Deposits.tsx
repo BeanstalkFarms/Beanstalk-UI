@@ -6,7 +6,7 @@ import { GridColumns } from '@mui/x-data-grid';
 import { Token } from '~/classes';
 import { FarmerSiloBalance } from '~/state/farmer/silo';
 import type { DepositCrate } from '~/state/farmer/silo';
-import { displayBN, displayFullBN } from '~/util';
+import { calculateGrownStalk, displayBN, displayFullBN } from '~/util';
 import useSeason from '~/hooks/beanstalk/useSeason';
 import { BEAN, STALK } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
@@ -84,8 +84,8 @@ const Deposits : FC<{
       headerAlign: 'right',
       valueFormatter: (params) => displayBN(params.value),
       renderCell: (params) => {
-        const seedsPerSeason = params.row.seeds.times(0.00001);
-        const accruedStalk   = seedsPerSeason.times(currentSeason.minus(params.row.season));
+        const grownStalk = calculateGrownStalk(currentSeason, params.row.seeds, params.row.season); 
+        const totalStalk = params.value.plus(grownStalk);
         return (
           <Tooltip
             placement="bottom"
@@ -95,15 +95,15 @@ const Deposits : FC<{
                   {displayFullBN(params.row.stalk, 2, 2)}
                 </StatHorizontal>
                 <StatHorizontal label="Stalk grown since Deposit">
-                  {displayFullBN(accruedStalk, 2, 2)}
+                  {displayFullBN(grownStalk, 2, 2)}
                 </StatHorizontal>
                 {/* <Typography color="gray">Earning {displayBN(seedsPerSeason)} Stalk per Season</Typography> */}
               </Stack>
             )}
           >
             <span>
-              <Typography display={{ xs: 'none', md: 'block' }}>{displayFullBN(params.value.plus(accruedStalk), STALK.displayDecimals, STALK.displayDecimals)}</Typography>
-              <Typography display={{ xs: 'block', md: 'none' }}>{displayBN(params.value.plus(accruedStalk))}</Typography>
+              <Typography display={{ xs: 'none', md: 'block' }}>{displayFullBN(totalStalk, STALK.displayDecimals, STALK.displayDecimals)}</Typography>
+              <Typography display={{ xs: 'block', md: 'none' }}>{displayBN(totalStalk)}</Typography>
             </span>
           </Tooltip>
         );

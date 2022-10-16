@@ -8,7 +8,7 @@ import { SEEDS, STALK } from '~/constants/tokens';
 import useDimensions from '~/hooks/app/useDimensions';
 import useFarmerStalkSources from '~/hooks/farmer/useFarmerStalkSources';
 import { AppState } from '~/state';
-import { displayFullBN, displayStalk } from '~/util';
+import { displayFullBN, displayStalk, STALK_PER_SEED_PER_SEASON } from '~/util';
 import BalancePopover from './BalancePopover';
 
 const colors = [
@@ -136,7 +136,7 @@ const StalkAndSeedsBalance: React.FC<{}> = () => {
       text: 'grown from Seeds',
     },
     {
-      amount: displayStalk(farmerSilo.seeds.active.times(1 / 10_000)),
+      amount: displayStalk(farmerSilo.seeds.active.times(STALK_PER_SEED_PER_SEASON)),
       text: 'per Season from Seeds',
     },
   ];

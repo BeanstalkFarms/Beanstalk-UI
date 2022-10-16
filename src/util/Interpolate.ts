@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import { TokenMap, ZERO_BN } from '~/constants';
 import { BEAN, SEEDS, SILO_WHITELIST, STALK } from '~/constants/tokens';
 import { FarmerSiloRewardsQuery, SeasonalPriceQuery } from '~/generated/graphql';
-import { secondsToDate, toTokenUnitsBN } from '~/util';
+import { secondsToDate, STALK_PER_SEED_PER_SEASON, toTokenUnitsBN } from '~/util';
 import { BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
 
 export type Snapshot = { id: string; season: number, timestamp: string, hourlyDepositedBDV: string };
@@ -86,7 +86,7 @@ export const interpolateFarmerStalk = (
       nextSeason = snapshots[j]?.season || undefined;
     } else {
       // Estimate actual amount of stalk using seeds
-      currStalk = currStalk.plus(currSeeds.multipliedBy(1 / 10_000)); // Each Seed grows 1/10,000 Stalk per Season
+      currStalk = currStalk.plus(currSeeds.multipliedBy(STALK_PER_SEED_PER_SEASON)); // Each Seed grows 1/10,000 Stalk per Season
       currTimestamp = currTimestamp.plus({ hours: 1 });
     }
     stalk.push({

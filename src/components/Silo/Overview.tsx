@@ -7,7 +7,7 @@ import { AppState } from '~/state';
 import useTabs from '~/hooks/display/useTabs';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { SEEDS, STALK } from '~/constants/tokens';
-import { displayPercentage, displayStalk, displayUSD } from '~/util';
+import { displayPercentage, displayStalk, displayUSD, STALK_PER_SEED_PER_SEASON } from '~/util';
 import { ChipLabel, StyledTab } from '~/components/Common/Tabs';
 import { ZERO_BN } from '~/constants';
 import Row from '~/components/Common/Row';
@@ -99,7 +99,7 @@ const Overview: FC<{
       <Stat
         title="Stalk Grown per Day"
         titleTooltip="The number of Stalk your Seeds will grow every 24 Seasons based on your current Seed balance."
-        amount={displayStalk(farmerSilo.seeds.active.times(1 / 10_000).times(24))}
+        amount={displayStalk(farmerSilo.seeds.active.times(STALK_PER_SEED_PER_SEASON).times(24))}
         color="text.secondary"
         gap={0.25}
         sx={{ minWidth: 120, ml: 0 }}
