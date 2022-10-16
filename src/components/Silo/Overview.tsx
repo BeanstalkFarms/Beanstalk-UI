@@ -17,7 +17,7 @@ import OverviewPlot from '~/components/Silo/OverviewPlot';
 import Stat from '~/components/Common/Stat';
 import useFarmerSiloOverview from '~/hooks/farmer/useFarmerSiloOverview';
 import { FC } from '~/types';
-import { DataPoint } from '~/components/Common/Charts/LineChart';
+import { BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
 
 const depositStats = (s: BigNumber, v: BigNumber[]) => (
   <Stat
@@ -136,7 +136,7 @@ const Overview: FC<{
           ]), [breakdown.states.deposited.value])}
           series={useMemo(() => ([
             data.deposits
-          ]), [data.deposits]) as DataPoint[][]}
+          ]), [data.deposits]) as BaseDataPoint[][]}
           season={season}
           stats={depositStats}
           loading={loading}
