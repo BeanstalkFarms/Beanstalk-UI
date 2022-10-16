@@ -5,7 +5,6 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { useSelector } from 'react-redux';
 import { SEEDS, STALK } from '~/constants/tokens';
 import useWhitelist from '~/hooks/beanstalk/useWhitelist';
-import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import { BeanstalkPalette, IconSize } from '../App/muiTheme';
 import EmbeddedCard from '../Common/EmbeddedCard';
 import Fiat from '~/components/Common/Fiat';
@@ -16,13 +15,11 @@ import TokenIcon from '../Common/TokenIcon';
 import { AppState } from '~/state';
 import { ZERO_BN } from '~/constants';
 import UserBalancesCharts from './UserBalancesCharts';
+import SiloTokenClaimNotice from './SiloTokenClaimNotice';
 
 const ARROW_CONTAINER_WIDTH = 20;
 
 const BalancesTable: React.FC<{}> = () => {
-  /// Helpers
-  const getChainToken = useGetChainToken();
-
   // Chain Constants
   const whitelist = useWhitelist();
 
@@ -99,8 +96,7 @@ const BalancesTable: React.FC<{}> = () => {
           </Grid>
         </Grid>
       </Box>
-      {tokens.map(([address, _token]) => {
-        const token = getChainToken(_token);
+      {tokens.map(([address, token]) => {
         const deposits = balances[address]?.deposited;
         return (
           <Box key={`${token.address}-${token.chainId}`}>
@@ -227,7 +223,6 @@ const BalancesTable: React.FC<{}> = () => {
     </Stack>
   );
 };
-
 const FarmerSiloBalances: React.FC<{}> = () => (
   <Stack gap={2}>
     <Typography variant="h4">DepositedBalances</Typography>
@@ -235,6 +230,7 @@ const FarmerSiloBalances: React.FC<{}> = () => (
       <EmbeddedCard sx={{ pt: 2, mb: 0.5 }}>
         <UserBalancesCharts />
       </EmbeddedCard>
+      <SiloTokenClaimNotice />
       <BalancesTable />
     </Stack>
   </Stack>
