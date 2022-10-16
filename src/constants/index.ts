@@ -49,6 +49,7 @@ export type PoolMap<P = Pool> = AddressMap<P>;
 
 export * from './addresses';
 export * from './blocks';
+export * from './chaininfo';
 export * from './chains';
 export * from './ecosystem';
 export * from './wallets';

@@ -32,7 +32,7 @@ const PriceButton: FC<ButtonProps> = ({ ...props }) => {
     (state) => state._bean.pools
   );
   const [_refetchPools] = useFetchPools();
-  const refetchPools = useMemo(() => throttle(_refetchPools, 1000), [_refetchPools]);
+  const refetchPools = useMemo(() => throttle(_refetchPools, 10_000), [_refetchPools]); // max refetch = 10s
 
   // Theme
   const theme    = useTheme();

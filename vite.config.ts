@@ -1,6 +1,7 @@
 import { splitVendorChunkPlugin } from 'vite';
 import { defineConfig } from 'vitest/config';
 import path from 'path';
+import { createHtmlPlugin } from 'vite-plugin-html';
 import react from '@vitejs/plugin-react';
 import strip from '@rollup/plugin-strip';
 import analyze from 'rollup-plugin-analyzer';
@@ -21,6 +22,9 @@ export default defineConfig(({ command, mode }) => ({
       // works at build time. The one in tsconfig.json ensures that
       // the IDE doesn't throw errors when using the prop.
       jsxImportSource: '@emotion/react',
+    }),
+    createHtmlPlugin({
+      minify: true,
     }),
     splitVendorChunkPlugin(),
     analyze({ limit: 10 }),

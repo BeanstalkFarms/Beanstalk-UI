@@ -5,7 +5,7 @@ import { Box, IconButton, Link, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import { parseError } from '~/util';
-import { CHAIN_INFO } from '~/constants/chains';
+import { CHAIN_INFO } from '~/constants';
 
 function dismissErrors(id?: any) {
   if (id) {

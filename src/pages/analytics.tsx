@@ -6,7 +6,6 @@ import SiloAnalytics from '~/components/Analytics/Silo';
 import PageHeader from '~/components/Common/PageHeader';
 
 import { FC } from '~/types';
-import BeanVs3Crv from '~/components/Analytics/Silo/BeanVs3Crv';
 
 const AnalyticsPage: FC<{}> = () => (
   <Container maxWidth="lg">
@@ -18,7 +17,6 @@ const AnalyticsPage: FC<{}> = () => (
       <BeanAnalytics />
       <SiloAnalytics />
       <FieldAnalytics />
-      <BeanVs3Crv />
     </Stack>
   </Container>
 );
