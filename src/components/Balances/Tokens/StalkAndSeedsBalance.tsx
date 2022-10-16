@@ -6,6 +6,7 @@ import Row from '~/components/Common/Row';
 import { ZERO_BN } from '~/constants';
 import { SEEDS, STALK } from '~/constants/tokens';
 import useDimensions from '~/hooks/app/useDimensions';
+import useFarmerStalkSources from '~/hooks/farmer/useFarmerStalkSources';
 import { AppState } from '~/state';
 import { displayFullBN, displayStalk } from '~/util';
 import BalancePopover from './BalancePopover';
@@ -99,6 +100,8 @@ const StalkAndSeedsBalance: React.FC<{}> = () => {
     (state) => state._beanstalk.silo
   );
 
+  const stalkSources = useFarmerStalkSources();
+
   const container = useRef<HTMLDivElement | null>(null);
 
   const ownership =
@@ -125,11 +128,11 @@ const StalkAndSeedsBalance: React.FC<{}> = () => {
 
   const stalkInfo = [
     {
-      amount: displayFullBN(farmerSilo.stalk.active, 2),
+      amount: displayFullBN(stalkSources.base, 2),
       text: 'from initial deposits',
     },
     {
-      amount: displayFullBN(farmerSilo.stalk.grown, 2),
+      amount: displayFullBN(stalkSources.grown, 2),
       text: 'grown from Seeds',
     },
     {
