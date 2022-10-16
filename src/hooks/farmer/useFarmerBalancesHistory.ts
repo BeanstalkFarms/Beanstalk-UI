@@ -6,7 +6,7 @@ import useInterpolateDeposits from '~/hooks/farmer/useInterpolateDeposits';
 // Why? here, depositData is type DataPoint2[][]
 // and in useFarmerSiloOverview depositData is
 // type DataPoint[][]
-const useFarmerBalancesOverview = (account: string | undefined) => {
+const useFarmerBalancesHistory = (account: string | undefined) => {
   const siloRewardsQuery = useFarmerSiloRewardsQuery({ variables: { account: account || '' }, skip: !account, fetchPolicy: 'cache-and-network' });
   const siloAssetsQuery = useFarmerSiloAssetSnapshotsQuery({ variables: { account: account || '' }, skip: !account, fetchPolicy: 'cache-and-network' });
   const priceQuery = useSeasonsQuery(SeasonalPriceDocument, SeasonRange.ALL);
@@ -25,4 +25,4 @@ const useFarmerBalancesOverview = (account: string | undefined) => {
   };
 };
 
-export default useFarmerBalancesOverview;
+export default useFarmerBalancesHistory;

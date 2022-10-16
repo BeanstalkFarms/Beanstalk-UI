@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import useAccount from '~/hooks/ledger/useAccount';
-import useFarmerBalancesOverview from '~/hooks/farmer/useFarmerBalancesOverview';
+import useFarmerBalancesHistory from '~/hooks/farmer/useFarmerBalancesHistory';
 import { BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
 import useTimeTabState from '~/hooks/app/useTimeTabState';
 import BaseSeasonPlot, { QueryData } from '~/components/Common/Charts/BaseSeasonPlot';
@@ -15,7 +15,7 @@ const UserBalancesCharts: React.FC<{}> = () => {
   //
   const account = useAccount();
   const timeTabParams = useTimeTabState();
-  const { data, loading } = useFarmerBalancesOverview(account);
+  const { data, loading } = useFarmerBalancesHistory(account);
 
   const formatValue = (value: number) =>
     `${value.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;

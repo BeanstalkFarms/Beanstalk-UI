@@ -15,7 +15,7 @@ import useAccount from '~/hooks/ledger/useAccount';
 import { Module, ModuleTabs } from '~/components/Common/Module';
 import OverviewPlot from '~/components/Silo/OverviewPlot';
 import Stat from '~/components/Common/Stat';
-import useFarmerSiloOverview from '~/hooks/farmer/useFarmerSiloOverview';
+import useFarmerSiloHistory from '~/hooks/farmer/useFarmerSiloHistory';
 import { FC } from '~/types';
 import { BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
 
@@ -69,7 +69,7 @@ const Overview: FC<{
 
   //
   const account = useAccount();
-  const { data, loading } = useFarmerSiloOverview(account);
+  const { data, loading } = useFarmerSiloHistory(account);
 
   //
   const ownership = (

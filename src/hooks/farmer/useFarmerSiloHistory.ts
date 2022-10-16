@@ -3,7 +3,7 @@ import useSeasonsQuery, { SeasonRange } from '~/hooks/beanstalk/useSeasonsQuery'
 import useInterpolateDeposits from '~/hooks/farmer/useInterpolateDeposits';
 import useInterpolateStalk from '~/hooks/farmer/useInterpolateStalk';
 
-const useFarmerSiloOverview = (account: string | undefined) => {
+const useFarmerSiloHistory = (account: string | undefined) => {
   const siloRewardsQuery = useFarmerSiloRewardsQuery({ variables: { account: account || '' }, skip: !account, fetchPolicy: 'cache-and-network' });
   const siloAssetsQuery = useFarmerSiloAssetSnapshotsQuery({ variables: { account: account || '' }, skip: !account, fetchPolicy: 'cache-and-network' });
   const priceQuery = useSeasonsQuery(SeasonalPriceDocument, SeasonRange.ALL);
@@ -26,4 +26,4 @@ const useFarmerSiloOverview = (account: string | undefined) => {
   };
 };
 
-export default useFarmerSiloOverview;
+export default useFarmerSiloHistory;
