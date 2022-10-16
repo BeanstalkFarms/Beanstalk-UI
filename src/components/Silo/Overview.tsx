@@ -69,7 +69,7 @@ const Overview: FC<{
 
   //
   const account = useAccount();
-  const { data, loading } = useFarmerSiloHistory(account);
+  const { data, loading } = useFarmerSiloHistory(account, false, true);
 
   //
   const ownership = (

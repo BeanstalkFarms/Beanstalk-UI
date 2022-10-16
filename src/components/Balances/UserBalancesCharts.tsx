@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import useAccount from '~/hooks/ledger/useAccount';
-import useFarmerBalancesHistory from '~/hooks/farmer/useFarmerBalancesHistory';
 import { BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
 import useTimeTabState from '~/hooks/app/useTimeTabState';
 import BaseSeasonPlot, { QueryData } from '~/components/Common/Charts/BaseSeasonPlot';
@@ -10,12 +9,13 @@ import { SEASON_RANGE_TO_COUNT, SeasonRange } from '~/hooks/beanstalk/useSeasons
 import MockPlot from '../Silo/MockPlot';
 import BlurComponent from '../Common/ZeroState/BlurComponent';
 import WalletButton from '../Common/Connection/WalletButton';
+import useFarmerSiloHistory from '~/hooks/farmer/useFarmerSiloHistory';
 
 const UserBalancesCharts: React.FC<{}> = () => {
   //
   const account = useAccount();
   const timeTabParams = useTimeTabState();
-  const { data, loading } = useFarmerBalancesHistory(account);
+  const { data, loading } = useFarmerSiloHistory(account, true, false);
 
   const formatValue = (value: number) =>
     `${value.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
