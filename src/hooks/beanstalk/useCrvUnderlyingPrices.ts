@@ -3,11 +3,11 @@ import { useCallback, useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bigNumberResult } from '../../util/Ledger';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
-import { DAI, USDC, USDT } from '../../constants/tokens';
+import { DAI, ETH, USDC, USDT } from '../../constants/tokens';
 import {
   DAI_CHAINLINK_ADDRESSES,
   USDT_CHAINLINK_ADDRESSES,
-  USDC_CHAINLINK_ADDRESSES,
+  USDC_CHAINLINK_ADDRESSES, ETH_CHAINLINK_ADDRESS,
 } from '../../constants/addresses';
 import { useAggregatorV3Contract } from '~/hooks/ledger/useContract';
 import { AppState } from '../../state/index';
@@ -28,6 +28,7 @@ export default function useCrvUnderlyingPrices() {
   const daiPriceFeed = useAggregatorV3Contract(DAI_CHAINLINK_ADDRESSES);
   const usdtPriceFeed = useAggregatorV3Contract(USDT_CHAINLINK_ADDRESSES);
   const usdcPriceFeed = useAggregatorV3Contract(USDC_CHAINLINK_ADDRESSES);
+  const ethPriceFeed = useAggregatorV3Contract(ETH_CHAINLINK_ADDRESS);
   const getChainToken = useGetChainToken();
   const dispatch = useDispatch();
 
@@ -43,6 +44,8 @@ export default function useCrvUnderlyingPrices() {
       usdtPriceDecimals,
       usdcPriceData,
       usdcPriceDecimals,
+      ethPriceData,
+      ethPriceDecimals
     ] = await Promise.all([
       daiPriceFeed.latestRoundData(),
       daiPriceFeed.decimals(),
@@ -50,11 +53,14 @@ export default function useCrvUnderlyingPrices() {
       usdtPriceFeed.decimals(),
       usdcPriceFeed.latestRoundData(),
       usdcPriceFeed.decimals(),
+      ethPriceFeed.latestRoundData(),
+      ethPriceFeed.decimals(),
     ]);
 
     const dai = getChainToken(DAI);
     const usdc = getChainToken(USDC);
     const usdt = getChainToken(USDT);
+    const eth = getChainToken(ETH);
 
     const priceDataCache: { [address: string]: BigNumber } = {};
 
@@ -76,13 +82,19 @@ export default function useCrvUnderlyingPrices() {
         usdcPriceDecimals
       );
     }
+    if (ethPriceData && ethPriceDecimals) {
+      priceDataCache[eth.address] = getBNResult(
+        ethPriceData.answer,
+        ethPriceDecimals
+      );
+    }
 
     console.debug(
       `[beanstalk/tokenPrices/useCrvUnderlyingPrices] RESULT: ${priceDataCache}`
     );
 
     return priceDataCache;
-  }, [tokenPriceMap, daiPriceFeed, usdtPriceFeed, usdcPriceFeed, getChainToken]);
+  }, [tokenPriceMap, daiPriceFeed, usdtPriceFeed, usdcPriceFeed, ethPriceFeed, getChainToken]);
 
   const handleUpdatePrices = useCallback(async () => {
     const prices = await fetch();
