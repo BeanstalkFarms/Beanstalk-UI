@@ -10,7 +10,7 @@ import { BaseChartProps, BaseDataPoint } from '~/components/Common/Charts/ChartP
 import useTimeTabState from '~/hooks/app/useTimeTabState';
 import BaseSeasonPlot, { QueryData } from '~/components/Common/Charts/BaseSeasonPlot';
 
-export const defaultValueFormatter = (value: number) => value.toFixed(4);
+export const defaultValueFormatter = (value: number) => `$${value.toFixed(4)}`;
 
 export type SeasonDataPoint = BaseDataPoint;
 
