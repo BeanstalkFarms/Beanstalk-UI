@@ -174,8 +174,8 @@ const Graph = (props: Props) => {
               <LinearGradient
                 to={styles[index]?.to}
                 from={styles[index]?.from}
-                toOpacity={0.5}
-                fromOpacity={0.3}
+                toOpacity={1}
+                fromOpacity={1}
                 id={key}
               />
               <rect
@@ -196,7 +196,6 @@ const Graph = (props: Props) => {
                 x={(d) => scales[0].xScale(getX(d.data)) ?? 0}
                 y0={(d) => scales[0].yScale(0) ?? 0}
                 y1={(d) => scales[0].yScale(getYByAsset(d.data, key)) ?? 0}
-
               >
                 {({ stacks, path }) =>
                   stacks.map((stack, _index) => (
