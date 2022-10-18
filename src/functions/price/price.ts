@@ -35,11 +35,11 @@ const _handler: Handler = async () => {
         }))
       }),
     };
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     return {
       statusCode: 403,
-      body: e?.toString() as string | undefined,
+      body: e?.toString()
     };
   }
 };
