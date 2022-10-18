@@ -41,7 +41,7 @@ const FarmerSiloBalances: React.FC<{}> = () => {
               Amount Deposited
             </Typography>
           </Grid>
-          <Grid item xs={6} sm={3} md={2.5} textAlign="right">
+          <Grid item xs={6} sm={3} md={2.5} textAlign="right" pr={{ xs: 4, md: 0 }}>
             <Typography variant="bodySmall" sx={{ color: BeanstalkPalette.lightGrey }}>
               Value Deposited
             </Typography>
@@ -51,7 +51,7 @@ const FarmerSiloBalances: React.FC<{}> = () => {
               Stalk
             </Typography>
           </Grid>
-          <Grid item xs={0} md={2.5} display={{ xs: 'none', md: 'block' }} textAlign="right" pr={4.5}>
+          <Grid item xs={0} md={2.5} display={{ xs: 'none', md: 'block' }} textAlign="right" pr={4}>
             <Typography variant="bodySmall" sx={{ color: BeanstalkPalette.lightGrey }}>
               Seeds
             </Typography>
@@ -91,10 +91,15 @@ const FarmerSiloBalances: React.FC<{}> = () => {
                     </Typography>
                   </Grid>
                   {/* Cell: Value of Deposited */}
-                  <Grid item xs={6} sm={3} md={2.5} textAlign="right">
-                    <Typography variant="bodySmall" color="text.primary">
-                      <Fiat token={token} amount={deposits?.amount ?? ZERO_BN} />
-                    </Typography>
+                  <Grid item xs={6} sm={3} md={2.5} textAlign="right" pr={{ xs: 2, md: 0 }}>
+                    <Row justifyContent="flex-end">
+                      <Typography variant="bodySmall" color="text.primary">
+                        <Fiat token={token} amount={deposits?.amount ?? ZERO_BN} />
+                      </Typography>
+                      <Stack display={{ xs: 'block', md: 'none' }} sx={{ width: ARROW_CONTAINER_WIDTH }} alignItems="center">
+                        <ArrowRightIcon sx={{ color: BeanstalkPalette.lightestGrey }} />
+                      </Stack>
+                    </Row>
                   </Grid>
                   {/* Cell: Stalk */}
                   <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }} textAlign="right">
@@ -109,7 +114,7 @@ const FarmerSiloBalances: React.FC<{}> = () => {
                     </Row>
                   </Grid>
                   {/* Cell: Seeds */}
-                  <Grid item xs={0} md={2.5} display={{ xs: 'none', md: 'block' }} textAlign="right" pr={2.25}>
+                  <Grid item xs={0} md={2.5} display={{ xs: 'none', md: 'block' }} textAlign="right" pr={2}>
                     <Row justifyContent="flex-end">
                       <TokenIcon token={SEEDS} />
                       <Typography variant="bodySmall" color="text.primary" component="span">

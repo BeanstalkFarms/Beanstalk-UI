@@ -11,10 +11,7 @@ import { useSelector } from 'react-redux';
 import { Field, FieldProps } from 'formik';
 import { useTheme } from '@mui/material/styles';
 import { LoadingButton } from '@mui/lab';
-import {
-  Module,
-  ModuleContent,
-} from '~/components/Common/Module';
+import { Module, ModuleContent } from '~/components/Common/Module';
 import beanIcon from '~/img/tokens/bean-logo-circled.svg';
 import stalkIcon from '~/img/beanstalk/stalk-icon.svg';
 import seedIcon from '~/img/beanstalk/seed-icon.svg';
@@ -112,7 +109,7 @@ const ClaimRewardsContent: React.FC<
     if (!open) {
       show();
       return;
-    } 
+    }
     if (open) {
       if (selectedAction !== undefined) {
         submitForm();
@@ -218,81 +215,69 @@ const RewardsContent: React.FC<{}> = () => {
   const [open, show, hide] = useToggle();
 
   return (
-    <Stack spacing={1}>
+    <Stack spacing={1} whiteSpace={{ xs: 'normal', sm: 'nowrap' }}>
       <Stack gap={2} px={0.5}>
-        <Stack spacing={0.6}>
-          <Typography>Rewards from Silo Seigniorage</Typography>
-          <Grid container width="100%" justifyContent="flex-start">
-            <Grid item xs={4}>
-              <RewardItem
-                title="Earned Beans"
-                amount={farmerSilo.beans.earned}
-                icon={beanIcon}
-                titleColor={BeanstalkPalette.theme.fall.brown}
-                titleBelow
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <RewardItem
-                title="Earned Stalk"
-                amount={farmerSilo.stalk.earned}
-                icon={stalkIcon}
-                titleColor={BeanstalkPalette.theme.fall.brown}
-                titleBelow
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <RewardItem
-                title="Plantable Seeds"
-                amount={farmerSilo.seeds.earned}
-                icon={seedIcon}
-                titleColor={BeanstalkPalette.lightGrey}
-                titleBelow
-              />
-            </Grid>
+        <Grid spacing={1} container width="100%" justifyContent="flex-start">
+          <Grid item xs={4}>
+            <RewardItem
+              title="Earned Beans"
+              amount={farmerSilo.beans.earned}
+              icon={beanIcon}
+              titleColor={BeanstalkPalette.theme.fall.brown}
+            />
           </Grid>
-        </Stack>
-        <Stack spacing={0.6}>
-          <Typography>Stalk grown from Seeds</Typography>
-          <Grid container>
-            <Grid item xs={4}>
-              <RewardItem
-                title="Grown Stalk"
-                amount={farmerSilo.stalk.grown}
-                icon={stalkIcon}
-                titleColor={BeanstalkPalette.lightGrey}
-                titleBelow
-              />
-            </Grid>
+          <Grid item xs={4}>
+            <RewardItem
+              title="Earned Stalk"
+              amount={farmerSilo.stalk.earned}
+              icon={stalkIcon}
+              titleColor={BeanstalkPalette.theme.fall.brown}
+            />
           </Grid>
-        </Stack>
-        <Stack spacing={0.6}>
-          <Typography>Stalk and Seeds from Unripe Assets</Typography>
-          <Grid container>
-            <Grid item xs={4}>
-              <RewardItem
-                title="Revitalized Stalk"
-                amount={revitalizedStalk}
-                icon={stalkIcon}
-                titleColor={BeanstalkPalette.lightGrey}
-                titleBelow
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <RewardItem
-                title="Revitalized Seed"
-                amount={revitalizedSeeds}
-                icon={seedIcon}
-                titleColor={BeanstalkPalette.lightGrey}
-                titleBelow
-              />
-            </Grid>
+          <Grid item xs={4}>
+            <RewardItem
+              title="Plantable Seeds"
+              amount={farmerSilo.seeds.earned}
+              icon={seedIcon}
+              titleColor="text.primary"
+            />
           </Grid>
+        </Grid>
+        <Stack>
+          <RewardItem
+            title="Grown Stalk"
+            amount={farmerSilo.stalk.grown}
+            icon={stalkIcon}
+            titleColor="text.primary"
+          />
         </Stack>
+        <Grid container spacing={1}>
+          <Grid item xs={4}>
+            <RewardItem
+              title="Revitalized Stalk"
+              amount={revitalizedStalk}
+              icon={stalkIcon}
+              titleColor="text.primary"
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <RewardItem
+              title="Revitalized Seed"
+              amount={revitalizedSeeds}
+              icon={seedIcon}
+              titleColor="text.primary"
+            />
+          </Grid>
+        </Grid>
         {open && (
           <RewardsForm>
             {(props) => (
-              <ClaimRewardsContent open={open} show={show} hide={hide} {...props} />
+              <ClaimRewardsContent
+                open={open}
+                show={show}
+                hide={hide}
+                {...props}
+              />
             )}
           </RewardsForm>
         )}

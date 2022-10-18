@@ -53,7 +53,7 @@ const TokenBalanceItem: React.FC<TokenItemProps> = ({
   ...stackProps
 }) => (
   <Stack>
-    <Row width="100%" {...stackProps} gap={0.6}>
+    <Row width="100%" justifyContent={{ xs: 'space-between', sm: 'unset' }} {...stackProps} gap={0.6}>
       <Typography variant="h4" color="text.primary">
         {title}
       </Typography>
@@ -134,8 +134,8 @@ const TokenBalancesHeader: React.FC<{}> = () => {
       </Row>
 
       {/* breakpoints xs & sm */}
-      <Grid container display={{ md: 'none' }} spacing={0.5}>
-        <Grid container item xs={12} spacing={0.5}>
+      <Grid container display={{ md: 'none' }} gap={0.5}>
+        <Grid container item xs={12} gap={0.5}>
           {/* STALK */}
           <Grid item xs={12} sm={6}>
             <TokenBalanceItem {...tokensProps.stalk} />
@@ -145,18 +145,21 @@ const TokenBalancesHeader: React.FC<{}> = () => {
             <TokenBalanceItem 
               {...tokensProps.seeds} 
               justifyContent={{ 
-                xs: 'flex-start', 
+                xs: 'space-between', 
                 sm: 'flex-end' 
               }} 
             />
           </Grid>
         </Grid>
-        <Grid container item xs sm spacing={0.5}>
+        <Grid container item xs sm gap={0.5}>
           {/* PODS */}
           <Grid item xs={12} sm={6}>
             <TokenBalanceItem
               {...tokensProps.pods}
-              justifyContent="flex-start"
+              justifyContent={{
+                xs: 'space-between',
+                sm: 'flex-start'
+              }}
             />
           </Grid>
           {/* SPROUTS */}
@@ -164,7 +167,7 @@ const TokenBalancesHeader: React.FC<{}> = () => {
             <TokenBalanceItem
               {...tokensProps.sprouts}
               justifyContent={{
-                xs: 'flex-start',
+                xs: 'space-between',
                 sm: 'flex-end',
               }}
             />
