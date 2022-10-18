@@ -39,7 +39,7 @@ const _handler: Handler = async () => {
     console.error(e);
     return {
       statusCode: 403,
-      body: e?.toString(),
+      body: e?.toString() as string | undefined,
     };
   }
 };
