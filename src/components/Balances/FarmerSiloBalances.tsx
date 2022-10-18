@@ -13,6 +13,7 @@ import { displayFullBN } from '~/util';
 import TokenIcon from '../Common/TokenIcon';
 import { AppState } from '~/state';
 import { ZERO_BN } from '~/constants';
+import useFarmerStalkByToken from '~/hooks/farmer/useFarmerStalkByToken';
 
 const ARROW_CONTAINER_WIDTH = 20;
 
@@ -22,6 +23,7 @@ const FarmerSiloBalances: React.FC<{}> = () => {
 
   // State
   const balances = useSelector<AppState, AppState['_farmer']['silo']['balances']>((state) => state._farmer.silo.balances);
+  const stalkByToken = useFarmerStalkByToken();
 
   const tokens = useMemo(() => Object.entries(whitelist), [whitelist]);
 
@@ -64,7 +66,7 @@ const FarmerSiloBalances: React.FC<{}> = () => {
             <Box key={`${token.address}-${token.chainId}`}>
               <Button
                 component={RouterLink}
-                to={`/silo/${token.address}`}
+                to={`/silo/${address}`}
                 fullWidth
                 variant="outlined"
                 color="secondary"
@@ -99,7 +101,10 @@ const FarmerSiloBalances: React.FC<{}> = () => {
                     <Row justifyContent="flex-end">
                       <TokenIcon token={STALK} />
                       <Typography variant="bodySmall" color="text.primary" component="span">
-                        {displayFullBN(token.getStalk(deposits?.bdv ?? ZERO_BN), 0)}
+                        {displayFullBN(
+                          (stalkByToken[address]?.base ?? ZERO_BN).plus(stalkByToken[address]?.grown ?? ZERO_BN) ?? ZERO_BN, 
+                          STALK.displayDecimals
+                        )}
                       </Typography>
                     </Row>
                   </Grid>

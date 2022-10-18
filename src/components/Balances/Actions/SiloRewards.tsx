@@ -66,8 +66,9 @@ const ClaimRewardsContent: React.FC<
   ClaimRewardsFormParams & {
     open: boolean;
     show: () => void;
+    hide: () => void;
   }
-> = ({ submitForm, isSubmitting, values, gas, calls, open, show }) => {
+> = ({ submitForm, isSubmitting, values, gas, calls, open, show, hide }) => {
   // helpers
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -111,8 +112,14 @@ const ClaimRewardsContent: React.FC<
     if (!open) {
       show();
       return;
+    } 
+    if (open) {
+      if (selectedAction !== undefined) {
+        submitForm();
+      } else {
+        hide();
+      }
     }
-    submitForm();
   };
 
   return (
@@ -188,14 +195,14 @@ const ClaimRewardsContent: React.FC<
         fullWidth
         size="medium"
         loading={isSubmitting}
-        disabled={open && (isSubmitting || values.action === undefined)}
+        disabled={isSubmitting}
         onClick={handleOnClick}
         endIcon={!open ? <DropdownIcon open={false} /> : null}
       >
         {!open
           ? 'Claim Rewards'
           : selectedAction === undefined
-          ? 'Select Claim type'
+          ? 'Close'
           : `${options[selectedAction].title}`}
       </LoadingButton>
     </Stack>
@@ -208,7 +215,7 @@ const RewardsContent: React.FC<{}> = () => {
   );
   const breakdown = useFarmerBalancesBreakdown();
   const { revitalizedStalk, revitalizedSeeds } = useRevitalized();
-  const [open, show] = useToggle();
+  const [open, show, hide] = useToggle();
 
   return (
     <Stack spacing={1}>
@@ -285,7 +292,7 @@ const RewardsContent: React.FC<{}> = () => {
         {open && (
           <RewardsForm>
             {(props) => (
-              <ClaimRewardsContent open={open} show={show} {...props} />
+              <ClaimRewardsContent open={open} show={show} hide={hide} {...props} />
             )}
           </RewardsForm>
         )}
@@ -297,7 +304,13 @@ const RewardsContent: React.FC<{}> = () => {
           variant="contained"
           sx={{ width: '100%', whiteSpace: 'nowrap' }}
           endIcon={!open ? <DropdownIcon open={false} /> : null}
-          onClick={show}
+          onClick={() => {
+            if (open) {
+              hide();
+            } else {
+              show();
+            }
+          }}
           disabled={breakdown.totalValue?.eq(0)}
         >
           Claim Rewards

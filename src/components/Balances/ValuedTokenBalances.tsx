@@ -20,9 +20,10 @@ const sortMap = {
   BEAN3CRV: 1,
   urBEAN: 2,
   urBEAN3CRV: 3,
-  DAI: 4,
-  USDC: 5,
-  USDT: 6,
+  ETH: 4,
+  DAI: 5,
+  USDC: 6,
+  USDT: 7,
 } as const;
 
 type TokenBalance = {
@@ -42,10 +43,10 @@ const BalanceTable: React.FC<{
   title: JSX.Element;
   pageName?: string;
 }> = (props) => (
-  <Card sx={{ width: '100%' }}>
+  <Card sx={{ width: '100%', height: '513px' }}>
     <Stack height="100%" p={2} spacing={1.5}>
       {props.title}
-      <Stack spacing={1} height="384px">
+      <Stack spacing={1}>
         <>
           <Grid container direction="row" sx={{ px: 1 }}>
             <Grid item xs={6} sm={5}>

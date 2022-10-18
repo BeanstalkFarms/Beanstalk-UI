@@ -75,7 +75,7 @@ const TokenBalanceItem: React.FC<TokenItemProps> = ({
   </Stack>
 );
 
-const BeanstalkTokenBalancesRow: React.FC<{}> = () => {
+const TokenBalancesHeader: React.FC<{}> = () => {
   const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
   const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
   const farmerBarn = useSelector<AppState, AppState['_farmer']['barn']>((state) => state._farmer.barn);
@@ -175,4 +175,4 @@ const BeanstalkTokenBalancesRow: React.FC<{}> = () => {
   );
 };
 
-export default BeanstalkTokenBalancesRow;
+export default TokenBalancesHeader;
