@@ -1,7 +1,7 @@
 import { Handler } from '@netlify/functions';
 import { ethers } from 'ethers';
 import middy from 'middy';
-import { BEANSTALK_PRICE_ADDRESSES } from '~/constants';
+import { BEANSTALK_PRICE_ADDRESSES } from '~/constants/addresses';
 import { cors, rateLimit } from '~/functions/middleware';
 import { ERC20__factory } from '~/generated';
 

@@ -371,12 +371,6 @@ export const ERC20_TOKENS: ChainConstant<ERC20Token>[] = [
   USDT,
 ];
 
-// Preemptively load balances for these tokens.
-export const BALANCE_TOKENS: ChainConstant<NativeToken | ERC20Token>[] = [
-  ETH,
-  ...ERC20_TOKENS,
-];
-
 // Assets underlying 3CRV (accessible when depositing/removing liquidity)
 export const CRV3_UNDERLYING: ChainConstant<ERC20Token>[] = [
   DAI,
