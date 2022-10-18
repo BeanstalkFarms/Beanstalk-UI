@@ -133,7 +133,13 @@ const TokenBalancesHeader: React.FC<{}> = () => {
         <Grid container item xs={12} gap={0.5}>
           {/* STALK */}
           <Grid item xs={12} sm={6}>
-            <TokenBalanceItem {...tokensProps.stalk} />
+            <TokenBalanceItem 
+              {...tokensProps.stalk} 
+              justifyContent={{ 
+                xs: 'space-between', 
+                sm: 'flex-start'
+              }} 
+            />
           </Grid>
           {/* SEEDS */}
           <Grid item xs sm>
