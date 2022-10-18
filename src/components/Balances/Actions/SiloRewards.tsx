@@ -11,7 +11,11 @@ import { useSelector } from 'react-redux';
 import { Field, FieldProps } from 'formik';
 import { useTheme } from '@mui/material/styles';
 import { LoadingButton } from '@mui/lab';
-import { Module, ModuleContent } from '~/components/Common/Module';
+import {
+  Module,
+  ModuleContent,
+  ModuleHeader,
+} from '~/components/Common/Module';
 import beanIcon from '~/img/tokens/bean-logo-circled.svg';
 import stalkIcon from '~/img/beanstalk/stalk-icon.svg';
 import seedIcon from '~/img/beanstalk/seed-icon.svg';
@@ -32,6 +36,7 @@ import DescriptionButton from '../../Common/DescriptionButton';
 import GasTag from '../../Common/GasTag';
 import { hoverMap } from '~/constants/silo';
 import MountedAccordion from '../../Common/Accordion/MountedAccordion';
+import { ZERO_BN } from '~/constants';
 
 const options = [
   {
@@ -73,7 +78,9 @@ const ClaimRewardsContent: React.FC<
   const balances = useFarmerSiloBalances();
 
   /// The currently hovered action.
-  const [hoveredAction, setHoveredAction] = useState<ClaimRewardsAction | undefined>(undefined);
+  const [hoveredAction, setHoveredAction] = useState<
+    ClaimRewardsAction | undefined
+  >(undefined);
 
   /// The currently selected action (after click).
   const selectedAction = values.action;
@@ -86,8 +93,14 @@ const ClaimRewardsContent: React.FC<
   ]?.deposited.amount.plus(balances[urBeanCrv3.address]?.deposited.amount);
 
   /// Handlers
-  const onMouseOver = useCallback((v: ClaimRewardsAction) => () => setHoveredAction(v), []);
-  const onMouseOutContainer = useCallback(() => setHoveredAction(undefined), []);
+  const onMouseOver = useCallback(
+    (v: ClaimRewardsAction) => () => setHoveredAction(v),
+    []
+  );
+  const onMouseOutContainer = useCallback(
+    () => setHoveredAction(undefined),
+    []
+  );
 
   // Checks if the current hoverState includes a given ClaimRewardsAction
   const isHovering = (c: ClaimRewardsAction) => {
@@ -134,18 +147,27 @@ const ClaimRewardsContent: React.FC<
                   if (unripeDepositedBalance?.eq(0) && option.hideIfNoUnripe) {
                     return null;
                   }
-                  const disabled = !calls || calls[option.value].enabled === false;
+                  const disabled =
+                    !calls || calls[option.value].enabled === false;
                   const hovered = isHovering(option.value) && !disabled;
 
                   return (
-                    <Tooltip title={!disabled || isMobile ? '' : 'Nothing to claim'}>
+                    <Tooltip
+                      title={!disabled || isMobile ? '' : 'Nothing to claim'}
+                    >
                       <div>
                         <DescriptionButton
                           key={option.value}
                           title={option.title}
-                          description={isMobile ? undefined : `${option.description}`}
-                          titleTooltip={isMobile ? `${option.description}` : undefined}
-                          tag={<GasTag gasLimit={gas?.[option.value] || null} />}
+                          description={
+                            isMobile ? undefined : `${option.description}`
+                          }
+                          titleTooltip={
+                            isMobile ? `${option.description}` : undefined
+                          }
+                          tag={
+                            <GasTag gasLimit={gas?.[option.value] || null} />
+                          }
                           // Button
                           fullWidth
                           onClick={set(option.value)}
@@ -204,7 +226,11 @@ const RewardsContent: React.FC<{}> = () => {
           <Grid item xs={4}>
             <RewardItem
               title="Earned Beans"
-              amount={farmerSilo.beans.earned}
+              amount={
+                farmerSilo.beans.earned?.gt(0)
+                  ? farmerSilo.beans.earned
+                  : ZERO_BN
+              }
               icon={beanIcon}
               titleColor={BeanstalkPalette.theme.fall.brown}
             />
@@ -212,7 +238,11 @@ const RewardsContent: React.FC<{}> = () => {
           <Grid item xs={4}>
             <RewardItem
               title="Earned Stalk"
-              amount={farmerSilo.stalk.earned}
+              amount={
+                farmerSilo.stalk.earned?.gt(0)
+                  ? farmerSilo.stalk.earned
+                  : ZERO_BN
+              }
               icon={stalkIcon}
               titleColor={BeanstalkPalette.theme.fall.brown}
             />
@@ -220,7 +250,11 @@ const RewardsContent: React.FC<{}> = () => {
           <Grid item xs={4}>
             <RewardItem
               title="Plantable Seeds"
-              amount={farmerSilo.seeds.earned}
+              amount={
+                farmerSilo.seeds.earned?.gt(0)
+                  ? farmerSilo.stalk.earned
+                  : ZERO_BN
+              }
               icon={seedIcon}
               titleColor="text.primary"
             />
@@ -229,7 +263,9 @@ const RewardsContent: React.FC<{}> = () => {
         <Stack>
           <RewardItem
             title="Grown Stalk"
-            amount={farmerSilo.stalk.grown}
+            amount={
+              farmerSilo.stalk.grown?.gt(0) ? farmerSilo.stalk.grown : ZERO_BN
+            }
             icon={stalkIcon}
             titleColor="text.primary"
           />
@@ -238,7 +274,7 @@ const RewardsContent: React.FC<{}> = () => {
           <Grid item xs={4}>
             <RewardItem
               title="Revitalized Stalk"
-              amount={revitalizedStalk}
+              amount={revitalizedStalk?.gt(0) ? revitalizedStalk : ZERO_BN}
               icon={stalkIcon}
               titleColor="text.primary"
             />
@@ -246,7 +282,7 @@ const RewardsContent: React.FC<{}> = () => {
           <Grid item xs={4}>
             <RewardItem
               title="Revitalized Seed"
-              amount={revitalizedSeeds}
+              amount={revitalizedSeeds?.gt(0) ? revitalizedStalk : ZERO_BN}
               icon={seedIcon}
               titleColor="text.primary"
             />
@@ -290,10 +326,13 @@ const RewardsContent: React.FC<{}> = () => {
 
 const SiloRewards: React.FC<{}> = () => (
   <Module>
-    <ModuleContent pt={1.5}>
-      <Stack px={0.5} pb={1}>
-        <Typography variant="h4">Rewards</Typography>
-      </Stack>
+    <ModuleHeader>
+      <Typography variant="h4">Rewards</Typography>
+    </ModuleHeader>
+    <ModuleContent>
+      {/* <Stack px={0.5} pb={1}> */}
+
+      {/* </Stack> */}
       <RewardsContent />
     </ModuleContent>
   </Module>

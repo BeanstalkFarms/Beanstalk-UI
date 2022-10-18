@@ -20,10 +20,14 @@ import { BeanstalkPalette, FontSize } from '../App/muiTheme';
 import { PODS, SEEDS, SPROUTS, STALK } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
 
-const STALK_TOOLTIP = 'This is your total Stalk balance. Stalk is the governance token of the Beanstalk DAO. Stalk entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo.';
-const SEEDS_TOOLTIP = 'This is your total Seed balance. Each Seed yields 1/10000 Grown Stalk each Season. Grown Stalk must be Mown to add it to your Stalk balance.';
-const PODS_TOOLTIP = 'This is your total Pod Balance. Pods become Harvestable on a FIFO basis. For more information on your place in the Pod Line, head over to the Field page.';
-const SPROUTS_TOOLTIP = 'This is your total Sprout balance. The number of Beans left to be earned from your Fertilizer. Sprouts become Rinsable on a pari passu basis. For more information on your Sprouts, head over to the Barn page.';
+const STALK_TOOLTIP =
+  'This is your total Stalk balance. Stalk is the governance token of the Beanstalk DAO. Stalk entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo.';
+const SEEDS_TOOLTIP =
+  'This is your total Seed balance. Each Seed yields 1/10000 Grown Stalk each Season. Grown Stalk must be Mown to add it to your Stalk balance.';
+const PODS_TOOLTIP =
+  'This is your total Pod Balance. Pods become Harvestable on a FIFO basis. For more information on your place in the Pod Line, head over to the Field page.';
+const SPROUTS_TOOLTIP =
+  'This is your total Sprout balance. The number of Beans left to be earned from your Fertilizer. Sprouts become Rinsable on a pari passu basis. For more information on your Sprouts, head over to the Barn page.';
 
 type TokenItemProps = {
   token: BeanstalkToken;
@@ -60,9 +64,14 @@ const TokenBalanceItem: React.FC<TokenItemProps> = ({
       <Row gap={0.5}>
         <TokenIcon token={token} />
         <Typography variant="h4" color="text.primary" display="inline-flex">
-          {displayFullBN(amount?.gt(0) ? amount : ZERO_BN, token.displayDecimals)}
+          {displayFullBN(
+            amount?.gt(0) ? amount : ZERO_BN,
+            token.displayDecimals
+          )}
           <Tooltip title={tooltip}>
-            <HelpOutlineIcon sx={{ color: 'text.secondary', fontSize: FontSize.sm, ml: '3px' }} />
+            <HelpOutlineIcon
+              sx={{ color: 'text.secondary', fontSize: FontSize.sm, ml: '3px' }}
+            />
           </Tooltip>
         </Typography>
       </Row>
@@ -71,9 +80,15 @@ const TokenBalanceItem: React.FC<TokenItemProps> = ({
 );
 
 const TokenBalancesHeader: React.FC<{}> = () => {
-  const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
-  const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
-  const farmerBarn = useSelector<AppState, AppState['_farmer']['barn']>((state) => state._farmer.barn);
+  const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>(
+    (state) => state._farmer.silo
+  );
+  const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
+    (state) => state._farmer.field
+  );
+  const farmerBarn = useSelector<AppState, AppState['_farmer']['barn']>(
+    (state) => state._farmer.barn
+  );
 
   const tokensProps = useMemo(
     () => ({
@@ -113,7 +128,11 @@ const TokenBalancesHeader: React.FC<{}> = () => {
   return (
     <>
       {/* breakpoints above md */}
-      <Row display={{ xs: 'none', md: 'flex' }} width="100%" justifyContent="space-between">
+      <Row
+        display={{ xs: 'none', md: 'flex' }}
+        width="100%"
+        justifyContent="space-between"
+      >
         {/* STALK */}
         <TokenBalanceItem {...tokensProps.stalk} alignItems="flex-start" />
         <Row width="100%" justifyContent="space-evenly">
@@ -133,22 +152,22 @@ const TokenBalancesHeader: React.FC<{}> = () => {
         <Grid container item xs={12} gap={0.5}>
           {/* STALK */}
           <Grid item xs={12} sm={6}>
-            <TokenBalanceItem 
-              {...tokensProps.stalk} 
-              justifyContent={{ 
-                xs: 'space-between', 
-                sm: 'flex-start'
-              }} 
+            <TokenBalanceItem
+              {...tokensProps.stalk}
+              justifyContent={{
+                xs: 'space-between',
+                sm: 'flex-start',
+              }}
             />
           </Grid>
           {/* SEEDS */}
           <Grid item xs sm>
-            <TokenBalanceItem 
-              {...tokensProps.seeds} 
-              justifyContent={{ 
-                xs: 'space-between', 
-                sm: 'flex-end' 
-              }} 
+            <TokenBalanceItem
+              {...tokensProps.seeds}
+              justifyContent={{
+                xs: 'space-between',
+                sm: 'flex-end',
+              }}
             />
           </Grid>
         </Grid>
@@ -159,7 +178,7 @@ const TokenBalancesHeader: React.FC<{}> = () => {
               {...tokensProps.pods}
               justifyContent={{
                 xs: 'space-between',
-                sm: 'flex-start'
+                sm: 'flex-start',
               }}
             />
           </Grid>

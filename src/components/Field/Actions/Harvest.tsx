@@ -63,24 +63,24 @@ const QuickHarvestForm: FC<Props> = ({
     return (
       <Form autoComplete="off" noValidate>
         <Stack gap={1}>
-          <Stack px={0.5}>
+          <Stack px={0.5} spacing={0.5}>
             <Row width="100%" justifyContent="space-between">
-              <Typography variant="bodySmall" color="primary">
+              <Typography color="primary">
                 Harvestable Pods
               </Typography>
-              <Typography component="span" variant="h3">
-                <Box mr={0.5} display="inline">
-                  <TokenIcon token={PODS} />
-                </Box>
-                {displayFullBN(amount, 0)}
-              </Typography>
+              <Row gap={0.5}>
+                <TokenIcon token={PODS} />
+                <Typography component="span" variant="h3">
+                  {displayFullBN(amount, 0)}
+                </Typography>
+              </Row>
             </Row>
-            <Stack sx={{ ml: '-5px' }}>
-              <FarmModeField
-                name="destination"    
-                labelProps={{ variant: 'bodySmall' }}
+            {/* <Stack> */}
+            <FarmModeField
+              name="destination"    
+                // labelProps={{ variant: 'bodySmall' }}
             />
-            </Stack>
+            {/* </Stack> */}
           </Stack>
           <SmartSubmitButton
             loading={isSubmitting}

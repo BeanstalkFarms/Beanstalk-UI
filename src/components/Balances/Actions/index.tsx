@@ -7,10 +7,18 @@ import useBanner from '~/hooks/app/useBanner';
 import useNavHeight from '~/hooks/app/usePageDimensions';
 
 const BalanceActions: React.FC<{}> = () => {
-  const banner    = useBanner();
+  const banner = useBanner();
   const navHeight = useNavHeight(!!banner);
   return (
-    <Stack width={{ xs: '100%', lg: '360px' }} sx={{ flexShrink: 0, position: { md: 'sticky', xs: 'block' }, top: `${navHeight + 20}px` }} gap={1}>
+    <Stack
+      width={{ xs: '100%', lg: '360px' }}
+      sx={{
+        flexShrink: 0,
+        position: { md: 'sticky', xs: 'block' },
+        top: `${navHeight + 20}px`,
+      }}
+      gap={{ xs: 2, lg: 1 }}
+    >
       <QuickHarvest />
       <QuickRinse />
       <SiloRewards />

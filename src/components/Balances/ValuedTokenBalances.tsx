@@ -1,4 +1,4 @@
-import { Typography, Stack, Grid, Card } from '@mui/material';
+import { Typography, Stack, Grid, Card, Box } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import React, { useCallback, useMemo } from 'react';
 import { ERC20Token, NativeToken } from '~/classes/Token';
@@ -43,37 +43,33 @@ const BalanceTable: React.FC<{
   title: JSX.Element;
   pageName?: string;
 }> = (props) => (
-  <Card sx={{ width: '100%', height: '513px' }}>
-    <Stack height="100%" p={2} spacing={1.5}>
-      {props.title}
-      <Stack spacing={1}>
+  <Card sx={{ width: '100%' }}>
+    <Stack spacing={1.5} pt={2} pb={1}>
+      <Box px={2} pb={0.5}>
+        {props.title}
+      </Box>
+      <Stack spacing={1} px={1}>
         <>
-          <Grid container direction="row" sx={{ px: 1 }}>
-            <Grid item xs={6} sm={5}>
-              <Typography
-                variant="bodySmall"
-                sx={{ color: BeanstalkPalette.lightGrey }}
-              >
+          <Grid container direction="row" px={2}>
+            <Grid item {...{ xs: 6, sm: 5 }}>
+              <Typography sx={{ color: BeanstalkPalette.lightGrey }}>
                 Token
               </Typography>
             </Grid>
-            <Grid item xs={6} sm={4.5}>
+            <Grid item {...{ xs: 6, sm: 4 }} pl={1}>
               <Stack textAlign={{ xs: 'right', sm: 'left' }}>
-                <Typography
-                  variant="bodySmall"
-                  sx={{
-                    color: BeanstalkPalette.lightGrey,
-                    pl: 1,
-                  }}
-                >
+                <Typography sx={{ color: BeanstalkPalette.lightGrey }}>
                   Amount
                 </Typography>
               </Stack>
             </Grid>
-            <Grid item xs={0} sm={2.5} display={{ xs: 'none', sm: 'block' }}>
+            <Grid
+              item
+              {...{ xs: 0, sm: 3 }}
+              display={{ xs: 'none', sm: 'block' }}
+            >
               <Stack>
                 <Typography
-                  variant="bodySmall"
                   textAlign="right"
                   sx={{ color: BeanstalkPalette.lightGrey }}
                 >
@@ -82,54 +78,52 @@ const BalanceTable: React.FC<{
               </Stack>
             </Grid>
           </Grid>
-          {props.rows.map(({ token, amount, value }, i) => (
-            <Stack
-              sx={{
-                px: '20px',
-                py: '10px',
-                borderRadius: '6px',
-                border: `1px solid ${BeanstalkPalette.lightestGrey}`,
-              }}
-              key={i}
-            >
-              <Grid container direction="row" spacing={2} alignItems="center">
-                <Grid item xs={6} sm={5}>
-                  <Row gap={1} alignItems="center">
-                    <img
-                      src={token.logo}
-                      alt=""
-                      height="20px"
-                      width="20px"
-                      style={{ borderRadius: '50%' }}
-                    />
-                    <Typography variant="bodySmall">
-                      {token.symbol}
-                    </Typography>
-                  </Row>
+          <Stack spacing={1}>
+            {props.rows.map(({ token, amount, value }, i) => (
+              <Stack
+                {...{ px: 2, py: 1 }}
+                sx={{
+                  borderRadius: '6px',
+                  border: `1px solid ${BeanstalkPalette.lightestGrey}`,
+                }}
+                key={i}
+              >
+                <Grid container direction="row" spacing={2} alignItems="center">
+                  <Grid item {...{ xs: 6, sm: 5 }}>
+                    <Row gap={1} alignItems="center">
+                      <img
+                        src={token.logo}
+                        alt=""
+                        height="20px"
+                        width="20px"
+                        style={{ borderRadius: '50%' }}
+                      />
+                      <Typography>{token.symbol}</Typography>
+                    </Row>
+                  </Grid>
+                  <Grid item {...{ xs: 6, sm: 4 }}>
+                    <Stack textAlign={{ xs: 'right', sm: 'left' }}>
+                      <Typography>
+                        {displayFullBN(amount, token.displayDecimals)}{' '}
+                        {token.symbol}
+                      </Typography>
+                    </Stack>
+                  </Grid>
+                  <Grid
+                    item
+                    {...{ xs: 0, sm: 3 }}
+                    display={{ xs: 'none', sm: 'block' }}
+                  >
+                    <Stack>
+                      <Typography textAlign="right">
+                        ${displayFullBN(value, 2)}
+                      </Typography>
+                    </Stack>
+                  </Grid>
                 </Grid>
-                <Grid item xs={6} sm={4.5}>
-                  <Stack textAlign={{ xs: 'right', sm: 'left' }}>
-                    <Typography variant="bodySmall">
-                      {displayFullBN(amount, token.displayDecimals)}{' '}
-                      {token.symbol}
-                    </Typography>
-                  </Stack>
-                </Grid>
-                <Grid
-                  item
-                  xs={0}
-                  sm={2.5}
-                  display={{ xs: 'none', sm: 'block' }}
-                >
-                  <Stack>
-                    <Typography variant="bodySmall" textAlign="right">
-                      ${displayFullBN(value, 2)}
-                    </Typography>
-                  </Stack>
-                </Grid>
-              </Grid>
-            </Stack>
-          ))}
+              </Stack>
+            ))}
+          </Stack>
         </>
       </Stack>
     </Stack>

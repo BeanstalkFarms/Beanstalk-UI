@@ -17,7 +17,6 @@ export type RewardItemProps = {
   /** */
   // eslint-disable-next-line
   compact?: boolean;
-  titleBelow?: boolean;
   titleColor?: string;
 };
 
@@ -27,7 +26,6 @@ const RewardItem: FC<RewardItemProps> = ({
   title,
   icon,
   isClaimable,
-  titleBelow = false,
   titleColor,
 }) => {
   const Amount = () => (
@@ -61,9 +59,8 @@ const RewardItem: FC<RewardItemProps> = ({
         opacity: isClaimable === false ? 0.2 : 1,
       }}
     >
-      {!titleBelow && <Title />}
+      <Title />
       <Amount />
-      {titleBelow && <Title />}
     </Box>
   );
 };
