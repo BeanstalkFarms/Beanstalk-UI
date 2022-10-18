@@ -45,7 +45,7 @@ const BalanceTable: React.FC<{
   <Card sx={{ width: '100%' }}>
     <Stack height="100%" p={2} spacing={1.5}>
       {props.title}
-      <Stack spacing={1} height="384px">
+      <Stack spacing={1}>
         <>
           <Grid container direction="row" sx={{ px: 1 }}>
             <Grid item xs={6} sm={5}>
