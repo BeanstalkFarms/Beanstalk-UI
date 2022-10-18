@@ -104,10 +104,10 @@ function BaseSeasonPlot<T extends MinimumViableSnapshotQuery>(props: Props<T>) {
     if (stackedArea) {
       const stacked = seriesInput[0];
       if (!stacked.length) return d;
-      const currStacked = stacked[seriesLen - 1];
-      if (currStacked && 'season' in currStacked) {
-        d.value = getVal([currStacked]);
-        d.season = currStacked.season;
+      const currDepositedAmount = stacked[stacked.length - 1];
+      if (currDepositedAmount && 'season' in currDepositedAmount) {
+        d.value = getVal([currDepositedAmount]);
+        d.season = currDepositedAmount.season;
       }
     } else {
       const lineData = seriesInput.map((s) => s[s.length - 1]);
