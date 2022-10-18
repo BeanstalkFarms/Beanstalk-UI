@@ -53,21 +53,16 @@ const TokenBalanceItem: React.FC<TokenItemProps> = ({
   ...stackProps
 }) => (
   <Stack>
-    <Row width="100%" justifyContent={{ xs: 'space-between', sm: 'unset' }} {...stackProps} gap={0.6}>
+    <Row width="100%" {...stackProps} gap={0.6}>
       <Typography variant="h4" color="text.primary">
         {title}
       </Typography>
       <Row gap={0.5}>
         <TokenIcon token={token} />
         <Typography variant="h4" color="text.primary" display="inline-flex">
-          {displayFullBN(
-            amount?.gt(0) ? amount : ZERO_BN,
-            token.displayDecimals
-          )}
+          {displayFullBN(amount?.gt(0) ? amount : ZERO_BN, token.displayDecimals)}
           <Tooltip title={tooltip}>
-            <HelpOutlineIcon
-              sx={{ color: 'text.secondary', fontSize: FontSize.sm, ml: '3px' }}
-            />
+            <HelpOutlineIcon sx={{ color: 'text.secondary', fontSize: FontSize.sm, ml: '3px' }} />
           </Tooltip>
         </Typography>
       </Row>

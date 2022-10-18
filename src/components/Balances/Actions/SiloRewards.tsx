@@ -73,9 +73,7 @@ const ClaimRewardsContent: React.FC<
   const balances = useFarmerSiloBalances();
 
   /// The currently hovered action.
-  const [hoveredAction, setHoveredAction] = useState<
-    ClaimRewardsAction | undefined
-  >(undefined);
+  const [hoveredAction, setHoveredAction] = useState<ClaimRewardsAction | undefined>(undefined);
 
   /// The currently selected action (after click).
   const selectedAction = values.action;
@@ -88,14 +86,8 @@ const ClaimRewardsContent: React.FC<
   ]?.deposited.amount.plus(balances[urBeanCrv3.address]?.deposited.amount);
 
   /// Handlers
-  const onMouseOver = useCallback(
-    (v: ClaimRewardsAction) => () => setHoveredAction(v),
-    []
-  );
-  const onMouseOutContainer = useCallback(
-    () => setHoveredAction(undefined),
-    []
-  );
+  const onMouseOver = useCallback((v: ClaimRewardsAction) => () => setHoveredAction(v), []);
+  const onMouseOutContainer = useCallback(() => setHoveredAction(undefined), []);
 
   // Checks if the current hoverState includes a given ClaimRewardsAction
   const isHovering = (c: ClaimRewardsAction) => {
@@ -142,27 +134,18 @@ const ClaimRewardsContent: React.FC<
                   if (unripeDepositedBalance?.eq(0) && option.hideIfNoUnripe) {
                     return null;
                   }
-                  const disabled =
-                    !calls || calls[option.value].enabled === false;
+                  const disabled = !calls || calls[option.value].enabled === false;
                   const hovered = isHovering(option.value) && !disabled;
 
                   return (
-                    <Tooltip
-                      title={!disabled || isMobile ? '' : 'Nothing to claim'}
-                    >
+                    <Tooltip title={!disabled || isMobile ? '' : 'Nothing to claim'}>
                       <div>
                         <DescriptionButton
                           key={option.value}
                           title={option.title}
-                          description={
-                            isMobile ? undefined : `${option.description}`
-                          }
-                          titleTooltip={
-                            isMobile ? `${option.description}` : undefined
-                          }
-                          tag={
-                            <GasTag gasLimit={gas?.[option.value] || null} />
-                          }
+                          description={isMobile ? undefined : `${option.description}`}
+                          titleTooltip={isMobile ? `${option.description}` : undefined}
+                          tag={<GasTag gasLimit={gas?.[option.value] || null} />}
                           // Button
                           fullWidth
                           onClick={set(option.value)}
