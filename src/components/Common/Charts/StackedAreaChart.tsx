@@ -153,7 +153,7 @@ const Graph = (props: Props) => {
    * the top of each stacked area.
    */
   const getLineHeight = (d: BaseDataPoint, tokenAddr: string) => {
-    if (d[tokenAddr] === 0) return 0;
+    if (d[tokenAddr] < 0.01) return 0;
     const indexOfToken = keys.indexOf(tokenAddr);
     return keys.reduce<number>((prev, curr, currentIndex) => {
       if (currentIndex <= indexOfToken) {
