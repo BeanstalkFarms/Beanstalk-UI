@@ -165,6 +165,8 @@ const Graph = (props: Props) => {
     }, 0);
   };
 
+  const reversedKeys = keys.slice().reverse();
+
   return (
     <div style={{ position: 'relative' }}>
       <div
@@ -223,7 +225,7 @@ const Graph = (props: Props) => {
                       toOpacity={1}
                       fromOpacity={1}
                       id={stack.key.toString()}
-                        />
+                    />
                     <path
                       key={`stack-${stack.key}`}
                       d={path(stack) || ''}
@@ -307,7 +309,7 @@ const Graph = (props: Props) => {
                 >
                   {typeof tooltip === 'boolean' ? (
                     <Stack gap={0.5}>
-                      {keys.map((key, index) => (
+                      {reversedKeys.map((key, index) => (
                         <Row justifyContent="space-between" gap={2}>
                           <Row gap={1}>
                             <Box
@@ -315,9 +317,9 @@ const Graph = (props: Props) => {
                                 width: '12px',
                                 height: '12px',
                                 borderRadius: '50%',
-                                background: getStyle(key, index).to,
+                                background: getStyle(key, reversedKeys.length - index - 1).to,
                                 border: 1,
-                                borderColor: getStyle(key, index).stroke
+                                borderColor: getStyle(key, reversedKeys.length - index - 1).stroke
                               }}
                             />
                             <Typography>{siloTokens[key]?.symbol}</Typography>
