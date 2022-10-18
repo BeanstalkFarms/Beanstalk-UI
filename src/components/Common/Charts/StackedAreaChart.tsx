@@ -5,7 +5,7 @@ import { Group } from '@visx/group';
 import { LinearGradient } from '@visx/gradient';
 import BigNumber from 'bignumber.js';
 import { Axis, Orientation } from '@visx/axis';
-import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
+import { useTooltip, useTooltipInPortal, TooltipWithBounds } from '@visx/tooltip';
 import { Box, Stack, Typography } from '@mui/material';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
@@ -89,12 +89,13 @@ const Graph = (props: Props) => {
   }, [data]);
 
   // tooltip
-  const { containerRef, containerBounds, TooltipInPortal } = useTooltipInPortal(
+  const { containerRef, containerBounds } = useTooltipInPortal(
     {
       scroll: true,
       detectBounds: true
     }
   );
+
   const {
     showTooltip,
     hideTooltip,
@@ -125,8 +126,6 @@ const Graph = (props: Props) => {
     },
     [containerBounds, getPointerValue, scales, series, showTooltip, onCursor, getDisplayValue]
   );
-
-  const tooltipLeftAttached = tooltipData ? scales[0].xScale(getX(tooltipData)) : undefined;
 
   // tick format + styles
   const xTickFormat = useCallback((_: any, i: number) => tickDates[i], [tickDates]);
@@ -169,34 +168,12 @@ const Graph = (props: Props) => {
 
   return (
     <div style={{ position: 'relative' }}>
-      <div
-        style={{
-          position: 'absolute',
-          bottom: dataRegion.yTop,
-          left: 0,
-          width: width - common.yAxisWidth,
-          height: dataRegion.yBottom - dataRegion.yTop,
-          zIndex: 9,
-        }}
-        ref={containerRef}
-        onTouchStart={handlePointerMove}
-        onTouchMove={handlePointerMove}
-        onMouseMove={handlePointerMove}
-        onMouseLeave={handleMouseLeave}
-      />
       <svg width={width} height={height}>
         <Group
           width={width - common.yAxisWidth}
           height={dataRegion.yBottom - dataRegion.yTop}
         >
           <>
-            {/* <LinearGradient */}
-            {/*  to={styles[index]?.to} */}
-            {/*  from={styles[index]?.from} */}
-            {/*  toOpacity={1} */}
-            {/*  fromOpacity={1} */}
-            {/*  id={key} */}
-            {/* /> */}
             <rect
               x={0}
               y={0}
@@ -225,13 +202,13 @@ const Graph = (props: Props) => {
                       toOpacity={1}
                       fromOpacity={1}
                       id={stack.key.toString()}
-                    />
+                      />
                     <path
                       key={`stack-${stack.key}`}
                       d={path(stack) || ''}
                       stroke="transparent"
                       fill={`url(#${stack.key.toString()})`}
-                        />
+                      />
                     <LinePath<BaseDataPoint>
                       stroke={styles[stack.index]?.stroke}
                       strokeWidth={1}
@@ -240,22 +217,9 @@ const Graph = (props: Props) => {
                       data={data}
                       x={(d) => scales[0].xScale(getX(d)) ?? 0}
                       y={(d) => scales[0].yScale(getLineHeight(d, stack.key.toString())) ?? 0}
-                        />
-                    {/* {keys.length > 1 && tooltipData && ( */}
-                    {/*  <circle */}
-                    {/*    cx={tooltipLeftAttached} */}
-                    {/*    cy={(d) => scales[0].yScale(getYByAsset(d, stack.key.toString())) ?? 0} */}
-                    {/*    r={2} */}
-                    {/*    fill="black" */}
-                    {/*    fillOpacity={0.1} */}
-                    {/*    stroke="black" */}
-                    {/*    strokeOpacity={0.1} */}
-                    {/*    strokeWidth={1} */}
-                    {/*    pointerEvents="none" */}
-                    {/*  /> */}
-                    {/* )} */}
+                      />
                   </>
-                    )
+                  )
                 )
               }
             </AreaStack>
@@ -288,8 +252,6 @@ const Graph = (props: Props) => {
         </g>
         {tooltipData && (
           <>
-            {/* only show vertical cursor line if there is one stack */}
-            {/* {keys.length === 1 && ( */}
             <g>
               <Line
                 from={{ x: tooltipLeft, y: dataRegion.yTop }}
@@ -299,10 +261,38 @@ const Graph = (props: Props) => {
                 pointerEvents="none"
               />
             </g>
-            {/* )} */}
+          </>
+        )}
+      </svg>
+      <div
+        style={{
+          position: 'absolute',
+          bottom: dataRegion.yTop,
+          left: 0,
+          width: width - common.yAxisWidth,
+          height: dataRegion.yBottom - dataRegion.yTop,
+          zIndex: 9,
+        }}
+        ref={containerRef}
+        onTouchStart={handlePointerMove}
+        onTouchMove={handlePointerMove}
+        onMouseMove={handlePointerMove}
+        onMouseLeave={handleMouseLeave}
+      >
+        {tooltipData && (
+          <>
+            <g>
+              <Line
+                from={{ x: tooltipLeft, y: dataRegion.yTop }}
+                to={{ x: tooltipLeft, y: dataRegion.yBottom }}
+                stroke={BeanstalkPalette.lightGrey}
+                strokeWidth={1}
+                pointerEvents="none"
+              />
+            </g>
             {tooltip ? (
               <div>
-                <TooltipInPortal
+                <TooltipWithBounds
                   key={Math.random()}
                   left={tooltipLeft}
                   top={tooltipTop}
@@ -333,12 +323,12 @@ const Graph = (props: Props) => {
                   ) : (
                     tooltip({ d: [tooltipData] })
                   )}
-                </TooltipInPortal>
+                </TooltipWithBounds>
               </div>
             ) : null}
           </>
         )}
-      </svg>
+      </div>
     </div>
   );
 };
