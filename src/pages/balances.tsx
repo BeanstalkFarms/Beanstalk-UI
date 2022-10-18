@@ -6,20 +6,22 @@ import ValuedTokenBalances from '~/components/Balances/ValuedTokenBalances';
 import FarmerSiloBalances from '~/components/Balances/FarmerSiloBalances';
 import BalanceActions from '~/components/Balances/Actions';
 import BeanstalkTokenBalancesRow from '~/components/Balances/BalancesRow';
-
-const infoPortionMaxWidth = XXLWidth - 360 - 20;
+import UserBalancesCharts from '~/components/Balances/UserBalancesCharts';
 
 const BalancesPage: FC<{}> = () => (
   <Container sx={{ maxWidth: `${XXLWidth}px !important`, width: '100%' }}>
     <Stack gap={2}>
-      <Stack maxWidth={{ xs: '100%', lg: 'calc(100% - 380px)' }} gap={0.5}>
+      <Stack width={{ xs: '100%', lg: 'calc(100% - 380px)' }} gap={0.5}>
         <Typography variant="h1">Balances</Typography>
         <BeanstalkTokenBalancesRow />
       </Stack>
       <Stack gap={2} direction="row">
         <Stack sx={{ minWidth: 0 }} width="100%" gap={2}>
+          <Card sx={{ pt: 2, pb: 0 }}>
+            <UserBalancesCharts />
+          </Card>
           {/* Deposit Balances */}
-          <Card sx={{ p: 2 }}>
+          <Card>
             <FarmerSiloBalances />
           </Card>
 
@@ -27,7 +29,6 @@ const BalancesPage: FC<{}> = () => (
           <Box display={{ xs: 'block', lg: 'none' }}>
             <BalanceActions />
           </Box>
-
           {/* Farm & Circulating Balances */}
           <ValuedTokenBalances />
         </Stack>

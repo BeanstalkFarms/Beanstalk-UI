@@ -163,21 +163,11 @@ const FlexDivider = () => (
 
 const BeanstalkTokenBalances: React.FC<{}> = () => {
   // state
-  const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>(
-    (state) => state._farmer.silo
-  );
-  const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>(
-    (state) => state._beanstalk.silo
-  );
-  const beanstalkBarn = useSelector<AppState, AppState['_beanstalk']['barn']>(
-    (state) => state._beanstalk.barn
-  );
-  const farmerField = useSelector<AppState, AppState['_farmer']['field']>(
-    (state) => state._farmer.field
-  );
-  const farmerBarn = useSelector<AppState, AppState['_farmer']['barn']>(
-    (state) => state._farmer.barn
-  );
+  const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
+  const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
+  const beanstalkBarn = useSelector<AppState, AppState['_beanstalk']['barn']>((state) => state._beanstalk.barn);
+  const farmerField = useSelector<AppState, AppState['_farmer']['field']>((state) => state._farmer.field);
+  const farmerBarn = useSelector<AppState, AppState['_farmer']['barn']>((state) => state._farmer.barn);
   const account = useAccount();
 
   const [mintAmount, setMintAmount] = useState<string | undefined>(undefined);
