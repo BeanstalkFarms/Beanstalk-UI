@@ -57,23 +57,18 @@ const QuickRinseForm: FC<
     <Form autoComplete="off" noValidate>
       <Stack gap={1}>
         <Stack sx={{ px: 0.5 }} spacing={0.5}>
-          <Row justifyContent="space-between" alignItems="flex-end">
+          <Row justifyContent="space-between">
             <Typography color="primary">
               Rinsable Sprouts
             </Typography>
             <Row gap={0.5}>
               <TokenIcon token={SPROUTS} />
-              <Typography component="span" variant="h3">
+              <Typography variant="h3">
                 {displayFullBN(amountSprouts, 0)}
               </Typography>
             </Row>
           </Row>
-          {/* <Stack sx={{ ml: '-10px' }}> */}
-          <FarmModeField
-            name="destination"    
-            labelProps={{ variant: 'body1' }}
-            />
-          {/* </Stack> */}
+          <FarmModeField name="destination" />
         </Stack>
         {/* Submit */}
         <SmartSubmitButton

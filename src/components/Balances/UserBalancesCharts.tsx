@@ -55,7 +55,7 @@ const UserBalancesCharts: React.FC<{}> = () => {
           height={300}
           StatProps={{
             title: 'Total Deposited Value',
-            gap: 0.5,
+            gap: 0.25,
           }}
           timeTabParams={timeTabParams}
           formatValue={formatValue}

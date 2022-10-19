@@ -14,7 +14,6 @@ import { LoadingButton } from '@mui/lab';
 import {
   Module,
   ModuleContent,
-  ModuleHeader,
 } from '~/components/Common/Module';
 import beanIcon from '~/img/tokens/bean-logo-circled.svg';
 import stalkIcon from '~/img/beanstalk/stalk-icon.svg';
@@ -326,14 +325,11 @@ const RewardsContent: React.FC<{}> = () => {
 
 const SiloRewards: React.FC<{}> = () => (
   <Module>
-    <ModuleHeader>
-      <Typography variant="h4">Rewards</Typography>
-    </ModuleHeader>
-    <ModuleContent>
-      {/* <Stack px={0.5} pb={1}> */}
-
-      {/* </Stack> */}
-      <RewardsContent />
+    <ModuleContent pt={1.5} px={1} pb={1}>
+      <Stack spacing={1.5}>
+        <Typography variant="h4" sx={{ px: 0.5 }}>Rewards</Typography>
+        <RewardsContent />
+      </Stack>
     </ModuleContent>
   </Module>
 );
