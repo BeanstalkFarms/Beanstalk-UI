@@ -34,7 +34,7 @@ const FarmerSiloBalances: React.FC<{}> = () => {
     <Stack width="100%">
       <Box
         {...{ pb: 0.5, px: 1, pt: 1.5 }}
-        sx={{ borderBottom: `0.5px solid ${BeanstalkPalette.lightestGrey}` }}
+        sx={{ borderBottom: `1.5px solid ${BeanstalkPalette.lightestGrey}` }}
       >
         <Grid
           container
@@ -117,10 +117,10 @@ const FarmerSiloBalances: React.FC<{}> = () => {
                       <img
                         src={token.logo}
                         alt={token.name}
-                        css={{ height: IconSize.small, display: 'inline' }}
+                        css={{ height: IconSize.medium, display: 'inline' }}
                       />
                       <Typography display="inline" color="text.primary">
-                        {token.symbol}
+                        {token.name}
                       </Typography>
                     </Row>
                   </Grid>
@@ -204,7 +204,10 @@ const FarmerSiloBalances: React.FC<{}> = () => {
                         alignItems="center"
                       >
                         <ArrowRightIcon
-                          sx={{ color: BeanstalkPalette.lightestGrey }}
+                          sx={{ 
+                            color: BeanstalkPalette.lightestGrey,
+                            marginTop: '3px'
+                          }}
                         />
                       </Stack>
                     </Row>
