@@ -6,7 +6,7 @@ import { LinearGradient } from '@visx/gradient';
 import BigNumber from 'bignumber.js';
 import { Axis, Orientation } from '@visx/axis';
 import { useTooltip, useTooltipInPortal, TooltipWithBounds } from '@visx/tooltip';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Card, Stack, Typography } from '@mui/material';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 
@@ -288,7 +288,7 @@ const Graph = (props: Props) => {
           bottom: dataRegion.yTop,
           left: 0,
           width: width - common.yAxisWidth,
-          height: dataRegion.yBottom - dataRegion.yTop,
+          height: dataRegion.yBottom,
           zIndex: 9,
         }}
         ref={containerRef}
@@ -314,33 +314,40 @@ const Graph = (props: Props) => {
                   key={Math.random()}
                   left={tooltipLeft}
                   top={tooltipTop}
+                  style={{
+                    width: 'fit-content',
+                    position: 'absolute'
+                    // containerBounds
+                  }}
                 >
-                  {typeof tooltip === 'boolean' ? (
-                    <Stack gap={0.5}>
-                      {reversedKeys.map((key, index) => (
-                        <Row justifyContent="space-between" gap={2}>
-                          <Row gap={1}>
-                            <Box
-                              sx={{
-                                width: '12px',
-                                height: '12px',
-                                borderRadius: '50%',
-                                background: getStyle(key, reversedKeys.length - index - 1).to,
-                                border: 1,
-                                borderColor: getStyle(key, reversedKeys.length - index - 1).stroke
-                              }}
-                            />
-                            <Typography>{siloTokens[key]?.symbol}</Typography>
+                  <Card sx={{ p: 1, backgroundColor: BeanstalkPalette.lightYellow }}>
+                    {typeof tooltip === 'boolean' ? (
+                      <Stack gap={0.5}>
+                        {reversedKeys.map((key, index) => (
+                          <Row justifyContent="space-between" gap={3}>
+                            <Row gap={1}>
+                              <Box
+                                sx={{
+                                  width: '12px',
+                                  height: '12px',
+                                  borderRadius: '50%',
+                                  background: getStyle(key, reversedKeys.length - index - 1).to,
+                                  border: 1,
+                                  borderColor: getStyle(key, reversedKeys.length - index - 1).stroke
+                                }}
+                              />
+                              <Typography>{siloTokens[key]?.symbol}</Typography>
+                            </Row>
+                            <Typography textAlign="right">
+                              {formatValue(tooltipData[key])}
+                            </Typography>
                           </Row>
-                          <Typography textAlign="right">
-                            {formatValue(tooltipData[key])}
-                          </Typography>
-                        </Row>
-                      ))}
-                    </Stack>
-                  ) : (
-                    tooltip({ d: [tooltipData] })
-                  )}
+                        ))}
+                      </Stack>
+                    ) : (
+                      tooltip({ d: [tooltipData] })
+                    )}
+                  </Card>
                 </TooltipWithBounds>
               </div>
             ) : null}
