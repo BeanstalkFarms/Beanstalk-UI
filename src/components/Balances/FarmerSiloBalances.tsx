@@ -34,7 +34,7 @@ const FarmerSiloBalances: React.FC<{}> = () => {
     <Stack width="100%">
       <Box
         {...{ pb: 0.5, px: 1, pt: 1.5 }}
-        sx={{ borderBottom: `1.5px solid ${BeanstalkPalette.lightestGrey}` }}
+        sx={{ borderBottom: `1px solid ${BeanstalkPalette.lightestGrey}` }}
       >
         <Grid
           container
@@ -111,7 +111,9 @@ const FarmerSiloBalances: React.FC<{}> = () => {
                 }}
               >
                 <Grid container alignItems="center">
-                  {/* Cell: Token */}
+                  {/** 
+                    * Cell: Token
+                    */}
                   <Grid item {...{ xs: 6, sm: 5, md: 3 }} pl={2}>
                     <Row gap={1}>
                       <img
@@ -124,7 +126,9 @@ const FarmerSiloBalances: React.FC<{}> = () => {
                       </Typography>
                     </Row>
                   </Grid>
-                  {/* Cell: Amount Deposited */}
+                  {/** 
+                     * Cell: Amount Deposited 
+                     */}
                   <Grid
                     item
                     {...{ xs: 0, sm: 4, md: 2 }}
@@ -136,7 +140,9 @@ const FarmerSiloBalances: React.FC<{}> = () => {
                       {token.symbol}
                     </Typography>
                   </Grid>
-                  {/* Cell: Value of Deposited */}
+                  {/**
+                     * Cell: Value of Deposited 
+                     */}
                   <Grid
                     item
                     {...{ xs: 6, sm: 3, md: 2.5 }}
@@ -161,7 +167,9 @@ const FarmerSiloBalances: React.FC<{}> = () => {
                       </Stack>
                     </Row>
                   </Grid>
-                  {/* Cell: Stalk */}
+                  {/** 
+                     * Cell: Stalk 
+                     */}
                   <Grid
                     item
                     {...{ xs: 0, md: 2 }}
@@ -180,7 +188,9 @@ const FarmerSiloBalances: React.FC<{}> = () => {
                       </Typography>
                     </Row>
                   </Grid>
-                  {/* Cell: Seeds */}
+                  {/** 
+                     *Cell: Seeds
+                     */}
                   <Grid
                     item
                     {...{ xs: 0, md: 2.5 }}

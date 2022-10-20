@@ -73,7 +73,7 @@ const Whitelist : FC<{
           pb: '5px',  // manually adjusted
           borderBottomStyle: 'solid',
           borderBottomColor: BeanstalkPalette.lightestGrey, 
-          borderBottomWidth: 1.5,
+          borderBottomWidth: 1,
         }}
       >
         <Grid container alignItems="flex-end">
