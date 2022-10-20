@@ -166,6 +166,8 @@ const Graph = (props: Props) => {
 
   const reversedKeys = keys.slice().reverse();
 
+  const tooltipLeftAttached = tooltipData ? scales[0].xScale(getX(tooltipData)) : undefined;
+
   return (
     <div style={{ position: 'relative' }}>
       <svg width={width} height={height}>
@@ -260,6 +262,22 @@ const Graph = (props: Props) => {
                 strokeWidth={1}
                 pointerEvents="none"
               />
+              {reversedKeys.map((key, index) => {
+                const lenKeys = keys.length;
+                return (
+                  <circle
+                    cx={tooltipLeftAttached}
+                    cy={scales[0].yScale(getLineHeight(tooltipData, key)) ?? 0}
+                    r={lenKeys === 1 ? 4 : 2}
+                    fill={lenKeys === 1 ? 'black' : getStyle(key, reversedKeys.length - index - 1).to}
+                    fillOpacity={lenKeys === 1 ? 0.1 : 0.4}
+                    stroke={lenKeys === 1 ? 'black' : getStyle(key, reversedKeys.length - index - 1).stroke}
+                    strokeOpacity={lenKeys === 1 ? 0.1 : 0.4}
+                    strokeWidth={2}
+                    pointerEvents="none"
+                  />
+                );
+              })}
             </g>
           </>
         )}

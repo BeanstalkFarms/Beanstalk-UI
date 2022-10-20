@@ -271,10 +271,9 @@ const Graph: React.FC<GraphProps> = (props) => {
                   strokeOpacity={0.1}
                   strokeWidth={2}
                   pointerEvents="none"
-              />
+                />
               );
             })}
-           
           </g>
         )}
       </svg>
