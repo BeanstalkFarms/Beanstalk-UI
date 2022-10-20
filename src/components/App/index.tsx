@@ -54,6 +54,7 @@ import useAccount from '~/hooks/ledger/useAccount';
 import EnforceNetwork from '~/components/App/EnforceNetwork';
 
 import { FC } from '~/types';
+import Footer from '~/components/Footer';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -128,6 +129,9 @@ export default function App() {
       {account && <NewProposalsDialog />}
       <Box
         sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          flexDirection: 'column',
           backgroundColor: PAGE_BG_COLOR,
           backgroundImage: `url(${pageBackground})`,
           backgroundAttachment: 'fixed',
@@ -141,7 +145,7 @@ export default function App() {
             xs: 2,
           },
           paddingBottom: {
-            md: 4,
+            md: 3,
             xs: 2,
           },
         }}
@@ -174,6 +178,7 @@ export default function App() {
             v{import.meta.env.VITE_VERSION || '0.0.0'} &middot; {sgEnvKey}
           </Typography>
         </Box>
+        <Footer />
       </Box>
     </>
   );
