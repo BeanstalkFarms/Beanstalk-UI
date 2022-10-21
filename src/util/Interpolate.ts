@@ -166,14 +166,12 @@ export const interpolateFarmerDepositedValue = (
         const thisSnapshotBDV = toTokenUnitsBN(snapshots[j].hourlyDepositedBDV, BEAN[1].decimals);
         thisBDV = thisBDV.plus(thisSnapshotBDV);
 
-        // -------
         if (currBDVByToken) {
           const tokenAddr = snapshots[j]?.id.split('-')[1].toLowerCase();
           if (tokenAddr && currBDVByToken[tokenAddr]) {
             currBDVByToken[tokenAddr] = currBDVByToken[tokenAddr].plus(thisSnapshotBDV);
           }
         }
-        // -------
       }
       nextSnapshotSeason = snapshots[j]?.season || undefined; // next season for which BDV changes
     }

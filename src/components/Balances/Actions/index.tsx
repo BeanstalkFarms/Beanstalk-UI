@@ -1,12 +1,12 @@
 import { Stack } from '@mui/material';
 import React from 'react';
-import SiloRewards from './SiloRewards';
+import ClaimSiloRewards from './ClaimSiloRewards';
 import QuickHarvest from './QuickHarvest';
 import QuickRinse from './QuickRinse';
 import useBanner from '~/hooks/app/useBanner';
 import useNavHeight from '~/hooks/app/usePageDimensions';
 
-const BalanceActions: React.FC<{}> = () => {
+const BalancesActions: React.FC<{}> = () => {
   const banner = useBanner();
   const navHeight = useNavHeight(!!banner);
   return (
@@ -21,9 +21,9 @@ const BalanceActions: React.FC<{}> = () => {
     >
       <QuickHarvest />
       <QuickRinse />
-      <SiloRewards />
+      <ClaimSiloRewards />
     </Stack>
   );
 };
 
-export default BalanceActions;
+export default BalancesActions;

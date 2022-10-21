@@ -103,8 +103,8 @@ export default function useFarmerBalancesBreakdown() {
         deposited:    _initState(whitelistAddrs),
         withdrawn:    _initState(whitelistAddrs),
         claimable:    _initState(whitelistAddrs),
-        farm:         _initState(whitelistAddrs),
-        circulating:  _initState(whitelistAddrs),
+        farm:         _initState(whitelistAddrs), // FIXME: not a Silo state
+        circulating:  _initState(whitelistAddrs), // FIXME: not a Silo state
       }
     };
 
