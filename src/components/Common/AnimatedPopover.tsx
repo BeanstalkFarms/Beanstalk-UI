@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { SxProps, Theme, Popover, Box } from '@mui/material';
 
+/**
+ * @note unused as of 10/21/2022
+ */
 const AnimatedPopover: React.FC<{
   children: React.ReactNode;
   popperEl: JSX.Element;

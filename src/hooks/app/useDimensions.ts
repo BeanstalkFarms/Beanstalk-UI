@@ -1,5 +1,8 @@
 import { useEffect, useState, MutableRefObject } from 'react';
 
+/**
+ * @note unused as of 10/21/2022.
+ */
 export default function useDimensions(
   container: MutableRefObject<HTMLDivElement | null>
 ) {

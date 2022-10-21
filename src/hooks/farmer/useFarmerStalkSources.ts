@@ -2,6 +2,9 @@ import { ZERO_BN } from '~/constants';
 import useSeason from '~/hooks/beanstalk/useSeason';
 import useFarmerSiloBalances from '~/hooks/farmer/useFarmerSiloBalances';
 
+/**
+ * @note unused as of 10/21/2022.
+ */
 export default function useFarmerStalkSources() {
   const balances = useFarmerSiloBalances();
   const season = useSeason();

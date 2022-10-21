@@ -3,8 +3,7 @@ import { useMemo } from 'react';
 import { TokenMap, ZERO_BN } from '~/constants';
 import useSeason from '~/hooks/beanstalk/useSeason';
 import useFarmerSiloBalances from '~/hooks/farmer/useFarmerSiloBalances';
-
-const STALK_GROWN_PER_SEED = new BigNumber(1 / 10_000);
+import { STALK_PER_SEED_PER_SEASON } from '~/util';
 
 type BaseToGrownStalk = {
   base: BigNumber;
@@ -28,7 +27,7 @@ export default function useFarmerStalkByToken() {
                 acc.base = acc.base.plus(crate.stalk);
                 // add grown stalk from deposits
                 acc.grown = acc.grown.plus(
-                  crate.seeds.times(elapsedSeasons).times(STALK_GROWN_PER_SEED)
+                  crate.seeds.times(elapsedSeasons).times(STALK_PER_SEED_PER_SEASON)
                 );
                 return acc;
               },
