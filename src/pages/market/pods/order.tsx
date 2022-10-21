@@ -13,9 +13,9 @@ import usePodOrder from '~/hooks/beanstalk/usePodOrder';
 import useAccount from '~/hooks/ledger/useAccount';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import { bigNumberResult, Source } from '~/util';
-import FillOrder from '../../components/Market/Pods/Actions/FillOrder';
-import OrderDetails from '../../components/Market/Pods/Cards/OrderDetails';
-import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
+import FillOrder from '../../../components/Market/Pods/Actions/FillOrder';
+import OrderDetails from '../../../components/Market/Pods/Cards/OrderDetails';
+import PageHeaderSecondary from '../../../components/Common/PageHeaderSecondary';
 import { Module, ModuleContent, ModuleHeader } from '~/components/Common/Module';
 
 import { FC } from '~/types';

@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
-import PageHeaderSecondary from '../../components/Common/PageHeaderSecondary';
+import PageHeaderSecondary from '../../../components/Common/PageHeaderSecondary';
 import useTabs from '~/hooks/display/useTabs';
 import AddressIcon from '~/components/Common/AddressIcon';
 import MyOrdersTable from '~/components/Market/Pods/Tables/MyOrders';

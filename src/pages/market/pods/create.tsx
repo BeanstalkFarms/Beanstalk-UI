@@ -4,7 +4,7 @@ import {
   Stack,
 } from '@mui/material';
 import PageHeader from '~/components/Common/PageHeader';
-import MarketActions from '../../components/Market/Pods/Actions';
+import MarketActions from '../../../components/Market/Pods/Actions';
 
 import { FC } from '~/types';
 
