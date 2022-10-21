@@ -2,7 +2,7 @@ import React from 'react';
 import { BoxProps, Grid, Tab, Tabs, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import { tabLabels } from '~/pages/market/activity';
+import { tabLabels } from '~/pages/market/pods/activity';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';

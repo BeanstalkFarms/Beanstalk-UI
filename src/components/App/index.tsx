@@ -27,14 +27,14 @@ import ForecastPage from '~/pages/forecast';
 import Barn from '~/pages/barn';
 import TransactionHistoryPage from '~/pages/history';
 import BalancesPage from '~/pages/balances';
-import PodMarketPage from '~/pages/market';
+import PodMarketPage from '~/pages/market/pods';
 import NFTPage from '~/pages/nft';
 import ChopPage from '~/pages/chop';
-import MarketAccountPage from '~/pages/market/account';
-import MarketActivityPage from '~/pages/market/activity';
-import CreatePage from '~/pages/market/create';
-import OrderPage from '~/pages/market/order';
-import ListingPage from '~/pages/market/listing';
+import MarketAccountPage from '~/pages/market/pods/account';
+import MarketActivityPage from '~/pages/market/pods/activity';
+import CreatePage from '~/pages/market/pods/create';
+import OrderPage from '~/pages/market/pods/order';
+import ListingPage from '~/pages/market/pods/listing';
 import SwapPage from '~/pages/swap';
 import AnalyticsPage from '~/pages/analytics';
 import GovernancePage from '~/pages/governance';
@@ -161,6 +161,9 @@ export default function App() {
           <Route path="/market/create" element={<CreatePage />} />
           <Route path="/market/order/:id" element={<OrderPage />} />
           <Route path="/market/listing/:id" element={<ListingPage />} />
+          {/* DEX CODE (hidden) */}
+          {/* <Route path="/market/wells" element={<WellHomePage />} /> */}
+          {/* <Route path="/market/wells/:id" element={<WellPage />} /> */}
           <Route path="/nft" element={<NFTPage />} />
           <Route path="/governance/:id" element={<ProposalPage />} />
           <Route path="/silo" element={<SiloPage />} />
