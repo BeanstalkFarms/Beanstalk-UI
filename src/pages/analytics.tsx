@@ -3,7 +3,6 @@ import React from 'react';
 import BeanAnalytics from '~/components/Analytics/Bean';
 import FieldAnalytics from '~/components/Analytics/Field';
 import SiloAnalytics from '~/components/Analytics/Silo';
-
 import PageHeader from '~/components/Common/PageHeader';
 
 import { FC } from '~/types';

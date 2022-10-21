@@ -78,10 +78,7 @@ const CarouselContext = createContext<CarouselContextReturn | undefined>(
   undefined
 );
 
-export const CarouselProvider: FC<CarouselProps> = ({
-  total,
-  children,
-}) => (
+export const CarouselProvider: FC<CarouselProps> = ({ total, children }) => (
   <CarouselContext.Provider value={useCarouselController({ total })}>
     {children}
   </CarouselContext.Provider>

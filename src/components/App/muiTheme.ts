@@ -93,6 +93,7 @@ export const BeanstalkPalette = {
   lightBlue: '#DAEBF7',
   lightestBlue: '#F6FAFE',
   darkBlue: '#1F78B4',
+  nightBlue: '#162B49',
   skyBlue: '#DBEDFD',
   // Other
   grey: '#657265',
@@ -105,6 +106,7 @@ export const BeanstalkPalette = {
   mediumRed: lighten('#c35f42', 0.55),
   hoverRed: '#fef9f8',
   trueRed: '#AE2D20',
+  lightestRed: '#FBEAEB',
   // Yellow
   yellow: '#f0df6a',
   lightYellow: '#FDF4E7',
@@ -152,6 +154,8 @@ export const FontWeight = {
   semiBold: 600,
   bold: 700
 };
+
+export const XXLWidth = 1400;
 
 // FIXME: changes to createTheme don't hot reload.
 let muiTheme = createTheme({

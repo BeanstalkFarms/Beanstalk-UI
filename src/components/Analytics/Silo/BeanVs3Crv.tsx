@@ -11,10 +11,11 @@ import {
   SeasonalDepositedSiloAssetQuery,
 } from '~/generated/graphql';
 import { toTokenUnitsBN } from '~/util';
-import useTimeTabState from '~/hooks/app/useTimeTabState';
 import { ERC20Token } from '~/classes/Token';
 import { BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
-import BaseSeasonPlot from '~/components/Common/Charts/BaseSeasonPlot';
+import BaseSeasonPlot, { QueryData } from '~/components/Common/Charts/BaseSeasonPlot';
+import useTimeTabState from '~/hooks/app/useTimeTabState';
+import useGenerateChartSeries from '~/hooks/beanstalk/useGenerateChartSeries';
 
 const assets = {
   bean: BEAN[1],
@@ -82,10 +83,12 @@ const BeanVs3Crv: React.FC<{}> = () => {
     [bean3CrvQuery, beanQuery]
   );
 
+  const queryData: QueryData = useGenerateChartSeries(queryParams, timeTabParams[0], true);
+
   return (
     <Card sx={{ pt: 2 }}>
       <BaseSeasonPlot
-        queryData={queryParams}
+        queryData={queryData}
         height={300}
         StatProps={{
           title: 'Total Deposited Bean & Bean3Crv',

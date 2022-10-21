@@ -5,8 +5,8 @@ import { Group } from '@visx/group';
 import { LinearGradient } from '@visx/gradient';
 import BigNumber from 'bignumber.js';
 import { Axis, Orientation } from '@visx/axis';
-import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
-import { Box, Stack, Typography } from '@mui/material';
+import { useTooltip, useTooltipInPortal, TooltipWithBounds } from '@visx/tooltip';
+import { Box, Card, Stack, Typography } from '@mui/material';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 
@@ -18,6 +18,8 @@ import ChartPropProvider, {
 } from './ChartPropProvider';
 import Row from '../Row';
 import { defaultValueFormatter } from './SeasonPlot';
+import useTokenMap from '~/hooks/chain/useTokenMap';
+import { SILO_WHITELIST } from '~/constants/tokens';
 
 type Props = {
   width: number;
@@ -26,6 +28,7 @@ type Props = {
   ProviderChartProps;
 
 const Graph = (props: Props) => {
+  const siloTokens = useTokenMap(SILO_WHITELIST);
   const {
     // Chart sizing
     width,
@@ -46,7 +49,7 @@ const Graph = (props: Props) => {
     accessors,
     utils,
   } = props;
-  const { getX, getY0, getY, getY1 } = accessors;
+  const { getX, getY0, getY, getY1, getYByAsset } = accessors;
   const { generateScale, generatePathFromStack, getPointerValue, getCurve } =
     utils;
 
@@ -86,9 +89,13 @@ const Graph = (props: Props) => {
   }, [data]);
 
   // tooltip
-  const { TooltipInPortal, containerBounds, containerRef } = useTooltipInPortal(
-    { scroll: true, detectBounds: true }
+  const { containerRef, containerBounds } = useTooltipInPortal(
+    {
+      scroll: true,
+      detectBounds: true
+    }
   );
+
   const {
     showTooltip,
     hideTooltip,
@@ -106,9 +113,8 @@ const Graph = (props: Props) => {
     (
       event: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>
     ) => {
-      const { left, top } = containerBounds;
-      const containerX = ('clientX' in event ? event.clientX : 0) - left;
-      const containerY = ('clientY' in event ? event.clientY : 0) - top;
+      const containerX = ('clientX' in event ? event.clientX : 0) - containerBounds.left;
+      const containerY = ('clientY' in event ? event.clientY : 0) - containerBounds.top - 10;
       const pointerData = getPointerValue(event, scales, series)[0];
 
       showTooltip({
@@ -118,21 +124,14 @@ const Graph = (props: Props) => {
       });
       onCursor?.(pointerData.season, getDisplayValue([pointerData]));
     },
-    [
-      containerBounds,
-      getPointerValue,
-      scales,
-      series,
-      showTooltip,
-      onCursor,
-      getDisplayValue,
-    ]
+    [containerBounds, getPointerValue, scales, series, showTooltip, onCursor, getDisplayValue]
   );
 
   // tick format + styles
   const xTickFormat = useCallback((_: any, i: number) => tickDates[i], [tickDates]);
   const yTickFormat = useCallback((val: any) => displayBN(new BigNumber(val)), []);
 
+  // styles are defined in ChartPropProvider as defaultChartStyles
   const { styles, getStyle } = useMemo(() => {
     const { getChartStyles } = common;
     return getChartStyles(stylesConfig);
@@ -149,75 +148,84 @@ const Graph = (props: Props) => {
       common.strokeBuffer,
   };
 
+  /**
+   * Gets the Y value for the line that borders
+   * the top of each stacked area.
+   */
+  const getLineHeight = (d: BaseDataPoint, tokenAddr: string) => {
+    if (d[tokenAddr] < 0.01) return 0;
+    const indexOfToken = keys.indexOf(tokenAddr);
+    return keys.reduce<number>((prev, curr, currentIndex) => {
+      if (currentIndex <= indexOfToken) {
+        prev += d[curr];
+        return prev;
+      }
+      return prev;
+    }, 0);
+  };
+
+  const reversedKeys = keys.slice().reverse();
+
+  const tooltipLeftAttached = tooltipData ? scales[0].xScale(getX(tooltipData)) : undefined;
+
   return (
     <div style={{ position: 'relative' }}>
-      <div
-        style={{
-          position: 'absolute',
-          bottom: dataRegion.yTop,
-          left: 0,
-          width: width - common.yAxisWidth,
-          height: dataRegion.yBottom - dataRegion.yTop,
-          zIndex: 9,
-        }}
-        ref={containerRef}
-        onTouchStart={handlePointerMove}
-        onTouchMove={handlePointerMove}
-        onMouseMove={handlePointerMove}
-        onMouseLeave={handleMouseLeave}
-      />
       <svg width={width} height={height}>
         <Group
           width={width - common.yAxisWidth}
           height={dataRegion.yBottom - dataRegion.yTop}
         >
-          {styles.map((s) => (
-            <LinearGradient {...s} key={s.id} />
-          ))}
-          <rect
-            x={0}
-            y={0}
-            width={width}
-            height={height}
-            fill="transparent"
-            rx={14}
-          />
-          {children && children({ scales, dataRegion, ...props })}
-          <AreaStack<BaseDataPoint>
-            top={common.margin.top}
-            left={common.margin.left}
-            keys={keys}
-            data={data}
-            height={height}
-            x={(d) => scales[0].xScale(getX(d.data)) ?? 0}
-            y0={(d) => scales[0].yScale(getY0(d)) ?? 0}
-            y1={(d) => scales[0].yScale(getY1(d)) ?? 0}
-          >
-            {({ stacks, path }) =>
-              stacks.map((stack, i) => 
-              
-                 (
-                   <>
-                     <path
-                       key={`stack-${stack.key}`}
-                       d={path(stack) || ''}
-                       stroke="transparent"
-                       fill={`url(#${getStyle(`${stack.key}`, i).id})`}
-                    />
-                     <LinePath<BaseDataPoint>
-                       stroke={getStyle(`${stack.key}`, i).stroke}
-                       strokeWidth={getStyle(`${stack.key}`, i).strokeWidth}
-                       key={`line-${i}`}
-                       curve={curveType}
-                       data={generatePathFromStack(stack)}
-                       x={(d) => scales[0].xScale(getX(d)) ?? 0}
-                       y={(d) => scales[0].yScale(getY(d)) ?? 0}
-                    />
-                   </>
+          <>
+            <rect
+              x={0}
+              y={0}
+              width={width}
+              height={height}
+              fill="transparent"
+              rx={14}
+            />
+            {children && children({ scales, dataRegion, ...props })}
+            <AreaStack<BaseDataPoint>
+              top={common.margin.top}
+              left={common.margin.left}
+              keys={keys}
+              data={data}
+              height={height}
+              x={(d) => scales[0].xScale(getX(d.data)) ?? 0}
+              y0={(d) => scales[0].yScale(getY0(d)) ?? 0}
+              y1={(d) => scales[0].yScale(getY1(d)) ?? 0}
+            >
+              {({ stacks, path }) =>
+                stacks.map((stack, _index) => (
+                  <>
+                    <LinearGradient
+                      to={styles[stack.index]?.to}
+                      from={styles[stack.index]?.from}
+                      toOpacity={1}
+                      fromOpacity={1}
+                      id={stack.key.toString()}
+                      />
+                    <path
+                      key={`stack-${stack.key}`}
+                      d={path(stack) || ''}
+                      stroke="transparent"
+                      fill={`url(#${stack.key.toString()})`}
+                      />
+                    <LinePath<BaseDataPoint>
+                      stroke={styles[stack.index]?.stroke}
+                      strokeWidth={1}
+                      key={`${stack.key.toString()}`}
+                      curve={curveType}
+                      data={data}
+                      x={(d) => scales[0].xScale(getX(d)) ?? 0}
+                      y={(d) => scales[0].yScale(getLineHeight(d, stack.key.toString())) ?? 0}
+                      />
+                  </>
+                  )
                 )
-              )
-            }
-          </AreaStack>
+              }
+            </AreaStack>
+          </>
         </Group>
         <g transform={`translate(0, ${dataRegion.yBottom})`}>
           <Axis
@@ -254,44 +262,98 @@ const Graph = (props: Props) => {
                 strokeWidth={1}
                 pointerEvents="none"
               />
+              {reversedKeys.map((key, index) => {
+                const lenKeys = keys.length;
+                return (
+                  <circle
+                    cx={tooltipLeftAttached}
+                    cy={scales[0].yScale(getLineHeight(tooltipData, key)) ?? 0}
+                    r={lenKeys === 1 ? 4 : 2}
+                    fill={lenKeys === 1 ? 'black' : getStyle(key, reversedKeys.length - index - 1).to}
+                    fillOpacity={lenKeys === 1 ? 0.1 : 0.4}
+                    stroke={lenKeys === 1 ? 'black' : getStyle(key, reversedKeys.length - index - 1).stroke}
+                    strokeOpacity={lenKeys === 1 ? 0.1 : 0.4}
+                    strokeWidth={2}
+                    pointerEvents="none"
+                  />
+                );
+              })}
+            </g>
+          </>
+        )}
+      </svg>
+      <div
+        style={{
+          position: 'absolute',
+          bottom: dataRegion.yTop,
+          left: 0,
+          width: width - common.yAxisWidth,
+          height: dataRegion.yBottom,
+          zIndex: 9,
+        }}
+        ref={containerRef}
+        onTouchStart={handlePointerMove}
+        onTouchMove={handlePointerMove}
+        onMouseMove={handlePointerMove}
+        onMouseLeave={handleMouseLeave}
+      >
+        {tooltipData && (
+          <>
+            <g>
+              <Line
+                from={{ x: tooltipLeft, y: dataRegion.yTop }}
+                to={{ x: tooltipLeft, y: dataRegion.yBottom }}
+                stroke={BeanstalkPalette.lightGrey}
+                strokeWidth={1}
+                pointerEvents="none"
+              />
             </g>
             {tooltip ? (
               <div>
-                <TooltipInPortal
+                <TooltipWithBounds
                   key={Math.random()}
                   left={tooltipLeft}
                   top={tooltipTop}
+                  style={{
+                    width: 'fit-content',
+                    position: 'absolute'
+                    // containerBounds
+                  }}
                 >
-                  {typeof tooltip === 'boolean' ? (
-                    <Stack gap={0.5}>
-                      {keys.map((key, i) => (
-                        <Row justifyContent="space-between" gap={2}>
-                          <Row gap={1}>
-                            <Box
-                              sx={{
-                                width: '12px',
-                                height: '12px',
-                                borderRadius: '50%',
-                                background: getStyle(key, i).stroke,
-                              }}
-                            />
-                            <Typography>{key}</Typography>
+                  <Card sx={{ p: 1, backgroundColor: BeanstalkPalette.lightYellow }}>
+                    {typeof tooltip === 'boolean' ? (
+                      <Stack gap={0.5}>
+                        {reversedKeys.map((key, index) => (
+                          <Row justifyContent="space-between" gap={3}>
+                            <Row gap={1}>
+                              <Box
+                                sx={{
+                                  width: '12px',
+                                  height: '12px',
+                                  borderRadius: '50%',
+                                  background: getStyle(key, reversedKeys.length - index - 1).to,
+                                  border: 1,
+                                  borderColor: getStyle(key, reversedKeys.length - index - 1).stroke
+                                }}
+                              />
+                              <Typography>{siloTokens[key]?.symbol}</Typography>
+                            </Row>
+                            <Typography textAlign="right">
+                              {formatValue(tooltipData[key])}
+                            </Typography>
                           </Row>
-                          <Typography textAlign="right">
-                            {formatValue(tooltipData[key])}
-                          </Typography>
-                        </Row>
-                      ))}
-                    </Stack>
-                  ) : (
-                    tooltip({ d: [tooltipData] })
-                  )}
-                </TooltipInPortal>
+                        ))}
+                      </Stack>
+                    ) : (
+                      tooltip({ d: [tooltipData] })
+                    )}
+                  </Card>
+                </TooltipWithBounds>
               </div>
             ) : null}
           </>
         )}
-      </svg>
+      </div>
     </div>
   );
 };

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 
-import LineChart, { DataPoint  } from '~/components/Common/Charts/LineChart';
+import LineChart from '~/components/Common/Charts/LineChart';
 import TimeTabs, { TimeTabState } from '~/components/Common/Charts/TimeTabs';
 import WalletButton from '~/components/Common/Connection/WalletButton';
 import Row from '~/components/Common/Row';
@@ -13,12 +13,13 @@ import { SEEDS, STALK } from '~/constants/tokens';
 import { SeasonAggregation, SeasonRange, SEASON_RANGE_TO_COUNT } from '~/hooks/beanstalk/useSeasonsQuery';
 
 import { FC } from '~/types';
+import { BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
 
 export type OverviewPlotProps = {
   account: string | undefined;
   season: BigNumber;
   current: BigNumber[];
-  series: DataPoint[][];
+  series: BaseDataPoint[][];
   stats: (season: BigNumber, value: BigNumber[]) => React.ReactElement;
   empty: boolean;
   loading: boolean;
@@ -42,7 +43,7 @@ const OverviewPlot: FC<OverviewPlotProps> = ({
   useEffect(() => setDisplaySeason(season), [season]);
 
   const handleCursor = useCallback(
-    (dps?: DataPoint[]) => {
+    (dps?: BaseDataPoint[]) => {
       setDisplaySeason(dps ? new BigNumber(dps[0].season) : season);
       setDisplayValue(dps ? dps.map((dp) => new BigNumber(dp.value)) : current);
     },

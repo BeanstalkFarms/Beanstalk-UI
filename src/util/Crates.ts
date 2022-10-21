@@ -5,6 +5,16 @@ import { Beanstalk } from '~/generated';
 import { Crate, DepositCrate, FarmerSiloBalance, WithdrawalCrate } from '~/state/farmer/silo';
 import { SeasonMap } from '~/util';
 
+export const STALK_PER_SEED_PER_SEASON = 1 / 10_000;
+
+export function calculateGrownStalk(
+  currentSeason: BigNumber,
+  depositSeeds: BigNumber,
+  depositSeason: BigNumber,
+) {
+  return currentSeason.minus(depositSeason).times(depositSeeds).times(STALK_PER_SEED_PER_SEASON);
+}
+
 /**
  * Split Withdrawals into:
  *    "withdrawn" (aka "transit")
@@ -58,6 +68,14 @@ export function parseWithdrawals(
   };
 }
 
+/**
+ * 
+ * @param beanstalk 
+ * @param unripeTokens 
+ * @param siloBalances 
+ * @param getBDV 
+ * @returns 
+ */
 export const selectCratesForEnroot = (
   beanstalk:    Beanstalk,
   unripeTokens: TokenMap<Token>,

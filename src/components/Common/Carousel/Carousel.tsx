@@ -57,7 +57,7 @@ Carousel.Elements = function NewCarouselElements({
   return (
     <Stack width="100%" sx={{ overflow: 'hidden', ...sx }}>
       {transitions((style, i) => (
-        <animated.div key={i} css={style}>
+        <animated.div key={i} style={style}>
           {elements[i]}
         </animated.div>
       ))}

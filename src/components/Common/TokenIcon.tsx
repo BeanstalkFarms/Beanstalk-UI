@@ -6,16 +6,15 @@ import { FC } from '~/types';
 const TokenIcon : FC<{
   token: Token;
   css?: any;
-}> = ({ token, css }) => (
+}> = ({ token, ...props }) => (
   <img
     src={token.logo}
     alt={token.symbol}
     css={{
       height: '1em',
       width: 'auto',
-      verticalAlign: 'top',
-      ...css
     }}
+    {...props}
   />
 );
 

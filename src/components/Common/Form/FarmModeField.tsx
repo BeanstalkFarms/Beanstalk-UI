@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Typography } from '@mui/material';
+import { Typography, TypographyProps } from '@mui/material';
 import { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import copy from '~/constants/copy';
 import AddressIcon from '../AddressIcon';
@@ -15,12 +15,13 @@ const FarmModeField : FC<
     circDesc? : string;
     farmDesc? : string;
     baseMode? : (typeof FarmFromMode | typeof FarmToMode);
+    labelProps?: TypographyProps;
   }
 > = ({
   circDesc: _circDesc,
   farmDesc: _farmDesc,
   label: _label,
-  baseMode = FarmToMode,
+  baseMode = FarmToMode,  
   ...props
 }) => {
   let circDesc : string;
@@ -35,6 +36,7 @@ const FarmModeField : FC<
     farmDesc = _farmDesc || 'Use assets to your internal balance within Beanstalk.';
     label    = _label    || 'Source';
   }
+
   const options = useMemo(() => ([
     {
       title: copy.MODES[baseMode.EXTERNAL],

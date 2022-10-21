@@ -8643,6 +8643,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@visx/legend@npm:^2.10.0":
+  version: 2.10.0
+  resolution: "@visx/legend@npm:2.10.0"
+  dependencies:
+    "@types/react": "*"
+    "@visx/group": 2.10.0
+    "@visx/scale": 2.2.2
+    classnames: ^2.3.1
+    prop-types: ^15.5.10
+  peerDependencies:
+    react: ^16.3.0-0 || ^17.0.0-0 || ^18.0.0-0
+  checksum: 720ccdf12e86fe16689a9ad01e5b9490b925cd0be2ed638d37519524d860a9f4972ad43f85e064460cb6bee0d1237254f1671d104d33c0fed125af13c895f2ec
+  languageName: node
+  linkType: hard
+
 "@visx/mock-data@npm:^2.1.2":
   version: 2.1.2
   resolution: "@visx/mock-data@npm:2.1.2"
@@ -8706,7 +8721,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@visx/scale@npm:2.2.2":
+"@visx/scale@npm:2.2.2, @visx/scale@npm:^2.2.2":
   version: 2.2.2
   resolution: "@visx/scale@npm:2.2.2"
   dependencies:
@@ -10766,8 +10781,10 @@ __metadata:
     "@typescript-eslint/parser": 4.13.0
     "@visx/clip-path": ^2.10.0
     "@visx/gradient": ^2.10.0
+    "@visx/legend": ^2.10.0
     "@visx/mock-data": ^2.1.2
     "@visx/pattern": ^2.1.2
+    "@visx/scale": ^2.2.2
     "@visx/voronoi": ^2.10.0
     "@visx/xychart": ^2.1.0
     "@visx/zoom": ^2.6.1

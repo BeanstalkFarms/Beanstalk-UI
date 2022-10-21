@@ -1,4 +1,4 @@
-import { StackProps } from '@mui/material';
+import { StackProps, TypographyProps } from '@mui/material';
 import React from 'react';
 import { StyledDialog, StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import PillRow from './PillRow';
@@ -12,6 +12,7 @@ const PillDialogField : FC<{
   label: string;
   pill: React.ReactNode;
   tooltip?: string;
+  labelProps?: TypographyProps;
 } & StackProps> = ({
   isOpen,
   show,
@@ -20,6 +21,7 @@ const PillDialogField : FC<{
   pill,
   tooltip,
   children,
+  labelProps
 }) => (
   <>
     <StyledDialog open={isOpen} onClose={hide} transitionDuration={0}>
@@ -35,6 +37,7 @@ const PillDialogField : FC<{
       tooltip={tooltip}
       isOpen={isOpen}
       onClick={show}
+      labelProps={labelProps}
     >
       {pill}
     </PillRow>
