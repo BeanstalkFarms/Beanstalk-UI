@@ -70,7 +70,6 @@ const FarmModeField : FC<
       label={label}
       {...props}          //
       options={options}   // always deterministically set options
-      
     />
   );
 };

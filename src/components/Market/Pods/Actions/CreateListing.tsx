@@ -53,7 +53,7 @@ const ExpiresAtInputProps = {
   endAdornment: (
     <InputAdornment position="end">
       <Box sx={{ pr: 1 }}>
-        <Typography sx={{ fontSize: '18px' }}>Place in Line</Typography>
+        <Typography color="text.primary" sx={{ fontSize: '18px' }}>Place in Line</Typography>
       </Box>
     </InputAdornment>
   )
