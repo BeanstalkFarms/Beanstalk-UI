@@ -95,7 +95,7 @@ const DescriptionButton: FC<ButtonProps & {
                 {titleTooltip && (
                   <>
                     &nbsp;
-                    <HelpOutlineIcon sx={{ color: 'text.tertiary', fontSize: FontSize.sm, display: 'inline' }} />
+                    <HelpOutlineIcon sx={{ color: 'text.secondary', fontSize: FontSize.sm, display: 'inline' }} />
                   </>
                 )}
               </>

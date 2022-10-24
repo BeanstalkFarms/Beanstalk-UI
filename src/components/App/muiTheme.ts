@@ -106,6 +106,7 @@ export const BeanstalkPalette = {
   white: '#fff',
   black: '#333',
   // Reds
+  // #FBE6E0
   // washedRed: '#c35f42',
   washedRed: '#DA2C38',
   mediumRed: lighten('#c35f42', 0.55),
@@ -141,7 +142,8 @@ export const BeanstalkPalette = {
       background: '#0C2C63',
       lightOrange: lighten('#FB8500', 0.6),
       lightest: lighten('#122540', 0.4),
-      warningDark: '#322D2A'
+      warningDark: '#322D2A',
+      lightRed: lighten('#AE2D20', 0.1)
     }
   }
 };
@@ -360,6 +362,21 @@ let muiTheme = createTheme({
           style: {
             borderColor: 'rgba(0, 0, 0, 0.26)'
           }
+        },
+        {
+          props: {
+            variant: 'contained',
+          },
+          style: sx({
+            '&.MuiButton-root:disabled': {
+              backgroundColor: BeanstalkPalette.theme.fallDark.ctaDisabled,
+              color: 'text.disabled'
+            },
+            '&.MuiLoadingButton-root:disabled': {
+              backgroundColor: BeanstalkPalette.theme.fallDark.ctaDisabled,
+              color: 'text.disabled'
+            }
+          })
         }
       ],
       defaultProps: {
@@ -380,14 +397,6 @@ let muiTheme = createTheme({
           fontWeight: 700,
           fontSize: '1rem',
           lineHeight: '1.25rem',
-          '&.MuiButton-root:disabled': {
-            backgroundColor: BeanstalkPalette.theme.fallDark.ctaDisabled,
-            color: 'text.disabled'
-          },
-          '&.MuiLoadingButton-root:disabled': {
-            backgroundColor: BeanstalkPalette.theme.fallDark.ctaDisabled,
-            color: 'text.disabled'
-          }
         }),
         /// Sizes
         sizeSmall: sx({}),

@@ -20,7 +20,7 @@ const StatHorizontal : FC<{
         {label}&nbsp;
         {labelTooltip && (
           <HelpOutlineIcon
-            sx={{ color: 'text.tertiary', fontSize: FontSize.sm }}
+            sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
           />
         )}
       </Typography>

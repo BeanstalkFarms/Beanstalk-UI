@@ -5,10 +5,11 @@ import { FC } from '~/types';
 
 const TokenIcon : FC<{
   token: Token;
+  logoOverride?: string;
   css?: any;
-}> = ({ token, ...props }) => (
+}> = ({ token, logoOverride, ...props }) => (
   <img
-    src={token.logo}
+    src={logoOverride || token.logo}
     alt={token.symbol}
     css={{
       height: '1em',

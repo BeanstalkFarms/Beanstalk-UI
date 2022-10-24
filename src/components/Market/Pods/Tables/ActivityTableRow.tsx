@@ -1,7 +1,6 @@
 import React from 'react';
 import { BoxProps, Grid, Link, Stack, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
-import { BeanstalkPalette } from '~/components/App/muiTheme';
 import Row from '~/components/Common/Row';
 import { displayBN } from '~/util';
 import { ZERO_BN } from '~/constants';
@@ -44,7 +43,7 @@ const ActivityTableRow: FC<BoxProps & { event: MarketEvent }> = (props) => {
   });
 
   return (
-    <Grid container direction="row" px={1} py={0.75} borderBottom={1} borderColor={BeanstalkPalette.blue}>
+    <Grid container direction="row" px={1} py={0.75} borderBottom={1} borderColor="divider">
       <Grid item xs={5} md={4}>
         <Row alignItems="center" height="100%" gap={1}>
           <Typography fontSize={14}>

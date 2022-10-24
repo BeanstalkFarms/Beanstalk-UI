@@ -28,14 +28,14 @@ const UnripeTokenRow: FC<{
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const primaryColor = amount.eq(0) ? BeanstalkPalette.lightGrey : null;
+  const primaryColor = amount.eq(0) ? 'text.secondary' : null;
   return (
     <Row justifyContent="space-between" alignItems="start">
       <Row gap={0.4}>
         {amount.gt(0) ? (
           <CheckIcon sx={{ fontSize: 16, color: BeanstalkPalette.logoGreen }} />
         ) : (
-          <CloseIcon sx={{ fontSize: 16, color: BeanstalkPalette.lightGrey }} />
+          <CloseIcon sx={{ fontSize: 16, color: 'text.primary' }} />
         )}
         <Typography
           sx={{
@@ -80,7 +80,7 @@ const UnripeTokenRow: FC<{
             <img src={greenBeanIcon} alt="Circulating Beans" width={13} />
             <Typography sx={{
               fontSize: '16px',
-              color: amount.eq(0) ? BeanstalkPalette.lightGrey : null
+              color: amount.eq(0) ? 'text.secondary' : null
             }}>
               {displayFullBN(amount)}
             </Typography>
