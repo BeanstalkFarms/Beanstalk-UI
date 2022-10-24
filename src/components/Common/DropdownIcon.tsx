@@ -14,7 +14,6 @@ const DropdownIcon : FC<{
 }) => (
   <ExpandMoreIcon
     sx={{
-      color: 'primary.main',
       marginLeft: '-4px',
       marginRight: '-4px',
       // Flip the icon when the popover or drawer is open.
