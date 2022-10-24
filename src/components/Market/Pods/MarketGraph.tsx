@@ -61,8 +61,8 @@ const PATTERN_ID = 'brush_pattern';
 export const accentColor = '#f6acc8';
 export const background = '#584153';
 export const background2 = '#af8baf';
-const axisColor      = BeanstalkPalette.lightGrey;
-const tickLabelColor = BeanstalkPalette.lightGrey;
+const axisColor      = BeanstalkPalette.theme.fallDark.accentGrey;
+const tickLabelColor = BeanstalkPalette.theme.fallDark.accentGrey;
 const tickLabelProps = (type: 'x' | 'y') => () => ({
   fill: tickLabelColor,
   fontSize: 12,

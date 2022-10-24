@@ -201,6 +201,7 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
           ...props.sx,
         } : {
           background: BeanstalkPalette.theme.fallDark.cardBackground,
+          color: 'text.primary',
           ...props.sx
         }}
       >
