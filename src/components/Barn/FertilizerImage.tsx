@@ -1,5 +1,4 @@
 import { Box, Button, Stack, Typography } from '@mui/material';
-import { grey } from '@mui/material/colors';
 import BigNumber from 'bignumber.js';
 import React from 'react';
 import fertActiveImage from '~/img/tokens/fert-logo-active.svg';
@@ -36,7 +35,8 @@ const FertilizerImage : FC<FertilizerImageProps> = ({
       sx={{
         height: '100%',
         aspectRatio: '1/1',
-        borderColor: isNew ? BeanstalkPalette.logoGreen : grey[300],
+        // borderColor: isNew ? BeanstalkPalette.logoGreen : grey[300],
+        borderColor: isNew ? BeanstalkPalette.logoGreen : BeanstalkPalette.theme.fallDark.dividerGrey,
         borderWidth: id ? 0 : 1, // if ID is present, use button border
         borderStyle: 'solid',
         borderRadius: 1,
