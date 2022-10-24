@@ -40,23 +40,23 @@ import { ZERO_BN } from '~/constants';
 const options = [
   {
     title: 'Mow',
-    description: 'Last called: 2 Seasons ago',
+    description: '',
     value: ClaimRewardsAction.MOW,
   },
   {
     title: 'Plant',
-    description: 'Last called: 2 Seasons ago',
+    description: '',
     value: ClaimRewardsAction.PLANT_AND_MOW,
   },
   {
     title: 'Enroot',
-    description: 'Last called: 2 Seasons ago',
+    description: '',
     value: ClaimRewardsAction.ENROOT_AND_MOW,
     hideIfNoUnripe: true,
   },
   {
     title: 'Claim all Silo Rewards',
-    description: 'Last called: 2 Seasons ago',
+    description: '',
     value: ClaimRewardsAction.CLAIM_ALL,
     hideIfNoUnripe: true,
   },
