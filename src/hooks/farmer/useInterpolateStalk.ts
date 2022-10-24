@@ -4,14 +4,15 @@ import useSeason from '~/hooks/beanstalk/useSeason';
 import { interpolateFarmerStalk } from '~/util/Interpolate';
 
 const useInterpolateStalk = (
-  siloRewardsQuery: ReturnType<typeof useFarmerSiloRewardsQuery>
+  siloRewardsQuery: ReturnType<typeof useFarmerSiloRewardsQuery>,
+  skip: boolean = false,
 ) => {
   const season = useSeason();
   return useMemo(() => {
-    if (!season.gt(0) || !siloRewardsQuery.data?.snapshots?.length) return [[], []];
+    if (skip || !season.gt(0) || !siloRewardsQuery.data?.snapshots?.length) return [[], []];
     const snapshots = siloRewardsQuery.data.snapshots;
     return interpolateFarmerStalk(snapshots, season);
-  }, [siloRewardsQuery.data?.snapshots, season]);
+  }, [skip, siloRewardsQuery.data?.snapshots, season]);
 };
 
 export default useInterpolateStalk;

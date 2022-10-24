@@ -61,8 +61,8 @@ const PATTERN_ID = 'brush_pattern';
 export const accentColor = '#f6acc8';
 export const background = '#584153';
 export const background2 = '#af8baf';
-const axisColor      = BeanstalkPalette.lightGrey;
-const tickLabelColor = BeanstalkPalette.lightGrey;
+const axisColor      = BeanstalkPalette.theme.fallDark.accentGrey;
+const tickLabelColor = BeanstalkPalette.theme.fallDark.accentGrey;
 const tickLabelProps = (type: 'x' | 'y') => () => ({
   fill: tickLabelColor,
   fontSize: 12,
@@ -153,7 +153,7 @@ const rescaleXWithZoom = (scale: any, zoom: any) => {
 /// //////////////////////////////// COMPONENTS ///////////////////////////////////
 
 const TooltipCard : FC<CardProps> = ({ children, sx, ...props }) => (
-  <Card sx={{ backgroundColor: BeanstalkPalette.lightestBlue, px: 0.5, py: 0.5, ...sx }} {...props}>
+  <Card sx={{ backgroundColor: BeanstalkPalette.theme.fallDark.accent, px: 0.5, py: 0.5, ...sx }} {...props}>
     {children}
   </Card>
 );
@@ -184,7 +184,7 @@ const SelectedPointPopover : FC<{
               p: 0
             }}
           >
-            <CloseIcon sx={{ fontSize: FontSize.base }} />
+            <CloseIcon sx={{ fontSize: FontSize.base, color: 'text.secondary' }} />
           </IconButton>
         </Row>
         <StatHorizontal label="Place in Line">
@@ -215,7 +215,7 @@ const SelectedPointPopover : FC<{
               p: 0
             }}
           >
-            <CloseIcon sx={{ fontSize: FontSize.base }} />
+            <CloseIcon sx={{ fontSize: FontSize.base, color: 'text.secondary' }} />
           </IconButton>
         </Row>
         <StatHorizontal label="Place in Line" labelTooltip="Any Pod in this range is eligible to sell to this Order.">
@@ -237,7 +237,7 @@ const SelectedPointPopover : FC<{
   // backgroundColor: 'white', p: 0.5, borderRadius: 1
   return (
     <Box sx={{ position: 'absolute', top: 10, right: 10 }}>
-      <TooltipCard sx={{ px: 1, py: 1, minWidth: 260, boxShadow: '0 4px 20px 6px rgba(255,255,255,0.6)' }}>
+      <TooltipCard sx={{ px: 1, py: 1, minWidth: 260, boxShadow: '0 4px 20px 6px rgba(15, 29, 49, 0.6)' }}>
         {inner}
       </TooltipCard>
     </Box>
@@ -419,10 +419,10 @@ const Graph: FC<GraphProps> = ({
             strokeWidth={1}
             pointerEvents="none"
           />
-          <Text fill="black" x={tooltipData.coordinate.x + 10} y={innerHeight - axis.xHeight} fontSize={14}>
+          <Text fill="white" x={tooltipData.coordinate.x + 10} y={innerHeight - axis.xHeight} fontSize={14}>
             {displayBN(listings[tooltipData.index].placeInLine)}
           </Text>
-          <Text fill="black" x={axis.yWidth + 10} y={tooltipData.coordinate.y - 5} fontSize={14}>
+          <Text fill="white" x={axis.yWidth + 10} y={tooltipData.coordinate.y - 5} fontSize={14}>
             {listings[tooltipData.index].pricePerPod.toFixed(4)}
           </Text>
         </g>
@@ -450,10 +450,10 @@ const Graph: FC<GraphProps> = ({
             height={innerHeight - tooltipData.coordinate.y}
             width={tooltipData.coordinate.x}
           />
-          <Text fill="black" x={tooltipData.coordinate.x + 10} y={innerHeight - axis.xHeight} fontSize={14}>
+          <Text fill="white" x={tooltipData.coordinate.x + 10} y={innerHeight - axis.xHeight} fontSize={14}>
             {displayBN(orders[tooltipData.index].maxPlaceInLine)}
           </Text>
-          <Text fill="black" x={axis.yWidth + 10} y={tooltipData.coordinate.y - 5} fontSize={14}>
+          <Text fill="white" x={axis.yWidth + 10} y={tooltipData.coordinate.y - 5} fontSize={14}>
             {orders[tooltipData.index].pricePerPod.toFixed(4)}
           </Text>
         </g>
@@ -724,8 +724,8 @@ const Graph: FC<GraphProps> = ({
                   top={tooltipTop}
                   width={tooltipWidth}
                   applyPositionStyle
-                  css={{
-                    padding: 0,
+                  style={{
+                    // padding: 0,
                     backgroundColor: 'transparent',
                     boxShadow: 'none',
                     fontSize: 13,

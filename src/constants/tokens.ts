@@ -8,10 +8,10 @@ import beanCircleLogoUrl from '~/img/tokens/bean-logo-circled.svg';
 import beanCrv3LpLogoUrl from '~/img/tokens/bean-crv3-logo.svg';
 
 // Beanstalk Token Logos
-import stalkLogo from '~/img/beanstalk/stalk-icon.svg';
-import seedLogo from '~/img/beanstalk/seed-icon.svg';
+import stalkLogo from '~/img/beanstalk/stalk-icon-white.svg';
+import seedLogo from '~/img/beanstalk/seed-icon-white.svg';
 import podsLogo from '~/img/beanstalk/pod-icon.svg';
-import sproutLogo from '~/img/beanstalk/sprout-icon.svg';
+import sproutLogo from '~/img/beanstalk/sprout-icon-white.svg';
 import rinsableSproutLogo from '~/img/beanstalk/rinsable-sprout-icon.svg';
 import beanEthLpLogoUrl from '~/img/tokens/bean-eth-lp-logo.svg';
 import beanLusdLogoUrl from '~/img/tokens/bean-lusd-logo.svg';
@@ -369,12 +369,6 @@ export const ERC20_TOKENS: ChainConstant<ERC20Token>[] = [
   DAI,
   USDC,
   USDT,
-];
-
-// Preemptively load balances for these tokens.
-export const BALANCE_TOKENS: ChainConstant<NativeToken | ERC20Token>[] = [
-  ETH,
-  ...ERC20_TOKENS,
 ];
 
 // Assets underlying 3CRV (accessible when depositing/removing liquidity)

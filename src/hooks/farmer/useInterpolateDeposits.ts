@@ -8,6 +8,7 @@ import { interpolateFarmerDepositedValue, Snapshot } from '~/util/Interpolate';
 const useInterpolateDeposits = (
   siloAssetsQuery: ReturnType<typeof useFarmerSiloAssetSnapshotsQuery>,
   priceQuery: ReturnType<typeof useSeasonalPriceQuery>,
+  itemizeByToken: boolean = false
 ) => {
   const unripe = useSelector<AppState, AppState['_bean']['unripe']>((state) => state._bean.unripe);
   return useMemo(() => {
@@ -21,12 +22,15 @@ const useInterpolateDeposits = (
     }
 
     // Convert the list of assets => snapshots into one snapshot list
-    // sorted by season and normalized based on chop rate.
-    const snapshots = siloAssetsQuery.data.farmer.silo.assets.reduce((prev, curr) => {
-      const tokenAddress = curr.token.toLowerCase();
+    // sorted by Season and normalized based on chop rate.
+    const snapshots = siloAssetsQuery.data.farmer.silo.assets.reduce((prev, asset) => {
+      const tokenAddress = asset.token.toLowerCase();
       prev.push(
-        ...curr.hourlySnapshots.map((snapshot) => ({
+        ...asset.hourlySnapshots.map((snapshot) => ({
           ...snapshot,
+          // For Unripe tokens, derive the "effective BDV" using the Chop Rate.
+          // Instead of using the BDV that Beanstalk honors for Stalk/Seeds, we calculate the BDV
+          // that would (approximately) match the value of the assets if they were chopped.
           hourlyDepositedBDV: (
             // NOTE: this isn't really true since it uses the *instantaneous* chop rate,
             // and the BDV of an unripe token isn't necessarily equal to this. but this matches
@@ -40,13 +44,8 @@ const useInterpolateDeposits = (
       return prev;
     }, [] as Snapshot[]).sort((a, b) => a.season - b.season);
 
-    return interpolateFarmerDepositedValue(snapshots, priceQuery.data.seasons);
-  }, [
-    unripe,
-    priceQuery.loading, 
-    priceQuery.data, 
-    siloAssetsQuery.data,
-  ]);
+    return interpolateFarmerDepositedValue(snapshots, priceQuery.data.seasons, itemizeByToken);
+  }, [priceQuery.loading, priceQuery?.data?.seasons, siloAssetsQuery?.data?.farmer?.silo?.assets, unripe, itemizeByToken]);
 };
 
 export default useInterpolateDeposits;

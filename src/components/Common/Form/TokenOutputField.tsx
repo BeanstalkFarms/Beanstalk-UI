@@ -35,7 +35,7 @@ const TokenOutputField : FC<{
   amountTooltip = '',
   isDelta = true,
   isLoading = false,
-  override
+  override,
 }) => {
   const isZero     = amount.eq(0);
   const isNegative = amount.lt(0);

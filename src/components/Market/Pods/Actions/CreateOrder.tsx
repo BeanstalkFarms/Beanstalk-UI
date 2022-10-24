@@ -194,7 +194,7 @@ const CreateOrderForm : FC<
               token={PODS}
               amount={amountPods}
             />
-            <Alert color="warning" icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}>You will only receive this number of Pods if your Order is entirely Filled.</Alert>
+            <Alert severity="warning" icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon color="primary" sx={{ fontSize: IconSize.small }} /></IconWrapper>}>You will only receive this number of Pods if your Order is entirely Filled.</Alert>
             <Box>
               <TxnAccordion>
                 <TxnPreview

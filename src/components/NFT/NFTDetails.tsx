@@ -1,6 +1,5 @@
 import React from 'react';
 import { Stack, Typography } from '@mui/material';
-import { BeanstalkPalette } from '../App/muiTheme';
 import { ClaimStatus, Nft } from '../../util/BeaNFTs';
 import NFTImage from './NFTImage';
 import Row from '~/components/Common/Row';
@@ -25,8 +24,8 @@ const NFTDetails: FC<NFTContentProps> = ({ nft, collection }) => (
         textAlign="right"
         color={
           nft.claimed === ClaimStatus.UNCLAIMED
-            ? BeanstalkPalette.logoGreen
-            : BeanstalkPalette.lightGrey}
+            ? 'primary.main'
+            : 'text.primary'}
         >
         {nft.claimed === ClaimStatus.UNCLAIMED
           ? 'Ready to mint'

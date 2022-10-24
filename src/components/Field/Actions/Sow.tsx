@@ -190,7 +190,7 @@ const SowForm : FC<
         />
         {!hasSoil ? (
           <Box>
-            <Alert color="warning" icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}>
+            <Alert severity="warning" icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon color="primary" sx={{ fontSize: IconSize.small }} /></IconWrapper>}>
               There is currently no Soil. <Link href="https://docs.bean.money/farm/field#soil" target="_blank" rel="noreferrer">Learn more</Link>
             </Alert>
           </Box>
@@ -218,8 +218,8 @@ const SowForm : FC<
             {(maxAmountUsed && maxAmountUsed.gt(0.9)) ? (
               <Box>
                 <Alert
-                  color="warning"
-                  icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
+                  severity="warning"
+                  icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon color="primary" sx={{ fontSize: IconSize.small }} /></IconWrapper>}
                 >
                   If there is less Soil at the time of execution, this transaction will Sow Beans into the remaining Soil and send any unused Beans to your Farm Balance.
                   {/* You are Sowing {displayFullBN(maxAmountUsed.times(100), 4, 0)}% of remaining Soil.  */}

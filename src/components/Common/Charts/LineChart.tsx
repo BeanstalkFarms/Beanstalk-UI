@@ -44,8 +44,8 @@ export type DataRegion = {
 };
 
 export type LineChartProps = {
-  series: DataPoint[][];
-  onCursor?: (ds?: DataPoint[]) => void;
+  series: BaseDataPoint[][];
+  onCursor?: (ds?: BaseDataPoint[]) => void;
   isTWAP?: boolean; // used to indicate if we are displaying TWAP price
   curve?: CurveFactory | keyof typeof CURVES;
   children?: (
@@ -66,19 +66,13 @@ type GraphProps = {
 //           Data
 // ------------------------
 
-export type DataPoint = {
-  season: number;
-  value: number;
-  date: Date;
-};
-
 // ------------------------
 //      Fonts & Colors
 // ------------------------
 
 const strokes = [
   {
-    stroke: BeanstalkPalette.theme.fall.brown,
+    stroke: BeanstalkPalette.theme.fallDark.primary,
     strokeWidth: 2,
   },
   {
@@ -153,7 +147,7 @@ const Graph: React.FC<GraphProps> = (props) => {
         tooltipLeft: containerX, // in pixels
         tooltipTop: containerY, // in pixels
       });
-      onCursor?.(pointerData as unknown as DataPoint[]);
+      onCursor?.(pointerData as unknown as BaseDataPoint[]);
     },
     [containerBounds, getPointerValue, scales, series, showTooltip, onCursor]
   );
@@ -277,10 +271,9 @@ const Graph: React.FC<GraphProps> = (props) => {
                   strokeOpacity={0.1}
                   strokeWidth={2}
                   pointerEvents="none"
-              />
+                />
               );
             })}
-           
           </g>
         )}
       </svg>

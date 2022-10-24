@@ -23,10 +23,11 @@ import { BeanstalkPalette } from '~/components/App/muiTheme';
 // -------------------------------------------------------------------------
 
 export type BaseDataPoint = {
-  [key: string]: number;
-} & {
   season: number;
   date: Date;
+  value: number;
+} & {
+  [key: string]: number;
 };
 
 export type ChartMultiStyles = {
@@ -39,7 +40,7 @@ export type ChartMultiStyles = {
 };
 
 type ChartStyleConfig = {
-  id: string;
+  // id: string;
   to: string;
   from: string;
   stroke: string;
@@ -79,6 +80,7 @@ type ChartAccessorProps = {
   getX: (d: BaseDataPoint) => number;
   getD: (d: BaseDataPoint) => Date;
   getY: (d: BaseDataPoint) => number;
+  getYByAsset: (d: BaseDataPoint, asset: string) => number;
   getY0: (d: SeriesPoint<BaseDataPoint>) => number;
   getY1: (d: SeriesPoint<BaseDataPoint>) => number;
   getYMin: (d: BaseDataPoint) => number;
@@ -151,9 +153,10 @@ export type BaseChartProps = {
 const strokeBuffer = 2;
 const axisHeight = 21;
 const backgroundColor = '#da7cff';
-const labelColor = '#340098';
-const tickLabelColor = BeanstalkPalette.lightGrey;
-const axisColor = BeanstalkPalette.lightGrey;
+// const labelColor = '#340098';
+const labelColor = BeanstalkPalette.theme.fallDark.accentGrey;
+const tickLabelColor = BeanstalkPalette.theme.fallDark.accentGrey;
+const axisColor = BeanstalkPalette.theme.fallDark.accentGrey;
 const yAxisWidth = 57;
 
 const margin = {
@@ -164,20 +167,26 @@ const margin = {
 };
 
 const defaultChartStyles: ChartMultiStyles = {
-  'chart-primary': {
-    stroke: BeanstalkPalette.theme.fall.brown,
-    fillPrimary: BeanstalkPalette.theme.fall.lightBrown,
+  0 : {
+    stroke: '#FB8500',
+    fillPrimary: '#EBCDAC',
     strokeWidth: 2,
   },
-  'chart-secondary': {
-    stroke: BeanstalkPalette.yellow,
-    fillPrimary: BeanstalkPalette.lightYellow,
+  1 : {
+    stroke: '#DA2C38',
+    fillPrimary: '#FBEAEB',
+    strokeWidth: 2,
+
+  },
+  2 : {
+    stroke: '#7F5533',
+    fillPrimary: '#F2EFEA',
     strokeWidth: 2,
   },
-  'chart-tertiary': {
-    stroke: BeanstalkPalette.grey,
-    fillPrimary: BeanstalkPalette.lightGrey,
-    strokeWidth: 0.5,
+  3 : {
+    stroke: '#AA9DFF',
+    fillPrimary: '#6C64A3',
+    strokeWidth: 2,
   },
 };
 
@@ -269,6 +278,11 @@ const getX = (d: BaseDataPoint) => d.season;
 const getY = (d: BaseDataPoint) => d.value;
 
 /**
+ * Gets the Y value for a specific stack in a stacked area chart.
+ */
+const getYByAsset = (d: BaseDataPoint, asset: string) => (d[asset] ? d[asset] : 0);
+
+/**
  * access 'date' property from BaseDataPoint
  * (currently line charts only)
  */
@@ -315,16 +329,19 @@ const getYMin = (d: BaseDataPoint) =>
 type YDomainCache = { cum: number; lowest: number };
 const getStackedAreaYDomainMin = (data: BaseDataPoint[], keys: string[]) => {
   const start = { cum: 0, lowest: Infinity };
-  const map = new Map<string, YDomainCache>(keys.map((key) => [key, start] as [string, YDomainCache]));
+  const map = new Map<string, YDomainCache>(
+    keys.map((key) => [key, start] as [string, YDomainCache])
+  );
   data.forEach((d) => {
     keys.forEach((k) => {
       if (k in d) {
-        const curr = (k in d) ? d[k] : 0;
+        const curr = k in d ? d[k] : 0;
         const stored = map.get(k);
         if (stored) {
-          map.set(k, { 
-            cum: stored.cum + curr, 
-            lowest: curr !== 0 ? Math.min(stored.lowest, curr) : stored.lowest });
+          map.set(k, {
+            cum: stored.cum + curr,
+            lowest: curr !== 0 ? Math.min(stored.lowest, curr) : stored.lowest,
+          });
         }
       }
     });
@@ -334,14 +351,14 @@ const getStackedAreaYDomainMin = (data: BaseDataPoint[], keys: string[]) => {
     if (!cache.cum) {
       cache = { cum, lowest };
     } else if (cum > cache.cum) {
-        cache = { cum, lowest };
+      cache = { cum, lowest };
     }
   });
   return !Number.isFinite(cache.lowest) ? 0 : cache.lowest;
 };
 
 /**
- * returns the maximum value amongst relavent keys of a BaseDataPoint
+ * returns the maximum value amongst relevant keys of a BaseDataPoint
  * to assist in generating yScale (stacked area charts only)
  */
 const getYMax = (d: BaseDataPoint) =>
@@ -361,7 +378,7 @@ const generateScale = (
   width: number,
   keys: string[],
   stackedArea?: boolean,
-  isTWAP?: boolean,
+  isTWAP?: boolean
 ) =>
   seriesData.map((data) => {
     // generate yScale
@@ -388,13 +405,15 @@ const generateScale = (
         domain: [1 - biggestDifference, 1 + biggestDifference],
       });
     } else {
-      const y1Min = stackedArea ? getStackedAreaYDomainMin(data, keys) : min(data, getY) as number;
+      const y1Min = stackedArea
+        ? getStackedAreaYDomainMin(data, keys)
+        : (min(data, getY) as number);
       const multiple = stackedArea ? [0.95, 1.05] : [1, 1];
       yScale = scaleLinear<number>({
         clamp: !!stackedArea,
         domain: [
-          multiple[0] * y1Min as number,
-          multiple[1] * (max(data, getYMax) as number),
+          stackedArea ? 0 : multiple[0] * y1Min as number,
+          multiple[1] * (max(data, getY) as number),
         ],
       });
     }
@@ -502,6 +521,7 @@ const ChartPropProvider: React.FC<ChartWrapperProps> = ({ children }) => {
       accessors: {
         getX,
         getY,
+        getYByAsset,
         getD,
         getY0,
         getY1,

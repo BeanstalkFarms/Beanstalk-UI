@@ -11,6 +11,7 @@ import { ZERO_BN } from '~/constants';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
+import { FontWeight } from '../App/muiTheme';
 
 export type FertilizerData = {
   /**
@@ -46,6 +47,10 @@ export type FertilizerData = {
    * The Season in which this Fertilizer was bought.
    */
   season?: BigNumber;
+  /**
+   * font weight of 'Sprouts text'
+   */
+  fontWeight?: keyof typeof FontWeight;
 }
 
 const FertilizerItem: FC<FertilizerData & {
@@ -72,6 +77,7 @@ const FertilizerItem: FC<FertilizerData & {
   tooltip,
   state,
   isNew,
+  fontWeight = 'bold'
 }) => (
   <Stack width="100%" alignItems="center" rowGap={0.75}>
     <FertilizerImage
@@ -104,12 +110,12 @@ const FertilizerItem: FC<FertilizerData & {
               : tooltip.reward}
           placement="right">
           <Row justifyContent="space-between">
-            <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
+            <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight={fontWeight}>
               Sprouts
             </Typography>
             <Row alignItems="center" gap={0.2}>
               <TokenIcon token={SPROUTS} css={{ width: '14px' }} />
-              <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight="bold">
+              <Typography sx={{ fontSize: '14px' }} color="text.primary" fontWeight={fontWeight}>
                 {sprouts ? displayBN(sprouts) : '?'}
               </Typography>
             </Row>

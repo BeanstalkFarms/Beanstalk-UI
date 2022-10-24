@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { flushSync } from 'react-dom';
 import BigNumber from 'bignumber.js';
 import { useFormikContext } from 'formik';
 import { Box, Grid, Typography } from '@mui/material';
@@ -87,6 +86,7 @@ const PlotInputField : FC<{
     />
   )), [disabledAdvanced, setFieldValue, values.settings.showRangeSelect]);
 
+  /// Clamp 
   const clamp = useCallback((amount: BigNumber | undefined) => {
     if (!amount) return undefined;
     if (amount.lt(0)) return ZERO_BN;
@@ -121,27 +121,19 @@ const PlotInputField : FC<{
   /// Select a new plot
   const handlePlotSelect = useCallback((index: string) => {
     const numPodsClamped  = clamp(new BigNumber(plots[index]));
-    // FIXME: React 18 introduced an infinite loop into the interaction
-    // between PlotInputField and TokenInputField. Usage of flushSync is
-    // a hotfix; we should study interaction more deeply and refactory.
-    flushSync(() => {
-      setFieldValue('plot.index',  index);     
-      onChangeAmount(numPodsClamped); // setup start/end index appropriately
-    });
-    flushSync(() => {
-      setFieldValue('plot.amount', numPodsClamped);
-    });
-  }, [clamp, onChangeAmount, plots, setFieldValue]);
+    setFieldValue('plot.amount', numPodsClamped);
+    setFieldValue('plot.index',  index);  
+    // set start/end directly since `onChangeAmount` depends on the current `plot`   
+    setFieldValue('plot.start',  ZERO_BN);
+    setFieldValue('plot.end',    numPodsClamped);
+  }, [clamp, plots, setFieldValue]);
 
   /// Update amount when an endpoint changes via the advanced controls
   /// If one of end/start change, so does the amount input.
   /// Values are changed when the slider moves or a manual input changes.
   useEffect(() => {
     const clampedAmount = clamp(plot.end?.minus(plot.start || ZERO_BN));
-    setFieldValue(
-      'plot.amount', 
-      clampedAmount,
-    );
+    setFieldValue('plot.amount', clampedAmount);
   }, [setFieldValue, plot.end, plot.start, clamp]);
 
   return (

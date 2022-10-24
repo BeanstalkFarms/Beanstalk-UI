@@ -31,8 +31,9 @@ const PageHeader : FC<{
           sx={{
             p: 1,
             borderRadius: 1,
+            color: 'text.secondary',
             '&:hover': {
-              color: BeanstalkPalette.logoGreen,
+              color: BeanstalkPalette.theme.fallDark.primary,
             }
         }}
         >

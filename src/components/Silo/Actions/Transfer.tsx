@@ -132,8 +132,8 @@ const TransferForm: FC<FormikProps<TransferFormValues> & {
                 <TxnSeparator />
                 {tokenOutputs}
                 <Alert
-                  color="warning"
-                  icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
+                  severity="warning"
+                  icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon color="primary" sx={{ fontSize: IconSize.small }} /></IconWrapper>}
                 >
                   More recent Deposits are Transferred first.
                 </Alert>

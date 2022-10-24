@@ -123,34 +123,34 @@ const PriceButton: FC<ButtonProps> = ({ ...props }) => {
         <Box px={1}>
           <Grid container>
             <Grid item xs={1.5} md={1.25}>
-              <Typography color="text.primary" variant="bodySmall">
+              <Typography color="text.tertiary" variant="bodySmall">
                 Season
               </Typography>
             </Grid>
             <Grid item xs={3} md={2} textAlign="right">
-              <Typography color="text.primary" variant="bodySmall">
+              <Typography color="text.tertiary" variant="bodySmall">
                 New Beans
               </Typography>
             </Grid>
             <Grid item xs={3} md={2} textAlign="right">
-              <Typography color="text.primary" variant="bodySmall">
+              <Typography color="text.tertiary" variant="bodySmall">
                 Soil
               </Typography>
             </Grid>
             <Grid item xs={4} md={2.75}>
               <Stack alignItems="flex-end">
-                <Typography color="text.primary" variant="bodySmall">
+                <Typography color="text.tertiary" variant="bodySmall">
                   Temperature
                 </Typography>
               </Stack>
             </Grid>
             <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }} textAlign="right">
-              <Typography color="text.primary" variant="bodySmall">
+              <Typography color="text.tertiary" variant="bodySmall">
                 Pod Rate
               </Typography>
             </Grid>
             <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }} textAlign="right">
-              <Typography color="text.primary" variant="bodySmall">
+              <Typography color="text.tertiary" variant="bodySmall">
                 Delta Demand
               </Typography>
             </Grid>
@@ -204,6 +204,12 @@ const PriceButton: FC<ButtonProps> = ({ ...props }) => {
       hotkey="opt+2, alt+2"
       zIndex={997}
       {...props}
+      // sx={{
+      //   backgroundColor: BeanstalkPalette.theme.fallDark.cardBackground,
+      //   border: '0px',
+      //   borderRadius: 1,
+      //   color: 'text.primary',
+      // }}
     />
   );
 };

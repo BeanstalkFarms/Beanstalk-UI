@@ -56,7 +56,7 @@ export const StyledDialogTitle : FC<{
             p: 0
           }}
         >
-          <CloseIcon sx={{ fontSize: FontSize.base }} />
+          <CloseIcon sx={{ fontSize: FontSize.base, color: 'text.secondary' }} />
         </IconButton>
       ) : null}
     </Row>

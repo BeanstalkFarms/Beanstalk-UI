@@ -25,7 +25,7 @@ import disconnectIcon from '~/img/beanstalk/interface/nav/disconnect.svg';
 import useAnchor from '~/hooks/display/useAnchor';
 import useToggle from '~/hooks/display/useToggle';
 import useAccount from '~/hooks/ledger/useAccount';
-import { CHAIN_INFO } from '~/constants/chains';
+import { CHAIN_INFO } from '~/constants';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import WalletDialog from './WalletDialog';
 import DropdownIcon from '~/components/Common/DropdownIcon';
@@ -145,10 +145,10 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
           onClick={showPick}
           sx={{
             py: 1.25,
-            backgroundColor: BeanstalkPalette.lightBrown,
-            color: BeanstalkPalette.brown,
+            backgroundColor: BeanstalkPalette.theme.fallDark.lightOrange,
+            color: BeanstalkPalette.theme.fallDark.primary,
             '&:hover': {
-              backgroundColor: BeanstalkPalette.lightBrown,
+              backgroundColor: BeanstalkPalette.theme.fallDark.lightOrange,
               opacity: 0.94,
             },
           }}
@@ -164,10 +164,10 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
           href="/#/chop"
           sx={{
             py: 1.25,
-            backgroundColor: BeanstalkPalette.brown,
-            color: BeanstalkPalette.white,
+            backgroundColor: BeanstalkPalette.theme.fallDark.primary,
+            color: 'text.primary',
             '&:hover': {
-              backgroundColor: BeanstalkPalette.brown,
+              backgroundColor: BeanstalkPalette.theme.fallDark.primary,
               opacity: 0.96,
             },
           }}
@@ -193,11 +193,17 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
         {...props}
         onClick={toggleMenuAnchor}
         sx={import.meta.env.VITE_OVERRIDE_FARMER_ACCOUNT ? {
+          background: BeanstalkPalette.theme.fallDark.cardBackground,
+          color: 'text.primary',
           borderBottomColor: 'red',
           borderBottomWidth: 2,
           borderBottomStyle: 'solid',
           ...props.sx,
-        } : props.sx}
+        } : {
+          background: BeanstalkPalette.theme.fallDark.cardBackground,
+          color: 'text.primary',
+          ...props.sx
+        }}
       >
         <Typography variant="bodyMedium" display={{ xs: 'none', sm: 'block' }}>
           {/* Use `accountRaw` to match capitalization of wallet provider

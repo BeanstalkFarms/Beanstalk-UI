@@ -65,11 +65,15 @@ const DescriptionButton: FC<ButtonProps & {
       // Prevents the button's flex properties from
       // changing the internal layout.
       display: 'block',
-      color: 'inherit',
-      borderColor: isSelected ? BeanstalkPalette.theme.fall.primary : BeanstalkPalette.lightestGrey,
-      backgroundColor: isSelected ? BeanstalkPalette.theme.fall.extraLight : null,
+      // color: 'inherit',
+      color: 'text.primary',
+      // borderColor: isSelected ? BeanstalkPalette.theme.fall.primary : BeanstalkPalette.lightestGrey,
+      borderColor: BeanstalkPalette.theme.fallDark.dividerGrey,
+      // backgroundColor: isSelected ? BeanstalkPalette.theme.fall.extraLight : null,
+      backgroundColor: isSelected ? BeanstalkPalette.theme.fallDark.light : null,
       '&:hover': {
-        backgroundColor: isSelected ? BeanstalkPalette.theme.fall.extraLight : null,
+        backgroundColor: isSelected ? BeanstalkPalette.theme.fallDark.light : null,
+        borderColor: 'primary.main'
       },
       height: 'auto'
     }}

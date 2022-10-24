@@ -44,8 +44,11 @@ const ProposalButton: FC<{ proposal: Proposal }> = ({ proposal }) => {
       sx={{
         p: 2,
         height: 'auto',
-        color: '#000000',
-        borderColor: BeanstalkPalette.lightestGrey,
+        color: 'text.primary',
+        borderColor: BeanstalkPalette.theme.fallDark.dividerGrey,
+        ':hover': {
+          borderColor: BeanstalkPalette.theme.fallDark.primary
+        }
       }}
     >
       <Stack gap={1} width="100%">

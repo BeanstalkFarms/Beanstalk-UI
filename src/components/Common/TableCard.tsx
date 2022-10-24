@@ -1,11 +1,13 @@
 import React, { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
-import { Box, Card, CircularProgress, Divider, Typography } from '@mui/material';
 import {
-  DataGrid,
-  GridColumns,
-  GridSortItem
-} from '@mui/x-data-grid';
+  Box,
+  Card,
+  CircularProgress,
+  Divider,
+  Typography,
+} from '@mui/material';
+import { DataGrid, GridColumns, GridSortItem } from '@mui/x-data-grid';
 import { tableStyle } from '~/components/Common/Table/styles';
 import { displayBN } from '~/util';
 import { ZERO_BN } from '~/constants';
@@ -24,7 +26,7 @@ import { FC } from '~/types';
 
 const MAX_ROWS = 5;
 
-const TableCard : FC<{
+const TableCard: FC<{
   /** Card title */
   title: string;
   /** Column setup */
@@ -41,6 +43,11 @@ const TableCard : FC<{
   sort?: GridSortItem;
   /** Token */
   token?: Token;
+  /** true if should hide title component */
+  onlyTable?: boolean;
+  /** additional table styles */
+  tableCss?: any;
+  /** disable border */
 }> = ({
   title,
   columns,
@@ -49,45 +56,56 @@ const TableCard : FC<{
   value,
   state,
   sort = { field: 'season', sort: 'desc' },
-  token
+  token,
+  onlyTable = false,
+  tableCss,
 }) => {
   const tableHeight = useMemo(() => {
     if (!rows || rows.length === 0) return '250px';
-    return (60.5 + 6 + 39 - 5) + Math.min(rows.length, MAX_ROWS) * 36;
+    return 60.5 + 6 + 39 - 5 + Math.min(rows.length, MAX_ROWS) * 36;
   }, [rows]);
   return (
-    <Card>
-      <Row p={2} justifyContent="space-between">
-        <Typography variant="h4">
-          {title}
-        </Typography>
-        {state === 'ready' ? (
-          <Row gap={0.3}>
-            {token && <img src={token.logo} alt="" height="17px" />}
-            <Typography variant="h4">
-              {displayBN(amount || ZERO_BN)}
-              {value && (
-                <Typography display={{ xs: 'none', sm: 'inline' }} color="text.secondary">
-                  {' '}(<Fiat value={value} amount={value} />)
-                </Typography>
-              )}
-            </Typography>
-          </Row>
-        ) : (
-          state === 'loading' ? (
-            <CircularProgress color="primary" variant="indeterminate" size={18} thickness={5} />
-          ) : null
-        )}
-      </Row>
-      <Divider />
+    <Card sx={{ border: onlyTable ? '0px solid' : undefined }}>
+      {!onlyTable && (
+        <Row p={2} justifyContent="space-between">
+          <Typography variant="h4">{title}</Typography>
+          {state === 'ready' ? (
+            <Row gap={0.3}>
+              {token && <img src={token.logo} alt="" height="17px" />}
+              <Typography variant="h4">
+                {displayBN(amount || ZERO_BN)}
+                {value && (
+                  <Typography
+                    display={{ xs: 'none', sm: 'inline' }}
+                    color="text.secondary"
+                  >
+                    {' '}
+                    (<Fiat value={value} amount={value} />)
+                  </Typography>
+                )}
+              </Typography>
+            </Row>
+          ) : state === 'loading' ? (
+            <CircularProgress
+              color="primary"
+              variant="indeterminate"
+              size={18}
+              thickness={5}
+            />
+          ) : null}
+        </Row>
+      )}
+      <Divider sx={{ borderColor: 'divider' }} />
       <Box
         sx={{
           pt: 0.5,
           px: 1,
           height: tableHeight,
           width: '100%',
-          ...tableStyle
-        }}>
+          ...tableStyle,
+          ...tableCss,
+        }}
+      >
         <DataGrid
           columns={columns}
           rows={rows}
@@ -104,17 +122,17 @@ const TableCard : FC<{
                 />
               );
             },
-            Pagination: ArrowPagination
+            Pagination: ArrowPagination,
           }}
           initialState={{
             sorting: {
               sortModel: [sort],
-            }
+            },
           }}
           sx={{
             '& .MuiDataGrid-footerContainer': {
-              justifyContent: 'center'
-            }
+              justifyContent: 'center',
+            },
           }}
         />
       </Box>

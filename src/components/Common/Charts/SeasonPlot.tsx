@@ -2,17 +2,17 @@ import React, { useCallback, useMemo } from 'react';
 import { DocumentNode } from 'graphql';
 import { QueryOptions } from '@apollo/client';
 import { StatProps } from '~/components/Common/Stat';
-import { DataPoint } from '~/components/Common/Charts/LineChart';
 import useSeasonsQuery, {
   MinimumViableSnapshotQuery,
 } from '~/hooks/beanstalk/useSeasonsQuery';
-import BaseSeasonPlot from './BaseSeasonPlot';
+import useGenerateChartSeries from '~/hooks/beanstalk/useGenerateChartSeries';
+import { BaseChartProps, BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
 import useTimeTabState from '~/hooks/app/useTimeTabState';
-import { BaseChartProps, BaseDataPoint } from './ChartPropProvider';
+import BaseSeasonPlot, { QueryData } from '~/components/Common/Charts/BaseSeasonPlot';
 
-export const defaultValueFormatter = (value: number) => value.toFixed(4);
+export const defaultValueFormatter = (value: number) => `$${value.toFixed(4)}`;
 
-export type SeasonDataPoint = DataPoint;
+export type SeasonDataPoint = BaseDataPoint;
 
 export type SeasonPlotBaseProps = {
   /** */
@@ -89,9 +89,11 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
     [seasonsQuery, getValue]
   );
 
+  const queryData: QueryData = useGenerateChartSeries(queryParams, timeTabParams[0], stackedArea);
+
   return (
     <BaseSeasonPlot
-      queryData={queryParams}
+      queryData={queryData}
       height={height}
       StatProps={statProps}
       timeTabParams={timeTabParams}
