@@ -26,6 +26,7 @@ import useGlobal from '~/hooks/app/useGlobal';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const AboutButton: FC<ButtonProps> = ({ sx }) => {
   /// Theme
@@ -69,7 +70,14 @@ const AboutButton: FC<ButtonProps> = ({ sx }) => {
           rel="noreferrer"
           variant="contained"
           color="secondary"
-          sx={{ py: 0.9 }}
+          sx={{ 
+            py: 0.9,
+            background: BeanstalkPalette.theme.fallDark.cardBackground,
+            color: 'text.primary',
+            ':hover': {
+              background: BeanstalkPalette.theme.fallDark.primary,
+            }
+          }}
         >
           <Row spacing={1}>
             <ListItemText>
@@ -79,7 +87,7 @@ const AboutButton: FC<ButtonProps> = ({ sx }) => {
             </ListItemText>
             <Typography variant="body2" color="text.secondary">
               <ArrowForwardIcon
-                sx={{ transform: 'rotate(-45deg)', fontSize: 12 }}
+                sx={{ color: 'text.primary', transform: 'rotate(-45deg)', fontSize: 12 }}
               />
             </Typography>
           </Row>
@@ -109,6 +117,8 @@ const AboutButton: FC<ButtonProps> = ({ sx }) => {
           lineHeight: 0,
           minWidth: 0,
           px: 1,
+          background: BeanstalkPalette.theme.fallDark.cardBackground,
+          color: 'text.primary',
           ...sx,
         }}
       >

@@ -40,7 +40,7 @@ const PoolCard: FC<{
       <Stack>
         <Row justifyContent="end" gap={0.6}>
           <Typography
-            color="text.secondary"
+            color="text.tertiary"
             variant="bodySmall"
           >
             liquidity:
@@ -51,7 +51,7 @@ const PoolCard: FC<{
         </Row>
         <Row justifyContent="end" gap={0.6}>
           <Typography
-            color="text.secondary"
+            color="text.tertiary"
             variant="bodySmall"
           >
             deltaB:
@@ -74,8 +74,11 @@ const PoolCard: FC<{
       sx={{
         height: 'auto', // FIXME
         display: 'block',
-        color: '#000000',
-        borderColor: BeanstalkPalette.lightestGrey,
+        color: 'text.primary',
+        ':hover': {
+          borderColor: BeanstalkPalette.theme.fallDark.primary
+        },
+        borderColor: BeanstalkPalette.theme.fallDark.dividerGrey,
       }}
       {...ButtonProps}
     >

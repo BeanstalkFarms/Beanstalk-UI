@@ -137,13 +137,15 @@ export const BeanstalkPalette = {
       dividerGrey: '#31363F',
       ctaDisabled: '#6C757D',
       textDisabled: '#DEE2E6',
-      cardBackground: '#0F1D31'
+      cardBackground: '#0F1D31',
+      background: '#0C2C63',
+      lightOrange: lighten('#FB8500', 0.6),
     }
   }
 };
 
 export const PAGE_BG_COLOR = BeanstalkPalette.theme.fall.light;
-export const PAGE_BORDER_COLOR = BeanstalkPalette.theme.fall.primary;
+export const PAGE_BORDER_COLOR = BeanstalkPalette.theme.fallDark.dividerGrey;
 
 export const IconSize = {
   xs: 14,
