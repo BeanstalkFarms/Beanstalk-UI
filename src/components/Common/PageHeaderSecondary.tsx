@@ -2,7 +2,7 @@ import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import React from 'react';
-import { BeanstalkPalette, IconSize } from '../App/muiTheme';
+import { IconSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
@@ -44,17 +44,18 @@ const PageHeaderSecondary: FC<{
                 float: 'left',
                 display: 'inline',
                 mb: '-2.5px',
+                color: 'text.secondary',
                 '&:hover': {
-                  color: BeanstalkPalette.logoGreen,
+                  color: 'primary.main',
                 },
               }}
             >
               <Row gap={0.5} height="100%">
                 <KeyboardBackspaceIcon
-                  sx={{ color: 'text.secondary', width: IconSize.small }}
+                  sx={{ width: IconSize.small }}
                   height="auto"
                 />
-                <Typography color="text.secondary" variant="h4">Back</Typography>
+                <Typography variant="h4">Back</Typography>
               </Row>
             </Button>
           </Stack>

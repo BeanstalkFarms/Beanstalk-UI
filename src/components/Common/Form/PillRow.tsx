@@ -54,7 +54,7 @@ const PillRow : FC<{
       <Row gap={0.5}>
         {children}
       </Row>
-      {isDropdown && <DropdownIcon sx={{ height: IconSize.xs }} open={isOpen} />}
+      {isDropdown && <DropdownIcon sx={{ color: 'primary.main', height: IconSize.xs }} open={isOpen} />}
     </Button>
   </Row>
 );

@@ -69,7 +69,7 @@ const TokenAdornment : FC<
             sx={{
               fontSize: 18,
               // color: 'rgba(0,0,0,0.87)'
-              color: 'text.primary'
+              color: 'primary.main'
             }}
           />
         )}
