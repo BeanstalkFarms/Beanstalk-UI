@@ -33,6 +33,10 @@ declare module '@mui/material/styles' {
     bodyMedium?: React.CSSProperties;
     bodyLarge?: React.CSSProperties;
   }
+
+  interface TypeText {
+    tertiary?: string;
+  }
 }
 
 // Update the Button's color prop options
@@ -102,7 +106,8 @@ export const BeanstalkPalette = {
   white: '#fff',
   black: '#333',
   // Reds
-  washedRed: '#c35f42',
+  // washedRed: '#c35f42',
+  washedRed: '#DA2C38',
   mediumRed: lighten('#c35f42', 0.55),
   hoverRed: '#fef9f8',
   trueRed: '#AE2D20',
@@ -125,10 +130,14 @@ export const BeanstalkPalette = {
       lightBrown: '#E5D7C8'
     },
     fallDark: { // Halloween
+      accent: '#2A6F97',
       light: '#122540', // lighter blue
       primary: '#FB8500', // halloween orange
       accentGrey: '#ADB5BD',
-      dividerGrey: '#31363F'
+      dividerGrey: '#31363F',
+      ctaDisabled: '#6C757D',
+      textDisabled: '#DEE2E6',
+      cardBackground: '#0F1D31'
     }
   }
 };
@@ -228,7 +237,8 @@ let muiTheme = createTheme({
       // primary: '#333333',
       primary: BeanstalkPalette.white,
       secondary: BeanstalkPalette.lightGrey,
-      // disabled: BeanstalkPalette.white,
+      tertiary: BeanstalkPalette.lightestGrey,
+      disabled: BeanstalkPalette.theme.fallDark.textDisabled
     },
     background: {
       default: '#0C2C63',
@@ -330,7 +340,7 @@ let muiTheme = createTheme({
     MuiDivider: {
       styleOverrides: {
         root: sx({
-          borderColor: BeanstalkPalette.theme.fall.light,
+          borderColor: BeanstalkPalette.theme.fallDark.dividerGrey,
           borderWidth: 0.5,
         }),
       },
@@ -365,6 +375,10 @@ let muiTheme = createTheme({
           fontWeight: 700,
           fontSize: '1rem',
           lineHeight: '1.25rem',
+          '&.MuiLoadingButton-root:disabled': {
+            background: BeanstalkPalette.theme.fallDark.ctaDisabled,
+            color: 'text.disabled'
+          }
         }),
         /// Sizes
         sizeSmall: sx({}),
@@ -426,7 +440,7 @@ let muiTheme = createTheme({
           borderColor: BeanstalkPalette.theme.fallDark.dividerGrey,
           borderWidth: 1,
           borderStyle: 'solid',
-          backgroundColor: BeanstalkPalette.theme.fallDark.light,
+          backgroundColor: BeanstalkPalette.theme.fallDark.accent,
           color: 'text.primary',
           p: 1,
           px: 1.25,
@@ -449,7 +463,7 @@ let muiTheme = createTheme({
           },
           style: {
             background: 'transparent',
-            borderColor: BeanstalkPalette.lightBlue,
+            borderColor: BeanstalkPalette.theme.fallDark.dividerGrey,
           },
         },
       ],
@@ -502,9 +516,12 @@ let muiTheme = createTheme({
     MuiListItem: {
       styleOverrides: {
         root: sx({
+          borderRadius: 1,
           '&.Mui-selected': {
-            backgroundColor: BeanstalkPalette.lightGreen,
-            borderRadius: 1,
+            backgroundColor: BeanstalkPalette.theme.fallDark.accent,
+          },
+          '&:hover': {
+            border: '0px',
           },
         })
       }
@@ -515,7 +532,9 @@ let muiTheme = createTheme({
           borderRadius: 1,
           px: 1,
           py: 1,
-          border: '2px solid white',
+          ':hover': {
+            background: '#1B283B'
+          },
         }),
       }
     },

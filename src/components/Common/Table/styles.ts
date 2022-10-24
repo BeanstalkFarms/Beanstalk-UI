@@ -53,6 +53,10 @@ export const tableStyle = {
     '& .MuiDataGrid-virtualScrollerRenderZone :hover': {
       // backgroundColor: "transparent"
       // backgroundColor: "#D8F2DB"
+    },
+
+    '& .MuiSvgIcon-root': {
+      color: 'text.primary'
     }
   }
 };

@@ -157,7 +157,7 @@ const Pie : FC<PieProps & PieCustomizationProps> = ({
   if (!data || data.length === 0) {
     return (
       <Stack sx={{ width, height }} alignItems="center" justifyContent="center">
-        <Typography color="text.secondary">
+        <Typography color="text.tertiary">
           No data
         </Typography>
       </Stack>

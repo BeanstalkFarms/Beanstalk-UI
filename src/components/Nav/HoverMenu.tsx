@@ -49,9 +49,10 @@ const HoverMenu: FC<{
       <Button
         size="small"
         variant="text"
-        color="dark"
+        // color=""
         endIcon={<DropdownIcon open={open} />}
         sx={{
+          color: 'text.primary',
           px: 1.5,
           fontSize: '1rem',
           fontWeight: '400',

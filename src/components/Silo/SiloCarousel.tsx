@@ -82,6 +82,7 @@ const ImageWrapper = styled(Stack)(({ theme }) => ({
 const InfoContent = styled(Stack)(({ theme }) => ({
   width: '100%',
   padding: '20px',
+  background: BeanstalkPalette.theme.fallDark.cardBackground,
   [theme.breakpoints.up('md')]: {
     borderLeft: `${BeanstalkPalette.theme.fallDark.dividerGrey} 1px solid`,
     maxWidth: '40%',

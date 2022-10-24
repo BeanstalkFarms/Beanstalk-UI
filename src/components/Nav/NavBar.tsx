@@ -3,7 +3,6 @@ import {
   AppBar,
   Box,
 } from '@mui/material';
-import { PAGE_BG_COLOR, PAGE_BORDER_COLOR } from '~/components/App/muiTheme';
 import WalletButton from '~/components/Common/Connection/WalletButton';
 import NetworkButton from '~/components/Common/Connection/NetworkButton';
 import PriceButton from './Buttons/PriceButton';
@@ -16,6 +15,7 @@ import { NAV_BORDER_HEIGHT, NAV_ELEM_HEIGHT, NAV_HEIGHT } from '~/hooks/app/useP
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
+import { BeanstalkPalette } from '../App/muiTheme';
 
 const NavBar: FC<{}> = ({ children }) => (
   <AppBar
@@ -25,8 +25,10 @@ const NavBar: FC<{}> = ({ children }) => (
     className="navbar"
     sx={{
       position: 'sticky',
-      backgroundColor: PAGE_BG_COLOR,
-      borderBottom: `${NAV_BORDER_HEIGHT}px solid ${PAGE_BORDER_COLOR}`,
+      bgcolor: 'background',
+      // backgroundColor: PAGE_BG_COLOR,
+      // borderColor: BeanstalkPalette.theme.fallDark.dividerGrey,
+      borderBottom: `${NAV_BORDER_HEIGHT}px solid ${BeanstalkPalette.theme.fallDark.dividerGrey}`,
     }}
   >
     {children}

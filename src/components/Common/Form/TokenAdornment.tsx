@@ -63,7 +63,8 @@ const TokenAdornment : FC<
           <KeyboardArrowDownIcon
             sx={{
               fontSize: 18,
-              color: 'rgba(0,0,0,0.87)'
+              // color: 'rgba(0,0,0,0.87)'
+              color: 'text.primary'
             }}
           />
         )}
