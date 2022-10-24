@@ -12,7 +12,7 @@ const TokenIcon : FC<{
     alt={token.symbol}
     css={{
       height: '1em',
-      width: 'auto',
+      width: 'auto'
     }}
     {...props}
   />

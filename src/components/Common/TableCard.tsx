@@ -95,7 +95,7 @@ const TableCard: FC<{
           ) : null}
         </Row>
       )}
-      <Divider />
+      <Divider sx={{ borderColor: 'divider' }} />
       <Box
         sx={{
           pt: 0.5,

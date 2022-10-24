@@ -17,7 +17,7 @@ const PaginationItem = styled(Box, {
   width: '100%',
   borderRadius: 0.5,
   background: isActive
-    ? BeanstalkPalette.logoGreen
+    ? BeanstalkPalette.theme.fallDark.primary
     : BeanstalkPalette.lightestGrey,
   cursor: 'pointer',
 }));
@@ -32,9 +32,9 @@ const PaginationArrow: FC<{
     sx={{
       transform: `rotate(${isRightArrow ? '180' : '0'}deg)`,
       cursor: disabled ? 'default' : 'pointer',
-      color: disabled ? BeanstalkPalette.lightGrey : BeanstalkPalette.black,
+      color: disabled ? 'text.secondary' : 'text.primary',
       ':hover': { 
-        color: disabled ? BeanstalkPalette.lightGrey : BeanstalkPalette.logoGreen 
+        color: disabled ? 'text.secondary' : 'primary.main' 
       }
     }}
   />

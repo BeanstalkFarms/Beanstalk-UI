@@ -16,7 +16,7 @@ export const tableStyle = {
     // Header
     '& .MuiDataGrid-columnHeaders': {
       border: 'none',
-      color: '#000000',
+      color: 'text.primary',
       borderRadius: 0,
       // fontSize: '18px',
     },

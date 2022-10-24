@@ -55,7 +55,7 @@ const TokenAdornment : FC<
             /> 
           ) : null}
         <Box sx={{ color: '#3B3B3B' }}>
-          <Typography variant="bodyMedium" fontWeight="fontWeightRegular">
+          <Typography variant="bodyMedium" fontWeight="fontWeightRegular" color="text.primary">
             {buttonLabel || token.symbol}
           </Typography>
         </Box>

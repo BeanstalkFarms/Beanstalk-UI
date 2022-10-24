@@ -83,7 +83,8 @@ const Stat: FC<StatProps> = ({
     </Tooltip>
     {/* Subtitle */}
     {subtitle !== undefined && (
-      <Typography variant="bodySmall" color="gray">
+      // <Typography variant="bodySmall" color="gray">
+      <Typography variant="bodySmall" color="text.primary">
         {subtitle}
       </Typography>
     )}
