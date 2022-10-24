@@ -535,7 +535,7 @@ let muiTheme = createTheme({
           px: 1,
           py: 1,
           ':hover': {
-            background: '#1B283B'
+            background: 'rgba(27, 39.1, 59, 0.5)'
           },
         }),
       }
