@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
+import { IconSize } from '~/components/App/muiTheme';
 import beanstalkLogo from '~/img/tokens/bean-logo-circled.svg';
 import ROUTES from './routes';
 import MenuItemMobile from './MenuItemMobile';
@@ -43,7 +43,7 @@ const NavDrawer: FC<{
         sx={{ height: '100vh' }}
         transitionDuration={0}
       >
-        <Box position="fixed" sx={{ backgroundColor: '#f7fafe', width: '100%', height: '100%', top: 0, overflowY: 'scroll' }}>
+        <Box position="fixed" sx={{ backgroundColor: 'secondary.main', width: '100%', height: '100%', top: 0, overflowY: 'scroll' }}>
           {/* Beanstalk Logo & Close Button */}
           <Row alignItems="center" justifyContent="space-between" sx={{ p: 1.5 }}>
             <Box>
@@ -52,14 +52,14 @@ const NavDrawer: FC<{
               </Link>
             </Box>
             <IconButton aria-label="close" onClick={hideDrawer} sx={{ mr: -0.8 }}>
-              <CloseIcon sx={{ color: BeanstalkPalette.black, fontSize: 35 }} />
+              <CloseIcon sx={{ color: 'text.secondary', fontSize: 35 }} />
             </IconButton>
           </Row>
           {/* Items */}
           <List sx={{ mt: 1, fontSize: 22 }}>
             {/* Individual Items */}
             {ROUTES.top.map((item) => (
-              <Box key={item.path} sx={{ borderBottom: 2, borderColor: BeanstalkPalette.lightBlue }}>
+              <Box key={item.path} sx={{ borderBottom: 2, borderColor: 'divider' }}>
                 <MenuItemMobile
                   item={item}
                   onClick={hideDrawer}
@@ -67,7 +67,7 @@ const NavDrawer: FC<{
               </Box>
             ))}
             {/* More Dropdown */}
-            <Box key="more" sx={{ borderBottom: 2, borderColor: BeanstalkPalette.lightBlue }}>
+            <Box key="more" sx={{ borderBottom: 2, borderColor: 'divider' }}>
               <MenuItemMobile
                 item={{ title: 'More', path: '#' }}
                 onClick={openMore ? hideMore : showMore}
@@ -92,15 +92,15 @@ const NavDrawer: FC<{
                     rel="noreferrer"
                     variant="contained"
                     color="secondary"
-                    sx={{ py: 0.9, zIndex: 3000 }}
+                    sx={{ py: 0.9, zIndex: 3000, ':hover': { backgroundColor: 'primary.main' } }}
                   >
                     <Row alignItems="center" spacing={1}>
                       <ListItemText>
-                        <Typography variant="h4">
+                        <Typography color="text.primary" variant="h4">
                           Contract: {beanstalkAddress.slice(0, 6)}...
                         </Typography>
                       </ListItemText>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" color="text.primary">
                         <ArrowForwardIcon
                           sx={{ transform: 'rotate(-45deg)', fontSize: 12 }}
                         />

@@ -39,13 +39,15 @@ const DepositRewards : FC<{ token: ERC20Token }> = ({ token }) => (
         />
         {token.rewards?.stalk}
       </Typography>
-      <Typography variant="bodyLarge">
+      <Row>
         <TokenIcon
           token={SEEDS}
-          css={{ marginTop: '4px', fontSize: 'inherit' }}
+          css={{ fontSize: 'inherit' }}
         />
-        {token.rewards?.seeds}
-      </Typography>
+        <Typography variant="bodyLarge">
+          {token.rewards?.seeds}
+        </Typography>
+      </Row>
     </Row>
     <SiloAssetApyChip 
       token={token as Token}
