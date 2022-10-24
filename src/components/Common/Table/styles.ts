@@ -55,8 +55,17 @@ export const tableStyle = {
       // backgroundColor: "#D8F2DB"
     },
 
-    '& .MuiSvgIcon-root': {
-      color: 'text.primary'
-    }
+    // '& .MuiSvgIcon-root': {
+    //   color: 'text.primary',
+    //   ':hover': {
+    //     '&:first-of-type': {
+    //       color: 'text.primary'
+    //     }, 
+    //     '&:last-of-type': {
+    //       color: 'text.primary'
+    //     },
+    //     color: 'primary.main'
+    //   }
+    // }
   }
 };
