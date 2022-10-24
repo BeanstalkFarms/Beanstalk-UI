@@ -49,7 +49,7 @@ const ChopConditions: FC<{}> = () => {
                 <Typography variant="body1">
                   Fertilizer Sold&nbsp;
                   <HelpOutlineIcon
-                    sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
+                    sx={{ color: 'text.tertiary', fontSize: FontSize.sm }}
                   />
                 </Typography>
               </Tooltip>
@@ -64,7 +64,7 @@ const ChopConditions: FC<{}> = () => {
                 <Typography variant="body1">
                   Debt Repaid to Fertilizer&nbsp;
                   <HelpOutlineIcon
-                    sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
+                    sx={{ color: 'text.tertiary', fontSize: FontSize.sm }}
                   />
                 </Typography>
               </Tooltip>

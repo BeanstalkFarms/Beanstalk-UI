@@ -31,7 +31,7 @@ const FieldConditions: FC<FieldConditionsProps> = ({
               <Typography variant="body1">
                 Available Soil&nbsp;
                 <HelpOutlineIcon
-                  sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
+                  sx={{ color: 'text.tertiary', fontSize: FontSize.sm }}
                 />
               </Typography>
             </Tooltip>
@@ -46,7 +46,7 @@ const FieldConditions: FC<FieldConditionsProps> = ({
               <Typography variant="body1">
                 Temperature&nbsp;
                 <HelpOutlineIcon
-                  sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
+                  sx={{ color: 'text.tertiary', fontSize: FontSize.sm }}
                 />
               </Typography>
             </Tooltip>

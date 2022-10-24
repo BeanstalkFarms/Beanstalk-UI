@@ -22,13 +22,13 @@ const TokenBalanceTable: React.FC<{
           <>
             <Grid container direction="row" px={2}>
               <Grid item {...{ xs: 6, sm: 5, lg: 3.5 }}>
-                <Typography sx={{ color: BeanstalkPalette.lightGrey }}>
+                <Typography color="text.tertiary">
                   Token
                 </Typography>
               </Grid>
               <Grid item {...{ xs: 6, sm: 4, lg: 4.5 }} pl={1}>
                 <Stack textAlign={{ xs: 'right', sm: 'left' }}>
-                  <Typography sx={{ color: BeanstalkPalette.lightGrey }}>
+                  <Typography color="text.tertiary">
                     Amount
                   </Typography>
                 </Stack>
@@ -41,7 +41,7 @@ const TokenBalanceTable: React.FC<{
                 <Stack>
                   <Typography
                     textAlign="right"
-                    sx={{ color: BeanstalkPalette.lightGrey }}
+                    color="text.tertiary"
                 >
                     Value
                   </Typography>
@@ -54,7 +54,8 @@ const TokenBalanceTable: React.FC<{
                   {...{ px: 2, py: 1 }}
                   sx={{
                   borderRadius: '6px',
-                  border: `1px solid ${BeanstalkPalette.lightestGrey}`,
+                  border: '1px solid',
+                  borderColor: BeanstalkPalette.theme.fallDark.dividerGrey
                 }}
                   key={i}
               >

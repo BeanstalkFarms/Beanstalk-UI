@@ -48,7 +48,7 @@ const PillRow : FC<{
         py: 0.5,
         my: 0.5,
         transition: 'none',
-        height: 'auto'
+        height: 'auto',
       }}
     >
       <Row gap={0.5}>

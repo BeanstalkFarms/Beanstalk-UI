@@ -140,6 +140,7 @@ export const BeanstalkPalette = {
       cardBackground: '#0F1D31',
       background: '#0C2C63',
       lightOrange: lighten('#FB8500', 0.6),
+      lightest: lighten('#122540', 0.4),
     }
   }
 };
@@ -377,8 +378,12 @@ let muiTheme = createTheme({
           fontWeight: 700,
           fontSize: '1rem',
           lineHeight: '1.25rem',
+          '&.MuiButton-root:disabled': {
+            backgroundColor: BeanstalkPalette.theme.fallDark.ctaDisabled,
+            color: 'text.disabled'
+          },
           '&.MuiLoadingButton-root:disabled': {
-            background: BeanstalkPalette.theme.fallDark.ctaDisabled,
+            backgroundColor: BeanstalkPalette.theme.fallDark.ctaDisabled,
             color: 'text.disabled'
           }
         }),

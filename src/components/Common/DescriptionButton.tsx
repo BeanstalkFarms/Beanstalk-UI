@@ -67,10 +67,13 @@ const DescriptionButton: FC<ButtonProps & {
       display: 'block',
       // color: 'inherit',
       color: 'text.primary',
-      borderColor: isSelected ? BeanstalkPalette.theme.fall.primary : BeanstalkPalette.lightestGrey,
-      backgroundColor: isSelected ? BeanstalkPalette.theme.fall.extraLight : null,
+      // borderColor: isSelected ? BeanstalkPalette.theme.fall.primary : BeanstalkPalette.lightestGrey,
+      borderColor: BeanstalkPalette.theme.fallDark.dividerGrey,
+      // backgroundColor: isSelected ? BeanstalkPalette.theme.fall.extraLight : null,
+      backgroundColor: isSelected ? BeanstalkPalette.theme.fallDark.light : null,
       '&:hover': {
-        backgroundColor: isSelected ? BeanstalkPalette.theme.fall.extraLight : null,
+        backgroundColor: isSelected ? BeanstalkPalette.theme.fallDark.light : null,
+        borderColor: 'primary.main'
       },
       height: 'auto'
     }}

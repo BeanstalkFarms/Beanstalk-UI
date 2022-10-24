@@ -16,8 +16,8 @@ import {
   ModuleContent,
 } from '~/components/Common/Module';
 import beanIcon from '~/img/tokens/bean-logo-circled.svg';
-import stalkIcon from '~/img/beanstalk/stalk-icon.svg';
-import seedIcon from '~/img/beanstalk/seed-icon.svg';
+import stalkIcon from '~/img/beanstalk/stalk-icon-white.svg';
+import seedIcon from '~/img/beanstalk/seed-icon-white.svg';
 
 import useRevitalized from '~/hooks/farmer/useRevitalized';
 import { AppState } from '~/state';
@@ -231,7 +231,7 @@ const RewardsContent: React.FC<{}> = () => {
                   : ZERO_BN
               }
               icon={beanIcon}
-              titleColor={BeanstalkPalette.theme.fall.brown}
+              titleColor="primary.main"
             />
           </Grid>
           <Grid item xs={4}>
@@ -243,7 +243,7 @@ const RewardsContent: React.FC<{}> = () => {
                   : ZERO_BN
               }
               icon={stalkIcon}
-              titleColor={BeanstalkPalette.theme.fall.brown}
+              titleColor="primary.main"
             />
           </Grid>
           <Grid item xs={4}>
