@@ -15,7 +15,7 @@ import { NAV_BORDER_HEIGHT, NAV_ELEM_HEIGHT, NAV_HEIGHT } from '~/hooks/app/useP
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
-import { BeanstalkPalette } from '../App/muiTheme';
+import { BeanstalkPalette, PAGE_BG_COLOR } from '../App/muiTheme';
 
 const NavBar: FC<{}> = ({ children }) => (
   <AppBar
@@ -26,7 +26,7 @@ const NavBar: FC<{}> = ({ children }) => (
     sx={{
       position: 'sticky',
       bgcolor: 'background',
-      // backgroundColor: PAGE_BG_COLOR,
+      backgroundColor: PAGE_BG_COLOR,
       // borderColor: BeanstalkPalette.theme.fallDark.dividerGrey,
       borderBottom: `${NAV_BORDER_HEIGHT}px solid ${BeanstalkPalette.theme.fallDark.dividerGrey}`,
     }}

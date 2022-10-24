@@ -145,7 +145,7 @@ export const BeanstalkPalette = {
   }
 };
 
-export const PAGE_BG_COLOR = BeanstalkPalette.theme.fall.light;
+export const PAGE_BG_COLOR = BeanstalkPalette.theme.fallDark.background;
 export const PAGE_BORDER_COLOR = BeanstalkPalette.theme.fallDark.dividerGrey;
 
 export const IconSize = {

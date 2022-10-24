@@ -51,10 +51,10 @@ const PageHeaderSecondary: FC<{
             >
               <Row gap={0.5} height="100%">
                 <KeyboardBackspaceIcon
-                  sx={{ width: IconSize.small }}
+                  sx={{ color: 'text.secondary', width: IconSize.small }}
                   height="auto"
                 />
-                <Typography variant="h4">Back</Typography>
+                <Typography color="text.secondary" variant="h4">Back</Typography>
               </Row>
             </Button>
           </Stack>
