@@ -7,7 +7,7 @@ import { FC } from '~/types';
 
 const WarningIcon : FC<{}> = () => (
   <IconWrapper boxSize={IconSize.medium}>
-    <WarningAmberIcon sx={{ fontSize: IconSize.small }} />
+    <WarningAmberIcon color="primary" sx={{ fontSize: IconSize.small }} />
   </IconWrapper>
 );
 

@@ -141,6 +141,7 @@ export const BeanstalkPalette = {
       background: '#0C2C63',
       lightOrange: lighten('#FB8500', 0.6),
       lightest: lighten('#122540', 0.4),
+      warningDark: '#322D2A'
     }
   }
 };
@@ -233,11 +234,9 @@ let muiTheme = createTheme({
     naked: {
       main: 'transparent',
       contrastText: BeanstalkPalette.black,
-      // contrastText: BeanstalkPalette.logoGreen
     },
     //
     text: {
-      // primary: '#333333',
       primary: BeanstalkPalette.white,
       secondary: BeanstalkPalette.lightGrey,
       tertiary: BeanstalkPalette.lightestGrey,
@@ -247,6 +246,9 @@ let muiTheme = createTheme({
       default: '#0C2C63',
       paper: '#0F1D31',
     },
+    warning: {
+      main: BeanstalkPalette.theme.fallDark.warningDark
+    }
   },
 
   /**
@@ -411,6 +413,17 @@ let muiTheme = createTheme({
       },
     },
     MuiAlert: {
+      variants: [
+        { 
+          props: {
+            severity: 'warning',
+          },
+          style: sx({
+            background: BeanstalkPalette.theme.fallDark.warningDark,
+            color: 'text.primary'
+          })
+        }
+      ],
       defaultProps: {
       },
       styleOverrides: {

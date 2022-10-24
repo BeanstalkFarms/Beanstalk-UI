@@ -442,7 +442,7 @@ const SwapForm: FC<FormikProps<SwapFormValues> & {
         </>
         {/* Warnings */}
         {ethModeCheck === false ? (
-          <Alert variant="standard" color="warning" icon={<WarningIcon />}>
+          <Alert variant="standard" severity="warning" icon={<WarningIcon />}>
             ETH can only be delivered to your Circulating Balance.&nbsp;
             <Link
               onClick={() => {
