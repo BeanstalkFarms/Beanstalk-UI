@@ -199,7 +199,10 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
           borderBottomWidth: 2,
           borderBottomStyle: 'solid',
           ...props.sx,
-        } : props.sx}
+        } : {
+          background: BeanstalkPalette.theme.fallDark.cardBackground,
+          ...props.sx
+        }}
       >
         <Typography variant="bodyMedium" display={{ xs: 'none', sm: 'block' }}>
           {/* Use `accountRaw` to match capitalization of wallet provider

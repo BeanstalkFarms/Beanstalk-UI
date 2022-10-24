@@ -168,24 +168,24 @@ const margin = {
 
 const defaultChartStyles: ChartMultiStyles = {
   0 : {
-    stroke: BeanstalkPalette.theme.fallDark.primary,
-    fillPrimary: BeanstalkPalette.theme.fall.lightBrown,
+    stroke: '#FB8500',
+    fillPrimary: '#EBCDAC',
     strokeWidth: 2,
   },
   1 : {
-    stroke: BeanstalkPalette.logoGreen,
-    fillPrimary: BeanstalkPalette.lightGreen,
+    stroke: '#DA2C38',
+    fillPrimary: '#FBEAEB',
     strokeWidth: 2,
 
   },
   2 : {
-    stroke: BeanstalkPalette.trueRed,
-    fillPrimary: BeanstalkPalette.lightestRed,
+    stroke: '#7F5533',
+    fillPrimary: '#F2EFEA',
     strokeWidth: 2,
   },
   3 : {
-    stroke: BeanstalkPalette.blue,
-    fillPrimary: BeanstalkPalette.lightestBlue,
+    stroke: '#AA9DFF',
+    fillPrimary: '#6C64A3',
     strokeWidth: 2,
   },
 };

@@ -46,7 +46,7 @@ import useNavHeight from '~/hooks/app/usePageDimensions';
 import useBanner from '~/hooks/app/useBanner';
 import { sgEnvKey } from '~/graph/client';
 
-import pageBackground from '~/img/beanstalk/interface/bg/halloween@2x.png';
+import pageBackground from '~/img/beanstalk/interface/bg/halloween-bg.png';
 
 import './App.css';
 import useAccount from '~/hooks/ledger/useAccount';
