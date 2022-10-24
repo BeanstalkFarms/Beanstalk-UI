@@ -46,10 +46,9 @@ import useNavHeight from '~/hooks/app/usePageDimensions';
 import useBanner from '~/hooks/app/useBanner';
 import { sgEnvKey } from '~/graph/client';
 
-import pageBackground from '~/img/beanstalk/interface/bg/fall@2x.png';
+import pageBackground from '~/img/beanstalk/interface/bg/halloween-bg.png';
 
 import './App.css';
-import { PAGE_BG_COLOR } from './muiTheme';
 import useAccount from '~/hooks/ledger/useAccount';
 import EnforceNetwork from '~/components/App/EnforceNetwork';
 
@@ -128,7 +127,8 @@ export default function App() {
       {account && <NewProposalsDialog />}
       <Box
         sx={{
-          backgroundColor: PAGE_BG_COLOR,
+          bgcolor: 'background.default',
+          // backgroundColor: PAGE_BG_COLOR,
           backgroundImage: `url(${pageBackground})`,
           backgroundAttachment: 'fixed',
           backgroundPosition: 'bottom center',

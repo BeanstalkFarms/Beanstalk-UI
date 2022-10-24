@@ -11,7 +11,7 @@ const BlurComponent : FC<StackProps & { blur?: number; opacity?: number }> = ({ 
       position: 'absolute',
       left: 0,
       top: 0,
-      backgroundColor: `rgba(255,255,255,${opacity})`,
+      backgroundColor: `rgba(15, 29, 49, ${opacity})`,
       backdropFilter: `blur(${blur}px)`,
       zIndex: 999,
       textAlign: 'center',

@@ -53,7 +53,7 @@ const ExpiresAtInputProps = {
   endAdornment: (
     <InputAdornment position="end">
       <Box sx={{ pr: 1 }}>
-        <Typography sx={{ fontSize: '18px' }}>Place in Line</Typography>
+        <Typography color="text.primary" sx={{ fontSize: '18px' }}>Place in Line</Typography>
       </Box>
     </InputAdornment>
   )
@@ -108,7 +108,7 @@ const CreateListingForm: FC<
         {plot.index && (
           <>
             {alreadyListed ? (
-              <Alert variant="standard" color="warning" icon={<WarningAmberIcon />}>
+              <Alert variant="standard" severity="warning" icon={<WarningAmberIcon color="primary" />}>
                 This Plot is already listed on the Market. Creating a new Listing will override the previous one.
               </Alert>
             ) : null}

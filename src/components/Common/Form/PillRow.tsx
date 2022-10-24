@@ -34,26 +34,27 @@ const PillRow : FC<{
     {...props}
   >
     <Tooltip title={tooltip}>
-      <Typography color="gray" {...props.labelProps}>
+      <Typography color="text.secondary" {...props.labelProps}>
         {label}
       </Typography>
     </Tooltip>
     <Button
       variant="outlined"
       onClick={onClick}
-      color="dark"
+      color="light"
       sx={{
+        color: 'text.tertiary',
         px: 0.75,
         py: 0.5,
         my: 0.5,
         transition: 'none',
-        height: 'auto'
+        height: 'auto',
       }}
     >
       <Row gap={0.5}>
         {children}
       </Row>
-      {isDropdown && <DropdownIcon sx={{ height: IconSize.xs }} open={isOpen} />}
+      {isDropdown && <DropdownIcon sx={{ color: 'primary.main', height: IconSize.xs }} open={isOpen} />}
     </Button>
   </Row>
 );

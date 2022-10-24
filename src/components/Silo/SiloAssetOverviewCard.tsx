@@ -7,7 +7,7 @@ import {
   SEEDS,
   STALK,
 } from '~/constants/tokens';
-import { BeanstalkPalette, FontSize } from '../App/muiTheme';
+import { FontSize } from '../App/muiTheme';
 import Stat from '../Common/Stat';
 import TokenIcon from '../Common/TokenIcon';
 import { BEANSTALK_ADDRESSES, CURVE_LINK } from '~/constants';
@@ -39,13 +39,15 @@ const DepositRewards : FC<{ token: ERC20Token }> = ({ token }) => (
         />
         {token.rewards?.stalk}
       </Typography>
-      <Typography variant="bodyLarge">
+      <Row>
         <TokenIcon
           token={SEEDS}
-          css={{ marginTop: '4px', fontSize: 'inherit' }}
+          css={{ fontSize: 'inherit' }}
         />
-        {token.rewards?.seeds}
-      </Typography>
+        <Typography variant="bodyLarge">
+          {token.rewards?.seeds}
+        </Typography>
+      </Row>
     </Row>
     <SiloAssetApyChip 
       token={token as Token}
@@ -77,7 +79,7 @@ const SiloAssetOverviewCard: FC<{ token: ERC20Token }> = ({ token }) => {
               color="text.primary"
               sx={{ 
                 flexWrap: 'nowrap', 
-                ':hover': { color: BeanstalkPalette.logoGreen } 
+                ':hover': { color: 'primary.main' } 
               }}
             >
               View Liquidity

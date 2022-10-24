@@ -22,10 +22,7 @@ const SiloBalances: React.FC<{}> = () => {
   const whitelist = useWhitelist();
 
   // State
-  const balances = useSelector<
-    AppState,
-    AppState['_farmer']['silo']['balances']
-  >((state) => state._farmer.silo.balances);
+  const balances = useSelector<AppState, AppState['_farmer']['silo']['balances']>((state) => state._farmer.silo.balances);
   const stalkByToken = useFarmerStalkByToken();
 
   const tokens = useMemo(() => Object.entries(whitelist), [whitelist]);
@@ -34,7 +31,7 @@ const SiloBalances: React.FC<{}> = () => {
     <Stack width="100%">
       <Box
         {...{ pb: 0.5, px: 1, pt: 1.5 }}
-        sx={{ borderBottom: `1px solid ${BeanstalkPalette.lightestGrey}` }}
+        sx={{ borderBottom: '1px solid', borderColor: BeanstalkPalette.theme.fallDark.dividerGrey }}
       >
         <Grid
           container
@@ -44,7 +41,7 @@ const SiloBalances: React.FC<{}> = () => {
           whiteSpace="nowrap"
         >
           <Grid item xs={6} sm={5} md={3} textAlign="left" pl={2}>
-            <Typography sx={{ color: BeanstalkPalette.lightGrey }}>
+            <Typography color="text.tertiary">
               Token
             </Typography>
           </Grid>
@@ -54,7 +51,7 @@ const SiloBalances: React.FC<{}> = () => {
             display={{ xs: 'none', sm: 'block' }}
             textAlign="left"
           >
-            <Typography sx={{ color: BeanstalkPalette.lightGrey }}>
+            <Typography color="text.tertiary">
               Amount Deposited
             </Typography>
           </Grid>
@@ -64,7 +61,7 @@ const SiloBalances: React.FC<{}> = () => {
             pr={{ xs: 4, md: 0 }}
             textAlign="right"
           >
-            <Typography sx={{ color: BeanstalkPalette.lightGrey }}>
+            <Typography color="text.tertiary">
               Value Deposited
             </Typography>
           </Grid>
@@ -74,7 +71,7 @@ const SiloBalances: React.FC<{}> = () => {
             display={{ xs: 'none', md: 'block' }}
             textAlign="right"
           >
-            <Typography sx={{ color: BeanstalkPalette.lightGrey }}>
+            <Typography color="text.tertiary">
               Stalk
             </Typography>
           </Grid>
@@ -85,7 +82,7 @@ const SiloBalances: React.FC<{}> = () => {
             textAlign="right"
             pr={4}
           >
-            <Typography sx={{ color: BeanstalkPalette.lightGrey }}>
+            <Typography color="text.tertiary">
               Seeds
             </Typography>
           </Grid>
@@ -107,7 +104,11 @@ const SiloBalances: React.FC<{}> = () => {
                   textAlign: 'left',
                   px: 0,
                   py: 1,
-                  borderColor: BeanstalkPalette.lightestGrey,
+                  borderColor: BeanstalkPalette.theme.fallDark.dividerGrey,
+                  ':hover': {
+                    borderColor: BeanstalkPalette.theme.fallDark.primary
+                  }
+                
                 }}
               >
                 <Grid container alignItems="center">

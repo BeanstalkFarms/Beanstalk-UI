@@ -38,7 +38,7 @@ const NavItemMobile: FC<{
     disableRipple
   >
     <Row justifyContent="space-between" spacing={0.5} width="100%">
-      <Typography sx={{ fontSize: item.small ? FontSize.lg : FontSize['2xl'] }} variant="body1" color="text.secondary">
+      <Typography sx={{ fontSize: item.small ? FontSize.lg : FontSize['2xl'] }} variant="body1" color="text.primary">
         {item.title}
       </Typography>
       {item.href ? (

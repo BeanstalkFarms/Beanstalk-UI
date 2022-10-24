@@ -12,7 +12,7 @@ import { useTheme } from '@mui/material/styles';
 import DropdownIcon from '~/components/Common/DropdownIcon';
 import useToggle from '~/hooks/display/useToggle';
 import useAnchor from '~/hooks/display/useAnchor';
-import { PAGE_BORDER_COLOR } from '~/components/App/muiTheme';
+import { BeanstalkPalette, PAGE_BORDER_COLOR } from '~/components/App/muiTheme';
 
 /**
  * Show a "Folder". A folder is a button that shows a popup;
@@ -103,18 +103,21 @@ const FolderMenu: FC<{
         }}
         {...buttonProps}
         sx={{
+          color: 'text.primary',
+          background: BeanstalkPalette.theme.fallDark.cardBackground,
           // Fully rounded by default; when open, remove
           // the bottom rounding to look like a "tab".
           borderBottomLeftRadius: popoverOpen ? 0 : undefined,
           borderBottomRightRadius: popoverOpen ? 0 : undefined,
           // Enforce a default white border; switch the color
           // to secondary when the Popper is open.
-          borderWidth: 1,
-          borderStyle: 'solid',
-          borderColor: popoverOpen ? PAGE_BORDER_COLOR : 'white',
+          // borderWidth: 1,
+          // borderStyle: 'solid',
+          // borderColor: popoverOpen ? PAGE_BORDER_COLOR : 'white',
+          // borderColor: PAGE_BORDER_COLOR,
           // Keep this white so we can make it look like the
           // button is "expanding" into a Box when you click it.
-          borderBottomColor: 'white',
+          // borderBottomColor: 'white',
           // Without disabling the transition, the border fades
           // in/out and looks weird.
           transition: 'none !important',
@@ -142,7 +145,8 @@ const FolderMenu: FC<{
       >
         <Box
           sx={(_theme) => ({
-            background: 'white',
+            // background: 'white',
+            background: BeanstalkPalette.theme.fallDark.cardBackground,
             width: popperWidth !== undefined ? popperWidth : '325px',
             borderBottomLeftRadius: _theme.shape.borderRadius,
             borderBottomRightRadius: _theme.shape.borderRadius,

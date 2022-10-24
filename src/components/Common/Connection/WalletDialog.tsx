@@ -11,7 +11,6 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { grey } from '@mui/material/colors';
 import { CONNECT_WALLET_ERRORS, CONNECTOR_LOGOS } from '~/constants/wallets';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import Row from '~/components/Common/Row';
@@ -19,6 +18,7 @@ import Row from '~/components/Common/Row';
 // -----------------------------------------------------------------
 
 import { FC } from '~/types';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const WalletDialog: FC<{
   handleClose: () => void;
@@ -52,9 +52,11 @@ const WalletDialog: FC<{
                 disabled={!connector.ready}
                 onClick={handleConnect(connector)}
                 sx={{
+                  backgroundColor: BeanstalkPalette.theme.fallDark.light,
                   py: 1,
                   minWidth: fullScreen ? null : 400,
-                  borderColor: grey[300]
+                  borderColor: 'divider'
+                  // borderColor: grey[300]
                 }}
               >
                 <Row justifyContent="space-between" sx={{ width: '100%' }} gap={3}>

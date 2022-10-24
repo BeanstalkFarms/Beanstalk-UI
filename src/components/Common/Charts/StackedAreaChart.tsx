@@ -320,7 +320,7 @@ const Graph = (props: Props) => {
                     // containerBounds
                   }}
                 >
-                  <Card sx={{ p: 1, backgroundColor: BeanstalkPalette.lightYellow }}>
+                  <Card sx={{ p: 1, backgroundColor: BeanstalkPalette.theme.fallDark.accent }}>
                     {typeof tooltip === 'boolean' ? (
                       <Stack gap={0.5}>
                         {reversedKeys.map((key, index) => (

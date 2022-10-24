@@ -30,10 +30,15 @@ const TokenAdornment : FC<
           cursor: 'pointer',
           border: '1px solid transparent',
           fontWeight: 'normal',
+          backgroundColor: 'transparent !important',
           // backgroundColor: 'primary.light',
           // '&:hover': {
           //   backgroundColor: 'primary.light',
           // }
+
+          '& .MuiButton-root:disabled': {
+            backgroundColor: 'transparent !important'
+          }
         }}
         // If no click handler is provided, disable so that
         // no mouse events work (i.e. no hover bg)
@@ -55,7 +60,7 @@ const TokenAdornment : FC<
             /> 
           ) : null}
         <Box sx={{ color: '#3B3B3B' }}>
-          <Typography variant="bodyMedium" fontWeight="fontWeightRegular">
+          <Typography variant="bodyMedium" fontWeight="fontWeightRegular" color="text.primary">
             {buttonLabel || token.symbol}
           </Typography>
         </Box>
@@ -63,7 +68,8 @@ const TokenAdornment : FC<
           <KeyboardArrowDownIcon
             sx={{
               fontSize: 18,
-              color: 'rgba(0,0,0,0.87)'
+              // color: 'rgba(0,0,0,0.87)'
+              color: 'primary.main'
             }}
           />
         )}

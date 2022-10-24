@@ -24,7 +24,7 @@ const buttonStyle = {
   variant: 'outlined' as const,
   color: 'dark' as const,
   size: 'small' as const,
-  sx: { fontWeight: 400 },
+  sx: { fontWeight: 400, color: 'text.secondary' },
   disableElevation: true,
 };
 
@@ -97,7 +97,7 @@ const SettingsDialog : FC<{ open: boolean; onClose?: () => void; }> = ({ open, o
         <Stack gap={2}>
           <Stack gap={1}>
             <Split>
-              <Typography color="gray">Fiat display</Typography>
+              <Typography color="text.secondary">Fiat display</Typography>
               {/* @ts-ignore */}
               <ButtonGroup variant="outlined" color="dark" disableRipple>
                 <Button {...buttonStyle} {...buttonProps(denomination, setDenomination, 'usd')}>{denomination === 'usd' ? '✓ ' : undefined}USD</Button>
@@ -105,7 +105,7 @@ const SettingsDialog : FC<{ open: boolean; onClose?: () => void; }> = ({ open, o
               </ButtonGroup>
             </Split>
             <Split>
-              <Typography color="gray">Subgraph</Typography>
+              <Typography color="text.secondary">Subgraph</Typography>
               <Box>
                 <Select
                   value={subgraphEnv || SGEnvironments.BF_PROD}
@@ -122,7 +122,7 @@ const SettingsDialog : FC<{ open: boolean; onClose?: () => void; }> = ({ open, o
               </Box>
             </Split>
             <Split>
-              <Typography color="gray">Clear cache</Typography>
+              <Typography color="text.secondary">Clear cache</Typography>
               <Button {...buttonStyle} onClick={clearCache}>
                 Clear
               </Button>
@@ -131,15 +131,15 @@ const SettingsDialog : FC<{ open: boolean; onClose?: () => void; }> = ({ open, o
           <Stack gap={1}>
             <Typography variant="h4">Info</Typography>
             <Split>
-              <Typography color="gray">Version</Typography>
+              <Typography color="text.secondary">Version</Typography>
               <Box>{import.meta.env.VITE_VERSION || '0.0.0'}</Box>
             </Split>
             <Split>
-              <Typography color="gray">Commit</Typography>
+              <Typography color="text.secondary">Commit</Typography>
               <Box>{import.meta.env.VITE_GIT_COMMIT_REF?.slice(0, 6) || 'HEAD'}</Box>
             </Split>
             <Split>
-              <Typography color="gray">Host</Typography>
+              <Typography color="text.secondary">Host</Typography>
               <Box>{import.meta.env.VITE_HOST || 'unknown'}</Box>
             </Split>
           </Stack>
@@ -148,11 +148,11 @@ const SettingsDialog : FC<{ open: boolean; onClose?: () => void; }> = ({ open, o
               <Stack gap={1}>
                 <Typography variant="h4">Dev Controls</Typography>
                 <Split>
-                  <Typography color="gray">Set season timer</Typography>
+                  <Typography color="text.secondary">Set season timer</Typography>
                   <Button {...buttonStyle} onClick={setSeasonTimer}>in 5s</Button>
                 </Split>
                 <Split>
-                  <Typography color="gray">Export deposits</Typography>
+                  <Typography color="text.secondary">Export deposits</Typography>
                   <Button {...buttonStyle} onClick={exportDepositsCSV}>Export</Button>
                 </Split>
               </Stack>

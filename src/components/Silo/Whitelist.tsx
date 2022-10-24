@@ -32,7 +32,7 @@ const TOOLTIP_COMPONENT_PROPS = {
   tooltip: {
     sx: {
       maxWidth: 'none !important',
-      boxShadow: '0px 6px 20px 10px rgba(255,255,255,0.3) !important'
+      // boxShadow: '0px 6px 20px 10px rgba(255,255,255,0.3) !important'
     }
   }
 };
@@ -72,13 +72,13 @@ const Whitelist : FC<{
           pt: '14px', // manually adjusted
           pb: '5px',  // manually adjusted
           borderBottomStyle: 'solid',
-          borderBottomColor: BeanstalkPalette.lightestGrey, 
+          borderBottomColor: BeanstalkPalette.theme.fallDark.dividerGrey, 
           borderBottomWidth: 1,
         }}
       >
         <Grid container alignItems="flex-end">
           <Grid item md={2.5} xs={4}>
-            <Typography sx={{ color: BeanstalkPalette.lightGrey }}>
+            <Typography color="text.tertiary">
               Token
             </Typography>
           </Grid>
@@ -91,7 +91,7 @@ const Whitelist : FC<{
                   </>
                 }
               >
-                <Typography sx={{ color: BeanstalkPalette.lightGrey }}>
+                <Typography color="text.tertiary">
                   Rewards
                 </Typography>
               </Tooltip>
@@ -134,13 +134,13 @@ const Whitelist : FC<{
           </Grid>
           <Grid item md={1.5} xs={0} display={{ xs: 'none', md: 'block' }}>
             <Tooltip title="Total Value Deposited in the Silo.">
-              <Typography sx={{ color: BeanstalkPalette.lightGrey }}>
+              <Typography color="text.tertiary">
                 TVD
               </Typography>
             </Tooltip>
           </Grid>
           <Grid item md={3.5} xs={0} display={{ xs: 'none', md: 'block' }}>
-            <Typography sx={{ color: BeanstalkPalette.lightGrey }}>
+            <Typography color="text.tertiary">
               Amount Deposited
             </Typography>
           </Grid>
@@ -148,12 +148,12 @@ const Whitelist : FC<{
             <Tooltip title={(
               <>
                 The value of your Silo deposits for each whitelisted token, denominated in {denomination === 'bdv' ? 'Beans' : 'USD'}.<br />
-                <Typography sx={{ color: BeanstalkPalette.lightGrey }} fontSize={FontSize.sm} fontStyle="italic">
+                <Typography color="text.tertiary" fontSize={FontSize.sm} fontStyle="italic">
                   Switch to {denomination === 'bdv' ? 'USD' : 'Beans'}: Option + F
                 </Typography>
               </>
             )}>
-              <Typography sx={{ color: BeanstalkPalette.lightGrey }}>
+              <Typography color="text.tertiary">
                 Value Deposited
               </Typography>
             </Tooltip>
@@ -186,7 +186,11 @@ const Whitelist : FC<{
                   textAlign: 'left',
                   px: 2,
                   py: 1.5,
-                  borderColor: BeanstalkPalette.lightestGrey
+                  borderColor: 'divider',
+                  background: 'background.paper',
+                  ':hover': {
+                    borderColor: 'primary.main',
+                  }
                 }}
               >
                 <Grid container alignItems="center">
@@ -212,10 +216,15 @@ const Whitelist : FC<{
                   <Grid item md={3} xs={0} display={{ xs: 'none', md: 'block' }}>
                     <Row gap={0.75}>
                       <Tooltip placement="right" title={<>1 {token.symbol} = {displayFullBN(getBDV(token))} BDV</>}>
-                        <Typography display="inline" color="text.primary">
-                          <TokenIcon token={STALK} />{token.rewards?.stalk}{' '}
-                          <TokenIcon token={SEEDS} css={{ marginTop: 1.5 }} />{token.rewards?.seeds}
-                        </Typography>
+                        <Row gap={0.2}>
+                          <TokenIcon token={STALK} css={{ height: '0.8em', marginTop: '-1px' }} />
+                          <Typography color="text.primary" mr={0.2}>{token.rewards?.stalk}</Typography>
+                          <TokenIcon token={SEEDS} />
+                          <Typography color="text.primary">
+                            {token.rewards?.seeds}
+                          </Typography>
+                        </Row>
+                        
                       </Tooltip>
                       <Row gap={0.25}>
                         <SiloAssetApyChip token={token} metric="bean" />
@@ -268,7 +277,7 @@ const Whitelist : FC<{
                             </Stack>
                             <Divider />
                             <Box sx={{ pl: { xs: 0, md: 2.7 } }}>
-                              <Typography variant="bodySmall" color="gray" textAlign="left">
+                              <Typography variant="bodySmall" color="text.tertiary" textAlign="left">
                                 Total Amount Deposited: {displayFullBN(beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN, token.displayDecimals)} {token.symbol}<br />
                                 Total Supply: {displayFullBN(unripeTokens[token.address]?.supply || ZERO_BN)} {token.symbol}<br />
                               </Typography>
