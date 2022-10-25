@@ -91,7 +91,8 @@ const FertilizerItem: FC<FertilizerData & {
     ) : (
       <Stack width="100%" direction="column" rowGap={0.25}>
         <Row justifyContent="space-between">
-          <Typography sx={{ fontSize: '14px', opacity: 0.6 }} color="text.secondary">
+          {/* <Typography sx={{ fontSize: '14px', opacity: 1 }} color="text.secondary"> */}
+          <Typography sx={{ fontSize: '14px', opacity: 0.8 }} color="text.secondary">
             x{displayFullBN(amount, 0)}
           </Typography>
           <Tooltip title={tooltip.humidity} placement="right">
