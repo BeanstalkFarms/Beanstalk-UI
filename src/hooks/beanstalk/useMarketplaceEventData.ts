@@ -162,11 +162,11 @@ const useMarketplaceEventData = () => {
               entity: 'order' as const,
               action: 'fill' as const,
               label: 'Pod Order Filled',
-              numPods: toTokenUnitsBN(podOrder?.amount, BEAN[1].decimals),
+              numPods: toTokenUnitsBN(podOrder?.filledAmount, BEAN[1].decimals),
               placeInPodline: displayBN(toTokenUnitsBN(new BigNumber(e.index), BEAN[1].decimals).minus(harvestableIndex)),
               pricePerPod: toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals),
               totalValue: getUSD(BEAN[1], toTokenUnitsBN(
-                podOrder?.amount, BEAN[1].decimals
+                podOrder?.filledAmount, BEAN[1].decimals
               )?.multipliedBy(toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals))),
               time: e.timestamp,
             };
@@ -208,10 +208,10 @@ const useMarketplaceEventData = () => {
               entity: 'listing' as const,
               action: 'fill' as const,
               label: 'Pod Listing Filled',
-              numPods: toTokenUnitsBN(podListing?.amount, BEAN[1].decimals),
+              numPods: toTokenUnitsBN(podListing?.filledAmount, BEAN[1].decimals),
               placeInPodline: `${displayBN(toTokenUnitsBN(podListing?.index, BEAN[1].decimals).minus(harvestableIndex))}`,
               pricePerPod: toTokenUnitsBN(new BigNumber(podListing?.pricePerPod || 0), BEAN[1].decimals),
-              totalValue: getUSD(BEAN[1], toTokenUnitsBN(podListing?.amount, BEAN[1].decimals).multipliedBy(toTokenUnitsBN(new BigNumber(podListing?.pricePerPod || 0), BEAN[1].decimals))),
+              totalValue: getUSD(BEAN[1], toTokenUnitsBN(podListing?.filledAmount, BEAN[1].decimals).multipliedBy(toTokenUnitsBN(new BigNumber(podListing?.pricePerPod || 0), BEAN[1].decimals))),
               time: e.timestamp,
             };
           }
