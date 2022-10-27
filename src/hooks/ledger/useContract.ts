@@ -21,10 +21,10 @@ import { ChainConstant } from '~/constants';
 import { getChainConstant } from '~/util/Chain';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import {
-  Beanstalk,
   BeaNFTGenesis,
   BeaNFTWinter,
   BeanstalkFertilizer,
+  Beanstalk,
   BeanstalkPrice,
   ERC20,
   AggregatorV3
@@ -150,50 +150,50 @@ export function useERC20Contract(addressOrAddressMap: AddressOrAddressMap) {
 export function useFertilizerContract(signer?: ethers.Signer | null) {
   const fertAddress = useChainConstant(BEANSTALK_FERTILIZER_ADDRESSES);
   const provider = useProvider();
-  return useWagmiContract<BeanstalkFertilizer>({
-    addressOrName: fertAddress,
-    contractInterface: BEANSTALK_FERTILIZER_ABI,
+  return useWagmiContract({
+    address: fertAddress,
+    abi: BEANSTALK_FERTILIZER_ABI,
     signerOrProvider: signer || provider,
-  });
+  }) as BeanstalkFertilizer;
 }
 
 export function useBeanstalkContract(signer?: ethers.Signer | null) {
   const address   = useChainConstant(BEANSTALK_ADDRESSES);
   const provider  = useProvider();
-  return useWagmiContract<Beanstalk>({
-    addressOrName: address,
-    contractInterface: BEANSTALK_ABI,
+  return useWagmiContract({
+    address,
+    abi: BEANSTALK_ABI,
     signerOrProvider: signer || provider,
-  });
+  }) as Beanstalk;
 }
 
 export function useGenesisNFTContract(signer?: ethers.Signer | null) {
   const address = useChainConstant(BEANFT_GENESIS_ADDRESSES);
   const provider = useProvider();
-  return useWagmiContract<BeaNFTGenesis>({
-    addressOrName: address,
-    contractInterface: BEANFT_GENESIS_ABI,
+  return useWagmiContract({
+    address,
+    abi: BEANFT_GENESIS_ABI,
     signerOrProvider: signer || provider,
-  });
+  }) as BeaNFTGenesis;
 }
 
 export function useWinterNFTContract(signer?: ethers.Signer | null) {
   const address = useChainConstant(BEANFT_WINTER_ADDRESSES);
   const provider = useProvider();
-  return useWagmiContract<BeaNFTWinter>({
-    addressOrName: address,
-    contractInterface: BEANFT_WINTER_ABI,
+  return useWagmiContract({
+    address,
+    abi: BEANFT_WINTER_ABI,
     signerOrProvider: signer || provider,
-  });
+  }) as BeaNFTWinter;
 }
 
 /** used to access chainlink price data feeds */
 export function useAggregatorV3Contract(chainConstant: ChainConstant<string>, signer?: ethers.Signer | null) {
   const address = useChainConstant(chainConstant);
   const provider = useProvider();
-  return useWagmiContract<AggregatorV3>({
-    addressOrName: address,
-    contractInterface: AGGREGATOR_V3_ABI,
+  return useWagmiContract({
+    address,
+    abi: AGGREGATOR_V3_ABI,
     signerOrProvider: signer || provider
-  });
+  }) as AggregatorV3;
 }

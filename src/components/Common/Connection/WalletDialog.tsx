@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import {
   Connector,
+  useAccount as useWagmiAccount,
   useConnect,
 } from 'wagmi';
 import {
@@ -25,14 +26,15 @@ const WalletDialog: FC<{
   open: boolean;
   fullScreen: boolean;
 }> = ({ handleClose, open, fullScreen }) => {
-  const { connect, connectors, error, isConnecting, pendingConnector } =
+  const { isConnecting } = useWagmiAccount();
+  const { connect, connectors, error, pendingConnector } =
     useConnect({
-      onConnect() {
+      onSuccess() {
         handleClose();
       }
   });
   const handleConnect = useCallback(
-    (connector: Connector) => () => connect(connector),
+    (connector: Connector) => () => connect({ connector }),
     [connect]
   );
   return (

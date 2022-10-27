@@ -38,8 +38,8 @@ import { FC } from '~/types';
 
 const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props }) => {
   const account = useAccount();
-  const { data: accountRaw } = useWagmiAccount();
-  const { activeChain } = useNetwork();
+  const { address } = useWagmiAccount();
+  const { chain: _chain } = useNetwork();
   const { disconnect } = useDisconnect();
   const chain = useChainConstant(CHAIN_INFO);
 
@@ -61,7 +61,7 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
   const [_, setSettingsOpen] = useGlobal('showSettings');
 
   /// Display: Not Connected
-  if (!account || !activeChain?.id) {
+  if (!account || !_chain?.id) {
     return (
       <>
         <Button
@@ -208,7 +208,7 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
         <Typography variant="bodyMedium" display={{ xs: 'none', sm: 'block' }}>
           {/* Use `accountRaw` to match capitalization of wallet provider
             * assert existence of accountRaw.address since we check `account` prior. */}
-          {trimAddress(IMPERSONATED_ACCOUNT || accountRaw?.address || '')}
+          {trimAddress(IMPERSONATED_ACCOUNT || address || '')}
         </Typography>
       </Button>
       {/* Mobile: Drawer */}

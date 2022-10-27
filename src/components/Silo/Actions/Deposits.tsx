@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
-import { useAccount } from 'wagmi';
+import { useAccount as useWagmiAccount } from 'wagmi';
 import { Stack, Tooltip, Typography } from '@mui/material';
 import { GridColumns } from '@mui/x-data-grid';
 import { Token } from '~/classes';
@@ -32,7 +32,7 @@ const Deposits : FC<{
   const Bean = useChainConstant(BEAN);
   const getUSD = useSiloTokenToFiat();
   const currentSeason = useSeason();
-  const { data: account } = useAccount();
+  const account = useWagmiAccount();
 
   const rows : (DepositCrate & { id: BigNumber })[] = useMemo(() => 
     siloBalance?.deposited.crates.map((deposit) => ({
