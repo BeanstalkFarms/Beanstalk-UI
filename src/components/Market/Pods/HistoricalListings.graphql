@@ -12,6 +12,7 @@ query HistoricalListings(
     index
     originalIndex
     historyID
+    filledAmount
     # ---
     updatedAt
   }
