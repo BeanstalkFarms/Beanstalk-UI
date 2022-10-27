@@ -216,15 +216,16 @@ const Whitelist : FC<{
                   <Grid item md={3} xs={0} display={{ xs: 'none', md: 'block' }}>
                     <Row gap={0.75}>
                       <Tooltip placement="right" title={<>1 {token.symbol} = {displayFullBN(getBDV(token))} BDV</>}>
-                        <Row gap={0.2}>
-                          <TokenIcon token={STALK} css={{ height: '0.8em', marginTop: '-1px' }} />
-                          <Typography color="text.primary" mr={0.2}>{token.rewards?.stalk}</Typography>
-                          <TokenIcon token={SEEDS} />
-                          <Typography color="text.primary">
-                            {token.rewards?.seeds}
-                          </Typography>
-                        </Row>
-                        
+                        <Box>
+                          <Row gap={0.2}>
+                            <TokenIcon token={STALK} css={{ height: '0.8em', marginTop: '-1px' }} />
+                            <Typography color="text.primary" mr={0.2}>{token.rewards?.stalk}</Typography>
+                            <TokenIcon token={SEEDS} />
+                            <Typography color="text.primary">
+                              {token.rewards?.seeds}
+                            </Typography>
+                          </Row>
+                        </Box>
                       </Tooltip>
                       <Row gap={0.25}>
                         <SiloAssetApyChip token={token} metric="bean" />
