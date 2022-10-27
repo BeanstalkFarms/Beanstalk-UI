@@ -5,7 +5,7 @@ import { providers } from 'ethers';
 // import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
-// import { InjectedConnector } from 'wagmi/connectors/injected';
+import { InjectedConnector } from 'wagmi/connectors/injected';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
 import { TESTNET_RPC_ADDRESSES, SupportedChainId } from '~/constants';
@@ -118,13 +118,13 @@ const client = createWagmiClient({
     new MetaMaskConnector({
       chains
     }),
-    // new InjectedConnector({
-    //   chains,
-    //   options: {
-    //     name: 'Injected',
-    //     shimDisconnect: true,
-    //   }
-    // }),
+    new InjectedConnector({
+      chains,
+      options: {
+        // name: 'Injected',
+        shimDisconnect: true,
+      }
+    }),
     new WalletConnectConnector({
       chains,
       options: {
