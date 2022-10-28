@@ -4,7 +4,7 @@ import { Button, ButtonProps, Link, Stack, Typography } from '@mui/material';
 import { ethers } from 'ethers';
 import { useFormikContext } from 'formik';
 import BigNumber from 'bignumber.js';
-import { useConnect } from 'wagmi';
+import { useAccount as useWagmiAccount } from 'wagmi';
 import toast from 'react-hot-toast';
 import useAllowances from '~/hooks/farmer/useAllowances';
 import useChainConstant from '~/hooks/chain/useChainConstant';
@@ -66,7 +66,7 @@ const SmartSubmitButton : FC<{
 }) => {
   const { explorer } = useChainConstant(CHAIN_INFO); // fallback to mainnet
   const { values, setFieldValue } = useFormikContext<FormState>();
-  const { status } = useConnect();
+  const { status } = useWagmiAccount();
   const chainId = useChainId();
   const getErc20Contract = useGetERC20Contract();
 

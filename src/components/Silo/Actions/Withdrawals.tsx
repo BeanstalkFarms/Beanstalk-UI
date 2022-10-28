@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import BigNumber from 'bignumber.js';
-import { useAccount } from 'wagmi';
+import { useAccount as useWagmiAccount } from 'wagmi';
 import { Typography } from '@mui/material';
 import { GridColumns } from '@mui/x-data-grid';
 import { Token } from '~/classes';
@@ -24,7 +24,7 @@ const Withdrawals : FC<{
 }) => {
   const getUSD = useSiloTokenToFiat();
   const currentSeason = useSeason();
-  const { data: account } = useAccount();
+  const account = useWagmiAccount();
 
   const rows : RowData[] = useMemo(() => {
     const data : RowData[] = [];

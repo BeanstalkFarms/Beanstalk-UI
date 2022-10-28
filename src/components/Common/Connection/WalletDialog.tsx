@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import {
   Connector,
+  useAccount as useWagmiAccount,
   useConnect,
 } from 'wagmi';
 import {
@@ -11,9 +12,11 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { CONNECT_WALLET_ERRORS, CONNECTOR_LOGOS } from '~/constants/wallets';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import Row from '~/components/Common/Row';
+import ethereumLogo from '~/img/tokens/eth-logo-circled.svg';
 
 // -----------------------------------------------------------------
 
@@ -25,14 +28,15 @@ const WalletDialog: FC<{
   open: boolean;
   fullScreen: boolean;
 }> = ({ handleClose, open, fullScreen }) => {
-  const { connect, connectors, error, isConnecting, pendingConnector } =
+  const { isConnecting } = useWagmiAccount();
+  const { connect, connectors, error, pendingConnector } =
     useConnect({
-      onConnect() {
+      onSuccess() {
         handleClose();
       }
   });
   const handleConnect = useCallback(
-    (connector: Connector) => () => connect(connector),
+    (connector: Connector) => () => connect({ connector }),
     [connect]
   );
   return (
@@ -40,41 +44,57 @@ const WalletDialog: FC<{
       <StyledDialogTitle onClose={handleClose}>
         Connect a wallet
       </StyledDialogTitle>
-      <StyledDialogContent>
-        <Stack gap={1}>
+      <StyledDialogContent sx={{ pb: 1 }}>
+        <Stack gap={1} mt={0.5}>
           {connectors.map((connector) => (
-            connector.ready ? (
-              <Button
-                size="large"
-                variant="outlined"
-                color="primary"
-                key={connector.id}
-                disabled={!connector.ready}
-                onClick={handleConnect(connector)}
-                sx={{
-                  backgroundColor: BeanstalkPalette.theme.fallDark.light,
-                  py: 1,
-                  minWidth: fullScreen ? null : 400,
-                  borderColor: 'divider'
-                  // borderColor: grey[300]
-                }}
-              >
-                <Row justifyContent="space-between" sx={{ width: '100%' }} gap={3}>
-                  <Typography color="text.primary" sx={{ fontSize: 20 }}>
-                    {isConnecting && (connector.id === pendingConnector?.id)
-                      ? <CircularProgress variant="indeterminate" color="primary" size={20} />
-                      : connector.name}
-                  </Typography>
-                  {CONNECTOR_LOGOS[connector.name] && (
-                    <img
-                      src={CONNECTOR_LOGOS[connector.name]}
-                      alt=""
-                      css={{ height: 35 }}
-                    />
-                  )}
-                </Row>
-              </Button>
-            ) : null
+            // MetaMaskConnector extends InjectedConnector
+            // Injected wallets like Rabby pretend to be MetaMask and so they show up twice
+            // If you override the injected connector name it applies to all connectors, even
+            //    if they choose a name different from MetaMask
+            // Temporary fix: If a wallet returns "MetaMask" as their name but is not an instance of MetaMaskConnector,
+            //    it must be an InjectedConnector. The user could connect to this wallet by clicking MetaMask.
+            //    So we hide it from the list.
+            // FIXME: "cannot redefine property: etherum"
+            (!connector.ready || (connector.name === 'MetaMask' && !(connector instanceof MetaMaskConnector)))
+              ? null
+              : (
+                <Button
+                  size="large"
+                  variant="outlined"
+                  color="primary"
+                  key={connector.id}
+                  disabled={!connector.ready}
+                  onClick={handleConnect(connector)}
+                  sx={{
+                    backgroundColor: BeanstalkPalette.theme.fallDark.light,
+                    py: 1,
+                    minWidth: fullScreen ? null : 400,
+                    borderColor: 'divider'
+                    // borderColor: grey[300]
+                  }}
+                >
+                  <Row justifyContent="space-between" sx={{ width: '100%' }} gap={3}>
+                    <Typography color="text.primary" sx={{ fontSize: 20 }}>
+                      {isConnecting && (connector.id === pendingConnector?.id)
+                        ? <CircularProgress variant="indeterminate" color="primary" size={20} />
+                        : connector.name}
+                    </Typography>
+                    {CONNECTOR_LOGOS[connector.name] ? (
+                      <img
+                        src={CONNECTOR_LOGOS[connector.name]}
+                        alt=""
+                        css={{ height: 35 }}
+                      />
+                    ) : (
+                      <img
+                        src={ethereumLogo}
+                        alt=""
+                        css={{ height: 35 }}
+                      />
+                    )}
+                  </Row>
+                </Button>
+              )
           ))}
           {error && (
             <Alert severity="error">

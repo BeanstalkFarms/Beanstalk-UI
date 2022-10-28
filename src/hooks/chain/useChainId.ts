@@ -9,9 +9,9 @@ import { SupportedChainId } from '~/constants/chains';
  * @returns SupportedChainId
  */
 export default function useChainId() {
-  const { activeChain } = useNetwork();
+  const { chain } = useNetwork();
   return useMemo(
-    () => activeChain?.id || SupportedChainId.MAINNET,
-    [activeChain?.id]
+    () => chain?.id || SupportedChainId.MAINNET,
+    [chain?.id]
   );
 }

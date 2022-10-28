@@ -1,16 +1,13 @@
 import BigNumber from 'bignumber.js';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { useAccount } from 'wagmi';
 import Token, { NativeToken } from '~/classes/Token';
 import { MAX_UINT256 } from '~/constants';
+import useAccount from '~/hooks/ledger/useAccount';
 import { AppState } from '~/state';
 import { useFetchFarmerAllowances } from '~/state/farmer/allowances/updater';
 
-// ----------------------------------------
-
 /**
- * 
  * @param contractAddress The contract that needs approval.
  * @param tokens Tokens 
  * @param config 
@@ -24,7 +21,7 @@ export default function useAllowances(
   }
 ) {
   const allowances = useSelector<AppState, AppState['_farmer']['allowances']>((state) => state._farmer.allowances);
-  const { data: account } = useAccount();
+  const account = useAccount();
   const [fetchAllowances] = useFetchFarmerAllowances();
 
   // If a provided Token is a NativeToken, there is no allowance.
@@ -44,7 +41,7 @@ export default function useAllowances(
   // If requested, the component will automatically load any
   // allowances that aren't present in state.
   useEffect(() => {
-    if (config.loadIfAbsent && account?.address && contractAddress) {
+    if (config.loadIfAbsent && account && contractAddress) {
       // Reduce `results` to a list of the corresponding `tokens`,
       // filtering only for absent results.
       const absent = currentAllowances.reduce<Token[]>((prev, curr, index) => {
@@ -54,14 +51,14 @@ export default function useAllowances(
       // console.debug(`[hooks/useAllowance] found ${absent.length} absent tokens for ${contractAddress}`);
       if (absent.length > 0) {
         fetchAllowances(
-          account?.address,
+          account,
           contractAddress,
           absent
         );
       }
     }
   }, [
-    account?.address,
+    account,
     contractAddress,
     config.loadIfAbsent,
     currentAllowances,
@@ -72,15 +69,15 @@ export default function useAllowances(
   // Allow a component to refetch initial allowances,
   // or to specify new ones to grab.
   const refetch = useCallback((_tokens?: Token[]) => {
-    if (account?.address && contractAddress) {
+    if (account && contractAddress) {
       return fetchAllowances(
-        account.address,
+        account,
         contractAddress,
         _tokens || tokens
       );
     }
     return Promise.resolve();
-  }, [fetchAllowances, account?.address, tokens, contractAddress]);
+  }, [fetchAllowances, account, tokens, contractAddress]);
 
   return [currentAllowances, refetch] as const;
 }

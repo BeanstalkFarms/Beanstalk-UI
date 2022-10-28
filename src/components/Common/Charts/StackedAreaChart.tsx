@@ -175,57 +175,54 @@ const Graph = (props: Props) => {
           width={width - common.yAxisWidth}
           height={dataRegion.yBottom - dataRegion.yTop}
         >
-          <>
-            <rect
-              x={0}
-              y={0}
-              width={width}
-              height={height}
-              fill="transparent"
-              rx={14}
-            />
-            {children && children({ scales, dataRegion, ...props })}
-            <AreaStack<BaseDataPoint>
-              top={common.margin.top}
-              left={common.margin.left}
-              keys={keys}
-              data={data}
-              height={height}
-              x={(d) => scales[0].xScale(getX(d.data)) ?? 0}
-              y0={(d) => scales[0].yScale(getY0(d)) ?? 0}
-              y1={(d) => scales[0].yScale(getY1(d)) ?? 0}
-            >
-              {({ stacks, path }) =>
-                stacks.map((stack, _index) => (
-                  <>
-                    <LinearGradient
-                      to={styles[stack.index]?.to}
-                      from={styles[stack.index]?.from}
-                      toOpacity={1}
-                      fromOpacity={1}
-                      id={stack.key.toString()}
-                      />
-                    <path
-                      key={`stack-${stack.key}`}
-                      d={path(stack) || ''}
-                      stroke="transparent"
-                      fill={`url(#${stack.key.toString()})`}
-                      />
-                    <LinePath<BaseDataPoint>
-                      stroke={styles[stack.index]?.stroke}
-                      strokeWidth={1}
-                      key={`${stack.key.toString()}`}
-                      curve={curveType}
-                      data={data}
-                      x={(d) => scales[0].xScale(getX(d)) ?? 0}
-                      y={(d) => scales[0].yScale(getLineHeight(d, stack.key.toString())) ?? 0}
-                      />
-                  </>
-                  )
-                )
-              }
-            </AreaStack>
-          </>
+          <rect
+            x={0}
+            y={0}
+            width={width}
+            height={height}
+            fill="transparent"
+            rx={14}
+          />
+          {children && children({ scales, dataRegion, ...props })}
+          <AreaStack<BaseDataPoint>
+            top={common.margin.top}
+            left={common.margin.left}
+            keys={keys}
+            data={data}
+            height={height}
+            x={(d) => scales[0].xScale(getX(d.data)) ?? 0}
+            y0={(d) => scales[0].yScale(getY0(d)) ?? 0}
+            y1={(d) => scales[0].yScale(getY1(d)) ?? 0}
+          >
+            {({ stacks, path }) =>
+              stacks.map((stack, _index) => (
+                <Group key={_index}>
+                  <LinearGradient
+                    to={styles[stack.index]?.to}
+                    from={styles[stack.index]?.from}
+                    toOpacity={1}
+                    fromOpacity={1}
+                    id={stack.key.toString()}
+                    />
+                  <path
+                    key={`stack-${stack.key}`}
+                    d={path(stack) || ''}
+                    stroke="transparent"
+                    fill={`url(#${stack.key.toString()})`}
+                    />
+                  <LinePath<BaseDataPoint>
+                    stroke={styles[stack.index]?.stroke}
+                    strokeWidth={1}
+                    key={`${stack.key.toString()}`}
+                    curve={curveType}
+                    data={data}
+                    x={(d) => scales[0].xScale(getX(d)) ?? 0}
+                    y={(d) => scales[0].yScale(getLineHeight(d, stack.key.toString())) ?? 0}
+                    />
+                </Group>
+              )
+            )}
+          </AreaStack>
         </Group>
         <g transform={`translate(0, ${dataRegion.yBottom})`}>
           <Axis
@@ -253,33 +250,32 @@ const Graph = (props: Props) => {
           />
         </g>
         {tooltipData && (
-          <>
-            <g>
-              <Line
-                from={{ x: tooltipLeft, y: dataRegion.yTop }}
-                to={{ x: tooltipLeft, y: dataRegion.yBottom }}
-                stroke={BeanstalkPalette.lightGrey}
-                strokeWidth={1}
-                pointerEvents="none"
-              />
-              {reversedKeys.map((key, index) => {
-                const lenKeys = keys.length;
-                return (
-                  <circle
-                    cx={tooltipLeftAttached}
-                    cy={scales[0].yScale(getLineHeight(tooltipData, key)) ?? 0}
-                    r={lenKeys === 1 ? 4 : 2}
-                    fill={lenKeys === 1 ? 'black' : getStyle(key, reversedKeys.length - index - 1).to}
-                    fillOpacity={lenKeys === 1 ? 0.1 : 0.4}
-                    stroke={lenKeys === 1 ? 'black' : getStyle(key, reversedKeys.length - index - 1).stroke}
-                    strokeOpacity={lenKeys === 1 ? 0.1 : 0.4}
-                    strokeWidth={2}
-                    pointerEvents="none"
-                  />
-                );
-              })}
-            </g>
-          </>
+          <Group>
+            <Line
+              from={{ x: tooltipLeft, y: dataRegion.yTop }}
+              to={{ x: tooltipLeft, y: dataRegion.yBottom }}
+              stroke={BeanstalkPalette.lightGrey}
+              strokeWidth={1}
+              pointerEvents="none"
+            />
+            {reversedKeys.map((key, index) => {
+              const lenKeys = keys.length;
+              return (
+                <circle
+                  key={index}
+                  cx={tooltipLeftAttached}
+                  cy={scales[0].yScale(getLineHeight(tooltipData, key)) ?? 0}
+                  r={lenKeys === 1 ? 4 : 2}
+                  fill={lenKeys === 1 ? 'black' : getStyle(key, reversedKeys.length - index - 1).to}
+                  fillOpacity={lenKeys === 1 ? 0.1 : 0.4}
+                  stroke={lenKeys === 1 ? 'black' : getStyle(key, reversedKeys.length - index - 1).stroke}
+                  strokeOpacity={lenKeys === 1 ? 0.1 : 0.4}
+                  strokeWidth={2}
+                  pointerEvents="none"
+                />
+              );
+            })}
+          </Group>
         )}
       </svg>
       <div
@@ -298,16 +294,14 @@ const Graph = (props: Props) => {
         onMouseLeave={handleMouseLeave}
       >
         {tooltipData && (
-          <>
-            <g>
-              <Line
-                from={{ x: tooltipLeft, y: dataRegion.yTop }}
-                to={{ x: tooltipLeft, y: dataRegion.yBottom }}
-                stroke={BeanstalkPalette.lightGrey}
-                strokeWidth={1}
-                pointerEvents="none"
-              />
-            </g>
+          <Group>
+            <Line
+              from={{ x: tooltipLeft, y: dataRegion.yTop }}
+              to={{ x: tooltipLeft, y: dataRegion.yBottom }}
+              stroke={BeanstalkPalette.lightGrey}
+              strokeWidth={1}
+              pointerEvents="none"
+            />
             {tooltip ? (
               <div>
                 <TooltipWithBounds
@@ -317,14 +311,13 @@ const Graph = (props: Props) => {
                   style={{
                     width: 'fit-content',
                     position: 'absolute'
-                    // containerBounds
                   }}
                 >
                   <Card sx={{ p: 1, backgroundColor: BeanstalkPalette.theme.fallDark.accent }}>
                     {typeof tooltip === 'boolean' ? (
                       <Stack gap={0.5}>
                         {reversedKeys.map((key, index) => (
-                          <Row justifyContent="space-between" gap={3}>
+                          <Row key={index} justifyContent="space-between" gap={3}>
                             <Row gap={1}>
                               <Box
                                 sx={{
@@ -351,7 +344,7 @@ const Graph = (props: Props) => {
                 </TooltipWithBounds>
               </div>
             ) : null}
-          </>
+          </Group>
         )}
       </div>
     </div>
