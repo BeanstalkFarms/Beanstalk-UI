@@ -53,26 +53,24 @@ const Stat: FC<StatProps> = ({
 }) => (
   <Stack gap={gap}>
     {/* Title */}
-    <Typography>
-      <Row gap={0.5}>
-        {titleIcon && <>{titleIcon}</>}
-        <Typography variant="body1">
-          {title}
-          {titleTooltip && (
-            <Tooltip title={titleTooltip} placement="right">
-              <HelpOutlineIcon
-                sx={{
-                  color: 'text.secondary',
-                  display: 'inline',
-                  mb: 0.5,
-                  fontSize: '11px',
-                }}
-              />
-            </Tooltip>
-          )}
-        </Typography>
-      </Row>
-    </Typography>
+    <Row gap={0.5}>
+      <Typography>{titleIcon && <>{titleIcon}</>}</Typography>
+      <Typography variant="body1">
+        {title}
+        {titleTooltip && (
+          <Tooltip title={titleTooltip} placement="right">
+            <HelpOutlineIcon
+              sx={{
+                color: 'text.secondary',
+                display: 'inline',
+                mb: 0.5,
+                fontSize: '11px',
+              }}
+            />
+          </Tooltip>
+        )}
+      </Typography>
+    </Row>
     {/* Amount */}
     <Tooltip title={amountTooltip}>
       <Typography variant={variant} color={color} sx={sx}>
