@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Accordion, AccordionDetails, Box, Stack, Typography } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import BigNumber from 'bignumber.js';
-import { useAccount, useProvider } from 'wagmi';
+import { useAccount as useWagmiAccount, useProvider } from 'wagmi';
 import toast from 'react-hot-toast';
 import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
 import {
@@ -195,7 +195,7 @@ const HarvestForm: FC<Props> = ({
 
 const Harvest: FC<{ quick?: boolean }> = ({ quick }) => {
   ///
-  const { data: account } = useAccount();
+  const account = useWagmiAccount();
   const provider = useProvider();
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);

@@ -209,7 +209,7 @@ const Graph: React.FC<Props> = (props) => {
          * Cursor
          */}
         {tooltipData && (
-          <g>
+          <>
             <Line
               from={{ x: tooltipLeft, y: dataRegion.yTop }}
               to={{ x: tooltipLeft, y: dataRegion.yBottom }}
@@ -221,6 +221,7 @@ const Graph: React.FC<Props> = (props) => {
               const tdTop = scales[i].yScale(getY(td));
               return (
                 <circle
+                  key={i}
                   cx={tooltipLeftAttached}
                   cy={tdTop}
                   r={4}
@@ -233,7 +234,7 @@ const Graph: React.FC<Props> = (props) => {
                 />
               );
             })}
-          </g>
+          </>
         )}
       </svg>
     </div>

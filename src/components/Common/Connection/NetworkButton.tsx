@@ -18,16 +18,16 @@ const NetworkButton: React.FC<ButtonProps & {
   children,
   ...props
 }) => {
-  const { activeChain } = useNetwork();
+  const { chain } = useNetwork();
 
   /// Dialog
   const [anchor, toggleAnchor] = useAnchor();
   const open = Boolean(anchor);
   
-  if (!activeChain) return null;
+  if (!chain) return null;
   const text = (
-    SupportedChainId[activeChain.id]
-      ? activeChain.name 
+    SupportedChainId[chain.id]
+      ? chain.name 
       : wrongNetworkText
   );
   

@@ -1,14 +1,16 @@
 // FIXME: rename
 import { Connector } from 'wagmi';
-import metamaskIcon from '~/img/wallets/metamask-logo.png';
-import walletConnectIcon from '~/img/wallets/walletconnect-logo.svg';
-import coinbaseWalletIcon from '~/img/wallets/coinbase-wallet-logo.png';
+import metamaskLogo from '~/img/wallets/metamask-logo.png';
+import walletConnectLogo from '~/img/wallets/walletconnect-logo.svg';
+import coinbaseWalletLogo from '~/img/wallets/coinbase-wallet-logo.png';
+import tallyLogo from '~/img/wallets/tally-logo.svg';
 import { SupportedChainId } from './chains';
 
 export const CONNECTOR_LOGOS : { [key: string] : string } = {
-  MetaMask: metamaskIcon,
-  WalletConnect: walletConnectIcon,
-  'Coinbase Wallet': coinbaseWalletIcon,
+  MetaMask: metamaskLogo,
+  WalletConnect: walletConnectLogo,
+  'Coinbase Wallet': coinbaseWalletLogo,
+  Tally: tallyLogo,
 };
 
 export const CONNECT_WALLET_ERRORS : { 

@@ -11,12 +11,13 @@ export const useEthPrices = () => {
   const dispatch = useDispatch();
   const getGas = useCallback(() => {
     (async () => {
-      dispatch(setEthPrices(
-        await fetch('/.netlify/functions/ethprice').then((response: any) => response.json()).catch((err) => {
-          console.error(err);
-          return null;
-        })
-      ));
+      try {
+        const query = await fetch('/.netlify/functions/ethprice');
+        const ethprice = await query.json();
+        dispatch(setEthPrices(ethprice));
+      } catch (e) {
+        console.error('Failed to load: ethprice');
+      }
     })();
   }, [dispatch]);
 

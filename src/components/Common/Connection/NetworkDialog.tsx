@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { useNetwork } from 'wagmi';
+import { useNetwork, useSwitchNetwork } from 'wagmi';
 import { Alert, Button, Dialog, DialogProps, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { SWITCH_NETWORK_ERRORS } from '~/constants/wallets';
@@ -22,17 +22,8 @@ const NetworkDialog: React.FC<DialogProps & {
   const isMedium = useMediaQuery(theme.breakpoints.down('md'));
   
   ///
-  const { activeChain, chains, error, pendingChainId, switchNetwork } = useNetwork({
-    onSettled(data, err) {
-      if (!err) {
-        console.debug('[NetworkButton] settled network change...');
-        console.debug('');
-        console.debug('');
-        console.debug('');
-        // window.location.reload();
-      }
-    }
-  });
+  const { chain: _chain } = useNetwork();
+  const { chains, error, pendingChainId, switchNetwork } = useSwitchNetwork();
   const handleSwitch = useCallback(
     (id: number) => () => {
       if (switchNetwork) {
@@ -51,9 +42,9 @@ const NetworkDialog: React.FC<DialogProps & {
       </StyledDialogTitle>
       <StyledDialogContent>
         <Stack gap={1}>
-          {activeChain?.id && !SupportedChainId[activeChain.id] ? (
+          {_chain?.id && !SupportedChainId[_chain.id] ? (
             <Alert severity="info">
-              {activeChain.name} is not supported. Please select another network below.
+              {_chain.name} is not supported. Please select another network below.
             </Alert>
           ) : null}
           {chains.map((chain) => (

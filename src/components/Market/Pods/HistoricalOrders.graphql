@@ -11,6 +11,7 @@ query HistoricalOrders(
     amount
     maxPlaceInLine
     pricePerPod
+    filledAmount
     # ---
     updatedAt
   }

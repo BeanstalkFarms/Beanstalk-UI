@@ -5,7 +5,7 @@ import { providers } from 'ethers';
 // import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
-// import { InjectedConnector } from 'wagmi/connectors/injected';
+import { InjectedConnector } from 'wagmi/connectors/injected';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
 import { TESTNET_RPC_ADDRESSES, SupportedChainId } from '~/constants';
@@ -92,7 +92,7 @@ const { chains, provider } = configureChains(
   baseChains, 
   [
     alchemyProvider({
-      alchemyId: import.meta.env.VITE_ALCHEMY_API_KEY,
+      apiKey: import.meta.env.VITE_ALCHEMY_API_KEY,
       priority: 0,
     }),
     /// On known networks (homestead, goerli, etc.) Alchemy will
@@ -118,13 +118,13 @@ const client = createWagmiClient({
     new MetaMaskConnector({
       chains
     }),
-    // new InjectedConnector({
-    //   chains,
-    //   options: {
-    //     name: 'Injected',
-    //     shimDisconnect: true,
-    //   }
-    // }),
+    new InjectedConnector({
+      chains,
+      options: {
+        // name: 'Injected',
+        shimDisconnect: true,
+      }
+    }),
     new WalletConnectConnector({
       chains,
       options: {
