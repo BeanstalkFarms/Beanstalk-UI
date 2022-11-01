@@ -24,7 +24,7 @@ const buttonStyle = {
   variant: 'outlined' as const,
   color: 'dark' as const,
   size: 'small' as const,
-  sx: { fontWeight: 400, color: 'text.secondary' },
+  sx: { fontWeight: 400 },
   disableElevation: true,
 };
 

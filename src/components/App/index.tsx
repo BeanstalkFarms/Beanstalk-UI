@@ -46,7 +46,7 @@ import useNavHeight from '~/hooks/app/usePageDimensions';
 import useBanner from '~/hooks/app/useBanner';
 import { sgEnvKey } from '~/graph/client';
 
-import pageBackground from '~/img/beanstalk/interface/bg/halloween-bg.png';
+import pageBackground from '~/img/beanstalk/interface/bg/fall@2x.png';
 
 import './App.css';
 import useAccount from '~/hooks/ledger/useAccount';
@@ -88,39 +88,39 @@ const CustomToaster: FC<{ navHeight: number }> = ({ navHeight }) => (
 );
 
 export default function App() {
-  const banner    = useBanner();
+  const banner = useBanner();
   const navHeight = useNavHeight(!!banner);
   const account = useAccount();
   return (
     <>
       {/* -----------------------
-        * Appplication Setup
-        * ----------------------- */}
+       * Appplication Setup
+       * ----------------------- */}
       <AppUpdater />
       {/* -----------------------
-        * Bean Updaters
-        * ----------------------- */}
+       * Bean Updaters
+       * ----------------------- */}
       <PoolsUpdater />
       <UnripeUpdater />
       {/* -----------------------
-        * Beanstalk Updaters
-        * ----------------------- */}
+       * Beanstalk Updaters
+       * ----------------------- */}
       <SiloUpdater />
       <FieldUpdater />
       <BarnUpdater />
       <SunUpdater />
       <GovernanceUpdater />
       {/* -----------------------
-        * Farmer Updaters
-        * ----------------------- */}
+       * Farmer Updaters
+       * ----------------------- */}
       <FarmerSiloUpdater />
       <FarmerFieldUpdater />
       <FarmerBarnUpdater />
       <FarmerBalancesUpdater />
       <FarmerMarketUpdater />
       {/* -----------------------
-        * Routes & Content
-        * ----------------------- */}
+       * Routes & Content
+       * ----------------------- */}
       <NavBar>{banner}</NavBar>
       <EnforceNetwork />
       <CustomToaster navHeight={navHeight} />
@@ -172,7 +172,17 @@ export default function App() {
           <Route path="/404" element={<PageNotFound />} />
           <Route path="*" element={<Navigate replace to="/404" />} />
         </Routes>
-        <Box sx={{ position: 'fixed', bottom: 0, right: 0, pr: 1, pb: 0.4, opacity: 0.6, display: { xs: 'none', lg: 'block' } }}>
+        <Box
+          sx={{
+            position: 'fixed',
+            bottom: 0,
+            right: 0,
+            pr: 1,
+            pb: 0.4,
+            opacity: 0.6,
+            display: { xs: 'none', lg: 'block' },
+          }}
+        >
           <Typography fontSize="small">
             v{import.meta.env.VITE_VERSION || '0.0.0'} &middot; {sgEnvKey}
           </Typography>

@@ -262,10 +262,10 @@ const ConvertForm : FC<
         {(!canConvert && tokenOut) ? (
           <Box>
             <Alert
-              severity="warning"
+              color="warning"
               icon={(
                 <IconWrapper boxSize={IconSize.medium}>
-                  <WarningAmberIcon color="primary" sx={{ fontSize: IconSize.small, alignItems: 'flex-start' }} />
+                  <WarningAmberIcon sx={{ fontSize: IconSize.small, alignItems: 'flex-start' }} />
                 </IconWrapper>
               )}>
               {tokenIn.symbol} can only be Converted to {tokenOut.symbol} when deltaB {tokenIn.isLP || tokenIn.symbol === 'urBEAN3CRV' ? '<' : '>'} 0.<br />
@@ -317,7 +317,7 @@ const ConvertForm : FC<
             </Stack>
             {(maxAmountUsed && maxAmountUsed.gt(0.9)) ? (
               <Box>
-                <Alert severity="warning" icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon color="primary" sx={{ fontSize: IconSize.small }} /></IconWrapper>}>
+                <Alert color="warning" icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon color="warning" sx={{ fontSize: IconSize.small }} /></IconWrapper>}>
                   You are converting {displayFullBN(maxAmountUsed.times(100), 4, 0)}% of the way to the peg. 
                   When Converting all the way to the peg, the Convert may fail due to a small amount of slippage in the direction of the peg.
                 </Alert>

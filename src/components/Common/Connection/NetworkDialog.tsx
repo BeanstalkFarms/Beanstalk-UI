@@ -2,12 +2,12 @@ import React, { useCallback } from 'react';
 import { useNetwork, useSwitchNetwork } from 'wagmi';
 import { Alert, Button, Dialog, DialogProps, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { grey } from '@mui/material/colors';
 import { SWITCH_NETWORK_ERRORS } from '~/constants/wallets';
 import { SupportedChainId, TESTNET_RPC_ADDRESSES } from '~/constants';
 import { ETH } from '~/constants/tokens';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import Row from '~/components/Common/Row';
-import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const NetworkDialog: React.FC<DialogProps & {
   open: boolean;
@@ -57,11 +57,8 @@ const NetworkDialog: React.FC<DialogProps & {
               sx={{
                 py: 1,
                 minWidth: isMedium ? null : 400,
-                // borderColor: BeanstalkPalette.theme.fallDark.light,
-                borderColor: 'divider',
-                ':hover': {
-                  borderColor: BeanstalkPalette.theme.fallDark.primary
-                }
+                borderColor: grey[300],
+                
               }}
             >
               <Row justifyContent="space-between" sx={{ width: '100%' }} gap={3}>

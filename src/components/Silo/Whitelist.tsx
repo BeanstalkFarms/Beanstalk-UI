@@ -32,7 +32,7 @@ const TOOLTIP_COMPONENT_PROPS = {
   tooltip: {
     sx: {
       maxWidth: 'none !important',
-      // boxShadow: '0px 6px 20px 10px rgba(255,255,255,0.3) !important'
+      boxShadow: '0px 6px 20px 10px rgba(255,255,255,0.3) !important'
     }
   }
 };
@@ -72,7 +72,7 @@ const Whitelist : FC<{
           pt: '14px', // manually adjusted
           pb: '5px',  // manually adjusted
           borderBottomStyle: 'solid',
-          borderBottomColor: BeanstalkPalette.theme.fallDark.dividerGrey, 
+          borderBottomColor: BeanstalkPalette.lightestGrey, 
           borderBottomWidth: 1,
         }}
       >
@@ -186,11 +186,7 @@ const Whitelist : FC<{
                   textAlign: 'left',
                   px: 2,
                   py: 1.5,
-                  borderColor: 'divider',
-                  background: 'background.paper',
-                  ':hover': {
-                    borderColor: 'primary.main',
-                  }
+                  borderColor: BeanstalkPalette.lightestGrey,
                 }}
               >
                 <Grid container alignItems="center">
@@ -278,7 +274,7 @@ const Whitelist : FC<{
                             </Stack>
                             <Divider />
                             <Box sx={{ pl: { xs: 0, md: 2.7 } }}>
-                              <Typography variant="bodySmall" color="text.tertiary" textAlign="left">
+                              <Typography variant="bodySmall" color="text.secondary" textAlign="left">
                                 Total Amount Deposited: {displayFullBN(beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN, token.displayDecimals)} {token.symbol}<br />
                                 Total Supply: {displayFullBN(unripeTokens[token.address]?.supply || ZERO_BN)} {token.symbol}<br />
                               </Typography>

@@ -28,14 +28,14 @@ const UnripeTokenRow: FC<{
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const primaryColor = amount.eq(0) ? 'text.secondary' : null;
+  const primaryColor = amount.eq(0) ? 'text.tertiary' : null;
   return (
     <Row justifyContent="space-between" alignItems="start">
       <Row gap={0.4}>
         {amount.gt(0) ? (
           <CheckIcon sx={{ fontSize: 16, color: BeanstalkPalette.logoGreen }} />
         ) : (
-          <CloseIcon sx={{ fontSize: 16, color: 'text.primary' }} />
+          <CloseIcon sx={{ fontSize: 16, color: 'text.tertiary' }} />
         )}
         <Typography
           sx={{

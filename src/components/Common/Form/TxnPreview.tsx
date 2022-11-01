@@ -22,7 +22,6 @@ import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import AddressIcon from '~/components/Common/AddressIcon';
 import Row from '~/components/Common/Row';
 import { FC } from '~/types';
-import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 // -----------------------------------------------------------------------
 
@@ -280,8 +279,7 @@ const TxnStep : FC<{
         py: 0.5,
         px: 0.5,
         mx: 'auto',
-        // background: 'white',
-        background: BeanstalkPalette.theme.fallDark.cardBackground,
+        background: 'white',
       }}>
         <Box
           display="inline-block"

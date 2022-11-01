@@ -24,12 +24,9 @@ const GuideDialog: FC<DialogProps & GuideProps> = (props) => (
               py: 2,
               display: 'block',
               color: 'inherit',
-              borderColor: BeanstalkPalette.theme.fallDark.dividerGrey,
+              borderColor: BeanstalkPalette.lightestGrey,
               height: 'auto',
               textAlign: 'center',
-              ':hover': { 
-                borderColor: BeanstalkPalette.theme.fallDark.primary,
-              }
             }}
           >
             <Typography variant="body1">{guide.title}</Typography>

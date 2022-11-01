@@ -3,7 +3,7 @@ import { Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { gridPageCountSelector, gridPageSelector, useGridApiContext, useGridSelector } from '@mui/x-data-grid';
-import { FontSize } from '../App/muiTheme';
+import { BeanstalkPalette, FontSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
 import { FC } from '~/types';
 
@@ -34,9 +34,9 @@ const ArrowPagination: FC<{}> = () => {
         sx={{
           fontSize: FontSize.lg,
           cursor: 'pointer',
-          color: page === 0 ? 'text.primary' : null,
+          color: page === 0 ? 'text.secondary' : null,
           '&:hover': {
-            color: page === 0 ? 'text.primary' : 'primary.main',
+            color: page === 0 ? 'text.secondary' : BeanstalkPalette.logoGreen,
           }
         }}
       />
@@ -48,9 +48,9 @@ const ArrowPagination: FC<{}> = () => {
         sx={{
           fontSize: FontSize.lg,
           cursor: 'pointer',
-          color: hasNextPage ? null : 'text.primary',
+          color: hasNextPage ? null : 'text.secondary',
           '&:hover': {
-            color: page === pageCount - 1 || pageCount === 0 ? 'text.primary' : 'primary.main',
+            color: page === pageCount - 1 || pageCount === 0 ? 'text.secondary' : BeanstalkPalette.logoGreen,
           }
         }}
       />
