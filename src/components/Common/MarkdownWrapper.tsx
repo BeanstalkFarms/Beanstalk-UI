@@ -83,6 +83,19 @@ const MarkdownWrapper: FC<{}> = ({ children }) => (
           },
         } as React.HTMLProps<HTMLParagraphElement>,
       },
+      h5: {
+        component: 'h5',
+        props: {
+          style: {
+            marginTop: '10px',
+            marginBottom: '0px',
+            fontSize: FontSize.base, // 16px
+            fontWeight: FontWeight.normal,
+            lineHeight: '1.15rem',
+            wordBreak: 'normal'
+          }
+        } as React.HTMLProps<HTMLParagraphElement>,
+      },
       code: {
         props: {
           style: {
