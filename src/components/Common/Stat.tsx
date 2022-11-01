@@ -54,7 +54,7 @@ const Stat: FC<StatProps> = ({
   <Stack gap={gap}>
     {/* Title */}
     <Row gap={0.5}>
-      <Typography>{titleIcon && <>{titleIcon}</>}</Typography>
+      {titleIcon && (<Typography><> {titleIcon}</></Typography>)}
       <Typography variant="body1">
         {title}
         {titleTooltip && (
