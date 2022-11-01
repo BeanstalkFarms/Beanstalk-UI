@@ -281,7 +281,7 @@ const RewardsContent: React.FC<{}> = () => {
           <Grid item xs={4}>
             <RewardItem
               title="Revitalized Seed"
-              amount={revitalizedSeeds?.gt(0) ? revitalizedStalk : ZERO_BN}
+              amount={revitalizedSeeds?.gt(0) ? revitalizedSeeds : ZERO_BN}
               icon={seedIcon}
               titleColor="text.primary"
             />
