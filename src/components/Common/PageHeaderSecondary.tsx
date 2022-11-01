@@ -46,7 +46,7 @@ const PageHeaderSecondary: FC<{
                 mb: '-2.5px',
                 color: 'text.secondary',
                 '&:hover': {
-                  color: BeanstalkPalette.logoGreen,
+                  color: BeanstalkPalette.theme.fall.brown,
                 },
               }}
             >

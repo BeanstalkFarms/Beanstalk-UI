@@ -164,7 +164,7 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
           href="/#/chop"
           sx={{
             py: 1.25,
-            backgroundColor: BeanstalkPalette.brown,
+            backgroundColor: BeanstalkPalette.theme.fall.brown,
             color: BeanstalkPalette.white,
             '&:hover': {
               backgroundColor: BeanstalkPalette.brown,

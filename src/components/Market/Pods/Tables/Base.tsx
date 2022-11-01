@@ -50,8 +50,7 @@ const marketplaceTableStyle = {
     },
     '& .MuiDataGrid-row': {
       border: 1,
-      // borderColor: BeanstalkPalette.blue,
-      borderColor: BeanstalkPalette.theme.fallDark.dividerGrey,
+      borderColor: BeanstalkPalette.blue,
       borderRadius: 1,
       py: 2.4,
       mb: 0.8,
@@ -59,8 +58,7 @@ const marketplaceTableStyle = {
       cursor: 'pointer',
       width: 'calc(100% - 2.5px)',
       '&:hover': {
-        // background: BeanstalkPalette.lightestBlue
-        borderColor: BeanstalkPalette.theme.fallDark.primary
+        background: BeanstalkPalette.lightestBlue
       }
     },
     '& .MuiDataGrid-footerContainer': {

@@ -128,7 +128,6 @@ export default function App() {
       <Box
         sx={{
           bgcolor: 'background.default',
-          // backgroundColor: PAGE_BG_COLOR,
           backgroundImage: `url(${pageBackground})`,
           backgroundAttachment: 'fixed',
           backgroundPosition: 'bottom center',

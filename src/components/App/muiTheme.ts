@@ -128,23 +128,7 @@ export const BeanstalkPalette = {
       primary: '#FFDE7B',
       brown: '#B97D46',
       lightBrown: '#E5D7C8',
-    },
-    fallDark: {
-      // Halloween
-      accent: '#2A6F97',
-      light: '#122540', // lighter blue
-      primary: '#FB8500', // halloween orange
-      accentGrey: '#ADB5BD',
-      dividerGrey: '#31363F',
-      ctaDisabled: '#6C757D',
-      textDisabled: '#DEE2E6',
-      cardBackground: '#0F1D31',
-      background: '#0C2C63',
-      lightOrange: lighten('#FB8500', 0.6),
-      lightest: lighten('#122540', 0.4),
-      warningDark: '#322D2A',
-      lightRed: lighten('#AE2D20', 0.1),
-    },
+    }
   },
 };
 
@@ -242,7 +226,6 @@ let muiTheme = createTheme({
       primary: BeanstalkPalette.black,
       secondary: 'gray',
       tertiary: BeanstalkPalette.lightGrey,
-      disabled: BeanstalkPalette.theme.fallDark.textDisabled,
     },
     background: {
       default: BeanstalkPalette.theme.fall.light,
@@ -335,16 +318,14 @@ let muiTheme = createTheme({
       styleOverrides: {
         root: sx({
           borderWidth: 1,
-          // borderColor: 'secondary.main',
-          // borderColor: BeanstalkPalette.theme.fallDark.light,
-          borderColor: 'divider',
+          borderColor: PAGE_BORDER_COLOR,
         }),
       },
     },
     MuiDivider: {
       styleOverrides: {
         root: sx({
-          borderColor: 'divider',
+          borderColor: BeanstalkPalette.theme.fall.light,
           borderWidth: 0.5,
         }),
       },

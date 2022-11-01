@@ -33,7 +33,7 @@ const PageHeader : FC<{
             borderRadius: 1,
             color: 'text.secondary',
             '&:hover': {
-              color: BeanstalkPalette.logoGreen,
+              color: BeanstalkPalette.theme.fall.brown,
             }
         }}
         >

@@ -111,6 +111,13 @@ const MarkdownWrapper: FC<{}> = ({ children }) => (
             color: BeanstalkPalette.theme.fall.brown,
           }
         }
+      },
+      img: {
+        props: {
+          style: {
+            width: '100%'
+          }
+        }
       }
     }}
   >
