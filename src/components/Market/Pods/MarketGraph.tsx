@@ -237,7 +237,7 @@ const SelectedPointPopover : FC<{
   // backgroundColor: 'white', p: 0.5, borderRadius: 1
   return (
     <Box sx={{ position: 'absolute', top: 10, right: 10 }}>
-      <TooltipCard sx={{ px: 1, py: 1, minWidth: 260, boxShadow: '0 4px 20px 6px rgba(15, 29, 49, 0.6)' }}>
+      <TooltipCard sx={{ px: 1, py: 1, minWidth: 260, boxShadow: '0 4px 20px 6px rgba(255,255,255,0.3)' }}>
         {inner}
       </TooltipCard>
     </Box>
