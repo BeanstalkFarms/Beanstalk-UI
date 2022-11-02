@@ -7,7 +7,7 @@ import {
   SEEDS,
   STALK,
 } from '~/constants/tokens';
-import { FontSize } from '../App/muiTheme';
+import { BeanstalkPalette, FontSize } from '../App/muiTheme';
 import Stat from '../Common/Stat';
 import TokenIcon from '../Common/TokenIcon';
 import { BEANSTALK_ADDRESSES, CURVE_LINK } from '~/constants';
@@ -79,7 +79,7 @@ const SiloAssetOverviewCard: FC<{ token: ERC20Token }> = ({ token }) => {
               color="text.primary"
               sx={{ 
                 flexWrap: 'nowrap', 
-                ':hover': { color: 'primary.main' } 
+                ':hover': { color: BeanstalkPalette.logoGreen }, 
               }}
             >
               View Liquidity

@@ -153,10 +153,9 @@ export type BaseChartProps = {
 const strokeBuffer = 2;
 const axisHeight = 21;
 const backgroundColor = '#da7cff';
-// const labelColor = '#340098';
-const labelColor = BeanstalkPalette.theme.fallDark.accentGrey;
-const tickLabelColor = BeanstalkPalette.theme.fallDark.accentGrey;
-const axisColor = BeanstalkPalette.theme.fallDark.accentGrey;
+const labelColor = '#340098';
+const tickLabelColor = BeanstalkPalette.lightGrey;
+const axisColor = BeanstalkPalette.lightGrey;
 const yAxisWidth = 57;
 
 const margin = {
@@ -168,24 +167,24 @@ const margin = {
 
 const defaultChartStyles: ChartMultiStyles = {
   0 : {
-    stroke: '#FB8500',
-    fillPrimary: '#EBCDAC',
+    stroke: BeanstalkPalette.theme.fall.brown,
+    fillPrimary: BeanstalkPalette.theme.fall.lightBrown,
     strokeWidth: 2,
   },
   1 : {
-    stroke: '#DA2C38',
-    fillPrimary: '#FBEAEB',
+    stroke: BeanstalkPalette.logoGreen,
+    fillPrimary: BeanstalkPalette.lightGreen,
     strokeWidth: 2,
 
   },
   2 : {
-    stroke: '#7F5533',
-    fillPrimary: '#F2EFEA',
+    stroke: BeanstalkPalette.trueRed,
+    fillPrimary: BeanstalkPalette.lightestRed,
     strokeWidth: 2,
   },
   3 : {
-    stroke: '#AA9DFF',
-    fillPrimary: '#6C64A3',
+    stroke: BeanstalkPalette.blue,
+    fillPrimary: BeanstalkPalette.lightestBlue,
     strokeWidth: 2,
   },
 };

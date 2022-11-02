@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  AppBar,
-  Box,
-} from '@mui/material';
+import { AppBar, Box } from '@mui/material';
 import WalletButton from '~/components/Common/Connection/WalletButton';
 import NetworkButton from '~/components/Common/Connection/NetworkButton';
 import PriceButton from './Buttons/PriceButton';
@@ -11,11 +8,15 @@ import LinkButton from './Buttons/LinkButton';
 import AboutButton from './Buttons/AboutButton';
 import ROUTES from './routes';
 import HoverMenu from './HoverMenu';
-import { NAV_BORDER_HEIGHT, NAV_ELEM_HEIGHT, NAV_HEIGHT } from '~/hooks/app/usePageDimensions';
+import {
+  NAV_BORDER_HEIGHT,
+  NAV_ELEM_HEIGHT,
+  NAV_HEIGHT,
+} from '~/hooks/app/usePageDimensions';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
-import { BeanstalkPalette, PAGE_BG_COLOR } from '../App/muiTheme';
+import { PAGE_BG_COLOR, PAGE_BORDER_COLOR } from '../App/muiTheme';
 
 const NavBar: FC<{}> = ({ children }) => (
   <AppBar
@@ -27,8 +28,8 @@ const NavBar: FC<{}> = ({ children }) => (
       position: 'sticky',
       bgcolor: 'background',
       backgroundColor: PAGE_BG_COLOR,
-      // borderColor: BeanstalkPalette.theme.fallDark.dividerGrey,
-      borderBottom: `${NAV_BORDER_HEIGHT}px solid ${BeanstalkPalette.theme.fallDark.dividerGrey}`,
+      borderBottom: `${NAV_BORDER_HEIGHT}px solid ${PAGE_BORDER_COLOR}`,
+      borderColor: 'divider',
     }}
   >
     {children}
@@ -42,10 +43,7 @@ const NavBar: FC<{}> = ({ children }) => (
       <Row sx={{ flex: 1 }} height="100%" gap={1}>
         <PriceButton sx={{ height: NAV_ELEM_HEIGHT }} />
         <SunButton sx={{ height: NAV_ELEM_HEIGHT }} />
-        <Row
-          sx={{ display: { lg: 'flex', xs: 'none' } }}
-          height="100%"
-        >
+        <Row sx={{ display: { lg: 'flex', xs: 'none' } }} height="100%">
           {ROUTES.top.map((item) => (
             <LinkButton
               key={item.path}
@@ -54,9 +52,7 @@ const NavBar: FC<{}> = ({ children }) => (
               tag={item.tag}
             />
           ))}
-          <HoverMenu items={ROUTES.more}>
-            More
-          </HoverMenu>
+          <HoverMenu items={ROUTES.more}>More</HoverMenu>
         </Row>
       </Row>
       {/* Desktop: Right Side */}

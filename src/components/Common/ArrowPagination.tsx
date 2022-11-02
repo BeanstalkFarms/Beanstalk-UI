@@ -34,9 +34,9 @@ const ArrowPagination: FC<{}> = () => {
         sx={{
           fontSize: FontSize.lg,
           cursor: 'pointer',
-          color: page === 0 ? 'text.primary' : null,
+          color: page === 0 ? 'text.secondary' : null,
           '&:hover': {
-            color: page === 0 ? 'text.primary' : 'primary.main',
+            color: page === 0 ? 'text.secondary' : 'primary.main',
           }
         }}
       />
@@ -48,9 +48,9 @@ const ArrowPagination: FC<{}> = () => {
         sx={{
           fontSize: FontSize.lg,
           cursor: 'pointer',
-          color: hasNextPage ? null : 'text.primary',
+          color: hasNextPage ? null : 'text.secondary',
           '&:hover': {
-            color: page === pageCount - 1 || pageCount === 0 ? 'text.primary' : 'primary.main',
+            color: page === pageCount - 1 || pageCount === 0 ? 'text.secondary' : 'primary.main',
           }
         }}
       />

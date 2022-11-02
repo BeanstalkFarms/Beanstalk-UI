@@ -72,7 +72,7 @@ type GraphProps = {
 
 const strokes = [
   {
-    stroke: BeanstalkPalette.theme.fallDark.primary,
+    stroke: BeanstalkPalette.theme.fall.brown,
     strokeWidth: 2,
   },
   {

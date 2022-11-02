@@ -2,7 +2,7 @@ import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import React from 'react';
-import { IconSize } from '../App/muiTheme';
+import { BeanstalkPalette, IconSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
@@ -46,7 +46,7 @@ const PageHeaderSecondary: FC<{
                 mb: '-2.5px',
                 color: 'text.secondary',
                 '&:hover': {
-                  color: 'primary.main',
+                  color: BeanstalkPalette.theme.fall.brown,
                 },
               }}
             >

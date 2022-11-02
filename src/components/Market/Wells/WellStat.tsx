@@ -25,7 +25,7 @@ const WellStat: React.FC<RewardItemProps> = ({
         {title}
         {tooltip && (
           <HelpOutlineIcon
-            sx={{ color: 'text.secondary', display: 'inline', mb: 0.5, fontSize: '11px' }}
+            sx={{ display: 'inline', mb: 0.5, fontSize: '11px' }}
           />
         )}
       </Typography>

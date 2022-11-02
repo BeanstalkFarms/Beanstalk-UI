@@ -51,7 +51,7 @@ const SeasonCard: FC<SeasonCardProps> = ({
           }}
         >
           <Row justifyContent="center" height="100%">
-            <Typography pl={1} color="text.primary" fontSize={FontSize.sm} textAlign="left">
+            <Typography pl={1} color="text.secondary" fontSize={FontSize.sm} textAlign="left">
               The forecast for Season {season.toString()} is based on data in the current Season.
             </Typography>
           </Row>
@@ -60,7 +60,7 @@ const SeasonCard: FC<SeasonCardProps> = ({
       <Box
         sx={{
           border: 1,
-          borderColor: BeanstalkPalette.theme.fallDark.dividerGrey,
+          borderColor: BeanstalkPalette.lightestGrey,
           p: 0.75,
           borderRadius: '8px',
           animation: isNew ? 'pulse 1s ease-in-out' : undefined,
