@@ -157,7 +157,7 @@ const Pie : FC<PieProps & PieCustomizationProps> = ({
   if (!data || data.length === 0) {
     return (
       <Stack sx={{ width, height }} alignItems="center" justifyContent="center">
-        <Typography color="text.tertiary">
+        <Typography color="text.secondary">
           No data
         </Typography>
       </Stack>
@@ -186,7 +186,7 @@ const Pie : FC<PieProps & PieCustomizationProps> = ({
         </VisxPie>
         {title && (
           <text
-            fill="#fff"
+            fill="#333"
             x={0}
             y={0}
             dy=".33em"

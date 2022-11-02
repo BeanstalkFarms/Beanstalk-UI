@@ -39,7 +39,7 @@ const MarkdownWrapper: FC<{}> = ({ children }) => (
             marginBottom: '0px',
             fontFamily: 'Futura PT',
             fontSize: FontSize['2xl'], // 24px
-            fontWeight: FontWeight.medium,
+            fontWeight: FontWeight.semiBold,
             wordBreak: 'normal'
           },
         } as React.HTMLProps<HTMLParagraphElement>,
@@ -52,7 +52,7 @@ const MarkdownWrapper: FC<{}> = ({ children }) => (
             marginBottom: '0px',
             fontFamily: 'Futura PT',
             fontSize: FontSize['1xl'], // 20px
-            fontWeight: FontWeight.medium,
+            fontWeight: FontWeight.semiBold,
             lineHeight: '1.875rem',
             wordBreak: 'normal'
           },
@@ -65,7 +65,7 @@ const MarkdownWrapper: FC<{}> = ({ children }) => (
             marginTop: '10px',
             marginBottom: '0px',
             fontSize: FontSize.lg, // 18px
-            fontWeight: FontWeight.normal,
+            fontWeight: FontWeight.semiBold,
             wordBreak: 'normal'
           },
         } as React.HTMLProps<HTMLParagraphElement>,
@@ -77,10 +77,23 @@ const MarkdownWrapper: FC<{}> = ({ children }) => (
             marginTop: '10px',
             marginBottom: '0px',
             fontSize: FontSize.base, // 16px
-            fontWeight: FontWeight.normal,
+            fontWeight: FontWeight.semiBold,
             lineHeight: '1.25rem',
             wordBreak: 'normal'
           },
+        } as React.HTMLProps<HTMLParagraphElement>,
+      },
+      h5: {
+        component: 'h5',
+        props: {
+          style: {
+            marginTop: '10px',
+            marginBottom: '0px',
+            fontSize: FontSize.sm, // 14px
+            fontWeight: FontWeight.semiBold,
+            // lineHeight: '1.15rem',
+            wordBreak: 'normal'
+          }
         } as React.HTMLProps<HTMLParagraphElement>,
       },
       code: {
@@ -108,7 +121,14 @@ const MarkdownWrapper: FC<{}> = ({ children }) => (
         props: {
           style: {
             wordBreak: 'break-word',
-            color: BeanstalkPalette.theme.fallDark.primary,
+            color: BeanstalkPalette.theme.fall.brown,
+          }
+        }
+      },
+      img: {
+        props: {
+          style: {
+            width: '100%'
           }
         }
       }

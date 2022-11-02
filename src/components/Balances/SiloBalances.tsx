@@ -1,9 +1,22 @@
 import React, { useMemo } from 'react';
-import { Box, Button, Grid, Stack, Tooltip, Typography, Link } from '@mui/material';
-import {  Link as RouterLink } from 'react-router-dom';
+import {
+  Box,
+  Button,
+  Grid,
+  Stack,
+  Tooltip,
+  Typography,
+  Link,
+} from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { useSelector } from 'react-redux';
-import { SEEDS, STALK, UNRIPE_BEAN, UNRIPE_BEAN_CRV3 } from '~/constants/tokens';
+import {
+  SEEDS,
+  STALK,
+  UNRIPE_BEAN,
+  UNRIPE_BEAN_CRV3,
+} from '~/constants/tokens';
 import useWhitelist from '~/hooks/beanstalk/useWhitelist';
 import { BeanstalkPalette, IconSize } from '../App/muiTheme';
 import Fiat from '~/components/Common/Fiat';
@@ -24,10 +37,10 @@ const TOOLTIP_COMPONENT_PROPS = {
   tooltip: {
     sx: {
       maxWidth: 'none !important',
-      zIndex: 99999
+      zIndex: 99999,
       // boxShadow: '0px 6px 20px 10px rgba(255,255,255,0.3) !important'
-    }
-  }
+    },
+  },
 };
 
 const SiloBalances: React.FC<{}> = () => {
@@ -35,13 +48,18 @@ const SiloBalances: React.FC<{}> = () => {
   const whitelist = useWhitelist();
   const getChainToken = useGetChainToken();
 
-  const urBean        = getChainToken(UNRIPE_BEAN);
-  const urBeanCrv3    = getChainToken(UNRIPE_BEAN_CRV3);
+  const urBean = getChainToken(UNRIPE_BEAN);
+  const urBeanCrv3 = getChainToken(UNRIPE_BEAN_CRV3);
   const unripeUnderlyingTokens = useUnripeUnderlyingMap();
 
   // State
-  const balances = useSelector<AppState, AppState['_farmer']['silo']['balances']>((state) => state._farmer.silo.balances);
-  const unripeTokens  = useSelector<AppState, AppState['_bean']['unripe']>((state) => state._bean.unripe);
+  const balances = useSelector<
+    AppState,
+    AppState['_farmer']['silo']['balances']
+  >((state) => state._farmer.silo.balances);
+  const unripeTokens = useSelector<AppState, AppState['_bean']['unripe']>(
+    (state) => state._bean.unripe
+  );
   const stalkByToken = useFarmerStalkByToken();
 
   const tokens = useMemo(() => Object.entries(whitelist), [whitelist]);
@@ -50,7 +68,10 @@ const SiloBalances: React.FC<{}> = () => {
     <Stack width="100%">
       <Box
         {...{ pb: 0.5, px: 1, pt: 1.5 }}
-        sx={{ borderBottom: '1px solid', borderColor: BeanstalkPalette.theme.fallDark.dividerGrey }}
+        sx={{
+          borderBottom: '1px solid',
+          borderColor: BeanstalkPalette.lightestGrey,
+        }}
       >
         <Grid
           container
@@ -60,9 +81,7 @@ const SiloBalances: React.FC<{}> = () => {
           whiteSpace="nowrap"
         >
           <Grid item xs={6} sm={5} md={3} textAlign="left" pl={2}>
-            <Typography color="text.tertiary">
-              Token
-            </Typography>
+            <Typography color="text.tertiary">Token</Typography>
           </Grid>
           <Grid
             item
@@ -70,9 +89,7 @@ const SiloBalances: React.FC<{}> = () => {
             display={{ xs: 'none', sm: 'block' }}
             textAlign="left"
           >
-            <Typography color="text.tertiary">
-              Amount Deposited
-            </Typography>
+            <Typography color="text.tertiary">Amount Deposited</Typography>
           </Grid>
           <Grid
             item
@@ -80,9 +97,7 @@ const SiloBalances: React.FC<{}> = () => {
             pr={{ xs: 4, md: 0 }}
             textAlign="right"
           >
-            <Typography color="text.tertiary">
-              Value Deposited
-            </Typography>
+            <Typography color="text.tertiary">Value Deposited</Typography>
           </Grid>
           <Grid
             item
@@ -90,9 +105,7 @@ const SiloBalances: React.FC<{}> = () => {
             display={{ xs: 'none', md: 'block' }}
             textAlign="right"
           >
-            <Typography color="text.tertiary">
-              Stalk
-            </Typography>
+            <Typography color="text.tertiary">Stalk</Typography>
           </Grid>
           <Grid
             item
@@ -101,9 +114,7 @@ const SiloBalances: React.FC<{}> = () => {
             textAlign="right"
             pr={4}
           >
-            <Typography color="text.tertiary">
-              Seeds
-            </Typography>
+            <Typography color="text.tertiary">Seeds</Typography>
           </Grid>
         </Grid>
       </Box>
@@ -111,7 +122,7 @@ const SiloBalances: React.FC<{}> = () => {
         {tokens.map(([address, token]) => {
           const deposits = balances[address]?.deposited;
           const isUnripe = token === urBean || token === urBeanCrv3;
-          
+
           return (
             <Box key={`${token.address}-${token.chainId}`}>
               <Button
@@ -125,16 +136,13 @@ const SiloBalances: React.FC<{}> = () => {
                   textAlign: 'left',
                   px: 0,
                   py: 1,
-                  borderColor: BeanstalkPalette.theme.fallDark.dividerGrey,
-                  ':hover': {
-                    borderColor: BeanstalkPalette.theme.fallDark.primary
-                  }
+                  borderColor: BeanstalkPalette.lightestGrey,
                 }}
               >
                 <Grid container alignItems="center">
-                  {/** 
-                    * Cell: Token
-                    */}
+                  {/**
+                   * Cell: Token
+                   */}
                   <Grid item {...{ xs: 6, sm: 5, md: 3 }} pl={2}>
                     <Row gap={1}>
                       <img
@@ -147,9 +155,9 @@ const SiloBalances: React.FC<{}> = () => {
                       </Typography>
                     </Row>
                   </Grid>
-                  {/** 
-                     * Cell: Amount Deposited 
-                     */}
+                  {/**
+                   * Cell: Amount Deposited
+                   */}
                   <Grid
                     item
                     {...{ xs: 0, sm: 4, md: 2 }}
@@ -162,8 +170,8 @@ const SiloBalances: React.FC<{}> = () => {
                     </Typography>
                   </Grid>
                   {/**
-                     * Cell: Value of Deposited 
-                     */}
+                   * Cell: Value of Deposited
+                   */}
                   <Grid
                     item
                     {...{ xs: 6, sm: 3, md: 2.5 }}
@@ -175,83 +183,143 @@ const SiloBalances: React.FC<{}> = () => {
                         <Tooltip
                           placement="left"
                           componentsProps={TOOLTIP_COMPONENT_PROPS}
-                          title={isUnripe ? (
-                            <Box width="100%">
-                              <Stack direction={{ xs: 'column', md: 'row' }} gap={{ xs: 0, md: 1 }} alignItems="stretch">
-                                <Box px={1} py={0.5}>
-                                  <Stat 
-                                    title={<Row gap={0.5}><TokenIcon token={token} /> {token.symbol}</Row>}
-                                    gap={0.25}
-                                    variant="h4"
-                                    amount={displayTokenAmount(deposits?.amount || ZERO_BN, token, { showName: false })}
-                                    subtitle={
-                                      <> 
-                                        The number of {token.symbol}<br />you have Deposited in the Silo.
-                                      </>
-                                    }
-                                  />
-                                </Box>
-                                <Row>x</Row>
-                                <Box sx={{ px: 1, py: 0.5, maxWidth: 215 }}>
-                                  <Stat
-                                    title="Chop Rate"
-                                    gap={0.25}
-                                    variant="h4"
-                                    amount={`1 - ${(unripeTokens[token.address]?.chopPenalty || ZERO_BN).toFixed(4)}%`}
-                                    subtitle={
-                                      <>
-                                        The current penalty for chopping<br />{token.symbol} for {unripeUnderlyingTokens[token.address].symbol}. <Link href="https://docs.bean.money/farm/barn#chopping" target="_blank" rel="noreferrer" underline="hover" onClick={(e) => { e.stopPropagation(); }}>Learn more</Link>
-                                      </>
-                                    }
-                                />
-                                </Box>
-                                <Row>×</Row>
-                                <Box sx={{ px: 1, py: 0.5, maxWidth: 215 }}>
-                                  <Stat
-                                    title={`${unripeUnderlyingTokens[token.address]} Price`}
-                                    gap={0.25}
-                                    variant="h4"
-                                    amount={(
-                                      <Fiat
-                                        token={unripeUnderlyingTokens[token.address]}
-                                        amount={ONE_BN}
-                                        chop={false}
-                                      />
-                                    )}
-                                    subtitle={`The current price of ${unripeUnderlyingTokens[token.address].symbol}.`}
-                                  />
-                                </Box>
-                                <Stack display={{ xs: 'none', md: 'flex' }} alignItems="center" justifyContent="center">=</Stack>
-                              </Stack>
-                            </Box>) 
-                            : ''
+                          title={
+                            isUnripe ? (
+                              <Box width="100%">
+                                <Stack
+                                  direction={{ xs: 'column', md: 'row' }}
+                                  gap={{ xs: 0, md: 1 }}
+                                  alignItems="stretch"
+                                >
+                                  <Box px={1} py={0.5}>
+                                    <Stat
+                                      title={
+                                        <Row gap={0.5}>
+                                          <TokenIcon token={token} />{' '}
+                                          {token.symbol}
+                                        </Row>
+                                      }
+                                      gap={0.25}
+                                      variant="h4"
+                                      amount={displayTokenAmount(
+                                        deposits?.amount || ZERO_BN,
+                                        token,
+                                        { showName: false }
+                                      )}
+                                      subtitle={
+                                        <>
+                                          The number of {token.symbol}
+                                          <br />
+                                          you have Deposited in the Silo.
+                                        </>
+                                      }
+                                    />
+                                  </Box>
+                                  <Row>x</Row>
+                                  <Box sx={{ px: 1, py: 0.5, maxWidth: 215 }}>
+                                    <Stat
+                                      title="Chop Rate"
+                                      gap={0.25}
+                                      variant="h4"
+                                      amount={`1 - ${(
+                                        unripeTokens[token.address]
+                                          ?.chopPenalty || ZERO_BN
+                                      ).toFixed(4)}%`}
+                                      subtitle={
+                                        <>
+                                          The current penalty for chopping
+                                          <br />
+                                          {token.symbol} for{' '}
+                                          {
+                                            unripeUnderlyingTokens[
+                                              token.address
+                                            ].symbol
+                                          }
+                                          .{' '}
+                                          <Link
+                                            href="https://docs.bean.money/farm/barn#chopping"
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            underline="hover"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                            }}
+                                          >
+                                            Learn more
+                                          </Link>
+                                        </>
+                                      }
+                                    />
+                                  </Box>
+                                  <Row>×</Row>
+                                  <Box sx={{ px: 1, py: 0.5, maxWidth: 215 }}>
+                                    <Stat
+                                      title={`${
+                                        unripeUnderlyingTokens[token.address]
+                                      } Price`}
+                                      gap={0.25}
+                                      variant="h4"
+                                      amount={
+                                        <Fiat
+                                          token={
+                                            unripeUnderlyingTokens[
+                                              token.address
+                                            ]
+                                          }
+                                          amount={ONE_BN}
+                                          chop={false}
+                                        />
+                                      }
+                                      subtitle={`The current price of ${
+                                        unripeUnderlyingTokens[token.address]
+                                          .symbol
+                                      }.`}
+                                    />
+                                  </Box>
+                                  <Stack
+                                    display={{ xs: 'none', md: 'flex' }}
+                                    alignItems="center"
+                                    justifyContent="center"
+                                  >
+                                    =
+                                  </Stack>
+                                </Stack>
+                              </Box>
+                            ) : (
+                              ''
+                            )
                           }
                         >
                           <Typography color="text.primary" component="span">
                             <Fiat
                               token={token}
                               amount={deposits?.amount ?? ZERO_BN}
-                              />
+                            />
                             {isUnripe ? (
-                              <Typography display="inline" color={BeanstalkPalette.washedRed}>*</Typography>
-                              ) : null}
+                              <Typography
+                                display="inline"
+                                color={BeanstalkPalette.washedRed}
+                              >
+                                *
+                              </Typography>
+                            ) : null}
                           </Typography>
                         </Tooltip>
                         <Stack
                           display={{ xs: 'block', md: 'none' }}
                           sx={{ width: ARROW_CONTAINER_WIDTH }}
                           alignItems="center"
-                          >
+                        >
                           <ArrowRightIcon
                             sx={{ color: BeanstalkPalette.lightestGrey }}
-                            />
+                          />
                         </Stack>
                       </Row>
                     </Box>
                   </Grid>
-                  {/** 
-                     * Cell: Stalk 
-                     */}
+                  {/**
+                   * Cell: Stalk
+                   */}
                   <Grid
                     item
                     {...{ xs: 0, md: 2 }}
@@ -270,9 +338,9 @@ const SiloBalances: React.FC<{}> = () => {
                       </Typography>
                     </Row>
                   </Grid>
-                  {/** 
-                     *Cell: Seeds
-                     */}
+                  {/**
+                   *Cell: Seeds
+                   */}
                   <Grid
                     item
                     {...{ xs: 0, md: 2.5 }}
@@ -296,9 +364,9 @@ const SiloBalances: React.FC<{}> = () => {
                         alignItems="center"
                       >
                         <ArrowRightIcon
-                          sx={{ 
+                          sx={{
                             color: BeanstalkPalette.lightestGrey,
-                            marginTop: '3px'
+                            marginTop: '3px',
                           }}
                         />
                       </Stack>

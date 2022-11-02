@@ -41,7 +41,7 @@ const PillRow : FC<{
     <Button
       variant="outlined"
       onClick={onClick}
-      color="light"
+      color="dark"
       sx={{
         color: 'text.tertiary',
         px: 0.75,
@@ -54,7 +54,7 @@ const PillRow : FC<{
       <Row gap={0.5}>
         {children}
       </Row>
-      {isDropdown && <DropdownIcon sx={{ color: 'primary.main', height: IconSize.xs }} open={isOpen} />}
+      {isDropdown && <DropdownIcon sx={{ height: IconSize.xs }} open={isOpen} />}
     </Button>
   </Row>
 );
