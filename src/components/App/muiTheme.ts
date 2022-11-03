@@ -224,7 +224,7 @@ let muiTheme = createTheme({
     //
     text: {
       primary: BeanstalkPalette.black,
-      secondary: 'gray',
+      secondary: '#808080',
       tertiary: BeanstalkPalette.lightGrey,
     },
     background: {
