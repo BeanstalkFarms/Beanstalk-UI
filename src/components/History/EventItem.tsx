@@ -216,7 +216,6 @@ const EventItem: FC<EventItemProps> = ({ event, account }) => {
           </Stack>
         </Row>
       </Box>
-      {/* <Divider /> */}
     </>
   );
 };
