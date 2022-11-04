@@ -53,6 +53,7 @@ import useAccount from '~/hooks/ledger/useAccount';
 import EnforceNetwork from '~/components/App/EnforceNetwork';
 
 import { FC } from '~/types';
+import PodsMarketNew from '~/pages/market/podsv2';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -160,6 +161,7 @@ export default function App() {
           <Route path="/market/create" element={<CreatePage />} />
           <Route path="/market/order/:id" element={<OrderPage />} />
           <Route path="/market/listing/:id" element={<ListingPage />} />
+          <Route path="/podsMarket" element={<PodsMarketNew />} />
           {/* DEX CODE (hidden) */}
           {/* <Route path="/market/wells" element={<WellHomePage />} /> */}
           {/* <Route path="/market/wells/:id" element={<WellPage />} /> */}

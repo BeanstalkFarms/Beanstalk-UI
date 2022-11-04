@@ -35,6 +35,7 @@
     "formik": "^2.2.9",
     "graphql": "^16.5.0",
     "http-errors": "^2.0.0",
+    "jotai": "^1.9.1",
     "lambda-rate-limiter": "^3.0.1",
     "luxon": "^2.4.0",
     "markdown-to-jsx": "^7.1.7",

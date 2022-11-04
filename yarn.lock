@@ -10944,6 +10944,7 @@ __metadata:
     graphql: ^16.5.0
     http-errors: ^2.0.0
     husky: ^8.0.0
+    jotai: ^1.9.1
     lambda-rate-limiter: ^3.0.1
     lint-staged: ^13.0.3
     luxon: ^2.4.0
@@ -19308,6 +19309,40 @@ __metadata:
     merge-stream: ^2.0.0
     supports-color: ^8.0.0
   checksum: 98cd68b696781caed61c983a3ee30bf880b5bd021c01d98f47b143d4362b85d0737f8523761e2713d45e18b4f9a2b98af1eaee77afade4111bb65c77d6f7c980
+  languageName: node
+  linkType: hard
+
+"jotai@npm:^1.9.1":
+  version: 1.9.1
+  resolution: "jotai@npm:1.9.1"
+  peerDependencies:
+    "@babel/core": "*"
+    "@babel/template": "*"
+    immer: "*"
+    jotai-tanstack-query: "*"
+    jotai-urql: "*"
+    optics-ts: "*"
+    react: ">=16.8"
+    valtio: "*"
+    xstate: "*"
+  peerDependenciesMeta:
+    "@babel/core":
+      optional: true
+    "@babel/template":
+      optional: true
+    immer:
+      optional: true
+    jotai-tanstack-query:
+      optional: true
+    jotai-urql:
+      optional: true
+    optics-ts:
+      optional: true
+    valtio:
+      optional: true
+    xstate:
+      optional: true
+  checksum: 5923e252b8b0e7c102a9a5c7cad137b412bbef51d9deb54fff9ab466d391853c04b1f1609eedad4a9eba635fd84177758454328b818b67b976a47989b11f763a
   languageName: node
   linkType: hard
 
