@@ -5,7 +5,6 @@ import githubIcon from '~/img/beanstalk/interface/nav/github.svg';
 import governanceIcon from '~/img/beanstalk/interface/nav/governance.svg';
 import swapIcon from '~/img/beanstalk/interface/nav/trade.svg';
 import twitterIcon from '~/img/beanstalk/interface/nav/twitter.svg';
-import duneIcon from '~/img/beanstalk/interface/nav/dune.svg';
 import immunefiIcon from '~/img/beanstalk/interface/nav/immunefi.svg';
 import docsIcon from '~/img/beanstalk/interface/nav/docs.svg';
 import disclosuresIcon from '~/img/beanstalk/interface/nav/disclosures.svg';
@@ -131,8 +130,8 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
     {
       path: 'analytics',
       href: 'https://dune.xyz/tbiq/Beanstalk',
-      title: 'Dune',
-      icon: duneIcon
+      title: 'Advanced Analytics',
+      icon: analyticsIcon
     },
   ],
   // Market Menu

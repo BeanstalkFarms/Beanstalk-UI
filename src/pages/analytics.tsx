@@ -13,6 +13,7 @@ const AnalyticsPage: FC<{}> = () => (
       <PageHeader
         title="Analytics"
         description="View historical data on Beanstalk"
+        href="https://analytics.bean.money/"
       />
       <BeanAnalytics />
       <SiloAnalytics />
