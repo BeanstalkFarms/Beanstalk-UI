@@ -1,7 +1,7 @@
 import { Container } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Card, Grid, Stack, Tab } from '@mui/material';
+import { Card, Divider, Grid, Stack, Tab } from '@mui/material';
 import EventItem from '~/components/History/EventItem';
 import WalletButton from '~/components/Common/Connection/WalletButton';
 import { Event } from '~/lib/Beanstalk/EventProcessor';
@@ -72,16 +72,20 @@ const TransactionHistoryPage: FC<{}> = () => {
           <Tab label="Silo" />
           <Tab label="Field" />
         </ModuleTabs>
-        <ModuleContent>
+        <Divider />
+        <ModuleContent px={0}>
           {walletEvents !== undefined && walletEvents.length > 0 ? (
             <Grid container>
-              {walletEvents.map((event) => (
-                <Grid key={`${event.transactionHash}-${event.logIndex}`} item width="100%">
-                  <EventItem
-                    event={event}
-                    account={account ? account.toString().toLowerCase() : ''}
-                      />
-                </Grid>
+              {walletEvents.map((event, i) => (
+                <React.Fragment key={`event-item-${i}`}>
+                  <Grid key={`${event.transactionHash}-${event.logIndex}`} item width="100%" px={2}>
+                    <EventItem
+                      event={event}
+                      account={account ? account.toString().toLowerCase() : ''}
+                        />
+                  </Grid>
+                  {i !== walletEvents.length - 1 && <Divider sx={{ width: '100%' }} />}
+                </React.Fragment>
                   ))}
             </Grid>
             ) : (
