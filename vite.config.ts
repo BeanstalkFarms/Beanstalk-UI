@@ -6,6 +6,22 @@ import react from '@vitejs/plugin-react';
 import strip from '@rollup/plugin-strip';
 import analyze from 'rollup-plugin-analyzer';
 
+type CSPData = {
+  'default-src': string[];
+  'connect-src': string[];
+  'style-src': string[];
+  'script-src': string[];
+  'img-src': string[];
+}
+
+function buildCSP(data: CSPData) {
+  return Object.keys(data).map(
+    (key) => `${key} ${data[key].join(' ')}`
+  ).join(';');
+}
+
+// default-src 'self'; connect-src 'self' *.alchemyapi.io *.bean.money *.snapshot.org wss://*.walletconnect.org wss://*.bridge.walletconnect.org registry.walletconnect.com wss://*.walletlink.org *.google-analytics.com *.doubleclick.net; style-src 'self' 'unsafe-inline'; script-src 'self' *.google-analytics.com *.googletagmanager.com 'sha256-D0XQFeW9gcWWp4NGlqN0xpmiObsjqCewnVFeAsys7qM=';
+
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => ({
   test: {
@@ -25,6 +41,40 @@ export default defineConfig(({ command, mode }) => ({
     }),
     createHtmlPlugin({
       minify: true,
+      inject: {
+        data: {
+          csp: buildCSP({
+            'default-src': [
+              'self'
+            ],
+            'connect-src': [
+              'self',
+              '*.alchemyapi.io',
+              '*.bean.money',
+              '*.snapshot.org',
+              'wss://*.walletconnect.org',
+              'wss://*.bridge.walletconnect.org',
+              'registry.walletconnect.com',
+              'wss://*.walletlink.org',
+              '*.google-analytics.com',
+              '*.doubleclick.net'
+            ],
+            'style-src': [
+              'self',
+              'unsafe-inline'
+            ],
+            'script-src': [
+              'self',
+              '*.google-analytics.com',
+              '*.googletagmanager.com',
+              'sha256-D0XQFeW9gcWWp4NGlqN0xpmiObsjqCewnVFeAsys7qM=' // GA inline script
+            ],
+            'img-src': [
+              '*.githubusercontent.com',
+            ],
+          })
+        }
+      }
     }),
     splitVendorChunkPlugin(),
     analyze({ limit: 10 }),
