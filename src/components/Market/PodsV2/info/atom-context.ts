@@ -1,9 +1,14 @@
 import { BigNumber } from 'bignumber.js';
-import { atom, PrimitiveAtom } from 'jotai';
+import { atom, PrimitiveAtom, useAtom } from 'jotai';
 import { atomWithReset } from 'jotai/utils';
+import { useEffect, useMemo } from 'react';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 import Token from '~/classes/Token';
 import { ZERO_BN } from '~/constants';
+import { BEAN, ETH, WETH } from '~/constants/tokens';
+import usePreferredToken, {
+  PreferredToken,
+} from '~/hooks/farmer/usePreferredToken';
 
 // ---------- TYPES ----------
 type PartialOpenState = 0 | 1 | 2;
@@ -16,6 +21,7 @@ export enum PodOrderAction {
 export enum PodOrderType {
   ORDER = 0,
   FILL = 1,
+  LIST = 2,
 }
 
 export enum PricingFn {
@@ -147,3 +153,40 @@ export const listingPodsAmountAtom = atom((get) => {
   const selectedListing = get(_selectedListingAtom);
   return selectedListing?.amount || ZERO_BN;
 });
+
+// ---------- UTILS ----------
+
+const PREFERRED_TOKENS: PreferredToken[] = [
+  {
+    token: BEAN,
+    minimum: new BigNumber(1), // $1
+  },
+  {
+    token: ETH,
+    minimum: new BigNumber(0.001), // ~$2-4
+  },
+  {
+    token: WETH,
+    minimum: new BigNumber(0.001), // ~$2-4
+  },
+];
+
+/**
+ * implemented as a separate hook to account for current chain
+ * @returns the preferred token for the current market
+ */
+export const useFulfillTokenAtom = () => {
+  const [fulfillToken, setFulfillToken] = useAtom(fulfillTokenAtom);
+  const baseToken = usePreferredToken(PREFERRED_TOKENS, 'use-best');
+
+  useEffect(() => {
+    if (baseToken && !fulfillToken) {
+      setFulfillToken(baseToken);
+    }
+  }, [fulfillToken, baseToken, setFulfillToken]);
+
+  return useMemo(
+    () => [fulfillToken, setFulfillToken] as const,
+    [fulfillToken, setFulfillToken]
+  );
+};
