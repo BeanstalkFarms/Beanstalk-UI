@@ -128,7 +128,7 @@ export const BeanstalkPalette = {
       primary: '#FFDE7B',
       brown: '#B97D46',
       lightBrown: '#E5D7C8',
-    }
+    },
   },
 };
 
@@ -230,7 +230,7 @@ let muiTheme = createTheme({
     background: {
       default: BeanstalkPalette.theme.fall.light,
       paper: BeanstalkPalette.white,
-    }
+    },
   },
 
   /**
@@ -278,6 +278,10 @@ let muiTheme = createTheme({
       fontFamily: 'Futura PT',
       fontSize: FontSize.sm, // 14px
       fontWeight: FontWeight.medium,
+    },
+    caption: {
+      fontSize: FontSize.xs, // 12px
+      fontWeight: FontWeight.normal,
     },
     // nav labels, nav button labels, token labels (module)
     bodyMedium: {

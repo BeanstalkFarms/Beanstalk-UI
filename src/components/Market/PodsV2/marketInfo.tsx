@@ -8,7 +8,7 @@ import { useAtom } from 'jotai';
 import useTabs from '~/hooks/display/useTabs';
 import { POD_MARKET_COLUMNS } from './tables/activityTable';
 
-import { FontSize } from '~/components/App/muiTheme';
+import { FontSize, FontWeight } from '~/components/App/muiTheme';
 import Row from '~/components/Common/Row';
 import { marketBottomTabsAtom } from './info/atom-context';
 import DropdownIcon from '~/components/Common/DropdownIcon';
@@ -34,9 +34,10 @@ export const podMarketActivityColumns: DataGridProps['columns'] = [
 const sx = {
   tabs: {
     '&.MuiTab-root': {
-      fontSize: FontSize.xs,
+      fontSize: FontSize.sm,
+      fontWeight: FontWeight.bold,
       '&.Mui-selected': {
-        fontSize: FontSize.xs,
+        fontSize: FontSize.sm,
       },
     },
   },
