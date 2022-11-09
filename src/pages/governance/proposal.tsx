@@ -6,6 +6,7 @@ import {
   Stack, Typography
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
+import BigNumber from 'bignumber.js';
 import PageHeader from '~/components/Common/PageHeader';
 import GovernanceActions from '~/components/Governance/Actions';
 import ProposalContent from '~/components/Governance/Proposal';
@@ -14,6 +15,44 @@ import { Proposal } from '~/util/Governance';
 import PageNotFound from '~/pages/error/404';
 
 import { FC } from '~/types';
+import useProposalBlockData from '~/hooks/beanstalk/useProposalBlockData';
+import useAccount from '~/hooks/ledger/useAccount';
+import { ZERO_BN } from '~/constants';
+
+const ProposalPageInner : FC<{ proposal: Proposal }> = ({ proposal }) => {
+  ///
+  const account = useAccount();
+
+  /// Query: Quorum
+  const quorum = useProposalBlockData(proposal, account);
+  const score = (
+    proposal.space.id === 'wearebeansprout.eth'
+      ? new BigNumber(proposal.scores_total || ZERO_BN)
+      : new BigNumber(proposal.scores[0] || ZERO_BN)
+  );
+
+  return (
+    <Container maxWidth="lg">
+      <Stack gap={2}>
+        <PageHeader returnPath="/governance" />
+        <Grid container direction={{ xs: 'column-reverse', md: 'row' }} spacing={{ xs: 0, md: 2 }} gap={{ xs: 2, md: 0 }} maxWidth="100%">
+          <Grid item xs={12} md={8} maxWidth="100% !important">
+            <ProposalContent
+              proposal={proposal}
+              quorum={quorum}
+            />
+          </Grid>
+          <Grid item xs={12} md={4} maxWidth="100%">
+            <GovernanceActions
+              proposal={proposal}
+              quorum={quorum}
+            />
+          </Grid>
+        </Grid>
+      </Stack>
+    </Container>
+  );
+};
 
 const ProposalPage: FC<{}> = () => {
   /// Routing
@@ -54,19 +93,7 @@ const ProposalPage: FC<{}> = () => {
   }
 
   return (
-    <Container maxWidth="lg">
-      <Stack gap={2}>
-        <PageHeader returnPath="/governance" />
-        <Grid container direction={{ xs: 'column-reverse', md: 'row' }} spacing={{ xs: 0, md: 2 }} gap={{ xs: 2, md: 0 }} maxWidth="100%">
-          <Grid item xs={12} md={8} maxWidth="100% !important">
-            <ProposalContent proposal={proposal} />
-          </Grid>
-          <Grid item xs={12} md={4} maxWidth="100%">
-            <GovernanceActions proposal={proposal} />
-          </Grid>
-        </Grid>
-      </Stack>
-    </Container>
+    <ProposalPageInner proposal={proposal} />
   );
 };
 

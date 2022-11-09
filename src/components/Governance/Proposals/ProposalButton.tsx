@@ -8,7 +8,6 @@ import ProposalStats from '~/components/Governance/Proposals/ProposalStats';
 import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
 import { Proposal } from '~/util/Governance';
 import Row from '~/components/Common/Row';
-import useProposalQuorum from '~/hooks/beanstalk/useProposalBlockData';
 
 import { FC } from '~/types';
 
@@ -26,9 +25,6 @@ const ProposalButton: FC<{ proposal: Proposal }> = ({ proposal }) => {
     skip: !account, // only send query when wallet connected
     context: { subgraph: 'snapshot' }
   });
-
-  /// Query Quorum
-  const { data: { totalStalk, quorum } } = useProposalQuorum(proposal);
 
   /// Time
   const today = new Date();
@@ -69,8 +65,8 @@ const ProposalButton: FC<{ proposal: Proposal }> = ({ proposal }) => {
         <Stack direction={{ xs: 'column', lg: 'row' }} justifyContent="space-between">
           <ProposalStats
             proposal={proposal}
-            totalStalk={totalStalk}
-            quorum={quorum}
+            // totalStalk={totalStalk}
+            // quorum={quorum}
             differenceInTime={differenceInTime}
           />
         </Stack>
