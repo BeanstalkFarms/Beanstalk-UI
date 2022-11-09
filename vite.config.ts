@@ -45,10 +45,10 @@ export default defineConfig(({ command, mode }) => ({
         data: {
           csp: buildCSP({
             'default-src': [
-              'self'
+              '\'self\''
             ],
             'connect-src': [
-              'self',
+              '\'self\'',
               '*.alchemyapi.io',
               '*.bean.money',
               '*.snapshot.org',
@@ -60,14 +60,14 @@ export default defineConfig(({ command, mode }) => ({
               '*.doubleclick.net'
             ],
             'style-src': [
-              'self',
-              'unsafe-inline'
+              '\'self\'',
+              '\'unsafe-inline\''
             ],
             'script-src': [
-              'self',
+              '\'self\'',
               '*.google-analytics.com',
               '*.googletagmanager.com',
-              'sha256-D0XQFeW9gcWWp4NGlqN0xpmiObsjqCewnVFeAsys7qM=' // GA inline script
+              '\'sha256-D0XQFeW9gcWWp4NGlqN0xpmiObsjqCewnVFeAsys7qM=\'' // GA inline script
             ],
             'img-src': [
               '*.githubusercontent.com',
