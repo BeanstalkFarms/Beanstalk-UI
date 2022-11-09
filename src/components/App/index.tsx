@@ -53,6 +53,7 @@ import useAccount from '~/hooks/ledger/useAccount';
 import EnforceNetwork from '~/components/App/EnforceNetwork';
 
 import { FC } from '~/types';
+import Leaves from '~/components/App/theme/Fall/Leaves';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -125,6 +126,7 @@ export default function App() {
       <EnforceNetwork />
       <CustomToaster navHeight={navHeight} />
       {account && <NewProposalsDialog />}
+      <Leaves />
       <Box
         sx={{
           bgcolor: 'background.default',
@@ -145,46 +147,49 @@ export default function App() {
           },
         }}
       >
-        <Routes>
-          <Route path="/" element={<ForecastPage />} />
-          <Route path="/analytics" element={<AnalyticsPage />} />
-          <Route path="/balances" element={<BalancesPage />} />
-          <Route path="/barn" element={<Barn />} />
-          <Route path="/chop" element={<ChopPage />} />
-          <Route path="/field" element={<FieldPage />} />
-          <Route path="/governance" element={<GovernancePage />} />
-          <Route path="/history" element={<TransactionHistoryPage />} />
-          <Route path="/market" element={<PodMarketPage />} />
-          <Route path="/market/account" element={<MarketAccountPage />} />
-          <Route path="/market/activity" element={<MarketActivityPage />} />
-          <Route path="/market/create" element={<CreatePage />} />
-          <Route path="/market/order/:id" element={<OrderPage />} />
-          <Route path="/market/listing/:id" element={<ListingPage />} />
-          {/* DEX CODE (hidden) */}
-          {/* <Route path="/market/wells" element={<WellHomePage />} /> */}
-          {/* <Route path="/market/wells/:id" element={<WellPage />} /> */}
-          <Route path="/nft" element={<NFTPage />} />
-          <Route path="/governance/:id" element={<ProposalPage />} />
-          <Route path="/silo" element={<SiloPage />} />
-          <Route path="/silo/:address" element={<SiloTokenPage />} />
-          <Route path="/swap" element={<SwapPage />} />
-          <Route path="/404" element={<PageNotFound />} />
-          <Route path="*" element={<Navigate replace to="/404" />} />
-        </Routes>
-        <Box
-          sx={{
-            position: 'fixed',
-            bottom: 0,
-            right: 0,
-            pr: 1,
-            pb: 0.4,
-            opacity: 0.6,
-            display: { xs: 'none', lg: 'block' },
-          }}
-        >
-          <Typography fontSize="small">
-            v{import.meta.env.VITE_VERSION || '0.0.0'} &middot; {sgEnvKey}
-          </Typography>
+        {/* use zIndex to move content over content */}
+        <Box sx={{ position: 'relative', zIndex: 1 }}>
+          <Routes>
+            <Route path="/" element={<ForecastPage />} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
+            <Route path="/balances" element={<BalancesPage />} />
+            <Route path="/barn" element={<Barn />} />
+            <Route path="/chop" element={<ChopPage />} />
+            <Route path="/field" element={<FieldPage />} />
+            <Route path="/governance" element={<GovernancePage />} />
+            <Route path="/history" element={<TransactionHistoryPage />} />
+            <Route path="/market" element={<PodMarketPage />} />
+            <Route path="/market/account" element={<MarketAccountPage />} />
+            <Route path="/market/activity" element={<MarketActivityPage />} />
+            <Route path="/market/create" element={<CreatePage />} />
+            <Route path="/market/order/:id" element={<OrderPage />} />
+            <Route path="/market/listing/:id" element={<ListingPage />} />
+            {/* DEX CODE (hidden) */}
+            {/* <Route path="/market/wells" element={<WellHomePage />} /> */}
+            {/* <Route path="/market/wells/:id" element={<WellPage />} /> */}
+            <Route path="/nft" element={<NFTPage />} />
+            <Route path="/governance/:id" element={<ProposalPage />} />
+            <Route path="/silo" element={<SiloPage />} />
+            <Route path="/silo/:address" element={<SiloTokenPage />} />
+            <Route path="/swap" element={<SwapPage />} />
+            <Route path="/404" element={<PageNotFound />} />
+            <Route path="*" element={<Navigate replace to="/404" />} />
+          </Routes>
+          <Box
+            sx={{
+              position: 'fixed',
+              bottom: 0,
+              right: 0,
+              pr: 1,
+              pb: 0.4,
+              opacity: 0.6,
+              display: { xs: 'none', lg: 'block' },
+            }}
+          >
+            <Typography fontSize="small">
+              v{import.meta.env.VITE_VERSION || '0.0.0'} &middot; {sgEnvKey}
+            </Typography>
+          </Box>
         </Box>
       </Box>
     </>
