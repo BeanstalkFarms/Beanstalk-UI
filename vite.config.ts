@@ -70,6 +70,7 @@ export default defineConfig(({ command, mode }) => ({
               '\'sha256-D0XQFeW9gcWWp4NGlqN0xpmiObsjqCewnVFeAsys7qM=\'' // GA inline script
             ],
             'img-src': [
+              '\'self\'',
               '*.githubusercontent.com',
             ],
           })
