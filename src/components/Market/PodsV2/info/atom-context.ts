@@ -2,6 +2,7 @@ import { BigNumber } from 'bignumber.js';
 import { atom, PrimitiveAtom, useAtom } from 'jotai';
 import { atomWithReset } from 'jotai/utils';
 import { useEffect, useMemo } from 'react';
+import { PlotFragment } from '~/components/Common/Form';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 import Token from '~/classes/Token';
 import { ZERO_BN } from '~/constants';
@@ -53,6 +54,12 @@ export const pricingFunctionAtom = atom<PricingFn>(PricingFn.FIXED);
 
 // the price of the active form
 export const orderPriceAtom = atom<BigNumber>(ZERO_BN);
+
+// [SELL] - the plot to sell
+export const selectedPlotAtom = atom<PlotFragment | null>(null);
+
+// [SELL] - the amount of pods to sell from the selected plot
+export const selectedPlotNumPodsAtom = atom<BigNumber>(ZERO_BN);
 
 // the active listing in the form (BUY / SELL)
 const _selectedListingAtom = atom<PodListing | null>(null);

@@ -20,6 +20,7 @@ const TokenAdornment: FC<
     buttonLabel?: string | JSX.Element;
   } & {
     iconSize?: keyof typeof IconSize;
+    downArrowIconSize?: keyof typeof IconSize;
     textVariant?: TypographyVariant;
   } & ButtonProps
 > = ({
@@ -28,6 +29,7 @@ const TokenAdornment: FC<
   disabled,
   onClick,
   iconSize = 'small',
+  downArrowIconSize = 'small',
   textVariant = 'bodyMedium' as TypographyVariant,
   ...props
 }) => (
@@ -73,7 +75,7 @@ const TokenAdornment: FC<
         {onClick && (
           <KeyboardArrowDownIcon
             sx={{
-              fontSize: 18,
+              fontSize: downArrowIconSize || 18,
               color: 'rgba(0,0,0,0.87)',
             }}
           />
