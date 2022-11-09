@@ -13,6 +13,7 @@ import Row from '~/components/Common/Row';
 import EntityIcon from '~/components/Market/Pods/EntityIcon';
 import { WellActivityData } from '~/components/Market/Wells/Tables';
 import { Token } from '~/classes';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const basicCell = (params: GridRenderCellParams) => <Typography>{params.formattedValue}</Typography>;
 
@@ -395,7 +396,7 @@ const COLUMNS = {
     width: 20,
     sortable: false,
     filterable: false,
-    renderCell: () => <ArrowRightIcon color="secondary" />
+    renderCell: () => <ArrowRightIcon sx={{ color: BeanstalkPalette.lightestGrey }} />
   } as GridColumns[number],
 };
 

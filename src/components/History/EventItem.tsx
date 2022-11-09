@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Divider, Link, Stack, Typography } from '@mui/material';
+import { Box, Link, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Token from '~/classes/Token';
 import { displayBN, toTokenUnitsBN } from '~/util';
@@ -216,7 +216,6 @@ const EventItem: FC<EventItemProps> = ({ event, account }) => {
           </Stack>
         </Row>
       </Box>
-      <Divider />
     </>
   );
 };
