@@ -2,6 +2,7 @@ import { BigNumber } from 'bignumber.js';
 import { atom, PrimitiveAtom, useAtom } from 'jotai';
 import { atomWithReset } from 'jotai/utils';
 import { useEffect, useMemo } from 'react';
+
 import { PlotFragment } from '~/components/Common/Form';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 import Token from '~/classes/Token';
@@ -10,9 +11,10 @@ import { BEAN, ETH, WETH } from '~/constants/tokens';
 import usePreferredToken, {
   PreferredToken,
 } from '~/hooks/farmer/usePreferredToken';
-
 // ---------- TYPES ----------
 type PartialOpenState = 0 | 1 | 2;
+
+export type MayBN = BigNumber | null;
 
 export enum PodOrderAction {
   BUY = 0,
@@ -31,7 +33,7 @@ export enum PricingFn {
 }
 
 export type PodsStateAtom<T extends BigNumber> = PrimitiveAtom<T>;
-export type ValueAtom = PrimitiveAtom<BigNumber>;
+export type ValueAtom<T extends BigNumber | null> = PrimitiveAtom<T>;
 
 // TODO - debounce;
 
@@ -47,19 +49,48 @@ export const podsOrderActionAtom = atom<PodOrderAction>(PodOrderAction.BUY);
 export const podsOrderTypeAtom = atom<PodOrderType>(PodOrderType.ORDER);
 
 // the place in line of a specific order or maximum place in line of an order
-export const placeInLineAtom = atomWithReset<BigNumber>(ZERO_BN);
+export const placeInLineAtom = atomWithReset<MayBN>(null);
 
 // whether a fixed or dynamic pricing function is being used for the active form
 export const pricingFunctionAtom = atom<PricingFn>(PricingFn.FIXED);
 
 // the price of the active form
-export const orderPriceAtom = atom<BigNumber>(ZERO_BN);
+export const orderPriceAtom = atom<MayBN>(null);
+
+// ----- SELECTED PLOT -----
+
+// [SELL] = the amount of pods to sell from selected plot
+export const selectedPlotAmountAtom = atom<MayBN>(null);
+
+export const selectedPlotStartAtom = atom<MayBN>(null);
+
+export const selectedPlotEndAtom = atom<MayBN>(null);
+
+export const selectedPlotIndexAtom = atom<string | null>(null);
 
 // [SELL] - the plot to sell
-export const selectedPlotAtom = atom<PlotFragment | null>(null);
+export const selectedPlotAtom = atom(
+  (get) => {
+    const index = get(selectedPlotIndexAtom);
+    const start = get(selectedPlotStartAtom);
+    const end = get(selectedPlotEndAtom);
+    const amount = get(selectedPlotAmountAtom);
 
-// [SELL] - the amount of pods to sell from the selected plot
-export const selectedPlotNumPodsAtom = atom<BigNumber>(ZERO_BN);
+    if (!index && !start && !end && !amount) return null;
+    return {
+      index,
+      start,
+      end,
+      amount,
+    } as PlotFragment;
+  },
+  (_get, set, update: PlotFragment) => {
+    set(selectedPlotAmountAtom, update.amount);
+    set(selectedPlotStartAtom, update.start);
+    set(selectedPlotEndAtom, update.end);
+    set(selectedPlotIndexAtom, update.index);
+  }
+);
 
 // the active listing in the form (BUY / SELL)
 const _selectedListingAtom = atom<PodListing | null>(null);
@@ -68,7 +99,7 @@ const _selectedListingAtom = atom<PodListing | null>(null);
 const _selectedOrderAtom = atom<PodOrder | null>(null);
 
 // the total amount to fulfill a buy or sell order
-export const fulfillAmountAtom = atom<BigNumber>(ZERO_BN);
+export const fulfillAmountAtom = atom<MayBN>(null);
 
 // the token used to fulfill a buy order
 export const fulfillTokenAtom = atom<Token | null>(null);

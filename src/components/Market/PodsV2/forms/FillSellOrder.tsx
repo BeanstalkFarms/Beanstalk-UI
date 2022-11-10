@@ -4,16 +4,14 @@ import React, { useEffect, useMemo } from 'react';
 import InfoRow from '~/components/Common/Form/InfoRow';
 import { ZERO_BN } from '~/constants';
 import { displayFullBN, displayBN } from '~/util';
-import AtomInputField from '../common/AtomInputField';
+import AtomInputField from '~/components/Common/Atom/AtomInputField';
 import PlaceInLineSlider from '../common/PlaceInLineSlider';
 import { selectedListingAtom, fulfillAmountAtom } from '../info/atom-context';
 
 const FillSellOrder: React.FC<{}> = () => {
   const selected = useAtomValue(selectedListingAtom);
   const setFulfillAmount = useSetAtom(fulfillAmountAtom);
-  const amountAtom = atom(
-    useMemo(() => selected?.amount || ZERO_BN, [selected])
-  );
+  const amountAtom = atom(useMemo(() => selected?.amount || null, [selected]));
 
   useEffect(() => {
     if (selected) {

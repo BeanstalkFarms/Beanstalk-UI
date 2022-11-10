@@ -29,7 +29,7 @@ const SubAction: FC<{ isActive: boolean; onClick: () => void }> = ({
       ':hover': {
         backgroundColor: isActive ? BeanstalkPalette.lightYellow : undefined,
       },
-      borderRadius: 0.8,
+      borderRadius: 0.4,
     }}
   >
     {children}

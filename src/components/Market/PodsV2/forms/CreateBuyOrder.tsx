@@ -1,7 +1,7 @@
 import { Stack, InputAdornment, Typography, Divider } from '@mui/material';
 import React from 'react';
 import Row from '~/components/Common/Row';
-import AtomInputField from '../common/AtomInputField';
+import AtomInputField from '~/components/Common/Atom/AtomInputField';
 import FulfillOrderAmount from '../common/FulfillOrderAmount';
 import PlaceInLineSlider from '../common/PlaceInLineSlider';
 import PricingFnSelect from '../common/PricingFnSelect';

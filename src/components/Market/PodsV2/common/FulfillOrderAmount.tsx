@@ -8,7 +8,7 @@ import useTokenMap from '~/hooks/chain/useTokenMap';
 import useToggle from '~/hooks/display/useToggle';
 import useFarmerBalances from '~/hooks/farmer/useFarmerBalances';
 import { fulfillAmountAtom, useFulfillTokenAtom } from '../info/atom-context';
-import AtomInputField from './AtomInputField';
+import AtomInputField from '~/components/Common/Atom/AtomInputField';
 
 const FulfillOrderAmount: React.FC<{}> = () => {
   // State
