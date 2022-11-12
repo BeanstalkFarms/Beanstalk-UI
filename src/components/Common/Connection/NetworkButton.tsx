@@ -7,7 +7,6 @@ import { ETH } from '~/constants/tokens';
 import TokenIcon from '../TokenIcon';
 import DropdownIcon from '../DropdownIcon';
 import NetworkDialog from './NetworkDialog';
-import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const NetworkButton: React.FC<ButtonProps & {
   showIcons?: boolean;
@@ -62,9 +61,7 @@ const NetworkButton: React.FC<ButtonProps & {
               xs: 0
             }
           },
-          ...props.sx,
-          background: BeanstalkPalette.theme.fallDark.cardBackground,
-          color: 'text.primary'
+          ...props.sx
         }}
       >
         {children || (

@@ -8,7 +8,6 @@ import ProposalStats from '~/components/Governance/Proposals/ProposalStats';
 import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
 import { Proposal } from '~/util/Governance';
 import Row from '~/components/Common/Row';
-import useProposalQuorum from '~/hooks/beanstalk/useProposalBlockData';
 
 import { FC } from '~/types';
 
@@ -27,9 +26,6 @@ const ProposalButton: FC<{ proposal: Proposal }> = ({ proposal }) => {
     context: { subgraph: 'snapshot' }
   });
 
-  /// Query Quorum
-  const { data: { totalStalk, quorum } } = useProposalQuorum(proposal);
-
   /// Time
   const today = new Date();
   const endDate = new Date(proposal.end * 1000);
@@ -44,11 +40,8 @@ const ProposalButton: FC<{ proposal: Proposal }> = ({ proposal }) => {
       sx={{
         p: 2,
         height: 'auto',
-        color: 'text.primary',
-        borderColor: BeanstalkPalette.theme.fallDark.dividerGrey,
-        ':hover': {
-          borderColor: BeanstalkPalette.theme.fallDark.primary
-        }
+        color: '#000000',
+        borderColor: BeanstalkPalette.lightestGrey,
       }}
     >
       <Stack gap={1} width="100%">
@@ -72,8 +65,8 @@ const ProposalButton: FC<{ proposal: Proposal }> = ({ proposal }) => {
         <Stack direction={{ xs: 'column', lg: 'row' }} justifyContent="space-between">
           <ProposalStats
             proposal={proposal}
-            totalStalk={totalStalk}
-            quorum={quorum}
+            // totalStalk={totalStalk}
+            // quorum={quorum}
             differenceInTime={differenceInTime}
           />
         </Stack>

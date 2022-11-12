@@ -28,22 +28,23 @@ type VoteFormValues = {
 
 const VoteForm: FC<FormikProps<VoteFormValues> & {
   proposal: Proposal;
+  quorum: ReturnType<typeof useProposalBlockData>;
   existingChoice: number | undefined;
 }> = ({
   values,
   setFieldValue,
   isSubmitting,
   proposal,
+  quorum,
   existingChoice
 }) => {
   /// State
   const account = useAccount();
   const farmerSilo = useSelector<AppState, AppState['_farmer']['silo']>((state) => state._farmer.silo);
-  const beanstalkSilo = useSelector<AppState, AppState['_beanstalk']['silo']>((state) => state._beanstalk.silo);
-
-  /// Query Quorum
-  const { data: { totalStalk, quorum, quorumPct, votingPower, tag }, loading: loadingQuorum } = useProposalBlockData(proposal, account);
   
+  ///  Quorum
+  const { data: { totalStalk, stalkForQuorum, pctStalkForQuorum: quorumPct, votingPower, tag }, loading: loadingQuorum } = quorum;
+
   /// Time
   const today = new Date();
   const endDate = new Date(proposal.end * 1000);
@@ -70,12 +71,19 @@ const VoteForm: FC<FormikProps<VoteFormValues> & {
 
   if (!proposal.choices) return null;
 
+  // {quorumPctComplete?.gt(0) && (
+  //   <>
+  //     &nbsp;
+  //     <CircularProgress variant="determinate" value={(quorumPctComplete.times(100)).toNumber()} size={12} thickness={8}  />
+  //   </>
+  // )}
+
   return (
     <Form autoComplete="off">
       <Stack gap={1}>
         {/**
-         * Progress by choice
-         */}
+          * Progress by choice
+          */}
         <Stack px={1} pb={1} gap={1.5}>
           {(votingPower && totalStalk) && (
             <StatHorizontal
@@ -86,17 +94,23 @@ const VoteForm: FC<FormikProps<VoteFormValues> & {
                 </div>
               }
             >
-              {displayBN(votingPower)} STALK&nbsp;&nbsp;·&nbsp;&nbsp;{displayBN(votingPower.div(totalStalk).multipliedBy(100))}%
+              {displayBN(votingPower)} STALK&nbsp;·&nbsp;{displayBN(votingPower.div(totalStalk).multipliedBy(100))}%
             </StatHorizontal>
           )}
-          {(quorumPct && quorum) && (
+          {(quorumPct && stalkForQuorum) && (
             <StatHorizontal
-              label="Quorum"
+              label={(
+                <>
+                  <Row display="inline-flex" alignItems="center">
+                    <span>Quorum</span>
+                  </Row>
+                </>
+              )}
               labelTooltip={
                 <Stack gap={0.5}>
-                  {quorum && (
+                  {stalkForQuorum && (
                     <StatHorizontal label="Stalk for Quorum">
-                      ~{displayFullBN(quorum, 2, 2)}
+                      ~{displayFullBN(stalkForQuorum, 2, 2)}
                     </StatHorizontal>
                   )}
                   <StatHorizontal label="Eligible Stalk">
@@ -106,19 +120,20 @@ const VoteForm: FC<FormikProps<VoteFormValues> & {
                     {proposal.snapshot}
                   </StatHorizontal>
                 </Stack>
-              }>
+              }
+            >
               {loadingQuorum ? (
                 <CircularProgress size={16} />
               ) : (
                 <>
-                  ~{displayFullBN(quorum, 0)} STALK&nbsp;&nbsp;·&nbsp;&nbsp;{(quorumPct * 100).toFixed(0)}%
+                  ~{displayFullBN(stalkForQuorum, 0)} STALK&nbsp;·&nbsp;{(quorumPct * 100).toFixed(0)}%
                 </>
               )}
             </StatHorizontal>
           )}
           <Divider />
           {proposal.choices.map((choice: string, index: number) => (
-            <Stack gap={0.5}>
+            <Stack gap={0.5} key={choice}>
               <Row columnGap={0.5} flexWrap="wrap" justifyContent="space-between">
                 <Typography variant="body1">
                   {isClosed && existingChoice !== undefined && (existingChoice === index + 1) ? (
@@ -216,17 +231,20 @@ const VoteForm: FC<FormikProps<VoteFormValues> & {
 
 // ---------------------------------------------------
 
-const Vote: FC<{ proposal: Proposal }> = (props) => {
+const Vote: FC<{
+  proposal: Proposal;
+  quorum: ReturnType<typeof useProposalBlockData>;
+}> = ({ proposal, quorum }) => {
   const account = useAccount();
   const { data: signer } = useSigner();
 
   /// Query Votes
   const { data: voteData, refetch: refetchVotes } = useVotesQuery({
     variables: {
-      proposal_id: props.proposal?.id.toLowerCase() || '',
+      proposal_id: proposal?.id.toLowerCase() || '',
       voter_address: account || '',
     },
-    skip: !account || !props.proposal?.id, // only send query when wallet connected
+    skip: !account || !proposal?.id, // only send query when wallet connected
     context: { subgraph: 'snapshot' },
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'network-only',
@@ -247,9 +265,9 @@ const Vote: FC<{ proposal: Proposal }> = (props) => {
         const _account = await signer?.getAddress();
         if (!_account) throw new Error('Missing signer.');
         if (values.choice === undefined) throw new Error('Select a voting choice.'); // use undefined here since 'choice' can be numerical zero 
-        if (!props.proposal) throw new Error('Error loading proposal data.');
-        if (props.proposal.type !== 'single-choice') throw new Error('Unsupported proposal type. Please vote through snapshot.org directly.');
-        if (!props.proposal?.space?.id) throw new Error('Unknown space.');
+        if (!proposal) throw new Error('Error loading proposal data.');
+        if (proposal.type !== 'single-choice') throw new Error('Unsupported proposal type. Please vote through snapshot.org directly.');
+        if (!proposal?.space?.id) throw new Error('Unknown space.');
 
         txToast = new TransactionToast({
           loading: 'Voting on proposal...',
@@ -259,9 +277,9 @@ const Vote: FC<{ proposal: Proposal }> = (props) => {
         const hub = 'https://hub.snapshot.org';
         const client = new snapshot.Client712(hub);
         const message = {
-          space: props.proposal.space.id,
-          proposal: props.proposal.id,
-          type: props.proposal.type as 'single-choice', // 'single-choice' | 'approval' | 'quadratic' | 'ranked-choice' | 'weighted' | 'basic';
+          space: proposal.space.id,
+          proposal: proposal.id,
+          type: proposal.type as 'single-choice', // 'single-choice' | 'approval' | 'quadratic' | 'ranked-choice' | 'weighted' | 'basic';
           choice: values.choice,
           app: 'snapshot'
         };
@@ -282,7 +300,7 @@ const Vote: FC<{ proposal: Proposal }> = (props) => {
         formActions.setSubmitting(false);
       }
     },
-    [props.proposal, signer, refetchVotes]
+    [proposal, signer, refetchVotes]
   );
 
   return (
@@ -293,7 +311,8 @@ const Vote: FC<{ proposal: Proposal }> = (props) => {
     >
       {(formikProps: FormikProps<VoteFormValues>) => (
         <VoteForm
-          proposal={props.proposal}
+          proposal={proposal}
+          quorum={quorum}
           existingChoice={existingChoice}
           {...formikProps}
         />

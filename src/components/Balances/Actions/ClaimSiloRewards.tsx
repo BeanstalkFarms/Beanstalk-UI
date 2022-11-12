@@ -16,8 +16,8 @@ import {
   ModuleContent,
 } from '~/components/Common/Module';
 import beanIcon from '~/img/tokens/bean-logo-circled.svg';
-import stalkIcon from '~/img/beanstalk/stalk-icon-white.svg';
-import seedIcon from '~/img/beanstalk/seed-icon-white.svg';
+import stalkIcon from '~/img/beanstalk/stalk-icon.svg';
+import seedIcon from '~/img/beanstalk/seed-icon.svg';
 
 import useRevitalized from '~/hooks/farmer/useRevitalized';
 import { AppState } from '~/state';
@@ -281,7 +281,7 @@ const RewardsContent: React.FC<{}> = () => {
           <Grid item xs={4}>
             <RewardItem
               title="Revitalized Seed"
-              amount={revitalizedSeeds?.gt(0) ? revitalizedStalk : ZERO_BN}
+              amount={revitalizedSeeds?.gt(0) ? revitalizedSeeds : ZERO_BN}
               icon={seedIcon}
               titleColor="text.primary"
             />

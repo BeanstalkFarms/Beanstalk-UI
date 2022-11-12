@@ -92,7 +92,7 @@ const Overview: FC<{
         title="Stalk Ownership"
         titleTooltip="Your current ownership of Beanstalk is displayed as a percentage. Ownership is determined by your proportional ownership of the total Stalk supply."
         amount={displayPercentage(ownership.multipliedBy(100))}
-        color="text.secondary"
+        color="dark.main"
         gap={0.25}
         sx={{ minWidth: 200, ml: 0 }}
       />

@@ -145,11 +145,11 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
           onClick={showPick}
           sx={{
             py: 1.25,
-            backgroundColor: BeanstalkPalette.theme.fallDark.lightOrange,
-            color: BeanstalkPalette.theme.fallDark.primary,
+            backgroundColor: BeanstalkPalette.lightBrown,
+            color: BeanstalkPalette.brown,
             '&:hover': {
-              backgroundColor: BeanstalkPalette.theme.fallDark.lightOrange,
-              opacity: 0.94,
+              backgroundColor: BeanstalkPalette.lightBrown,
+              opacity: 0.96,
             },
           }}
         >
@@ -164,10 +164,10 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
           href="/#/chop"
           sx={{
             py: 1.25,
-            backgroundColor: BeanstalkPalette.theme.fallDark.primary,
-            color: 'text.primary',
+            backgroundColor: BeanstalkPalette.theme.fall.brown,
+            color: BeanstalkPalette.white,
             '&:hover': {
-              backgroundColor: BeanstalkPalette.theme.fallDark.primary,
+              backgroundColor: BeanstalkPalette.brown,
               opacity: 0.96,
             },
           }}
@@ -193,17 +193,12 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
         {...props}
         onClick={toggleMenuAnchor}
         sx={import.meta.env.VITE_OVERRIDE_FARMER_ACCOUNT ? {
-          background: BeanstalkPalette.theme.fallDark.cardBackground,
           color: 'text.primary',
           borderBottomColor: 'red',
           borderBottomWidth: 2,
           borderBottomStyle: 'solid',
           ...props.sx,
-        } : {
-          background: BeanstalkPalette.theme.fallDark.cardBackground,
-          color: 'text.primary',
-          ...props.sx
-        }}
+        } : props.sx}
       >
         <Typography variant="bodyMedium" display={{ xs: 'none', sm: 'block' }}>
           {/* Use `accountRaw` to match capitalization of wallet provider

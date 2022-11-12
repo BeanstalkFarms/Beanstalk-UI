@@ -38,7 +38,7 @@ const LinkButton: FC<{ to: string; title: string, tag?: string }> = ({ to, title
         to={to}
         size="small"
         variant="text"
-        // color={match ? 'primary' : 'dark'}
+        color={match ? 'primary' : 'dark'}
         sx={{
           '&:hover > h6': {
             textDecorationThickness: '2px',
@@ -51,7 +51,6 @@ const LinkButton: FC<{ to: string; title: string, tag?: string }> = ({ to, title
         <Typography
           variant="subtitle1"
           sx={{
-            color: match ? 'primary.main' : 'text.primary',
             display: 'inline-block',
             textDecorationThickness: '2px',
           }}

@@ -37,7 +37,7 @@ const TxnSettings : FC<{
   return (
     <Box sx={PLACEMENTS[placement]}>
       <IconButton size="small" onClick={handleToggleMenu}>
-        <SettingsIcon sx={{ fontSize: 20, transform: `rotate(${anchorEl ? 30 : 0}deg)`, transition: 'transform 150ms ease-in-out', color: 'text.secondary' }} />
+        <SettingsIcon sx={{ fontSize: 20, transform: `rotate(${anchorEl ? 30 : 0}deg)`, transition: 'transform 150ms ease-in-out' }} />
       </IconButton>
       <Menu
         elevation={0}
@@ -46,9 +46,9 @@ const TxnSettings : FC<{
         onClose={handleHideMenu}
         PaperProps={{
           sx: {
-            backgroundColor: BeanstalkPalette.theme.fallDark.light,
+            backgroundColor: BeanstalkPalette.theme.fall.extraLight,
             borderWidth: 2,
-            borderColor: BeanstalkPalette.theme.fallDark.dividerGrey,
+            borderColor: 'secondary.main',
             borderStyle: 'solid',
             py: 0.5,
             px: 2,
