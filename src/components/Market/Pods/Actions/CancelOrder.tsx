@@ -78,6 +78,7 @@ const CancelOrder : FC<{
         const txn = await beanstalk.cancelPodOrder(
           Bean.stringify(order.pricePerPod),
           Bean.stringify(order.maxPlaceInLine),
+          Bean.stringify(order.minFillAmount || 0),
           destination,
         );
         txToast.confirming(txn);
@@ -91,11 +92,12 @@ const CancelOrder : FC<{
         navigate('/market/account');
       } catch (err) {
         console.error(err);
+        txToast.error(err);
       } finally {
         setLoading(false);
       }
     })();
-  }, [Bean, beanstalk, hide, navigate, order.maxPlaceInLine, order.pricePerPod, refetchFarmerBalances, refetchFarmerMarket, middleware]);
+  }, [middleware, hide, beanstalk, Bean, order.pricePerPod, order.maxPlaceInLine, order.minFillAmount, refetchFarmerMarket, refetchFarmerBalances, navigate]);
 
   return (
     <>

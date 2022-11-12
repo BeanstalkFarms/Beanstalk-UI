@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { ZERO_BN } from '~/constants';
 import { BEAN } from '~/constants/tokens';
 import { MarketStatus, PodListingFragment, PodOrderFragment } from '~/generated/graphql';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
@@ -30,6 +31,8 @@ export const castPodListing = (listing: PodListingFragment, harvestableIndex: Bi
     start:                toTokenUnitsBN(listing.start, BEAN[1].decimals),
     status:               listing.status as MarketStatus,
     mode:                 listing.mode.toString() as FarmToMode, // FIXME: use numbers instead?
+    // @ts-ignore
+    minFillAmount:        listing.minFillAmount || ZERO_BN,
     // ---
     placeInLine:          index.minus(harvestableIndex)
   };
@@ -51,6 +54,8 @@ export const castPodOrder = (order: PodOrderFragment) : PodOrder => {
     remainingAmount: amount.minus(filled),
     maxPlaceInLine:  toTokenUnitsBN(order.maxPlaceInLine, BEAN[1].decimals),
     pricePerPod:     toTokenUnitsBN(order.pricePerPod, BEAN[1].decimals),
+    // @ts-ignore
+    minFillAmount:   order.minFillAmount || ZERO_BN,
     status:          order.status as MarketStatus,
   };
 };
@@ -136,6 +141,11 @@ export type PodListing = {
   filledAmount: BigNumber;
 
   /**
+   * 
+   */
+  minFillAmount: BigNumber;
+  
+  /**
    * Pod Listing status.
    *
    * FIXME: make this an enum
@@ -197,6 +207,11 @@ export type PodOrder = {
    */
   filledAmount: BigNumber;
 
+  /**
+   * 
+   */
+   minFillAmount: BigNumber;
+   
   /**
    * Pod Order status.
    *

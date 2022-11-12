@@ -129,7 +129,7 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
     },
     {
       path: 'analytics',
-      href: 'https://dune.xyz/tbiq/Beanstalk',
+      href: 'https://analytics.bean.money',
       title: 'Advanced Analytics',
       icon: analyticsIcon
     },

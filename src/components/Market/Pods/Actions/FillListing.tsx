@@ -353,6 +353,7 @@ const FillListing : FC<{
       if (!signer) throw new Error('Connect a wallet that can sign transactions first.');
       if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
       if (!formData.amount || !amountBeans || amountBeans.eq(0)) throw new Error('No amount set');
+      if (podListing.amount.lt(new BigNumber(1))) throw new Error('Amount not greater than minFillAmount.');
       
       const data : string[] = [];
       const amountPods = amountBeans.div(podListing.pricePerPod);
@@ -399,6 +400,7 @@ const FillListing : FC<{
             amount:   Bean.stringify(podListing.amount),
             pricePerPod: Bean.stringify(podListing.pricePerPod),
             maxHarvestableIndex: Bean.stringify(podListing.maxHarvestableIndex),
+            minFillAmount: Bean.stringify(podListing.minFillAmount || 0), // minFillAmount for listings is measured in Beans
             mode:     podListing.mode,
           },
           Bean.stringify(amountBeans),
