@@ -248,7 +248,7 @@ const CreateListing: FC<{}> = () => {
         toStringBaseUnitBN(amount,      Bean.decimals),   // relative amount
         toStringBaseUnitBN(pricePerPod, Bean.decimals),   // price per pod
         toStringBaseUnitBN(maxHarvestableIndex, Bean.decimals), // absolute index of expiry
-        toStringBaseUnitBN(new BigNumber(1), PODS.decimals),
+        toStringBaseUnitBN(new BigNumber(1), Bean.decimals), // minFillAmount is measured in Beans
         destination,
       );
       txToast.confirming(txn);

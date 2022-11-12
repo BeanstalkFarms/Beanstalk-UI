@@ -400,7 +400,7 @@ const FillListing : FC<{
             amount:   Bean.stringify(podListing.amount),
             pricePerPod: Bean.stringify(podListing.pricePerPod),
             maxHarvestableIndex: Bean.stringify(podListing.maxHarvestableIndex),
-            minFillAmount: toStringBaseUnitBN(new BigNumber(1), PODS.decimals),
+            minFillAmount: Bean.stringify(podListing.minFillAmount || 0), // minFillAmount for listings is measured in Beans
             mode:     podListing.mode,
           },
           Bean.stringify(amountBeans),

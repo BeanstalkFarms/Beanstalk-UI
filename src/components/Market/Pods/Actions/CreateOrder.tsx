@@ -340,7 +340,7 @@ const CreateOrder : FC<{}> = () => {
           Bean.stringify(tokenData.amount),
           Bean.stringify(pricePerPod),
           Bean.stringify(placeInLine),
-          toStringBaseUnitBN(new BigNumber(1), PODS.decimals),
+          PODS.stringify(new BigNumber(1)), // minFillAmount is measured in Pods
           optimizeFromMode(tokenData.amount, balances[Bean.address])
         );
       } 

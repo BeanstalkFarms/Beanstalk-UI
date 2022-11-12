@@ -2,13 +2,12 @@ import { LoadingButton } from '@mui/lab';
 import { Stack, Typography } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import BigNumber from 'bignumber.js';
 import { IconSize } from '~/components/App/muiTheme';
 import AddressIcon from '~/components/Common/AddressIcon';
 import DescriptionButton from '~/components/Common/DescriptionButton';
 import { StyledDialog, StyledDialogContent, StyledDialogTitle } from '~/components/Common/Dialog';
 import TransactionToast from '~/components/Common/TxnToast';
-import { BEAN, PODS } from '~/constants/tokens';
+import { BEAN } from '~/constants/tokens';
 import useToggle from '~/hooks/display/useToggle';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import useChainConstant from '~/hooks/chain/useChainConstant';
@@ -20,7 +19,6 @@ import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
 import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 import { FC } from '~/types';
-import { toStringBaseUnitBN } from '~/util';
 
 const OPTIONS = [
   {
@@ -80,7 +78,7 @@ const CancelOrder : FC<{
         const txn = await beanstalk.cancelPodOrder(
           Bean.stringify(order.pricePerPod),
           Bean.stringify(order.maxPlaceInLine),
-          toStringBaseUnitBN(new BigNumber(1), PODS.decimals),
+          Bean.stringify(order.minFillAmount || 0),
           destination,
         );
         txToast.confirming(txn);
@@ -94,11 +92,12 @@ const CancelOrder : FC<{
         navigate('/market/account');
       } catch (err) {
         console.error(err);
+        txToast.error(err);
       } finally {
         setLoading(false);
       }
     })();
-  }, [Bean, beanstalk, hide, navigate, order.maxPlaceInLine, order.pricePerPod, refetchFarmerBalances, refetchFarmerMarket, middleware]);
+  }, [middleware, hide, beanstalk, Bean, order.pricePerPod, order.maxPlaceInLine, order.minFillAmount, refetchFarmerMarket, refetchFarmerBalances, navigate]);
 
   return (
     <>
