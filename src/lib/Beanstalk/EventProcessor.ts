@@ -578,6 +578,7 @@ export default class EventProcessor {
       totalAmount:      amount,   //
       remainingAmount:  amount,   //
       filledAmount:     BN(0),    // 
+      minFillAmount:    tokenBN(event.args.minFillAmount || 0, BEAN[1]),
       status:           MarketStatus.Active,
       placeInLine:      ZERO_BN,  // FIXME
     };
@@ -656,6 +657,7 @@ export default class EventProcessor {
       pricePerPod:      tokenBN(event.args.pricePerPod, BEAN[1]),
       remainingAmount:  tokenBN(event.args.amount, BEAN[1]),
       filledAmount:     new BigNumber(0),
+      minFillAmount:    tokenBN(event.args.minFillAmount || 0, PODS),
       status:           MarketStatus.Active,
     };
   }

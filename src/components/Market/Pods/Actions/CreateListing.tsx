@@ -24,7 +24,14 @@ import useFarmerPlots from '~/hooks/farmer/useFarmerPlots';
 import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import { ActionType } from '~/util/Actions';
 import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
-import { PlotMap , toStringBaseUnitBN , parseError, displayTokenAmount, displayBN, displayFullBN } from '~/util';
+import {
+  PlotMap,
+  toStringBaseUnitBN,
+  parseError,
+  displayTokenAmount,
+  displayBN,
+  displayFullBN
+} from '~/util';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 
 import { BEAN, PODS } from '~/constants/tokens';
@@ -241,6 +248,7 @@ const CreateListing: FC<{}> = () => {
         toStringBaseUnitBN(amount,      Bean.decimals),   // relative amount
         toStringBaseUnitBN(pricePerPod, Bean.decimals),   // price per pod
         toStringBaseUnitBN(maxHarvestableIndex, Bean.decimals), // absolute index of expiry
+        toStringBaseUnitBN(new BigNumber(1), Bean.decimals), // minFillAmount is measured in Beans
         destination,
       );
       txToast.confirming(txn);
