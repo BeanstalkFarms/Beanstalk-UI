@@ -12,14 +12,13 @@ const BuyPods: React.FC<{}> = () => {
 
   return (
     <Stack>
-      <Stack sx={{ p: 0.8 }} gap={1.6}>
+      <Stack sx={{ p: 0.8 }}>
         {/* buy or sell toggle */}
         <SubActionSelect />
-        <Stack px={0.4}>
-          {/* create buy order */}
-          {orderType === PodOrderType.ORDER && <CreateBuyOrder />}
-          {orderType === PodOrderType.FILL && <FillSellOrder />}
-        </Stack>
+        {/* create buy order */}
+        {orderType === PodOrderType.ORDER && <CreateBuyOrder />}
+        {/* fill sell order */}
+        {orderType === PodOrderType.FILL && <FillSellOrder />}
       </Stack>
       <Divider />
       {/* submit buy order */}

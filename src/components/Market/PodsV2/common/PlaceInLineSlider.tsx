@@ -29,6 +29,9 @@ const sliderSx = (canSlide?: boolean) => ({
       borderWidth: '0 5px 8px 5px',
       borderColor: 'transparent transparent #000000 transparent',
     },
+    '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
+      boxShadow: 'inherit',
+    },
   },
   '& .MuiSlider-track': {
     height: '8px',
@@ -56,7 +59,8 @@ function CustomThumbComponent(props: CustomThumbComponentProps) {
 const PlaceInLineSlider: React.FC<{
   disabled?: boolean;
   canSlide?: boolean;
-}> = ({ disabled, canSlide = true }) => {
+  isRange?: boolean;
+}> = ({ disabled, canSlide = true, isRange = true }) => {
   // state
   const [index, setIndex] = useAtom(placeInLineAtom);
   const beanstalkField = useSelector<AppState, AppState['_beanstalk']['field']>(

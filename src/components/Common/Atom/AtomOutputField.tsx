@@ -1,4 +1,4 @@
-import { StackProps, Typography } from '@mui/material';
+import { StackProps, Typography, TypographyVariant } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { PrimitiveAtom, useAtomValue } from 'jotai';
 import React from 'react';
@@ -8,12 +8,22 @@ import { displayFullBN } from '~/util';
 
 const AtomOutputField: React.FC<
   {
-    atom: PrimitiveAtom<BigNumber>;
+    atom: PrimitiveAtom<BigNumber | null>;
     label?: string;
     info?: string;
+    variant?: TypographyVariant;
+    disabled?: boolean;
     formatValue?: (...props: any | any[]) => string;
   } & StackProps
-> = ({ atom: _atom, label, info, formatValue, ...stackProps }) => {
+> = ({
+  atom: _atom,
+  label,
+  info,
+  variant = 'caption',
+  disabled,
+  formatValue,
+  ...stackProps
+}) => {
   const value = useAtomValue(_atom);
 
   return (
@@ -22,16 +32,22 @@ const AtomOutputField: React.FC<
       justifyContent="space-between"
       {...stackProps}
       sx={{
-        borderRadius: 1,
-        border: '1px solid',
-        borderColor: 'text.primary',
+        px: '8px',
+        py: '12px',
+        borderRadius: 0.6,
+        border: '0.5px solid',
+        borderColor: 'rgba(0, 0, 0, 0.23)',
         ...stackProps.sx,
       }}
     >
-      <Typography variant="caption" color="text.primary">
+      <Typography variant={variant} color="text.primary">
         {label}
       </Typography>
-      <Typography variant="caption" color="text.primary" textAlign="right">
+      <Typography
+        variant={variant}
+        color={disabled ? 'text.tertiary' : 'text.primary'}
+        textAlign="right"
+      >
         {`${
           formatValue ? formatValue(value) : displayFullBN(value || ZERO_BN, 2)
         } ${info || ''}`}

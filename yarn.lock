@@ -10952,6 +10952,7 @@ __metadata:
     middy: ^0.36.0
     mui-markdown: ^0.5.5
     netlify-cli: ^10.5.1
+    optics-ts: ^2.4.0
     prettier: ^2.3.0
     prism-react-renderer: ^1.3.5
     process: ^0.11.10
@@ -22164,6 +22165,13 @@ __metadata:
   dependencies:
     is-wsl: ^1.1.0
   checksum: 35b677b5a1fd6c8cb1996b0607671ba79f7ce9fa029217d54eafaf6bee13eb7e700691c6a415009140fd02a435fffdfd143875f3b233b60f3f9d631c6f6b81a0
+  languageName: node
+  linkType: hard
+
+"optics-ts@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "optics-ts@npm:2.4.0"
+  checksum: 99f7af4ee4972152a1289eb472ac77f73d322fcd4ee4a7efdd56311343711ce40fc647565a51aff203ce83310c5c6bf7462a87c2bdd2e61d875da027e528dc7f
   languageName: node
   linkType: hard
 

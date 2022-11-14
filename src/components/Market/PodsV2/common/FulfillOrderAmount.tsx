@@ -1,7 +1,8 @@
-import { InputAdornment, Typography, TypographyVariant } from '@mui/material';
+import { Button, InputAdornment, Typography } from '@mui/material';
 import React from 'react';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
-import { TokenAdornment, TokenSelectDialog } from '~/components/Common/Form';
+import { TokenSelectDialog } from '~/components/Common/Form';
 import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
 import { BEAN, ETH, WETH } from '~/constants/tokens';
 import useTokenMap from '~/hooks/chain/useTokenMap';
@@ -9,13 +10,42 @@ import useToggle from '~/hooks/display/useToggle';
 import useFarmerBalances from '~/hooks/farmer/useFarmerBalances';
 import { fulfillAmountAtom, useFulfillTokenAtom } from '../info/atom-context';
 import AtomInputField from '~/components/Common/Atom/AtomInputField';
+import { FontSize } from '~/components/App/muiTheme';
+
+const StartAdornment: React.FC<{}> = () => (
+  <InputAdornment position="start">
+    <Typography color="text.primary" variant="caption">
+      TOTAL
+    </Typography>
+  </InputAdornment>
+);
+
+const TokenEndAdornment: React.FC<{
+  token: Token;
+  onClick: () => void;
+}> = ({ token, onClick }) => (
+  <InputAdornment position="end" sx={{ mt: 0.1 }}>
+    <Button variant="text" size="small" onClick={onClick}>
+      <Typography variant="caption" color="text.primary">
+        {token.symbol}
+        <KeyboardArrowDownIcon
+          sx={{
+            fontSize: FontSize.xs,
+            position: 'relative',
+            color: 'rgba(0,0,0,0.87)',
+            ml: '2px',
+            top: '2px',
+          }}
+        />
+      </Typography>
+    </Button>
+  </InputAdornment>
+);
 
 const FulfillOrderAmount: React.FC<{}> = () => {
   // State
   const [isTokenSelectVisible, handleOpen, hideTokenSelect] = useToggle();
   const [fulfillToken, setFulfillToken] = useFulfillTokenAtom();
-
-  console.log('rerenxcer...');
 
   const erc20TokenMap = useTokenMap<ERC20Token | NativeToken>([
     BEAN,
@@ -43,21 +73,9 @@ const FulfillOrderAmount: React.FC<{}> = () => {
       <AtomInputField
         atom={fulfillAmountAtom}
         InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Typography color="text.primary" variant="caption">
-                TOTAL
-              </Typography>
-            </InputAdornment>
-          ),
+          startAdornment: <StartAdornment />,
           endAdornment: fulfillToken && (
-            <TokenAdornment
-              iconSize="xs"
-              textVariant={'bodySmall' as TypographyVariant}
-              token={fulfillToken}
-              onClick={handleOpen}
-              disabled={false}
-            />
+            <TokenEndAdornment token={fulfillToken} onClick={handleOpen} />
           ),
         }}
       />

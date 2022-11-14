@@ -21,7 +21,7 @@ const FillSellOrder: React.FC<{}> = () => {
 
   return (
     <Stack gap={0.8}>
-      <Stack gap={1.6}>
+      <Stack sx={{ p: 0.4 }}>
         {!selected && (
           <Typography variant="caption" color="text.primary" sx={{ pb: 1 }}>
             SELECT A POD LISTING ON THE CHART TO BUY FROM

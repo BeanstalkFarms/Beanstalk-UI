@@ -1,15 +1,8 @@
-import {
-  InputAdornment,
-  Stack,
-  Typography,
-  styled,
-  Slider,
-  SliderThumb,
-} from '@mui/material';
+import { InputAdornment, Stack, Typography, Slider } from '@mui/material';
 
 import BigNumber from 'bignumber.js';
-import { atom, useAtom } from 'jotai';
-import React, { useCallback, useMemo } from 'react';
+import { atom, useAtom, useSetAtom } from 'jotai';
+import React, { useCallback, useMemo, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { TokenAdornment } from '~/components/Common/Form';
 import Row from '~/components/Common/Row';
@@ -22,11 +15,13 @@ import { AppState } from '~/state';
 import { displayBN } from '~/util';
 import AtomInputField from '../../../Common/Atom/AtomInputField';
 import PlaceInLineSlider from '../common/PlaceInLineSlider';
+import SubActionSelect from '../common/SubActionSelect';
 import {
   selectedPlotAmountAtom,
   selectedPlotAtom,
   selectedPlotStartAtom,
   selectedPlotEndAtom,
+  placeInLineAtom,
 } from '../info/atom-context';
 
 const SelectPlotField: React.FC<{}> = () => {
@@ -107,7 +102,8 @@ const SelectPlotField: React.FC<{}> = () => {
         atom={selectedPlotAmountAtom}
         InputProps={InputProps}
         amountString="PlotSize"
-        maxAtom={maxAtom}
+        maxValueAtom={maxAtom}
+        showMax
       />
       <PlotSelectDialog
         open={open}
@@ -121,55 +117,13 @@ const SelectPlotField: React.FC<{}> = () => {
   );
 };
 
-interface AirbnbThumbComponentProps extends React.HTMLAttributes<unknown> {}
-
-function AirbnbThumbComponent(props: AirbnbThumbComponentProps) {
-  const { children, ...other } = props;
-  return (
-    <SliderThumb {...other}>
-      {children}
-      <span className="airbnb-bar" />
-    </SliderThumb>
-  );
-}
-
-const AirbnbSlider = styled(Slider)(({ theme }) => ({
-  color: 'primary.main',
-  padding: '13px 0',
-  '& .MuiSlider-thumb': {
-    width: '8px',
-    height: '10px',
-    backgroundColor: '#fff',
-    border: '1px solid currentColor',
-    '&:hover': {
-      boxShadow: '0 0 0 2px primary.main',
-    },
-    '& .airbnb-bar': {
-      position: 'relative',
-      bottom: '-10px',
-      width: '10px',
-      height: '8px',
-      borderStyle: 'solid',
-      borderWidth: '0 5px 8px 5px',
-      borderColor: 'transparent transparent #000000 transparent',
-    },
-  },
-  '& .MuiSlider-track': {
-    height: 3,
-  },
-  '& .MuiSlider-rail': {
-    color: theme.palette.mode === 'dark' ? '#bfbfbf' : '#d8d8d8',
-    opacity: theme.palette.mode === 'dark' ? undefined : 1,
-    height: 3,
-  },
-}));
-
 const minSliderDistance = 1;
 const SelectedPlotSlider: React.FC<{}> = () => {
   const plots = useSelector<AppState, AppState['_farmer']['field']['plots']>(
     (state) => state._farmer.field.plots
   );
   const [selectedPlot, setSelectedPlot] = useAtom(selectedPlotAtom);
+  const setPlaceInLine = useSetAtom(placeInLineAtom);
 
   const [start, setStart] = useAtom(selectedPlotStartAtom);
   const [end, setEnd] = useAtom(selectedPlotEndAtom);
@@ -195,6 +149,14 @@ const SelectedPlotSlider: React.FC<{}> = () => {
     [end, start, setAmount, setEnd, setStart]
   );
 
+  useEffect(() => {
+    if (selectedPlot?.index) {
+      console.log('selectedPLot?.index: ', selectedPlot?.index);
+      console.log('place in line: ', plots[selectedPlot?.index]?.toNumber());
+      setPlaceInLine(new BigNumber(selectedPlot.index).minus(harvestableIndex));
+    }
+  }, [harvestableIndex, plots, selectedPlot, setPlaceInLine]);
+
   if (!selectedPlot?.index) return null;
 
   return (
@@ -208,7 +170,21 @@ const SelectedPlotSlider: React.FC<{}> = () => {
           onChange={handleChange}
           disableSwap
           size="small"
-          components={{ Thumb: AirbnbThumbComponent }}
+          sx={{
+            color: 'primary.main',
+            height: '8px',
+            '& .MuiSlider-thumb': {
+              width: '20px',
+              height: '20px',
+              boxShadow: 'none',
+              boxSizing: 'border-box',
+              background: '#fff',
+              border: '2.5px solid currentColor',
+              '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
+                boxShadow: 'inherit',
+              },
+            },
+          }}
         />
       </Stack>
       <Row gap={0.8} width="100%" justifyContent="space-between">
@@ -244,13 +220,14 @@ const SelectedPlotSlider: React.FC<{}> = () => {
 const SellPods: React.FC<{}> = () => {
   const s = '';
   return (
-    <Stack pb={0.8}>
-      <Stack py={0.8} px={0.8}>
+    <Stack>
+      <Stack p={0.8} gap={0.8}>
+        <SubActionSelect />
         <SelectPlotField />
-      </Stack>
-      <SelectedPlotSlider />
-      <Stack px={1.6} gap={0.8}>
-        <PlaceInLineSlider canSlide={false} />
+        <SelectedPlotSlider />
+        <Stack px={1.6} gap={0.8}>
+          <PlaceInLineSlider canSlide={false} />
+        </Stack>
       </Stack>
     </Stack>
   );

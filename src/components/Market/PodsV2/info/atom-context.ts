@@ -54,8 +54,14 @@ export const placeInLineAtom = atomWithReset<MayBN>(null);
 // whether a fixed or dynamic pricing function is being used for the active form
 export const pricingFunctionAtom = atom<PricingFn>(PricingFn.FIXED);
 
+// price in beans per pod
+export const pricePerPodAtom = atom<BigNumber | null>(ZERO_BN);
+
 // the price of the active form
 export const orderPriceAtom = atom<MayBN>(null);
+
+// is form being submitted
+export const formSubmittingAtom = atom<boolean>(false);
 
 // ----- SELECTED PLOT -----
 
