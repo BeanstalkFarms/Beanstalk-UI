@@ -57,6 +57,7 @@ const DescriptionButton: FC<ButtonProps & {
   <Button
     variant="outlined"
     color="secondary"
+    {...props}
     sx={{
       textAlign: 'left',
       px: GAP,
@@ -64,8 +65,8 @@ const DescriptionButton: FC<ButtonProps & {
       ...sx,
       // Prevents the button's flex properties from
       // changing the internal layout.
+      color: 'text.primary',
       display: 'block',
-      color: 'inherit',
       borderColor: isSelected ? BeanstalkPalette.theme.fall.primary : BeanstalkPalette.lightestGrey,
       backgroundColor: isSelected ? BeanstalkPalette.theme.fall.extraLight : null,
       '&:hover': {
@@ -73,7 +74,7 @@ const DescriptionButton: FC<ButtonProps & {
       },
       height: 'auto'
     }}
-    {...props}
+    
   >
     <Row gap={0.5} justifyContent="space-between" {...StackProps}>
       {/* Icon + Title */}
