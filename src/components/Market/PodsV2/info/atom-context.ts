@@ -39,6 +39,9 @@ export type ValueAtom<T extends BigNumber | null> = PrimitiveAtom<T>;
 
 // ---------- STATE ATOMS ----------
 
+// chart type atom (pods / Depth || select listing voroni)
+export const marketChartTypeAtom = atom<'depth' | 'listing'>('depth');
+
 // open state of the bottom tabs (market / your orders)
 export const marketBottomTabsAtom = atom<PartialOpenState>(0);
 

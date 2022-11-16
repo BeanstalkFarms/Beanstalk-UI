@@ -8,7 +8,8 @@ import {
   marketBottomTabsAtom,
   selectedListingAtom,
   selectedOrderAtom,
-} from './info/atom-context';
+} from '../info/atom-context';
+import ChartTypePill from './ChartTypePill';
 
 const SelectedOrdersTemp: React.FC<{}> = () => {
   const [selectedOrder, selectOrder] = useAtom(selectedOrderAtom);
@@ -98,8 +99,10 @@ const PodsChart: React.FC<{}> = () => {
         direction="row"
         width="100%"
         height="100%"
-        sx={{ backgroundColor: 'green' }}
+        sx={{ backgroundColor: 'green', position: 'relative' }}
       >
+        {/* chart type pill overlay */}
+        <ChartTypePill pos={{ right: 8, top: 8 }} />
         {/** LISTINGS */}
         <Stack
           width="100%"
