@@ -5,6 +5,7 @@ import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { ethers } from 'ethers';
 import { useProvider } from 'wagmi';
+import toast from 'react-hot-toast';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import TransactionToast from '~/components/Common/TxnToast';
 import TxnAccordion from '~/components/Common/TxnAccordion';
@@ -33,8 +34,9 @@ import { useSigner } from '~/hooks/ledger/useSigner';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
 import { ActionType } from '~/util/Actions';
-import Farm from '~/lib/Beanstalk/Farm';
-import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN, displayTokenAmount, displayBN } from '~/util';
+import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
+import { optimizeFromMode } from '~/util/Farm';
+import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN, parseError, displayTokenAmount, displayBN } from '~/util';
 import { AppState } from '~/state';
 import { BEAN, ETH, PODS, WETH } from '~/constants/tokens';
 import { ONE_BN, ZERO_BN, POD_MARKET_TOOLTIPS } from '~/constants';
@@ -308,91 +310,91 @@ const CreateOrder : FC<{}> = () => {
   );
 
   const onSubmit = useCallback(async (values: CreateOrderFormValues, formActions: FormikHelpers<CreateOrderFormValues>) => {
-    const txToast = new TransactionToast({
-      loading: 'Ordering Pods...',
-      success: 'Order successful.',
-    });
-    txToast.error(new Error('Creating listings is temporarily disabled. Check Discord for more details'));
-    // try {
-    //   middleware.before();
+    let txToast;
+    try {
+      middleware.before();
 
-    //   if (!values.settings.slippage) throw new Error('No slippage value set.');
-    //   if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
-    //   const tokenData = values.tokens[0];
-    //   const { pricePerPod, placeInLine } = values;
-    //   if (!tokenData?.amount || tokenData.amount.eq(0)) throw new Error('No amount set');
-    //   if (!pricePerPod || !placeInLine) throw new Error('Missing data');
+      if (!values.settings.slippage) throw new Error('No slippage value set.');
+      if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
+      const tokenData = values.tokens[0];
+      const { pricePerPod, placeInLine } = values;
+      if (!tokenData?.amount || tokenData.amount.eq(0)) throw new Error('No amount set');
+      if (!pricePerPod || !placeInLine) throw new Error('Missing data');
       
-    //   ///
-    //   let call;
-    //   let value = ZERO_BN;
-    //   const inputToken = tokenData.token;
+      ///
+      let call;
+      let value = ZERO_BN;
+      const inputToken = tokenData.token;
 
-    //   ///
+      ///
+      txToast = new TransactionToast({
+        loading: 'Ordering Pods...',
+        success: 'Order successful.',
+      });
       
-    //   /// Create Pod Order directly
-    //   /// We only need one call to do this, so we skip
-    //   /// the farm() call below to optimize gas.
-    //   if (inputToken === Bean) {
-    //     call = beanstalk.createPodOrder(
-    //       Bean.stringify(tokenData.amount),
-    //       Bean.stringify(pricePerPod),
-    //       Bean.stringify(placeInLine),
-    //       PODS.stringify(new BigNumber(1)), // minFillAmount is measured in Pods
-    //       optimizeFromMode(tokenData.amount, balances[Bean.address])
-    //     );
-    //   } 
+      /// Create Pod Order directly
+      /// We only need one call to do this, so we skip
+      /// the farm() call below to optimize gas.
+      if (inputToken === Bean) {
+        call = beanstalk.createPodOrder(
+          Bean.stringify(tokenData.amount),
+          Bean.stringify(pricePerPod),
+          Bean.stringify(placeInLine),
+          PODS.stringify(new BigNumber(1)), // minFillAmount is measured in Pods
+          optimizeFromMode(tokenData.amount, balances[Bean.address])
+        );
+      } 
       
-    //   /// Buy and Create Pod Order
-    //   else {
-    //     /// Require a quote
-    //     if (!tokenData.steps || !tokenData.amountOut) throw new Error(`No quote available for ${tokenData.token.symbol}`);
-    //     const data : string[] = [];
+      /// Buy and Create Pod Order
+      else {
+        /// Require a quote
+        if (!tokenData.steps || !tokenData.amountOut) throw new Error(`No quote available for ${tokenData.token.symbol}`);
+        const data : string[] = [];
 
-    //     /// Wrap ETH to WETH
-    //     if (inputToken === Eth) {
-    //       value = value.plus(tokenData.amount); 
-    //       data.push(beanstalk.interface.encodeFunctionData('wrapEth', [
-    //         toStringBaseUnitBN(value, Eth.decimals),
-    //         FarmToMode.INTERNAL, // to
-    //       ]));
-    //     }
+        /// Wrap ETH to WETH
+        if (inputToken === Eth) {
+          value = value.plus(tokenData.amount); 
+          data.push(beanstalk.interface.encodeFunctionData('wrapEth', [
+            toStringBaseUnitBN(value, Eth.decimals),
+            FarmToMode.INTERNAL, // to
+          ]));
+        }
 
-    //     /// Execute steps
-    //     /// (right now: Sell WETH -> BEAN)
-    //     const encoded = Farm.encodeStepsWithSlippage(
-    //       tokenData.steps,
-    //       values.settings.slippage / 100,
-    //     );
-    //     data.push(...encoded);
-    //     data.push(
-    //       beanstalk.interface.encodeFunctionData('createPodOrder', [
-    //         Bean.stringify(tokenData.amountOut),
-    //         Bean.stringify(pricePerPod),
-    //         Bean.stringify(placeInLine),
-    //         toStringBaseUnitBN(new BigNumber(1), PODS.decimals),
-    //         FarmFromMode.INTERNAL_TOLERANT,
-    //       ])
-    //     );
+        /// Execute steps
+        /// (right now: Sell WETH -> BEAN)
+        const encoded = Farm.encodeStepsWithSlippage(
+          tokenData.steps,
+          values.settings.slippage / 100,
+        );
+        data.push(...encoded);
+        data.push(
+          beanstalk.interface.encodeFunctionData('createPodOrder', [
+            Bean.stringify(tokenData.amountOut),
+            Bean.stringify(pricePerPod),
+            Bean.stringify(placeInLine),
+            toStringBaseUnitBN(new BigNumber(1), PODS.decimals),
+            FarmFromMode.INTERNAL_TOLERANT,
+          ])
+        );
 
-    //     call = beanstalk.farm(data, { value: Eth.stringify(value) });
-    //   }
+        call = beanstalk.farm(data, { value: Eth.stringify(value) });
+      }
 
-    //   const txn = await call;
-    //   txToast.confirming(txn);
+      const txn = await call;
+      txToast.confirming(txn);
 
-    //   const receipt = await txn.wait();
-    //   await Promise.all([
-    //     refetchFarmerBalances(),
-    //     refetchFarmerMarket(),
-    //   ]);
-    //   txToast.success(receipt);
-    //   formActions.resetForm();
-    // } catch (err) {
-    //   txToast?.error(err) || toast.error(parseError(err));
-    //   console.error(err);
-    // }
-  }, []);
+      const receipt = await txn.wait();
+      await Promise.all([
+        refetchFarmerBalances(),
+        refetchFarmerMarket(),
+      ]);
+      txToast.success(receipt);
+      formActions.resetForm();
+    } catch (err) {
+      txToast?.error(err) || toast.error(parseError(err));
+      console.error(err);
+    }
+  }, [Bean, Eth, balances, beanstalk, refetchFarmerBalances, refetchFarmerMarket, middleware]);
   
   return (
     <Formik<CreateOrderFormValues>

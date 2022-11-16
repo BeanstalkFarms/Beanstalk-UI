@@ -35,29 +35,29 @@ const CancelListing : FC<{ id: string }> = ({ id }) => {
         loading: 'Cancelling Pod Listing...',
         success: 'Cancellation successful.',
       });
-      txToast.error(new Error('Cancelling Pod Listings is temporarily disabled. Check Discord for more details'));
+      txToast.error('Cancelling Pod Listings is temporarily disabled. Check Discord for more details.');
 
-      // try {
-      //   middleware.before();
+      try {
+        middleware.before();
 
-      //   const txn = await beanstalk.cancelPodListing(id);
-      //   txToast.confirming(txn);
+        const txn = await beanstalk.cancelPodListing(id);
+        txToast.confirming(txn);
 
-      //   const receipt = await txn.wait();
-      //   await Promise.all([
-      //     refetchFarmerField(),
-      //     refetchFarmerMarket(),
-      //   ]);
-      //   txToast.success(receipt);
-      //   navigate('/market/account');
-      // } catch (err) {
-      //   txToast.error(err);
-      //   console.error(err);
-      // } finally {
-      //   setLoading(false);
-      // }
+        const receipt = await txn.wait();
+        await Promise.all([
+          refetchFarmerField(),
+          refetchFarmerMarket(),
+        ]);
+        txToast.success(receipt);
+        navigate('/market/account');
+      } catch (err) {
+        txToast.error(err);
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     })();
-  }, []);
+  }, [beanstalk, id, navigate, refetchFarmerField, refetchFarmerMarket, middleware]);
 
   return (
     <LoadingButton

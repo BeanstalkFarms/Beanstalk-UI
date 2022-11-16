@@ -72,7 +72,7 @@ const CancelOrder : FC<{
         loading: 'Cancelling Pod Order',
         success: 'Cancellation successful.',
       });
-      txToast.error(new Error('Cancelling Pod Orders is temporarily disabled. Check Discord for more details.'));
+      txToast.error('Cancelling Pod Orders is temporarily disabled. Check Discord for more details.');
       // try {
       //   middleware.before();
       //   hide();
