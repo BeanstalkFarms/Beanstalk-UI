@@ -69,36 +69,35 @@ const CancelOrder : FC<{
   const onSubmit = useCallback((destination: FarmToMode) => () => {
     (async () => {
       const txToast = new TransactionToast({
-        loading: 'Cancelling Pod Order',
+        loading: 'Cancelling Pod Listing',
         success: 'Cancellation successful.',
       });
-      txToast.error('Cancelling Pod Orders is temporarily disabled. Check Discord for more details.');
-      // try {
-      //   middleware.before();
-      //   hide();
-      //   const txn = await beanstalk.cancelPodOrder(
-      //     Bean.stringify(order.pricePerPod),
-      //     Bean.stringify(order.maxPlaceInLine),
-      //     Bean.stringify(order.minFillAmount || 0),
-      //     destination,
-      //   );
-      //   txToast.confirming(txn);
+      try {
+        middleware.before();
+        hide();
+        const txn = await beanstalk.cancelPodOrder(
+          Bean.stringify(order.pricePerPod),
+          Bean.stringify(order.maxPlaceInLine),
+          Bean.stringify(order.minFillAmount || 0),
+          destination,
+        );
+        txToast.confirming(txn);
 
-      //   const receipt = await txn.wait();
-      //   await Promise.all([
-      //     refetchFarmerMarket(),    // clear old pod order
-      //     refetchFarmerBalances(),  // refresh Beans
-      //   ]);
-      //   txToast.success(receipt);
-      //   navigate('/market/account');
-      // } catch (err) {
-      //   console.error(err);
-      //   txToast.error(err);
-      // } finally {
-      //   setLoading(false);
-      // }
+        const receipt = await txn.wait();
+        await Promise.all([
+          refetchFarmerMarket(),    // clear old pod order
+          refetchFarmerBalances(),  // refresh Beans
+        ]);
+        txToast.success(receipt);
+        navigate('/market/account');
+      } catch (err) {
+        console.error(err);
+        txToast.error(err);
+      } finally {
+        setLoading(false);
+      }
     })();
-  }, []);
+  }, [middleware, hide, beanstalk, Bean, order.pricePerPod, order.maxPlaceInLine, order.minFillAmount, refetchFarmerMarket, refetchFarmerBalances, navigate]);
 
   return (
     <>

@@ -35,8 +35,6 @@ const CancelListing : FC<{ id: string }> = ({ id }) => {
         loading: 'Cancelling Pod Listing...',
         success: 'Cancellation successful.',
       });
-      txToast.error('Cancelling Pod Listings is temporarily disabled. Check Discord for more details.');
-
       try {
         middleware.before();
 
