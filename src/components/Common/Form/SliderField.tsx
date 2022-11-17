@@ -37,7 +37,7 @@ const SliderField : FC<
   initialState,
   fields,
   changeMode = 'onChange',
-  throttleMs = 40,
+  throttleMs = 200,
   /// Slider Props
   min,
   max,
@@ -103,11 +103,13 @@ const SliderField : FC<
       setInternalValue(newValue);
       /// If requested, push throttled change to the form.
       if (changeMode === 'onChange') {
+        // updateExternalThrottled.cancel();
         updateExternalThrottled(newValue, activeThumb);
       }
     },
     onChangeCommitted: (event: React.SyntheticEvent | Event, newValue: number | number[]) => {
       if (changeMode === 'onChangeCommitted') {
+        // updateExternalThrottled.cancel();
         updateExternalThrottled(newValue);
       } else {
         /// flush the existing onChange call
