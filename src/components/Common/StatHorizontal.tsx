@@ -7,7 +7,7 @@ import Row from '~/components/Common/Row';
 import { FC } from '~/types';
 
 const StatHorizontal : FC<{
-  label: string,
+  label: string | React.ReactElement,
   labelTooltip?: string | React.ReactElement;
 }> = ({
   label,
@@ -20,7 +20,7 @@ const StatHorizontal : FC<{
         {label}&nbsp;
         {labelTooltip && (
           <HelpOutlineIcon
-            sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
+            sx={{ color: 'text.secondary', fontSize: FontSize.xs }}
           />
         )}
       </Typography>

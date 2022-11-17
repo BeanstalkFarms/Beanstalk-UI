@@ -103,6 +103,7 @@ export const BeanstalkPalette = {
   skyBlue: '#DBEDFD',
   // Other
   grey: '#657265',
+  realGrey: '#808080',
   lightGrey: '#9E9E9E',
   lightestGrey: '#DDDDDD',
   white: '#fff',
@@ -226,7 +227,7 @@ const muiThemeBase: ThemeOptions = {
     //
     text: {
       primary: BeanstalkPalette.black,
-      secondary: 'gray',
+      secondary: BeanstalkPalette.realGrey,
       tertiary: BeanstalkPalette.lightGrey,
     },
     background: {

@@ -74,12 +74,9 @@ const marketplaceTableStyle = {
       color: 'text.tertiary'
     },
     '& .MuiDataGrid-virtualScrollerRenderZone :hover': {
-      // backgroundColor: "transparent"
-      // backgroundColor: "#D8F2DB"
+      // backgroundColor: 'transparent',
+      // backgroundColor: '#D8F2DB'
     },
-    '& .MuiSvgIcon-root': {
-      color: 'text.tertiary'
-    }
   }
 };
 

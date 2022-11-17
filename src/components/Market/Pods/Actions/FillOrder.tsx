@@ -17,9 +17,9 @@ import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import { parseError , PlotMap } from '~/util';
+import { parseError, PlotMap } from '~/util';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
-import { BEAN } from '~/constants/tokens';
+import { BEAN, PODS } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
@@ -172,6 +172,7 @@ const FillOrder: FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
       if (!numPods) throw new Error('Plot not recognized.');
       if (!start || !amount) throw new Error('Malformatted plot data.');
       if (!values.destination) throw new Error('No destination selected.');
+      if (amount.lt(new BigNumber(1))) throw new Error('Amount not greater than minFillAmount.');
 
       console.debug('[FillOrder]', {
         numPods: numPods.toString(),
@@ -203,6 +204,7 @@ const FillOrder: FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
           account:        podOrder.account,
           maxPlaceInLine: Bean.stringify(podOrder.maxPlaceInLine),
           pricePerPod:    Bean.stringify(podOrder.pricePerPod),
+          minFillAmount:  PODS.stringify(podOrder.minFillAmount || 0), // minFillAmount for Orders is measured in Pods
         },
         Bean.stringify(index),    // index of plot to sell
         Bean.stringify(start),    // start index within plot
@@ -223,7 +225,7 @@ const FillOrder: FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
     } finally {
       formActions.setSubmitting(false);
     }
-  }, [Bean, allPlots, beanstalk, podOrder.account, podOrder.maxPlaceInLine, podOrder.pricePerPod, refetchFarmerBalances, refetchFarmerField, middleware]);
+  }, [middleware, allPlots, podOrder.account, podOrder.maxPlaceInLine, podOrder.pricePerPod, podOrder.minFillAmount, Bean, beanstalk, refetchFarmerField, refetchFarmerBalances]);
 
   return (
     <Formik<FillOrderFormValues>
