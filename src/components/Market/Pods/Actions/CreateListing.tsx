@@ -105,6 +105,7 @@ const CreateListingForm: FC<
   const isSubmittable = (() => {
     if (values.pricePerPod?.isZero()) return false; // always require a price
     if (values.expiresAt?.isZero()) return false; // always require a place in line
+    if (values.plot.amount?.isZero()) return false; // always require an amount
     return !REQUIRED_KEYS.some((k) => values[k] === null);
   })();
 
