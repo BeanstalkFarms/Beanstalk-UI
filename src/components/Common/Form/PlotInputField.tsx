@@ -132,8 +132,8 @@ const PlotInputField : FC<{
   /// If one of end/start change, so does the amount input.
   /// Values are changed when the slider moves or a manual input changes.
   useEffect(() => {
-      const clampedAmount = clamp(plot.end?.minus(plot.start || ZERO_BN));
-      setFieldValue('plot.amount', clampedAmount);
+    const clampedAmount = clamp(plot.end?.minus(plot.start || ZERO_BN));
+    setFieldValue('plot.amount', clampedAmount);
   }, [setFieldValue, plot.end, plot.start, clamp]);
 
   return (
