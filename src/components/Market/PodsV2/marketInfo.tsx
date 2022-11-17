@@ -64,7 +64,7 @@ const PodsMarketInfo: React.FC<{}> = () => {
     >
       <Card sx={{ height: '100%', width: '100%' }}>
         <Stack height="100%" sx={{ overflow: 'hidden', visibility: 'visible' }}>
-          <Row width="100%" justifyContent="space-between" p={1.2}>
+          <Row width="100%" justifyContent="space-between" p={1.5}>
             <Tabs
               value={tab}
               onChange={(e, i) => {

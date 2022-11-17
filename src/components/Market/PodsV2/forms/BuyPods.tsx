@@ -12,7 +12,7 @@ const BuyPods: React.FC<{}> = () => {
 
   return (
     <Stack>
-      <Stack sx={{ p: 0.8 }}>
+      <Stack p={1}>
         {/* buy or sell toggle */}
         <SubActionSelect />
         {/* create buy order */}
@@ -22,7 +22,7 @@ const BuyPods: React.FC<{}> = () => {
       </Stack>
       <Divider />
       {/* submit buy order */}
-      <Stack p={0.8}>
+      <Stack p={1}>
         <SubmitMarketAction />
       </Stack>
     </Stack>
