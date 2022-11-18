@@ -2,7 +2,7 @@ import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   ListItemText,
-  MenuItem as MuiMenuItem, Tooltip,
+  MenuItem as MuiMenuItem, MenuItemProps, Tooltip,
   Typography,
 } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -15,9 +15,10 @@ import { FC } from '~/types';
 const MenuItem : FC<{
   item: RouteData;
   onClick?: (event: React.MouseEvent<any>) => void;
-}> = ({
+} & MenuItemProps> = ({
   item,
   onClick,
+  sx
 }) => (
   <MuiMenuItem
     disabled={item.disabled}
@@ -27,7 +28,7 @@ const MenuItem : FC<{
     target={item.href ? '_blank' : undefined}
     rel={item.href ? 'noreferrer' : undefined}
     to={item.href ? undefined : item.path}
-    sx={{ minWidth: 250 }}
+    sx={{ minWidth: 250, ...sx }}
     onClick={onClick}
     >
     {item.disabled ? (

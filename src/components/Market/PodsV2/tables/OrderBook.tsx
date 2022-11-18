@@ -6,10 +6,10 @@ import {
   DataGridProps,
 } from '@mui/x-data-grid';
 import React, { useMemo, useState } from 'react';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { BeanstalkPalette, FontSize, FontWeight } from '~/components/App/muiTheme';
 import ArrowPagination from '~/components/Common/ArrowPagination';
 import Row from '~/components/Common/Row';
+import PercentDropdown from '~/components/Market/PodsV2/PercentDropdown';
 
 const orderbookTableStyle = {
   '& .MuiDataGrid-root': {
@@ -36,6 +36,15 @@ const orderbookTableStyle = {
     },
   },
 };
+
+const percentOptions = [
+  '0.01',
+  '0.02',
+  '0.03',
+  '0.04',
+  '0.05',
+  '0.06'
+];
 
 const OrderbookCols = {
   price: (flex: number) =>
@@ -102,6 +111,7 @@ const useFakeOrders = () =>
 const OrderBook: React.FC<{}> = () => {
   const orders = useFakeOrders();
   const [numberFormat, setNumberFormat] = useState(0);
+  const [percent, setPercent] = useState(percentOptions[0]);
 
   const tableHeight = useMemo(() => {
     if (!orders || orders.length === 0) return 0;
@@ -160,22 +170,23 @@ const OrderBook: React.FC<{}> = () => {
                 </Button>
               </Row>
             </Card>
-            <Card sx={{ borderRadius: 0.4, p: 0.2 }}>
-              <Button variant="text" size="small" sx={{ p: 0.2, borderRadius: 0.4, minWidth: 'unset' }}>
-                <Typography variant="caption" color="text.primary">
-                  0.01
-                  <KeyboardArrowDownIcon
-                    sx={{
-                      fontSize: FontSize.xs,
-                      position: 'relative',
-                      color: 'rgba(0,0,0,0.87)',
-                      ml: '2px',
-                      top: '2px',
-                    }}
-                  />
-                </Typography>
-              </Button>
-            </Card>
+            <PercentDropdown options={percentOptions} selectedOption={percent} setOption={setPercent}  />
+            {/* <Card sx={{ borderRadius: 0.4, p: 0.2 }}> */}
+            {/*  <Button variant="text" size="small" sx={{ p: 0.2, borderRadius: 0.4, minWidth: 'unset' }}> */}
+            {/*    <Typography variant="caption" color="text.primary"> */}
+            {/*      0.01 */}
+            {/*      <KeyboardArrowDownIcon */}
+            {/*        sx={{ */}
+            {/*          fontSize: FontSize.xs, */}
+            {/*          position: 'relative', */}
+            {/*          color: 'rgba(0,0,0,0.87)', */}
+            {/*          ml: '2px', */}
+            {/*          top: '2px', */}
+            {/*        }} */}
+            {/*      /> */}
+            {/*    </Typography> */}
+            {/*  </Button> */}
+            {/* </Card> */}
           </Row>
         </Row>
         <Divider />
