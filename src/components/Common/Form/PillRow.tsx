@@ -43,7 +43,7 @@ const PillRow : FC<{
       onClick={onClick}
       color="dark"
       sx={{
-        color: 'text.tertiary',
+        color: 'text.primary',
         px: 0.75,
         py: 0.5,
         my: 0.5,

@@ -100,9 +100,12 @@ const CreateListingForm: FC<
   const alreadyListed = plot?.index
     ? existingListings[toStringBaseUnitBN(plot.index, BEAN[1].decimals)]
     : false;
-  const isSubmittable = (
-    !REQUIRED_KEYS.some((k) => values[k] === null)
-  );
+  const isSubmittable = (() => {
+    if (values.pricePerPod?.isZero()) return false; // always require a price
+    if (values.expiresAt?.isZero()) return false; // always require a place in line
+    if (values.plot.amount?.isZero()) return false; // always require an amount
+    return !REQUIRED_KEYS.some((k) => values[k] === null);
+  })();
 
   return (
     <Form autoComplete="off" noValidate>
