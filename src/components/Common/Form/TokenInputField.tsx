@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { Field, FieldProps } from 'formik';
 import BigNumber from 'bignumber.js';
+
 import Token from '~/classes/Token';
 import { displayBN, displayFullBN, displayTokenAmount } from '~/util';
 import { FarmerBalances } from '~/state/farmer/balances';
@@ -15,6 +16,7 @@ import NumberFormatInput from './NumberFormatInput';
 import FieldWrapper from './FieldWrapper';
 import Row from '~/components/Common/Row';
 import { FC } from '~/types';
+import { ZERO_BN } from '~/constants';
 
 export type TokenInputCustomProps = {
   /**
@@ -45,8 +47,14 @@ export type TokenInputCustomProps = {
   /**
    *
    */
+  allowNegative?: boolean;
+  /**
+   * 
+   */
   onChange?: (finalValue: BigNumber | undefined) => void;
 };
+
+// const preventNegative = (e: React.)
 
 export type TokenInputProps = (
   TokenInputCustomProps // custom
@@ -54,6 +62,12 @@ export type TokenInputProps = (
 );
 
 export const VALID_INPUTS = /[0-9]*/;
+
+export const preventNegativeInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  if (e.key === '-') {
+    e.preventDefault();
+  }
+};
 
 const TokenInput: FC<
   TokenInputProps & FieldProps
@@ -65,6 +79,7 @@ const TokenInput: FC<
   hideBalance = false,
   quote,
   max: _max = 'use-balance',
+  allowNegative = false,
   /// Formik props
   field,
   form,
@@ -119,9 +134,10 @@ const TokenInput: FC<
       balance: balance?.toString(),
     });
     if (!amount) return undefined; // if no amount, exit
+    if (!allowNegative && amount?.lt(ZERO_BN)) return ZERO_BN; // clamp negative 
     if (max?.lt(amount)) return max; // clamp @ max
     return amount; // no max; always return amount
-  }, [_max, balance, field.name]);
+  }, [_max, balance, field.name, allowNegative]);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     /// If e.target.value is non-empty string, parse it into a BigNumber.
@@ -135,7 +151,6 @@ const TokenInput: FC<
     /// causing an infinite loop.
     ///
     /// FIXME: throws an error if e.target.value === '.'
-    /// FIXME: throws an error if e.target.value === '-'
     const newValue = e.target.value ? new BigNumber(e.target.value) : null;
 
     /// Always update the display amount right away.
@@ -223,6 +238,7 @@ const TokenInput: FC<
         value={displayAmount || ''}
         onChange={handleChange}
         InputProps={inputProps}
+        onKeyDown={!allowNegative ? preventNegativeInput : undefined}
         sx={sx}
       />
       {/* Bottom Adornment */}

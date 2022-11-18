@@ -37,7 +37,7 @@ const SliderField : FC<
   initialState,
   fields,
   changeMode = 'onChange',
-  throttleMs = 40,
+  throttleMs = 200,
   /// Slider Props
   min,
   max,
