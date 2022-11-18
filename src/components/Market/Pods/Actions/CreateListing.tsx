@@ -3,6 +3,7 @@ import BigNumber from 'bignumber.js';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import toast from 'react-hot-toast';
 import {
   PlotFragment,
   PlotSettingsFragment,
@@ -28,7 +29,8 @@ import {
   toStringBaseUnitBN,
   displayTokenAmount,
   displayBN,
-  displayFullBN
+  displayFullBN,
+  parseError
 } from '~/util';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 
@@ -220,57 +222,53 @@ const CreateListing: FC<{}> = () => {
   // eslint-disable-next-line unused-imports/no-unused-vars
   const onSubmit = useCallback(async (values: CreateListingFormValues, formActions: FormikHelpers<CreateListingFormValues>) => {
     const Bean = getChainToken(BEAN);
-    const txToast = new TransactionToast({
-      loading: 'Listing Pods...',
-      success: 'List successful.',
-    });
+    let txToast;
 
-    txToast.error(new Error('Creating listings is temporarily disabled. Check Discord for more details'));
-    // try {
-    //   middleware.before();
-    //   const { plot: { index, start, end, amount }, pricePerPod, expiresAt, destination } = values;
-    //   if (!index || !start || !end || !amount || !pricePerPod || !expiresAt || !destination) throw new Error('Missing data');
+    try {
+      middleware.before();
+      const { plot: { index, start, end, amount }, pricePerPod, expiresAt, destination } = values;
+      if (!index || !start || !end || !amount || !pricePerPod || !expiresAt || !destination) throw new Error('Missing data');
 
-    //   const plotIndexBN = new BigNumber(index);
-    //   const numPods     = plots[index];
+      const plotIndexBN = new BigNumber(index);
+      const numPods     = plots[index];
 
-    //   if (!numPods) throw new Error('Plot not found.');
-    //   if (start.gte(end)) throw new Error('Invalid start/end parameter.');
-    //   if (!end.minus(start).eq(amount)) throw new Error('Malformatted amount.');
-    //   if (pricePerPod.gt(1)) throw new Error('Price per pod cannot be more than 1.');
-    //   if (expiresAt.gt(plotIndexBN.minus(harvestableIndex).plus(start))) throw new Error('This listing would expire after the Plot harvests.');
+      if (!numPods) throw new Error('Plot not found.');
+      if (start.gte(end)) throw new Error('Invalid start/end parameter.');
+      if (!end.minus(start).eq(amount)) throw new Error('Malformatted amount.');
+      if (pricePerPod.gt(1)) throw new Error('Price per pod cannot be more than 1.');
+      if (expiresAt.gt(plotIndexBN.minus(harvestableIndex).plus(start))) throw new Error('This listing would expire after the Plot harvests.');
 
-    //   txToast = new TransactionToast({
-    //     loading: 'Listing Pods...',
-    //     success: 'List successful.',
-    //   });
+      txToast = new TransactionToast({
+        loading: 'Listing Pods...',
+        success: 'List successful.',
+      });
 
-    //   /// expiresAt is relative (ie 0 = front of pod line)
-    //   /// add harvestableIndex to make it absolute
-    //   const maxHarvestableIndex = expiresAt.plus(harvestableIndex);
-    //   const txn = await beanstalk.createPodListing(
-    //     toStringBaseUnitBN(index,       Bean.decimals),   // absolute plot index
-    //     toStringBaseUnitBN(start,       Bean.decimals),   // relative start index
-    //     toStringBaseUnitBN(amount,      Bean.decimals),   // relative amount
-    //     toStringBaseUnitBN(pricePerPod, Bean.decimals),   // price per pod
-    //     toStringBaseUnitBN(maxHarvestableIndex, Bean.decimals), // absolute index of expiry
-    //     toStringBaseUnitBN(new BigNumber(1), Bean.decimals), // minFillAmount is measured in Beans
-    //     destination,
-    //   );
-    //   txToast.confirming(txn);
+      /// expiresAt is relative (ie 0 = front of pod line)
+      /// add harvestableIndex to make it absolute
+      const maxHarvestableIndex = expiresAt.plus(harvestableIndex);
+      const txn = await beanstalk.createPodListing(
+        toStringBaseUnitBN(index,       Bean.decimals),   // absolute plot index
+        toStringBaseUnitBN(start,       Bean.decimals),   // relative start index
+        toStringBaseUnitBN(amount,      Bean.decimals),   // relative amount
+        toStringBaseUnitBN(pricePerPod, Bean.decimals),   // price per pod
+        toStringBaseUnitBN(maxHarvestableIndex, Bean.decimals), // absolute index of expiry
+        toStringBaseUnitBN(new BigNumber(1), Bean.decimals), // minFillAmount is measured in Beans
+        destination,
+      );
+      txToast.confirming(txn);
 
-    //   const receipt = await txn.wait();
-    //   await Promise.all([
-    //     refetchFarmerMarket()
-    //   ]);
+      const receipt = await txn.wait();
+      await Promise.all([
+        refetchFarmerMarket()
+      ]);
 
-    //   txToast.success(receipt);
-    //   formActions.resetForm();
-    // } catch (err) {
-    //   txToast?.error(err) || toast.error(parseError(err));
-    //   console.error(err);
-    // }
-  }, [getChainToken]);
+      txToast.success(receipt);
+      formActions.resetForm();
+    } catch (err) {
+      txToast?.error(err) || toast.error(parseError(err));
+      console.error(err);
+    }
+  }, [beanstalk, getChainToken, harvestableIndex, middleware, plots, refetchFarmerMarket]);
 
   return (
     <Formik<CreateListingFormValues>
