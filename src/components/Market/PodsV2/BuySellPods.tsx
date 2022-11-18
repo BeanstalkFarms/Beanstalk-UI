@@ -6,14 +6,12 @@ import BuyPods from './forms/BuyPods';
 import SellPods from './forms/SellPods';
 import { PodOrderAction, podsOrderActionTypeAtom } from './info/atom-context';
 
-const sx = {
-  tabs: {
-    '&.MuiTab-root': {
+const tabSX = {
+  '&.MuiTab-root': {
+    fontSize: FontSize.sm,
+    mr: 0.8,
+    '&.Mui-selected': {
       fontSize: FontSize.sm,
-      mr: 0.8,
-      '&.Mui-selected': {
-        fontSize: FontSize.sm,
-      },
     },
   },
 };
@@ -29,8 +27,8 @@ const BuySellPods: React.FC<{}> = () => {
     <Card sx={{ width: '100%' }}>
       <Box sx={{ p: 1.2 }}>
         <Tabs value={orderType} onChange={handleSetOrderType}>
-          <Tab label="BUY" sx={sx.tabs} />
-          <Tab label="SELL" sx={sx.tabs} />
+          <Tab label="BUY" sx={tabSX} />
+          <Tab label="SELL" sx={tabSX} />
         </Tabs>
       </Box>
       <Divider />

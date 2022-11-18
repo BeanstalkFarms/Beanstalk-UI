@@ -5,9 +5,9 @@ import {
   DataGrid,
   DataGridProps,
 } from '@mui/x-data-grid';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { FontSize, FontWeight } from '~/components/App/muiTheme';
+import { BeanstalkPalette, FontSize, FontWeight } from '~/components/App/muiTheme';
 import ArrowPagination from '~/components/Common/ArrowPagination';
 import Row from '~/components/Common/Row';
 
@@ -101,6 +101,7 @@ const useFakeOrders = () =>
 
 const OrderBook: React.FC<{}> = () => {
   const orders = useFakeOrders();
+  const [numberFormat, setNumberFormat] = useState(0);
 
   const tableHeight = useMemo(() => {
     if (!orders || orders.length === 0) return 0;
@@ -123,21 +124,58 @@ const OrderBook: React.FC<{}> = () => {
             ORDERBOOK
           </Typography>
           <Row gap={0.8}>
-            <Typography>MIN/MAX</Typography>
-            <Button variant="text" size="small" sx={{ border: 0.5, borderRadius: 0.4, width: 'fit-content' }}>
-              <Typography variant="caption" color="text.primary">
-                0.01
-                <KeyboardArrowDownIcon
+            <Card sx={{ borderRadius: 0.4, height: '100%', p: 0.2 }}>
+              <Row gap={0.4}>
+                <Button
+                  variant="text"
+                  size="small"
+                  onClick={() => setNumberFormat(0)}
                   sx={{
-                    fontSize: FontSize.xs,
-                    position: 'relative',
-                    color: 'rgba(0,0,0,0.87)',
-                    ml: '2px',
-                    top: '2px',
+                    p: 0.2,
+                    borderRadius: 0.4,
+                    minWidth: 'unset',
+                    backgroundColor: numberFormat === 0 ? BeanstalkPalette.lightYellow : null,
+                    '&:hover': {
+                      backgroundColor: numberFormat === 0 ? BeanstalkPalette.lightYellow : null,
+                    }
                   }}
-                />
-              </Typography>
-            </Button>
+                >
+                  <Typography variant="caption" color="text.primary">MIN/MAX</Typography>
+                </Button>
+                <Button
+                  variant="text"
+                  size="small"
+                  onClick={() => setNumberFormat(1)}
+                  sx={{
+                    p: 0.2,
+                    borderRadius: 0.4,
+                    minWidth: 'unset',
+                    backgroundColor: numberFormat === 1 ? BeanstalkPalette.lightYellow : null,
+                    '&:hover': {
+                      backgroundColor: numberFormat === 1 ? BeanstalkPalette.lightYellow : null,
+                    }
+                  }}
+                >
+                  <Typography variant="caption" color="text.primary">AVG</Typography>
+                </Button>
+              </Row>
+            </Card>
+            <Card sx={{ borderRadius: 0.4, p: 0.2 }}>
+              <Button variant="text" size="small" sx={{ p: 0.2, borderRadius: 0.4, minWidth: 'unset' }}>
+                <Typography variant="caption" color="text.primary">
+                  0.01
+                  <KeyboardArrowDownIcon
+                    sx={{
+                      fontSize: FontSize.xs,
+                      position: 'relative',
+                      color: 'rgba(0,0,0,0.87)',
+                      ml: '2px',
+                      top: '2px',
+                    }}
+                  />
+                </Typography>
+              </Button>
+            </Card>
           </Row>
         </Row>
         <Divider />
@@ -156,7 +194,8 @@ const OrderBook: React.FC<{}> = () => {
               rows={orders}
               pageSize={100}
               density="compact"
-              onRowClick={() => {}}
+              onRowClick={() => {
+              }}
               initialState={{
                 sorting: {
                   sortModel: [{ field: 'price', sort: 'asc' }],
