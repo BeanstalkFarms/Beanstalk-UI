@@ -39,6 +39,10 @@ export type TokenInputCustomProps = {
   /**
    *
    */
+  min?: BigNumber;
+  /**
+   * 
+   */
   hideBalance?: boolean;
   /**
    *
@@ -79,6 +83,7 @@ const TokenInput: FC<
   hideBalance = false,
   quote,
   max: _max = 'use-balance',
+  min,
   allowNegative = false,
   /// Formik props
   field,
@@ -134,10 +139,11 @@ const TokenInput: FC<
       balance: balance?.toString(),
     });
     if (!amount) return undefined; // if no amount, exit
+    if (min?.gt(amount)) return min; // clamp @ min
     if (!allowNegative && amount?.lt(ZERO_BN)) return ZERO_BN; // clamp negative 
     if (max?.lt(amount)) return max; // clamp @ max
     return amount; // no max; always return amount
-  }, [_max, balance, field.name, allowNegative]);
+  }, [_max, balance, field.name, min, allowNegative]);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     /// If e.target.value is non-empty string, parse it into a BigNumber.
@@ -165,6 +171,9 @@ const TokenInput: FC<
       onChange?.(clampedValue); // bubble up if necessary
     }
   }, [form, field.name, field.value, onChange, clamp]);
+
+  console.log('displayamount: ', displayAmount);
+  console.log('vallu: ', field.value?.toString());
 
   // 
   const handleMax = useCallback(() => {

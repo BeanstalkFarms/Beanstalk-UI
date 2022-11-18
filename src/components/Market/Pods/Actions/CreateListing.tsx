@@ -75,6 +75,8 @@ const REQUIRED_KEYS = [
   'destination'
 ] as (keyof CreateListingFormValues)[];
 
+const MIN_PLACE_IN_LINE_INPUT = new BigNumber(1e-6);
+
 const CreateListingForm: FC<
   FormikProps<CreateListingFormValues> & {
     plots: PlotMap<BigNumber>;
@@ -136,6 +138,7 @@ const CreateListingForm: FC<
                 placeholder="0.0000"
                 InputProps={ExpiresAtInputProps}
                 max={placeInLine.plus(plot.start || ZERO_BN)}
+                min={MIN_PLACE_IN_LINE_INPUT}
               />
             </FieldWrapper>
             <FarmModeField
