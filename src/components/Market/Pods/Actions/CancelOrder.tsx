@@ -72,33 +72,32 @@ const CancelOrder : FC<{
         loading: 'Cancelling Pod Order',
         success: 'Cancellation successful.',
       });
-      txToast.error(new Error('Cancelling Pod Orders is temporarily disabled. Check Discord for more details.'));
-      // try {
-      //   middleware.before();
-      //   hide();
-      //   const txn = await beanstalk.cancelPodOrder(
-      //     Bean.stringify(order.pricePerPod),
-      //     Bean.stringify(order.maxPlaceInLine),
-      //     Bean.stringify(order.minFillAmount || 0),
-      //     destination,
-      //   );
-      //   txToast.confirming(txn);
+      try {
+        middleware.before();
+        hide();
+        const txn = await beanstalk.cancelPodOrder(
+          Bean.stringify(order.pricePerPod),
+          Bean.stringify(order.maxPlaceInLine),
+          Bean.stringify(order.minFillAmount || 0),
+          destination,
+        );
+        txToast.confirming(txn);
 
-      //   const receipt = await txn.wait();
-      //   await Promise.all([
-      //     refetchFarmerMarket(),    // clear old pod order
-      //     refetchFarmerBalances(),  // refresh Beans
-      //   ]);
-      //   txToast.success(receipt);
-      //   navigate('/market/account');
-      // } catch (err) {
-      //   console.error(err);
-      //   txToast.error(err);
-      // } finally {
-      //   setLoading(false);
-      // }
+        const receipt = await txn.wait();
+        await Promise.all([
+          refetchFarmerMarket(),    // clear old pod order
+          refetchFarmerBalances(),  // refresh Beans
+        ]);
+        txToast.success(receipt);
+        navigate('/market/account');
+      } catch (err) {
+        console.error(err);
+        txToast.error(err);
+      } finally {
+        setLoading(false);
+      }
     })();
-  }, []);
+  }, [Bean, beanstalk, hide, middleware, navigate, order.maxPlaceInLine, order.minFillAmount, order.pricePerPod, refetchFarmerBalances, refetchFarmerMarket]);
 
   return (
     <>
