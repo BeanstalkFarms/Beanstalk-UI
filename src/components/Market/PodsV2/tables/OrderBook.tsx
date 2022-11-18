@@ -1,4 +1,4 @@
-import { Box, Card, Divider, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Divider, Stack, Typography } from '@mui/material';
 import {
   GridRenderCellParams,
   GridColumns,
@@ -6,6 +6,7 @@ import {
   DataGridProps,
 } from '@mui/x-data-grid';
 import React, { useMemo } from 'react';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { FontSize, FontWeight } from '~/components/App/muiTheme';
 import ArrowPagination from '~/components/Common/ArrowPagination';
 import Row from '~/components/Common/Row';
@@ -98,7 +99,7 @@ const useFakeOrders = () =>
       depthPods: i,
     }));
 
-const Orderbook: React.FC<{}> = () => {
+const OrderBook: React.FC<{}> = () => {
   const orders = useFakeOrders();
 
   const tableHeight = useMemo(() => {
@@ -117,11 +118,27 @@ const Orderbook: React.FC<{}> = () => {
   return (
     <Card>
       <Stack>
-        <Row justifyContent="space-between" width="100%" p={1.2}>
+        <Row justifyContent="space-between" width="100%" p={0.8}>
           <Typography variant="bodySmall" fontWeight={FontWeight.bold}>
             ORDERBOOK
           </Typography>
-          <Typography>MIN/MAX</Typography>
+          <Row gap={0.8}>
+            <Typography>MIN/MAX</Typography>
+            <Button variant="text" size="small" sx={{ border: 0.5, borderRadius: 0.4, width: 'fit-content' }}>
+              <Typography variant="caption" color="text.primary">
+                0.01
+                <KeyboardArrowDownIcon
+                  sx={{
+                    fontSize: FontSize.xs,
+                    position: 'relative',
+                    color: 'rgba(0,0,0,0.87)',
+                    ml: '2px',
+                    top: '2px',
+                  }}
+                />
+              </Typography>
+            </Button>
+          </Row>
         </Row>
         <Divider />
         <Stack sx={{ overflowY: 'scroll' }}>
@@ -156,4 +173,4 @@ const Orderbook: React.FC<{}> = () => {
   );
 };
 
-export default Orderbook;
+export default OrderBook;

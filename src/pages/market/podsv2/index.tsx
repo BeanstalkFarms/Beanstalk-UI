@@ -6,6 +6,7 @@ import useBanner from '~/hooks/app/useBanner';
 import BuySellPods from '~/components/Market/PodsV2/BuySellPods';
 import PodsMarketInfo from '~/components/Market/PodsV2/marketInfo';
 import PodsChart from '~/components/Market/PodsV2/chart/podsChart';
+import OrderBook from '~/components/Market/PodsV2/tables/OrderBook';
 
 const SECTION_MAX_WIDTH = 375;
 
@@ -19,37 +20,34 @@ const FullPageWrapper: FC<{}> = ({ children }) => {
   const navHeight = useNavHeight(!!banner);
 
   return (
-    
     <Box
       sx={{
         position: 'absolute',
         width: '100vw',
         height: `calc(100vh - ${navHeight}px)`,
         // top: '-40px', // TODO: fix me
-
       }}
       id="full-page-wrapper"
     >
       <Box sx={{ ...sx, p: 1 }}>{children}</Box>
     </Box>
-    
   );
 };
 
 const PodsMarketNew: React.FC<{}> = () => (
   // <ThemeProvider theme={muiThemeCondensed}>
-  <FullPageWrapper>
-    <Stack direction="row" {...sx} gap={1}>
+  <Box sx={{ px: 0.8 }}>
+    <Stack direction={{ xs: 'column-reverse', md: 'row' }} {...sx} gap={1}>
       <Stack {...sx}>
         <PodsChart />
         <PodsMarketInfo />
       </Stack>
-      <Stack maxWidth={SECTION_MAX_WIDTH} {...sx} gap={1}>
+      <Stack maxWidth={{ xs: 'none', md: SECTION_MAX_WIDTH }} {...sx} gap={1}>
         <BuySellPods />
-        {/* <Orderbook /> */}
+        <OrderBook />
       </Stack>
     </Stack>
-  </FullPageWrapper>
+  </Box>
   // </ThemeProvider>
 );
 
