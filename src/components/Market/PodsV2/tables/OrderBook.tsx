@@ -113,9 +113,11 @@ const OrderBook: React.FC<{}> = () => {
   const [numberFormat, setNumberFormat] = useState(0);
   const [percent, setPercent] = useState(percentOptions[0]);
 
+  const ROWS_PER_PAGE = 14;
+
   const tableHeight = useMemo(() => {
     if (!orders || orders.length === 0) return 0;
-    return 39 + 58 + Math.min(orders.length, 100) * 58;
+    return 95 + Math.min(orders.length, ROWS_PER_PAGE) * 36;
   }, [orders]);
 
   const cols: DataGridProps['columns'] = [
@@ -141,7 +143,8 @@ const OrderBook: React.FC<{}> = () => {
                   size="small"
                   onClick={() => setNumberFormat(0)}
                   sx={{
-                    p: 0.2,
+                    py: 0.2,
+                    px: 0.3,
                     borderRadius: 0.4,
                     minWidth: 'unset',
                     backgroundColor: numberFormat === 0 ? BeanstalkPalette.lightYellow : null,
@@ -157,7 +160,8 @@ const OrderBook: React.FC<{}> = () => {
                   size="small"
                   onClick={() => setNumberFormat(1)}
                   sx={{
-                    p: 0.2,
+                    py: 0.2,
+                    px: 0.3,
                     borderRadius: 0.4,
                     minWidth: 'unset',
                     backgroundColor: numberFormat === 1 ? BeanstalkPalette.lightYellow : null,
@@ -171,22 +175,6 @@ const OrderBook: React.FC<{}> = () => {
               </Row>
             </Card>
             <PercentDropdown options={percentOptions} selectedOption={percent} setOption={setPercent}  />
-            {/* <Card sx={{ borderRadius: 0.4, p: 0.2 }}> */}
-            {/*  <Button variant="text" size="small" sx={{ p: 0.2, borderRadius: 0.4, minWidth: 'unset' }}> */}
-            {/*    <Typography variant="caption" color="text.primary"> */}
-            {/*      0.01 */}
-            {/*      <KeyboardArrowDownIcon */}
-            {/*        sx={{ */}
-            {/*          fontSize: FontSize.xs, */}
-            {/*          position: 'relative', */}
-            {/*          color: 'rgba(0,0,0,0.87)', */}
-            {/*          ml: '2px', */}
-            {/*          top: '2px', */}
-            {/*        }} */}
-            {/*      /> */}
-            {/*    </Typography> */}
-            {/*  </Button> */}
-            {/* </Card> */}
           </Row>
         </Row>
         <Divider />
@@ -195,7 +183,6 @@ const OrderBook: React.FC<{}> = () => {
             sx={{
               px: 0.2,
               height: tableHeight,
-
               width: '100%',
               ...orderbookTableStyle,
             }}
@@ -203,7 +190,7 @@ const OrderBook: React.FC<{}> = () => {
             <DataGrid
               columns={cols}
               rows={orders}
-              pageSize={100}
+              pageSize={ROWS_PER_PAGE}
               density="compact"
               onRowClick={() => {
               }}

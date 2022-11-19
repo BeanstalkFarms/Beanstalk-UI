@@ -24,7 +24,7 @@ const BuySellPods: React.FC<{}> = () => {
   };
 
   return (
-    <Card sx={{ width: '100%' }}>
+    <Card sx={{ width: '100%', overflow: 'visible' }}>
       <Box sx={{ p: 1.2 }}>
         <Tabs value={orderType} onChange={handleSetOrderType}>
           <Tab label="BUY" sx={tabSX} />
@@ -32,7 +32,7 @@ const BuySellPods: React.FC<{}> = () => {
         </Tabs>
       </Box>
       <Divider />
-      <Stack sx={{ height: '100%', width: '100%' }}>
+      <Stack sx={{ width: '100%' }}>
         {orderType === PodOrderAction.BUY && <BuyPods />}
         {orderType === PodOrderAction.SELL && <SellPods />}
       </Stack>

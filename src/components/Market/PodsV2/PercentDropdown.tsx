@@ -61,7 +61,7 @@ const PercentDropdown: FC<{ showFullText?: boolean; options: string[]; selectedO
           }}
           size="small"
         >
-          <Typography variant="caption">
+          <Typography variant="caption" color="text.primary">
             {props.selectedOption}
           </Typography>
         </Button>

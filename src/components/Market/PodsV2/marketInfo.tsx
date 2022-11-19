@@ -59,7 +59,7 @@ const PodsMarketInfo: React.FC<{}> = () => {
         maxHeight:
           openState === 0 ? '56px' : openState === 1 ? '300px' : '100%',
         transition: 'max-height 200ms ease-in',
-        mt: openState !== 2 ? 1 : 0,
+        // mt: openState !== 2 ? 1 : 0,
       }}
     >
       <Card sx={{ height: '100%', width: '100%' }}>
