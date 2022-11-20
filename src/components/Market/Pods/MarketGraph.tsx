@@ -673,11 +673,11 @@ const Graph: FC<GraphProps> = ({
                 }}
                 css={{
                   cursor: (
-                    selectedPoint 
+                    selectedPoint
                       ? 'default'         // when selected, freeze cursor
-                      : zoom.isDragging   
+                      : zoom.isDragging
                         ? 'grabbing'      // if dragging, show grab
-                        : tooltipData     
+                        : tooltipData
                           ? 'pointer'     // hovering over a point but haven't clicked it yet
                           : 'grab'        // not hovering a point, user can drag
                   ),
@@ -734,8 +734,8 @@ const Graph: FC<GraphProps> = ({
                   <TooltipCard>
                     <Row gap={0.5}>
                       <EntityIcon type={tooltipData.type} size={20} />
-                      {tooltipData.type === 'listing' 
-                        ? displayBN(listings[tooltipData.index].remainingAmount) 
+                      {tooltipData.type === 'listing'
+                        ? displayBN(listings[tooltipData.index].remainingAmount)
                         : displayBN(orders[tooltipData.index].remainingAmount)
                       } Pods
                     </Row>
@@ -767,11 +767,11 @@ const MarketGraph: FC<MarketGraphProps> = (props) => (
         width={visWidth}
         height={visHeight}
         {...props}
-      >
+        >
         {props.children}
       </Graph>
-    )}
+      )}
   </ParentSize>
-);
+  );
 
 export default MarketGraph;

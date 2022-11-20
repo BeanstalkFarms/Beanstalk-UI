@@ -49,16 +49,16 @@ const sx = {
 const PodsMarketInfo: React.FC<{}> = () => {
   const [tab, setTab] = useTabs();
   const [openState, setOpenState] = useAtom(marketBottomTabsAtom);
-
   return (
     <Stack
       sx={{
         position: 'relative',
         bottom: 0,
-        height: '100%',
+        height: openState === 0 ? '56px' : openState === 1 ? '300px' : '750px',
         maxHeight:
-          openState === 0 ? '56px' : openState === 1 ? '300px' : '100%',
-        transition: 'max-height 200ms ease-in',
+          openState === 0 ? '56px' : openState === 1 ? '300px' : '800px',
+        // FIXME: transition -> nice-to-have
+        // transition: openState === 0 ? 'max-height 200ms ease-in' : null,
         // mt: openState !== 2 ? 1 : 0,
       }}
     >
@@ -85,7 +85,7 @@ const PodsMarketInfo: React.FC<{}> = () => {
               >
                 <DropdownIcon open={openState !== 0} />
               </Box>
-              <Box>
+              <Box display={{ xs: 'none', md: 'block' }}>
                 {openState === 1 && (
                   <FullscreenIcon
                     onClick={() => setOpenState(2)}

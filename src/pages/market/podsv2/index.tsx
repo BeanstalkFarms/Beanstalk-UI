@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box, Stack } from '@mui/material';
 import useNavHeight from '~/hooks/app/usePageDimensions';
 import { FC } from '~/types';
@@ -35,13 +35,23 @@ const FullPageWrapper: FC<{}> = ({ children }) => {
 };
 
 const PodsMarketNew: React.FC<{}> = () => {
+  const [accordionHeight, setAccordionHeight] = useState(0);
   const data = useMarketData();
   const banner = useBanner();
   const navHeight = useNavHeight(!!banner);
   const GAP = 0.8;
+
+  const ref = useRef(null);
+
+  useEffect(() => {
+    console.log('REF', ref?.current?.clientHeight);
+    // setAccordionHeight(ref?.current?.clientHeight)
+  }, [ref]);
+
   return (
     <Stack
       px={1}
+      mt={{ xs: 7, md: 0 }}
       direction={{ xs: 'column-reverse', md: 'row' }}
       justifyItems="stretch"
       width="100%"
@@ -52,7 +62,35 @@ const PodsMarketNew: React.FC<{}> = () => {
         <Module sx={{ p: 2, height: '100%' }}>
           TEST
         </Module>
-        <PodsMarketInfo />
+        {/* <Module> */}
+        {/*  <ModuleHeader> */}
+        {/*    <Typography variant="h4">Overview</Typography> */}
+        {/*  </ModuleHeader> */}
+        {/*  <Box sx={{ */}
+        {/*    width: '100%', */}
+        {/*    height: `calc(100vh - ${navHeight * 4.4}px)`, */}
+        {/*    // height: '94%', */}
+        {/*    position: 'relative', */}
+        {/*    overflow: 'visible' */}
+        {/*  }}> */}
+        {/*    {data.loading === false && data.listings !== undefined && data.orders !== undefined ? ( */}
+        {/*      <MarketGraph */}
+        {/*        listings={data.listings} */}
+        {/*        orders={data.orders} */}
+        {/*        maxPlaceInLine={data.maxPlaceInLine} */}
+        {/*        maxPlotSize={data.maxPlotSize} */}
+        {/*        harvestableIndex={data.harvestableIndex} */}
+        {/*      /> */}
+        {/*    ) : ( */}
+        {/*      <Centered> */}
+        {/*        <CircularProgress variant="indeterminate" /> */}
+        {/*      </Centered> */}
+        {/*    )} */}
+        {/*  </Box> */}
+        {/* </Module> */}
+        <Box height="fit-content" ref={ref}>
+          <PodsMarketInfo />
+        </Box>
       </Stack>
 
       <Stack direction="column" sx={{ width: { xs: '100%', md: '375px' }, height: '100%' }} gap={GAP}>
