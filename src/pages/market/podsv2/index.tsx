@@ -1,12 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Box, Stack } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import useNavHeight from '~/hooks/app/usePageDimensions';
 import { FC } from '~/types';
 import useBanner from '~/hooks/app/useBanner';
 import BuySellPods from '~/components/Market/PodsV2/BuySellPods';
-import PodsMarketInfo from '~/components/Market/PodsV2/marketInfo';
-import { Module } from '~/components/Common/Module';
+import PodsMarketInfo, { sizes } from '~/components/Market/PodsV2/marketInfo';
+import { Module, ModuleHeader } from '~/components/Common/Module';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
+import MarketGraph from '~/components/Market/Pods/MarketGraph';
+import Centered from '~/components/Common/ZeroState/Centered';
 
 const SECTION_MAX_WIDTH = 375;
 
@@ -35,18 +37,21 @@ const FullPageWrapper: FC<{}> = ({ children }) => {
 };
 
 const PodsMarketNew: React.FC<{}> = () => {
-  const [accordionHeight, setAccordionHeight] = useState(0);
   const data = useMarketData();
   const banner = useBanner();
   const navHeight = useNavHeight(!!banner);
-  const GAP = 0.8;
 
-  const ref = useRef(null);
+  const GAP = 0.8;
+  const BOTTOM_HEIGHT = navHeight * 2.5;
+  const CONTAINER_HEIGHT = `calc(100vh - ${BOTTOM_HEIGHT}px)`;
+  const [accordionHeight, setAccordionHeight] = useState(sizes.CLOSED);
+  const CHART_HEIGHT = `calc(100vh - ${(GAP * 10) + BOTTOM_HEIGHT + accordionHeight + 57}px)`;
 
   useEffect(() => {
-    console.log('REF', ref?.current?.clientHeight);
-    // setAccordionHeight(ref?.current?.clientHeight)
-  }, [ref]);
+    console.log('HEIGHT', accordionHeight);
+  }, [accordionHeight]);
+
+  console.log('ST: ', CHART_HEIGHT);
 
   return (
     <Stack
@@ -56,40 +61,42 @@ const PodsMarketNew: React.FC<{}> = () => {
       justifyItems="stretch"
       width="100%"
       gap={GAP}
-      sx={{ height: `calc(100vh - ${navHeight * 2.5}px)` }}
+      sx={{ height: CONTAINER_HEIGHT }}
     >
       <Stack direction="column" width="100%" gap={GAP} justifyItems="stretch">
-        <Module sx={{ p: 2, height: '100%' }}>
-          TEST
-        </Module>
-        {/* <Module> */}
-        {/*  <ModuleHeader> */}
-        {/*    <Typography variant="h4">Overview</Typography> */}
-        {/*  </ModuleHeader> */}
-        {/*  <Box sx={{ */}
-        {/*    width: '100%', */}
-        {/*    height: `calc(100vh - ${navHeight * 4.4}px)`, */}
-        {/*    // height: '94%', */}
-        {/*    position: 'relative', */}
-        {/*    overflow: 'visible' */}
-        {/*  }}> */}
-        {/*    {data.loading === false && data.listings !== undefined && data.orders !== undefined ? ( */}
-        {/*      <MarketGraph */}
-        {/*        listings={data.listings} */}
-        {/*        orders={data.orders} */}
-        {/*        maxPlaceInLine={data.maxPlaceInLine} */}
-        {/*        maxPlotSize={data.maxPlotSize} */}
-        {/*        harvestableIndex={data.harvestableIndex} */}
-        {/*      /> */}
-        {/*    ) : ( */}
-        {/*      <Centered> */}
-        {/*        <CircularProgress variant="indeterminate" /> */}
-        {/*      </Centered> */}
-        {/*    )} */}
-        {/*  </Box> */}
+        {/* <Module sx={{ p: 2, height: '100%' }}> */}
+        {/*  TEST */}
         {/* </Module> */}
-        <Box height="fit-content" ref={ref}>
-          <PodsMarketInfo />
+        <Module>
+          <ModuleHeader>
+            <Typography variant="h4">Overview</Typography>
+          </ModuleHeader>
+          <Box sx={{
+            width: '100%',
+            // height: `calc(100vh - ${navHeight * 4.4}px)`,
+            height: CHART_HEIGHT,
+            // `calc(${CONTAINER_HEIGHT}px - ${GAP * 10}px - ${accordionHeight}px)`
+            // height: '94%',
+            position: 'relative',
+            overflow: 'visible'
+          }}>
+            {data.loading === false && data.listings !== undefined && data.orders !== undefined ? (
+              <MarketGraph
+                listings={data.listings}
+                orders={data.orders}
+                maxPlaceInLine={data.maxPlaceInLine}
+                maxPlotSize={data.maxPlotSize}
+                harvestableIndex={data.harvestableIndex}
+              />
+            ) : (
+              <Centered>
+                <CircularProgress variant="indeterminate" />
+              </Centered>
+            )}
+          </Box>
+        </Module>
+        <Box height="fit-content">
+          <PodsMarketInfo setHeight={setAccordionHeight} />
         </Box>
       </Stack>
 
