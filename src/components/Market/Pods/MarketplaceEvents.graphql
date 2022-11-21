@@ -7,15 +7,15 @@ query MarketplaceEvents(
   # $listings_updatedAt_lt: BigInt!
 ) {
   marketplaceEvents(
-    orderBy: timestamp,
+    orderBy: createdAt,
     orderDirection: desc,
     first: $events_first,
     where: { 
-      timestamp_lt: $events_timestamp_lt
+      createdAt_lt: $events_timestamp_lt
     }
   ) {
     hash
-    timestamp
+    createdAt
     # --------
     # LISTINGS
     # --------

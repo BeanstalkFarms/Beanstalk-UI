@@ -21,8 +21,8 @@ query SunButton {
   ) {
     id
     season
-    newSoil
-		weather
+    issuedSoil
+		temperature
     podRate
   }
 }

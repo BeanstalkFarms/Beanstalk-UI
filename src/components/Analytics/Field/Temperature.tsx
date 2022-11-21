@@ -10,7 +10,7 @@ import { AppState } from '~/state';
 
 import { FC } from '~/types';
 
-const getValue = (snapshot: SnapshotData<SeasonalWeatherQuery>) => snapshot.weather;
+const getValue = (snapshot: SnapshotData<SeasonalWeatherQuery>) => snapshot.temperature;
 const formatValue = (value: number) => `${value.toFixed(0)}%`;
 const statProps = {
   title: 'Temperature',

@@ -6,7 +6,7 @@ query PodOrderFilledEvent($id: ID!) {
     }
 #    transaction {
 #      id
-#      timestamp
+#      createdAt
 #    }
   }
 }

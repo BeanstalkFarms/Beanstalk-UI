@@ -1,16 +1,16 @@
 query MarketplaceEventsOld(
   $first: Int = 15,
-  $timestamp_lt: BigInt
+  $createdAt_lt: BigInt
 ) {
   marketplaceEvents(
     first: $first,
-    orderBy: timestamp,
+    orderBy: createdAt,
     orderDirection: desc
-    where: {timestamp_lt: $timestamp_lt}
+    where: {createdAt_lt: $createdAt_lt}
   ) {
     id
     hash
-    timestamp
+    createdAt
     ... on PodOrderCreated {
       amount
       maxPlaceInLine

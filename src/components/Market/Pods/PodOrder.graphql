@@ -4,7 +4,7 @@ query PodOrder($id: ID!) {
     ...PodOrder
     #    transaction {
     #      id
-    #      timestamp
+    #      createdAt
     #    }
   }
 }

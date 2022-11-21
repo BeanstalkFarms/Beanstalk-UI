@@ -6,8 +6,8 @@ fragment PodOrder on PodOrder {
   updatedAt
   status
   # Order data
-  amount
-  filledAmount
+  podAmount
+  podAmountFilled
   pricePerPod
   maxPlaceInLine
 }

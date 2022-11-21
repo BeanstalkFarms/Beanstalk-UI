@@ -15,7 +15,7 @@ query SeasonalSeeds(
   ) { 
     id
     season
-    createdAt # timestamp
-    seeds # totalSeeds
+    createdAt
+    seeds
   }
 }
