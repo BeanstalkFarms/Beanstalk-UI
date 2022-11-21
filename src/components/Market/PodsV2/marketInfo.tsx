@@ -68,7 +68,6 @@ const PodsMarketInfo: React.FC<{ setHeight: any }> = (props) => {
       sx={{
         position: 'relative',
         bottom: 0,
-        // height: '100%',
         height: `${size}px`,
         // FIXME: transition -> nice-to-have
         // transition: openState === 0 ? 'max-height 200ms ease-in' : null,
