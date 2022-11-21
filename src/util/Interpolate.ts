@@ -62,7 +62,7 @@ export const interpolateFarmerStalk = (
   const maxSeason = season.toNumber(); // current season
   let currStalk : BigNumber = ZERO_BN;
   let currSeeds : BigNumber = ZERO_BN;
-  let currTimestamp = DateTime.fromJSDate(secondsToDate(snapshots[j].timestamp));
+  let currTimestamp = DateTime.fromJSDate(secondsToDate(snapshots[j].createdAt));
   let nextSeason : number | undefined = minSeason;
   
   // Add buffer points before the first snapshot
@@ -75,7 +75,7 @@ export const interpolateFarmerStalk = (
       // Use the corresponding total stalk value.
       currStalk = toTokenUnitsBN(snapshots[j].totalStalk, STALK.decimals);
       currSeeds = toTokenUnitsBN(snapshots[j].totalSeeds, SEEDS.decimals);
-      currTimestamp = DateTime.fromJSDate(secondsToDate(snapshots[j].timestamp));
+      currTimestamp = DateTime.fromJSDate(secondsToDate(snapshots[j].createdAt));
       j += 1;
       nextSeason = snapshots[j]?.season || undefined;
     } else {
@@ -146,7 +146,7 @@ export const interpolateFarmerDepositedValue = (
     const thisPriceEntity = prices[currPriceIndex];
     const nextPriceEntity = prices[currPriceIndex + 1];
     const thisPriceBN     = new BigNumber(thisPriceEntity.price);
-    const thisTimestamp   = DateTime.fromJSDate(secondsToDate(thisPriceEntity.timestamp));
+    const thisTimestamp   = DateTime.fromJSDate(secondsToDate(thisPriceEntity.createdAt));
     let thisBDV = currBDV;
 
     // If there's another price and the season associated with the price is

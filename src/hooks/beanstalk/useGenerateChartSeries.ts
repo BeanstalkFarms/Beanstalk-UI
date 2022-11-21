@@ -90,7 +90,7 @@ const generateStackedAreaSeriesData = <T extends MinimumViableSnapshotQuery>(
         if (sd) agg[_k] += sd;
       }
       if (j === 0) {
-        d = secondsToDate(season.timestamp);
+        d = secondsToDate(season.createdAt);
         s = season.season as number;
         j += 1;
       } else if (i === lastIndex || j === 24) {
@@ -114,7 +114,7 @@ const generateStackedAreaSeriesData = <T extends MinimumViableSnapshotQuery>(
       points.push({
         ...seasonData,
         season: seasonData.season as number,
-        date: secondsToDate(seasonData.timestamp)
+        date: secondsToDate(seasonData.createdAt)
       } as BaseDataPoint);
     }
   }
@@ -146,7 +146,7 @@ const generateSeriesData = <T extends MinimumViableSnapshotQuery>(
         if (!season) continue; // skip empty points
         v += getValue(season);
         if (j === 0) {
-          d = secondsToDate(season.timestamp);
+          d = secondsToDate(season.createdAt);
           s = season.season as number;
           j += 1;
         } else if (
@@ -170,7 +170,7 @@ const generateSeriesData = <T extends MinimumViableSnapshotQuery>(
         if (!season || !season.season) continue;
         _points.push({
           season: season.season as number,
-          date: secondsToDate(season.timestamp),
+          date: secondsToDate(season.createdAt),
           value: getValue(season),
         } as unknown as BaseDataPoint);
       }
