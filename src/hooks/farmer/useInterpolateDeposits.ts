@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useFarmerSiloAssetSnapshotsQuery, useSeasonalPriceQuery } from '~/generated/graphql';
 import { AppState } from '~/state';
-import { interpolateFarmerDepositedValue, Snapshot } from '~/util/Interpolate';
+import { interpolateFarmerDepositedValue, SnapshotBeanstalk } from '~/util/Interpolate';
 
 const useInterpolateDeposits = (
   siloAssetsQuery: ReturnType<typeof useFarmerSiloAssetSnapshotsQuery>,
@@ -36,13 +36,13 @@ const useInterpolateDeposits = (
             // and the BDV of an unripe token isn't necessarily equal to this. but this matches
             // up with what the silo table below the overview shows.
             unripe[tokenAddress]
-              ? new BigNumber(snapshot.hourlyDepositedAmount).times(unripe[tokenAddress].chopRate)
-              : snapshot.hourlyDepositedBDV
+              ? new BigNumber(snapshot.deltaDepositedBDV).times(unripe[tokenAddress].chopRate)
+              : snapshot.deltaDepositedBDV
           )
         }))
       );
       return prev;
-    }, [] as Snapshot[]).sort((a, b) => a.season - b.season);
+    }, [] as SnapshotBeanstalk[]).sort((a, b) => a.season - b.season);
 
     return interpolateFarmerDepositedValue(snapshots, priceQuery.data.seasons, itemizeByToken);
   }, [priceQuery.loading, priceQuery?.data?.seasons, siloAssetsQuery?.data?.farmer?.silo?.assets, unripe, itemizeByToken]);

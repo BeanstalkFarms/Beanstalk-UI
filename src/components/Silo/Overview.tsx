@@ -69,6 +69,7 @@ const Overview: FC<{
 
   //
   const account = useAccount();
+  console.log('account: ', account);
   const { data, loading } = useFarmerSiloHistory(account, false, true);
 
   //

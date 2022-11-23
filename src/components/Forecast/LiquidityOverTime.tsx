@@ -44,6 +44,7 @@ const LiquidityOverTime: FC<{} & CardProps> = ({ sx }) => {
           StatProps={StatProps}
           queryConfig={queryConfig}
           stackedArea
+          dateKey="timestamp"
         />
       </Box>
     </Card>
