@@ -23,8 +23,6 @@ const lineChartProps : Partial<LineChartProps> = {
   yTickFormat: tickFormatBeanPrice
 };
 
-const queryConfig = { context: { subgraph: 'beanstalk-dev' } };
-
 const Price: FC<{ height?: SeasonPlotBaseProps['height'] }> = ({
   height,
 }) => {
@@ -40,7 +38,6 @@ const Price: FC<{ height?: SeasonPlotBaseProps['height'] }> = ({
       formatValue={formatValue}
       StatProps={statProps}
       LineChartProps={lineChartProps}
-      queryConfig={queryConfig}
     />
   );
 };

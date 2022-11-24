@@ -36,7 +36,7 @@ const useInterpolateDeposits = (
             // and the BDV of an unripe token isn't necessarily equal to this. but this matches
             // up with what the silo table below the overview shows.
             unripe[tokenAddress]
-              ? new BigNumber(snapshot.deltaDepositedBDV).times(unripe[tokenAddress].chopRate)
+              ? new BigNumber(snapshot.deltaDepositedAmount).times(unripe[tokenAddress].chopRate)
               : snapshot.deltaDepositedBDV
           )
         }))

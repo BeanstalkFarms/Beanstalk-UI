@@ -15,7 +15,7 @@ export const castPodListing = (listing: PodListingFragment, harvestableIndex: Bi
   const [account, id]     = listing.id.split('-'); /// Subgraph returns a conjoined ID.
   const index             = toTokenUnitsBN(id, BEAN[1].decimals);
   const amount            = toTokenUnitsBN(listing.amount,      BEAN[1].decimals);  
-  const totalAmount       = toTokenUnitsBN(listing.totalAmount, BEAN[1].decimals); 
+  const totalAmount       = toTokenUnitsBN(listing.originalAmount, BEAN[1].decimals); 
   const filledAmount      = totalAmount.minus(amount);
   const remainingAmount   = amount;
   return {
@@ -44,8 +44,8 @@ export const castPodListing = (listing: PodListingFragment, harvestableIndex: Bi
  * @returns Redux form of PodOrder.
  */
 export const castPodOrder = (order: PodOrderFragment) : PodOrder => {
-  const amount = toTokenUnitsBN(order.amount,   BEAN[1].decimals);  
-  const filled = toTokenUnitsBN(order.filledAmount,  BEAN[1].decimals);
+  const amount = toTokenUnitsBN(order.podAmount,   BEAN[1].decimals);  
+  const filled = toTokenUnitsBN(order.podAmountFilled,  BEAN[1].decimals);
   return {
     id:              order.id,
     account:         order.farmer.id,
