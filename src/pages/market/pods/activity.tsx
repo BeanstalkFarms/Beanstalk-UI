@@ -24,6 +24,8 @@ const MarketActivityPage: FC<{}> = () => {
 
   const { data, harvestableIndex, loading, fetchMoreData } = useMarketplaceEventData();
 
+  console.log('data: ', data);
+
   const handleFetchMore = () => {
     fetchMoreData();
     setScrollPosition(window.scrollY);
@@ -68,7 +70,7 @@ const MarketActivityPage: FC<{}> = () => {
                   <ActivityTableHeader tab={tab} handleChangeTab={handleChangeTab} />
                   {/* Table body */}
                   {filteredData.map((e) => (
-                    <ActivityTableRow key={e.id} event={e} />
+                    <ActivityTableRow key={`${e.id}-${e.hash}`} event={e} />
                   ))}
                   <Box p={1}>
                     {loading ? (
