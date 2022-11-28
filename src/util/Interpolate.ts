@@ -14,6 +14,16 @@ export type Snapshot = {
 };
 
 /**
+ * snapshot type from Beanstalk subgraph
+ */
+export type SnapshotBeanstalk = {
+  id: string;
+  season: number;
+  createdAt: string;
+  hourlyDepositedBDV: string;
+}
+
+/**
  * 
  */
 export const addBufferSeasons = (
@@ -73,8 +83,8 @@ export const interpolateFarmerStalk = (
     if (s === nextSeason) {
       // Reached a data point for which we have a snapshot.
       // Use the corresponding total stalk value.
-      currStalk = toTokenUnitsBN(snapshots[j].totalStalk, STALK.decimals);
-      currSeeds = toTokenUnitsBN(snapshots[j].totalSeeds, SEEDS.decimals);
+      currStalk = toTokenUnitsBN(snapshots[j].stalk, STALK.decimals);
+      currSeeds = toTokenUnitsBN(snapshots[j].seeds, SEEDS.decimals);
       currTimestamp = DateTime.fromJSDate(secondsToDate(snapshots[j].createdAt));
       j += 1;
       nextSeason = snapshots[j]?.season || undefined;
@@ -107,7 +117,7 @@ export const interpolateFarmerStalk = (
  * and   (b) seasonal Bean price data.
  */
 export const interpolateFarmerDepositedValue = (
-  snapshots: Snapshot[], // oldest season first
+  snapshots: SnapshotBeanstalk[], // oldest season first
   _prices: SeasonalPriceQuery['seasons'], // most recent season first
   itemizeByToken : boolean = true,
   bufferSeasons : number = 24,
