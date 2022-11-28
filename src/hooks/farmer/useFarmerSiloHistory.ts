@@ -9,8 +9,6 @@ const useFarmerSiloHistory = (
   includeStalk: boolean = false,
 ) => {
   /// Data
-
-  console.log('account: ', account);
   const siloRewardsQuery = useFarmerSiloRewardsQuery({ variables: { account: account || '' }, skip: !account, fetchPolicy: 'cache-and-network' });
   const siloAssetsQuery = useFarmerSiloAssetSnapshotsQuery({ variables: { account: account || '' }, skip: !account, fetchPolicy: 'cache-and-network' });
   const priceQuery = useSeasonsQuery(SeasonalPriceDocument, SeasonRange.ALL);

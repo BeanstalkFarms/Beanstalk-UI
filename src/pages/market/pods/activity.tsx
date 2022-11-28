@@ -24,8 +24,6 @@ const MarketActivityPage: FC<{}> = () => {
 
   const { data, harvestableIndex, loading, fetchMoreData } = useMarketplaceEventData();
 
-  console.log('data: ', data);
-
   const handleFetchMore = () => {
     fetchMoreData();
     setScrollPosition(window.scrollY);
