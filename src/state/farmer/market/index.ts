@@ -14,18 +14,20 @@ export const castPodListing = (listing: PodListingFragment, harvestableIndex: Bi
   /// NOTE: try to maintain symmetry with subgraph vars here.
   const [account, id]     = listing.id.split('-'); /// Subgraph returns a conjoined ID.
   const index             = toTokenUnitsBN(id, BEAN[1].decimals);
-  const amount            = toTokenUnitsBN(listing.amount,      BEAN[1].decimals);  
-  const totalAmount       = toTokenUnitsBN(listing.originalAmount, BEAN[1].decimals); 
-  const filledAmount      = totalAmount.minus(amount);
-  const remainingAmount   = amount;
+
+  const amount            = toTokenUnitsBN(listing.amount, BEAN[1].decimals);
+  const originalAmount    = toTokenUnitsBN(listing.originalAmount, BEAN[1].decimals); 
+
   return {
     id:                   id,
     account:              account,
     index:                index,
+
     amount:               amount,
-    totalAmount:          totalAmount,
-    filledAmount:         filledAmount,
-    remainingAmount:      remainingAmount,
+    originalAmount:       originalAmount,
+    filledAmount:         originalAmount.minus(amount),
+    remainingAmount:      amount, // where is this used?
+
     maxHarvestableIndex:  toTokenUnitsBN(listing.maxHarvestableIndex, BEAN[1].decimals),
     pricePerPod:          toTokenUnitsBN(listing.pricePerPod, BEAN[1].decimals),
     start:                toTokenUnitsBN(listing.start, BEAN[1].decimals),
@@ -33,7 +35,7 @@ export const castPodListing = (listing: PodListingFragment, harvestableIndex: Bi
     mode:                 listing.mode.toString() as FarmToMode, // FIXME: use numbers instead?
     // @ts-ignore
     minFillAmount:        listing.minFillAmount || ZERO_BN,
-    // ---
+
     placeInLine:          index.minus(harvestableIndex)
   };
 };
@@ -44,18 +46,21 @@ export const castPodListing = (listing: PodListingFragment, harvestableIndex: Bi
  * @returns Redux form of PodOrder.
  */
 export const castPodOrder = (order: PodOrderFragment) : PodOrder => {
-  const amount = toTokenUnitsBN(order.podAmount,   BEAN[1].decimals);  
-  const filled = toTokenUnitsBN(order.podAmountFilled,  BEAN[1].decimals);
+  const podAmount = toTokenUnitsBN(order.podAmount,   BEAN[1].decimals);  
+  const podAmountFilled = toTokenUnitsBN(order.podAmountFilled,  BEAN[1].decimals);
   return {
     id:              order.id,
     account:         order.farmer.id,
-    totalAmount:     amount,
-    filledAmount:    filled,
-    remainingAmount: amount.minus(filled),
+
+    totalAmount:     podAmount,
+    filledAmount:    podAmountFilled,
+    remainingAmount: podAmount.minus(podAmountFilled),
+
     maxPlaceInLine:  toTokenUnitsBN(order.maxPlaceInLine, BEAN[1].decimals),
     pricePerPod:     toTokenUnitsBN(order.pricePerPod, BEAN[1].decimals),
     // @ts-ignore
     minFillAmount:   order.minFillAmount || ZERO_BN,
+
     status:          order.status as MarketStatus,
   };
 };
@@ -122,7 +127,7 @@ export type PodListing = {
    * The total number of Pods originally intended to be sold.
    * Fixed upon emission of `PodListingCreated`.
    */
-  totalAmount: BigNumber;
+  originalAmount: BigNumber;
 
   /**
    * The number of Pods left to sell.

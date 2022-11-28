@@ -575,7 +575,7 @@ export default class EventProcessor {
       maxHarvestableIndex: tokenBN(event.args.maxHarvestableIndex, BEAN[1]),
       mode:             event.args.mode.toString() as FarmToMode,
       amount:           amount,   //
-      totalAmount:      amount,   //
+      originalAmount:      amount,   //
       remainingAmount:  amount,   //
       filledAmount:     BN(0),    // 
       minFillAmount:    tokenBN(event.args.minFillAmount || 0, BEAN[1]),
