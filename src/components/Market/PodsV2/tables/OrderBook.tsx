@@ -97,7 +97,7 @@ const OrderbookCols = {
 };
 
 const useFakeOrders = () =>
-  Array(100)
+  Array(250)
     .fill(null)
     .map((_, i) => ({
       id: i % 0.1,
@@ -113,12 +113,17 @@ const OrderBook: React.FC<{}> = () => {
   const [numberFormat, setNumberFormat] = useState(0);
   const [percent, setPercent] = useState(percentOptions[0]);
 
-  const ROWS_PER_PAGE = 14;
+  const ROWS_PER_PAGE = 50;
 
   const tableHeight = useMemo(() => {
-    if (!orders || orders.length === 0) return 0;
-    return 95 + Math.min(orders.length, ROWS_PER_PAGE) * 36;
+    if (!orders || orders.length === 0) return '300px';
+    return 95 + Math.min(orders.length, 1) * 58;
   }, [orders]);
+
+  // const tableHeight = useMemo(() => {
+  //   if (!orders || orders.length === 0) return '300px';
+  //   return 39 + 58 + Math.min(orders.length, 10) * 58;
+  // }, [orders]);
 
   const cols: DataGridProps['columns'] = [
     OrderbookCols.price(1),
@@ -129,8 +134,8 @@ const OrderBook: React.FC<{}> = () => {
   ];
 
   return (
-    <Card>
-      <Stack>
+    <Card sx={{ height: '100%' }}>
+      <Stack height="100%" sx={{ overflow: 'hidden', visibility: 'visible' }}>
         <Row justifyContent="space-between" width="100%" p={0.8}>
           <Typography variant="bodySmall" fontWeight={FontWeight.bold}>
             ORDERBOOK
@@ -174,38 +179,37 @@ const OrderBook: React.FC<{}> = () => {
                 </Button>
               </Row>
             </Card>
-            <PercentDropdown options={percentOptions} selectedOption={percent} setOption={setPercent}  />
+            <PercentDropdown options={percentOptions} selectedOption={percent} setOption={setPercent} />
           </Row>
         </Row>
         <Divider />
-        <Stack sx={{ overflowY: 'scroll' }}>
-          <Box
-            sx={{
-              px: 0.2,
-              height: tableHeight,
-              width: '100%',
-              ...orderbookTableStyle,
+        <Box
+          sx={{
+            px: 0.2,
+            height: tableHeight,
+            width: '100%',
+            ...orderbookTableStyle,
+          }}
+        >
+          <DataGrid
+            columns={cols}
+            rows={orders}
+            pageSize={ROWS_PER_PAGE}
+            density="compact"
+            onRowClick={() => {
             }}
-          >
-            <DataGrid
-              columns={cols}
-              rows={orders}
-              pageSize={ROWS_PER_PAGE}
-              density="compact"
-              onRowClick={() => {
-              }}
-              initialState={{
-                sorting: {
-                  sortModel: [{ field: 'price', sort: 'asc' }],
-                },
-              }}
-              components={{
-                Pagination: ArrowPagination,
-              }}
-            />
-          </Box>
-        </Stack>
+            initialState={{
+              sorting: {
+                sortModel: [{ field: 'price', sort: 'asc' }],
+              },
+            }}
+            components={{
+              Pagination: ArrowPagination,
+            }}
+          />
+        </Box>
       </Stack>
+  
     </Card>
   );
 };

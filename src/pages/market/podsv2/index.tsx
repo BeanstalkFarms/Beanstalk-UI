@@ -8,6 +8,7 @@ import { Module, ModuleHeader } from '~/components/Common/Module';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
 import MarketGraph from '~/components/Market/Pods/MarketGraph';
 import Centered from '~/components/Common/ZeroState/Centered';
+import OrderBook from '~/components/Market/PodsV2/tables/OrderBook';
 
 const SECTION_MAX_WIDTH = 550;
 
@@ -65,10 +66,10 @@ const PodsMarketNew: React.FC<{}> = () => {
       </Stack>
       <Stack direction="column" sx={{ width: { xs: '100%', md: `${SECTION_MAX_WIDTH}px` }, height: '100%' }} gap={GAP}>
         <BuySellPods />
-        <Module sx={{ p: 2, height: '100%' }}>
-          ORDERBOOK
-        </Module>
-        {/* <OrderBook /> */}
+        {/* <Module sx={{ p: 2, height: '100%' }}> */}
+        {/*  ORDERBOOK */}
+        {/* </Module> */}
+        <OrderBook />
       </Stack>
     </Stack>
   );
