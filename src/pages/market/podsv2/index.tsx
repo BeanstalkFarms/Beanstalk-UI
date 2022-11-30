@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Card, CircularProgress, Stack, Typography } from '@mui/material';
+import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import useNavHeight from '~/hooks/app/usePageDimensions';
 import useBanner from '~/hooks/app/useBanner';
 import MarketActionsV2 from '~/components/Market/PodsV2/MarketActionsV2';
@@ -8,7 +8,6 @@ import { Module, ModuleHeader } from '~/components/Common/Module';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
 import MarketGraph from '~/components/Market/Pods/MarketGraph';
 import Centered from '~/components/Common/ZeroState/Centered';
-import Soon from '~/components/Common/ZeroState/Soon';
 
 const SECTION_MAX_WIDTH = 550;
 
@@ -64,16 +63,16 @@ const PodsMarketNew: React.FC<{}> = () => {
           <PodsMarketInfo setHeight={setAccordionHeight} />
         </Box>
       </Stack>
-      <Stack direction="column" sx={{ width: { xs: '100%', md: `${SECTION_MAX_WIDTH}px` }, height: '100%' }} gap={GAP}>
+      <Stack direction="column" sx={{ width: { xs: '100%', md: `${SECTION_MAX_WIDTH}px` }, height: '100%', overflow: 'auto' }} gap={GAP}>
         <MarketActionsV2 />
         {/* <Module sx={{ p: 2, height: '100%' }}> */}
         {/*  ORDERBOOK */}
         {/* </Module> */}
-        <Card sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
-          <Soon>
-            <Typography textAlign="center" color="gray">Orderbook coming soon.</Typography>
-          </Soon>
-        </Card>
+        {/* <Card sx={{ height: '100%', display: 'flex', alignItems: 'center' }}> */}
+        {/*  <Soon> */}
+        {/*    <Typography textAlign="center" color="gray">Orderbook coming soon.</Typography> */}
+        {/*  </Soon> */}
+        {/* </Card> */}
         {/* <OrderBook /> */}
       </Stack>
     </Stack>
