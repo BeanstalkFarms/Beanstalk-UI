@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, CircularProgress, Stack, Typography } from '@mui/material';
+import { Box, Card, CircularProgress, Stack, Typography } from '@mui/material';
 import useNavHeight from '~/hooks/app/usePageDimensions';
 import useBanner from '~/hooks/app/useBanner';
 import MarketActionsV2 from '~/components/Market/PodsV2/MarketActionsV2';
@@ -8,7 +8,7 @@ import { Module, ModuleHeader } from '~/components/Common/Module';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
 import MarketGraph from '~/components/Market/Pods/MarketGraph';
 import Centered from '~/components/Common/ZeroState/Centered';
-import OrderBook from '~/components/Market/PodsV2/tables/OrderBook';
+import Soon from '~/components/Common/ZeroState/Soon';
 
 const SECTION_MAX_WIDTH = 550;
 
@@ -69,7 +69,12 @@ const PodsMarketNew: React.FC<{}> = () => {
         {/* <Module sx={{ p: 2, height: '100%' }}> */}
         {/*  ORDERBOOK */}
         {/* </Module> */}
-        <OrderBook />
+        <Card sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
+          <Soon>
+            <Typography textAlign="center" color="gray">Orderbook coming soon.</Typography>
+          </Soon>
+        </Card>
+        {/* <OrderBook /> */}
       </Stack>
     </Stack>
   );
