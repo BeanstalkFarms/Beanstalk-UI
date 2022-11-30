@@ -237,7 +237,7 @@ const SiloBalances: React.FC<{}> = () => {
                                           }
                                           .{' '}
                                           <Link
-                                            href="https://docs.bean.money/farm/barn#chopping"
+                                            href="https://docs.bean.money/almanac/farm/barn#chopping"
                                             target="_blank"
                                             rel="noreferrer"
                                             underline="hover"

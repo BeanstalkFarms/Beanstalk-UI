@@ -99,7 +99,7 @@ const Whitelist : FC<{
               <Tooltip
                 title={
                   <>
-                    <strong>vAPY</strong> (Variable APY) uses historical data about Beans earned by Stalkholders to estimate future returns for Depositing assets in the Silo.&nbsp;<Link underline="hover" href="https://docs.bean.money/guides/silo/understand-vapy" target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>Learn more</Link>
+                    <strong>vAPY</strong> (Variable APY) uses historical data about Beans earned by Stalkholders to estimate future returns for Depositing assets in the Silo.&nbsp;<Link underline="hover" href="https://docs.bean.money/almanac/guides/silo/understand-vapy" target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>Learn more</Link>
                     <Divider sx={{ my: 1 }} />
                     <Typography fontSize={FontSize.sm}>
                       <strong>Bean vAPY:</strong> Estimated annual Beans earned by a Stalkholder for Depositing an asset.<br />
@@ -409,7 +409,7 @@ const Whitelist : FC<{
                                 amount={`1 - ${(unripeTokens[token.address]?.chopPenalty || ZERO_BN).toFixed(4)}%`}
                                 subtitle={
                                   <>
-                                    The current penalty for chopping<br />{token.symbol} for {unripeUnderlyingTokens[token.address].symbol}. <Link href="https://docs.bean.money/farm/barn#chopping" target="_blank" rel="noreferrer" underline="hover" onClick={(e) => { e.stopPropagation(); }}>Learn more</Link>
+                                    The current penalty for chopping<br />{token.symbol} for {unripeUnderlyingTokens[token.address].symbol}. <Link href="https://docs.bean.money/almanac/farm/barn#chopping" target="_blank" rel="noreferrer" underline="hover" onClick={(e) => { e.stopPropagation(); }}>Learn more</Link>
                                   </>
                                 }
                               />
