@@ -58,7 +58,7 @@ const PageHeader : FC<{
               {props.description}.
               {props.href !== undefined && (
                 <Link
-                  href={props.href || 'https://docs.bean.money'}
+                  href={props.href || 'https://docs.bean.money/almanac'}
                   underline="none"
                   color="primary"
                   display="flex"

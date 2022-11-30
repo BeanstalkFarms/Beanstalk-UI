@@ -15,7 +15,7 @@ const SwapPage: FC<{}> = () => (
       <PageHeader
         title="Swap"
         description="Trade Beans and transfer Beanstalk assets"
-        href="https://docs.bean.money/guides/swap"
+        href="https://docs.bean.money/almanac/guides/swap"
         control={
           <GuideButton
             title="The Farmers' Almanac: Swap Guides"

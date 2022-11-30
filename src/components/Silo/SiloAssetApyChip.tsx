@@ -67,7 +67,7 @@ const SiloAssetApyChip: FC<SiloAssetApyChipProps> = ({ token, metric, variant = 
             ) : (
               <> The Variable Stalk APY estimates the growth in your Stalk balance for Depositing {token.name}.&nbsp; </>
             )}
-            <Link underline="hover" href="https://docs.bean.money/guides/silo/understand-vapy" target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>
+            <Link underline="hover" href="https://docs.bean.money/almanac/guides/silo/understand-vapy" target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>
               Learn more
             </Link>
           </Box>

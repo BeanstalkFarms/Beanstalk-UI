@@ -273,7 +273,7 @@ const PickBeansDialog: FC<{
         <Typography sx={{ fontSize: '15px' }} color="text.secondary">
           To claim non-Deposited Unripe Beans and Unripe BEAN:3CRV LP, they must be Picked. After Replant, you can Pick assets to your wallet, or Pick and Deposit them directly in the Silo.<br /><br />
           Unripe Deposited assets <b>do not need to be Picked</b> and will be automatically Deposited at Replant.<br /><br />
-          Read more about Unripe assets <Link href="https://docs.bean.money/farm/barn#unripe-assets" target="_blank" rel="noreferrer">here</Link>.
+          Read more about Unripe assets <Link href="https://docs.bean.money/almanac/farm/barn#unripe-assets" target="_blank" rel="noreferrer">here</Link>.
         </Typography>
       </Row>
       <Divider />
