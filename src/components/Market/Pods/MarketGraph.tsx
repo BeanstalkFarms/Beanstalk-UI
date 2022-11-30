@@ -196,7 +196,7 @@ const SelectedPointPopover : FC<{
         <StatHorizontal label="Amount">
           <Row gap={0.25}><TokenIcon token={PODS} /> {displayFullBN(data.remainingAmount, 2, 0)}</Row>
         </StatHorizontal>
-        <Button component={RouterLink} to={`/market/listing/${data.id}`} variant="contained" color="primary">
+        <Button component={RouterLink} to={`/podsmarket/listing/${data.id}`} variant="contained" color="primary">
           Fill
         </Button>
       </Stack>
@@ -227,7 +227,7 @@ const SelectedPointPopover : FC<{
         <StatHorizontal label="Amount">
           <Row gap={0.25}><TokenIcon token={PODS} /> {displayFullBN(data.remainingAmount, 2, 0)}</Row>
         </StatHorizontal>
-        <Button component={RouterLink} to={`/market/order/${data.id}`} variant="contained" color="primary">
+        <Button component={RouterLink} to={`/podsmarket/order/${data.id}`} variant="contained" color="primary">
           Fill
         </Button>
       </Stack>
