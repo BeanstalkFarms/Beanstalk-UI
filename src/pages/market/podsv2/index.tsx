@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import useNavHeight from '~/hooks/app/usePageDimensions';
 import useBanner from '~/hooks/app/useBanner';
-import BuySellPods from '~/components/Market/PodsV2/BuySellPods';
+import MarketActionsV2 from '~/components/Market/PodsV2/MarketActionsV2';
 import PodsMarketInfo, { sizes } from '~/components/Market/PodsV2/marketInfo';
 import { Module, ModuleHeader } from '~/components/Common/Module';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
@@ -65,7 +65,7 @@ const PodsMarketNew: React.FC<{}> = () => {
         </Box>
       </Stack>
       <Stack direction="column" sx={{ width: { xs: '100%', md: `${SECTION_MAX_WIDTH}px` }, height: '100%' }} gap={GAP}>
-        <BuySellPods />
+        <MarketActionsV2 />
         {/* <Module sx={{ p: 2, height: '100%' }}> */}
         {/*  ORDERBOOK */}
         {/* </Module> */}

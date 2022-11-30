@@ -16,7 +16,7 @@ const tabSX = {
   },
 };
 
-const BuySellPods: React.FC<{}> = () => {
+const MarketActionsV2: React.FC<{}> = () => {
   const [orderType, setOrderType] = useAtom(podsOrderActionTypeAtom);
 
   const handleSetOrderType = (_e: any, i: number) => {
@@ -40,4 +40,4 @@ const BuySellPods: React.FC<{}> = () => {
   );
 };
 
-export default BuySellPods;
+export default MarketActionsV2;

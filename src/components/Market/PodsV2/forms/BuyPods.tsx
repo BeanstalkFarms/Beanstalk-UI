@@ -4,8 +4,8 @@ import React from 'react';
 import SubActionSelect from '../common/SubActionSelect';
 import SubmitMarketAction from '../common/SubmitMarketAction';
 import { PodOrderType, podsOrderTypeAtom } from '../info/atom-context';
-import CreateBuyOrder from './CreateBuyOrder';
 import FillSellOrder from './FillSellOrder';
+import CreateOrderV2 from '~/components/Market/PodsV2/Actions/CreateOrderV2';
 
 const BuyPods: React.FC<{}> = () => {
   const orderType = useAtomValue(podsOrderTypeAtom);
@@ -16,7 +16,8 @@ const BuyPods: React.FC<{}> = () => {
         {/* buy or sell toggle */}
         <SubActionSelect />
         {/* create buy order */}
-        {orderType === PodOrderType.ORDER && <CreateBuyOrder />}
+        {/* {orderType === PodOrderType.ORDER && <CreateBuyOrder />} */}
+        {orderType === PodOrderType.ORDER && <CreateOrderV2 />}
         {/* fill sell order */}
         {orderType === PodOrderType.FILL && <FillSellOrder />}
       </Stack>
