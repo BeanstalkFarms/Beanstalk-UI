@@ -8,7 +8,6 @@ import { SupportedChainId, TESTNET_RPC_ADDRESSES } from '~/constants';
 import { ETH } from '~/constants/tokens';
 import { StyledDialogContent, StyledDialogTitle } from '../Dialog';
 import Row from '~/components/Common/Row';
-import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const NetworkDialog: React.FC<DialogProps & {
   open: boolean;
@@ -60,7 +59,7 @@ const NetworkDialog: React.FC<DialogProps & {
                 minWidth: isMedium ? null : 400,
                 borderColor: grey[300],
                 '&:hover': {
-                  borderColor: BeanstalkPalette.theme.fall.light,
+                  borderColor: 'primary.main',
                 }
               }}
             >

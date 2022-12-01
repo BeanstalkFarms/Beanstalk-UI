@@ -144,6 +144,7 @@ const BuyForm : FC<
               <Alert
                 color="warning"
                 icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
+                sx={{ color: 'black' }}
               >The amount of Fertilizer received rounds down to the nearest USDC. {usdc?.toFixed(2)} USDC = {fert?.toFixed(0)} FERT.
               </Alert>
               <Box sx={{ width: '100%', mt: 0 }}>

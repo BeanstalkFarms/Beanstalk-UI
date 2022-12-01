@@ -40,8 +40,8 @@ const ProposalButton: FC<{ proposal: Proposal }> = ({ proposal }) => {
       sx={{
         p: 2,
         height: 'auto',
-        color: '#000000',
-        borderColor: BeanstalkPalette.lightestGrey,
+        color: 'text.primary',
+        borderColor: 'divider',
       }}
     >
       <Stack gap={1} width="100%">

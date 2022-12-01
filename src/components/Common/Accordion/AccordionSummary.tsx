@@ -2,7 +2,7 @@ import React from 'react';
 import { AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import splitArrowsIcon from '~/img/beanstalk/interface/split-arrows.svg';
-import { BeanstalkPalette, IconSize } from '../../App/muiTheme';
+import { IconSize } from '../../App/muiTheme';
 import IconWrapper from '../IconWrapper';
 import Row from '~/components/Common/Row';
 
@@ -21,7 +21,7 @@ const StyledAccordionSummary : FC<{
     expandIcon={(
       <ExpandMoreIcon
         sx={{
-          color: BeanstalkPalette.theme.fall.brown,
+          color: 'primary.main',
           fontSize: IconSize.xs
         }}
       />
@@ -33,7 +33,7 @@ const StyledAccordionSummary : FC<{
       <Typography
         variant="body1"
         sx={gradientText ? {
-          background: 'linear-gradient(90deg, rgba(185, 125, 70, 1.0) 23%, rgba(255, 173, 97, 1.0) 54%, rgba(177, 180, 31, 1.0) 20%)',
+          background: 'linear-gradient(90deg, #46B955 0%, #7B61FF 36.58%, #1F78B4 96.2%)',
           '-webkit-background-clip': 'text',
           '-webkit-text-fill-color': 'transparent'
         } : null}

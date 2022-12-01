@@ -3,7 +3,7 @@ import { Box, Button, Link, LinkProps, Stack, Typography, StackProps as MuiStack
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import React from 'react';
 import EastIcon from '@mui/icons-material/East';
-import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
+import { FontSize, IconSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
@@ -33,7 +33,7 @@ const PageHeader : FC<{
             borderRadius: 1,
             color: 'text.secondary',
             '&:hover': {
-              color: BeanstalkPalette.theme.fall.brown,
+              color: 'primary.main',
             }
         }}
         >

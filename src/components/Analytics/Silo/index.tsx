@@ -28,7 +28,7 @@ const SiloAnalytics: FC<{}> = () => {
         <Tab label="LP vAPY" />
       </Tabs>
       <Box px={1} mb={1.5}>
-        <Alert variant="standard" color="warning" icon={<WarningIcon />}>
+        <Alert variant="standard" color="warning" icon={<WarningIcon />} sx={{ color: 'black' }}>
           Silo analytics are under active development. Data shown may be incorrect.<br />
           <Typography fontSize="small">Graphs not working? <Link href="#/analytics" underline="hover" onClick={() => clearApolloCache()}>Clear cache</Link></Typography>
         </Alert>

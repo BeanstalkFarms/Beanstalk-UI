@@ -428,7 +428,8 @@ const TxnPreview : FC<{
               onFocus={() => setHighlighted(a.type)}
               onBlur={() => setHighlighted(undefined)}
             >
-              <Typography variant="body1" color="grey[300]">
+              {/* <Typography variant="body1" color="grey[300]"> */}
+              <Typography variant="body1" color="black">
                 {parseActionMessage(a)}
               </Typography>
             </Box>

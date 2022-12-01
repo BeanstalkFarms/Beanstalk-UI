@@ -330,7 +330,7 @@ const Whitelist : FC<{
                               truncate
                               chop={false}
                             />
-                            <Typography display="inline" color={BeanstalkPalette.washedRed}>*</Typography>
+                            <Typography display="inline" color={BeanstalkPalette.theme.winter.red}>*</Typography>
                           </>
                         ) : (
                           <Fiat
@@ -443,7 +443,7 @@ const Whitelist : FC<{
                               amount={deposited?.amount}
                             />
                             {isUnripe ? (
-                              <Typography display="inline" color={BeanstalkPalette.washedRed}>*</Typography>
+                              <Typography display="inline" color={BeanstalkPalette.theme.winter.red}>*</Typography>
                             ) : null}
                           </Row>
                         </Typography>

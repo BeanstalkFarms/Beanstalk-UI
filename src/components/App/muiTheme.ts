@@ -149,6 +149,8 @@ export const BeanstalkPalette = {
       blueLight: '#1E6091',
       lightGreen: '#D5F2E3',
       selected: hexToRgba('#168AAD', 40),
+      red: '#DA2C38',
+      error: '#E33D51'
     },
   },
 };
@@ -463,8 +465,8 @@ let muiTheme = createTheme({
             variant: 'outlined',
           },
           style: {
-            background: 'transparent',
-            borderColor: BeanstalkPalette.lightBlue,
+            background: 'white',
+            borderColor: 'primary.main',
           },
         },
       ],
