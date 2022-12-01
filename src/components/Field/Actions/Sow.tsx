@@ -227,7 +227,7 @@ const SowForm : FC<
               </Box>
             ) : null}
             <Box>
-              <Accordion variant="outlined">
+              <Accordion variant="outlined" color="primary">
                 <StyledAccordionSummary title="Transaction Details" />
                 <AccordionDetails>
                   <TxnPreview

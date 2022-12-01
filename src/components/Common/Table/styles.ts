@@ -54,5 +54,8 @@ export const tableStyle = {
       // backgroundColor: "transparent"
       // backgroundColor: "#D8F2DB"
     },
+    '& .MuiDataGrid-sortIcon': {
+      color: 'text.primary'
+    }
   }
 };
