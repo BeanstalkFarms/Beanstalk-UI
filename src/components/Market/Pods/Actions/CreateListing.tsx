@@ -118,7 +118,7 @@ const CreateListingForm: FC<
         {plot.index && (
           <>
             {alreadyListed ? (
-              <Alert variant="standard" color="warning" icon={<WarningAmberIcon />} sx={{ color: 'black' }}>
+              <Alert variant="standard" color="warning" icon={<WarningAmberIcon />}>
                 This Plot is already listed on the Market. Creating a new Listing will override the previous one.
               </Alert>
             ) : null}

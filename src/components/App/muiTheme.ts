@@ -253,7 +253,7 @@ let muiTheme = createTheme({
     background: {
       default: '#016586',
       paper: BeanstalkPalette.theme.winter.paleBlue,
-    },
+    }
   },
 
   /**
@@ -364,6 +364,18 @@ let muiTheme = createTheme({
             borderColor: 'rgba(0, 0, 0, 0.26)',
           },
         },
+        {
+          props: {
+            variant: 'contained',
+            color: 'primary'
+          },
+          style: {
+            '&.Mui-disabled': {
+              backgroundColor: '#C1C1C1',
+              color: BeanstalkPalette.grey
+            }
+          }
+        }
       ],
       defaultProps: {
         disableElevation: true,
@@ -408,6 +420,17 @@ let muiTheme = createTheme({
       },
     },
     MuiAlert: {
+      variants: [
+        {
+          props: {
+            color: 'warning'
+          },
+          style: sx({
+            backgroundColor: 'rgba(253, 244, 231, 0.3)',
+            color: BeanstalkPalette.white
+          })
+        }
+      ],
       defaultProps: {},
       styleOverrides: {
         root: sx({
@@ -465,8 +488,8 @@ let muiTheme = createTheme({
             variant: 'outlined',
           },
           style: {
-            background: 'white',
-            borderColor: 'primary.main',
+            background: 'background.paper',
+            borderColor: 'divider',
           },
         },
       ],

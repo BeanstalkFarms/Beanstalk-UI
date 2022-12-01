@@ -442,7 +442,7 @@ const SwapForm: FC<FormikProps<SwapFormValues> & {
         </>
         {/* Warnings */}
         {ethModeCheck === false ? (
-          <Alert variant="standard" color="warning" icon={<WarningIcon />} sx={{ color: 'black' }}>
+          <Alert variant="standard" color="warning" icon={<WarningIcon />}>
             ETH can only be delivered to your Circulating Balance.&nbsp;
             <Link
               onClick={() => {
@@ -456,7 +456,7 @@ const SwapForm: FC<FormikProps<SwapFormValues> & {
           </Alert>
         ) : null}
         {pathwayCheck === false ? (
-          <Alert variant="standard" color="warning" icon={<WarningIcon />} sx={{ color: 'black' }}>
+          <Alert variant="standard" color="warning" icon={<WarningIcon />}>
             Swapping from {tokenIn.symbol} to {tokenOut.symbol} is currently unsupported.
           </Alert>
         ) : null}
@@ -464,7 +464,7 @@ const SwapForm: FC<FormikProps<SwapFormValues> & {
           * After the upgrade to `handleChangeModeIn` / `handleChangeModeOut`
           * this should never be true. */}
         {diffModeCheck === false ? (
-          <Alert variant="standard" color="warning" icon={<WarningIcon />} sx={{ color: 'black' }}>
+          <Alert variant="standard" color="warning" icon={<WarningIcon />}>
             Please choose a different source or destination.
           </Alert>
         ) : null}
@@ -474,7 +474,7 @@ const SwapForm: FC<FormikProps<SwapFormValues> & {
           * show a message and prompt them to use `max`.
           */}
         {(!noBalance && !enoughBalanceCheck) ? (
-          <Alert variant="standard" color="warning" icon={<WarningIcon />} sx={{ color: 'black' }}>
+          <Alert variant="standard" color="warning" icon={<WarningIcon />}>
             Not enough {tokenIn.symbol}{tokensMatch ? ` in your ${copy.MODES[modeIn]}` : ''} to execute this transaction.&nbsp;
             <Link
               onClick={handleMax}

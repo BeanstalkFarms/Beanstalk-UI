@@ -53,8 +53,8 @@ import EnforceNetwork from '~/components/App/EnforceNetwork';
 import useAccount from '~/hooks/ledger/useAccount';
 import './App.css';
 
-import Leaves from '~/components/App/theme/Fall/Leaves';
 import { FC } from '~/types';
+import Snowflakes from './theme/winter/Snowflakes';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -127,7 +127,8 @@ export default function App() {
       <EnforceNetwork />
       <CustomToaster navHeight={navHeight} />
       {account && <NewProposalsDialog />}
-      <Leaves />
+      {/* <Leaves /> */}
+      <Snowflakes />
       <Box
         sx={{
           bgcolor: 'background.default',

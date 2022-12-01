@@ -133,7 +133,6 @@ const WithdrawForm : FC<
       <Alert
         color="warning"
         icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
-        sx={{ color: 'black' }}
       >
         You can Claim your Withdrawn assets at the start of the next Season.
       </Alert>
