@@ -34,7 +34,7 @@ const PillRow : FC<{
     {...props}
   >
     <Tooltip title={tooltip}>
-      <Typography color="text.secondary" {...props.labelProps}>
+      <Typography color="text.tertiary" {...props.labelProps}>
         {label}
       </Typography>
     </Tooltip>
