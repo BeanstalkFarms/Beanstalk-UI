@@ -99,7 +99,7 @@ const OverviewPlot: FC<OverviewPlotProps> = ({
         ) : (
           <>
             <MockPlot />
-            <BlurComponent>
+            <BlurComponent blur={0.5}>
               <Stack justifyContent="center" alignItems="center" height="100%" gap={1}>
                 {!account ? (
                   <>

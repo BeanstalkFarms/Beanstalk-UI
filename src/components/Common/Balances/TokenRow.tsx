@@ -83,7 +83,7 @@ const TokenRow: FC<{
       {labelTooltip && (
         <Tooltip title={labelTooltip} placement="top">
           <HelpOutlineIcon
-            sx={{ color: 'text.secondary', fontSize: '14px' }}
+            sx={{ color: 'text.tertiary', fontSize: '14px' }}
           />
         </Tooltip>
       )}

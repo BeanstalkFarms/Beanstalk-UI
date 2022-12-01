@@ -32,7 +32,7 @@ const TOOLTIP_COMPONENT_PROPS = {
   tooltip: {
     sx: {
       maxWidth: 'none !important',
-      boxShadow: '0px 6px 20px 10px rgba(255,255,255,0.3) !important'
+      // boxShadow: '0px 6px 20px 10px rgba(255,255,255,0.3) !important'
     }
   }
 };
@@ -72,7 +72,7 @@ const Whitelist : FC<{
           pt: '14px', // manually adjusted
           pb: '5px',  // manually adjusted
           borderBottomStyle: 'solid',
-          borderBottomColor: BeanstalkPalette.lightestGrey, 
+          borderBottomColor: 'divider', 
           borderBottomWidth: 1,
         }}
       >
@@ -100,7 +100,7 @@ const Whitelist : FC<{
                 title={
                   <>
                     <strong>vAPY</strong> (Variable APY) uses historical data about Beans earned by Stalkholders to estimate future returns for Depositing assets in the Silo.&nbsp;<Link underline="hover" href="https://docs.bean.money/almanac/guides/silo/understand-vapy" target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>Learn more</Link>
-                    <Divider sx={{ my: 1 }} />
+                    <Divider sx={{ my: 1, borderColor: 'divider' }} />
                     <Typography fontSize={FontSize.sm}>
                       <strong>Bean vAPY:</strong> Estimated annual Beans earned by a Stalkholder for Depositing an asset.<br />
                       <strong>Stalk vAPY:</strong> Estimated annual growth in Stalk for Depositing an asset.
@@ -186,7 +186,10 @@ const Whitelist : FC<{
                   textAlign: 'left',
                   px: 2,
                   py: 1.5,
-                  borderColor: BeanstalkPalette.lightestGrey,
+                  borderColor: 'divider',
+                  '&:hover': {
+                    borderColor: 'primary.main',
+                  }
                 }}
               >
                 <Grid container alignItems="center">
@@ -272,9 +275,9 @@ const Whitelist : FC<{
                                 />
                               </Box>
                             </Stack>
-                            <Divider />
+                            <Divider sx={{ borderColor: 'divider' }} />
                             <Box sx={{ pl: { xs: 0, md: 2.7 } }}>
-                              <Typography variant="bodySmall" color="text.secondary" textAlign="left">
+                              <Typography variant="bodySmall" color="text.tertiary" textAlign="left">
                                 Total Amount Deposited: {displayFullBN(beanstalkSilo.balances[token.address]?.deposited.amount || ZERO_BN, token.displayDecimals)} {token.symbol}<br />
                                 Total Supply: {displayFullBN(unripeTokens[token.address]?.supply || ZERO_BN)} {token.symbol}<br />
                               </Typography>
@@ -357,7 +360,7 @@ const Whitelist : FC<{
                               <Typography display="inline" color="primary">
                                 {displayFullBN(farmerSilo.beans.earned || ZERO_BN, token.displayDecimals)}
                               </Typography> Earned BEAN<br />
-                              <Divider sx={{ my: 0.5, opacity: 0.7, borderBottomWidth: 0, }} />
+                              <Divider sx={{ my: 0.5, opacity: 0.7, borderBottomWidth: 0, borderColor: 'divider' }} />
                               = {displayFullBN(farmerSilo.beans.earned.plus(deposited?.amount || ZERO_BN), token.displayDecimals)} BEAN<br />
                             </> 
                           )}>
@@ -446,7 +449,7 @@ const Whitelist : FC<{
                         </Typography>
                       </Tooltip>
                       <Stack display={{ xs: 'none', md: 'block' }} sx={{ width: ARROW_CONTAINER_WIDTH }} alignItems="center">
-                        <ArrowRightIcon sx={{ color: BeanstalkPalette.lightestGrey, marginTop: '3px' }} />
+                        <ArrowRightIcon sx={{ color: 'primary.main', marginTop: '3px' }} />
                       </Stack>
                     </Row>
                   </Grid>
