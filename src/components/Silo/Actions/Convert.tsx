@@ -267,7 +267,8 @@ const ConvertForm : FC<
                 <IconWrapper boxSize={IconSize.medium}>
                   <WarningAmberIcon sx={{ fontSize: IconSize.small, alignItems: 'flex-start' }} />
                 </IconWrapper>
-              )}>
+              )}
+            >
               {tokenIn.symbol} can only be Converted to {tokenOut.symbol} when deltaB {tokenIn.isLP || tokenIn.symbol === 'urBEAN3CRV' ? '<' : '>'} 0.<br />
               {/* <Typography sx={{ opacity: 0.7 }} fontSize={FontSize.sm}>Press ⌥ + 1 to see deltaB.</Typography> */}
             </Alert>

@@ -26,7 +26,6 @@ import useAnchor from '~/hooks/display/useAnchor';
 import useToggle from '~/hooks/display/useToggle';
 import useAccount from '~/hooks/ledger/useAccount';
 import { CHAIN_INFO } from '~/constants';
-import { BeanstalkPalette } from '~/components/App/muiTheme';
 import WalletDialog from './WalletDialog';
 import DropdownIcon from '~/components/Common/DropdownIcon';
 import PickBeansDialog from '~/components/Farmer/Unripe/PickDialog';
@@ -67,7 +66,6 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
         <Button
           variant="contained"
           color="primary"
-          // color="light"
           {...props}
           onClick={showWallets}
         >
@@ -138,18 +136,18 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
           </Typography>
         </Row>
       </MenuItem>
-      <Divider sx={{ mx: 1  }} />
+      <Divider sx={{ mx: 1, borderColor: 'divider' }} />
       <Box sx={{ px: 1, pb: 0.25 }}>
         <Button
           fullWidth
           onClick={showPick}
+          color="secondary"
           sx={{
             py: 1.25,
-            backgroundColor: BeanstalkPalette.lightBrown,
-            color: BeanstalkPalette.brown,
+            color: 'primary.main',
             '&:hover': {
-              backgroundColor: BeanstalkPalette.lightBrown,
-              opacity: 0.96,
+              backgroundColor: 'secondary.main',
+              opacity: 0.96
             },
           }}
         >
@@ -162,14 +160,13 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
         <Button
           fullWidth
           href="/#/chop"
-          sx={{
+          color="primary"
+          sx={{ 
             py: 1.25,
-            backgroundColor: BeanstalkPalette.theme.fall.brown,
-            color: BeanstalkPalette.white,
             '&:hover': {
-              backgroundColor: BeanstalkPalette.brown,
-              opacity: 0.96,
-            },
+              backgroundColor: 'primary.main',
+              opacity: 0.96
+            }
           }}
         >
           <Row alignItems="center">
@@ -187,7 +184,7 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
       <Button
         disableFocusRipple
         variant="contained"
-        color="light"
+        color="secondary"
         startIcon={<AddressIcon address={account} />}
         endIcon={<DropdownIcon open={menuVisible} />}
         {...props}

@@ -78,7 +78,7 @@ const TokenPage: FC<{}> = () => {
         <PageHeaderSecondary
           title={whitelistedToken.name}
           titleAlign="left"
-          icon={<TokenIcon css={{ marginTop: 3 }} token={whitelistedToken} />}
+          icon={<TokenIcon css={{ marginBottom: -3 }} token={whitelistedToken} />}
           returnPath="/silo"
           hideBackButton
           control={

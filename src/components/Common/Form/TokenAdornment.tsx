@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Button, ButtonProps, InputAdornment, Typography } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Token from '~/classes/Token';
-import { IconSize } from '../../App/muiTheme';
+import { BeanstalkPalette, hexToRgba, IconSize } from '../../App/muiTheme';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
@@ -54,7 +54,7 @@ const TokenAdornment : FC<
               }}
             /> 
           ) : null}
-        <Box sx={{ color: '#3B3B3B' }}>
+        <Box sx={{ color: 'text.tertiary' }}>
           <Typography variant="bodyMedium" fontWeight="fontWeightRegular">
             {buttonLabel || token.symbol}
           </Typography>
@@ -63,7 +63,7 @@ const TokenAdornment : FC<
           <KeyboardArrowDownIcon
             sx={{
               fontSize: 18,
-              color: 'rgba(0,0,0,0.87)'
+              color: hexToRgba(BeanstalkPalette.lightestGrey, 0.87)
             }}
           />
         )}

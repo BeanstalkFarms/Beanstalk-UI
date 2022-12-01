@@ -70,7 +70,7 @@ const SiloBalancesHistory: React.FC<{}> = () => {
           <MockPlot />
           <BlurComponent>
             <Stack justifyContent="center" alignItems="center" height="100%" gap={1}> 
-              <Typography variant="body1" color="gray">Your Deposits will appear here.</Typography>
+              <Typography variant="body1" color="text.tertiary">Your Deposits will appear here.</Typography>
               <WalletButton showFullText color="primary" sx={{ height: 45 }} />
             </Stack>
           </BlurComponent>

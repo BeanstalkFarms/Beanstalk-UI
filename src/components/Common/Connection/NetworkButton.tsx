@@ -35,7 +35,7 @@ const NetworkButton: React.FC<ButtonProps & {
       <Button
         disableFocusRipple
         variant="contained"
-        color="light"
+        color="secondary"
         startIcon={showIcons && (
           <TokenIcon
             token={ETH[SupportedChainId.MAINNET]}
@@ -65,7 +65,7 @@ const NetworkButton: React.FC<ButtonProps & {
         }}
       >
         {children || (
-          <Typography variant="bodyMedium" sx={{ display: { lg: 'block', xs: 'none' } }}>
+          <Typography variant="bodyMedium" sx={{ display: { lg: 'block', xs: 'none' }, color: 'text.primary' }}>
             {text}
           </Typography>
         )}

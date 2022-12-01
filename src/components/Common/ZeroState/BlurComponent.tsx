@@ -2,6 +2,7 @@ import React from 'react';
 import { Stack, Typography, StackProps } from '@mui/material';
 
 import { FC } from '~/types';
+import { hexToRgba, BeanstalkPalette } from '~/components/App/muiTheme';
 
 const BlurComponent : FC<StackProps & { blur?: number; opacity?: number }> = ({ children, opacity = 0.4, blur = 8, sx }) => (
   <Stack
@@ -11,7 +12,7 @@ const BlurComponent : FC<StackProps & { blur?: number; opacity?: number }> = ({ 
       position: 'absolute',
       left: 0,
       top: 0,
-      backgroundColor: `rgba(255, 255, 255, ${opacity})`,
+      backgroundColor: hexToRgba(BeanstalkPalette.theme.winter.paleBlue, opacity),
       backdropFilter: `blur(${blur}px)`,
       zIndex: 999,
       textAlign: 'center',

@@ -186,7 +186,7 @@ const PriceButton: FC<ButtonProps> = ({ ...props }) => {
           );
         })}
       </Stack>
-      <Divider sx={{ borderBottomWidth: 0 }} />
+      <Divider sx={{ borderBottomWidth: 0, borderColor: 'divider' }} />
       <Box sx={{ p: 1 }}>
         <SunriseButton />
       </Box>

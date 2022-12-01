@@ -72,7 +72,7 @@ const TokenOutputField : FC<{
               }}
             />
           )}
-          <Typography variant="bodyMedium">
+          <Typography variant="bodyMedium" color="text.primary">
             {modifier && `${modifier} `}{token.symbol}
           </Typography>
         </Row>

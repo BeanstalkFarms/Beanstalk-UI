@@ -26,7 +26,7 @@ const PodMarketPage: FC<{}> = () => {
         <PageHeader
           title="The Pod Market"
           description="Trade the Beanstalk-native debt asset"
-          href="https://docs.bean.money/farm/market#the-pod-market"
+          href="https://docs.bean.money/almanac/farm/market#the-pod-market"
           OuterStackProps={{
             // alignItems: 'end'
           }}

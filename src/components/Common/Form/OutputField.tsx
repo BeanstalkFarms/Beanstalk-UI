@@ -3,6 +3,7 @@ import { StackProps } from '@mui/material';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const OutputField : FC<{
   isNegative?: boolean;
@@ -16,11 +17,12 @@ const OutputField : FC<{
 }) => (
   <Row
     sx={{
-      backgroundColor: isNegative ? '#FFE5DF' : '#F6FAFE',
+      // backgroundColor: isNegative ? '#FFE5DF' : '#F6FAFE',
+      backgroundColor: BeanstalkPalette.theme.winter.blueLight, 
       borderRadius: 1,
       px: 2,
       py: 2,
-      color: isNegative ? 'hsla(12, 63%, 52%, 1)' : 'inherit',
+      color: isNegative ? BeanstalkPalette.theme.winter.error : 'inherit',
       height: '70px',
       ...sx
     }}

@@ -186,7 +186,7 @@ const Pie : FC<PieProps & PieCustomizationProps> = ({
         </VisxPie>
         {title && (
           <text
-            fill="#333"
+            fill="#ffffff"
             x={0}
             y={0}
             dy=".33em"
