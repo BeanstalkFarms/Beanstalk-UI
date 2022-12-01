@@ -77,7 +77,7 @@ const TokenRow: FC<{
           }}
         />
       )}
-      <Typography variant="body1" color="text.secondary" sx={token ? { display: 'block' } : undefined}>
+      <Typography variant="body1" color="text.primary" sx={token ? { display: 'block' } : undefined}>
         {label}
       </Typography>
       {labelTooltip && (

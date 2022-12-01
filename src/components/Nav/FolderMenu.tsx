@@ -104,22 +104,20 @@ const FolderMenu: FC<{
         {...buttonProps}
         sx={{
           color: 'text.primary',
-          /// removing border for winter theme
-
           // Fully rounded by default; when open, remove
           // the bottom rounding to look like a "tab".
-          // borderBottomLeftRadius: popoverOpen ? 0 : undefined,
-          // borderBottomRightRadius: popoverOpen ? 0 : undefined,
+          borderBottomLeftRadius: popoverOpen ? 0 : undefined,
+          borderBottomRightRadius: popoverOpen ? 0 : undefined,
           // Enforce a default white border; switch the color
           // to secondary when the Popper is open.
-          // borderWidth: 1,
-          // borderStyle: 'solid',
-          border: 'none',
-          // borderColor: popoverOpen ? PAGE_BORDER_COLOR : 'white',
-          // borderColor: PAGE_BORDER_COLOR,
+          borderWidth: 1,
+          boxSizing: 'border-box',
+          borderStyle: 'solid',
+          // border: 'none',
+          borderColor: popoverOpen ? PAGE_BORDER_COLOR : 'secondary.main',
           // Keep this white so we can make it look like the
           // button is "expanding" into a Box when you click it.
-          // borderBottomColor: 'white',
+          borderBottomColor: 'secondary.main',
           // Without disabling the transition, the border fades
           // in/out and looks weird.
           transition: 'none !important',
@@ -128,6 +126,9 @@ const FolderMenu: FC<{
           zIndex: popoverOpen ? 999 : undefined,
           // Positioning and other styles.
           ...buttonProps.sx,
+          '&:hover': {
+            backgroundColor: 'secondary.main'
+          }
         }}
       >
         <Box sx={{ display: { xs: hideTextOnMobile ? 'none' : 'block', sm: 'block' } }}>
@@ -147,7 +148,7 @@ const FolderMenu: FC<{
       >
         <Box
           sx={(_theme) => ({
-            background: _theme.palette.background.paper,
+            background: _theme.palette.secondary.main,
             width: popperWidth !== undefined ? popperWidth : '325px',
             borderBottomLeftRadius: _theme.shape.borderRadius,
             borderBottomRightRadius: _theme.shape.borderRadius,
@@ -155,6 +156,7 @@ const FolderMenu: FC<{
             borderColor: PAGE_BORDER_COLOR,
             borderWidth: 1,
             borderStyle: 'solid',
+            boxSizing: 'border-box',
             // px: 1,
             // py: 1, 
             boxShadow: _theme.shadows[0],

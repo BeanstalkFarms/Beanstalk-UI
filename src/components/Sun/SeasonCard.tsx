@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import rainySeasonIcon from '~/img/beanstalk/sun/rainy-season.svg';
 import drySeasonIcon from '~/img/beanstalk/sun/dry-season.svg';
 import { displayBN, displayFullBN } from '../../util';
-import { FontSize, IconSize } from '../App/muiTheme';
+import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
@@ -51,7 +51,7 @@ const SeasonCard: FC<SeasonCardProps> = ({
           }}
         >
           <Row justifyContent="center" height="100%">
-            <Typography pl={1} color="text.secondary" fontSize={FontSize.sm} textAlign="left">
+            <Typography pl={1} fontSize={FontSize.sm} textAlign="left" sx={{ color: BeanstalkPalette.theme.winter.blueDark }}>
               The forecast for Season {season.toString()} is based on data in the current Season.
             </Typography>
           </Row>

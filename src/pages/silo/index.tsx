@@ -104,7 +104,7 @@ const SiloPage : FC<{}> = () => {
                   size="medium"
                   variant="contained"
                   sx={{ width: '100%', whiteSpace: 'nowrap' }}
-                  endIcon={<DropdownIcon open={false} />}
+                  endIcon={<DropdownIcon open={false} disabled={breakdown.totalValue?.eq(0)} />}
                   onClick={show}
                   disabled={breakdown.totalValue?.eq(0)}
                 >

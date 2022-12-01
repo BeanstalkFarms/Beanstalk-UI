@@ -67,8 +67,9 @@ const ClaimRewardsContent: React.FC<
     open: boolean;
     show: () => void;
     hide: () => void;
+    ctaDisabled?: boolean;
   }
-> = ({ submitForm, isSubmitting, values, gas, calls, open, show, hide }) => {
+> = ({ submitForm, isSubmitting, values, gas, calls, open, show, hide, ctaDisabled }) => {
   // helpers
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -197,7 +198,7 @@ const ClaimRewardsContent: React.FC<
         loading={isSubmitting}
         disabled={isSubmitting}
         onClick={handleOnClick}
-        endIcon={!open ? <DropdownIcon open={false} /> : null}
+        endIcon={!open ? <DropdownIcon open={false} disabled={isSubmitting || ctaDisabled} /> : null}
       >
         {!open
           ? 'Claim Rewards'
@@ -290,6 +291,7 @@ const RewardsContent: React.FC<{}> = () => {
           <RewardsForm>
             {(props) => (
               <ClaimRewardsContent
+                disabled={breakdown?.totalValue?.eq(0)}
                 open={open}
                 show={show}
                 hide={hide}
@@ -305,7 +307,7 @@ const RewardsContent: React.FC<{}> = () => {
           size="medium"
           variant="contained"
           sx={{ width: '100%', whiteSpace: 'nowrap', mt: '20px !important' }}
-          endIcon={!open ? <DropdownIcon open={false} /> : null}
+          endIcon={!open ? <DropdownIcon open={false} disabled={breakdown?.totalValue?.eq(0)} /> : null}
           onClick={() => {
             if (open) {
               hide();

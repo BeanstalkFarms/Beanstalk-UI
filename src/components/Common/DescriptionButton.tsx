@@ -70,6 +70,7 @@ const DescriptionButton: FC<ButtonProps & {
       backgroundColor: isSelected ? BeanstalkPalette.theme.winter.selected : null,
       '&:hover': {
         backgroundColor: isSelected ? BeanstalkPalette.theme.winter.selected : null,
+        borderColor: 'primary.main'
       },
       height: 'auto'
     }}

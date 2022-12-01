@@ -85,7 +85,7 @@ const PoolCard: FC<{
       {cardContent}
     </Button>
   ) : (
-    <Card sx={{ p: 1, pr: 2, pl: 2 }}>
+    <Card sx={{ p: 1, pr: 2, pl: 2, background: 'secondary.main' }}>
       {cardContent}
     </Card>
   );

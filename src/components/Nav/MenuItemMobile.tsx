@@ -38,11 +38,11 @@ const NavItemMobile: FC<{
     disableRipple
   >
     <Row justifyContent="space-between" spacing={0.5} width="100%">
-      <Typography sx={{ fontSize: item.small ? FontSize.lg : FontSize['2xl'] }} variant="body1" color="text.secondary">
+      <Typography sx={{ fontSize: item.small ? FontSize.lg : FontSize['2xl'] }} variant="body1" color="text.primary">
         {item.title}
       </Typography>
       {item.href ? (
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.primary">
           <ArrowForwardIcon sx={{ transform: 'rotate(-45deg)', fontSize: item.small ? 12 : 16 }} />
         </Typography>
       ) : null}
