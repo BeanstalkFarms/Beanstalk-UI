@@ -29,7 +29,6 @@ const NavBar: FC<{}> = ({ children }) => (
       bgcolor: 'background',
       backgroundColor: 'background.default',
       borderBottom: `${NAV_BORDER_HEIGHT}px solid ${PAGE_BORDER_COLOR}`,
-      borderColor: 'divider',
     }}
   >
     {children}
