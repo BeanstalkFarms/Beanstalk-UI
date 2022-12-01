@@ -38,7 +38,7 @@ import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN, displayTokenAmount, 
 import { AppState } from '~/state';
 import { BEAN, ETH, PODS, WETH } from '~/constants/tokens';
 import { ONE_BN, ZERO_BN, POD_MARKET_TOOLTIPS } from '~/constants';
-import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
+import { IconSize } from '~/components/App/muiTheme';
 import SliderField from '~/components/Common/Form/SliderField';
 import FieldWrapper from '~/components/Common/Form/FieldWrapper';
 import IconWrapper from '~/components/Common/IconWrapper';
@@ -59,7 +59,7 @@ const PlaceInLineInputProps = {
   startAdornment: (
     <InputAdornment position="start">
       <Stack sx={{ pr: 0 }} alignItems="center">
-        <Typography color={BeanstalkPalette.black} sx={{ mt: 0.09, mr: -0.2, fontSize: '1.5rem' }}>0
+        <Typography color="text.primary" sx={{ mt: 0.09, mr: -0.2, fontSize: '1.5rem' }}>0
           -
         </Typography>
       </Stack>
