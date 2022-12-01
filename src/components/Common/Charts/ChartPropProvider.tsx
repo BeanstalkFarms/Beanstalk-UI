@@ -165,26 +165,26 @@ const margin = {
   right: 0,
 };
 
+const chartColors = BeanstalkPalette.theme.winter.chart;
 const defaultChartStyles: ChartMultiStyles = {
   0 : {
     stroke: BeanstalkPalette.theme.winter.primary,
-    fillPrimary: '#9ddeff',
-    // fillPrimary: '#8ad8ff',
+    fillPrimary: chartColors.primaryLight,
     strokeWidth: 2,
   },
   1 : {
-    stroke: '#97D8C4',
-    fillPrimary: '#D0DFDB',
+    stroke: chartColors.purple,
+    fillPrimary: chartColors.purpleLight,
     strokeWidth: 2,
   },
   2 : {
-    stroke: '#4059AD',
-    fillPrimary: '#AAB3D2',
+    stroke: chartColors.green,
+    fillPrimary: chartColors.greenLight,
     strokeWidth: 2,
   },
   3 : {
-    stroke: '#F4B942',
-    fillPrimary: '#FBE3B3',
+    stroke: chartColors.yellow,
+    fillPrimary: chartColors.yellowLight,
     strokeWidth: 2,
   },
 };

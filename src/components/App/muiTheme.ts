@@ -142,7 +142,6 @@ export const BeanstalkPalette = {
       primary: '#00A6FB',
       light: '#177694',
       paleBlue: '#01497C',
-      bg: '#01497C',
       divider: '#002855', 
       blueDark: '#023E7D',
       extraLight: '#168AAD',
@@ -150,7 +149,18 @@ export const BeanstalkPalette = {
       lightGreen: '#D5F2E3',
       selected: hexToRgba('#168AAD', 40),
       red: '#DA2C38',
-      error: '#E33D51'
+      error: '#E33D51',
+      chart: {
+        primaryLight: '#9DDEFF',
+        blue: '#6B9AC4',
+        blueLight: '#D0D7DD',
+        purple: '#4059AD',
+        purpleLight: '#AAB3D2',
+        yellow: '#F4B942',
+        yellowLight: '#FBE3B3',
+        green: '#97D8C4',
+        greenLight: '#D0DFDB'
+      }
     },
   },
 };
