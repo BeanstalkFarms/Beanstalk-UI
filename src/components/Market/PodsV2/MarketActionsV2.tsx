@@ -1,10 +1,12 @@
 import { Box, Card, Divider, Stack, Tab, Tabs } from '@mui/material';
 import { useAtom } from 'jotai';
 import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { FontSize } from '~/components/App/muiTheme';
 import BuyPods from './forms/BuyPods';
 import SellPods from './forms/SellPods';
 import { PodOrderAction, podsOrderActionTypeAtom } from './info/atom-context';
+import useTabs from '~/hooks/display/useTabs';
 
 const tabSX = {
   '&.MuiTab-root': {
@@ -16,11 +18,19 @@ const tabSX = {
   },
 };
 
+export const MARKET_SLUGS = ['buy', 'sell'];
+
 const MarketActionsV2: React.FC<{}> = () => {
   const [orderType, setOrderType] = useAtom(podsOrderActionTypeAtom);
+  const [_, handleChange] = useTabs(MARKET_SLUGS, 'action');
+
+  const [params] = useSearchParams();
+  const actionType = params.get('action');
 
   const handleSetOrderType = (_e: any, i: number) => {
     setOrderType(i);
+    // Changes URL action param
+    handleChange(_e, i);
   };
 
   return (

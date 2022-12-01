@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Typography } from '@mui/material';
+import { CircularProgress, Stack, Typography } from '@mui/material';
 import usePodListing from '~/hooks/beanstalk/usePodListing';
 import FillListingV2 from '~/components/Market/PodsV2/Actions/FillListingV2';
-import GenericZero from '~/components/Common/ZeroState/GenericZero';
 import { bigNumberResult } from '~/util';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 
@@ -32,21 +31,23 @@ const FillListingWrapper: React.FC<{}> = () => {
   /// Loading isn't complete until listingValid is set
   if (loading || listingValid === null) {
     return (
-      <GenericZero loading />
+      <Stack height={200} alignItems="center" justifyContent="center">
+        <CircularProgress color="primary" />
+      </Stack>
     );
   }
   if (error) {
     return (
-      <GenericZero title="Error">
+      <Stack height={200} alignItems="center" justifyContent="center">
         <Typography>{error.message.toString()}</Typography>
-      </GenericZero>
+      </Stack>
     );
   }
   if (!listing || !listingValid) {
     return (
-      <GenericZero title="Not found">
+      <Stack height={200} alignItems="center" justifyContent="center">
         <Typography>Listing not found.</Typography>
-      </GenericZero>
+      </Stack>
     );
   }
 

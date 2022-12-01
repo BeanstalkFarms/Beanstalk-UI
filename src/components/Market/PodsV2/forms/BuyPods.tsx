@@ -4,8 +4,8 @@ import React from 'react';
 import { Outlet, useParams } from 'react-router-dom';
 import SubActionSelect from '../common/SubActionSelect';
 import { PodOrderType, podsOrderTypeAtom } from '../info/atom-context';
-import CreateOrderV2 from '~/components/Market/PodsV2/Actions/CreateOrderV2';
 import Soon from '~/components/Common/ZeroState/Soon';
+import CreateOrderV2 from '~/components/Market/PodsV2/Actions/CreateOrderV2';
 
 const BuyPods: React.FC<{}> = () => {
   const orderType = useAtomValue(podsOrderTypeAtom);
