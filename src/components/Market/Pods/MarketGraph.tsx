@@ -184,7 +184,7 @@ const SelectedPointPopover : FC<{
               p: 0
             }}
           >
-            <CloseIcon sx={{ fontSize: FontSize.base, color: 'text.secondary' }} />
+            <CloseIcon sx={{ fontSize: FontSize.base, color: 'text.primary' }} />
           </IconButton>
         </Row>
         <StatHorizontal label="Place in Line">

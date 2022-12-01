@@ -42,6 +42,9 @@ const ProposalButton: FC<{ proposal: Proposal }> = ({ proposal }) => {
         height: 'auto',
         color: 'text.primary',
         borderColor: 'divider',
+        '&:hover': {
+          borderColor: 'primary.main'
+        }
       }}
     >
       <Stack gap={1} width="100%">
