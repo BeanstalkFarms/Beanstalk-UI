@@ -186,9 +186,7 @@ const SelectedPointPopover : FC<{
     if (orderAction !== action) {
       setOrderAction(action);
     }
-    if (orderType !== type) {
-      setOrderType(type);
-    }
+    setOrderType(type);
   };
 
   if (selectedPoint.type === 'listing') {
