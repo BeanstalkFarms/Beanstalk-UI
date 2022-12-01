@@ -129,12 +129,23 @@ export const BeanstalkPalette = {
       primary: '#FFDE7B',
       brown: '#B97D46',
       lightBrown: '#E5D7C8',
-    }
+    },
+    winter: {
+      primary: '#00A6FB',
+      light: '#177694',
+      paleBlue: '#01497C',
+      bg: '#01497C',
+      divider: '#002855',
+      blueDark: '#023E7D',
+      extraLight: '#168AAD',
+      blueLight: '#1E6091',
+      lightGreen: '#D5F2E3',
+    },
   },
 };
 
-export const PAGE_BG_COLOR = BeanstalkPalette.theme.fall.light;
-export const PAGE_BORDER_COLOR = BeanstalkPalette.theme.fall.primary;
+export const PAGE_BG_COLOR = BeanstalkPalette.theme.winter.light;
+export const PAGE_BORDER_COLOR = BeanstalkPalette.theme.winter.divider;
 
 export const IconSize = {
   xs: 14,
@@ -191,9 +202,10 @@ let muiTheme = createTheme({
    * https://mui.com/material-ui/customization/palette/
    */
   palette: {
-    divider: BeanstalkPalette.theme.fall.primary,
+    divider: BeanstalkPalette.theme.winter.divider,
     primary: {
-      main: BeanstalkPalette.theme.fall.brown,
+      main: BeanstalkPalette.theme.winter.primary,
+      dark: '#023E7D',
       light: BeanstalkPalette.lightGreen,
       contrastText: '#ffffff',
     },
@@ -224,14 +236,14 @@ let muiTheme = createTheme({
     },
     //
     text: {
-      primary: BeanstalkPalette.black,
-      secondary: BeanstalkPalette.realGrey,
-      tertiary: BeanstalkPalette.lightGrey,
+      primary: BeanstalkPalette.white,
+      secondary: BeanstalkPalette.lightGrey,
+      tertiary: BeanstalkPalette.lightestGrey,
     },
     background: {
-      default: BeanstalkPalette.theme.fall.light,
-      paper: BeanstalkPalette.white,
-    }
+      default: '#10718F',
+      paper: BeanstalkPalette.theme.winter.paleBlue,
+    },
   },
 
   /**
@@ -319,7 +331,7 @@ let muiTheme = createTheme({
       styleOverrides: {
         root: sx({
           borderWidth: 1,
-          borderColor: PAGE_BORDER_COLOR,
+          borderColor: 'divider',
         }),
       },
     },
@@ -421,7 +433,7 @@ let muiTheme = createTheme({
           borderColor: 'divider',
           borderWidth: 1,
           borderStyle: 'solid',
-          backgroundColor: BeanstalkPalette.theme.fall.extraLight,
+          backgroundColor: BeanstalkPalette.theme.winter.extraLight,
           color: 'text.primary',
           p: 1,
           px: 1.25,
