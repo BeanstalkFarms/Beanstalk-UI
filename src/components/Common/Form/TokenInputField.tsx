@@ -172,9 +172,6 @@ const TokenInput: FC<
     }
   }, [form, field.name, field.value, onChange, clamp]);
 
-  console.log('displayamount: ', displayAmount);
-  console.log('vallu: ', field.value?.toString());
-
   // 
   const handleMax = useCallback(() => {
     console.debug('[TokenInputField] handleMax');
