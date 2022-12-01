@@ -74,15 +74,18 @@ const PoolCard: FC<{
       sx={{
         height: 'auto', // FIXME
         display: 'block',
-        color: '#000000',
-        borderColor: BeanstalkPalette.lightestGrey,
+        color: 'text.primary',
+        borderColor: BeanstalkPalette.theme.winter.divider,
+        ':hover': {
+          borderColor: 'primary.main',
+        }
       }}
       {...ButtonProps}
     >
       {cardContent}
     </Button>
   ) : (
-    <Card sx={{ p: 1, pr: 2, pl: 2 }}>
+    <Card sx={{ p: 1, pr: 2, pl: 2, background: 'secondary.main' }}>
       {cardContent}
     </Card>
   );

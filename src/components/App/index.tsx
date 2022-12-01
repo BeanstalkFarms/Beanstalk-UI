@@ -1,59 +1,60 @@
 import React from 'react';
-import BigNumber from 'bignumber.js';
-import { Routes, Route, Navigate } from 'react-router-dom';
+
 import { Box, Typography } from '@mui/material';
+import BigNumber from 'bignumber.js';
 import { ToastBar, Toaster } from 'react-hot-toast';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
-import NavBar from '~/components/Nav/NavBar';
 import NewProposalsDialog from '~/components/Governance/NewProposalsDialog';
+import NavBar from '~/components/Nav/NavBar';
 
+import AppUpdater from '~/state/app/updater';
 import PoolsUpdater from '~/state/bean/pools/updater';
 import UnripeUpdater from '~/state/bean/unripe/updater';
-import SunUpdater from '~/state/beanstalk/sun/updater';
 import BarnUpdater from '~/state/beanstalk/barn/updater';
+import FieldUpdater from '~/state/beanstalk/field/updater';
 import SiloUpdater from '~/state/beanstalk/silo/updater';
-import FarmerSiloUpdater from '~/state/farmer/silo/updater';
-import FarmerFieldUpdater from '~/state/farmer/field/updater';
+import SunUpdater from '~/state/beanstalk/sun/updater';
 import FarmerBalancesUpdater from '~/state/farmer/balances/updater';
 import FarmerBarnUpdater from '~/state/farmer/barn/updater';
+import FarmerFieldUpdater from '~/state/farmer/field/updater';
 import FarmerMarketUpdater from '~/state/farmer/market/updater';
-import FieldUpdater from '~/state/beanstalk/field/updater';
-import AppUpdater from '~/state/app/updater';
+import FarmerSiloUpdater from '~/state/farmer/silo/updater';
 
-import SiloPage from '~/pages/silo';
-import SiloTokenPage from '~/pages/silo/token';
+import AnalyticsPage from '~/pages/analytics';
+import BalancesPage from '~/pages/balances';
+import Barn from '~/pages/barn';
+import ChopPage from '~/pages/chop';
+import PageNotFound from '~/pages/error/404';
 import FieldPage from '~/pages/field';
 import ForecastPage from '~/pages/forecast';
-import Barn from '~/pages/barn';
+import GovernancePage from '~/pages/governance';
+import ProposalPage from '~/pages/governance/proposal';
 import TransactionHistoryPage from '~/pages/history';
-import BalancesPage from '~/pages/balances';
 import PodMarketPage from '~/pages/market/pods';
-import NFTPage from '~/pages/nft';
-import ChopPage from '~/pages/chop';
 import MarketAccountPage from '~/pages/market/pods/account';
 import MarketActivityPage from '~/pages/market/pods/activity';
 import CreatePage from '~/pages/market/pods/create';
-import OrderPage from '~/pages/market/pods/order';
 import ListingPage from '~/pages/market/pods/listing';
+import OrderPage from '~/pages/market/pods/order';
+import NFTPage from '~/pages/nft';
+import SiloPage from '~/pages/silo';
+import SiloTokenPage from '~/pages/silo/token';
 import SwapPage from '~/pages/swap';
-import AnalyticsPage from '~/pages/analytics';
-import GovernancePage from '~/pages/governance';
-import ProposalPage from '~/pages/governance/proposal';
 import GovernanceUpdater from '~/state/beanstalk/governance/updater';
-import PageNotFound from '~/pages/error/404';
 
-import useNavHeight from '~/hooks/app/usePageDimensions';
-import useBanner from '~/hooks/app/useBanner';
 import { sgEnvKey } from '~/graph/client';
+import useBanner from '~/hooks/app/useBanner';
+import useNavHeight from '~/hooks/app/usePageDimensions';
 
-import pageBackground from '~/img/beanstalk/interface/bg/Thanksgiving-bg.png';
+import pageBackground from '~/img/beanstalk/interface/bg/winter-bg.png';
 
-import './App.css';
-import useAccount from '~/hooks/ledger/useAccount';
 import EnforceNetwork from '~/components/App/EnforceNetwork';
+import useAccount from '~/hooks/ledger/useAccount';
+import './App.css';
 
 import { FC } from '~/types';
-import Leaves from '~/components/App/theme/Fall/Leaves';
+import Snowflakes from './theme/winter/Snowflakes';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -126,7 +127,8 @@ export default function App() {
       <EnforceNetwork />
       <CustomToaster navHeight={navHeight} />
       {account && <NewProposalsDialog />}
-      <Leaves />
+      {/* <Leaves /> */}
+      <Snowflakes />
       <Box
         sx={{
           bgcolor: 'background.default',

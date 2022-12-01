@@ -30,7 +30,7 @@ const FieldWrapper : FC<{
           {label}&nbsp;
           {tooltip && (
             <HelpOutlineIcon
-              sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
+              sx={{ color: 'text.tertiary', fontSize: FontSize.sm }}
             />
           )}
         </Typography>

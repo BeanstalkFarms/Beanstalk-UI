@@ -16,13 +16,12 @@ import {
   ModuleContent,
 } from '~/components/Common/Module';
 import beanIcon from '~/img/tokens/bean-logo-circled.svg';
-import stalkIcon from '~/img/beanstalk/stalk-icon.svg';
-import seedIcon from '~/img/beanstalk/seed-icon.svg';
+import stalkIcon from '~/img/beanstalk/stalk-icon-white.svg';
+import seedIcon from '~/img/beanstalk/seed-icon-white.svg';
 
 import useRevitalized from '~/hooks/farmer/useRevitalized';
 import { AppState } from '~/state';
 import RewardItem from '../../Silo/RewardItem';
-import { BeanstalkPalette } from '../../App/muiTheme';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import DropdownIcon from '~/components/Common/DropdownIcon';
 import useToggle from '~/hooks/display/useToggle';
@@ -68,8 +67,9 @@ const ClaimRewardsContent: React.FC<
     open: boolean;
     show: () => void;
     hide: () => void;
+    ctaDisabled?: boolean;
   }
-> = ({ submitForm, isSubmitting, values, gas, calls, open, show, hide }) => {
+> = ({ submitForm, isSubmitting, values, gas, calls, open, show, hide, ctaDisabled }) => {
   // helpers
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -177,7 +177,7 @@ const ClaimRewardsContent: React.FC<
                           sx={{
                             padding: '12.5px 10px !important',
                             '&:disabled': {
-                              borderColor: BeanstalkPalette.lightestGrey,
+                              borderColor: 'divider',
                             },
                           }}
                         />
@@ -198,7 +198,7 @@ const ClaimRewardsContent: React.FC<
         loading={isSubmitting}
         disabled={isSubmitting}
         onClick={handleOnClick}
-        endIcon={!open ? <DropdownIcon open={false} /> : null}
+        endIcon={!open ? <DropdownIcon open={false} disabled={isSubmitting || ctaDisabled} /> : null}
       >
         {!open
           ? 'Claim Rewards'
@@ -291,6 +291,7 @@ const RewardsContent: React.FC<{}> = () => {
           <RewardsForm>
             {(props) => (
               <ClaimRewardsContent
+                ctaDisabled={breakdown?.totalValue?.eq(0)}
                 open={open}
                 show={show}
                 hide={hide}
@@ -306,7 +307,7 @@ const RewardsContent: React.FC<{}> = () => {
           size="medium"
           variant="contained"
           sx={{ width: '100%', whiteSpace: 'nowrap', mt: '20px !important' }}
-          endIcon={!open ? <DropdownIcon open={false} /> : null}
+          endIcon={!open ? <DropdownIcon open={false} disabled={breakdown?.totalValue?.eq(0)} /> : null}
           onClick={() => {
             if (open) {
               hide();

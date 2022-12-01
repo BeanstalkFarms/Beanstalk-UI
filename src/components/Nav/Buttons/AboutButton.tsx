@@ -99,7 +99,7 @@ const AboutButton: FC<ButtonProps> = ({ sx }) => {
        */}
       <NavDrawer open={open && isMedium} hideDrawer={hide} />
       <Button
-        color="light"
+        color="secondary"
         variant="contained"
         aria-label="open drawer"
         onClick={show}

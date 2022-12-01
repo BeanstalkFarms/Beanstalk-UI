@@ -73,7 +73,7 @@ const useCardContentWithToken = (token: ERC20Token) => [
 const ImageWrapper = styled(Stack)(({ theme }) => ({
   justifyContent: 'flex-end',
   alignItems: 'center',
-  background: BeanstalkPalette.theme.fall.light,
+  background: BeanstalkPalette.theme.winter.blueDark,
   width: '100%',
   height: '300px',
   [theme.breakpoints.down('md')]: { height: '250px !important' },
@@ -82,12 +82,13 @@ const ImageWrapper = styled(Stack)(({ theme }) => ({
 const InfoContent = styled(Stack)(({ theme }) => ({
   width: '100%',
   padding: '20px',
+  background: BeanstalkPalette.theme.winter.blueLight,
   [theme.breakpoints.up('md')]: {
-    borderLeft: `${BeanstalkPalette.theme.fall.light} 1px solid`,
+    borderLeft: `${theme.palette.divider} 1px solid`,
     maxWidth: '40%',
   },
   [theme.breakpoints.down('md')]: {
-    borderTop: `${BeanstalkPalette.theme.fall.light} 1px solid`,
+    borderTop: `${theme.palette.divider} 1px solid`,
   },
   [theme.breakpoints.between('sm', 'md')]: {
     height: '200px',
@@ -99,7 +100,7 @@ const InfoContent = styled(Stack)(({ theme }) => ({
 
 const CarouselCard = styled(EmbeddedCard)(({ theme }) => ({
   // heights are defined here otherwise layout jumps occur during animation
-  borderColor: BeanstalkPalette.theme.fall.light,
+  borderColor: theme.palette.divider,
   overflow: 'hidden',
   [theme.breakpoints.up('md')]: { height: '300px' },
   [theme.breakpoints.between('sm', 'md')]: { height: '450px' },
@@ -131,12 +132,14 @@ const SiloCarousel: FC<{ token: ERC20Token }> = ({ token }) => {
                 disableSlide
                 elements={content.map(({ title, texts }, k) => (
                   <React.Fragment key={`${k}-info`}>
-                    <Typography>{title}</Typography>
+                    <Typography color="text.primary">
+                      {title}
+                    </Typography>
                     <Stack sx={{ whiteSpace: 'pre-wrap' }}>
                       {texts.map((text, i) => (
                         <Typography
                           variant="bodySmall"
-                          color={BeanstalkPalette.grey}
+                          color="text.tertiary"
                           key={i}
                         >
                           {`${text}\n\n`}

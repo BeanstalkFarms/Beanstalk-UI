@@ -77,16 +77,13 @@ const TransactionHistoryPage: FC<{}> = () => {
           {walletEvents !== undefined && walletEvents.length > 0 ? (
             <Grid container>
               {walletEvents.map((event, i) => (
-                <React.Fragment key={`event-item-${i}`}>
-                  <Grid key={`${event.transactionHash}-${event.logIndex}`} item width="100%" px={2}>
-                    <EventItem
-                      event={event}
-                      account={account ? account.toString().toLowerCase() : ''}
+                <Grid key={`${event.transactionHash}-${event.logIndex}`} item width="100%" px={2}>
+                  <EventItem
+                    event={event}
+                    account={account ? account.toString().toLowerCase() : ''}
                         />
-                  </Grid>
-                  {i !== walletEvents.length - 1 && <Divider sx={{ width: '100%' }} />}
-                </React.Fragment>
-                  ))}
+                </Grid>
+              ))}
             </Grid>
             ) : (
               <EmptyState message="No transactions of this type." />

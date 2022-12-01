@@ -1,5 +1,6 @@
-import { Chip, styled, Tab, TabProps } from '@mui/material';
 import React from 'react';
+
+import { Chip, styled, Tab, TabProps } from '@mui/material';
 import { Token } from 'graphql';
 import Row from '~/components/Common/Row';
 import { FC } from '~/types';
@@ -7,7 +8,7 @@ import { FC } from '~/types';
 export const ChipLabel : FC<{ name: string; token?: Token }> = ({ name, children }) => (
   <Row gap={0.2}>
     {name}&nbsp;
-    <Chip label={children} size="small" sx={{ fontWeight: 'bold' }} />
+    <Chip label={children} size="small" sx={{ fontWeight: 'bold', background: '#DAE4FF', color: 'primary.main' }} />
   </Row>
 ); 
 

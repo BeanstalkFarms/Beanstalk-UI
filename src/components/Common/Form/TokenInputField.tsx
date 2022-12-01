@@ -17,6 +17,7 @@ import FieldWrapper from './FieldWrapper';
 import Row from '~/components/Common/Row';
 import { FC } from '~/types';
 import { ZERO_BN } from '~/constants';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 export type TokenInputCustomProps = {
   /**
@@ -229,6 +230,7 @@ const TokenInput: FC<
       {/* Input */}
       <TextField
         type="text"
+        color="primary"
         placeholder={placeholder || '0'}
         disabled={isInputDisabled}
         fullWidth // default to fullWidth
@@ -239,7 +241,11 @@ const TokenInput: FC<
         onChange={handleChange}
         InputProps={inputProps}
         onKeyDown={!allowNegative ? preventNegativeInput : undefined}
-        sx={sx}
+        sx={{
+          background: BeanstalkPalette.theme.winter.blueDark,
+          borderRadius: 1,
+          ...sx
+        }}
       />
       {/* Bottom Adornment */}
       {(balance && !hideBalance || quote) && (

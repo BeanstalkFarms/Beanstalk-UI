@@ -61,8 +61,8 @@ const PATTERN_ID = 'brush_pattern';
 export const accentColor = '#f6acc8';
 export const background = '#584153';
 export const background2 = '#af8baf';
-const axisColor      = BeanstalkPalette.lightGrey;
-const tickLabelColor = BeanstalkPalette.lightGrey;
+const axisColor      = BeanstalkPalette.theme.winter.lightGreen;
+const tickLabelColor = BeanstalkPalette.theme.winter.lightGreen;
 const tickLabelProps = (type: 'x' | 'y') => () => ({
   fill: tickLabelColor,
   fontSize: 12,
@@ -153,7 +153,7 @@ const rescaleXWithZoom = (scale: any, zoom: any) => {
 /// //////////////////////////////// COMPONENTS ///////////////////////////////////
 
 const TooltipCard : FC<CardProps> = ({ children, sx, ...props }) => (
-  <Card sx={{ backgroundColor: BeanstalkPalette.theme.fall.extraLight, px: 0.5, py: 0.5, ...sx }} {...props}>
+  <Card sx={{ backgroundColor: BeanstalkPalette.theme.winter.extraLight, px: 0.5, py: 0.5, ...sx }} {...props}>
     {children}
   </Card>
 );
@@ -184,7 +184,7 @@ const SelectedPointPopover : FC<{
               p: 0
             }}
           >
-            <CloseIcon sx={{ fontSize: FontSize.base, color: 'text.secondary' }} />
+            <CloseIcon sx={{ fontSize: FontSize.base, color: 'text.primary' }} />
           </IconButton>
         </Row>
         <StatHorizontal label="Place in Line">
@@ -237,7 +237,14 @@ const SelectedPointPopover : FC<{
   // backgroundColor: 'white', p: 0.5, borderRadius: 1
   return (
     <Box sx={{ position: 'absolute', top: 10, right: 10 }}>
-      <TooltipCard sx={{ px: 1, py: 1, minWidth: 260, boxShadow: '0 4px 20px 6px rgba(255,255,255,0.3)' }}>
+      <TooltipCard 
+        sx={{ 
+          px: 1, 
+          py: 1, 
+          minWidth: 260, 
+          // boxShadow: '0 4px 20px 6px rgba(255,255,255,0.3)' 
+        }}
+      >
         {inner}
       </TooltipCard>
     </Box>

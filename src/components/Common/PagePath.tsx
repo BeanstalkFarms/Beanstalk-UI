@@ -21,7 +21,7 @@ const PagePath: FC<{
             component={RouterLink}
             to={item.path}
             sx={{
-              color: isLastItem ? 'text.primary' : 'text.secondary',
+              color: isLastItem ? 'text.primary' : 'text.tertiary',
               '&:hover': { color: 'text.primary' },
             }}
             display="inline"
@@ -33,7 +33,7 @@ const PagePath: FC<{
           </Link>
           {isLastItem ? null : (
             <Typography
-              color="text.secondary"
+              color="text.tertiary"
               display="inline"
               variant="h4"
               mr={1}
