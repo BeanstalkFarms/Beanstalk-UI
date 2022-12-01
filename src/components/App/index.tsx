@@ -53,7 +53,10 @@ import useAccount from '~/hooks/ledger/useAccount';
 import EnforceNetwork from '~/components/App/EnforceNetwork';
 
 import { FC } from '~/types';
+import PodsMarketNew from '~/pages/market/podsv2';
 import Leaves from '~/components/App/theme/Fall/Leaves';
+import FillListingWrapper from '~/components/Market/PodsV2/Actions/FillListingWrapper';
+import FillOrderWrapper from '~/components/Market/PodsV2/Actions/FillOrderWrapper';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -164,6 +167,11 @@ export default function App() {
             <Route path="/market/create" element={<CreatePage />} />
             <Route path="/market/order/:id" element={<OrderPage />} />
             <Route path="/market/listing/:id" element={<ListingPage />} />
+            <Route path="/podsMarket" element={<PodsMarketNew />}>
+              {/* https://ui.dev/react-router-nested-routes */}
+              <Route path="listing/:listingID" element={<FillListingWrapper />} />
+              <Route path="order/:orderID" element={<FillOrderWrapper />} />
+            </Route>
             {/* DEX CODE (hidden) */}
             {/* <Route path="/market/wells" element={<WellHomePage />} /> */}
             {/* <Route path="/market/wells/:id" element={<WellPage />} /> */}

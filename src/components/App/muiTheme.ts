@@ -1,8 +1,10 @@
+import { deepmerge } from '@mui/utils';
 import {
   createTheme,
   experimental_sx as sx,
   lighten,
   responsiveFontSizes,
+  ThemeOptions,
 } from '@mui/material/styles';
 import React from 'react';
 
@@ -129,7 +131,7 @@ export const BeanstalkPalette = {
       primary: '#FFDE7B',
       brown: '#B97D46',
       lightBrown: '#E5D7C8',
-    }
+    },
   },
 };
 
@@ -164,7 +166,7 @@ export const FontWeight = {
 export const XXLWidth = 1400;
 
 // FIXME: changes to createTheme don't hot reload.
-let muiTheme = createTheme({
+const muiThemeBase: ThemeOptions = {
   breakpoints: {
     values: {
       xs: 0,
@@ -231,7 +233,7 @@ let muiTheme = createTheme({
     background: {
       default: BeanstalkPalette.theme.fall.light,
       paper: BeanstalkPalette.white,
-    }
+    },
   },
 
   /**
@@ -279,6 +281,10 @@ let muiTheme = createTheme({
       fontFamily: 'Futura PT',
       fontSize: FontSize.sm, // 14px
       fontWeight: FontWeight.medium,
+    },
+    caption: {
+      fontSize: FontSize.xs, // 12px
+      fontWeight: FontWeight.normal,
     },
     // nav labels, nav button labels, token labels (module)
     bodyMedium: {
@@ -405,7 +411,7 @@ let muiTheme = createTheme({
       defaultProps: {
         enterTouchDelay: 0,
         leaveTouchDelay: 1000000,
-        onClick: (e) => e.stopPropagation(),
+        onClick: (e: React.MouseEvent) => e.stopPropagation(),
       },
       variants: [
         {
@@ -673,8 +679,12 @@ let muiTheme = createTheme({
       },
     },
   },
-});
+};
+
+let muiTheme = createTheme({ ...muiThemeBase });
 
 muiTheme = responsiveFontSizes(muiTheme);
 
 export default muiTheme;
+
+export const muiThemeCondensed = createTheme(deepmerge(muiThemeBase, { spacing: 8 }));
