@@ -38,7 +38,7 @@ const LinkButton: FC<{ to: string; title: string, tag?: string }> = ({ to, title
         to={to}
         size="small"
         variant="text"
-        color={match ? 'primary' : 'dark'}
+        color={match ? 'primary' : 'light'}
         sx={{
           '&:hover > h6': {
             textDecorationThickness: '2px',

@@ -72,7 +72,7 @@ const TableCard: FC<{
           {state === 'ready' ? (
             <Row gap={0.3}>
               {token && <img src={token.logo} alt="" height="17px" />}
-              <Typography variant="h4">
+              <Typography variant="h4" component="span">
                 {displayBN(amount || ZERO_BN)}
                 {value && (
                   <Typography

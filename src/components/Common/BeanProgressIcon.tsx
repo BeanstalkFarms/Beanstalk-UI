@@ -1,6 +1,6 @@
 import React from 'react';
 import { CircularProgress, CircularProgressProps, Stack } from '@mui/material';
-import beanPumpkin from '~/img/beanstalk/interface/seasonTheme/bean-pumpkin.svg';
+import beanIcon from '~/img/tokens/bean-logo-circled.svg';
 import { FC } from '~/types';
 
 const PROGRESS_THICKNESS = 2;
@@ -33,13 +33,9 @@ const BeanProgressIcon : FC<CircularProgressProps & {
         />
       ) : null}
     <img
-      src={beanPumpkin}
+      src={beanIcon}
       alt="Bean"
-      css={{ 
-          height: enabled ? size * 0.88 : size ,
-          width: size,
-        }}
-      />
+      css={{ height: size, width: size }} />
   </Stack>
 );
 

@@ -229,6 +229,7 @@ const TokenInput: FC<
       {/* Input */}
       <TextField
         type="text"
+        color="primary"
         placeholder={placeholder || '0'}
         disabled={isInputDisabled}
         fullWidth // default to fullWidth

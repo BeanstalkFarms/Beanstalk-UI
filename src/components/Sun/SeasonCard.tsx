@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import rainySeasonIcon from '~/img/beanstalk/sun/rainy-season.svg';
 import drySeasonIcon from '~/img/beanstalk/sun/dry-season.svg';
 import { displayBN, displayFullBN } from '../../util';
-import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
+import { FontSize, IconSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
@@ -60,7 +60,7 @@ const SeasonCard: FC<SeasonCardProps> = ({
       <Box
         sx={{
           border: 1,
-          borderColor: BeanstalkPalette.lightestGrey,
+          borderColor: 'divider',
           p: 0.75,
           borderRadius: '8px',
           animation: isNew ? 'pulse 1s ease-in-out' : undefined,

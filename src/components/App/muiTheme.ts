@@ -79,6 +79,14 @@ declare module '@mui/material/Tooltip' {
 const BASE_FONT_SIZE = 16;
 const remBase = (n: number) => `${(n / BASE_FONT_SIZE).toFixed(4)}rem`;
 
+export const hexToRgba = (hex: string, alpha?: number) => {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+
+  return `rgba(${r}, ${g}, ${b}, ${alpha ?? 1})`;
+};
+
 /**
  * Beanstalk's primary color pallete.
  *
@@ -135,7 +143,7 @@ export const BeanstalkPalette = {
       light: '#177694',
       paleBlue: '#01497C',
       bg: '#01497C',
-      divider: '#002855',
+      divider: '#002855', 
       blueDark: '#023E7D',
       extraLight: '#168AAD',
       blueLight: '#1E6091',
@@ -145,7 +153,7 @@ export const BeanstalkPalette = {
 };
 
 export const PAGE_BG_COLOR = BeanstalkPalette.theme.winter.light;
-export const PAGE_BORDER_COLOR = BeanstalkPalette.theme.winter.divider;
+export const PAGE_BORDER_COLOR = BeanstalkPalette.theme.winter.blueLight;
 
 export const IconSize = {
   xs: 14,
@@ -205,14 +213,14 @@ let muiTheme = createTheme({
     divider: BeanstalkPalette.theme.winter.divider,
     primary: {
       main: BeanstalkPalette.theme.winter.primary,
-      dark: '#023E7D',
-      light: BeanstalkPalette.lightGreen,
+      dark: '#0074AF',
+      light: '#33B7FB',
       contrastText: '#ffffff',
     },
     secondary: {
-      main: BeanstalkPalette.theme.fall.light,
-      dark: BeanstalkPalette.theme.fall.primary,
-      contrastText: '#000000',
+      main: BeanstalkPalette.theme.winter.blueDark,
+      // dark: BeanstalkPalette.theme.fall.primary,
+      contrastText: '#ffffff',
     },
     light: {
       main: BeanstalkPalette.white,
@@ -241,7 +249,7 @@ let muiTheme = createTheme({
       tertiary: BeanstalkPalette.lightestGrey,
     },
     background: {
-      default: '#10718F',
+      default: '#016586',
       paper: BeanstalkPalette.theme.winter.paleBlue,
     },
   },
