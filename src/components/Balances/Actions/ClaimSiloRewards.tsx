@@ -291,7 +291,7 @@ const RewardsContent: React.FC<{}> = () => {
           <RewardsForm>
             {(props) => (
               <ClaimRewardsContent
-                disabled={breakdown?.totalValue?.eq(0)}
+                ctaDisabled={breakdown?.totalValue?.eq(0)}
                 open={open}
                 show={show}
                 hide={hide}

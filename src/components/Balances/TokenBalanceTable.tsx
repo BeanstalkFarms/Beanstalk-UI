@@ -2,7 +2,6 @@ import { Typography, Stack, Grid, Card, Box } from '@mui/material';
 import React from 'react';
 import Row from '../Common/Row';
 import { displayFullBN } from '~/util';
-import { BeanstalkPalette } from '../App/muiTheme';
 import { TokenBalanceWithFiatValue } from '~/hooks/farmer/useFarmerBalancesWithFiatValue';
 
 const TokenBalanceTable: React.FC<{
@@ -95,10 +94,7 @@ const TokenBalanceTable: React.FC<{
         </Stack>
       ) : (
         <Stack height="100%" alignItems="center" justifyContent="center" pb={2}>
-          <Typography
-            color="text.primary"
-            sx={{ color: BeanstalkPalette.lightGrey }}
-          >
+          <Typography color="text.tertiary">
             {`You don't have any tokens in your ${pageName} Balance`}
           </Typography>
         </Stack>
