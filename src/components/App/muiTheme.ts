@@ -220,7 +220,6 @@ let muiTheme = createTheme({
     },
     secondary: {
       main: BeanstalkPalette.theme.winter.blueDark,
-      // dark: BeanstalkPalette.theme.fall.primary,
       contrastText: '#ffffff',
     },
     light: {
@@ -347,7 +346,7 @@ let muiTheme = createTheme({
     MuiDivider: {
       styleOverrides: {
         root: sx({
-          borderColor: BeanstalkPalette.theme.fall.light,
+          borderColor: 'divider',
           borderWidth: 0.5,
         }),
       },

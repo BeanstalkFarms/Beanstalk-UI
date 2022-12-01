@@ -66,10 +66,10 @@ const DescriptionButton: FC<ButtonProps & {
       // changing the internal layout.
       display: 'block',
       color: 'inherit',
-      borderColor: isSelected ? BeanstalkPalette.theme.fall.primary : BeanstalkPalette.lightestGrey,
-      backgroundColor: isSelected ? BeanstalkPalette.theme.fall.extraLight : null,
+      borderColor: isSelected ? 'primary.main' : 'divider',
+      backgroundColor: isSelected ? BeanstalkPalette.theme.winter.selected : null,
       '&:hover': {
-        backgroundColor: isSelected ? BeanstalkPalette.theme.fall.extraLight : null,
+        backgroundColor: isSelected ? BeanstalkPalette.theme.winter.selected : null,
       },
       height: 'auto'
     }}

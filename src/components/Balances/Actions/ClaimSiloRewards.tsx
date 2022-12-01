@@ -22,7 +22,6 @@ import seedIcon from '~/img/beanstalk/seed-icon.svg';
 import useRevitalized from '~/hooks/farmer/useRevitalized';
 import { AppState } from '~/state';
 import RewardItem from '../../Silo/RewardItem';
-import { BeanstalkPalette } from '../../App/muiTheme';
 import useFarmerBalancesBreakdown from '~/hooks/farmer/useFarmerBalancesBreakdown';
 import DropdownIcon from '~/components/Common/DropdownIcon';
 import useToggle from '~/hooks/display/useToggle';
@@ -177,7 +176,7 @@ const ClaimRewardsContent: React.FC<
                           sx={{
                             padding: '12.5px 10px !important',
                             '&:disabled': {
-                              borderColor: BeanstalkPalette.lightestGrey,
+                              borderColor: 'divider',
                             },
                           }}
                         />

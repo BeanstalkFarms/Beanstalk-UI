@@ -46,7 +46,7 @@ const TokenBalanceTable: React.FC<{
                   sx={{
                     borderRadius: '6px',
                     border: '1px solid',
-                    borderColor: BeanstalkPalette.lightestGrey,
+                    borderColor: 'divider',
                   }}
                   key={i}
                 >

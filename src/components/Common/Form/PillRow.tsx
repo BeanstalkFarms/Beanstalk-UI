@@ -41,9 +41,9 @@ const PillRow : FC<{
     <Button
       variant="outlined"
       onClick={onClick}
-      color="dark"
+      color="light"
       sx={{
-        color: 'text.primary',
+        color: 'white',
         px: 0.75,
         py: 0.5,
         my: 0.5,

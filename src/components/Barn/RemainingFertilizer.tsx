@@ -80,7 +80,7 @@ const RemainingFertilizer: FC<{}> = () => {
                 <Typography>
                   Humidity&nbsp;
                   <HelpOutlineIcon
-                    sx={{ color: 'text.secondary', fontSize: FontSize.sm }}
+                    sx={{ color: 'text.tertiary', fontSize: FontSize.sm }}
                   />
                 </Typography>
               </Tooltip>
