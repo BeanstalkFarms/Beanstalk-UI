@@ -148,6 +148,7 @@ export const BeanstalkPalette = {
       extraLight: '#168AAD',
       blueLight: '#1E6091',
       lightGreen: '#D5F2E3',
+      selected: hexToRgba('#168AAD', 40),
     },
   },
 };
@@ -517,7 +518,7 @@ let muiTheme = createTheme({
         root: sx({
           borderRadius: 1,
           '&.Mui-selected': {
-            backgroundColor: BeanstalkPalette.lightGreen,
+            backgroundColor: '#168AAD',
           },
         }),
       },
@@ -528,7 +529,11 @@ let muiTheme = createTheme({
           borderRadius: 1,
           px: 1,
           py: 1,
-          border: '2px solid white',
+          // border: '0.5px solid',
+          // borderColor: 'divider',
+          '&:hover': {
+            backgroundColor: BeanstalkPalette.theme.winter.selected,
+          }
         }),
       },
     },
