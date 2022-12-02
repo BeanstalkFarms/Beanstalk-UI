@@ -2,8 +2,8 @@ import { Alert, Box, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
-import toast from 'react-hot-toast';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import toast from 'react-hot-toast';
 import {
   PlotFragment,
   PlotSettingsFragment,
@@ -27,10 +27,10 @@ import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
 import {
   PlotMap,
   toStringBaseUnitBN,
-  parseError,
   displayTokenAmount,
   displayBN,
-  displayFullBN
+  displayFullBN,
+  parseError
 } from '~/util';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 
@@ -75,6 +75,8 @@ const REQUIRED_KEYS = [
   'destination'
 ] as (keyof CreateListingFormValues)[];
 
+const MIN_PLACE_IN_LINE_INPUT = new BigNumber(1e-6);
+
 const CreateListingForm: FC<
   FormikProps<CreateListingFormValues> & {
     plots: PlotMap<BigNumber>;
@@ -102,9 +104,12 @@ const CreateListingForm: FC<
   const alreadyListed = plot?.index
     ? existingListings[toStringBaseUnitBN(plot.index, BEAN[1].decimals)]
     : false;
-  const isSubmittable = (
-    !REQUIRED_KEYS.some((k) => values[k] === null)
-  );
+  const isSubmittable = (() => {
+    if (values.pricePerPod?.isZero()) return false; // always require a price
+    if (values.expiresAt?.isZero()) return false; // always require a place in line
+    if (values.plot.amount?.isZero()) return false; // always require an amount
+    return !REQUIRED_KEYS.some((k) => values[k] === null);
+  })();
 
   return (
     <Form autoComplete="off" noValidate>
@@ -133,6 +138,7 @@ const CreateListingForm: FC<
                 placeholder="0.0000"
                 InputProps={ExpiresAtInputProps}
                 max={placeInLine.plus(plot.start || ZERO_BN)}
+                min={MIN_PLACE_IN_LINE_INPUT}
               />
             </FieldWrapper>
             <FarmModeField
@@ -220,6 +226,7 @@ const CreateListing: FC<{}> = () => {
   const onSubmit = useCallback(async (values: CreateListingFormValues, formActions: FormikHelpers<CreateListingFormValues>) => {
     const Bean = getChainToken(BEAN);
     let txToast;
+
     try {
       middleware.before();
       const { plot: { index, start, end, amount }, pricePerPod, expiresAt, destination } = values;
@@ -264,7 +271,7 @@ const CreateListing: FC<{}> = () => {
       txToast?.error(err) || toast.error(parseError(err));
       console.error(err);
     }
-  }, [beanstalk, getChainToken, harvestableIndex, plots, refetchFarmerMarket, middleware]);
+  }, [beanstalk, getChainToken, harvestableIndex, middleware, plots, refetchFarmerMarket]);
 
   return (
     <Formik<CreateListingFormValues>

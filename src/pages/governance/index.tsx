@@ -17,7 +17,7 @@ const GovernancePage: FC<{}> = () => (
       <PageHeader
         title="Governance"
         description="Participate in Beanstalk governance as a Stalkholder"
-        href="https://docs.bean.money/governance/proposals"
+        href="https://docs.bean.money/almanac/governance/proposals"
         control={
           <GuideButton
             title="The Farmers' Almanac: Governance Guides"

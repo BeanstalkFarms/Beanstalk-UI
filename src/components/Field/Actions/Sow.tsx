@@ -190,8 +190,8 @@ const SowForm : FC<
         />
         {!hasSoil ? (
           <Box>
-            <Alert color="warning" icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}>
-              There is currently no Soil. <Link href="https://docs.bean.money/farm/field#soil" target="_blank" rel="noreferrer">Learn more</Link>
+            <Alert color="warning" icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>} sx={{ color: 'black' }}>
+              There is currently no Soil. <Link href="https://docs.bean.money/almanac/farm/field#soil" target="_blank" rel="noreferrer">Learn more</Link>
             </Alert>
           </Box>
         ) : null}
@@ -220,6 +220,7 @@ const SowForm : FC<
                 <Alert
                   color="warning"
                   icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
+                  sx={{ color: 'black' }}
                 >
                   If there is less Soil at the time of execution, this transaction will Sow Beans into the remaining Soil and send any unused Beans to your Farm Balance.
                   {/* You are Sowing {displayFullBN(maxAmountUsed.times(100), 4, 0)}% of remaining Soil.  */}
@@ -227,7 +228,7 @@ const SowForm : FC<
               </Box>
             ) : null}
             <Box>
-              <Accordion variant="outlined">
+              <Accordion variant="outlined" color="primary">
                 <StyledAccordionSummary title="Transaction Details" />
                 <AccordionDetails>
                   <TxnPreview
@@ -253,7 +254,7 @@ const SowForm : FC<
                   <Divider sx={{ my: 2, opacity: 0.4 }} />
                   <Box pb={1}>
                     <Typography variant="body2" alignItems="center">
-                      Pods become <strong>Harvestable</strong> on a first in, first out <Link href="https://docs.bean.money/protocol-resources/glossary#fifo" target="_blank" rel="noreferrer" underline="hover">(FIFO)</Link> basis. Upon <strong>Harvest</strong>, each Pod is redeemed for <span><TokenIcon token={BEAN[1]} css={{ height: IconSize.xs, marginTop: 2.6 }} /></span>1.
+                      Pods become <strong>Harvestable</strong> on a first in, first out <Link href="https://docs.bean.money/almanac/protocol/glossary#fifo" target="_blank" rel="noreferrer" underline="hover">(FIFO)</Link> basis. Upon <strong>Harvest</strong>, each Pod is redeemed for <span><TokenIcon token={BEAN[1]} css={{ height: IconSize.xs, marginTop: 2.6 }} /></span>1.
                     </Typography>
                   </Box>
                 </AccordionDetails>

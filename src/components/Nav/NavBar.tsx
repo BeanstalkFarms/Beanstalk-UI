@@ -16,7 +16,7 @@ import {
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
-import { PAGE_BG_COLOR, PAGE_BORDER_COLOR } from '../App/muiTheme';
+import { PAGE_BORDER_COLOR } from '../App/muiTheme';
 
 const NavBar: FC<{}> = ({ children }) => (
   <AppBar
@@ -27,9 +27,8 @@ const NavBar: FC<{}> = ({ children }) => (
     sx={{
       position: 'sticky',
       bgcolor: 'background',
-      backgroundColor: PAGE_BG_COLOR,
+      backgroundColor: 'background.default',
       borderBottom: `${NAV_BORDER_HEIGHT}px solid ${PAGE_BORDER_COLOR}`,
-      borderColor: 'divider',
     }}
   >
     {children}

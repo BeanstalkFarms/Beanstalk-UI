@@ -10,7 +10,7 @@ const FarmerChip : FC<{ account: string }> = ({ account }) => (
   <Button
     size="small"
     variant="outlined"
-    color="secondary"
+    color="primary"
     sx={{
       fontWeight: 400,
       color: 'text.primary'

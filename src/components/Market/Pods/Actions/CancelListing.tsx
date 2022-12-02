@@ -35,6 +35,7 @@ const CancelListing : FC<{ id: string }> = ({ id }) => {
         loading: 'Cancelling Pod Listing...',
         success: 'Cancellation successful.',
       });
+
       try {
         middleware.before();
 
@@ -55,7 +56,7 @@ const CancelListing : FC<{ id: string }> = ({ id }) => {
         setLoading(false);
       }
     })();
-  }, [beanstalk, id, navigate, refetchFarmerField, refetchFarmerMarket, middleware]);
+  }, [beanstalk, id, middleware, navigate, refetchFarmerField, refetchFarmerMarket]);
 
   return (
     <LoadingButton

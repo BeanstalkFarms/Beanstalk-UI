@@ -81,6 +81,14 @@ declare module '@mui/material/Tooltip' {
 const BASE_FONT_SIZE = 16;
 const remBase = (n: number) => `${(n / BASE_FONT_SIZE).toFixed(4)}rem`;
 
+export const hexToRgba = (hex: string, alpha?: number) => {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+
+  return `rgba(${r}, ${g}, ${b}, ${alpha ?? 1})`;
+};
+
 /**
  * Beanstalk's primary color pallete.
  *
@@ -132,11 +140,35 @@ export const BeanstalkPalette = {
       brown: '#B97D46',
       lightBrown: '#E5D7C8',
     },
+    winter: {
+      primary: '#00A6FB',
+      light: '#177694',
+      paleBlue: '#01497C',
+      divider: '#002855', 
+      blueDark: '#023E7D',
+      extraLight: '#168AAD',
+      blueLight: '#1E6091',
+      lightGreen: '#D5F2E3',
+      selected: hexToRgba('#168AAD', 40),
+      red: '#DA2C38',
+      error: '#E33D51',
+      chart: {
+        primaryLight: '#9DDEFF',
+        blue: '#6B9AC4',
+        blueLight: '#D0D7DD',
+        purple: '#4059AD',
+        purpleLight: '#AAB3D2',
+        yellow: '#F4B942',
+        yellowLight: '#FBE3B3',
+        green: '#97D8C4',
+        greenLight: '#D0DFDB'
+      }
+    },
   },
 };
 
-export const PAGE_BG_COLOR = BeanstalkPalette.theme.fall.light;
-export const PAGE_BORDER_COLOR = BeanstalkPalette.theme.fall.primary;
+export const PAGE_BG_COLOR = BeanstalkPalette.theme.winter.light;
+export const PAGE_BORDER_COLOR = BeanstalkPalette.theme.winter.blueLight;
 
 export const IconSize = {
   xs: 14,
@@ -193,16 +225,16 @@ const muiThemeBase: ThemeOptions = {
    * https://mui.com/material-ui/customization/palette/
    */
   palette: {
-    divider: BeanstalkPalette.theme.fall.primary,
+    divider: BeanstalkPalette.theme.winter.divider,
     primary: {
-      main: BeanstalkPalette.theme.fall.brown,
-      light: BeanstalkPalette.lightGreen,
+      main: BeanstalkPalette.theme.winter.primary,
+      dark: '#0074AF',
+      light: '#33B7FB',
       contrastText: '#ffffff',
     },
     secondary: {
-      main: BeanstalkPalette.theme.fall.light,
-      dark: BeanstalkPalette.theme.fall.primary,
-      contrastText: '#000000',
+      main: BeanstalkPalette.theme.winter.blueDark,
+      contrastText: '#ffffff',
     },
     light: {
       main: BeanstalkPalette.white,
@@ -226,14 +258,14 @@ const muiThemeBase: ThemeOptions = {
     },
     //
     text: {
-      primary: BeanstalkPalette.black,
-      secondary: BeanstalkPalette.realGrey,
-      tertiary: BeanstalkPalette.lightGrey,
+      primary: BeanstalkPalette.white,
+      secondary: BeanstalkPalette.lightGrey,
+      tertiary: BeanstalkPalette.lightestGrey,
     },
     background: {
-      default: BeanstalkPalette.theme.fall.light,
-      paper: BeanstalkPalette.white,
-    },
+      default: '#016586',
+      paper: BeanstalkPalette.theme.winter.paleBlue,
+    }
   },
 
   /**
@@ -325,14 +357,14 @@ const muiThemeBase: ThemeOptions = {
       styleOverrides: {
         root: sx({
           borderWidth: 1,
-          borderColor: PAGE_BORDER_COLOR,
+          borderColor: 'divider',
         }),
       },
     },
     MuiDivider: {
       styleOverrides: {
         root: sx({
-          borderColor: BeanstalkPalette.theme.fall.light,
+          borderColor: 'divider',
           borderWidth: 0.5,
         }),
       },
@@ -348,6 +380,18 @@ const muiThemeBase: ThemeOptions = {
             borderColor: 'rgba(0, 0, 0, 0.26)',
           },
         },
+        {
+          props: {
+            variant: 'contained',
+            color: 'primary'
+          },
+          style: {
+            '&.Mui-disabled': {
+              backgroundColor: '#C1C1C1',
+              color: BeanstalkPalette.grey
+            }
+          }
+        }
       ],
       defaultProps: {
         disableElevation: true,
@@ -392,6 +436,17 @@ const muiThemeBase: ThemeOptions = {
       },
     },
     MuiAlert: {
+      variants: [
+        {
+          props: {
+            color: 'warning'
+          },
+          style: sx({
+            backgroundColor: 'rgba(253, 244, 231, 0.3)',
+            color: BeanstalkPalette.white
+          })
+        }
+      ],
       defaultProps: {},
       styleOverrides: {
         root: sx({
@@ -427,7 +482,7 @@ const muiThemeBase: ThemeOptions = {
           borderColor: 'divider',
           borderWidth: 1,
           borderStyle: 'solid',
-          backgroundColor: BeanstalkPalette.theme.fall.extraLight,
+          backgroundColor: BeanstalkPalette.theme.winter.extraLight,
           color: 'text.primary',
           p: 1,
           px: 1.25,
@@ -449,8 +504,8 @@ const muiThemeBase: ThemeOptions = {
             variant: 'outlined',
           },
           style: {
-            background: 'transparent',
-            borderColor: BeanstalkPalette.lightBlue,
+            background: 'background.paper',
+            borderColor: 'divider',
           },
         },
       ],
@@ -503,7 +558,7 @@ const muiThemeBase: ThemeOptions = {
         root: sx({
           borderRadius: 1,
           '&.Mui-selected': {
-            backgroundColor: BeanstalkPalette.lightGreen,
+            backgroundColor: '#168AAD',
           },
         }),
       },
@@ -514,7 +569,11 @@ const muiThemeBase: ThemeOptions = {
           borderRadius: 1,
           px: 1,
           py: 1,
-          border: '2px solid white',
+          // border: '0.5px solid',
+          // borderColor: 'divider',
+          '&:hover': {
+            backgroundColor: BeanstalkPalette.theme.winter.selected,
+          }
         }),
       },
     },

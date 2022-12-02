@@ -60,7 +60,7 @@ const SiloPage : FC<{}> = () => {
         <PageHeader
           title="The Silo"
           description="Earn yield and participate in Beanstalk governance by depositing whitelisted assets"
-          href="https://docs.bean.money/farm/silo"
+          href="https://docs.bean.money/almanac/farm/silo"
           // makes guide display to the right of the title on mobile
           OuterStackProps={{ direction: 'row' }}
           control={
@@ -104,7 +104,7 @@ const SiloPage : FC<{}> = () => {
                   size="medium"
                   variant="contained"
                   sx={{ width: '100%', whiteSpace: 'nowrap' }}
-                  endIcon={<DropdownIcon open={false} />}
+                  endIcon={<DropdownIcon open={false} disabled={breakdown.totalValue?.eq(0)} />}
                   onClick={show}
                   disabled={breakdown.totalValue?.eq(0)}
                 >

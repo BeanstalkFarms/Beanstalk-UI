@@ -19,6 +19,9 @@ import useFarmerSiloHistory from '~/hooks/farmer/useFarmerSiloHistory';
 import { FC } from '~/types';
 import { BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
 
+import stalkIconWinter from '~/img/beanstalk/stalk-icon-winter.svg';
+import seedIconWinter from '~/img/beanstalk/seed-icon-winter.svg';
+
 const depositStats = (s: BigNumber, v: BigNumber[]) => (
   <Stat
     title="Value Deposited"
@@ -92,7 +95,7 @@ const Overview: FC<{
         title="Stalk Ownership"
         titleTooltip="Your current ownership of Beanstalk is displayed as a percentage. Ownership is determined by your proportional ownership of the total Stalk supply."
         amount={displayPercentage(ownership.multipliedBy(100))}
-        color="dark.main"
+        color="text.tertiary"
         gap={0.25}
         sx={{ minWidth: 200, ml: 0 }}
       />
@@ -118,12 +121,12 @@ const Overview: FC<{
         } />
         <StyledTab label={
           <ChipLabel name="Stalk">
-            <Row alignItems="center"><TokenIcon token={STALK} /> {displayStalk(farmerSilo.stalk.active, 0)}</Row>
+            <Row alignItems="center"><TokenIcon token={STALK} logoOverride={stalkIconWinter} /> {displayStalk(farmerSilo.stalk.active, 0)}</Row>
           </ChipLabel>
         } />
         <StyledTab label={
           <ChipLabel name="Seeds">
-            <Row alignItems="center"><TokenIcon token={SEEDS} /> {displayStalk(farmerSilo.seeds.active, 0)}</Row>
+            <Row alignItems="center"><TokenIcon token={SEEDS} logoOverride={seedIconWinter} /> {displayStalk(farmerSilo.seeds.active, 0)}</Row>
           </ChipLabel>
         } />
       </ModuleTabs>

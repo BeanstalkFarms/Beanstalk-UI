@@ -15,7 +15,7 @@ const Barn: FC<{}> = () => (
       <PageHeader
         title="The Barn"
         description="Earn yield and recapitalize Beanstalk with Fertilizer"
-        href="https://docs.bean.money/farm/barn"
+        href="https://docs.bean.money/almanac/farm/barn"
         OuterStackProps={{ direction: 'row' }}
         control={
           <GuideButton

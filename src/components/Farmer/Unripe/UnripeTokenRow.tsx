@@ -48,7 +48,7 @@ const UnripeTokenRow: FC<{
         {!isMobile && (
           <Tooltip placement="right" title={tooltip}>
             <HelpOutlineIcon
-              sx={{ color: 'text.secondary', fontSize: '13px' }}
+              sx={{ color: 'text.tertiary', fontSize: '13px' }}
             />
           </Tooltip>
         )}

@@ -22,6 +22,7 @@ import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import AddressIcon from '~/components/Common/AddressIcon';
 import Row from '~/components/Common/Row';
 import { FC } from '~/types';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 // -----------------------------------------------------------------------
 
@@ -279,7 +280,7 @@ const TxnStep : FC<{
         py: 0.5,
         px: 0.5,
         mx: 'auto',
-        background: 'white',
+        background: BeanstalkPalette.theme.winter.paleBlue,
       }}>
         <Box
           display="inline-block"
@@ -374,7 +375,7 @@ const TxnPreview : FC<{
           {/* Dotted line */}
           <Box
             sx={{
-              borderColor: 'secondary.main',
+              borderColor: BeanstalkPalette.blue,
               borderBottomStyle: 'dotted',
               borderBottomWidth: TXN_PREVIEW_LINE_WIDTH,
               width: '100%',
@@ -428,7 +429,8 @@ const TxnPreview : FC<{
               onFocus={() => setHighlighted(a.type)}
               onBlur={() => setHighlighted(undefined)}
             >
-              <Typography variant="body1" color="grey[300]">
+              {/* <Typography variant="body1" color="grey[300]"> */}
+              <Typography variant="body1" color="text.primary">
                 {parseActionMessage(a)}
               </Typography>
             </Box>

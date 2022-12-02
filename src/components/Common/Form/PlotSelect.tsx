@@ -13,7 +13,7 @@ import BigNumber from 'bignumber.js';
 import { useTheme } from '@mui/material/styles';
 import { BEAN, PODS } from '~/constants/tokens';
 import useFarmerListings from '~/hooks/farmer/useFarmerListings';
-import { BeanstalkPalette, FontSize, IconSize } from '~/components/App/muiTheme';
+import { FontSize, IconSize } from '~/components/App/muiTheme';
 import { displayBN, displayFullBN, toStringBaseUnitBN , PlotMap } from '~/util';
 import podIcon from '~/img/beanstalk/pod-icon.svg';
 import Row from '~/components/Common/Row';
@@ -71,7 +71,7 @@ const PlotSelect: FC<PlotSelectProps> = ({
           '& .MuiListItemText-secondary': {
             fontSize: FontSize.base,
             lineHeight: '1.25rem',
-            color: BeanstalkPalette.lightGrey
+            // color: BeanstalkPalette.lightGrey
           },
         }}
       >

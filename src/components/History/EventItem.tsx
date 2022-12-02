@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Link, Stack, Typography } from '@mui/material';
+import { Box, Divider, Link, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import Token from '~/classes/Token';
 import { displayBN, toTokenUnitsBN } from '~/util';
@@ -192,7 +192,7 @@ const EventItem: FC<EventItemProps> = ({ event, account }) => {
   }
 
   return (
-    <>
+    <Box sx={{ position: 'relative' }}>
       <Box py={1}>
         <Row gap={0.2} justifyContent="space-between">
           <Stack direction="column">
@@ -216,7 +216,10 @@ const EventItem: FC<EventItemProps> = ({ event, account }) => {
           </Stack>
         </Row>
       </Box>
-    </>
+      <Box sx={{ position: 'absolute', width: 'calc(100% + 40px)', height: '1px', left: '-20px' }}>
+        <Divider />
+      </Box>
+    </Box>
   );
 };
 

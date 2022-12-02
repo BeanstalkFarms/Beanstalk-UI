@@ -69,7 +69,7 @@ const CancelOrder : FC<{
   const onSubmit = useCallback((destination: FarmToMode) => () => {
     (async () => {
       const txToast = new TransactionToast({
-        loading: 'Cancelling Pod Listing',
+        loading: 'Cancelling Pod Order',
         success: 'Cancellation successful.',
       });
       try {
@@ -97,7 +97,7 @@ const CancelOrder : FC<{
         setLoading(false);
       }
     })();
-  }, [middleware, hide, beanstalk, Bean, order.pricePerPod, order.maxPlaceInLine, order.minFillAmount, refetchFarmerMarket, refetchFarmerBalances, navigate]);
+  }, [Bean, beanstalk, hide, middleware, navigate, order.maxPlaceInLine, order.minFillAmount, order.pricePerPod, refetchFarmerBalances, refetchFarmerMarket]);
 
   return (
     <>

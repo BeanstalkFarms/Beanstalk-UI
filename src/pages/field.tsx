@@ -84,7 +84,7 @@ const FieldPage: FC<{}> = () => {
         <PageHeader
           title="The Field"
           description="Earn yield by lending Beans to Beanstalk"
-          href="https://docs.bean.money/farm/field"
+          href="https://docs.bean.money/almanac/farm/field"
           OuterStackProps={{ direction: 'row' }}
           control={
             <GuideButton

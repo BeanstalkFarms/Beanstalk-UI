@@ -5,8 +5,8 @@ import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { ethers } from 'ethers';
 import { useProvider } from 'wagmi';
-import toast from 'react-hot-toast';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import toast from 'react-hot-toast';
 import TransactionToast from '~/components/Common/TxnToast';
 import TxnAccordion from '~/components/Common/TxnAccordion';
 import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
@@ -21,7 +21,6 @@ import {
   TxnSettings
 } from '~/components/Common/Form';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
-import useChainId from '~/hooks/chain/useChainId';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import useFarmerBalances from '~/hooks/farmer/useFarmerBalances';
 import { QuoteHandler } from '~/hooks/ledger/useQuote';
@@ -35,12 +34,11 @@ import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
 import { ActionType } from '~/util/Actions';
 import Farm, { FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
-import { optimizeFromMode } from '~/util/Farm';
-import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN, parseError, displayTokenAmount, displayBN } from '~/util';
+import { displayFullBN, toStringBaseUnitBN, toTokenUnitsBN, displayTokenAmount, displayBN, optimizeFromMode, parseError } from '~/util';
 import { AppState } from '~/state';
 import { BEAN, ETH, PODS, WETH } from '~/constants/tokens';
 import { ONE_BN, ZERO_BN, POD_MARKET_TOOLTIPS } from '~/constants';
-import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
+import { IconSize } from '~/components/App/muiTheme';
 import SliderField from '~/components/Common/Form/SliderField';
 import FieldWrapper from '~/components/Common/Form/FieldWrapper';
 import IconWrapper from '~/components/Common/IconWrapper';
@@ -61,7 +59,7 @@ const PlaceInLineInputProps = {
   startAdornment: (
     <InputAdornment position="start">
       <Stack sx={{ pr: 0 }} alignItems="center">
-        <Typography color={BeanstalkPalette.black} sx={{ mt: 0.09, mr: -0.2, fontSize: '1.5rem' }}>0
+        <Typography color="text.primary" sx={{ mt: 0.09, mr: -0.2, fontSize: '1.5rem' }}>0
           -
         </Typography>
       </Stack>
@@ -96,7 +94,6 @@ const CreateOrderForm : FC<
   tokenList,
   contract,
 }) => {
-  const chainId = useChainId();
   const getChainToken = useGetChainToken();
   const balances = useFarmerBalances();
 
@@ -310,7 +307,11 @@ const CreateOrder : FC<{}> = () => {
   );
 
   const onSubmit = useCallback(async (values: CreateOrderFormValues, formActions: FormikHelpers<CreateOrderFormValues>) => {
-    let txToast;
+    const txToast = new TransactionToast({
+      loading: 'Ordering Pods...',
+      success: 'Order successful.',
+    });
+
     try {
       middleware.before();
 
@@ -327,10 +328,6 @@ const CreateOrder : FC<{}> = () => {
       const inputToken = tokenData.token;
 
       ///
-      txToast = new TransactionToast({
-        loading: 'Ordering Pods...',
-        success: 'Order successful.',
-      });
       
       /// Create Pod Order directly
       /// We only need one call to do this, so we skip
@@ -394,7 +391,7 @@ const CreateOrder : FC<{}> = () => {
       txToast?.error(err) || toast.error(parseError(err));
       console.error(err);
     }
-  }, [Bean, Eth, balances, beanstalk, refetchFarmerBalances, refetchFarmerMarket, middleware]);
+  }, [Bean, Eth, balances, beanstalk, middleware, refetchFarmerBalances, refetchFarmerMarket]);
   
   return (
     <Formik<CreateOrderFormValues>

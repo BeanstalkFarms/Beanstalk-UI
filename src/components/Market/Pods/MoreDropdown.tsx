@@ -41,7 +41,7 @@ const MoreDropdown: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
       <Button
         disableFocusRipple
         variant="contained"
-        color="light"
+        color="secondary"
         endIcon={<DropdownIcon open={menuVisible} />}
         {...props}
         onClick={toggleMenuAnchor}

@@ -42,7 +42,7 @@ const HeaderItem: React.FC<TokenItemProps> = ({
           )}
           <Tooltip title={tooltip}>
             <HelpOutlineIcon
-              sx={{ color: 'text.secondary', fontSize: FontSize.sm, ml: '3px' }}
+              sx={{ color: 'text.tertiary', fontSize: FontSize.sm, ml: '3px' }}
             />
           </Tooltip>
         </Typography>

@@ -70,7 +70,7 @@ const SiloBalances: React.FC<{}> = () => {
         {...{ pb: 0.5, px: 1, pt: 1.5 }}
         sx={{
           borderBottom: '1px solid',
-          borderColor: BeanstalkPalette.lightestGrey,
+          borderColor: 'divider',
         }}
       >
         <Grid
@@ -130,13 +130,16 @@ const SiloBalances: React.FC<{}> = () => {
                 to={`/silo/${address}`}
                 fullWidth
                 variant="outlined"
-                color="secondary"
+                color="primary"
                 size="large"
                 sx={{
                   textAlign: 'left',
                   px: 0,
                   py: 1,
-                  borderColor: BeanstalkPalette.lightestGrey,
+                  borderColor: 'divider',
+                  '&:hover': {
+                    borderColor: 'unset',
+                  }
                 }}
               >
                 <Grid container alignItems="center">
@@ -237,7 +240,7 @@ const SiloBalances: React.FC<{}> = () => {
                                           }
                                           .{' '}
                                           <Link
-                                            href="https://docs.bean.money/farm/barn#chopping"
+                                            href="https://docs.bean.money/almanac/farm/barn#chopping"
                                             target="_blank"
                                             rel="noreferrer"
                                             underline="hover"
@@ -311,7 +314,7 @@ const SiloBalances: React.FC<{}> = () => {
                           alignItems="center"
                         >
                           <ArrowRightIcon
-                            sx={{ color: BeanstalkPalette.lightestGrey }}
+                            sx={{ color: 'primary.main' }}
                           />
                         </Stack>
                       </Row>
@@ -365,7 +368,7 @@ const SiloBalances: React.FC<{}> = () => {
                       >
                         <ArrowRightIcon
                           sx={{
-                            color: BeanstalkPalette.lightestGrey,
+                            color: 'primary.main',
                             marginTop: '3px',
                           }}
                         />

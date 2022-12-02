@@ -16,40 +16,42 @@ import { UnripeToken } from '~/state/bean/unripe';
 // Types and Helpers
 // -----------------
 
+const colors = BeanstalkPalette.theme.winter;
+
 export const STATE_CONFIG = {
   pooled: [
     'Pooled',
-    '#8CB4CF',
+    colors.chart.purple,
     (name: string) => `${name} in all liquidity pools. Does not include Beans that make up Ripe BEAN:3CRV.`
   ],
   deposited: [
     'Deposited',
-    BeanstalkPalette.logoGreen, 
+    colors.chart.yellow, 
     (name: string) => `${name} that are Deposited in the Silo.`
   ],
   withdrawn: [
     'Withdrawn & Claimable',
-    '#E17E76', 
+    colors.chart.yellowLight, 
     (name: string) => `${name} being Withdrawn from the Silo. At the end of the current Season, Withdrawn ${name} become Claimable.`
   ],
   farmable: [
     'Farm & Circulating',
-    BeanstalkPalette.lightBlue, 
+    colors.chart.green, 
     (name: string) => `Farm ${name} are stored in Beanstalk. Circulating ${name} are in Farmers' wallets.`,
   ],
   budget: [
     'Budget',
-    BeanstalkPalette.supportGreen,
+    colors.chart.yellowLight,
     (name: string) => `Circulating ${name} in the Beanstalk Farms and Bean Sprout multisig wallets.`,
   ],
   ripe: [
     'Ripe',
-    '#DFB385', 
+    colors.primary, 
     (name: string) => `${name} minted as the percentage of Fertilizer sold increases. Ripe ${name} are the ${name} underlying Unripe ${name}. ${name === 'Beans' ? 'Does not include Beans that make up Ripe BEAN:3CRV.' : ''}`
   ],
   ripePooled: [
     'Ripe Pooled',
-    '#c07a30',
+    colors.chart.primaryLight,
     (name: string) => `Pooled ${name} that make up Ripe BEAN:3CRV.`
   ],
 } as const;

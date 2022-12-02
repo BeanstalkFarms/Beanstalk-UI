@@ -154,8 +154,8 @@ const strokeBuffer = 2;
 const axisHeight = 21;
 const backgroundColor = '#da7cff';
 const labelColor = '#340098';
-const tickLabelColor = BeanstalkPalette.lightGrey;
-const axisColor = BeanstalkPalette.lightGrey;
+const tickLabelColor = BeanstalkPalette.theme.winter.lightGreen;
+const axisColor = BeanstalkPalette.theme.winter.lightGreen;
 const yAxisWidth = 57;
 
 const margin = {
@@ -165,26 +165,26 @@ const margin = {
   right: 0,
 };
 
+const chartColors = BeanstalkPalette.theme.winter.chart;
 const defaultChartStyles: ChartMultiStyles = {
   0 : {
-    stroke: BeanstalkPalette.theme.fall.brown,
-    fillPrimary: BeanstalkPalette.theme.fall.lightBrown,
+    stroke: BeanstalkPalette.theme.winter.primary,
+    fillPrimary: chartColors.primaryLight,
     strokeWidth: 2,
   },
   1 : {
-    stroke: BeanstalkPalette.logoGreen,
-    fillPrimary: BeanstalkPalette.lightGreen,
+    stroke: chartColors.purple,
+    fillPrimary: chartColors.purpleLight,
     strokeWidth: 2,
-
   },
   2 : {
-    stroke: BeanstalkPalette.trueRed,
-    fillPrimary: BeanstalkPalette.lightestRed,
+    stroke: chartColors.green,
+    fillPrimary: chartColors.greenLight,
     strokeWidth: 2,
   },
   3 : {
-    stroke: BeanstalkPalette.blue,
-    fillPrimary: BeanstalkPalette.lightestBlue,
+    stroke: chartColors.yellow,
+    fillPrimary: chartColors.yellowLight,
     strokeWidth: 2,
   },
 };
