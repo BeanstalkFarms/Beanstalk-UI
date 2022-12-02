@@ -27,17 +27,17 @@ const ChopConditions: FC<{}> = () => {
                 title="The claim to future Ripe assets you are forfeiting by Chopping."
                 placement="top"
               >
-                <Typography variant="body1" color={BeanstalkPalette.washedRed}>
+                <Typography variant="body1" color={BeanstalkPalette.theme.winter.error}>
                   Chop Penalty&nbsp;
                   <HelpOutlineIcon
-                    sx={{ color: BeanstalkPalette.washedRed, fontSize: FontSize.sm }}
+                    sx={{ color: BeanstalkPalette.theme.winter.error, fontSize: FontSize.sm }}
                   />
                 </Typography>
               </Tooltip>
               {!unripeTokens[urBean.address] ? (
-                <CircularProgress size={16} thickness={5} sx={{ color: BeanstalkPalette.washedRed }} />
+                <CircularProgress size={16} thickness={5} sx={{ color: BeanstalkPalette.theme.winter.error }} />
               ) : (
-                <Typography variant="bodyLarge" fontWeight="400" color={BeanstalkPalette.washedRed}>
+                <Typography variant="bodyLarge" fontWeight="400" color={BeanstalkPalette.theme.winter.error}>
                   {displayBN(unripeTokens[urBean.address].chopPenalty)}%
                 </Typography>
               )}

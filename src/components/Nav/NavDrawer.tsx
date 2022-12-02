@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { BeanstalkPalette, IconSize } from '~/components/App/muiTheme';
+import { IconSize } from '~/components/App/muiTheme';
 import beanstalkLogo from '~/img/tokens/bean-logo-circled.svg';
 import ROUTES from './routes';
 import MenuItemMobile from './MenuItemMobile';
@@ -43,7 +43,7 @@ const NavDrawer: FC<{
         sx={{ height: '100vh' }}
         transitionDuration={0}
       >
-        <Box position="fixed" sx={{ backgroundColor: '#f7fafe', width: '100%', height: '100%', top: 0, overflowY: 'scroll' }}>
+        <Box position="fixed" sx={{ backgroundColor: 'background.paper', width: '100%', height: '100%', top: 0, overflowY: 'scroll' }}>
           {/* Beanstalk Logo & Close Button */}
           <Row alignItems="center" justifyContent="space-between" sx={{ p: 1.5 }}>
             <Box>
@@ -59,7 +59,7 @@ const NavDrawer: FC<{
           <List sx={{ mt: 1, fontSize: 22 }}>
             {/* Individual Items */}
             {ROUTES.top.map((item) => (
-              <Box key={item.path} sx={{ borderBottom: 2, borderColor: BeanstalkPalette.lightBlue }}>
+              <Box key={item.path} sx={{ borderBottom: 2, borderColor: 'divider' }}>
                 <MenuItemMobile
                   item={item}
                   onClick={hideDrawer}
@@ -67,11 +67,11 @@ const NavDrawer: FC<{
               </Box>
             ))}
             {/* More Dropdown */}
-            <Box key="more" sx={{ borderBottom: 2, borderColor: BeanstalkPalette.lightBlue }}>
+            <Box key="more" sx={{ borderBottom: 2, borderColor: 'divider' }}>
               <MenuItemMobile
                 item={{ title: 'More', path: '#' }}
                 onClick={openMore ? hideMore : showMore}
-                endAdornment={<DropdownIcon open={openMore} sx={{ color: 'text.secondary', height: IconSize.small }} />}
+                endAdornment={<DropdownIcon open={openMore} sx={{ color: 'text.tertiary', height: IconSize.small }} />}
               />
               {/* Only show dropdown if openMore === true */}
               <Stack display={openMore ? 'block' : 'none'}>

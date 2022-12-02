@@ -126,11 +126,11 @@ const ChopForm: FC<
             name="destination"
           />
           <Row justifyContent="space-between" px={0.5}>
-            <Typography variant="body1" color="gray">Chop Penalty</Typography>
+            <Typography variant="body1" color="text.tertiary">Chop Penalty</Typography>
             {!unripeTokens[inputToken.address] ? (
-              <CircularProgress size={16} thickness={5} sx={{ color: BeanstalkPalette.washedRed }} />
+              <CircularProgress size={16} thickness={5} sx={{ color: BeanstalkPalette.theme.winter.red }} />
             ) : (
-              <Typography variant="body1" color={BeanstalkPalette.washedRed}>
+              <Typography variant="body1" color={BeanstalkPalette.theme.winter.error}>
                 {displayFullBN(chopPenalty, 5)}%
               </Typography>
             )}

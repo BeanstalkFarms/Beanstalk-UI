@@ -11,13 +11,13 @@ import { FC } from '~/types';
 
 const PaginationItem = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isActive',
-})<{ isActive: boolean }>(({ isActive }) => sx({
+})<{ isActive: boolean }>(({ isActive, theme }) => sx({
   height: '5px',
   minWidth: '20px',
   width: '100%',
   borderRadius: 0.5,
   background: isActive
-    ? BeanstalkPalette.theme.fall.brown
+    ? theme.palette.primary.main
     : BeanstalkPalette.lightestGrey,
   cursor: 'pointer',
 }));

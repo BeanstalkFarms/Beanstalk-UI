@@ -144,6 +144,7 @@ const BuyForm : FC<
               <Alert
                 color="warning"
                 icon={<IconWrapper boxSize={IconSize.medium}><WarningAmberIcon sx={{ fontSize: IconSize.small }} /></IconWrapper>}
+                sx={{ color: 'black' }}
               >The amount of Fertilizer received rounds down to the nearest USDC. {usdc?.toFixed(2)} USDC = {fert?.toFixed(0)} FERT.
               </Alert>
               <Box sx={{ width: '100%', mt: 0 }}>
@@ -154,7 +155,7 @@ const BuyForm : FC<
                   <Divider sx={{ my: 2, opacity: 0.4 }} />
                   <Box sx={{ pb: 1 }}>
                     <Typography variant="body2">
-                      Sprouts become <strong>Rinsable</strong> on a <Link href="https://docs.bean.money/protocol-resources/glossary#pari-passu" target="_blank" rel="noreferrer" underline="hover">pari passu</Link> basis. Upon <strong>Rinse</strong>, each Sprout is redeemed for <span><TokenIcon token={BEAN[1]} css={{ height: IconSize.xs, marginTop: 2.6 }} /></span>1.
+                      Sprouts become <strong>Rinsable</strong> on a <Link href="https://docs.bean.money/almanac/protocol/glossary#pari-passu" target="_blank" rel="noreferrer" underline="hover">pari passu</Link> basis. Upon <strong>Rinse</strong>, each Sprout is redeemed for <span><TokenIcon token={BEAN[1]} css={{ height: IconSize.xs, marginTop: 2.6 }} /></span>1.
                     </Typography>
                   </Box>
                 </TxnAccordion>

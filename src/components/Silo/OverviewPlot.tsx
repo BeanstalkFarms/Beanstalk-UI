@@ -103,13 +103,13 @@ const OverviewPlot: FC<OverviewPlotProps> = ({
               <Stack justifyContent="center" alignItems="center" height="100%" gap={1}>
                 {!account ? (
                   <>
-                    <Typography variant="body1" color="gray">Your {label} will appear here.</Typography>
+                    <Typography variant="body1" color="text.tertiary">Your {label} will appear here.</Typography>
                     <WalletButton showFullText color="primary" sx={{ height: 45 }} />
                   </>
                 ) : loading ? (
                   <CircularProgress variant="indeterminate" thickness={4} color="primary" />
                 ) : empty ? (
-                  <Typography variant="body1" color="gray">
+                  <Typography variant="body1" color="text.tertiary">
                     Receive <TokenIcon token={STALK} />Stalk and <TokenIcon token={SEEDS} />Seeds for Depositing whitelisted assets in the Silo. Stalkholders earn a portion of new Bean mints. Seeds grow into Stalk every Season.
                   </Typography>
                 ) : null}

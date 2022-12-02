@@ -83,7 +83,7 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
     },
     {
       path: 'docs',
-      href: 'https://docs.bean.money',
+      href: 'https://docs.bean.money/almanac',
       title: 'Docs',
       icon: docsIcon,
       small: true
@@ -100,7 +100,7 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
     {
       path: 'disclosures',
       title: 'Disclosures',
-      href: 'https://docs.bean.money/disclosures',
+      href: 'https://docs.bean.money/almanac/disclosures',
       icon: disclosuresIcon
     },
     {

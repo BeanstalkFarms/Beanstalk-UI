@@ -17,6 +17,7 @@ import FieldWrapper from './FieldWrapper';
 import Row from '~/components/Common/Row';
 import { FC } from '~/types';
 import { ZERO_BN } from '~/constants';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 export type TokenInputCustomProps = {
   /**
@@ -38,6 +39,10 @@ export type TokenInputCustomProps = {
   max?: BigNumber | 'use-balance';
   /**
    *
+   */
+  min?: BigNumber;
+  /**
+   * 
    */
   hideBalance?: boolean;
   /**
@@ -79,6 +84,7 @@ const TokenInput: FC<
   hideBalance = false,
   quote,
   max: _max = 'use-balance',
+  min,
   allowNegative = false,
   /// Formik props
   field,
@@ -134,10 +140,11 @@ const TokenInput: FC<
       balance: balance?.toString(),
     });
     if (!amount) return undefined; // if no amount, exit
+    if (min?.gt(amount)) return min; // clamp @ min
     if (!allowNegative && amount?.lt(ZERO_BN)) return ZERO_BN; // clamp negative 
     if (max?.lt(amount)) return max; // clamp @ max
     return amount; // no max; always return amount
-  }, [_max, balance, field.name, allowNegative]);
+  }, [_max, balance, field.name, min, allowNegative]);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     /// If e.target.value is non-empty string, parse it into a BigNumber.
@@ -229,6 +236,7 @@ const TokenInput: FC<
       {/* Input */}
       <TextField
         type="text"
+        color="primary"
         placeholder={placeholder || '0'}
         disabled={isInputDisabled}
         fullWidth // default to fullWidth
@@ -239,7 +247,11 @@ const TokenInput: FC<
         onChange={handleChange}
         InputProps={inputProps}
         onKeyDown={!allowNegative ? preventNegativeInput : undefined}
-        sx={sx}
+        sx={{
+          background: BeanstalkPalette.theme.winter.blueDark,
+          borderRadius: 1,
+          ...sx
+        }}
       />
       {/* Bottom Adornment */}
       {(balance && !hideBalance || quote) && (

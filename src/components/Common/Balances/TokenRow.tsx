@@ -77,13 +77,13 @@ const TokenRow: FC<{
           }}
         />
       )}
-      <Typography variant="body1" color="text.secondary" sx={token ? { display: 'block' } : undefined}>
+      <Typography variant="body1" color="text.primary" sx={token ? { display: 'block' } : undefined}>
         {label}
       </Typography>
       {labelTooltip && (
         <Tooltip title={labelTooltip} placement="top">
           <HelpOutlineIcon
-            sx={{ color: 'text.secondary', fontSize: '14px' }}
+            sx={{ color: 'text.tertiary', fontSize: '14px' }}
           />
         </Tooltip>
       )}

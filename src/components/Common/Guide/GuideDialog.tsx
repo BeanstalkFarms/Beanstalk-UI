@@ -2,7 +2,6 @@ import React from 'react';
 import { Button, DialogProps, Link, Stack, Typography } from '@mui/material';
 import { StyledDialog, StyledDialogTitle, StyledDialogContent } from '~/components/Common/Dialog';
 import { GuideProps } from '~/components/Common/Guide/GuideButton';
-import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 import { FC } from '~/types';
 
@@ -24,9 +23,12 @@ const GuideDialog: FC<DialogProps & GuideProps> = (props) => (
               py: 2,
               display: 'block',
               color: 'inherit',
-              borderColor: BeanstalkPalette.lightestGrey,
+              borderColor: 'divider',
               height: 'auto',
               textAlign: 'center',
+              '&:hover': {
+                borderColor: 'primary.main'
+              }
             }}
           >
             <Typography variant="body1">{guide.title}</Typography>
