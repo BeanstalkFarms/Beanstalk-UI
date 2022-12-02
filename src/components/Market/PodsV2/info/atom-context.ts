@@ -46,6 +46,7 @@ export const marketChartTypeAtom = atom<'depth' | 'listing'>('depth');
 export const marketBottomTabsAtom = atom<PartialOpenState>(0);
 
 // whether the PodOrderAction is Buy or Sell
+// export const podsOrderActionAtom = atom<PodOrderAction | null>(null);
 export const podsOrderActionAtom = atom<PodOrderAction>(PodOrderAction.BUY);
 
 // whether the PodOrderAction is a filling a pod order or creating a new order

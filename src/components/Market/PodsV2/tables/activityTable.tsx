@@ -20,7 +20,6 @@ const marketplaceTableStyle = {
     '& .MuiDataGrid-columnHeaders': {
       outline: 'none',
       border: 'none',
-      
     },
     '& .MuiDataGrid-columnHeaderTitle': {
       fontSize: FontSize.xs,
@@ -31,7 +30,6 @@ const marketplaceTableStyle = {
       fontSize: FontSize.xs,
       color: 'text.primary',
     }
-
   }
 };
 

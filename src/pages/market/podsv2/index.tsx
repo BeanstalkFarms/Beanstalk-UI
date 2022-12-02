@@ -1,56 +1,94 @@
-import React from 'react';
-import { Box, Stack, ThemeProvider } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, CircularProgress, Stack, Typography } from '@mui/material';
+
+import { useAtom } from 'jotai';
 import useNavHeight from '~/hooks/app/usePageDimensions';
-import { FC } from '~/types';
 import useBanner from '~/hooks/app/useBanner';
-import BuySellPods from '~/components/Market/PodsV2/BuySellPods';
-import PodsMarketInfo from '~/components/Market/PodsV2/marketInfo';
-import PodsChart from '~/components/Market/PodsV2/chart/podsChart';
-import { muiThemeCondensed } from '~/components/App/muiTheme';
+import MarketActionsV2 from '~/components/Market/PodsV2/MarketActionsV2';
+import PodsMarketInfo, { sizes } from '~/components/Market/PodsV2/marketInfo';
+import { Module, ModuleHeader } from '~/components/Common/Module';
+import useMarketData from '~/hooks/beanstalk/useMarketData';
+import MarketGraph from '~/components/Market/Pods/MarketGraph';
+import Centered from '~/components/Common/ZeroState/Centered';
+import { podsOrderActionTypeAtom } from '~/components/Market/PodsV2/info/atom-context';
 
-const SECTION_MAX_WIDTH = 375;
+const SECTION_MAX_WIDTH = 550;
 
-const sx = {
-  height: '100%',
-  width: '100%',
-};
-
-const FullPageWrapper: FC<{}> = ({ children }) => {
+const PodsMarketNew: React.FC<{}> = () => {
+  const data = useMarketData();
   const banner = useBanner();
   const navHeight = useNavHeight(!!banner);
 
-  return (
-    
-    <Box
-      sx={{
-        position: 'absolute',
-        width: '100vw',
-        height: `calc(100vh - ${navHeight}px)`,
-        top: '-40px', // TODO: fix me
+  // sizes & calculations
+  const GAP = 0.8;
+  const BOTTOM_HEIGHT = navHeight * 2.5;
+  const CONTAINER_HEIGHT = `calc(100vh - ${BOTTOM_HEIGHT}px)`;
+  const [accordionHeight, setAccordionHeight] = useState(sizes.CLOSED);
+  const CHART_HEIGHT = `calc(100vh - ${(GAP * 10) + BOTTOM_HEIGHT + accordionHeight + 57}px)`;
+  
+  const [orderType, setOrderType] = useAtom(podsOrderActionTypeAtom);
 
-      }}
-      id="full-page-wrapper"
+  const handleSetOrderType = (_e: any, i: number) => {
+    setOrderType(i);
+  };
+
+  return (
+    <Stack
+      px={1}
+      mt={{ xs: 7, md: 0 }}
+      direction={{ xs: 'column-reverse', md: 'row' }}
+      justifyItems="stretch"
+      width="100%"
+      gap={GAP}
+      sx={{ height: CONTAINER_HEIGHT }}
     >
-      <Box sx={{ ...sx, p: 1 }}>{children}</Box>
-    </Box>
-    
+      <Stack direction="column" width="100%" gap={GAP} justifyItems="stretch">
+        <Module>
+          <ModuleHeader>
+            <Typography variant="h4">Overview</Typography>
+          </ModuleHeader>
+          <Box sx={{
+            width: '100%',
+            height: CHART_HEIGHT,
+            position: 'relative',
+            overflow: 'visible'
+          }}>
+            {!data.loading && data.listings !== undefined && data.orders !== undefined ? (
+              <MarketGraph
+                listings={data.listings}
+                orders={data.orders}
+                maxPlaceInLine={data.maxPlaceInLine}
+                maxPlotSize={data.maxPlotSize}
+                harvestableIndex={data.harvestableIndex}
+              />
+            ) : (
+              <Centered>
+                <CircularProgress variant="indeterminate" />
+              </Centered>
+            )}
+          </Box>
+        </Module>
+        <Box height="fit-content">
+          <PodsMarketInfo setHeight={setAccordionHeight} />
+        </Box>
+      </Stack>
+      <Stack
+        direction="column"
+        sx={{ width: { xs: '100%', md: `${SECTION_MAX_WIDTH}px` }, height: '100%', overflow: 'auto' }}
+        gap={GAP}>
+        <MarketActionsV2 />
+        {/* <Module sx={{ p: 2, height: '100%' }}> */}
+        {/*  ORDERBOOK */}
+        {/* </Module> */}
+        {/* <Card sx={{ height: '100%', display: 'flex', alignItems: 'center' }}> */}
+        {/*  <Soon> */}
+        {/*    <Typography textAlign="center" color="gray">Orderbook coming soon.</Typography> */}
+        {/*  </Soon> */}
+        {/* </Card> */}
+        {/* <OrderBook /> */}
+      </Stack>
+    </Stack>
   );
 };
-
-const PodsMarketNew: React.FC<{}> = () => (
-  <ThemeProvider theme={muiThemeCondensed}>
-    <FullPageWrapper>
-      <Stack direction="row" {...sx} gap={1}>
-        <Stack {...sx}>
-          <PodsChart />
-          <PodsMarketInfo />
-        </Stack>
-        <Stack maxWidth={SECTION_MAX_WIDTH} {...sx} gap={1}>
-          <BuySellPods />
-        </Stack>
-      </Stack>
-    </FullPageWrapper>
-  </ThemeProvider>
-);
 
 export default PodsMarketNew;

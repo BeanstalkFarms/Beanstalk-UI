@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Card, Stack, Tab, Tabs } from '@mui/material';
 import { DataGridProps } from '@mui/x-data-grid';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
@@ -46,20 +46,32 @@ const sx = {
   },
 };
 
-const PodsMarketInfo: React.FC<{}> = () => {
+export const sizes = {
+  CLOSED: 56,
+  HALF: 300,
+  FULL: 750,
+};
+
+const PodsMarketInfo: React.FC<{ setHeight: any }> = (props) => {
   const [tab, setTab] = useTabs();
   const [openState, setOpenState] = useAtom(marketBottomTabsAtom);
+  const [size, setSize] = useState(sizes.CLOSED);
+
+  useEffect(() => {
+    const h = openState === 0 ? sizes.CLOSED : openState === 1 ? sizes.HALF : sizes.FULL;
+    setSize(h);
+    props.setHeight(h);
+  }, [openState, props, size]);
 
   return (
     <Stack
       sx={{
         position: 'relative',
         bottom: 0,
-        height: '100%',
-        maxHeight:
-          openState === 0 ? '56px' : openState === 1 ? '300px' : '100%',
-        transition: 'max-height 200ms ease-in',
-        mt: openState !== 2 ? 1 : 0,
+        height: `${size}px`,
+        // FIXME: transition -> nice-to-have
+        // transition: openState === 0 ? 'max-height 200ms ease-in' : null,
+        // mt: openState !== 2 ? 1 : 0,
       }}
     >
       <Card sx={{ height: '100%', width: '100%' }}>
@@ -85,7 +97,7 @@ const PodsMarketInfo: React.FC<{}> = () => {
               >
                 <DropdownIcon open={openState !== 0} />
               </Box>
-              <Box>
+              <Box display={{ xs: 'none', md: 'block' }}>
                 {openState === 1 && (
                   <FullscreenIcon
                     onClick={() => setOpenState(2)}
