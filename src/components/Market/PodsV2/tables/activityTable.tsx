@@ -1,11 +1,20 @@
-import React, {  useMemo } from 'react';
-import { DataGrid, DataGridProps, GridColumns, GridRenderCellParams, GridValueFormatterParams } from '@mui/x-data-grid';
-import { Box } from '@mui/material';
-import { displayFullBN } from '~/util';
+import React, { useEffect, useMemo, useRef } from 'react';
+import {
+  DataGrid,
+  DataGridProps,
+  GridColumns,
+  GridRenderCellParams,
+  GridValueFormatterParams,
+} from '@mui/x-data-grid';
+import { Box, CircularProgress } from '@mui/material';
+import { DateTime } from 'luxon';
+import { displayBN, displayFullBN } from '~/util';
 import { FC } from '~/types';
 import { MarketBaseTableProps } from '~/components/Common/Table/TabTable';
 import ArrowPagination from '~/components/Common/ArrowPagination';
 import { FontSize, FontWeight } from '~/components/App/muiTheme';
+import { ZERO_BN } from '~/constants';
+import Centered from '~/components/Common/ZeroState/Centered';
 
 const marketplaceTableStyle = {
   '& .MuiDataGrid-root': {
@@ -15,7 +24,7 @@ const marketplaceTableStyle = {
       outline: 'none',
       borderBottom: 'none',
       borderTop: 'none',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     '& .MuiDataGrid-columnHeaders': {
       outline: 'none',
@@ -29,170 +38,274 @@ const marketplaceTableStyle = {
     '& .MuiDataGrid-cell': {
       fontSize: FontSize.xs,
       color: 'text.primary',
-    }
-  }
+    },
+    '& .MuiDataGrid-sortIcon': {
+      color: 'text.primary',
+    },
+    '& .MuiDataGrid-menuIconButton': {
+      color: 'text.primary',
+    },
+    '& .MuiDataGrid-iconSeparator': {
+      color: 'transparent',
+    },
+  },
 };
 
-const basicCell = (params: GridRenderCellParams) => <>{params.formattedValue}</>;
+const basicCell = (params: GridRenderCellParams) => (
+  <>{params.formattedValue}</>
+);
 
-const formatDate = new Intl.DateTimeFormat('en-US', {
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-  hour: '2-digit',
-});
+const formatDate = (value: string) => {
+  const date = DateTime.fromMillis((Number(value) * 1000) as number);
+  return date.toLocaleString({
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  });
+};
 
 const MAX_ROWS = 10;
 
 export const POD_MARKET_COLUMNS = {
-  date: (flex: number) => ({
-    field: 'date',
-    headerName: 'DATE',
-    flex: flex,
-    align: 'left',
-    headerAlign: 'left',
-    renderCell: (params: GridRenderCellParams) => (
-      <>{formatDate.format(params.value)}</>
-    ),
-  }) as GridColumns[number],
+  date: (flex: number, align?: 'left' | 'right') =>
+    ({
+      field: 'time',
+      headerName: 'DATE',
+      flex: flex,
+      align: align || 'left',
+      headerAlign: align || 'left',
+      valueFormatter: (params: GridValueFormatterParams) =>
+        formatDate(params.value),
+      renderCell: (params: GridRenderCellParams) => (
+        <>{params.formattedValue}</>
+      ),
+    } as GridColumns[number]),
 
-  action: (flex: number) => ({
-    field: 'action',
-    headerName: 'ACTION',
-    flex: flex,
-    align: 'left',
-    headerAlign: 'left',
-    renderCell: (params: GridRenderCellParams) => (
-      <>{params.value.toString().toUpperCase()}</>
-    )
-  }) as GridColumns[number],
+  action: (flex: number, align?: 'left' | 'right') =>
+    ({
+      field: 'action',
+      headerName: 'ACTION',
+      flex: flex,
+      align: align || 'left',
+      headerAlign: align || 'left',
+      renderCell: (params: GridRenderCellParams) => (
+        <>{params.value.toString().toUpperCase()}</>
+      ),
+    } as GridColumns[number]),
 
-  type: (flex: number) => ({
-    field: 'type',
-    headerName: 'TYPE',
-    flex: flex,
-    align: 'left',
-    headerAlign: 'left',
-    renderCell: (params: GridRenderCellParams) => (
-      <>{params.value.toString().toUpperCase()}</>
-    ),
-  }) as GridColumns[number],
+  type: (flex: number, align?: 'left' | 'right') =>
+    ({
+      field: 'type',
+      headerName: 'TYPE',
+      flex: flex,
+      align: align || 'left',
+      headerAlign: align || 'left',
+      renderCell: (params: GridRenderCellParams) => (
+        <>{params.value.toString().toUpperCase()}</>
+      ),
+    } as GridColumns[number]),
 
-  priceType: (flex: number) => ({
-    field: 'priceType',
-    headerName: 'PRICE TYPE',
-    flex: flex,
-    align: 'left',
-    headerAlign: 'left',
-    renderCell: (params: GridRenderCellParams) => (
-      <>{params.value.toUpperCase()}</>
-    ),
-  }) as GridColumns[number],
+  entity: (flex: number, align?: 'left' | 'right') =>
+    ({
+      field: 'entity',
+      headerName: 'TYPE',
+      flex: flex,
+      align: align || 'left',
+      headerAlign: align || 'left',
+      renderCell: (params: GridRenderCellParams) => (
+        <>{params.value.toString().toUpperCase()}</>
+      ),
+    } as GridColumns[number]),
 
-  price: (flex: number) => ({
-    field: 'price',
-    headerName: 'PRICE',
-    flex: flex,
-    align: 'left',
-    headerAlign: 'left',
-    valueFormatter: (params: GridValueFormatterParams) => displayFullBN(params.value, 2),
-    renderCell: (params: GridRenderCellParams) => basicCell(params),
-  }) as GridColumns[number],
+  priceType: (flex: number, align?: 'left' | 'right') =>
+    ({
+      field: 'priceType',
+      headerName: 'PRICE TYPE',
+      flex: flex,
+      align: align || 'left',
+      headerAlign: align || 'left',
+      renderCell: (params: GridRenderCellParams) => (
+        <>{params.value.toUpperCase()}</>
+      ),
+    } as GridColumns[number]),
 
-  amount: (flex: number) => ({
-    field: 'amount',
-    headerName: 'AMOUNT',
-    flex: flex,
-    align: 'left',
-    headerAlign: 'left',
-    valueFormatter: (params: GridValueFormatterParams) => displayFullBN(params.value, 2),
-    renderCell: (params: GridRenderCellParams) => basicCell(params),
-  }) as GridColumns[number],
+  price: (flex: number, align?: 'left' | 'right') =>
+    ({
+      field: 'pricePerPod',
+      headerName: 'PRICE',
+      flex: flex,
+      align: align || 'left',
+      headerAlign: align || 'left',
+      valueFormatter: (params: GridValueFormatterParams) =>
+        displayBN(params.value || ZERO_BN),
+      renderCell: (params: GridRenderCellParams) => basicCell(params),
+    } as GridColumns[number]),
 
-  placeInLine: (flex: number) => ({
-    field: 'placeInLine',
-    headerName: 'PLACE IN LINE',
-    flex: flex,
-    align: 'left',
-    headerAlign: 'left',
-    valueFormatter: (params: GridValueFormatterParams) => displayFullBN(params.value, 2),
-    renderCell: (params: GridRenderCellParams) => basicCell(params),
-  }) as GridColumns[number],
+  amount: (flex: number, align?: 'left' | 'right') =>
+    ({
+      field: 'numPods',
+      headerName: 'AMOUNT',
+      flex: flex,
+      align: align || 'left',
+      headerAlign: align || 'left',
+      valueFormatter: (params: GridValueFormatterParams) =>
+        displayFullBN(params.value, 2),
+      renderCell: (params: GridRenderCellParams) => basicCell(params),
+    } as GridColumns[number]),
 
-  expiry: (flex: number) => ({
-    field: 'expiry',
-    headerName: 'EXPIRY',
-    flex: flex,
-    align: 'left',
-    type: 'string',
-    headerAlign: 'left',
-    renderCell: (params: GridRenderCellParams) => (
-      <>{params.value}</>
-    ),
-  }) as GridColumns[number],
+  placeInLine: (flex: number, align?: 'left' | 'right') =>
+    ({
+      field: 'placeInPodline',
+      headerName: 'PLACE IN LINE',
+      flex: flex,
+      align: align || 'left',
+      headerAlign: align || 'left',
+      renderCell: (params: GridRenderCellParams) => <>{params.value}</>,
+    } as GridColumns[number]),
 
-  fillPct: (flex: number) => ({
-    field: 'fillPct',
-    headerName: 'FILL %',
-    flex: flex,
-    align: 'left',
-    headerAlign: 'left',
-    valueFormatter: (params: GridValueFormatterParams) => `${displayFullBN(params.value, 2)}%`,
-    renderCell: (params: GridRenderCellParams) => basicCell(params),
-  }) as GridColumns[number],
+  expiry: (flex: number, align?: 'left' | 'right') =>
+    ({
+      field: 'expiry',
+      headerName: 'EXPIRY',
+      flex: flex,
+      align: align || 'left',
+      type: 'string',
+      headerAlign: align || 'left',
+      renderCell: (params: GridRenderCellParams) => <>{params.value}</>,
+    } as GridColumns[number]),
 
-  total: (flex: number) => ({
-    field: 'total',
-    headerName: 'TOTAL',
-    flex: flex,
-    align: 'left',
-    headerAlign: 'left',
-    valueFormatter: (params: GridValueFormatterParams) => displayFullBN(params.value, 2),
-    renderCell: (params: GridRenderCellParams) => basicCell(params),
-  }) as GridColumns[number],
+  fillPct: (flex: number, align?: 'left' | 'right') =>
+    ({
+      field: 'fillPct',
+      headerName: 'FILL %',
+      flex: flex,
+      align: align || 'left',
+      headerAlign: align || 'left',
+      valueFormatter: (params: GridValueFormatterParams) =>
+        `${displayFullBN(params.value, 2)}%`,
+      renderCell: (params: GridRenderCellParams) => basicCell(params),
+    } as GridColumns[number]),
 
-  status: (flex: number) => ({  
-    field: 'status',
-    headerName: 'STATUS',
-    flex: flex,
-    align: 'right',
-    headerAlign: 'right',
-    renderCell: (params: GridRenderCellParams) => (
-      <>{params.value.toString().toUpperCase()}</>
-    ),
-  }) as GridColumns[number],
+  total: (flex: number, align?: 'left' | 'right') =>
+    ({
+      field: 'totalValue',
+      headerName: 'TOTAL',
+      flex: flex,
+      align: align || 'left',
+      headerAlign: align || 'left',
+      valueFormatter: (params: GridValueFormatterParams) =>
+        `$${displayBN(params.value || ZERO_BN)}`,
+      renderCell: (params: GridRenderCellParams) => basicCell(params),
+    } as GridColumns[number]),
+
+  status: (flex: number, align?: 'left' | 'right') =>
+    ({
+      field: 'status',
+      headerName: 'STATUS',
+      flex: flex,
+      align: align || 'left',
+      headerAlign: align || 'left',
+      renderCell: (params: GridRenderCellParams) => (
+        <>{params.value.toString().toUpperCase()}</>
+      ),
+    } as GridColumns[number]),
 };
 
-const ActivityTable: FC<MarketBaseTableProps & DataGridProps> = ({ rows, columns, maxRows, onRowClick, ...props }) => {
+const useListenToScollEvents = (
+  ref: React.MutableRefObject<HTMLDivElement | null>
+) => {
+  const onScroll = () => {
+    if (ref.current) {
+      const { scrollTop, scrollHeight, clientHeight } = ref.current;
+      if (scrollTop + clientHeight === scrollHeight) {
+        // TO SOMETHING HERE
+        console.log('Reached bottom');
+      }
+    }
+  };
+
+  console.log(ref.current?.scrollTop);
+
+  return onScroll;
+};
+
+type IProps = {
+  initializing?: boolean;
+  fetchMore?: () => void;
+} & MarketBaseTableProps &
+  DataGridProps;
+
+const ActivityTable: FC<IProps> = ({
+  rows,
+  columns,
+  maxRows,
+  onRowClick,
+  initializing,
+  fetchMore,
+  ...props
+}) => {
   const tableHeight = useMemo(() => {
     if (!rows || rows.length === 0) return '300px';
-    return 39 + 58 + Math.min(rows.length, maxRows || MAX_ROWS) * 58;
-  }, [rows, maxRows]);
+    const baseHeight =
+      39 + 58 + Math.min(rows.length, maxRows || MAX_ROWS) * 58;
+    if (fetchMore) return baseHeight + 200;
+    return baseHeight;
+  }, [rows, maxRows, fetchMore]);
 
-  return (
-    <Box sx={{
-      px: 0.2,
-      height: tableHeight,
-      width: '100%',
-      ...marketplaceTableStyle,
-    }}>
-      <DataGrid
-        columns={columns}
-        rows={rows}
-        pageSize={maxRows}
-        density="compact"
-        onRowClick={onRowClick}
-        initialState={{
-          sorting: {
-            sortModel: [{ field: 'date', sort: 'asc' }],
-          }
+  const gridRef = useRef<any>(null);
+
+  useEffect(() => {
+    const onScroll = () => {
+      console.log('scrolling...');
+    };
+    const r = gridRef.current;
+
+    if (r) {
+      r.addEventListener('scroll', onScroll);
+    }
+
+    return () => {
+      r?.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+
+  return initializing ? (
+    <Centered>
+      <CircularProgress />
+    </Centered>
+  ) : (
+    <>
+      <Box
+        sx={{
+          px: 0.2,
+          height: tableHeight,
+          width: '100%',
+          ...marketplaceTableStyle,
         }}
-        components={{
-          Pagination: ArrowPagination
-        }}
-        {...props}
-      />
-    </Box>
+        ref={gridRef}
+      >
+        <DataGrid
+          columns={columns}
+          rows={rows}
+          pageSize={maxRows}
+          density="compact"
+          onRowClick={onRowClick}
+          initialState={{
+            sorting: {
+              sortModel: [{ field: 'date', sort: 'asc' }],
+            },
+          }}
+          components={{
+            Pagination: ArrowPagination,
+          }}
+          {...props}
+        />
+      </Box>
+    </>
   );
 };
 

@@ -13,9 +13,9 @@ import useSiloTokenToFiat from '~/hooks/beanstalk/useSiloTokenToFiat';
 
 export type MarketEvent = {
   id: string;
-  entity: 'listing' | 'order' | 'unknown';
+  entity: 'listing' | 'order' | 'fill order' | 'fill listing' | 'unknown';
   /** Event action type */
-  action: 'create' | 'fill' | 'cancel' | 'unknown';
+  action: 'create' | 'cancel' | 'unknown' | 'buy' | 'sell';
   /** ex: Pod Order Created */
   label?: string;
   numPods?: BigNumber;
@@ -25,7 +25,7 @@ export type MarketEvent = {
   time?: number;
   /** Txn hash */
   hash: string;
-}
+};
 
 export const QUERY_AMOUNT = 50;
 export const MAX_TIMESTAMP = '9999999999999'; // 166 455 351 3803
@@ -142,6 +142,7 @@ const useMarketplaceEventData = () => {
               hash: e.hash,
               entity: 'order' as const,
               action: 'cancel' as const,
+              type: 'order' as const,
               label: 'Pod Order Cancelled',
               numPods: toTokenUnitsBN(podOrder?.amount, BEAN[1].decimals),
               placeInPodline: `0 - ${displayBN(toTokenUnitsBN(podOrder?.maxPlaceInLine, BEAN[1].decimals))}`,
@@ -159,8 +160,8 @@ const useMarketplaceEventData = () => {
             return {
               id: e.id,
               hash: e.hash,
-              entity: 'order' as const,
-              action: 'fill' as const,
+              entity: 'fill order' as const,
+              action: 'sell' as const,
               label: 'Pod Order Filled',
               numPods: toTokenUnitsBN(podOrder?.filledAmount, BEAN[1].decimals),
               placeInPodline: displayBN(toTokenUnitsBN(new BigNumber(e.index), BEAN[1].decimals).minus(harvestableIndex)),
@@ -205,8 +206,8 @@ const useMarketplaceEventData = () => {
             return {
               id: e.id,
               hash: e.hash,
-              entity: 'listing' as const,
-              action: 'fill' as const,
+              entity: 'fill listing' as const,
+              action: 'buy' as const,
               label: 'Pod Listing Filled',
               numPods: toTokenUnitsBN(podListing?.filledAmount, BEAN[1].decimals),
               placeInPodline: `${displayBN(toTokenUnitsBN(podListing?.index, BEAN[1].decimals).minus(harvestableIndex))}`,
