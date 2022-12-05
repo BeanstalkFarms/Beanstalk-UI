@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
   DataGrid,
   DataGridProps,
@@ -213,33 +213,20 @@ export const POD_MARKET_COLUMNS = {
         <>{params.value.toString().toUpperCase()}</>
       ),
     } as GridColumns[number]),
-};
-
-const useListenToScollEvents = (
-  ref: React.MutableRefObject<HTMLDivElement | null>
-) => {
-  const onScroll = () => {
-    if (ref.current) {
-      const { scrollTop, scrollHeight, clientHeight } = ref.current;
-      if (scrollTop + clientHeight === scrollHeight) {
-        // TO SOMETHING HERE
-        console.log('Reached bottom');
-      }
-    }
-  };
-
-  console.log(ref.current?.scrollTop);
-
-  return onScroll;
+  
 };
 
 type IProps = {
+  tableId: string;
+  scrollRef: React.MutableRefObject<HTMLDivElement | null>;
   initializing?: boolean;
   fetchMore?: () => void;
 } & MarketBaseTableProps &
   DataGridProps;
 
 const ActivityTable: FC<IProps> = ({
+  tableId,
+  scrollRef,
   rows,
   columns,
   maxRows,
@@ -256,22 +243,25 @@ const ActivityTable: FC<IProps> = ({
     return baseHeight;
   }, [rows, maxRows, fetchMore]);
 
-  const gridRef = useRef<any>(null);
-
   useEffect(() => {
-    const onScroll = () => {
+    const onScr = () => {
       console.log('scrolling...');
     };
-    const r = gridRef.current;
+    const virtualScroller = scrollRef?.current?.querySelector('.MuiDataGrid-virtualScroller');
 
-    if (r) {
-      r.addEventListener('scroll', onScroll);
+    if (initializing) return;
+    
+    if (virtualScroller) {
+      console.log('isRendered...');
+      virtualScroller?.addEventListener('scroll', onScr);
+    } else {
+      console.log('isNotRendered...');
     }
 
     return () => {
-      r?.removeEventListener('scroll', onScroll);
+      virtualScroller?.removeEventListener('scroll', onScr);
     };
-  }, []);
+  }, [scrollRef, initializing]);
 
   return initializing ? (
     <Centered>
@@ -280,15 +270,16 @@ const ActivityTable: FC<IProps> = ({
   ) : (
     <>
       <Box
+        ref={scrollRef}
         sx={{
           px: 0.2,
           height: tableHeight,
           width: '100%',
           ...marketplaceTableStyle,
         }}
-        ref={gridRef}
       >
         <DataGrid
+          aria-label="activity-table"
           columns={columns}
           rows={rows}
           pageSize={maxRows}

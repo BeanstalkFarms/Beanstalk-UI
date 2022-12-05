@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import ActivityTable, { POD_MARKET_COLUMNS } from './activityTable';
 import useMarketplaceEventData from '~/hooks/beanstalk/useMarketplaceEventData';
 
@@ -24,9 +24,12 @@ const MarketActivity: React.FC<{}> = () => {
   }, [data, loading]);
 
   const initializing = data.length === 0 || harvestableIndex.lte(0);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
   return (
     <ActivityTable
+      scrollRef={scrollRef}
+      tableId="market-activity"
       initializing={initializing}
       fetchMore={fetchMoreData}
       columns={columns}

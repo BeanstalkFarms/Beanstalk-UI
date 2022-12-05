@@ -13,6 +13,7 @@ import Row from '~/components/Common/Row';
 import { marketBottomTabsAtom } from './info/atom-context';
 import DropdownIcon from '~/components/Common/DropdownIcon';
 import MarketActivity from './tables/MarketActivity';
+import MyPodMarketActivity from './tables/MyPodMarketActivity';
 
 const COLS = POD_MARKET_COLUMNS;
 
@@ -112,8 +113,7 @@ const PodsMarketInfo: React.FC<{ setHeight: any }> = (props) => {
               </Box>
             </Row>
           </Row>
-          {/* {tab === 0 && <YourPodOrders />} */}
-          {tab === 0 && <MarketActivity />}
+          {tab === 0 && <MyPodMarketActivity />}
           {tab === 1 && <MarketActivity />}
         </Stack>
       </Card>
