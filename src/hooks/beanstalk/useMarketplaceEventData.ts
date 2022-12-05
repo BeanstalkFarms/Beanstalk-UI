@@ -101,6 +101,34 @@ const useMarketplaceEventData = () => {
     setLoading(false);
   }, [getEvents, getListings, getOrders]);
 
+  const fetchWithIds = useCallback(async ({ orderIds, listingIds }: { orderIds?: string[], listingIds?: string[] }) => {
+    const promises = [];
+    setLoading(true);
+    
+    orderIds?.length && 
+      promises.push(
+        new Promise(() => 
+          getOrders({  
+            variables: { 
+              historyIDs: orderIds 
+            } 
+          })
+        )
+      ); 
+    listingIds?.length &&
+      promises.push(
+        new Promise(() => 
+          getListings({ 
+            variables: { 
+              historyIDs: listingIds 
+            } 
+          })
+        )
+      );
+    promises.length && await Promise.all(promises);
+    setLoading(false);
+  }, [getListings, getOrders]);
+
   const fetchMoreData = useCallback(async () => {
     // look up the next set of marketplaceEvents using the last known timestamp
     const first = QUERY_AMOUNT;
@@ -257,6 +285,7 @@ const useMarketplaceEventData = () => {
     loading,
     error,
     fetchMoreData,
+    fetchWithIds,
     page
   };
 };

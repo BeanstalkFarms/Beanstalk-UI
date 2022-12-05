@@ -15,8 +15,6 @@ const columns = [
 ];
 
 const MarketActivity: React.FC<{}> = () => {
-  // const rows = useFakePodMarketActivity();
-
   const { data, harvestableIndex, loading, fetchMoreData } =
     useMarketplaceEventData();
 
