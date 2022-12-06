@@ -8,7 +8,6 @@ import {
   BeanstalkPalette,
   FontSize,
   FontWeight,
-  hexToRgba,
 } from '~/components/App/muiTheme';
 import ScrollPaginationControl from '~/components/Common/ScrollPaginationControl';
 import Centered from '~/components/Common/ZeroState/Centered';
@@ -17,17 +16,15 @@ import AuthEmptyState from '~/components/Common/ZeroState/AuthEmptyState';
 
 const scrollbarStyles = {
   '& ::-webkit-scrollbar': {
-    width: '8px',
+    width: '4px',
   },
   '& ::-webkit-scrollbar-track': {
-    width: '8px',
+    width: '4px',
     background: BeanstalkPalette.theme.winter.paleBlue,
   },
   '& ::-webkit-scrollbar-thumb': {
     borderRadius: 2,
     background: BeanstalkPalette.theme.winter.primary,
-    // outline: '1px solid',
-    // outlineColor: BeanstalkPalette.theme.winter.blueDark,
   },
   '& ::-webkit-scrollbar-thumb:hover': {
     background: BeanstalkPalette.theme.winter.blueLight,
@@ -47,12 +44,12 @@ const marketplaceTableStyle = {
     },
 
     // Column Header
-    '& .MuiDataGrid-columnHeader': {
+    '& .MuiDataGrid-columnHeaders': {
       outline: 'none',
       border: 'none',
       '&:focused, active': {
-        border: 'none'
-      }
+        border: 'none',
+      },
     },
     '& .MuiDataGrid-columnHeader:focus': {
       outline: 'none',
@@ -69,8 +66,9 @@ const marketplaceTableStyle = {
       fontSize: FontSize.xs,
       color: 'text.primary',
       '&:focused': {
-        border: 'none'
-      }
+        outline: 'none',
+      },
+      border: 'none',
     },
     '& .MuiDataGrid-cell:focus': {
       outline: 'none',
@@ -79,8 +77,8 @@ const marketplaceTableStyle = {
 
     // Row
     '& .MuiDataGrid-row': {
-      borderBottom: '1px solid',
-      borderColor: hexToRgba(BeanstalkPalette.lightGrey, 0.2),
+      borderBottom: 'none',
+      // borderColor: hexToRgba(BeanstalkPalette.lightGrey, 0.8),
     },
     // Icon
     '& .MuiDataGrid-sortIcon': {
@@ -173,6 +171,7 @@ const ActivityTable: FC<
           },
         }}
         components={{
+          // We add pagination for now b/c Mui-DataGrid doesn't support maxRows > 100 if not on pro plan
           Footer: ScrollPaginationControl,
           NoRowsOverlay: EmptyOverlay,
           LoadingOverlay: EmptyOverlay,

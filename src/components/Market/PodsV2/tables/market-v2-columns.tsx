@@ -5,7 +5,7 @@ import {
   GridValueFormatterParams,
 } from '@mui/x-data-grid';
 import { DateTime } from 'luxon';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { displayBN, displayFullBN } from '~/util';
 import { ZERO_BN } from '~/constants';
 import TokenIcon from '~/components/Common/TokenIcon';
@@ -48,7 +48,9 @@ export const POD_MARKET_COLUMNS = {
       valueFormatter: (params: GridValueFormatterParams) =>
         formatDate(params.value),
       renderCell: (params: GridRenderCellParams) => (
-        <>{params.formattedValue}</>
+        <Typography color="text.tertiary" sx={{ fontSize: 'inherit' }}>
+          {params.formattedValue}
+        </Typography>
       ),
     } as GridColumns[number]),
 

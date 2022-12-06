@@ -16,21 +16,24 @@ const columns = [
 ];
 
 const MarketActivity: React.FC<{}> = () => {
-  const { data, harvestableIndex, loading, fetchMoreData } =
+  const { data, harvestableIndex, fetchMoreData } =
     useMarketplaceEventData();
 
   // map row data to have index due to duplicated ids causing rendering issues
   const rows = useMemo(() => {
-    if (!data) return [];
-    const _rows = data.filter((d) => d.time);
-    return _rows.map((r, i) => ({
+    if (!data || !data.length) return [];
+    // const _rows = data.filter((d) => d.time);
+    return data.map((r, i) => ({
       idx: i,
       ...r,
     }));
   }, [data]);
 
+  const isInitializing = rows.length === 0 || harvestableIndex.lte(0);
+
   return (
     <ActivityTable
+      loading={isInitializing}
       fetchMore={fetchMoreData}
       columns={columns}
       rows={rows}
