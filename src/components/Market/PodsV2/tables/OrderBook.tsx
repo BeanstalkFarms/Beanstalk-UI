@@ -1,4 +1,4 @@
-import { Box, Button, Card, Divider, Stack, Typography } from '@mui/material';
+import { Box, Card, Divider, Stack, Typography } from '@mui/material';
 import {
   GridRenderCellParams,
   GridColumns,
@@ -6,10 +6,14 @@ import {
   DataGridProps,
 } from '@mui/x-data-grid';
 import React, { useMemo, useState } from 'react';
-import { BeanstalkPalette, FontSize, FontWeight } from '~/components/App/muiTheme';
+import { FontSize, FontWeight } from '~/components/App/muiTheme';
 import ArrowPagination from '~/components/Common/ArrowPagination';
 import Row from '~/components/Common/Row';
-import PercentDropdown from '~/components/Market/PodsV2/PercentDropdown';
+import SelectionGroup from '~/components/Common/SingleSelectionGroup';
+import useMarketDataWithPrecision, {
+  OrderbookPrecision,
+} from '~/hooks/beanstalk/useMarketDataWithPrecision';
+import marketplaceTableStyle from '../common/tableStyles';
 
 const orderbookTableStyle = {
   '& .MuiDataGrid-root': {
@@ -37,14 +41,7 @@ const orderbookTableStyle = {
   },
 };
 
-const percentOptions = [
-  '0.01',
-  '0.02',
-  '0.03',
-  '0.04',
-  '0.05',
-  '0.06'
-];
+const percentOptions = ['0.01', '0.02', '0.03', '0.04', '0.05', '0.06'];
 
 const OrderbookCols = {
   price: (flex: number) =>
@@ -108,10 +105,17 @@ const useFakeOrders = () =>
       depthPods: i,
     }));
 
+const precisionOptions: OrderbookPrecision[] = [0.01, 0.05, 0.1];
+
 const OrderBook: React.FC<{}> = () => {
   const orders = useFakeOrders();
+  const [precision, setPrecision] = useState<OrderbookPrecision>(
+    precisionOptions[0]
+  );
+
   const [numberFormat, setNumberFormat] = useState(0);
   const [percent, setPercent] = useState(percentOptions[0]);
+  const data = useMarketDataWithPrecision(precision);
 
   const ROWS_PER_PAGE = 50;
 
@@ -140,47 +144,12 @@ const OrderBook: React.FC<{}> = () => {
           <Typography variant="bodySmall" fontWeight={FontWeight.bold}>
             ORDERBOOK
           </Typography>
-          <Row gap={0.8}>
-            <Card sx={{ borderRadius: 0.4, height: '100%', p: 0.2 }}>
-              <Row gap={0.4}>
-                <Button
-                  variant="text"
-                  size="small"
-                  onClick={() => setNumberFormat(0)}
-                  sx={{
-                    py: 0.2,
-                    px: 0.3,
-                    borderRadius: 0.4,
-                    minWidth: 'unset',
-                    backgroundColor: numberFormat === 0 ? BeanstalkPalette.lightYellow : null,
-                    '&:hover': {
-                      backgroundColor: numberFormat === 0 ? BeanstalkPalette.lightYellow : null,
-                    }
-                  }}
-                >
-                  <Typography variant="caption" color="text.primary">MIN/MAX</Typography>
-                </Button>
-                <Button
-                  variant="text"
-                  size="small"
-                  onClick={() => setNumberFormat(1)}
-                  sx={{
-                    py: 0.2,
-                    px: 0.3,
-                    borderRadius: 0.4,
-                    minWidth: 'unset',
-                    backgroundColor: numberFormat === 1 ? BeanstalkPalette.lightYellow : null,
-                    '&:hover': {
-                      backgroundColor: numberFormat === 1 ? BeanstalkPalette.lightYellow : null,
-                    }
-                  }}
-                >
-                  <Typography variant="caption" color="text.primary">AVG</Typography>
-                </Button>
-              </Row>
-            </Card>
-            <PercentDropdown options={percentOptions} selectedOption={percent} setOption={setPercent} />
-          </Row>
+          <SelectionGroup
+            options={precisionOptions}
+            value={precision}
+            setValue={setPrecision}
+            fontSize="sm"
+          />
         </Row>
         <Divider />
         <Box
@@ -188,7 +157,7 @@ const OrderBook: React.FC<{}> = () => {
             px: 0.2,
             height: tableHeight,
             width: '100%',
-            ...orderbookTableStyle,
+            ...marketplaceTableStyle,
           }}
         >
           <DataGrid
@@ -196,8 +165,7 @@ const OrderBook: React.FC<{}> = () => {
             rows={orders}
             pageSize={ROWS_PER_PAGE}
             density="compact"
-            onRowClick={() => {
-            }}
+            onRowClick={() => {}}
             initialState={{
               sorting: {
                 sortModel: [{ field: 'price', sort: 'asc' }],
@@ -209,7 +177,6 @@ const OrderBook: React.FC<{}> = () => {
           />
         </Box>
       </Stack>
-  
     </Card>
   );
 };

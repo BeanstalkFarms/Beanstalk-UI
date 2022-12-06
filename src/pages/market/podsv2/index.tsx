@@ -11,6 +11,7 @@ import { Module, ModuleHeader } from '~/components/Common/Module';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
 import MarketGraph from '~/components/Market/Pods/MarketGraph';
 import Centered from '~/components/Common/ZeroState/Centered';
+import OrderBook from '~/components/Market/PodsV2/tables/OrderBook';
 
 const SECTION_MAX_WIDTH = 550;
 
@@ -96,7 +97,7 @@ const PodsMarketNew: React.FC<{}> = () => {
         {/*    <Typography textAlign="center" color="gray">Orderbook coming soon.</Typography> */}
         {/*  </Soon> */}
         {/* </Card> */}
-        {/* <OrderBook /> */}
+        <OrderBook />
       </Stack>
     </Stack>
   );
