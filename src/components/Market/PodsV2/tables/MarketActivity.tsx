@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import ActivityTable, { POD_MARKET_COLUMNS } from './activityTable';
 import useMarketplaceEventData from '~/hooks/beanstalk/useMarketplaceEventData';
 
@@ -18,24 +18,22 @@ const MarketActivity: React.FC<{}> = () => {
   const { data, harvestableIndex, loading, fetchMoreData } =
     useMarketplaceEventData();
 
+  // map row data to have index due to duplicated ids causing rendering issues
   const rows = useMemo(() => {
-    if (!data || loading) return [];
-    return data.filter((d) => d.time);
-  }, [data, loading]);
-
-  const initializing = data.length === 0 || harvestableIndex.lte(0);
-  const scrollRef = useRef<HTMLDivElement | null>(null);
+    if (!data) return [];
+    const _rows = data.filter((d) => d.time);
+    return _rows.map((r, i) => ({
+      idx: i,
+      ...r,
+    }));
+  }, [data]);
 
   return (
     <ActivityTable
-      scrollRef={scrollRef}
-      tableId="market-activity"
-      initializing={initializing}
       fetchMore={fetchMoreData}
       columns={columns}
       rows={rows}
-      loading={false}
-      getRowId={(row) => row.id}
+      getRowId={(row) => row.idx}
     />
   );
 };

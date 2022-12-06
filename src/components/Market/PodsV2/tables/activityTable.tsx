@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import {
   DataGrid,
   DataGridProps,
@@ -11,9 +11,9 @@ import { DateTime } from 'luxon';
 import { displayBN, displayFullBN } from '~/util';
 import { FC } from '~/types';
 import { MarketBaseTableProps } from '~/components/Common/Table/TabTable';
-import ArrowPagination from '~/components/Common/ArrowPagination';
 import { FontSize, FontWeight } from '~/components/App/muiTheme';
 import { ZERO_BN } from '~/constants';
+import ScrollPaginationControl from '~/components/Common/ScrollPaginationControl';
 import Centered from '~/components/Common/ZeroState/Centered';
 
 const marketplaceTableStyle = {
@@ -71,6 +71,15 @@ const formatDate = (value: string) => {
 const MAX_ROWS = 10;
 
 export const POD_MARKET_COLUMNS = {
+  id: (flex: number) =>
+    ({
+      field: 'idx',
+      headerName: 'ID',
+      flex,
+      align: 'left',
+      headerAlign: 'left',
+      renderCell: (params: GridRenderCellParams) => <>{params.value}</>,
+    } as GridColumns[number]),
   date: (flex: number, align?: 'left' | 'right') =>
     ({
       field: 'time',
@@ -213,25 +222,24 @@ export const POD_MARKET_COLUMNS = {
         <>{params.value.toString().toUpperCase()}</>
       ),
     } as GridColumns[number]),
-  
 };
 
+const EmptyOverlay: React.FC<{}> = () => (
+  <Centered>
+    <CircularProgress />
+  </Centered>
+);
+
 type IProps = {
-  tableId: string;
-  scrollRef: React.MutableRefObject<HTMLDivElement | null>;
-  initializing?: boolean;
   fetchMore?: () => void;
 } & MarketBaseTableProps &
   DataGridProps;
 
 const ActivityTable: FC<IProps> = ({
-  tableId,
-  scrollRef,
   rows,
   columns,
   maxRows,
   onRowClick,
-  initializing,
   fetchMore,
   ...props
 }) => {
@@ -239,35 +247,12 @@ const ActivityTable: FC<IProps> = ({
     if (!rows || rows.length === 0) return '300px';
     const baseHeight =
       39 + 58 + Math.min(rows.length, maxRows || MAX_ROWS) * 58;
-    if (fetchMore) return baseHeight + 200;
     return baseHeight;
-  }, [rows, maxRows, fetchMore]);
+  }, [rows, maxRows]);
 
-  useEffect(() => {
-    const onScr = () => {
-      console.log('scrolling...');
-    };
-    const virtualScroller = scrollRef?.current?.querySelector('.MuiDataGrid-virtualScroller');
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
-    if (initializing) return;
-    
-    if (virtualScroller) {
-      console.log('isRendered...');
-      virtualScroller?.addEventListener('scroll', onScr);
-    } else {
-      console.log('isNotRendered...');
-    }
-
-    return () => {
-      virtualScroller?.removeEventListener('scroll', onScr);
-    };
-  }, [scrollRef, initializing]);
-
-  return initializing ? (
-    <Centered>
-      <CircularProgress />
-    </Centered>
-  ) : (
+  return (
     <>
       <Box
         ref={scrollRef}
@@ -279,6 +264,7 @@ const ActivityTable: FC<IProps> = ({
         }}
       >
         <DataGrid
+          hideFooterSelectedRowCount
           aria-label="activity-table"
           columns={columns}
           rows={rows}
@@ -287,11 +273,18 @@ const ActivityTable: FC<IProps> = ({
           onRowClick={onRowClick}
           initialState={{
             sorting: {
-              sortModel: [{ field: 'date', sort: 'asc' }],
+              sortModel: [{ field: 'time', sort: 'asc' }],
             },
           }}
           components={{
-            Pagination: ArrowPagination,
+            Footer: ScrollPaginationControl,
+            NoRowsOverlay: EmptyOverlay,
+          }}
+          componentsProps={{
+            footer: {
+              scrollRef,
+              handleFetchMore: fetchMore,
+            },
           }}
           {...props}
         />
