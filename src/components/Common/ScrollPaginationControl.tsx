@@ -1,4 +1,3 @@
-import { CircularProgress } from '@mui/material';
 import {
   useGridApiContext,
   useGridSelector,
@@ -9,17 +8,31 @@ import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import ArrowPagination from '~/components/Common/ArrowPagination';
 import Centered from '~/components/Common/ZeroState/Centered';
 
-type IProps = {
+type IScrollPaginationControl = {
+  /**
+   * ref of the data grid container element
+   */
   scrollRef: React.MutableRefObject<HTMLDivElement | null>;
-  handleFetchMore?: () => void;
+  /**
+   * async function to fetch more data when scrolled to the bottom of the table
+   */
+  handleFetchMore?: () => Promise<void>;
 };
 
 type ControllerCache = {
+  /**
+   * keep track of how many rows there were prior to calling `handleFetchMore`
+   */
   numRowsPrev: number;
+  /**
+   * keep track of whether or not page number can update
+   */
   mayUpdatePage: boolean;
 };
 
-const ScrollPaginationControl: React.FC<IProps> = ({
+const CONTROL_HEIGHT = 52;
+
+const ScrollPaginationControl: React.FC<IScrollPaginationControl> = ({
   scrollRef,
   handleFetchMore,
 }) => {
@@ -28,23 +41,22 @@ const ScrollPaginationControl: React.FC<IProps> = ({
   const page = useGridSelector(apiRef, gridPageSelector);
   const pageCount = useGridSelector(apiRef, gridPageCountSelector);
 
-  // use useRef here instead to avoid re-rendering
-  const cacheRef = useRef<ControllerCache>({
-    /**
-     * keep track of how many rows there were prior to calling `handleFetchMore`
-     */
-    numRowsPrev: 0,
-    /**
-     * keep track of whether or not page number can update
-     */
-    mayUpdatePage: false,
-  });
+  // use useRef here instead to avoid unnecessary re-renders
+  const cacheRef = useRef<ControllerCache | null>(null);
 
-  // get the Mui Data Grid scroll container element
-  const el = useMemo(
-    () => scrollRef?.current?.querySelector('.MuiDataGrid-virtualScroller'),
-    [scrollRef]
-  );
+  // initialize cacheRef on mount & clean up on unmount
+  useEffect(() => {
+    cacheRef.current = {
+      numRowsPrev: 0,
+      mayUpdatePage: false,
+    };
+    return () => {
+      cacheRef.current = null;
+    };
+  }, []);
+
+  // get the Mui Data-Grid-scroll container element in which the scrollbar is rendered
+  const el = scrollRef?.current?.querySelector('.MuiDataGrid-virtualScroller');
 
   const hasNextPage = useMemo(
     () => !(page === pageCount - 1 || pageCount === 0),
@@ -54,8 +66,8 @@ const ScrollPaginationControl: React.FC<IProps> = ({
   /*
    * Handle scroll events. If scrolled to the bottom, call 'fetchMore()' if provided
    */
-  const handleOnScroll = useCallback(() => {
-    if (!handleFetchMore) return;
+  const handleOnScroll = useCallback(async () => {
+    if (!handleFetchMore || !cacheRef?.current) return;
     const [sh, st, ch] = [el?.scrollHeight, el?.scrollTop, el?.clientHeight];
     if (sh && st && ch) {
       const isBottom = sh - st === ch;
@@ -68,17 +80,21 @@ const ScrollPaginationControl: React.FC<IProps> = ({
   }, [handleFetchMore, el, hasNextPage]);
 
   /**
-   * handle update page number if `handleFetchMore` was called.
+   * handle update page number & cached values if `handleFetchMore` was called.
    */
   const handleUpdatePage = useCallback(() => {
-    const rowDiff = numRows !== cacheRef.current.numRowsPrev;
-    const pageDiff = page + 1 !== pageCount;
-    if (pageDiff && hasNextPage) {
-      apiRef.current.setPage(page + 1);
+    if (!cacheRef?.current) return;
+    const isRowDiff = numRows !== cacheRef.current.numRowsPrev;
+    const isPageDiff = page + 1 !== pageCount;
+
+    if (isPageDiff && hasNextPage) {
+      // set as pageCount - 1 for cases where new rows exceed the a single page size
+      apiRef.current.setPage(pageCount - 1);
       cacheRef.current.mayUpdatePage = false;
       cacheRef.current.numRowsPrev = numRows;
-    } else if (rowDiff && !hasNextPage) {
+
       // only update rows here if we are on the last page
+    } else if (isRowDiff && !hasNextPage) {
       cacheRef.current.numRowsPrev = numRows;
     }
   }, [apiRef, hasNextPage, numRows, page, pageCount]);
@@ -98,20 +114,16 @@ const ScrollPaginationControl: React.FC<IProps> = ({
    * update page number if necessary
    */
   useEffect(() => {
-    cacheRef.current.mayUpdatePage && handleUpdatePage();
+    if (cacheRef.current && cacheRef.current.mayUpdatePage) {
+      handleUpdatePage();
+    }
   }, [handleUpdatePage]);
 
   return (
-    <Centered height={52} width="100%">
+    <Centered height={CONTROL_HEIGHT} width="100%">
       <ArrowPagination />
     </Centered>
   );
 };
-
-export const DataGridEmptyOverlay = () => (
-  <Centered height="100%">
-    <CircularProgress />
-  </Centered>
-);
 
 export default ScrollPaginationControl;

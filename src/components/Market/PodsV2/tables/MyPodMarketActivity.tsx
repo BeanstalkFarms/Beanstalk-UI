@@ -25,6 +25,8 @@ const MyPodMarketActivity: React.FC<{}> = () => {
       columns={podMarketActivityColumns}
       rows={rows}
       getRowId={(row) => row.id}
+      isUserTable
+      title="Orders and Listings"
     />
   );
 };

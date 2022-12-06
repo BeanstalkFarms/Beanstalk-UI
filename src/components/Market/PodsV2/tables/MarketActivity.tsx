@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
-import ActivityTable, { POD_MARKET_COLUMNS } from './activityTable';
+import ActivityTable from './activityTable';
 import useMarketplaceEventData from '~/hooks/beanstalk/useMarketplaceEventData';
+import { POD_MARKET_COLUMNS } from './market-v2-columns';
 
 const C = POD_MARKET_COLUMNS;
 
@@ -11,7 +12,7 @@ const columns = [
   C.price(1),
   C.amount(1),
   C.placeInLine(1),
-  C.total(0.75, 'right'),
+  C.total(0.75, 'left'),
 ];
 
 const MarketActivity: React.FC<{}> = () => {

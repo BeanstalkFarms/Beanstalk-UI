@@ -6,7 +6,7 @@ import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import { useAtom } from 'jotai';
 
 import useTabs from '~/hooks/display/useTabs';
-import { POD_MARKET_COLUMNS } from './tables/activityTable';
+import { POD_MARKET_COLUMNS } from './tables/market-v2-columns';
 
 import { FontSize, FontWeight } from '~/components/App/muiTheme';
 import Row from '~/components/Common/Row';
@@ -58,7 +58,12 @@ const PodsMarketInfo: React.FC<{ setHeight: any }> = (props) => {
   const [size, setSize] = useState(sizes.CLOSED);
 
   useEffect(() => {
-    const h = openState === 0 ? sizes.CLOSED : openState === 1 ? sizes.HALF : sizes.FULL;
+    const h =
+      openState === 0
+        ? sizes.CLOSED
+        : openState === 1
+        ? sizes.HALF
+        : sizes.FULL;
     setSize(h);
     props.setHeight(h);
   }, [openState, props, size]);
