@@ -69,7 +69,7 @@ export function deposit(
   // DEPOSIT and RECEIVE_REWARDS always come last
   summary.actions.push({
     type: ActionType.DEPOSIT,
-    amount: summary.bdv,
+    amount: summary.amount,
     // from the perspective of the deposit, the token is "coming in".
     token: to, 
   });
