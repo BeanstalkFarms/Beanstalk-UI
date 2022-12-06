@@ -1,35 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Card, Stack, Tab, Tabs } from '@mui/material';
-import { DataGridProps } from '@mui/x-data-grid';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import { useAtom } from 'jotai';
 
 import useTabs from '~/hooks/display/useTabs';
-import { POD_MARKET_COLUMNS } from './tables/market-v2-columns';
 
 import { FontSize, FontWeight } from '~/components/App/muiTheme';
 import Row from '~/components/Common/Row';
 import { marketBottomTabsAtom } from './info/atom-context';
 import DropdownIcon from '~/components/Common/DropdownIcon';
 import MarketActivity from './tables/MarketActivity';
-import MyPodMarketActivity from './tables/MyPodMarketActivity';
-
-const COLS = POD_MARKET_COLUMNS;
-
-export const podMarketActivityColumns: DataGridProps['columns'] = [
-  COLS.date(2),
-  COLS.action(1),
-  COLS.type(1),
-  COLS.priceType(1),
-  COLS.price(1),
-  COLS.amount(1),
-  COLS.placeInLine(1),
-  COLS.expiry(1),
-  COLS.fillPct(1),
-  COLS.total(1),
-  COLS.status(1),
-];
+import FarmerMarketActivity from './tables/FarmerMarketActivity';
 
 const sx = {
   tabs: {
@@ -52,7 +34,7 @@ export const sizes = {
   FULL: 750,
 };
 
-const PodsMarketInfo: React.FC<{ setHeight: any }> = (props) => {
+const MarketActivityV2: React.FC<{ setHeight: any }> = (props) => {
   const [tab, setTab] = useTabs();
   const [openState, setOpenState] = useAtom(marketBottomTabsAtom);
   const [size, setSize] = useState(sizes.CLOSED);
@@ -118,7 +100,7 @@ const PodsMarketInfo: React.FC<{ setHeight: any }> = (props) => {
               </Box>
             </Row>
           </Row>
-          {tab === 0 && <MyPodMarketActivity />}
+          {tab === 0 && <FarmerMarketActivity />}
           {tab === 1 && <MarketActivity />}
         </Stack>
       </Card>
@@ -126,4 +108,4 @@ const PodsMarketInfo: React.FC<{ setHeight: any }> = (props) => {
   );
 };
 
-export default PodsMarketInfo;
+export default MarketActivityV2;

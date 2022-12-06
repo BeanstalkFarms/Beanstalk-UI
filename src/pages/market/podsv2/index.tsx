@@ -4,7 +4,9 @@ import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import useNavHeight from '~/hooks/app/usePageDimensions';
 import useBanner from '~/hooks/app/useBanner';
 import MarketActionsV2 from '~/components/Market/PodsV2/MarketActionsV2';
-import PodsMarketInfo, { sizes } from '~/components/Market/PodsV2/marketInfo';
+import MarketActivityV2, {
+  sizes,
+} from '~/components/Market/PodsV2/MarketActivityV2';
 import { Module, ModuleHeader } from '~/components/Common/Module';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
 import MarketGraph from '~/components/Market/Pods/MarketGraph';
@@ -73,7 +75,7 @@ const PodsMarketNew: React.FC<{}> = () => {
           </Box>
         </Module>
         <Box height="fit-content">
-          <PodsMarketInfo setHeight={setAccordionHeight} />
+          <MarketActivityV2 setHeight={setAccordionHeight} />
         </Box>
       </Stack>
       <Stack

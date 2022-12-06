@@ -6,14 +6,18 @@ import {
 } from '@mui/x-data-grid';
 import { DateTime } from 'luxon';
 import { Box, Typography } from '@mui/material';
-import { displayBN, displayFullBN } from '~/util';
+import BigNumber from 'bignumber.js';
+import { displayBN } from '~/util';
 import { ZERO_BN } from '~/constants';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN } from '~/constants/tokens';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
+import { IFarmerMarketEvent } from '~/hooks/farmer/useFarmerMarketplaceEvents';
 
-const basicCell = (params: GridRenderCellParams) => (
-  <>{params.formattedValue}</>
-);
+const statusColorMap = {
+  active: BeanstalkPalette.logoGreen,
+  cancelled: 'text.secondary',
+};
 
 const formatDate = (value: string) => {
   const date = DateTime.fromMillis((Number(value) * 1000) as number);
@@ -29,15 +33,6 @@ const formatDate = (value: string) => {
 };
 
 export const POD_MARKET_COLUMNS = {
-  id: (flex: number) =>
-    ({
-      field: 'idx',
-      headerName: 'ID',
-      flex,
-      align: 'left',
-      headerAlign: 'left',
-      renderCell: (params: GridRenderCellParams) => <>{params.value}</>,
-    } as GridColumns[number]),
   date: (flex: number, align?: 'left' | 'right') =>
     ({
       field: 'time',
@@ -102,28 +97,44 @@ export const POD_MARKET_COLUMNS = {
       ),
     } as GridColumns[number]),
 
-  price: (flex: number, align?: 'left' | 'right') =>
+  pricePerPod: (flex: number, align?: 'left' | 'right') =>
     ({
       field: 'pricePerPod',
       headerName: 'PRICE',
       flex: flex,
       align: align || 'left',
       headerAlign: align || 'left',
-      valueFormatter: (params: GridValueFormatterParams) =>
-        displayBN(params.value || ZERO_BN),
-      renderCell: (params: GridRenderCellParams) => basicCell(params),
+      renderCell: (params: GridRenderCellParams) => (
+        <Box display="inline-flex" sx={{ gap: 0.25, alignItems: 'center' }}>
+          <TokenIcon token={BEAN[1]} />
+          {displayBN(params.value || ZERO_BN)}
+        </Box>
+      ),
     } as GridColumns[number]),
 
-  amount: (flex: number, align?: 'left' | 'right') =>
+  numPods: (flex: number, align?: 'left' | 'right') =>
     ({
       field: 'numPods',
       headerName: 'AMOUNT',
       flex: flex,
       align: align || 'left',
       headerAlign: align || 'left',
-      valueFormatter: (params: GridValueFormatterParams) =>
-        displayFullBN(params.value, 2),
-      renderCell: (params: GridRenderCellParams) => basicCell(params),
+      renderCell: (params: GridRenderCellParams) => (
+        <>{displayBN(params.value)} PODS</>
+      ),
+    } as GridColumns[number]),
+
+  numPodsActive: (flex: number, align?: 'left' | 'right') =>
+    ({
+      field: 'remainingAmount',
+      headerName: 'AMOUNT',
+      flex: flex,
+      type: 'number',
+      align: align || 'left',
+      headerAlign: align,
+      renderCell: (params: GridRenderCellParams) => (
+        <>{displayBN(params.value)} PODS</>
+      ),
     } as GridColumns[number]),
 
   placeInLine: (flex: number, align?: 'left' | 'right') =>
@@ -133,18 +144,29 @@ export const POD_MARKET_COLUMNS = {
       flex: flex,
       align: align || 'left',
       headerAlign: align || 'left',
-      renderCell: (params: GridRenderCellParams) => <>{params.value}</>,
+      renderCell: (params: GridRenderCellParams<any, IFarmerMarketEvent>) => {
+        const strVal =
+          params.value instanceof BigNumber
+            ? displayBN(params.value)
+            : params.value;
+        const isFixed = params.row.priceType === 'fixed';
+        const start = isFixed ? 0 : '*'; // FIX ME: this doesn't show correct value for dynamic pricing
+        return <>{`${start} - ${strVal}`}</>;
+      },
     } as GridColumns[number]),
 
   expiry: (flex: number, align?: 'left' | 'right') =>
     ({
       field: 'expiry',
-      headerName: 'EXPIRY',
+      headerName: 'EXPIRY @',
       flex: flex,
       align: align || 'left',
       type: 'string',
       headerAlign: align || 'left',
-      renderCell: (params: GridRenderCellParams) => <>{params.value}</>,
+      renderCell: (params: GridRenderCellParams) => {
+        const expiry = params.value as BigNumber;
+        return <>{expiry.gt(0) ? `${displayBN(expiry)} Pods` : '-'}</>;
+      },
     } as GridColumns[number]),
 
   fillPct: (flex: number, align?: 'left' | 'right') =>
@@ -154,9 +176,21 @@ export const POD_MARKET_COLUMNS = {
       flex: flex,
       align: align || 'left',
       headerAlign: align || 'left',
-      valueFormatter: (params: GridValueFormatterParams) =>
-        `${displayFullBN(params.value, 2)}%`,
-      renderCell: (params: GridRenderCellParams) => basicCell(params),
+      renderCell: (params: GridRenderCellParams) => {
+        const progress = params.value as BigNumber;
+        return (
+          <Typography
+            sx={{
+              fontSize: 'inherit',
+              color: params.value.gt(0)
+                ? 'text.primary'
+                : BeanstalkPalette.grey,
+            }}
+          >
+            {progress.toFixed(1)}%
+          </Typography>
+        );
+      },
     } as GridColumns[number]),
 
   total: (flex: number, align?: 'left' | 'right') =>
@@ -166,12 +200,10 @@ export const POD_MARKET_COLUMNS = {
       flex: flex,
       align: align || 'left',
       headerAlign: align || 'left',
-      valueFormatter: (params: GridValueFormatterParams) =>
-        displayBN(params.value || ZERO_BN),
       renderCell: (params: GridRenderCellParams) => (
         <Box display="inline-flex" sx={{ gap: 0.25, alignItems: 'center' }}>
           <TokenIcon token={BEAN[1]} />
-          {basicCell(params)}
+          {displayBN(params.value || ZERO_BN)}
         </Box>
       ),
     } as GridColumns[number]),
@@ -183,8 +215,18 @@ export const POD_MARKET_COLUMNS = {
       flex: flex,
       align: align || 'left',
       headerAlign: align || 'left',
-      renderCell: (params: GridRenderCellParams) => (
-        <>{params.value.toString().toUpperCase()}</>
-      ),
+      renderCell: (params: GridRenderCellParams) => {
+        const key = params.value.toLowerCase();
+        const color =
+          key in statusColorMap
+            ? statusColorMap[key as keyof typeof statusColorMap]
+            : 'text.primary';
+
+        return (
+          <Typography sx={{ fontSize: 'inherit', color: color }}>
+            {params.value.toString().toUpperCase()}
+          </Typography>
+        );
+      },
     } as GridColumns[number]),
 };

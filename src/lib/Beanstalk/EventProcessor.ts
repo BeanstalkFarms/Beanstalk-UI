@@ -586,7 +586,13 @@ export default class EventProcessor {
 
   PodListingCancelled(event: Simplify<PodListingCancelledEvent>) {
     const id = event.args.index.toString();
-    if (this.listings[id]) delete this.listings[id];
+    if (this.listings[id]) {
+      this.listings[id] = {
+        ...this.listings[id],
+        status: MarketStatus.Cancelled,
+      };
+      // delete this.listings[id];
+    }
   }
 
   /**
@@ -664,7 +670,13 @@ export default class EventProcessor {
 
   PodOrderCancelled(event: Simplify<PodOrderCancelledEvent>) {
     const id = event.args.id.toString();
-    if (this.orders[id]) delete this.orders[id];
+    if (this.orders[id]) {
+      this.orders[id] = {
+        ...this.orders[id],
+        status: MarketStatus.Cancelled,
+      };
+      // delete this.orders[id];
+    }
   }
   
   PodOrderFilled(event: Simplify<PodOrderFilledEvent>) {
