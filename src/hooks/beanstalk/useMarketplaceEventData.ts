@@ -107,7 +107,7 @@ const useMarketplaceEventData = () => {
     const first = QUERY_AMOUNT;
     const after = (
       eventsQuery.data?.marketplaceEvents?.length
-        ? eventsQuery.data?.marketplaceEvents[eventsQuery.data?.marketplaceEvents.length - 1].timestamp
+        ? eventsQuery.data?.marketplaceEvents[eventsQuery.data?.marketplaceEvents.length - 1].createdAt
         : MAX_TIMESTAMP
     );
     console.debug('Fetch more: ', first, after);
@@ -136,13 +136,13 @@ const useMarketplaceEventData = () => {
               pricePerPod: toTokenUnitsBN(e.pricePerPod, BEAN[1].decimals),
               totalBeans,
               totalValue: getUSD(BEAN[1], totalBeans),
-              time: e.timestamp,
+              time: e.createdAt,
             };
           }
           case 'PodOrderCancelled': {
             const podOrder = podOrdersById[e.historyID];
             const totalBeans = toTokenUnitsBN(
-              podOrder?.amount, BEAN[1].decimals
+              podOrder?.podAmount, BEAN[1].decimals
             )?.multipliedBy(
               toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals)
             );
@@ -153,18 +153,18 @@ const useMarketplaceEventData = () => {
               action: 'cancel' as const,
               type: 'order' as const,
               label: 'Pod Order Cancelled',
-              numPods: toTokenUnitsBN(podOrder?.amount, BEAN[1].decimals),
+              numPods: toTokenUnitsBN(podOrder?.podAmount, BEAN[1].decimals),
               placeInPodline: `0 - ${displayBN(toTokenUnitsBN(podOrder?.maxPlaceInLine, BEAN[1].decimals))}`,
               pricePerPod: toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals),
               totalBeans,
               totalValue: getUSD(BEAN[1], totalBeans),
-              time: e.timestamp,
+              time: e.createdAt,
             };
           }
           case 'PodOrderFilled': {
             const podOrder = podOrdersById[e.historyID];
             const totalBeans =  getUSD(BEAN[1], toTokenUnitsBN(
-              podOrder?.filledAmount, BEAN[1].decimals
+              podOrder?.podAmountFilled, BEAN[1].decimals
             )?.multipliedBy(toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals)));
             return {
               id: e.id,
@@ -172,12 +172,12 @@ const useMarketplaceEventData = () => {
               entity: 'fill order' as const,
               action: 'sell' as const,
               label: 'Pod Order Filled',
-              numPods: toTokenUnitsBN(podOrder?.filledAmount, BEAN[1].decimals),
+              numPods: toTokenUnitsBN(podOrder?.podAmountFilled, BEAN[1].decimals),
               placeInPodline: displayBN(toTokenUnitsBN(new BigNumber(e.index), BEAN[1].decimals).minus(harvestableIndex)),
               pricePerPod: toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals),
               totalBeans,
               totalValue: getUSD(BEAN[1], totalBeans),
-              time: e.timestamp,
+              time: e.createdAt,
             };
           }
           case 'PodListingCreated': {
@@ -193,7 +193,7 @@ const useMarketplaceEventData = () => {
               pricePerPod: toTokenUnitsBN(e.pricePerPod, BEAN[1].decimals),
               totalBeans,
               totalValue: getUSD(BEAN[1], totalBeans),
-              time: e.timestamp,
+              time: e.createdAt,
             };
           }
           case 'PodListingCancelled': {
@@ -210,7 +210,7 @@ const useMarketplaceEventData = () => {
               pricePerPod: toTokenUnitsBN(new BigNumber(podListing?.pricePerPod || 0), BEAN[1].decimals),
               totalBeans,
               totalValue: getUSD(BEAN[1], totalBeans),
-              time: e.timestamp,
+              time: e.createdAt,
             };
           }
           case 'PodListingFilled': {
@@ -227,7 +227,7 @@ const useMarketplaceEventData = () => {
               pricePerPod: toTokenUnitsBN(new BigNumber(podListing?.pricePerPod || 0), BEAN[1].decimals),
               totalBeans,
               totalValue: getUSD(BEAN[1], totalBeans),
-              time: e.timestamp,
+              time: e.createdAt,
             };
           }
           default: {

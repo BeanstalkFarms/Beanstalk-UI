@@ -33,6 +33,7 @@ const Crosses: FC<{height?: SeasonPlotBaseProps['height']}> = ({ height }) => {
       queryConfig={queryConfig}
       StatProps={statProps}
       LineChartProps={lineChartProps}
+      dateKey="timestamp"
     />
   );
 };

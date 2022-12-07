@@ -10,7 +10,7 @@ query SeasonalHarvestedPods($season_lte: Int, $first: Int) {
   ) {
     id
     season
-    timestamp
-    totalHarvestedPods
+    createdAt
+    harvestedPods
   }
 }

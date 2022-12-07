@@ -68,7 +68,7 @@ const MarketActivityPage: FC<{}> = () => {
                   <ActivityTableHeader tab={tab} handleChangeTab={handleChangeTab} />
                   {/* Table body */}
                   {filteredData.map((e) => (
-                    <ActivityTableRow key={e.id} event={e} />
+                    <ActivityTableRow key={`${e.id}-${e.hash}`} event={e} />
                   ))}
                   <Box p={1}>
                     {loading ? (

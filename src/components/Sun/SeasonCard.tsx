@@ -12,7 +12,7 @@ import { FC } from '~/types';
 export interface SeasonCardProps {
   season: BigNumber;
   rewardBeans: BigNumber | undefined;
-  newSoil: BigNumber | undefined;
+  issuedSoil: BigNumber | undefined;
   temperature: BigNumber | undefined;
   deltaTemperature: BigNumber | undefined;
   podRate: BigNumber;
@@ -23,7 +23,7 @@ export interface SeasonCardProps {
 const SeasonCard: FC<SeasonCardProps> = ({ 
   season,
   rewardBeans,
-  newSoil,
+  issuedSoil,
   podRate,
   temperature,
   deltaTemperature,
@@ -90,10 +90,10 @@ const SeasonCard: FC<SeasonCardProps> = ({
           {/* Soil */}
           <Grid item xs={3} md={2} textAlign="right">
             <Typography variant="bodySmall">
-              {newSoil
-                ? newSoil.lt(0.01)
+              {issuedSoil
+                ? issuedSoil.lt(0.01)
                   ? '<0.01'
-                  : displayFullBN(newSoil, 2, 2) 
+                  : displayFullBN(issuedSoil, 2, 2) 
                 : '-'}
             </Typography>
           </Grid>

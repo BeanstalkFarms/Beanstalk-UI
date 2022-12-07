@@ -14,6 +14,16 @@ export type Snapshot = {
 };
 
 /**
+ * snapshot type from Beanstalk subgraph
+ */
+export type SnapshotBeanstalk = {
+  id: string;
+  season: number;
+  createdAt: string;
+  hourlyDepositedBDV: string;
+}
+
+/**
  * 
  */
 export const addBufferSeasons = (
@@ -62,7 +72,7 @@ export const interpolateFarmerStalk = (
   const maxSeason = season.toNumber(); // current season
   let currStalk : BigNumber = ZERO_BN;
   let currSeeds : BigNumber = ZERO_BN;
-  let currTimestamp = DateTime.fromJSDate(secondsToDate(snapshots[j].timestamp));
+  let currTimestamp = DateTime.fromJSDate(secondsToDate(snapshots[j].createdAt));
   let nextSeason : number | undefined = minSeason;
   
   // Add buffer points before the first snapshot
@@ -73,9 +83,9 @@ export const interpolateFarmerStalk = (
     if (s === nextSeason) {
       // Reached a data point for which we have a snapshot.
       // Use the corresponding total stalk value.
-      currStalk = toTokenUnitsBN(snapshots[j].totalStalk, STALK.decimals);
-      currSeeds = toTokenUnitsBN(snapshots[j].totalSeeds, SEEDS.decimals);
-      currTimestamp = DateTime.fromJSDate(secondsToDate(snapshots[j].timestamp));
+      currStalk = toTokenUnitsBN(snapshots[j].stalk, STALK.decimals);
+      currSeeds = toTokenUnitsBN(snapshots[j].seeds, SEEDS.decimals);
+      currTimestamp = DateTime.fromJSDate(secondsToDate(snapshots[j].createdAt));
       j += 1;
       nextSeason = snapshots[j]?.season || undefined;
     } else {
@@ -107,7 +117,7 @@ export const interpolateFarmerStalk = (
  * and   (b) seasonal Bean price data.
  */
 export const interpolateFarmerDepositedValue = (
-  snapshots: Snapshot[], // oldest season first
+  snapshots: SnapshotBeanstalk[], // oldest season first
   _prices: SeasonalPriceQuery['seasons'], // most recent season first
   itemizeByToken : boolean = true,
   bufferSeasons : number = 24,
@@ -146,7 +156,7 @@ export const interpolateFarmerDepositedValue = (
     const thisPriceEntity = prices[currPriceIndex];
     const nextPriceEntity = prices[currPriceIndex + 1];
     const thisPriceBN     = new BigNumber(thisPriceEntity.price);
-    const thisTimestamp   = DateTime.fromJSDate(secondsToDate(thisPriceEntity.timestamp));
+    const thisTimestamp   = DateTime.fromJSDate(secondsToDate(thisPriceEntity.createdAt));
     let thisBDV = currBDV;
 
     // If there's another price and the season associated with the price is
