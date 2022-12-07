@@ -5,6 +5,7 @@ import { AppState } from '~/state';
 import { POD_MARKET_COLUMNS } from './market-activity-columns';
 import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import useFarmerMarketplaceEvents from '~/hooks/farmer/useFarmerMarketplaceEvents';
+import useFarmerMarket from '~/hooks/farmer/useFarmerMarket';
 
 const C = POD_MARKET_COLUMNS;
 const columns = [
@@ -29,6 +30,8 @@ const FarmerMarketActivity: React.FC<{}> = () => {
     AppState,
     AppState['_farmer']['market']['listings']
   >((state) => state._farmer.market.listings);
+
+  const { data: farmerMarket } = useFarmerMarket();
 
   console.debug('orders: ', orders);
   console.debug('listings: ', listings);

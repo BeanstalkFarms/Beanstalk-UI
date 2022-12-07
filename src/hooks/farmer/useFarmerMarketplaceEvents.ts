@@ -100,9 +100,9 @@ export default function useFarmerMarketplaceEvents() {
         pricePerPod: l.pricePerPod,
         remainingAmount: l.remainingAmount,
         placeInPodline: l.index.minus(harvestableIndex),
-        numPods: l.totalAmount.times(l.pricePerPod),
+        numPods: l.amount.times(l.pricePerPod),
         expiry: l.maxHarvestableIndex.minus(harvestableIndex),
-        fillPct: l.filledAmount.div(l.totalAmount).times(100),
+        fillPct: l.filledAmount.div(l.amount).times(100),
         totalBeans: l.remainingAmount.times(l.pricePerPod),
         status: l.status,
       });
