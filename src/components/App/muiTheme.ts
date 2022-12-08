@@ -84,7 +84,7 @@ const remBase = (n: number) => `${(n / BASE_FONT_SIZE).toFixed(4)}rem`;
 export const hexToRgba = (hex: string, alpha?: number) => {
   const stripped = hex.replace('#', '').split('');
   if (stripped.length % 3 !== 0 || stripped.length > 6) {
-    throw new Error('input hex value but value was invalid');
+    throw new Error(`unexpected invalid hex value: ${hex}`);
   }
 
   const isCondensedHex = stripped.length === 3;

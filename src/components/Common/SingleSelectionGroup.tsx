@@ -1,11 +1,10 @@
 import React, { useCallback } from 'react';
 import {
-  FormControl,
-  FormControlProps,
   MenuItem,
   SelectProps,
   SelectChangeEvent,
   Select,
+  Box,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FontSize } from '../App/muiTheme';
@@ -17,32 +16,28 @@ export type ISelectionGroup<T extends TSelect> = {
   value: T;
   options: T[];
   setValue: React.Dispatch<React.SetStateAction<T>>;
-  formControlProps?: FormControlProps;
   fontSize?: keyof typeof FontSize;
 };
 
-const stylesSmall = {
-  '& .MuiInputBase-root': {
-    borderRadius: '4px',
+const selectionGroupStyles = {
+  '& .MuiOutlinedInput-notchedOutline': {
+    outline: '1px',
+    borderColor: 'divider',
+  },
+  '& .MuiSelect-nativeInput': {
+    borderWidth: '1px',
     borderColor: 'primary.main',
   },
   '& .MuiInputBase-input': {
     paddingLeft: 1,
     paddingTop: 0.5,
     paddingBottom: 0.5,
-    borderColor: 'primary.main',
-    '&:hover': {
-      borderColor: 'primary.main',
-    },
+    border: '1px solid',
+    borderRadius: '4px',
+    borderColor: 'divider',
   },
   '& .MuiOutlinedInput-root': {
-    borderColor: 'primary.main',
-    '&:hover': {
-      borderColor: 'primary.main',
-    },
-  },
-  '& .MuiInputBase-input:focus, hover, active': {
-    borderColor: 'primary.main',
+    borderRadius: '4px',
   },
   '& .MuiSelect-icon': {
     fontSize: 'inherit',
@@ -54,7 +49,6 @@ export default function SingleSelectionGroup<T extends TSelect>({
   value,
   options,
   setValue,
-  formControlProps,
   size = 'small',
   fontSize,
   ...props
@@ -67,17 +61,17 @@ export default function SingleSelectionGroup<T extends TSelect>({
   );
 
   return (
-    <FormControl {...formControlProps}>
+    <Box sx={selectionGroupStyles}>
       <Select
+        color="primary"
         size={size}
         value={value}
         onChange={handleOnChange}
         IconComponent={ExpandMoreIcon}
         {...props}
         sx={{
-          fontSize: fontSize ? FontSize[fontSize] : undefined,
-          ...(size === 'small' ? stylesSmall : {}),
           ...props.sx,
+          fontSize: fontSize ? FontSize[fontSize] : undefined,
         }}
       >
         {options.map((opt) => (
@@ -93,6 +87,6 @@ export default function SingleSelectionGroup<T extends TSelect>({
           </MenuItem>
         ))}
       </Select>
-    </FormControl>
+    </Box>
   );
 }

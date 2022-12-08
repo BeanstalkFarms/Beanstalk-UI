@@ -5,14 +5,17 @@ import {
   DataGrid,
   DataGridProps,
 } from '@mui/x-data-grid';
+import { atom } from 'jotai';
 import React, { useMemo, useState } from 'react';
 import { FontSize, FontWeight } from '~/components/App/muiTheme';
 import ArrowPagination from '~/components/Common/ArrowPagination';
 import Row from '~/components/Common/Row';
 import SelectionGroup from '~/components/Common/SingleSelectionGroup';
-import useMarketDataWithPrecision, {
+import ToggleGroup from '~/components/Common/ToggleGroup';
+import useOrderbook, {
   OrderbookPrecision,
-} from '~/hooks/beanstalk/useMarketDataWithPrecision';
+} from '~/hooks/beanstalk/useOrderbook';
+
 import marketplaceTableStyle from '../common/tableStyles';
 
 const orderbookTableStyle = {
@@ -105,17 +108,21 @@ const useFakeOrders = () =>
       depthPods: i,
     }));
 
-const precisionOptions: OrderbookPrecision[] = [0.01, 0.05, 0.1];
+const precisionOptions: OrderbookPrecision[] = [0.01, 0.02, 0.05, 0.1];
+
+const orderBookAggregatAtom = atom<'min-max' | 'avg'>('min-max');
+const precisionAtom = atom<OrderbookPrecision>(precisionOptions[0]);
 
 const OrderBook: React.FC<{}> = () => {
   const orders = useFakeOrders();
   const [precision, setPrecision] = useState<OrderbookPrecision>(
     precisionOptions[0]
   );
+  const [aggregation, setAggregation] = useState<'min-max' | 'avg'>('min-max');
 
   const [numberFormat, setNumberFormat] = useState(0);
   const [percent, setPercent] = useState(percentOptions[0]);
-  const data = useMarketDataWithPrecision(precision);
+  const data = useOrderbook(precision, aggregation);
 
   const ROWS_PER_PAGE = 50;
 
@@ -144,12 +151,25 @@ const OrderBook: React.FC<{}> = () => {
           <Typography variant="bodySmall" fontWeight={FontWeight.bold}>
             ORDERBOOK
           </Typography>
-          <SelectionGroup
-            options={precisionOptions}
-            value={precision}
-            setValue={setPrecision}
-            fontSize="sm"
-          />
+          <Row gap={1}>
+            <ToggleGroup
+              value={aggregation}
+              exclusive
+              size="small"
+              onChange={(_e, v) => setAggregation((prev) => v || prev)}
+              options={[
+                { value: 'min-max', label: 'MIN/MAX' },
+                { value: 'avg', label: 'AVG' },
+              ]}
+              fontSize="xs"
+            />
+            <SelectionGroup
+              options={precisionOptions}
+              value={precision}
+              setValue={setPrecision}
+              fontSize="xs"
+            />
+          </Row>
         </Row>
         <Divider />
         <Box
