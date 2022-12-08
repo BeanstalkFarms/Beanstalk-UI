@@ -86,7 +86,7 @@ const ActivityTable: FC<
         onRowClick={onRowClick}
         initialState={{
           sorting: {
-            sortModel: [{ field: 'time', sort: 'asc' }],
+            sortModel: [{ field: 'time', sort: 'desc' }],
           },
         }}
         components={{

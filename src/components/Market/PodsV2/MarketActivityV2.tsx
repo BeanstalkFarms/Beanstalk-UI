@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Box, Card, Stack, Tab, Tabs } from '@mui/material';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
@@ -50,6 +50,12 @@ const MarketActivityV2: React.FC<{ setHeight: any }> = (props) => {
     props.setHeight(h);
   }, [openState, props, size]);
 
+  const openIfClosed = useCallback(() => {
+    if (openState === 0) {
+      setOpenState(1);
+    }
+  }, [openState, setOpenState]);
+
   return (
     <Stack
       sx={{
@@ -64,15 +70,9 @@ const MarketActivityV2: React.FC<{ setHeight: any }> = (props) => {
       <Card sx={{ height: '100%', width: '100%' }}>
         <Stack height="100%" sx={{ overflow: 'hidden', visibility: 'visible' }}>
           <Row width="100%" justifyContent="space-between" p={1.2}>
-            <Tabs
-              value={tab}
-              onChange={(e, i) => {
-                setTab(e, i);
-                openState === 0 && setOpenState(1);
-              }}
-            >
-              <Tab label="Your Orders" sx={sx.tabs} />
-              <Tab label="Market Activity" sx={sx.tabs} />
+            <Tabs value={tab} onChange={setTab}>
+              <Tab label="Your Orders" sx={sx.tabs} onClick={openIfClosed} />
+              <Tab label="Market Activity" sx={sx.tabs} onClick={openIfClosed} />
             </Tabs>
             <Row alignItems="center">
               <Box
@@ -100,8 +100,8 @@ const MarketActivityV2: React.FC<{ setHeight: any }> = (props) => {
               </Box>
             </Row>
           </Row>
-          {tab === 0 && <FarmerMarketActivity />}
-          {tab === 1 && <MarketActivity />}
+          {openState !== 0 && tab === 0 && <FarmerMarketActivity />}
+          {openState !== 0 && tab === 1 && <MarketActivity />}
         </Stack>
       </Card>
     </Stack>

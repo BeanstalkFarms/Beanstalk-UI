@@ -575,23 +575,21 @@ export default class EventProcessor {
       maxHarvestableIndex: tokenBN(event.args.maxHarvestableIndex, BEAN[1]),
       mode:             event.args.mode.toString() as FarmToMode,
       amount:           amount,   //
-      originalAmount:      amount,   //
+      originalAmount:     amount,   //
       remainingAmount:  amount,   //
       filledAmount:     BN(0),    // 
       minFillAmount:    tokenBN(event.args.minFillAmount || 0, BEAN[1]),
       status:           MarketStatus.Active,
       placeInLine:      ZERO_BN,  // FIXME
+      pricingFunction:  event.args.pricingFunction,
+      pricingType:      event.args.pricingType,
     };
   }
 
   PodListingCancelled(event: Simplify<PodListingCancelledEvent>) {
     const id = event.args.index.toString();
     if (this.listings[id]) {
-      this.listings[id] = {
-        ...this.listings[id],
-        status: MarketStatus.Cancelled,
-      };
-      // delete this.listings[id];
+      delete this.listings[id];
     }
   }
 
@@ -665,17 +663,15 @@ export default class EventProcessor {
       filledAmount:     new BigNumber(0),
       minFillAmount:    tokenBN(event.args.minFillAmount || 0, PODS),
       status:           MarketStatus.Active,
+      pricingFunction:  event.args.pricingFunction,
+      pricingType:      event.args.priceType,
     };
   }
 
   PodOrderCancelled(event: Simplify<PodOrderCancelledEvent>) {
     const id = event.args.id.toString();
     if (this.orders[id]) {
-      this.orders[id] = {
-        ...this.orders[id],
-        status: MarketStatus.Cancelled,
-      };
-      // delete this.orders[id];
+      delete this.orders[id];
     }
   }
   

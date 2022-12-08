@@ -29,13 +29,20 @@ const PodsMarketNew: React.FC<{}> = () => {
     GAP * 10 + BOTTOM_HEIGHT + accordionHeight + 57
   }px)`;
 
-  // const [orderType, setOrderType] = useAtom(podsOrderActionTypeAtom);
-
-  // const handleSetOrderType = (_e: any, i: number) => {
-  //   setOrderType(i);
-  // };
-
   return (
+    // <Container 
+    //   maxWidth={false} 
+    //   sx={(theme) => ({ 
+    //     // m: 0, 
+    //     // p: 0,
+    //     width: '100%',
+    //     [theme.breakpoints.up('md')]: { 
+    //       pl: 0, 
+    //       pr: 0 
+    //       } 
+    //     })
+    //   }
+    // >
     <Stack
       px={1}
       mt={{ xs: 7, md: 0 }}
@@ -100,6 +107,7 @@ const PodsMarketNew: React.FC<{}> = () => {
         <OrderBook />
       </Stack>
     </Stack>
+    // </Container>
   );
 };
 
