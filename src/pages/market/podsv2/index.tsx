@@ -11,7 +11,7 @@ import { Module, ModuleHeader } from '~/components/Common/Module';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
 import MarketGraph from '~/components/Market/Pods/MarketGraph';
 import Centered from '~/components/Common/ZeroState/Centered';
-import OrderBook from '~/components/Market/PodsV2/tables/OrderBook';
+import OrderBook from '~/components/Market/PodsV2/OrderBook';
 
 const SECTION_MAX_WIDTH = 550;
 
@@ -30,16 +30,16 @@ const PodsMarketNew: React.FC<{}> = () => {
   }px)`;
 
   return (
-    // <Container 
-    //   maxWidth={false} 
-    //   sx={(theme) => ({ 
-    //     // m: 0, 
+    // <Container
+    //   maxWidth={false}
+    //   sx={(theme) => ({
+    //     // m: 0,
     //     // p: 0,
     //     width: '100%',
-    //     [theme.breakpoints.up('md')]: { 
-    //       pl: 0, 
-    //       pr: 0 
-    //       } 
+    //     [theme.breakpoints.up('md')]: {
+    //       pl: 0,
+    //       pr: 0
+    //       }
     //     })
     //   }
     // >

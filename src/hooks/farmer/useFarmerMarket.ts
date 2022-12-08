@@ -69,26 +69,6 @@ export type IFarmerMarket = {
   id: string;
 };
 
-const printObjArr = (title: string, obj: any[]) => {
-  console.log(`------ ${title} ------`);
-  obj.forEach((o) => {
-    const _obj = Object.entries(o).reduce(
-      (prev, [key, value]) => {
-        if (value instanceof BigNumber) {
-          prev[key] = value.toFixed(2);
-          // console.log(`${key}: ${value.toFixed(2)}`);
-        } else {
-          prev[key] = value;
-        }
-        return prev;
-        // console.log(`${key}: ${value}`);
-      },
-      { ...o } as any
-    );
-    console.log(_obj);
-  });
-};
-
 const beanDecimals = BEAN[1].decimals;
 const QUERY_AMOUNT = 50;
 
@@ -114,10 +94,14 @@ export default function useFarmerMarket() {
 
   /// Queries
   const [getListings, listingsQuery] = useFarmerPodListingsLazyQuery({
-    fetchPolicy: 'cache-and-network', nextFetchPolicy: 'cache-first', notifyOnNetworkStatusChange: true 
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true,
   });
   const [getOrders, ordersQuery] = useFarmerPodOrdersLazyQuery({
-    fetchPolicy: 'cache-and-network', nextFetchPolicy: 'cache-first', notifyOnNetworkStatusChange: true 
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true,
   });
 
   /// cast query data to proper types
