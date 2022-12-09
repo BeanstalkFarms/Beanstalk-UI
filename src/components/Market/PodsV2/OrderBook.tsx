@@ -25,7 +25,7 @@ const LISTING_RED = '#DA5F49';
 
 const precisionOptions: OrderbookPrecision[] = [0.01, 0.02, 0.05, 0.1];
 
-const CELL_HEIGHT = 30;
+const CELL_HEIGHT = 21.91;
 
 const OrderBook: React.FC<{}> = () => {
   const [precision, setPrecision] = useState<OrderbookPrecision>(
@@ -39,14 +39,14 @@ const OrderBook: React.FC<{}> = () => {
     if (!data) {
       return undefined;
     }
-    return Object.entries(reduceByPrecision({ precision, priceBuckets: data }));
+    return Object.entries(reduceByPrecision({ precision, priceBuckets: data })).sort((a, b) => parseFloat(b[0]) - parseFloat(a[0]));
   }, [data, precision, reduceByPrecision]);
 
   const isMinMax = aggregation === 'min-max';
 
   const tableHeight = useMemo(() => {
     if (!filteredData) return '100%';
-    return `${filteredData.length * CELL_HEIGHT}px`;
+    return `${(filteredData.length * (CELL_HEIGHT))}px`;
   }, [filteredData]);
 
   return (

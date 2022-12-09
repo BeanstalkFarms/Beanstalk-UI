@@ -51,11 +51,3 @@ const MarketActionsV2: React.FC<{}> = () => {
 };
 
 export default MarketActionsV2;
-
-/*
-fill listing -> I buy pods that are for sale by another
-fill order -> I sell pods that are desired by another
-
-create listing -> I want to sell pods
-create order -> I want to buy pods
-*/

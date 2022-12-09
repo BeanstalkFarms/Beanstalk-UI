@@ -77,9 +77,7 @@ const getPriceKey = (pricePerPod: BigNumber) => {
   return new BigNumber(modified).div(100).toFixed(PRECISION);
 };
 
-const handleBucketOrders = (orders: PodOrder[]) => {
-  console.log('orderslen: ', orders.length);
-  return orders.reduce((prev, order) => {
+const handleBucketOrders = (orders: PodOrder[]) => orders.reduce((prev, order) => {
     const price = getPriceKey(order.pricePerPod);
     const bucket = prev[price] || initPriceBucket();
     const beanAmount = order.remainingAmount.times(order.pricePerPod);
@@ -108,7 +106,6 @@ const handleBucketOrders = (orders: PodOrder[]) => {
     prev = { ...prev, [price]: { ...bucket } };
     return prev;
   }, {} as PriceBuckets);
-};
 
 const handleBucketListings = (listings: PodListing[]) =>
   listings.reduce((prev, listing) => {
