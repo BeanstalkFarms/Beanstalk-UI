@@ -13,7 +13,7 @@ import MarketGraph from '~/components/Market/Pods/MarketGraph';
 import Centered from '~/components/Common/ZeroState/Centered';
 import OrderBook from '~/components/Market/PodsV2/OrderBook';
 
-const SECTION_MAX_WIDTH = 550;
+const SECTION_MAX_WIDTH = 400;
 
 const PodsMarketNew: React.FC<{}> = () => {
   const data = useMarketData();
@@ -52,7 +52,13 @@ const PodsMarketNew: React.FC<{}> = () => {
       gap={GAP}
       sx={{ height: CONTAINER_HEIGHT }}
     >
-      <Stack direction="column" width="100%" gap={GAP} justifyItems="stretch">
+      <Stack
+        direction="column"
+        width="100%"
+        gap={GAP}
+        justifyItems="stretch"
+        maxWidth="800px"
+      >
         <Module>
           <ModuleHeader>
             <Typography variant="h4">Overview</Typography>

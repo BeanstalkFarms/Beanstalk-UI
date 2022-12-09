@@ -4,7 +4,7 @@ import {
   FontWeight,
 } from '~/components/App/muiTheme';
 
-const scrollbarStyles = {
+export const scrollbarStyles = {
   '& ::-webkit-scrollbar': {
     width: '4px',
   },

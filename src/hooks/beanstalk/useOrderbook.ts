@@ -1,7 +1,7 @@
 import { BigNumber } from 'bignumber.js';
 import { useMemo, useCallback } from 'react';
 import { PodListing, PodOrder } from '~/state/farmer/market';
-import { ZERO_BN, ONE_BN } from '~/constants';
+import { ZERO_BN } from '~/constants';
 import useMarketData from './useMarketData';
 
 export type PriceBucket = {
@@ -104,7 +104,7 @@ function useBucketMarketData() {
 
         prev = { ...prev, [price]: { ...bucket } };
         return prev;
-      }, {} as Record<string, PriceBucket>),
+      }, {} as PriceBuckets),
     [initPriceBucket]
   );
 
@@ -137,7 +137,7 @@ function useBucketMarketData() {
 
         prev = { ...prev, [price]: { ...bucket } };
         return prev;
-      }, {} as Record<string, PriceBucket>),
+      }, {} as PriceBuckets),
     [initPriceBucket]
   );
 
@@ -156,50 +156,121 @@ export default function useOrderbook() {
   const { bucketOrders, bucketListings, initPriceBucket } =
     useBucketMarketData();
 
+  const basePriceKeys = useMemo(
+    () =>
+      Array(100)
+        .fill(null)
+        .map((_v, i) => INCRE.times(i).plus(INCRE).toFixed(PRECISION)),
+    []
+  );
+
   const values = useMemo(() => {
     const buckets = {} as PriceBuckets;
     if (!listings?.length || !orders?.length) return buckets;
+
     const listingBuckets = bucketListings(listings);
     const orderBuckets = bucketOrders(orders);
 
-    const iter = { v: INCRE };
-
-    while (iter.v.lt(ONE_BN)) {
-      const priceKey = iter.v.toFixed(PRECISION);
+    return basePriceKeys.reduce<PriceBuckets>((prev, curr) => {
       const bucket = initPriceBucket();
 
-      // merge listings
-      if (listingBuckets[priceKey]) {
-        if (listingBuckets[priceKey].depth.pods.gt(0)) {
-          bucket.depth.pods = listingBuckets[priceKey].depth.pods;
-        }
-        bucket.placeInLine.sell =
-          listingBuckets[priceKey].placeInLine.sell.count > 0
-            ? { ...listingBuckets[priceKey].placeInLine.sell }
-            : { ...BASE_SELL_FRAGMENT };
+      if (listingBuckets[curr]?.depth.pods.gt(0)) {
+        bucket.depth.pods = listingBuckets[curr].depth.pods;
+      }
+      bucket.placeInLine.sell =
+        listingBuckets[curr]?.placeInLine.sell.count > 0
+          ? { ...listingBuckets[curr].placeInLine.sell }
+          : { ...BASE_SELL_FRAGMENT };
+
+      if (orderBuckets[curr]?.depth.bean.gt(0)) {
+        bucket.depth.bean = orderBuckets[curr].depth.bean;
+      }
+      bucket.placeInLine.buy =
+        orderBuckets[curr]?.placeInLine.buy.count > 0
+          ? { ...orderBuckets[curr].placeInLine.buy }
+          : { ...BASE_BUY_FRAGMENT };
+
+      return { ...prev, [curr]: bucket };
+    }, buckets);
+  }, [
+    basePriceKeys,
+    bucketListings,
+    bucketOrders,
+    initPriceBucket,
+    listings,
+    orders,
+  ]);
+
+  const reduceByPrecision = useCallback(
+    ({
+      precision,
+      priceBuckets,
+    }: {
+      precision: OrderbookPrecision;
+      priceBuckets: PriceBuckets;
+    }): PriceBuckets => {
+      if (Object.keys(priceBuckets).length === 0) {
+        return {} as PriceBuckets;
       }
 
-      // merge orders
-      if (orderBuckets[priceKey]) {
-        if (orderBuckets[priceKey].depth.bean) {
-          bucket.depth.bean = orderBuckets[priceKey].depth.bean;
-        }
+      const reduced = Object.entries(priceBuckets).reduce(
+        (prev, [price, data]) => {
+          const currKey = (
+            parseFloat(price) <= prev.currPriceKey
+              ? prev.currPriceKey
+              : ((prev.currPriceKey + precision) as number)
+          ).toFixed(2);
 
-        bucket.placeInLine.buy =
-          orderBuckets[priceKey].placeInLine.buy.count > 0
-            ? { ...orderBuckets[priceKey].placeInLine.buy }
-            : { ...BASE_BUY_FRAGMENT };
-      }
+          const bucket = prev.buckets[currKey] || initPriceBucket();
 
-      iter.v = iter.v.plus(INCRE);
-      buckets[priceKey] = { ...bucket };
-    }
+          // transfer depth data
+          bucket.depth.bean = bucket.depth.bean.plus(data.depth.bean);
+          bucket.depth.pods = bucket.depth.pods.plus(data.depth.pods);
 
-    return buckets;
-  }, [bucketListings, bucketOrders, initPriceBucket, listings, orders]);
+          // transfer buy data
+          if (data.placeInLine.buy.count > 0) {
+            bucket.placeInLine.buy.count += data.placeInLine.buy.count;
+            bucket.placeInLine.buy.max = BigNumber.max(
+              bucket.placeInLine.buy.max,
+              data.placeInLine.buy.max
+            );
+            bucket.placeInLine.buy.avg = bucket.placeInLine.buy.avg
+              .plus(data.placeInLine.buy.avg)
+              .div(bucket.placeInLine.buy.count);
+          } else if (bucket.placeInLine.buy.max.eq(SAFE_MAX)) {
+            bucket.placeInLine.buy = { ...BASE_BUY_FRAGMENT };
+          }
+          // transfer sell data
+          if (data.placeInLine.sell.count > 0) {
+            bucket.placeInLine.sell.count += data.placeInLine.sell.count;
+            bucket.placeInLine.sell.min = BigNumber.min(
+              bucket.placeInLine.sell.min,
+              data.placeInLine.sell.min
+            );
+            bucket.placeInLine.sell.avg = bucket.placeInLine.sell.avg
+              .plus(data.placeInLine.sell.avg)
+              .div(bucket.placeInLine.sell.count);
+          } else if (bucket.placeInLine.sell.min.eq(SAFE_MIN)) {
+            bucket.placeInLine.sell = { ...BASE_SELL_FRAGMENT };
+          }
+
+          prev = {
+            ...prev,
+            buckets: { ...prev.buckets, [currKey]: bucket },
+            currPriceKey: parseFloat(currKey),
+          };
+          return prev;
+        },
+        { buckets: {} as PriceBuckets, currPriceKey: precision as number }
+      );
+      return reduced.buckets;
+    },
+    [initPriceBucket]
+  );
 
   return {
     data: values,
     ...other,
+    reduceByPrecision,
   };
 }
