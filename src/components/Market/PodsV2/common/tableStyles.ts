@@ -81,7 +81,7 @@ const marketplaceTableStyle = {
       color: 'transparent',
     },
   },
-  ...scrollbarStyles,
+  // ...scrollbarStyles,
 };
 
 export default marketplaceTableStyle;

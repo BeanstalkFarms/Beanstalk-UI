@@ -30,10 +30,11 @@ export const castPodListing = (
     id:                   id,
     account:              listing.farmer.id || account,
     index:                index,
+    createdAt:            listing?.createdAt || null,
 
     amount:               amount,
     originalAmount:       originalAmount,
-    filledAmount:         listing.filledAmount,
+    filledAmount:         toTokenUnitsBN(listing.filledAmount, BEAN[1].decimals),
     remainingAmount:      amount, // where is this used?
 
     maxHarvestableIndex:  toTokenUnitsBN(listing.maxHarvestableIndex, BEAN[1].decimals),
@@ -47,6 +48,7 @@ export const castPodListing = (
     placeInLine:          index.minus(harvestableIndex),
     pricingFunction:      listing?.pricingFunction ?? null,
     pricingType:          (listing?.pricingType || null) as PricingType | null,
+    
   };
 };
 
@@ -56,8 +58,28 @@ export const castPodListing = (
  * @returns Redux form of PodOrder.
  */
 export const castPodOrder = (order: PodOrderFragment): PodOrder => {
-  const podAmount         = toTokenUnitsBN(order.podAmount, BEAN[1].decimals);
+  const pricePerPod = toTokenUnitsBN(order.pricePerPod, BEAN[1].decimals);
+
+  const beanAmount = toTokenUnitsBN(order.beanAmount, BEAN[1].decimals);
+  const podAmount = new BigNumber(order.podAmount).eq(0) 
+    ? beanAmount.div(pricePerPod) 
+    : toTokenUnitsBN(order.podAmount, BEAN[1].decimals);
+  // const podAmount = toTokenUnitsBN(
+  //   podOrderedAmount,
+  //   BEAN[1].decimals
+  // );
   const podAmountFilled   = toTokenUnitsBN(order.podAmountFilled, BEAN[1].decimals);
+
+  if (order.farmer.id?.toLowerCase() === '0xc5581f1ae61e34391824779d505ca127a4566737') {
+    console.log('ppd: ', order.pricePerPod.toString());
+    console.log('ppd-cast: ', pricePerPod.toString());
+    console.log('beanAmount: ', order.beanAmount.toString());
+    console.log('beanAmount-cast: ', beanAmount.toString());
+    console.log('podOrderedAmount: ', order.podAmount.toString());
+    console.log('podOrderedAmount-pre-cast: ', podAmount.toString());
+    console.log('podOrderedAmount-cast: ', podAmount.toString());
+  }
+
   return {
     id:                   order.id,
     account:              order.farmer.id,
@@ -68,7 +90,7 @@ export const castPodOrder = (order: PodOrderFragment): PodOrder => {
     remainingAmount:      podAmount.minus(podAmountFilled),
 
     maxPlaceInLine:       toTokenUnitsBN(order.maxPlaceInLine, BEAN[1].decimals),
-    pricePerPod:          toTokenUnitsBN(order.pricePerPod, BEAN[1].decimals),
+    pricePerPod:          pricePerPod,
     // @ts-ignore
     minFillAmount:        order.minFillAmount || ZERO_BN,
 

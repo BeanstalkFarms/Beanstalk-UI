@@ -19,7 +19,8 @@ const statusColorMap = {
   cancelled: 'text.secondary',
 };
 
-const formatDate = (value: string) => {
+const formatDate = (value: string | undefined) => {
+  if (!value) return '-';
   const date = DateTime.fromMillis((Number(value) * 1000) as number);
   return date.toLocaleString({
     year: 'numeric',
@@ -155,6 +156,16 @@ export const POD_MARKET_COLUMNS = {
       },
     } as GridColumns[number]),
 
+  activityPlaceInLine: (flex: number, align?: 'left' | 'right') => ({
+    field: 'placeInPodline',
+    headerName: 'PLACE IN LINE',
+    flex: flex,
+    headerAlign: align || 'left',
+    renderCell: (params: GridRenderCellParams) => (
+      <>{params.value}</>
+    ),
+  } as GridColumns[number]),
+
   expiry: (flex: number, align?: 'left' | 'right') =>
     ({
       field: 'expiry',
@@ -165,7 +176,7 @@ export const POD_MARKET_COLUMNS = {
       headerAlign: align || 'left',
       renderCell: (params: GridRenderCellParams) => {
         const expiry = params.value as BigNumber;
-        return <>{expiry.gt(0) ? `${displayBN(expiry)} Pods` : '-'}</>;
+        return <>{expiry.gt(0) ? `${displayBN(expiry)} PODS` : '-'}</>;
       },
     } as GridColumns[number]),
 

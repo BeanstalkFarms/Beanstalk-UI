@@ -1,5 +1,4 @@
 import { Box, Card, Divider, Grid, Stack, Typography } from '@mui/material';
-import { atom } from 'jotai';
 import React, { useMemo, useState } from 'react';
 import { FontWeight } from '~/components/App/muiTheme';
 import Row from '~/components/Common/Row';
@@ -13,9 +12,6 @@ import { displayBN } from '~/util';
 
 const precisionOptions: OrderbookPrecision[] = [0.01, 0.02, 0.05, 0.1];
 
-const orderBookAggregatAtom = atom<'min-max' | 'avg'>('min-max');
-const precisionAtom = atom<OrderbookPrecision>(precisionOptions[0]);
-
 const CELL_HEIGHT = 30;
 
 const OrderBook: React.FC<{}> = () => {
@@ -25,8 +21,6 @@ const OrderBook: React.FC<{}> = () => {
   const [aggregation, setAggregation] =
     useState<OrderbookAggregation>('min-max');
   const { data, error, loading, reduceByPrecision } = useOrderbook();
-
-  console.log('orderbook data: ', data);
 
   const filteredData = useMemo(() => {
     if (!data) {

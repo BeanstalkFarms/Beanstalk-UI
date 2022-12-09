@@ -1,10 +1,7 @@
 import React, { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import ActivityTable from './activityTable';
-import { AppState } from '~/state';
 import { POD_MARKET_COLUMNS } from './market-activity-columns';
 import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
-import useFarmerMarketplaceEvents from '~/hooks/farmer/useFarmerMarketplaceEvents';
 import useFarmerMarket from '~/hooks/farmer/useFarmerMarket';
 
 const C = POD_MARKET_COLUMNS;
@@ -23,30 +20,18 @@ const columns = [
 ];
 
 const FarmerMarketActivity: React.FC<{}> = () => {
-  const orders = useSelector<AppState, AppState['_farmer']['market']['orders']>(
-    (state) => state._farmer.market.orders
-  );
-  const listings = useSelector<
-    AppState,
-    AppState['_farmer']['market']['listings']
-  >((state) => state._farmer.market.listings);
-
   const { data: farmerMarket } = useFarmerMarket();
 
-  console.debug('orders: ', orders);
-  console.debug('listings: ', listings);
-
-  const data = useFarmerMarketplaceEvents();
   const harvestableIndex = useHarvestableIndex();
-  const isLoading = data.length === 0 || harvestableIndex.lte(0);
+  const isLoading = farmerMarket.length === 0 || harvestableIndex.lte(0);
 
   const rows = useMemo(
     () =>
-      data.map((d, i) => ({
+    farmerMarket.map((d, i) => ({
         ...d,
         idx: i,
       })),
-    [data]
+    [farmerMarket]
   );
 
   return (

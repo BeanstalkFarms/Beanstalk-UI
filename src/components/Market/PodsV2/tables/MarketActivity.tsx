@@ -11,7 +11,7 @@ const columns = [
   C.entity(1),
   C.pricePerPod(1),
   C.numPods(1),
-  C.placeInLine(1),
+  C.activityPlaceInLine(1),
   C.total(0.75, 'left'),
 ];
 
@@ -21,7 +21,6 @@ const MarketActivity: React.FC<{}> = () => {
   // map row data to have index due to duplicated ids causing rendering issues
   const rows = useMemo(() => {
     if (!data || !data.length) return [];
-    // const _rows = data.filter((d) => d.time);
     return data.map((r, i) => ({
       idx: i,
       ...r,

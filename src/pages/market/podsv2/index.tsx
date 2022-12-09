@@ -57,7 +57,7 @@ const PodsMarketNew: React.FC<{}> = () => {
         width="100%"
         gap={GAP}
         justifyItems="stretch"
-        maxWidth="800px"
+        // maxWidth="800px"
       >
         <Module>
           <ModuleHeader>
