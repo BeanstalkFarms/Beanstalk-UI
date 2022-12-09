@@ -1,14 +1,27 @@
-import { Box, Card, Divider, Grid, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Card,
+  CircularProgress,
+  Divider,
+  Grid,
+  Stack,
+  Typography,
+} from '@mui/material';
 import React, { useMemo, useState } from 'react';
 import { FontWeight } from '~/components/App/muiTheme';
 import Row from '~/components/Common/Row';
 import SelectionGroup from '~/components/Common/SingleSelectionGroup';
 import ToggleGroup from '~/components/Common/ToggleGroup';
+import Centered from '~/components/Common/ZeroState/Centered';
 import useOrderbook, {
   OrderbookAggregation,
   OrderbookPrecision,
 } from '~/hooks/beanstalk/useOrderbook';
 import { displayBN } from '~/util';
+import { scrollbarStyles } from './common/tableStyles';
+
+const ORDER_GREEN = '#42885D';
+const LISTING_RED = '#DA5F49';
 
 const precisionOptions: OrderbookPrecision[] = [0.01, 0.02, 0.05, 0.1];
 
@@ -38,11 +51,16 @@ const OrderBook: React.FC<{}> = () => {
     return `${filteredData.length * CELL_HEIGHT}px`;
   }, [filteredData]);
 
-  console.log('filteredData: ', filteredData);
-
   return (
-    <Card sx={{ height: '100%' }}>
-      <Stack>
+    <Card
+      sx={({ breakpoints: bp }) => ({
+        height: '100%',
+        [bp.up('md')]: {
+          minWidth: '400px',
+        },
+      })}
+    >
+      <Stack height="100%">
         <Row justifyContent="space-between" width="100%" p={0.8}>
           <Typography variant="bodySmall" fontWeight={FontWeight.bold}>
             ORDERBOOK
@@ -119,79 +137,86 @@ const OrderBook: React.FC<{}> = () => {
           {/*
            *TABLE BODY
            */}
-          <Stack
-            sx={{ position: 'relative', height: '100%', overflow: 'auto' }}
-          >
+          {filteredData && filteredData.length ? (
             <Box
               sx={{
                 height: tableHeight,
-                // overflow: 'auto',
-                // ...scrollbarStyles,
+                overflow: 'auto',
+                ...scrollbarStyles,
               }}
             >
-              {filteredData?.length &&
-                filteredData.map(([priceKey, bucket]) => (
-                  <Stack key={priceKey}>
-                    <Grid container direction="row" spacing={0.8}>
-                      <Grid item container xs={1.5}>
-                        {/*
-                         * PRICE DATA
-                         */}
-                        <Grid item xs={12}>
-                          <Typography variant="caption" color="text.primary">
-                            {priceKey}
-                          </Typography>
-                        </Grid>
-                      </Grid>
+              {filteredData.map(([priceKey, bucket]) => (
+                <Stack key={priceKey}>
+                  <Grid container direction="row" spacing={0.8}>
+                    <Grid item container xs={1.5}>
                       {/*
-                       * BUY DATA
+                       * PRICE DATA
                        */}
-                      <Grid item container xs={5.25}>
-                        <Grid item xs={6}>
-                          <Typography variant="caption" color="text.primary">
-                            {displayBN(bucket.depth.bean)}
-                          </Typography>
-                        </Grid>
-                        <Grid
-                          item
-                          xs={6}
-                          alignItems="flex-end"
-                          textAlign="right"
-                        >
-                          <Typography variant="caption" color="text.primary">
-                            {displayBN(
-                              isMinMax
-                                ? bucket.placeInLine.sell.min
-                                : bucket.placeInLine.sell.avg
-                            )}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                      {/*
-                       *  SELL DATA
-                       */}
-                      <Grid item container xs={5.25}>
-                        <Grid item xs={6}>
-                          <Typography variant="caption" color="text.primary">
-                            {displayBN(bucket.depth.pods)}
-                          </Typography>
-                        </Grid>
-                        <Grid
-                          item
-                          xs={6}
-                          alignItems="flex-end"
-                          textAlign="right"
-                        >
-                          <Typography variant="caption">
-                            {displayBN(bucket.depth.pods)}
-                          </Typography>
-                        </Grid>
+                      <Grid item xs={12}>
+                        <Typography variant="caption" color="text.primary">
+                          {priceKey}
+                        </Typography>
                       </Grid>
                     </Grid>
-                  </Stack>
-                ))}
+                    {/*
+                     * BUY DATA
+                     */}
+                    <Grid item container xs={5.25}>
+                      <Grid item xs={6}>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: ORDER_GREEN }}
+                        >
+                          {displayBN(bucket.depth.bean)}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={6} alignItems="flex-end" textAlign="right">
+                        <Typography
+                          variant="caption"
+                          sx={{ color: ORDER_GREEN }}
+                        >
+                          {displayBN(
+                            isMinMax
+                              ? bucket.placeInLine.buy.max
+                              : bucket.placeInLine.buy.avg
+                          )}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    {/*
+                     *  SELL DATA
+                     */}
+                    <Grid item container xs={5.25}>
+                      <Grid item xs={6}>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: LISTING_RED }}
+                        >
+                          {displayBN(
+                            isMinMax
+                              ? bucket.placeInLine.sell.min
+                              : bucket.placeInLine.sell.avg
+                          )}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={6} alignItems="flex-end" textAlign="right">
+                        <Typography
+                          variant="caption"
+                          sx={{ color: LISTING_RED }}
+                        >
+                          {displayBN(bucket.depth.pods)}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Stack>
+              ))}
             </Box>
-          </Stack>
+          ) : (
+            <Centered>
+              <CircularProgress />
+            </Centered>
+          )}
         </Stack>
       </Stack>
     </Card>

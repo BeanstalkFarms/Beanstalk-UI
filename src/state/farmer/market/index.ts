@@ -20,35 +20,40 @@ export const castPodListing = (
   harvestableIndex: BigNumber
 ): PodListing => {
   /// NOTE: try to maintain symmetry with subgraph vars here.
-  const [account, id]     = listing.id.split('-'); /// Subgraph returns a conjoined ID.
-  const index             = toTokenUnitsBN(id, BEAN[1].decimals);
+  const [account, id] = listing.id.split('-'); /// Subgraph returns a conjoined ID.
+  const index = toTokenUnitsBN(id, BEAN[1].decimals);
 
-  const amount            = toTokenUnitsBN(listing.remainingAmount, BEAN[1].decimals);
-  const originalAmount    = toTokenUnitsBN(listing.originalAmount, BEAN[1].decimals);
+  const amount = toTokenUnitsBN(listing.remainingAmount, BEAN[1].decimals);
+  const originalAmount = toTokenUnitsBN(
+    listing.originalAmount,
+    BEAN[1].decimals
+  );
 
   return {
-    id:                   id,
-    account:              listing.farmer.id || account,
-    index:                index,
-    createdAt:            listing?.createdAt || null,
+    id: id,
+    account: listing.farmer.id || account,
+    index: index,
+    createdAt: listing?.createdAt || null,
 
-    amount:               amount,
-    originalAmount:       originalAmount,
-    filledAmount:         toTokenUnitsBN(listing.filledAmount, BEAN[1].decimals),
-    remainingAmount:      amount, // where is this used?
+    amount: amount,
+    originalAmount: originalAmount,
+    filledAmount: toTokenUnitsBN(listing.filledAmount, BEAN[1].decimals),
+    remainingAmount: amount, // where is this used?
 
-    maxHarvestableIndex:  toTokenUnitsBN(listing.maxHarvestableIndex, BEAN[1].decimals),
-    pricePerPod:          toTokenUnitsBN(listing.pricePerPod, BEAN[1].decimals),
-    start:                toTokenUnitsBN(listing.start, BEAN[1].decimals),
-    status:               listing.status as MarketStatus,
-    mode:                 listing.mode.toString() as FarmToMode, // FIXME: use numbers instead?
+    maxHarvestableIndex: toTokenUnitsBN(
+      listing.maxHarvestableIndex,
+      BEAN[1].decimals
+    ),
+    pricePerPod: toTokenUnitsBN(listing.pricePerPod, BEAN[1].decimals),
+    start: toTokenUnitsBN(listing.start, BEAN[1].decimals),
+    status: listing.status as MarketStatus,
+    mode: listing.mode.toString() as FarmToMode, // FIXME: use numbers instead?
     // @ts-ignore
-    minFillAmount:        listing.minFillAmount || ZERO_BN,
+    minFillAmount: listing.minFillAmount || ZERO_BN,
 
-    placeInLine:          index.minus(harvestableIndex),
-    pricingFunction:      listing?.pricingFunction ?? null,
-    pricingType:          (listing?.pricingType || null) as PricingType | null,
-    
+    placeInLine: index.minus(harvestableIndex),
+    pricingFunction: listing?.pricingFunction ?? null,
+    pricingType: (listing?.pricingType || null) as PricingType | null,
   };
 };
 
@@ -61,42 +66,35 @@ export const castPodOrder = (order: PodOrderFragment): PodOrder => {
   const pricePerPod = toTokenUnitsBN(order.pricePerPod, BEAN[1].decimals);
 
   const beanAmount = toTokenUnitsBN(order.beanAmount, BEAN[1].decimals);
-  const podAmount = new BigNumber(order.podAmount).eq(0) 
-    ? beanAmount.div(pricePerPod) 
+  const podAmount = new BigNumber(order.podAmount).eq(0)
+    ? beanAmount.div(pricePerPod)
     : toTokenUnitsBN(order.podAmount, BEAN[1].decimals);
   // const podAmount = toTokenUnitsBN(
   //   podOrderedAmount,
   //   BEAN[1].decimals
   // );
-  const podAmountFilled   = toTokenUnitsBN(order.podAmountFilled, BEAN[1].decimals);
-
-  if (order.farmer.id?.toLowerCase() === '0xc5581f1ae61e34391824779d505ca127a4566737') {
-    console.log('ppd: ', order.pricePerPod.toString());
-    console.log('ppd-cast: ', pricePerPod.toString());
-    console.log('beanAmount: ', order.beanAmount.toString());
-    console.log('beanAmount-cast: ', beanAmount.toString());
-    console.log('podOrderedAmount: ', order.podAmount.toString());
-    console.log('podOrderedAmount-pre-cast: ', podAmount.toString());
-    console.log('podOrderedAmount-cast: ', podAmount.toString());
-  }
+  const podAmountFilled = toTokenUnitsBN(
+    order.podAmountFilled,
+    BEAN[1].decimals
+  );
 
   return {
-    id:                   order.id,
-    account:              order.farmer.id,
-    createdAt:            order.createdAt,
+    id: order.id,
+    account: order.farmer.id,
+    createdAt: order.createdAt,
 
-    totalAmount:          podAmount,
-    filledAmount:         podAmountFilled,
-    remainingAmount:      podAmount.minus(podAmountFilled),
+    totalAmount: podAmount,
+    filledAmount: podAmountFilled,
+    remainingAmount: podAmount.minus(podAmountFilled),
 
-    maxPlaceInLine:       toTokenUnitsBN(order.maxPlaceInLine, BEAN[1].decimals),
-    pricePerPod:          pricePerPod,
+    maxPlaceInLine: toTokenUnitsBN(order.maxPlaceInLine, BEAN[1].decimals),
+    pricePerPod: pricePerPod,
     // @ts-ignore
-    minFillAmount:        order.minFillAmount || ZERO_BN,
+    minFillAmount: order.minFillAmount || ZERO_BN,
 
-    status:               order.status as MarketStatus,
-    pricingFunction:      order?.pricingFunction ?? null,
-    pricingType:          (order?.pricingType || null) as PricingType | null,
+    status: order.status as MarketStatus,
+    pricingFunction: order?.pricingFunction ?? null,
+    pricingType: (order?.pricingType || null) as PricingType | null,
   };
 };
 
@@ -105,7 +103,7 @@ export type PodListing = {
    * The ID of the Pod Listing. Equivalent to the `index` with no decimals.
    * @decimals 0
    */
-  id: string
+  id: string;
 
   /**
    * The address of the Farmer that owns the Listing.
@@ -288,7 +286,7 @@ export type PodOrder = {
    * 1 => DYNAMIC
    * null => PodMarket-V1 didn't have price type
    */
-   pricingType: PricingType | undefined | null;
+  pricingType: PricingType | undefined | null;
 
   /**
    * approximate timestamp in which the order was created

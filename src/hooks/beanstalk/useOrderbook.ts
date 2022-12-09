@@ -54,107 +54,94 @@ const BASE_SELL_FRAGMENT = {
   count: 0,
 };
 
-function useBucketMarketData() {
-  const initPriceBucket = useCallback(
-    (): PriceBucket => ({
-      depth: {
-        pods: ZERO_BN,
-        bean: ZERO_BN,
-      },
-      placeInLine: {
-        buy: {
-          ...BASE_BUY_FRAGMENT,
-          max: SAFE_MAX,
-        },
-        sell: {
-          ...BASE_SELL_FRAGMENT,
-          min: SAFE_MIN,
-        },
-      },
-    }),
-    []
-  );
+const initPriceBucket = (): PriceBucket => ({
+  depth: {
+    pods: ZERO_BN,
+    bean: ZERO_BN,
+  },
+  placeInLine: {
+    buy: {
+      ...BASE_BUY_FRAGMENT,
+      max: SAFE_MAX,
+    },
+    sell: {
+      ...BASE_SELL_FRAGMENT,
+      min: SAFE_MIN,
+    },
+  },
+});
 
-  const bucketOrders = useCallback(
-    (orders: PodOrder[]) =>
-      orders.reduce((prev, order) => {
-        const price = order.pricePerPod.toFixed(PRECISION);
-        const bucket = prev[price] || initPriceBucket();
+const getPriceKey = (pricePerPod: BigNumber) => {
+  if (pricePerPod.eq(0)) return INCRE.toFixed(PRECISION);
+  const modified = Math.ceil(pricePerPod.times(100).toNumber());
+  return new BigNumber(modified).div(100).toFixed(PRECISION);
+};
 
-        // add to the depth of beans at the price point
-        bucket.depth.bean = bucket.depth.bean.plus(order.totalAmount);
+const handleBucketOrders = (orders: PodOrder[]) => {
+  console.log('orderslen: ', orders.length);
+  return orders.reduce((prev, order) => {
+    const price = getPriceKey(order.pricePerPod);
+    const bucket = prev[price] || initPriceBucket();
+    const beanAmount = order.remainingAmount.times(order.pricePerPod);
 
-        // set the running max place in line for the price point
-        bucket.placeInLine.buy.max = BigNumber.max(
-          bucket.placeInLine.buy.max,
-          order.maxPlaceInLine
-        );
+    // add to the depth of beans at the price point
+    bucket.depth.bean = bucket.depth.bean.plus(beanAmount);
 
-        // set the running average place in line for the price point
-        const prevAvg = bucket.placeInLine.buy.avg;
-        if (prevAvg.eq(0)) {
-          bucket.placeInLine.buy.avg = order.maxPlaceInLine;
-        } else {
-          bucket.placeInLine.buy.avg = prevAvg
-            .plus(order.maxPlaceInLine)
-            .div(bucket.placeInLine.buy.count + 1);
-        }
-        // increment the number of orders at the price point
-        bucket.placeInLine.buy.count += 1;
+    // set the running max place in line for the price point
+    bucket.placeInLine.buy.max = BigNumber.max(
+      bucket.placeInLine.buy.max,
+      order.maxPlaceInLine
+    );
 
-        prev = { ...prev, [price]: { ...bucket } };
-        return prev;
-      }, {} as PriceBuckets),
-    [initPriceBucket]
-  );
+    // set the running average place in line for the price point
+    const prevAvg = bucket.placeInLine.buy.avg;
+    if (prevAvg.eq(0)) {
+      bucket.placeInLine.buy.avg = order.maxPlaceInLine;
+    } else {
+      bucket.placeInLine.buy.avg = prevAvg
+        .plus(order.maxPlaceInLine.valueOf())
+        .div(bucket.placeInLine.buy.count + 1);
+    }
+    // increment the number of orders at the price point
+    bucket.placeInLine.buy.count += 1;
 
-  const bucketListings = useCallback(
-    (listings: PodListing[]) =>
-      listings.reduce((prev, listing) => {
-        const price = listing.pricePerPod.toFixed(PRECISION);
-        const bucket = prev[price] || initPriceBucket();
+    prev = { ...prev, [price]: { ...bucket } };
+    return prev;
+  }, {} as PriceBuckets);
+};
 
-        // add to the depth of pods at the price point
-        // console.log('listing.amount', listing.amount.toString());
-        const podsRemaining = listing.amount.div(listing.pricePerPod);
-        bucket.depth.pods = bucket.depth.pods.plus(podsRemaining);
-        // // set the running minimum plot index for the price point
-        bucket.placeInLine.sell.min = BigNumber.min(
-          bucket.placeInLine.sell.min,
-          listing.index
-        );
-        // // set the running average plot index for the price point
-        const prevAvg = bucket.placeInLine.sell.avg;
-        if (prevAvg.eq(0)) {
-          bucket.placeInLine.sell.avg = listing.index;
-        } else {
-          bucket.placeInLine.sell.avg = prevAvg
-            .plus(listing.index)
-            .div(bucket.placeInLine.sell.count + 1);
-        }
-        // increment the number of listings at the price point
-        bucket.placeInLine.sell.count += 1;
+const handleBucketListings = (listings: PodListing[]) =>
+  listings.reduce((prev, listing) => {
+    const price = getPriceKey(listing.pricePerPod);
+    const bucket = prev[price] || initPriceBucket();
 
-        prev = { ...prev, [price]: { ...bucket } };
-        return prev;
-      }, {} as PriceBuckets),
-    [initPriceBucket]
-  );
+    // add to the depth of pods at the price point
+    // console.log('listing.amount', listing.amount.toString());
+    const podsRemaining = listing.amount.div(listing.pricePerPod);
+    bucket.depth.pods = bucket.depth.pods.plus(podsRemaining);
+    // // set the running minimum plot index for the price point
+    bucket.placeInLine.sell.min = BigNumber.min(
+      bucket.placeInLine.sell.min,
+      listing.index
+    );
+    // // set the running average plot index for the price point
+    const prevAvg = bucket.placeInLine.sell.avg;
+    if (prevAvg.eq(0)) {
+      bucket.placeInLine.sell.avg = listing.index;
+    } else {
+      bucket.placeInLine.sell.avg = bucket.placeInLine.sell.avg
+        .plus(listing.index)
+        .div(bucket.placeInLine.sell.count + 1);
+    }
+    // increment the number of listings at the price point
+    bucket.placeInLine.sell.count += 1;
 
-  return useMemo(
-    () => ({
-      bucketOrders,
-      bucketListings,
-      initPriceBucket,
-    }),
-    [bucketListings, bucketOrders, initPriceBucket]
-  );
-}
+    prev = { ...prev, [price]: { ...bucket } };
+    return prev;
+  }, {} as PriceBuckets);
 
 export default function useOrderbook() {
   const { listings, orders, ...other } = useMarketData();
-  const { bucketOrders, bucketListings, initPriceBucket } =
-    useBucketMarketData();
 
   const basePriceKeys = useMemo(
     () =>
@@ -163,13 +150,12 @@ export default function useOrderbook() {
         .map((_v, i) => INCRE.times(i).plus(INCRE).toFixed(PRECISION)),
     []
   );
-
   const values = useMemo(() => {
     const buckets = {} as PriceBuckets;
     if (!listings?.length || !orders?.length) return buckets;
 
-    const listingBuckets = bucketListings(listings);
-    const orderBuckets = bucketOrders(orders);
+    const listingBuckets = handleBucketListings(listings);
+    const orderBuckets = handleBucketOrders(orders);
 
     return basePriceKeys.reduce<PriceBuckets>((prev, curr) => {
       const bucket = initPriceBucket();
@@ -192,14 +178,7 @@ export default function useOrderbook() {
 
       return { ...prev, [curr]: bucket };
     }, buckets);
-  }, [
-    basePriceKeys,
-    bucketListings,
-    bucketOrders,
-    initPriceBucket,
-    listings,
-    orders,
-  ]);
+  }, [basePriceKeys, listings, orders]);
 
   const reduceByPrecision = useCallback(
     ({
@@ -265,7 +244,7 @@ export default function useOrderbook() {
       );
       return reduced.buckets;
     },
-    [initPriceBucket]
+    []
   );
 
   return {
