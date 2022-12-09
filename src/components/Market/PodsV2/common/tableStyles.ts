@@ -7,6 +7,10 @@ import {
 export const scrollbarStyles = {
   '& ::-webkit-scrollbar': {
     width: '4px',
+    height: '4px',
+    // '@media (max-width: 800px)': {
+    //   height: '4px',
+    // },
   },
   '& ::-webkit-scrollbar-track': {
     width: '4px',
@@ -81,7 +85,7 @@ const marketplaceTableStyle = {
       color: 'transparent',
     },
   },
-  // ...scrollbarStyles,
+  ...scrollbarStyles,
 };
 
 export default marketplaceTableStyle;

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Box, CircularProgress, Stack, Typography } from '@mui/material';
+import React, { useMemo, useState } from 'react';
+import { Box, Stack, useMediaQuery, useTheme } from '@mui/material';
 
 import useNavHeight from '~/hooks/app/usePageDimensions';
 import useBanner from '~/hooks/app/useBanner';
@@ -7,113 +7,64 @@ import MarketActionsV2 from '~/components/Market/PodsV2/MarketActionsV2';
 import MarketActivityV2, {
   sizes,
 } from '~/components/Market/PodsV2/MarketActivityV2';
-import { Module, ModuleHeader } from '~/components/Common/Module';
-import useMarketData from '~/hooks/beanstalk/useMarketData';
-import MarketGraph from '~/components/Market/Pods/MarketGraph';
-import Centered from '~/components/Common/ZeroState/Centered';
 import OrderBook from '~/components/Market/PodsV2/OrderBook';
+import MarketChart from '~/components/Market/PodsV2/chart/MarketChart';
 
 const SECTION_MAX_WIDTH = 400;
+const GAP = 0.8;
 
 const PodsMarketNew: React.FC<{}> = () => {
-  const data = useMarketData();
   const banner = useBanner();
   const navHeight = useNavHeight(!!banner);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
 
   // sizes & calculations
-  const GAP = 0.8;
   const BOTTOM_HEIGHT = navHeight * 2.5;
   const CONTAINER_HEIGHT = `calc(100vh - ${BOTTOM_HEIGHT}px)`;
   const [accordionHeight, setAccordionHeight] = useState(sizes.CLOSED);
-  const CHART_HEIGHT = `calc(100vh - ${
-    GAP * 10 + BOTTOM_HEIGHT + accordionHeight + 57
-  }px)`;
+
+  const chartHeight = useMemo(() => {
+    if (isMobile) return '400px';
+    return `calc(100vh - ${GAP * 10 + BOTTOM_HEIGHT + accordionHeight + 57}px)`;
+  }, [BOTTOM_HEIGHT, accordionHeight, isMobile]);
 
   return (
-    // <Container
-    //   maxWidth={false}
-    //   sx={(theme) => ({
-    //     // m: 0,
-    //     // p: 0,
-    //     width: '100%',
-    //     [theme.breakpoints.up('md')]: {
-    //       pl: 0,
-    //       pr: 0
-    //       }
-    //     })
-    //   }
-    // >
-    <Stack
-      px={1}
-      mt={{ xs: 7, md: 0 }}
-      direction={{ xs: 'column-reverse', md: 'row' }}
-      justifyItems="stretch"
-      width="100%"
-      gap={GAP}
-      sx={{ height: CONTAINER_HEIGHT }}
-    >
+    <Box>
       <Stack
-        direction="column"
+        px={1}
+        direction={{ xs: 'column', lg: 'row' }}
         width="100%"
         gap={GAP}
-        justifyItems="stretch"
-        // maxWidth="800px"
+        sx={{ height: { xs: '100%', lg: CONTAINER_HEIGHT } }}
       >
-        <Module>
-          <ModuleHeader>
-            <Typography variant="h4">Overview</Typography>
-          </ModuleHeader>
-          <Box
-            sx={{
-              width: '100%',
-              height: CHART_HEIGHT,
-              position: 'relative',
-              overflow: 'visible',
-            }}
-          >
-            {!data.loading &&
-            data.listings !== undefined &&
-            data.orders !== undefined ? (
-              <MarketGraph
-                listings={data.listings}
-                orders={data.orders}
-                maxPlaceInLine={data.maxPlaceInLine}
-                maxPlotSize={data.maxPlotSize}
-                harvestableIndex={data.harvestableIndex}
-              />
-            ) : (
-              <Centered>
-                <CircularProgress variant="indeterminate" />
-              </Centered>
-            )}
+        <Stack
+          width={{ xs: '100%', lg: `calc(100% - ${SECTION_MAX_WIDTH}px)` }}
+          gap={GAP}
+          sx={{ boxSizing: 'border-box', height: '100%' }}
+        >
+          <Box>
+            <MarketChart chartHeight={chartHeight} />
           </Box>
-        </Module>
-        <Box height="fit-content">
-          <MarketActivityV2 setHeight={setAccordionHeight} />
-        </Box>
+          <Box height="fit-content" display={{ xs: 'none', lg: 'block' }}>
+            <MarketActivityV2 setHeight={setAccordionHeight} />
+          </Box>
+        </Stack>
+        <Stack
+          sx={{
+            width: { xs: '100%', lg: `${SECTION_MAX_WIDTH}px` },
+            height: '100%',
+          }}
+          gap={GAP}
+        >
+          <MarketActionsV2 />
+          <OrderBook />
+          <Box height="fit-content" display={{ xs: 'block', lg: 'none' }}>
+            <MarketActivityV2 setHeight={setAccordionHeight} />
+          </Box>
+        </Stack>
       </Stack>
-      <Stack
-        direction="column"
-        sx={{
-          width: { xs: '100%', md: `${SECTION_MAX_WIDTH}px` },
-          height: '100%',
-          overflow: 'auto',
-        }}
-        gap={GAP}
-      >
-        <MarketActionsV2 />
-        {/* <Module sx={{ p: 2, height: '100%' }}> */}
-        {/*  ORDERBOOK */}
-        {/* </Module> */}
-        {/* <Card sx={{ height: '100%', display: 'flex', alignItems: 'center' }}> */}
-        {/*  <Soon> */}
-        {/*    <Typography textAlign="center" color="gray">Orderbook coming soon.</Typography> */}
-        {/*  </Soon> */}
-        {/* </Card> */}
-        <OrderBook />
-      </Stack>
-    </Stack>
-    // </Container>
+    </Box>
   );
 };
 

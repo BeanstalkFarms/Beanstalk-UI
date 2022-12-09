@@ -33,7 +33,7 @@ const OrderBook: React.FC<{}> = () => {
   );
   const [aggregation, setAggregation] =
     useState<OrderbookAggregation>('min-max');
-  const { data, error, loading, reduceByPrecision } = useOrderbook();
+  const { data, error, reduceByPrecision } = useOrderbook();
 
   const filteredData = useMemo(() => {
     if (!data) {
@@ -45,21 +45,12 @@ const OrderBook: React.FC<{}> = () => {
   const isMinMax = aggregation === 'min-max';
 
   const tableHeight = useMemo(() => {
-    if (!filteredData) {
-      return '100%';
-    }
+    if (!filteredData) return '100%';
     return `${filteredData.length * CELL_HEIGHT}px`;
   }, [filteredData]);
 
   return (
-    <Card
-      sx={({ breakpoints: bp }) => ({
-        height: '100%',
-        [bp.up('md')]: {
-          minWidth: '400px',
-        },
-      })}
-    >
+    <Card sx={{ ...scrollbarStyles, height: '100%' }}>
       <Stack height="100%">
         <Row justifyContent="space-between" width="100%" p={0.8}>
           <Typography variant="bodySmall" fontWeight={FontWeight.bold}>
@@ -112,8 +103,7 @@ const OrderBook: React.FC<{}> = () => {
               </Grid>
               <Grid item xs={6} alignItems="flex-end" textAlign="right">
                 <Typography variant="caption" color="text.secondary">
-                  {isMinMax ? 'MAX' : 'AVG'} PLACE IN <br />
-                  LINE (BUY)
+                  {isMinMax ? 'MAX' : 'AVG'} PLACE IN LINE (BUY)
                 </Typography>
               </Grid>
             </Grid>
@@ -123,8 +113,7 @@ const OrderBook: React.FC<{}> = () => {
             <Grid item container xs={5.25}>
               <Grid item xs={6} alignItems="flex-start">
                 <Typography variant="caption" color="text.secondary">
-                  {isMinMax ? 'MIN' : 'AVG'} PLACE IN <br />
-                  LINE (SELL)
+                  {isMinMax ? 'MIN' : 'AVG'} PLACE IN LINE (SELL)
                 </Typography>
               </Grid>
               <Grid item xs={6} alignItems="flex-end" textAlign="right">
@@ -137,13 +126,22 @@ const OrderBook: React.FC<{}> = () => {
           {/*
            *TABLE BODY
            */}
-          {filteredData && filteredData.length ? (
+          {error && (
+            <Centered>
+              <Typography color="text.tertiary">
+                There was an error fetching data
+              </Typography>
+            </Centered>
+          )}
+          {!error && filteredData && filteredData.length ? (
             <Box
-              sx={{
+              sx={({ breakpoints: bp }) => ({
                 height: tableHeight,
                 overflow: 'auto',
-                ...scrollbarStyles,
-              }}
+                [bp.down('lg')]: {
+                  height: '300px',
+                },
+              })}
             >
               {filteredData.map(([priceKey, bucket]) => (
                 <Stack key={priceKey}>
