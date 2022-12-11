@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { Box, Button, Card, CardProps, IconButton, Stack, Typography } from '@mui/material';
+import { Box, Card, CardProps } from '@mui/material';
 import { Tooltip, useTooltip } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { Circle, Line } from '@visx/shape';
@@ -13,17 +13,13 @@ import { PatternLines } from '@visx/pattern';
 import { applyMatrixToPoint, Zoom } from '@visx/zoom';
 import { ProvidedZoom, TransformMatrix } from '@visx/zoom/lib/types';
 import { voronoi, VoronoiPolygon } from '@visx/voronoi';
-import CloseIcon from '@mui/icons-material/Close';
 import BigNumber from 'bignumber.js';
-import { Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { PodListing, PodOrder } from '~/state/farmer/market';
-import { BeanstalkPalette, FontSize } from '~/components/App/muiTheme';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 import EntityIcon from '~/components/Market/Pods/EntityIcon';
-import { displayBN, displayFullBN } from '~/util';
+import { displayBN } from '~/util';
 import Row from '~/components/Common/Row';
-import StatHorizontal from '~/components/Common/StatHorizontal';
-import TokenIcon from '~/components/Common/TokenIcon';
-import { BEAN, PODS } from '~/constants/tokens';
 import { FC } from '~/types';
 import './MarketGraph.css';
 import { MARKET_SLUGS } from '~/components/Market/PodsV2/MarketActionsV2';
@@ -166,110 +162,6 @@ const TooltipCard : FC<CardProps> = ({ children, sx, ...props }) => (
   </Card>
 );
 
-const SelectedPointPopover : FC<{ 
-  selectedPoint: TooltipData;
-  listings: PodListing[];
-  orders: PodOrder[];
-  onClose: () => void;
-}> = ({ 
-  selectedPoint,
-  listings,
-  orders,
-  onClose,
-}) => {
-  let inner;
-  const [orderAction, setOrderAction] = useAtom(podsOrderActionTypeAtom);
-  const [orderType, setOrderType] = useAtom(podsOrderTypeAtom);
-
-  // updates form states
-  const handleClickFill = (action: PodOrderAction, type: PodOrderType) => {
-    if (orderAction !== action) {
-      setOrderAction(action);
-    }
-    setOrderType(type);
-  };
-
-  if (selectedPoint.type === 'listing') {
-    const data = listings[selectedPoint.index];
-    inner = (
-      <Stack gap={1}>
-        <Row gap={1} justifyContent="space-between">
-          <Typography variant="h4">Pod Listing</Typography>
-          <IconButton
-            onClick={onClose}
-            disableRipple
-            sx={{
-              color: (theme) => theme.palette.grey[600],
-              p: 0
-            }}
-          >
-            <CloseIcon sx={{ fontSize: FontSize.base, color: 'text.primary' }} />
-          </IconButton>
-        </Row>
-        <StatHorizontal label="Place in Line">
-          {displayBN(data.placeInLine)}
-        </StatHorizontal>
-        <StatHorizontal label="Price per Pod">
-          <Row gap={0.25}><TokenIcon token={BEAN[1]} /> {displayFullBN(data.pricePerPod, 4, 2)}</Row>
-        </StatHorizontal>
-        <StatHorizontal label="Amount">
-          <Row gap={0.25}><TokenIcon token={PODS} /> {displayFullBN(data.remainingAmount, 2, 0)}</Row>
-        </StatHorizontal>
-        <Button component={RouterLink} to={`/market/listing/${data.id}?action=${MARKET_SLUGS[0]}`} onClick={() => handleClickFill(PodOrderAction.BUY, PodOrderType.FILL)} variant="contained" color="primary">
-          Fill
-        </Button>
-      </Stack>
-    );
-  } else {
-    const data = orders[selectedPoint.index];
-    inner = (
-      <Stack gap={1}>
-        <Row gap={1} justifyContent="space-between">
-          <Typography variant="h4">Pod Order</Typography>
-          <IconButton
-            onClick={onClose}
-            disableRipple
-            sx={{
-              color: (theme) => theme.palette.grey[600],
-              p: 0
-            }}
-          >
-            <CloseIcon sx={{ fontSize: FontSize.base, color: 'text.secondary' }} />
-          </IconButton>
-        </Row>
-        <StatHorizontal label="Place in Line" labelTooltip="Any Pod in this range is eligible to sell to this Order.">
-          0 - {displayBN(data.maxPlaceInLine)}
-        </StatHorizontal>
-        <StatHorizontal label="Price per Pod">
-          <Row gap={0.25}><TokenIcon token={BEAN[1]} /> {displayFullBN(data.pricePerPod, 4, 2)}</Row>
-        </StatHorizontal>
-        <StatHorizontal label="Amount">
-          <Row gap={0.25}><TokenIcon token={PODS} /> {displayFullBN(data.remainingAmount, 2, 0)}</Row>
-        </StatHorizontal>
-        <Button component={RouterLink} to={`/market/order/${data.id}?action=${MARKET_SLUGS[1]}`} onClick={() => handleClickFill(PodOrderAction.SELL, PodOrderType.FILL)} variant="contained" color="primary">
-          Fill
-        </Button>
-      </Stack>
-    );
-  }
-
-  // backgroundColor: 'white', p: 0.5, borderRadius: 1
-  return (
-    <Box sx={{ position: 'absolute', top: 10, right: 10 }}>
-      <TooltipCard 
-        sx={{ 
-          px: 1, 
-          py: 1, 
-          minWidth: 260, 
-          // boxShadow: '0 4px 20px 6px rgba(255,255,255,0.3)' 
-        }}
-      >
-        {inner}
-      </TooltipCard>
-    </Box>
-  );
-};
-
 /// //////////////////////////////// GRAPH ///////////////////////////////////
 
 const Graph: FC<GraphProps> = ({
@@ -365,6 +257,10 @@ const Graph: FC<GraphProps> = ({
   const [selectedPoint, setSelectedPoint] = useState<TooltipData | undefined>(undefined);
   const [hoveredId, setVoronoiHoveredId] = useState<string | null>(null);
   const [neighborIds, setVoronoiNeighborIds] = useState<Set<string>>(new Set());
+  const [orderAction, setOrderAction] = useAtom(podsOrderActionTypeAtom);
+  const [orderType, setOrderType] = useAtom(podsOrderTypeAtom);
+
+  const navigate = useNavigate();
   
   /// Helpers
   const peerOpacity = useCallback((_type: TooltipData['type'], _i: number) => (
@@ -577,13 +473,35 @@ const Graph: FC<GraphProps> = ({
     return hideTooltip();
   }, [hideTooltip, hoveredId, listingPositions, orderPositions, selectedPoint, showTooltip, voronoiLayout]);
 
+  const handleClickFill = useCallback((action: PodOrderAction, type: PodOrderType) => {
+    if (orderAction !== action) {
+      setOrderAction(action);
+    }
+    setOrderType(type);
+  }, [orderAction, setOrderAction, setOrderType]);
+
   const handleClick = useCallback(() => { 
     if (selectedPoint) {
       setSelectedPoint(undefined);
       hideTooltip();
     }
-    else setSelectedPoint(tooltipData);
-  }, [hideTooltip, selectedPoint, tooltipData]);
+    else {
+      setSelectedPoint(tooltipData);
+      if (tooltipData?.type === 'listing') {
+        const data = listings[tooltipData.index];
+        if (data) {
+          handleClickFill(PodOrderAction.BUY, PodOrderType.FILL);
+          navigate(`/market/listing/${data.id}?action=${MARKET_SLUGS[0]}`);
+        }
+      } else if (tooltipData?.type === 'order') {
+        const data = orders[tooltipData.index];
+        if (data) {
+          handleClickFill(PodOrderAction.SELL, PodOrderType.FILL);
+          navigate(`/market/order/${data.id}?action=${MARKET_SLUGS[1]}`);
+        }
+      }
+    }
+  }, [handleClickFill, hideTooltip, navigate, listings, orders, selectedPoint, tooltipData]);
 
   useHotkeys('esc', () => {
     setSelectedPoint(undefined);
@@ -771,14 +689,14 @@ const Graph: FC<GraphProps> = ({
                   </TooltipCard>
                 </Tooltip>
             )}
-            {selectedPoint && (
-              <SelectedPointPopover
-                selectedPoint={selectedPoint}
-                orders={orders}
-                listings={listings}
-                onClose={() => setSelectedPoint(undefined)}
-              />
-            )}
+            {/* {selectedPoint && ( */}
+            {/*  <SelectedPointPopover */}
+            {/*    selectedPoint={selectedPoint} */}
+            {/*    orders={orders} */}
+            {/*    listings={listings} */}
+            {/*    onClose={() => setSelectedPoint(undefined)} */}
+            {/*  /> */}
+            {/* )} */}
           </Box>
         )}
       </Zoom>

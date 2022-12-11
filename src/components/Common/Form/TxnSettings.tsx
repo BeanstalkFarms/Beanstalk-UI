@@ -23,7 +23,7 @@ const PLACEMENTS = {
 };
 
 const TxnSettings : FC<{
-  placement?: 'form-top-right',
+  placement?: 'form-top-right' | 'condensed-form-top-right',
 }> = ({ 
   placement = 'form-top-right',
   children

@@ -6,16 +6,38 @@ import SubActionSelect from '../common/SubActionSelect';
 import { PodOrderType, podsOrderTypeAtom } from '../info/atom-context';
 import CreateListingV2 from '~/components/Market/PodsV2/Actions/CreateListingV2';
 import Soon from '~/components/Common/ZeroState/Soon';
+import StatHorizontal from '~/components/Common/StatHorizontal';
+import { displayBN, displayFullBN } from '~/util';
+import Row from '~/components/Common/Row';
+import TokenIcon from '~/components/Common/TokenIcon';
+import { BEAN, PODS } from '~/constants/tokens';
+import usePodOrder from '~/hooks/beanstalk/usePodOrder';
 
 const SellPods: React.FC<{}> = () => {
   const orderType = useAtomValue(podsOrderTypeAtom);
   const { orderID } = useParams<{ orderID: string }>();
+  const { data: order } = usePodOrder(orderID);
 
   return (
     <Stack>
       <Stack sx={{ p: 0.8 }} gap={1}>
         {/* buy or sell toggle */}
         <SubActionSelect />
+        {(order && orderType === PodOrderType.FILL) && (
+          <>
+            <StatHorizontal
+              label="Place in Line"
+              labelTooltip="Any Pod in this range is eligible to sell to this Order.">
+              0 - {displayBN(order.maxPlaceInLine)}
+            </StatHorizontal>
+            <StatHorizontal label="Price per Pod">
+              <Row gap={0.25}><TokenIcon token={BEAN[1]} /> {displayFullBN(order.pricePerPod, 4, 2)}</Row>
+            </StatHorizontal>
+            <StatHorizontal label="Amount">
+              <Row gap={0.25}><TokenIcon token={PODS} /> {displayFullBN(order.remainingAmount, 2, 0)}</Row>
+            </StatHorizontal>
+          </>
+        )}
         {/* create buy order */}
         {/* {orderType === PodOrderType.ORDER && <CreateBuyOrder />} */}
         {orderType === PodOrderType.LIST && <CreateListingV2 />}
