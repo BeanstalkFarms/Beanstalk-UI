@@ -99,7 +99,7 @@ const COLUMNS = {
         placement="right"
         title="">
         <Row gap={1}>
-          <EntityIcon type="listing" />
+          <EntityIcon type="sell" />
           <Typography display={{ xs: 'none', md: 'block' }}>
             #{params.row.id}
           </Typography>
@@ -126,7 +126,7 @@ const COLUMNS = {
         placement="right"
         title="">
         <Row gap={1}>
-          <EntityIcon type="order" />
+          <EntityIcon type="buy" />
           <Typography display={{ xs: 'none', md: 'block' }}>
             {params.row.id.substring(0, 8)}
           </Typography>

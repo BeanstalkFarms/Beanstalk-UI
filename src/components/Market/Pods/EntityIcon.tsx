@@ -3,13 +3,12 @@ import React from 'react';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { PODS } from '~/constants/tokens';
-import { MarketEvent } from '~/hooks/beanstalk/useMarketplaceEventData';
 
 import { FC } from '~/types';
 
 type IProps = {
   size?: number;
-  type: Pick<MarketEvent, 'entity'>
+  type: 'create' | 'cancel' | 'unknown' | 'buy' | 'sell'
 }
 
 const EntityIcon : FC<IProps> = ({ size = 25, type }) => (

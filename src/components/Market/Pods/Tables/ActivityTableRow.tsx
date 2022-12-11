@@ -51,7 +51,7 @@ const ActivityTableRow: FC<BoxProps & { event: MarketEvent }> = (props) => {
             {actionToModifier[e.action]}
           </Typography>
           {e.entity !== 'unknown' ? (
-            <EntityIcon type={e.entity} />
+            <EntityIcon type={e.entity as any} />
           ) : null}
           <Link
             href={`https://etherscan.io/tx/${e.hash}`}
