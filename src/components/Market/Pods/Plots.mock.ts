@@ -19,12 +19,14 @@ export const mockPodListingData: PodListing[] = new Array(20).fill(null).map((_,
     maxHarvestableIndex: new BigNumber(10000000 * Math.random()),
     mode: FarmToMode.INTERNAL,
     amount: amount,
-    totalAmount: new BigNumber(10000000 * Math.random()),
+    originalAmount: new BigNumber(10000000 * Math.random()),
     remainingAmount: amount,
     filledAmount: new BigNumber(3000000 * Math.random()),
     minFillAmount: new BigNumber(0),
     status: MarketStatus.Active,
-    placeInLine: index.minus(50_000_000)
+    placeInLine: index.minus(50000000),
+    pricingFunction: null,
+    pricingType: undefined
   };
 });
 
@@ -33,13 +35,15 @@ export const mockPodListingData: PodListing[] = new Array(20).fill(null).map((_,
  * /src/state/v1/marketplace/reducer.ts
 */
 export const mockPodOrderData: PodOrder[] = new Array(20).fill(null).map(() => ({
-  account: '0X123456789101112131415',
-  id: '123456789',
-  pricePerPod: new BigNumber(Math.random()),
-  maxPlaceInLine: new BigNumber(10000000 * Math.random()),
-  totalAmount: new BigNumber(10000000 * Math.random()),
-  remainingAmount: new BigNumber(5000000 * Math.random()),
-  filledAmount: new BigNumber(3000000 * Math.random()),
-  minFillAmount: new BigNumber(0),
-  status: MarketStatus.Active,
-}));
+    account: '0X123456789101112131415',
+    id: '123456789',
+    pricePerPod: new BigNumber(Math.random()),
+    maxPlaceInLine: new BigNumber(10000000 * Math.random()),
+    totalAmount: new BigNumber(10000000 * Math.random()),
+    remainingAmount: new BigNumber(5000000 * Math.random()),
+    filledAmount: new BigNumber(3000000 * Math.random()),
+    minFillAmount: new BigNumber(0),
+    status: MarketStatus.Active,
+    pricingFunction: null,
+    pricingType: undefined
+  }));

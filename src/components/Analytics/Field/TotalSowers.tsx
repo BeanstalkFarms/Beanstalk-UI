@@ -8,7 +8,7 @@ import { SnapshotData } from '~/hooks/beanstalk/useSeasonsQuery';
 
 import { FC } from '~/types';
 
-const getValue = (season: SnapshotData<SeasonalTotalSowersQuery>) => season.totalNumberOfSowers;
+const getValue = (season: SnapshotData<SeasonalTotalSowersQuery>) => season.numberOfSowers;
 const formatValue = (value: number) => `${value}`;
 const statProps = {
   title: 'Total Sowers',

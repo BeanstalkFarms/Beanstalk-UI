@@ -31,12 +31,6 @@ import ForecastPage from '~/pages/forecast';
 import GovernancePage from '~/pages/governance';
 import ProposalPage from '~/pages/governance/proposal';
 import TransactionHistoryPage from '~/pages/history';
-import PodMarketPage from '~/pages/market/pods';
-import MarketAccountPage from '~/pages/market/pods/account';
-import MarketActivityPage from '~/pages/market/pods/activity';
-import CreatePage from '~/pages/market/pods/create';
-import ListingPage from '~/pages/market/pods/listing';
-import OrderPage from '~/pages/market/pods/order';
 import NFTPage from '~/pages/nft';
 import SiloPage from '~/pages/silo';
 import SiloTokenPage from '~/pages/silo/token';
@@ -54,6 +48,9 @@ import useAccount from '~/hooks/ledger/useAccount';
 import './App.css';
 
 import { FC } from '~/types';
+import PodsMarketNew from '~/pages/market/podsv2';
+import FillListingWrapper from '~/components/Market/PodsV2/Actions/FillListingWrapper';
+import FillOrderWrapper from '~/components/Market/PodsV2/Actions/FillOrderWrapper';
 import Snowflakes from './theme/winter/Snowflakes';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
@@ -160,12 +157,17 @@ export default function App() {
             <Route path="/field" element={<FieldPage />} />
             <Route path="/governance" element={<GovernancePage />} />
             <Route path="/history" element={<TransactionHistoryPage />} />
-            <Route path="/market" element={<PodMarketPage />} />
-            <Route path="/market/account" element={<MarketAccountPage />} />
+            {/* <Route path="/market" element={<PodMarketPage />} /> */}
+            {/* <Route path="/market/account" element={<MarketAccountPage />} />
             <Route path="/market/activity" element={<MarketActivityPage />} />
             <Route path="/market/create" element={<CreatePage />} />
             <Route path="/market/order/:id" element={<OrderPage />} />
-            <Route path="/market/listing/:id" element={<ListingPage />} />
+            <Route path="/market/listing/:id" element={<ListingPage />} /> */}
+            <Route path="/market" element={<PodsMarketNew />}>
+              {/* https://ui.dev/react-router-nested-routes */}
+              <Route path="listing/:listingID" element={<FillListingWrapper />} />
+              <Route path="order/:orderID" element={<FillOrderWrapper />} />
+            </Route>
             {/* DEX CODE (hidden) */}
             {/* <Route path="/market/wells" element={<WellHomePage />} /> */}
             {/* <Route path="/market/wells/:id" element={<WellPage />} /> */}

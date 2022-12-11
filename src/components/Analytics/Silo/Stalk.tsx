@@ -9,7 +9,7 @@ import { tickFormatTruncated } from '~/components/Analytics/formatters';
 
 import { FC } from '~/types';
 
-const getValue = (season: SnapshotData<SeasonalStalkQuery>) => toTokenUnitsBN(season.totalStalk, STALK.decimals).toNumber();
+const getValue = (season: SnapshotData<SeasonalStalkQuery>) => toTokenUnitsBN(season.stalk, STALK.decimals).toNumber();
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const statProps = {
   title: 'Stalk',

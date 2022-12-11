@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Box, Button, Card, CardProps, IconButton, Stack, Typography } from '@mui/material';
-import { useTooltip, Tooltip } from '@visx/tooltip';
+import { Tooltip, useTooltip } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { Circle, Line } from '@visx/shape';
 import { AxisBottom, AxisLeft } from '@visx/axis';
@@ -10,7 +10,7 @@ import { RectClipPath } from '@visx/clip-path';
 import { scaleLinear } from '@visx/scale';
 import { localPoint } from '@visx/event';
 import { PatternLines } from '@visx/pattern';
-import { Zoom, applyMatrixToPoint } from '@visx/zoom';
+import { applyMatrixToPoint, Zoom } from '@visx/zoom';
 import { ProvidedZoom, TransformMatrix } from '@visx/zoom/lib/types';
 import { voronoi, VoronoiPolygon } from '@visx/voronoi';
 import CloseIcon from '@mui/icons-material/Close';
@@ -26,6 +26,14 @@ import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN, PODS } from '~/constants/tokens';
 import { FC } from '~/types';
 import './MarketGraph.css';
+import { MARKET_SLUGS } from '~/components/Market/PodsV2/MarketActionsV2';
+import { useAtom } from 'jotai';
+import {
+  PodOrderAction,
+  PodOrderType,
+  podsOrderActionTypeAtom,
+  podsOrderTypeAtom
+} from '~/components/Market/PodsV2/info/atom-context';
 
 /// //////////////////////////////// TYPES ///////////////////////////////////
 
@@ -170,6 +178,17 @@ const SelectedPointPopover : FC<{
   onClose,
 }) => {
   let inner;
+  const [orderAction, setOrderAction] = useAtom(podsOrderActionTypeAtom);
+  const [orderType, setOrderType] = useAtom(podsOrderTypeAtom);
+
+  // updates form states
+  const handleClickFill = (action: PodOrderAction, type: PodOrderType) => {
+    if (orderAction !== action) {
+      setOrderAction(action);
+    }
+    setOrderType(type);
+  };
+
   if (selectedPoint.type === 'listing') {
     const data = listings[selectedPoint.index];
     inner = (
@@ -196,7 +215,7 @@ const SelectedPointPopover : FC<{
         <StatHorizontal label="Amount">
           <Row gap={0.25}><TokenIcon token={PODS} /> {displayFullBN(data.remainingAmount, 2, 0)}</Row>
         </StatHorizontal>
-        <Button component={RouterLink} to={`/market/listing/${data.id}`} variant="contained" color="primary">
+        <Button component={RouterLink} to={`/market/listing/${data.id}?action=${MARKET_SLUGS[0]}`} onClick={() => handleClickFill(PodOrderAction.BUY, PodOrderType.FILL)} variant="contained" color="primary">
           Fill
         </Button>
       </Stack>
@@ -227,7 +246,7 @@ const SelectedPointPopover : FC<{
         <StatHorizontal label="Amount">
           <Row gap={0.25}><TokenIcon token={PODS} /> {displayFullBN(data.remainingAmount, 2, 0)}</Row>
         </StatHorizontal>
-        <Button component={RouterLink} to={`/market/order/${data.id}`} variant="contained" color="primary">
+        <Button component={RouterLink} to={`/market/order/${data.id}?action=${MARKET_SLUGS[1]}`} onClick={() => handleClickFill(PodOrderAction.SELL, PodOrderType.FILL)} variant="contained" color="primary">
           Fill
         </Button>
       </Stack>
@@ -680,11 +699,11 @@ const Graph: FC<GraphProps> = ({
                 }}
                 css={{
                   cursor: (
-                    selectedPoint 
+                    selectedPoint
                       ? 'default'         // when selected, freeze cursor
-                      : zoom.isDragging   
+                      : zoom.isDragging
                         ? 'grabbing'      // if dragging, show grab
-                        : tooltipData     
+                        : tooltipData
                           ? 'pointer'     // hovering over a point but haven't clicked it yet
                           : 'grab'        // not hovering a point, user can drag
                   ),
@@ -741,8 +760,8 @@ const Graph: FC<GraphProps> = ({
                   <TooltipCard>
                     <Row gap={0.5}>
                       <EntityIcon type={tooltipData.type} size={20} />
-                      {tooltipData.type === 'listing' 
-                        ? displayBN(listings[tooltipData.index].remainingAmount) 
+                      {tooltipData.type === 'listing'
+                        ? displayBN(listings[tooltipData.index].remainingAmount)
                         : displayBN(orders[tooltipData.index].remainingAmount)
                       } Pods
                     </Row>
@@ -774,11 +793,11 @@ const MarketGraph: FC<MarketGraphProps> = (props) => (
         width={visWidth}
         height={visHeight}
         {...props}
-      >
+        >
         {props.children}
       </Graph>
-    )}
+      )}
   </ParentSize>
-);
+  );
 
 export default MarketGraph;

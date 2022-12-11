@@ -4,13 +4,13 @@ export const tableStyle = {
   '& .MuiDataGrid-root': {
     outline: 'none',
     border: 'none',
-    
+
     // Rows
     '& .MuiDataGrid-row.odd': {
-      backgroundColor: '#F6FAFE'
+      backgroundColor: '#F6FAFE',
     },
     '& .MuiDataGrid-iconSeparator': {
-      display: 'none'
+      display: 'none',
     },
 
     // Header
@@ -22,12 +22,12 @@ export const tableStyle = {
     },
     '& .MuiDataGrid-columnHeader': {
       '&:focus': {
-        outline: 'none'
+        outline: 'none',
       },
     },
     '& .MuiDataGrid-columnHeaderTitle': {
       fontWeight: 500,
-      fontSize: FontSize.base
+      fontSize: FontSize.base,
     },
 
     // Cells
@@ -37,7 +37,7 @@ export const tableStyle = {
     },
     '& .MuiDataGrid-cell': {
       '&:focus': {
-        outline: 'none'
+        outline: 'none',
       },
       border: 'none',
     },
@@ -46,7 +46,7 @@ export const tableStyle = {
     '& .MuiDataGrid-footerContainer': {
       borderBottom: 'none',
       borderTop: 'none',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
 
     // Other
@@ -55,7 +55,7 @@ export const tableStyle = {
       // backgroundColor: "#D8F2DB"
     },
     '& .MuiDataGrid-sortIcon': {
-      color: 'text.primary'
-    }
-  }
+      color: 'text.primary',
+    },
+  },
 };

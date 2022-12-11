@@ -1,8 +1,10 @@
+import { deepmerge } from '@mui/utils';
 import {
   createTheme,
   experimental_sx as sx,
   lighten,
   responsiveFontSizes,
+  ThemeOptions,
 } from '@mui/material/styles';
 import React from 'react';
 
@@ -80,9 +82,23 @@ const BASE_FONT_SIZE = 16;
 const remBase = (n: number) => `${(n / BASE_FONT_SIZE).toFixed(4)}rem`;
 
 export const hexToRgba = (hex: string, alpha?: number) => {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
+  const stripped = hex.replace('#', '').split('');
+  if (stripped.length % 3 !== 0 || stripped.length > 6) {
+    throw new Error(`unexpected invalid hex value: ${hex}`);
+  }
+
+  const isCondensedHex = stripped.length === 3;
+  const hexArr = stripped.reduce((prev, curr) => {
+    if (isCondensedHex) { 
+        prev += curr;
+    }
+    prev += curr;
+    return prev;
+  },'' as string).toString();
+
+  const r = parseInt(hexArr.slice(0, 2), 16);
+  const g = parseInt(hexArr.slice(2, 4), 16);
+  const b = parseInt(hexArr.slice(4, 6), 16);
 
   return `rgba(${r}, ${g}, ${b}, ${alpha ?? 1})`;
 };
@@ -142,7 +158,7 @@ export const BeanstalkPalette = {
       primary: '#00A6FB',
       light: '#177694',
       paleBlue: '#01497C',
-      divider: '#002855', 
+      divider: '#002855',
       blueDark: '#023E7D',
       extraLight: '#168AAD',
       blueLight: '#1E6091',
@@ -159,8 +175,8 @@ export const BeanstalkPalette = {
         yellow: '#F4B942',
         yellowLight: '#FBE3B3',
         green: '#97D8C4',
-        greenLight: '#D0DFDB'
-      }
+        greenLight: '#D0DFDB',
+      },
     },
   },
 };
@@ -196,7 +212,7 @@ export const FontWeight = {
 export const XXLWidth = 1400;
 
 // FIXME: changes to createTheme don't hot reload.
-let muiTheme = createTheme({
+const muiThemeBase: ThemeOptions = {
   breakpoints: {
     values: {
       xs: 0,
@@ -263,7 +279,7 @@ let muiTheme = createTheme({
     background: {
       default: '#016586',
       paper: BeanstalkPalette.theme.winter.paleBlue,
-    }
+    },
   },
 
   /**
@@ -311,6 +327,10 @@ let muiTheme = createTheme({
       fontFamily: 'Futura PT',
       fontSize: FontSize.sm, // 14px
       fontWeight: FontWeight.medium,
+    },
+    caption: {
+      fontSize: FontSize.xs, // 12px
+      fontWeight: FontWeight.normal,
     },
     // nav labels, nav button labels, token labels (module)
     bodyMedium: {
@@ -377,15 +397,15 @@ let muiTheme = createTheme({
         {
           props: {
             variant: 'contained',
-            color: 'primary'
+            color: 'primary',
           },
           style: {
             '&.Mui-disabled': {
               backgroundColor: '#C1C1C1',
-              color: BeanstalkPalette.grey
-            }
-          }
-        }
+              color: BeanstalkPalette.grey,
+            },
+          },
+        },
       ],
       defaultProps: {
         disableElevation: true,
@@ -433,13 +453,13 @@ let muiTheme = createTheme({
       variants: [
         {
           props: {
-            color: 'warning'
+            color: 'warning',
           },
           style: sx({
             backgroundColor: 'rgba(253, 244, 231, 0.3)',
-            color: BeanstalkPalette.white
-          })
-        }
+            color: BeanstalkPalette.white,
+          }),
+        },
       ],
       defaultProps: {},
       styleOverrides: {
@@ -460,7 +480,7 @@ let muiTheme = createTheme({
       defaultProps: {
         enterTouchDelay: 0,
         leaveTouchDelay: 1000000,
-        onClick: (e) => e.stopPropagation(),
+        onClick: (e: React.MouseEvent) => e.stopPropagation(),
       },
       variants: [
         {
@@ -567,7 +587,7 @@ let muiTheme = createTheme({
           // borderColor: 'divider',
           '&:hover': {
             backgroundColor: BeanstalkPalette.theme.winter.selected,
-          }
+          },
         }),
       },
     },
@@ -732,8 +752,14 @@ let muiTheme = createTheme({
       },
     },
   },
-});
+};
+
+let muiTheme = createTheme({ ...muiThemeBase });
 
 muiTheme = responsiveFontSizes(muiTheme);
 
 export default muiTheme;
+
+export const muiThemeCondensed = createTheme(
+  deepmerge(muiThemeBase, { spacing: 8 })
+);

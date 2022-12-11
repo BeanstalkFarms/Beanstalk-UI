@@ -11,10 +11,10 @@ import disclosuresIcon from '~/img/beanstalk/interface/nav/disclosures.svg';
 import analyticsIcon from '~/img/beanstalk/interface/nav/analytics.svg';
 
 export type RouteData = {
-  /** If set, link to this internal path. */
-  path: string;
   /** Nav item title */
   title: string;
+  /** If set, link to this internal path. */
+  path: string;
   /** Tag to show inside the nav item */
   tag?: string;
   /** If set, link out to this external URL. */
