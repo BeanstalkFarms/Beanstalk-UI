@@ -45,7 +45,7 @@ type CirclePosition = {
 };
 
 type TooltipData = {
-  type: 'listing' | 'order';
+  type: 'create' | 'cancel' | 'unknown' | 'buy' | 'sell';
   index: number;
   coordinate: CirclePosition
 }
@@ -189,7 +189,7 @@ const SelectedPointPopover : FC<{
     setOrderType(type);
   };
 
-  if (selectedPoint.type === 'listing') {
+  if (selectedPoint.type === 'sell') {
     const data = listings[selectedPoint.index];
     inner = (
       <Stack gap={1}>
@@ -377,14 +377,14 @@ const Graph: FC<GraphProps> = ({
 
   /// Elements
   const orderCircles = orderPositions.map((coordinate, i) => {
-    const active = tooltipData?.type === 'order' && i === tooltipData?.index;
+    const active = tooltipData?.type === 'buy' && i === tooltipData?.index;
     return (
       <Circle
         key={`order-${i}`}
         cx={coordinate.x}
         cy={coordinate.y}
         r={active ? HOVER_MULTIPLIER * coordinate.radius : coordinate.radius}
-        opacity={peerOpacity('order', i)}
+        opacity={peerOpacity('buy', i)}
         fill={BeanstalkPalette.logoGreen}
         stroke={active ? BeanstalkPalette.mediumGreen : '#fff'}
         strokeWidth={active ? 2 : 1}
@@ -394,14 +394,14 @@ const Graph: FC<GraphProps> = ({
     );
   });
   const listingCircles = listingPositions.map((coordinate, i) => {
-    const active = tooltipData?.type === 'listing' && i === tooltipData?.index;
+    const active = tooltipData?.type === 'sell' && i === tooltipData?.index;
     return (
       <Circle
         key={`listing-${i}`}
         cx={coordinate.x}
         cy={coordinate.y}
         r={active ? HOVER_MULTIPLIER * coordinate.radius : coordinate.radius}
-        opacity={peerOpacity('listing', i)}
+        opacity={peerOpacity('sell', i)}
         fill={BeanstalkPalette.mediumRed}
         stroke={active ? BeanstalkPalette.trueRed : '#fff'}
         strokeWidth={active ? 2 : 1}
@@ -428,7 +428,7 @@ const Graph: FC<GraphProps> = ({
     </g>
   );
   const cursorPositionLines = (tooltipOpen && tooltipData)
-    ? tooltipData?.type === 'listing'
+    ? tooltipData?.type === 'sell'
       ? (
         <g>
           <Line
@@ -543,7 +543,7 @@ const Graph: FC<GraphProps> = ({
         tooltipTop:  zoomedCoordinate.y,
         tooltipData: {
           index: listingIndex,
-          type: 'listing',
+          type: 'sell',
           coordinate: coordinate
         }
       });
@@ -567,7 +567,7 @@ const Graph: FC<GraphProps> = ({
         tooltipTop:   zoomedCoordinate.y,
         tooltipData: {
           index: orderIndex,
-          type: 'order',
+          type: 'buy',
           coordinate: coordinate
         }
       });
@@ -760,7 +760,7 @@ const Graph: FC<GraphProps> = ({
                   <TooltipCard>
                     <Row gap={0.5}>
                       <EntityIcon type={tooltipData.type} size={20} />
-                      {tooltipData.type === 'listing'
+                      {tooltipData.type === 'sell'
                         ? displayBN(listings[tooltipData.index].remainingAmount)
                         : displayBN(orders[tooltipData.index].remainingAmount)
                       } Pods
