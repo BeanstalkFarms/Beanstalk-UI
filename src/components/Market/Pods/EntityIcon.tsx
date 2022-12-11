@@ -3,16 +3,22 @@ import React from 'react';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { PODS } from '~/constants/tokens';
+import { MarketEvent } from '~/hooks/beanstalk/useMarketplaceEventData';
 
 import { FC } from '~/types';
 
-const EntityIcon : FC<{ size?: number, type: 'listing' | 'order' }> = ({ size = 25, type }) => (
+type IProps = {
+  size?: number;
+  type: Pick<MarketEvent, 'entity'>
+}
+
+const EntityIcon : FC<IProps> = ({ size = 25, type }) => (
   <Stack
     alignItems="center"
     justifyContent="center"
     sx={{
       backgroundColor: (
-        type === 'listing'
+        ['fill listing', 'listing'].includes(type)
           ? BeanstalkPalette.mediumRed
           : BeanstalkPalette.mediumGreen
       ),

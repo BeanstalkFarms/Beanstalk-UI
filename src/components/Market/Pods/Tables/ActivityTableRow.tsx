@@ -15,10 +15,9 @@ import { FC } from '~/types';
 const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZoneName;
 
 const actionToModifier = {
-  'fill order': '💰',
-  'fill listing': '💰',
-  listing: '✏️',
-  order: '✏️',
+  buy: '💰',
+  sell: '💰',
+  create: '✏️',
   cancel: '❌',
   unknown: undefined,
 };
