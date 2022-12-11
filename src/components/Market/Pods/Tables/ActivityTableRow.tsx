@@ -20,6 +20,8 @@ const actionToModifier = {
   create: '✏️',
   cancel: '❌',
   unknown: undefined,
+  listing: '💰',
+  order: '✏️'
 };
 
 const ActivityTableRow: FC<BoxProps & { event: MarketEvent }> = (props) => {

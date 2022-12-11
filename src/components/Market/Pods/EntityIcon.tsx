@@ -6,18 +6,13 @@ import { PODS } from '~/constants/tokens';
 
 import { FC } from '~/types';
 
-type IProps = {
-  size?: number;
-  type: 'create' | 'cancel' | 'unknown' | 'buy' | 'sell'
-}
-
-const EntityIcon : FC<IProps> = ({ size = 25, type }) => (
+const EntityIcon : FC<{ size?: number, type: 'listing' | 'order' | 'create' | 'buy' | 'cancel' | 'unkonwn' | 'sell' }> = ({ size = 25, type }) => (
   <Stack
     alignItems="center"
     justifyContent="center"
     sx={{
       backgroundColor: (
-        ['fill listing', 'listing'].includes(type)
+        type === 'listing' || type === 'sell'
           ? BeanstalkPalette.mediumRed
           : BeanstalkPalette.mediumGreen
       ),
