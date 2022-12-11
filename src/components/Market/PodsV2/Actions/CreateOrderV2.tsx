@@ -404,7 +404,7 @@ const CreateOrderV2 : FC<{}> = () => {
     >
       {(formikProps: FormikProps<CreateOrderFormValues>) => (
         <>
-          <TxnSettings placement="form-top-right">
+          <TxnSettings placement="condensed-form-top-right">
             <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
           </TxnSettings>
           <CreateOrderV2Form
