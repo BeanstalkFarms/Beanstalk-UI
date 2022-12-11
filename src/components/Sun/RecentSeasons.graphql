@@ -8,7 +8,7 @@ query Seasons {
   fields(first: 24, orderBy: season, orderDirection: desc) {
     id
     season
-    soil
-    temperature
+    totalSoil
+    weather
   }
 }

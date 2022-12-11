@@ -10,7 +10,7 @@ query SeasonalTotalSowers($season_lte: Int, $first: Int) {
   ) {
     id
     season
-    createdAt
-    numberOfSowers
+    timestamp
+    totalNumberOfSowers
   }
 }

@@ -1,21 +1,13 @@
 fragment PodOrder on PodOrder {
   # Metadata
   id
-  historyID
-  farmer { 
-    id 
-  }
+  farmer { id }
   createdAt
   updatedAt
   status
   # Order data
-  podAmount           # Market V1 - Original amount of the ordered pods
-  beanAmount          # Market V2 - Original amount of beans used to ordered beans
-  podAmountFilled     # current filled amount
-  beanAmountFilled    # bean amount filled
-  minFillAmount       
-  maxPlaceInLine      # max place in line for pods to fulfill the order
-  pricePerPod         
-  pricingFunction     # MarketV2 pricing function
-  pricingType         # MarketV2 pricing type
+  amount
+  filledAmount
+  pricePerPod
+  maxPlaceInLine
 }

@@ -1,11 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { ZERO_BN } from '~/constants';
 import { BEAN } from '~/constants/tokens';
-import {
-  MarketStatus,
-  PodListingFragment,
-  PodOrderFragment,
-} from '~/generated/graphql';
+import { MarketStatus, PodListingFragment, PodOrderFragment } from '~/generated/graphql';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import { toTokenUnitsBN } from '~/util';
 
@@ -14,46 +10,31 @@ import { toTokenUnitsBN } from '~/util';
  * @param listing The PodListing as returned by the subgraph.
  * @returns Redux form of PodListing.
  */
-
-export const castPodListing = (
-  listing: PodListingFragment,
-  harvestableIndex: BigNumber
-): PodListing => {
+export const castPodListing = (listing: PodListingFragment, harvestableIndex: BigNumber) : PodListing => {
   /// NOTE: try to maintain symmetry with subgraph vars here.
-  const [account, id] = listing.id.split('-'); /// Subgraph returns a conjoined ID.
-  const index = toTokenUnitsBN(id, BEAN[1].decimals);
-
-  const amount = toTokenUnitsBN(listing.remainingAmount, BEAN[1].decimals);
-  const originalAmount = toTokenUnitsBN(
-    listing.originalAmount,
-    BEAN[1].decimals
-  );
-
+  const [account, id]     = listing.id.split('-'); /// Subgraph returns a conjoined ID.
+  const index             = toTokenUnitsBN(id, BEAN[1].decimals);
+  const amount            = toTokenUnitsBN(listing.amount,      BEAN[1].decimals);  
+  const totalAmount       = toTokenUnitsBN(listing.totalAmount, BEAN[1].decimals); 
+  const filledAmount      = totalAmount.minus(amount);
+  const remainingAmount   = amount;
   return {
-    id: id,
-    account: listing.farmer.id || account,
-    index: index,
-    createdAt: listing?.createdAt || null,
-
-    amount: amount,
-    originalAmount: originalAmount,
-    filledAmount: toTokenUnitsBN(listing.filledAmount, BEAN[1].decimals),
-    remainingAmount: amount, // where is this used?
-
-    maxHarvestableIndex: toTokenUnitsBN(
-      listing.maxHarvestableIndex,
-      BEAN[1].decimals
-    ),
-    pricePerPod: toTokenUnitsBN(listing.pricePerPod, BEAN[1].decimals),
-    start: toTokenUnitsBN(listing.start, BEAN[1].decimals),
-    status: listing.status as MarketStatus,
-    mode: listing.mode.toString() as FarmToMode, // FIXME: use numbers instead?
+    id:                   id,
+    account:              account,
+    index:                index,
+    amount:               amount,
+    totalAmount:          totalAmount,
+    filledAmount:         filledAmount,
+    remainingAmount:      remainingAmount,
+    maxHarvestableIndex:  toTokenUnitsBN(listing.maxHarvestableIndex, BEAN[1].decimals),
+    pricePerPod:          toTokenUnitsBN(listing.pricePerPod, BEAN[1].decimals),
+    start:                toTokenUnitsBN(listing.start, BEAN[1].decimals),
+    status:               listing.status as MarketStatus,
+    mode:                 listing.mode.toString() as FarmToMode, // FIXME: use numbers instead?
     // @ts-ignore
-    minFillAmount: listing.minFillAmount || ZERO_BN,
-
-    placeInLine: index.minus(harvestableIndex),
-    pricingFunction: listing?.pricingFunction ?? null,
-    pricingType: (listing?.pricingType || null) as PricingType | null,
+    minFillAmount:        listing.minFillAmount || ZERO_BN,
+    // ---
+    placeInLine:          index.minus(harvestableIndex)
   };
 };
 
@@ -62,39 +43,20 @@ export const castPodListing = (
  * @param order The PodOrder as returned by the subgraph.
  * @returns Redux form of PodOrder.
  */
-export const castPodOrder = (order: PodOrderFragment): PodOrder => {
-  const pricePerPod = toTokenUnitsBN(order.pricePerPod, BEAN[1].decimals);
-
-  const beanAmount = toTokenUnitsBN(order.beanAmount, BEAN[1].decimals);
-  const podAmount = new BigNumber(order.podAmount).eq(0)
-    ? beanAmount.div(pricePerPod)
-    : toTokenUnitsBN(order.podAmount, BEAN[1].decimals);
-  // const podAmount = toTokenUnitsBN(
-  //   podOrderedAmount,
-  //   BEAN[1].decimals
-  // );
-  const podAmountFilled = toTokenUnitsBN(
-    order.podAmountFilled,
-    BEAN[1].decimals
-  );
-
+export const castPodOrder = (order: PodOrderFragment) : PodOrder => {
+  const amount = toTokenUnitsBN(order.amount,   BEAN[1].decimals);  
+  const filled = toTokenUnitsBN(order.filledAmount,  BEAN[1].decimals);
   return {
-    id: order.id,
-    account: order.farmer.id,
-    createdAt: order.createdAt,
-
-    totalAmount: podAmount,
-    filledAmount: podAmountFilled,
-    remainingAmount: podAmount.minus(podAmountFilled),
-
-    maxPlaceInLine: toTokenUnitsBN(order.maxPlaceInLine, BEAN[1].decimals),
-    pricePerPod: pricePerPod,
+    id:              order.id,
+    account:         order.farmer.id,
+    totalAmount:     amount,
+    filledAmount:    filled,
+    remainingAmount: amount.minus(filled),
+    maxPlaceInLine:  toTokenUnitsBN(order.maxPlaceInLine, BEAN[1].decimals),
+    pricePerPod:     toTokenUnitsBN(order.pricePerPod, BEAN[1].decimals),
     // @ts-ignore
-    minFillAmount: order.minFillAmount || ZERO_BN,
-
-    status: order.status as MarketStatus,
-    pricingFunction: order?.pricingFunction ?? null,
-    pricingType: (order?.pricingType || null) as PricingType | null,
+    minFillAmount:   order.minFillAmount || ZERO_BN,
+    status:          order.status as MarketStatus,
   };
 };
 
@@ -103,7 +65,7 @@ export type PodListing = {
    * The ID of the Pod Listing. Equivalent to the `index` with no decimals.
    * @decimals 0
    */
-  id: string;
+  id: string
 
   /**
    * The address of the Farmer that owns the Listing.
@@ -121,7 +83,7 @@ export type PodListing = {
    *    0         the first Pod issued
    *    100,000   harvestableIndex
    *    150,000   index
-   *
+   * 
    * @decimals 6
    */
   index: BigNumber;
@@ -160,7 +122,7 @@ export type PodListing = {
    * The total number of Pods originally intended to be sold.
    * Fixed upon emission of `PodListingCreated`.
    */
-  originalAmount: BigNumber;
+  totalAmount: BigNumber;
 
   /**
    * The number of Pods left to sell.
@@ -179,41 +141,22 @@ export type PodListing = {
   filledAmount: BigNumber;
 
   /**
-   *
+   * 
    */
   minFillAmount: BigNumber;
-
+  
   /**
    * Pod Listing status.
+   *
+   * FIXME: make this an enum
    */
   status: MarketStatus;
 
   /**
-   *
+   * 
    */
   placeInLine: BigNumber;
-
-  /**
-   *
-   */
-  pricingFunction: string | null;
-
-  /**
-   *
-   */
-  pricingType: PricingType | undefined | null;
-
-  /**
-   * approximate timestamp in which the listing was created
-   * optional b/c it is only available from the subgraph
-   */
-  createdAt?: string;
 };
-
-export enum PricingType {
-  FIXED = 0,
-  DYNAMIC = 1,
-}
 
 export type PodOrder = {
   /**
@@ -265,34 +208,16 @@ export type PodOrder = {
   filledAmount: BigNumber;
 
   /**
-   *
+   * 
    */
-  minFillAmount: BigNumber;
-
+   minFillAmount: BigNumber;
+   
   /**
    * Pod Order status.
    *
    * FIXME: make this an enum
    */
   status: MarketStatus;
-
-  /**
-   * Market-V2 pricing function
-   */
-  pricingFunction: string | null;
-
-  /**
-   * 0 => FIXED
-   * 1 => DYNAMIC
-   * null => PodMarket-V1 didn't have price type
-   */
-  pricingType: PricingType | undefined | null;
-
-  /**
-   * approximate timestamp in which the order was created
-   * optional b/c it is only available from the subgraph
-   */
-  createdAt?: string;
 };
 
 export type FarmerMarket = {
@@ -301,5 +226,5 @@ export type FarmerMarket = {
   };
   orders: {
     [id: string]: PodOrder;
-  };
-};
+  }
+}

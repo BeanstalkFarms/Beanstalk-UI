@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Box,
-  Button,
-  ButtonProps,
-  InputAdornment,
-  Typography,
-  TypographyVariant,
-} from '@mui/material';
+import { Box, Button, ButtonProps, InputAdornment, Typography } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Token from '~/classes/Token';
 import { BeanstalkPalette, hexToRgba, IconSize } from '../../App/muiTheme';
@@ -14,23 +7,17 @@ import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
 
-const TokenAdornment: FC<
+const TokenAdornment : FC<
   {
-    token: Token;
+    token: Token,
     buttonLabel?: string | JSX.Element;
-  } & {
-    iconSize?: keyof typeof IconSize;
-    downArrowIconSize?: keyof typeof IconSize;
-    textVariant?: TypographyVariant;
-  } & ButtonProps
+  }
+  & ButtonProps
 > = ({
   token,
   buttonLabel,
   disabled,
   onClick,
-  iconSize = 'small',
-  downArrowIconSize = 'small',
-  textVariant = 'bodyMedium' as TypographyVariant,
   ...props
 }) => (
   <InputAdornment position="end">
@@ -38,44 +25,44 @@ const TokenAdornment: FC<
       variant="text"
       color="primary"
       sx={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        cursor: 'pointer',
-        border: '1px solid transparent',
-        fontWeight: 'normal',
-        // backgroundColor: 'primary.light',
-        // '&:hover': {
-        //   backgroundColor: 'primary.light',
-        // }
-      }}
-      // If no click handler is provided, disable so that
-      // no mouse events work (i.e. no hover bg)
+          display: 'inline-flex',
+          alignItems: 'center',
+          cursor: 'pointer',
+          border: '1px solid transparent',
+          fontWeight: 'normal',
+          // backgroundColor: 'primary.light',
+          // '&:hover': {
+          //   backgroundColor: 'primary.light',
+          // }          
+        }}
+        // If no click handler is provided, disable so that
+        // no mouse events work (i.e. no hover bg)
       disabled={disabled || !onClick}
       onClick={onClick}
       {...props}
-    >
+      >
       <Row gap={0.5}>
         {token.logo ? (
           <Box
             component="img"
             src={token.logo}
             alt=""
-            sx={{
-              minWidth: IconSize[iconSize],
-              width: IconSize[iconSize],
-              height: IconSize[iconSize],
-            }}
-          />
-        ) : null}
+            sx={{ 
+                minWidth: IconSize.small,
+                width: IconSize.small,
+                height: IconSize.small
+              }}
+            /> 
+          ) : null}
         <Box sx={{ color: 'text.tertiary' }}>
-          <Typography variant={textVariant} fontWeight="fontWeightRegular">
+          <Typography variant="bodyMedium" fontWeight="fontWeightRegular">
             {buttonLabel || token.symbol}
           </Typography>
         </Box>
         {onClick && (
           <KeyboardArrowDownIcon
             sx={{
-              fontSize: downArrowIconSize || 18,
+              fontSize: 18,
               color: hexToRgba(BeanstalkPalette.lightestGrey, 0.87)
             }}
           />
@@ -83,6 +70,6 @@ const TokenAdornment: FC<
       </Row>
     </Button>
   </InputAdornment>
-);
+  );
 
 export default TokenAdornment;

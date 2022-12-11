@@ -1,5 +1,4 @@
 export enum SGEnvironments {
-  DNET_2_0_3 = 'dnet-2.0.3',
   BF_PROD = 'bf-prod',
   BF_DEV = 'bf-dev',
   BF_TEST = 'bf-test',
@@ -17,17 +16,10 @@ type SGEnvironment = {
 }
 
 export const SUBGRAPH_ENVIRONMENTS : Record<SGEnvironments, SGEnvironment> = {
-  [SGEnvironments.DNET_2_0_3]: {
-    name: 'Decentralized Network v2.0.3',
-    subgraphs: {
-      beanstalk: `https://gateway.thegraph.com/api/${import.meta.env.VITE_THEGRAPH_API_KEY}/subgraphs/id/R9rnzRuiyDybfDsZfoM7eA9w8WuHtZKbroGrgWwDw1d`,
-      bean: 'https://graph.node.bean.money/subgraphs/name/bean', // fixme
-    }
-  },
   [SGEnvironments.BF_PROD]:       {
     name: 'Beanstalk Farms / Production',
     subgraphs: {
-      beanstalk: 'https://graph.node.bean.money/subgraphs/name/beanstalk-dev',
+      beanstalk: 'https://graph.node.bean.money/subgraphs/name/beanstalk',
       bean: 'https://graph.node.bean.money/subgraphs/name/bean'
     },
   },

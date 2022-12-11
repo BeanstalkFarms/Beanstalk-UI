@@ -10,7 +10,7 @@ import { tickFormatTruncated } from '~/components/Analytics/formatters';
 
 import { FC } from '~/types';
 
-const getValue = (season: SnapshotData<SeasonalSownQuery>) => toTokenUnitsBN(season.sownBeans, BEAN[1].decimals).toNumber();
+const getValue = (season: SnapshotData<SeasonalSownQuery>) => toTokenUnitsBN(season.totalSownBeans, BEAN[1].decimals).toNumber();
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const statProps = {
   title: 'Beans Sown',

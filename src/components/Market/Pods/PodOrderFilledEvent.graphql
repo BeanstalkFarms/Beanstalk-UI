@@ -4,5 +4,9 @@ query PodOrderFilledEvent($id: ID!) {
     order {
       ...PodOrder
     }
+#    transaction {
+#      id
+#      timestamp
+#    }
   }
 }

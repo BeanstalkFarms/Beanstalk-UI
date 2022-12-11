@@ -28,8 +28,8 @@ import { FC } from '~/types';
 
 const castField = (data: SunButtonQuery['fields'][number]) => ({
   season:   new BigNumber(data.season),
-  issuedSoil:  toTokenUnitsBN(data.issuedSoil, BEAN[1].decimals),
-  temperature: new BigNumber(data.temperature),
+  newSoil:  toTokenUnitsBN(data.newSoil, BEAN[1].decimals),
+  temperature: new BigNumber(data.weather),
   podRate:  new BigNumber(data.podRate),
 });
 const castSeason = (data: SunButtonQuery['seasons'][number]) => ({
@@ -159,7 +159,7 @@ const PriceButton: FC<ButtonProps> = ({ ...props }) => {
         <SeasonCard
           season={season.plus(1)}
           rewardBeans={peg.rewardBeans}
-          issuedSoil={peg.soilStart}
+          newSoil={peg.soilStart}
           podRate={NEW_BN}
           temperature={beanstalkField.weather.yield.plus(peg.deltaTemperature)} // FIXME expected
           deltaDemand={peg.deltaPodDemand}
@@ -180,7 +180,7 @@ const PriceButton: FC<ButtonProps> = ({ ...props }) => {
               temperature={s.temperature}
               deltaTemperature={deltaTemperature}
               deltaDemand={undefined}
-              issuedSoil={s.issuedSoil}
+              newSoil={s.newSoil}
               podRate={s.podRate}
             />
           );

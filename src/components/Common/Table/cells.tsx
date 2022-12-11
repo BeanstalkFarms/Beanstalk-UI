@@ -99,7 +99,7 @@ const COLUMNS = {
         placement="right"
         title="">
         <Row gap={1}>
-          <EntityIcon type="sell" />
+          <EntityIcon type="listing" />
           <Typography display={{ xs: 'none', md: 'block' }}>
             #{params.row.id}
           </Typography>
@@ -126,7 +126,7 @@ const COLUMNS = {
         placement="right"
         title="">
         <Row gap={1}>
-          <EntityIcon type="buy" />
+          <EntityIcon type="order" />
           <Typography display={{ xs: 'none', md: 'block' }}>
             {params.row.id.substring(0, 8)}
           </Typography>
@@ -170,8 +170,7 @@ const COLUMNS = {
     headerAlign: 'left',
     flex: 1,
     renderCell: (params: GridRenderCellParams<any, PodListing | PodOrder>) => {
-      const total = 'totalAmount' in params.row ? params.row.totalAmount : params.row.originalAmount; 
-      const progress = params.row.filledAmount.div(total).times(100);
+      const progress = params.row.filledAmount.div(params.row.totalAmount).times(100);
       return (
         <Row gap={1} width="100%">
           <Box sx={{ flex: 1 }}>

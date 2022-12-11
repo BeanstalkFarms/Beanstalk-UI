@@ -32,7 +32,6 @@ const Volume: FC<{ height?: SeasonPlotBaseProps['height'] }> = ({ height }) => {
       StatProps={statProps}
       LineChartProps={lineChartProps}
       queryConfig={queryConfig}
-      dateKey="timestamp"
     />
   );
 };

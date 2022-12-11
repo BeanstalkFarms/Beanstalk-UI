@@ -51,7 +51,6 @@ type SeasonPlotFinalProps<T extends MinimumViableSnapshotQuery> =
     /**
      *
      */
-    dateKey?: 'timestamp' | 'createdAt';
     queryConfig?: Partial<QueryOptions>;
     StatProps: Omit<StatProps, 'amount' | 'subtitle'>;
     LineChartProps?: Pick<BaseChartProps, 'curve' | 'isTWAP'>;
@@ -69,7 +68,6 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
   height = '175px',
   StatProps: statProps, // renamed to prevent type collision
   LineChartProps,
-  dateKey = 'createdAt',
   queryConfig,
   stackedArea,
 }: SeasonPlotFinalProps<T>) {
@@ -91,7 +89,7 @@ function SeasonPlot<T extends MinimumViableSnapshotQuery>({
     [seasonsQuery, getValue]
   );
 
-  const queryData: QueryData = useGenerateChartSeries(queryParams, timeTabParams[0], dateKey, stackedArea);
+  const queryData: QueryData = useGenerateChartSeries(queryParams, timeTabParams[0], stackedArea);
 
   return (
     <BaseSeasonPlot

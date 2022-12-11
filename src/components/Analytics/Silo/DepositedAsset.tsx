@@ -24,7 +24,7 @@ const DepositedAsset: FC<{
   asset
 }) => {
   const getValue = useCallback(
-    (season: SnapshotData<SeasonalDepositedSiloAssetQuery>) => toTokenUnitsBN(season.depositedAmount, asset.decimals).toNumber(),
+    (season: SnapshotData<SeasonalDepositedSiloAssetQuery>) => toTokenUnitsBN(season.totalDepositedAmount, asset.decimals).toNumber(),
     [asset]
   );
   const statProps = useMemo(() => ({

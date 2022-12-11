@@ -8,10 +8,10 @@ query HistoricalOrders(
     historyID
     status
     # ---
-    podAmount
+    amount
     maxPlaceInLine
     pricePerPod
-    podAmountFilled
+    filledAmount
     # ---
     updatedAt
   }

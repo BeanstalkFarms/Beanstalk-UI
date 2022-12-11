@@ -65,9 +65,6 @@ const ListingPage: FC<{}> = () => {
       </GenericZero>
     );
   }
-
-  console.log('SUBGRAPH LISTING: ', listing);
-  console.log('IS VALID LISTING: ', listingValid);
   
   return (
     <Container maxWidth="sm">

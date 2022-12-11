@@ -10,7 +10,7 @@ query SeasonalRRoR($season_lte: Int, $first: Int) {
   ) {
     id
     season
-    createdAt
+    timestamp
     realRateOfReturn
   }
 }

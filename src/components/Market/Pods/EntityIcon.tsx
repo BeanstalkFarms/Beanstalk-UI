@@ -6,13 +6,13 @@ import { PODS } from '~/constants/tokens';
 
 import { FC } from '~/types';
 
-const EntityIcon : FC<{ size?: number, type: 'listing' | 'order' | 'create' | 'buy' | 'cancel' | 'unkonwn' | 'sell' }> = ({ size = 25, type }) => (
+const EntityIcon : FC<{ size?: number, type: 'listing' | 'order' }> = ({ size = 25, type }) => (
   <Stack
     alignItems="center"
     justifyContent="center"
     sx={{
       backgroundColor: (
-        type === 'listing' || type === 'sell'
+        type === 'listing'
           ? BeanstalkPalette.mediumRed
           : BeanstalkPalette.mediumGreen
       ),

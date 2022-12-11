@@ -9,7 +9,7 @@ import { LineChartProps } from '~/components/Common/Charts/LineChart';
 
 import { FC } from '~/types';
 
-const getValue = (season: SnapshotData<SeasonalSeedsQuery>) => toTokenUnitsBN(season.seeds, SEEDS.decimals).toNumber();
+const getValue = (season: SnapshotData<SeasonalSeedsQuery>) => toTokenUnitsBN(season.totalSeeds, SEEDS.decimals).toNumber();
 const formatValue = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 const statProps = {
   title: 'Seeds',

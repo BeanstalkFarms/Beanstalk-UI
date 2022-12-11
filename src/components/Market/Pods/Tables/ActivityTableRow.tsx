@@ -15,13 +15,10 @@ import { FC } from '~/types';
 const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZoneName;
 
 const actionToModifier = {
-  buy: '💰',
-  sell: '💰',
+  fill: '💰',
   create: '✏️',
   cancel: '❌',
   unknown: undefined,
-  listing: '💰',
-  order: '✏️'
 };
 
 const ActivityTableRow: FC<BoxProps & { event: MarketEvent }> = (props) => {
@@ -53,7 +50,7 @@ const ActivityTableRow: FC<BoxProps & { event: MarketEvent }> = (props) => {
             {actionToModifier[e.action]}
           </Typography>
           {e.entity !== 'unknown' ? (
-            <EntityIcon type={e.entity as any} />
+            <EntityIcon type={e.entity} />
           ) : null}
           <Link
             href={`https://etherscan.io/tx/${e.hash}`}

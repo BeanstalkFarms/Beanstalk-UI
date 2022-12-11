@@ -7,15 +7,15 @@ query MarketplaceEvents(
   # $listings_updatedAt_lt: BigInt!
 ) {
   marketplaceEvents(
-    orderBy: createdAt,
+    orderBy: timestamp,
     orderDirection: desc,
     first: $events_first,
     where: { 
-      createdAt_lt: $events_timestamp_lt
+      timestamp_lt: $events_timestamp_lt
     }
   ) {
     hash
-    createdAt
+    timestamp
     # --------
     # LISTINGS
     # --------
@@ -74,4 +74,56 @@ query MarketplaceEvents(
       # => pricePerPod
     }
   }
+
+  # podOrders(
+  #   first: $orders_first,
+  #   where: {
+  #     updatedAt_lt: $orders_updatedAt_lt
+  #     status_in: [
+  #       ACTIVE,
+  #       CANCELLED,
+  #       CANCELLED_PARTIAL,
+  #       FILLED
+  #       # there is no FILLED_PARTIAL for orders
+  #     ], 
+  #   }, 
+  #   orderBy: updatedAt, 
+  #   orderDirection: desc
+  # ) {
+  #   id
+  #   status
+  #   # ---
+  #   amount
+  #   maxPlaceInLine
+  #   pricePerPod
+  #   historyID
+  #   # ---
+  #   updatedAt
+  # }
+
+  # podListings(
+  #   first: $listings_first,
+  #   where: {
+  #     updatedAt_lt: $listings_updatedAt_lt,
+  #     status_in: [
+  #       CANCELLED,
+  #       CANCELLED_PARTIAL,
+  #       FILLED,
+  #       FILLED_PARTIAL,
+  #     ]
+  #   },
+  #   orderBy: updatedAt,
+  #   orderDirection: desc
+  # ) {
+  #   id
+  #   status
+  #   # ---
+  #   amount
+  #   pricePerPod
+  #   index
+  #   originalIndex
+  #   historyID
+  #   # ---
+  #   updatedAt
+  # }
 }

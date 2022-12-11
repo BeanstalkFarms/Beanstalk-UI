@@ -8,10 +8,10 @@ query FarmerSiloAssetSnapshots(
         hourlySnapshots(orderBy: season, orderDirection: asc) {
           id
           season
-          deltaDepositedBDV # hourly Deposited BDV
-          deltaDepositedAmount #hourly Deposited Amount
-          depositedBDV # total Deposited BDV
-          createdAt
+          hourlyDepositedBDV
+          hourlyDepositedAmount
+          totalDepositedBDV
+          timestamp
         }
       }
     }

@@ -64,7 +64,6 @@ const generateStackedAreaSeriesData = <T extends MinimumViableSnapshotQuery>(
   params: SeasonsQueryItem<T>[], 
   seasonAggregation: SeasonAggregation, 
   keys: string[],
-  dateKey: 'timestamp' | 'createdAt'
 ) => {
   const seasonsData = reduceSeasonsQueries(params, keys);
   const points: BaseDataPoint[] = [];
@@ -91,7 +90,7 @@ const generateStackedAreaSeriesData = <T extends MinimumViableSnapshotQuery>(
         if (sd) agg[_k] += sd;
       }
       if (j === 0) {
-        d = secondsToDate(season[dateKey]);
+        d = secondsToDate(season.timestamp);
         s = season.season as number;
         j += 1;
       } else if (i === lastIndex || j === 24) {
@@ -115,7 +114,7 @@ const generateStackedAreaSeriesData = <T extends MinimumViableSnapshotQuery>(
       points.push({
         ...seasonData,
         season: seasonData.season as number,
-        date: secondsToDate(seasonData[dateKey])
+        date: secondsToDate(seasonData.timestamp)
       } as BaseDataPoint);
     }
   }
@@ -130,7 +129,6 @@ const generateStackedAreaSeriesData = <T extends MinimumViableSnapshotQuery>(
 const generateSeriesData = <T extends MinimumViableSnapshotQuery>(
   params: SeasonsQueryItem<T>[], 
   seasonAggregation: SeasonAggregation,
-  dateKey: 'timestamp' | 'createdAt'
 ) => {
   const points: BaseDataPoint[][] = params.map(({ query, getValue }) => {
     const _points: BaseDataPoint[] = [];
@@ -148,7 +146,7 @@ const generateSeriesData = <T extends MinimumViableSnapshotQuery>(
         if (!season) continue; // skip empty points
         v += getValue(season);
         if (j === 0) {
-          d = secondsToDate(season.createdAt);
+          d = secondsToDate(season.timestamp);
           s = season.season as number;
           j += 1;
         } else if (
@@ -172,7 +170,7 @@ const generateSeriesData = <T extends MinimumViableSnapshotQuery>(
         if (!season || !season.season) continue;
         _points.push({
           season: season.season as number,
-          date: secondsToDate(season[dateKey]),
+          date: secondsToDate(season.timestamp),
           value: getValue(season),
         } as unknown as BaseDataPoint);
       }
@@ -196,11 +194,7 @@ export type ChartSeriesParams = {
 const useGenerateChartSeries = <T extends MinimumViableSnapshotQuery>(
   params: SeasonsQueryItem<T>[],
   timeTabState: TimeTabState,
-  // whereas the beanstalk subgraph uses 'createdAt', the bean subgraph uses 'timestamp'
-  // include param to choose which key to use
-  dateKey: 'timestamp' | 'createdAt',
   stackedArea?: boolean,
-  
 ): ChartSeriesParams => {
   const loading = !!(params.find((p) => p.query.loading));
 
@@ -214,10 +208,10 @@ const useGenerateChartSeries = <T extends MinimumViableSnapshotQuery>(
   const mergeData = useMemo(() => {
     const _keys = params.map((param, i) => param.key ?? i.toString());
     const series = stackedArea 
-      ? generateStackedAreaSeriesData(params, timeTabState[0], _keys, dateKey)
-      : generateSeriesData(params, timeTabState[0], dateKey);
+      ? generateStackedAreaSeriesData(params, timeTabState[0], _keys)
+      : generateSeriesData(params, timeTabState[0]);
     return { data: series, keys: _keys };
-  }, [params, stackedArea, timeTabState, dateKey]);
+  }, [params, stackedArea, timeTabState]);
 
   return { ...mergeData, error, loading };
 };

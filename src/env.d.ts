@@ -17,11 +17,6 @@ interface ImportMetaEnv {
    * Only works with local forked nodes.
    */
   readonly VITE_OVERRIDE_FARMER_ACCOUNT?: string
-
-  /**
-   * API key for decentralized network subgraph
-   */
-  readonly VITE_THEGRAPH_API_KEY: string;
 }
 
 interface ImportMeta {
