@@ -69,6 +69,7 @@ declare module '@mui/material/Typography' {
     bodySmall: true;
     bodyMedium: true;
     bodyLarge: true;
+    headerSmall: true;
   }
 }
 
@@ -334,6 +335,7 @@ const muiThemeBase: ThemeOptions = {
     },
     caption: {
       fontSize: FontSize.xs, // 12px
+      lineHeight: '0.938rem', // 15px
       fontWeight: FontWeight.normal,
     },
     // nav labels, nav button labels, token labels (module)
