@@ -8,10 +8,10 @@ import SellPods from './forms/SellPods';
 import { PodOrderAction, podsOrderActionTypeAtom } from './info/atom-context';
 import useTabs from '~/hooks/display/useTabs';
 
-const tabSX = {
+const tabSx = {
   '&.MuiTab-root': {
     fontSize: FontSize.sm,
-    mr: 0.8,
+    mr: 1,
     '&.Mui-selected': {
       fontSize: FontSize.sm,
     },
@@ -37,8 +37,8 @@ const MarketActionsV2: React.FC<{}> = () => {
     <Card sx={{ width: '100%', overflow: 'visible' }}>
       <Box sx={{ p: 1.2 }}>
         <Tabs value={orderType} onChange={handleSetOrderType}>
-          <Tab label="BUY" sx={tabSX} />
-          <Tab label="SELL" sx={tabSX} />
+          <Tab label="BUY" sx={tabSx} />
+          <Tab label="SELL" sx={tabSx} />
         </Tabs>
       </Box>
       <Divider />

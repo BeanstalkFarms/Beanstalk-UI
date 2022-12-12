@@ -1,5 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import { Box, Stack, useMediaQuery, useTheme } from '@mui/material';
+import {
+  Box,
+  Stack,
+  ThemeProvider,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 
 import useNavHeight from '~/hooks/app/usePageDimensions';
 import useBanner from '~/hooks/app/useBanner';
@@ -9,11 +15,12 @@ import MarketActivityV2, {
 } from '~/components/Market/PodsV2/MarketActivityV2';
 import OrderBook from '~/components/Market/PodsV2/OrderBook';
 import MarketChart from '~/components/Market/PodsV2/chart/MarketChart';
+import { muiThemeCondensed } from '~/components/App/muiTheme';
 
 const SECTION_MAX_WIDTH = 400;
 const GAP = 0.8;
 
-const PodsMarketNew: React.FC<{}> = () => {
+const MarketPage: React.FC<{}> = () => {
   const banner = useBanner();
   const navHeight = useNavHeight(!!banner);
   const theme = useTheme();
@@ -68,4 +75,10 @@ const PodsMarketNew: React.FC<{}> = () => {
   );
 };
 
-export default PodsMarketNew;
+const PodMarketV2: React.FC<{}> = () => (
+  <ThemeProvider theme={muiThemeCondensed}>
+    <MarketPage />
+  </ThemeProvider>
+);
+
+export default PodMarketV2;

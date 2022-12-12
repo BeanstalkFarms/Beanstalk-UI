@@ -29,11 +29,13 @@ declare module '@mui/material/styles' {
     bodySmall: React.CSSProperties;
     bodyMedium: React.CSSProperties;
     bodyLarge: React.CSSProperties;
+    headerSmall: React.CSSProperties;
   }
   interface TypographyVariantsOptions {
     bodySmall?: React.CSSProperties;
     bodyMedium?: React.CSSProperties;
     bodyLarge?: React.CSSProperties;
+    headerSmall?: React.CSSProperties;
   }
 
   interface TypeText {
@@ -88,13 +90,15 @@ export const hexToRgba = (hex: string, alpha?: number) => {
   }
 
   const isCondensedHex = stripped.length === 3;
-  const hexArr = stripped.reduce((prev, curr) => {
-    if (isCondensedHex) { 
+  const hexArr = stripped
+    .reduce((prev, curr) => {
+      if (isCondensedHex) {
         prev += curr;
-    }
-    prev += curr;
-    return prev;
-  },'' as string).toString();
+      }
+      prev += curr;
+      return prev;
+    }, '' as string)
+    .toString();
 
   const r = parseInt(hexArr.slice(0, 2), 16);
   const g = parseInt(hexArr.slice(2, 4), 16);
@@ -345,6 +349,12 @@ const muiThemeBase: ThemeOptions = {
       fontSize: FontSize['2xl'], // 24px
       fontWeight: FontWeight.medium,
       lineHeight: '1.875rem', // 30px
+    },
+    // smaller, bold headers & text
+    headerSmall: {
+      fontFamily: 'Futura PT',
+      fontSize: FontSize.sm, // 14px
+      fontWeight: FontWeight.bold,
     },
     // page subtitles
     subtitle1: {
