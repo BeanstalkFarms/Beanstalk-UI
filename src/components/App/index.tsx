@@ -136,14 +136,6 @@ export default function App() {
           backgroundRepeat: 'no-repeat',
           width: '100%',
           minHeight: `calc(100vh - ${navHeight}px)`,
-          paddingTop: {
-            md: 4,
-            xs: 2,
-          },
-          paddingBottom: {
-            md: 4,
-            xs: 2,
-          },
         }}
       >
         {/* use zIndex to move content over content */}

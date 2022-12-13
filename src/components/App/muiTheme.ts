@@ -709,6 +709,20 @@ const muiThemeBase: ThemeOptions = {
         }),
       },
     },
+    MuiContainer: {
+      styleOverrides: {
+        root: sx({
+          paddingTop: {
+            md: 4,
+            xs: 2,
+          },
+          paddingBottom: {
+            md: 4,
+            xs: 2,
+          },
+        })
+      }
+    },
     MuiChip: {
       variants: [
         {

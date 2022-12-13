@@ -30,7 +30,7 @@ const PodsMarketNew: React.FC<{}> = () => {
   }, [BOTTOM_HEIGHT, accordionHeight, isMobile]);
 
   return (
-    <Box>
+    <Box py={0.8}>
       <Stack
         px={1}
         direction={{ xs: 'column', lg: 'row' }}
