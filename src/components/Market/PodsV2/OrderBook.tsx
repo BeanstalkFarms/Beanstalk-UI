@@ -1,17 +1,17 @@
-import { CircularProgress, Grid, Stack, Typography } from '@mui/material';
+import { CircularProgress, Stack, Typography } from '@mui/material';
 import React, { useMemo, useState } from 'react';
 import CondensedCard from '~/components/Common/Card/CondensedCard';
 import Row from '~/components/Common/Row';
 import SelectionGroup from '~/components/Common/SingleSelectionGroup';
 import ToggleGroup from '~/components/Common/ToggleGroup';
 import Centered from '~/components/Common/ZeroState/Centered';
-import { ZERO_BN } from '~/constants';
 import useOrderbook, {
   OrderbookAggregation,
   OrderbookPrecision,
 } from '~/hooks/beanstalk/useOrderbook';
-import { displayBN } from '~/util';
 import { scrollbarStyles } from './common/tableStyles';
+import OrderBookRow from './tables/OrderbookRow';
+import OrderbookTableHeader from './tables/OrderbookTableHeader';
 
 const ORDER_GREEN = '#60D394';
 const LISTING_RED = '#EC4067';
@@ -74,50 +74,14 @@ const OrderBook: React.FC<{}> = () => {
     >
       <Stack
         height="100%"
+        py={1}
         sx={{
           borderTop: '0.5px solid',
           borderColor: 'divider',
           ...scrollbarStyles,
         }}
-        py={1}
       >
-        {/* TABLE HEADER */}
-        <Grid container direction="row" spacing={1} px={1.5}>
-          <Grid item container xs={1.5}>
-            <Grid item xs={12} alignItems="flex-start" textAlign="left">
-              <Typography variant="caption" color="text.secondary">
-                PRICE
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item container xs={5.25}>
-            <Grid item xs={6} alignItems="flex-start" textAlign="left">
-              <Typography variant="caption" color="text.secondary">
-                DEPTH(BEAN)
-              </Typography>
-            </Grid>
-            <Grid item xs={6} alignItems="flex-end" textAlign="right">
-              <Typography variant="caption" color="text.secondary">
-                {isMinMax ? 'MAX' : 'AVG'} PLACE IN LINE (BUY)
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item container xs={5.25}>
-            <Grid item xs={6} alignItems="flex-start">
-              <Typography variant="caption" color="text.secondary">
-                {isMinMax ? 'MIN' : 'AVG'} PLACE IN LINE (SELL)
-              </Typography>
-            </Grid>
-            <Grid item xs={6} alignItems="flex-end" textAlign="right">
-              <Typography variant="caption" color="text.secondary">
-                DEPTH(PODS)
-              </Typography>
-            </Grid>
-          </Grid>
-        </Grid>
-        {/*
-         *TABLE BODY
-         */}
+        <OrderbookTableHeader isMinMax={aggregation === 'min-max'} />
         {error ? (
           <Centered p={2}>
             <Typography color="text.tertiary">
@@ -141,64 +105,11 @@ const OrderBook: React.FC<{}> = () => {
             })}
           >
             {filteredData.map(([priceKey, bucket]) => (
-              <Grid
-                container
-                item
-                direction="row"
-                spacing={1}
-                px={1.5}
-                py={0}
-                key={priceKey}
-              >
-                <Grid item container xs={1.5}>
-                  {/*
-                   * PRICE DATA
-                   */}
-                  <Grid item xs={12}>
-                    <Typography variant="caption" color="text.primary">
-                      {priceKey}
-                    </Typography>
-                  </Grid>
-                </Grid>
-                {/*
-                 * BUY DATA
-                 */}
-                <Grid item container xs={5.25}>
-                  <Grid item xs={6}>
-                    <Typography variant="caption" sx={{ color: ORDER_GREEN }}>
-                      {displayBN(bucket.depth.bean || ZERO_BN)}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6} alignItems="flex-end" textAlign="right">
-                    <Typography variant="caption" sx={{ color: ORDER_GREEN }}>
-                      {displayBN(
-                        isMinMax
-                          ? bucket.placeInLine.buy.max
-                          : bucket.placeInLine.buy.avg
-                      )}
-                    </Typography>
-                  </Grid>
-                </Grid>
-                {/*
-                 *  SELL DATA
-                 */}
-                <Grid item container xs={5.25}>
-                  <Grid item xs={6}>
-                    <Typography variant="caption" sx={{ color: LISTING_RED }}>
-                      {displayBN(
-                        isMinMax
-                          ? bucket.placeInLine.sell.min
-                          : bucket.placeInLine.sell.avg
-                      )}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6} alignItems="flex-end" textAlign="right">
-                    <Typography variant="caption" sx={{ color: LISTING_RED }}>
-                      {displayBN(bucket.depth.pods)}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
+              <OrderBookRow
+                priceKey={priceKey}
+                bucket={bucket}
+                isMinMax={aggregation === 'min-max'}
+              />
             ))}
           </Stack>
         )}

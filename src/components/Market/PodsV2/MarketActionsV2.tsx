@@ -1,4 +1,4 @@
-import { Box, Card, Divider, Stack, Tab, Tabs } from '@mui/material';
+import { Box, Card, Stack, Tab, Tabs } from '@mui/material';
 import { useAtom } from 'jotai';
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -11,7 +11,8 @@ import useTabs from '~/hooks/display/useTabs';
 const tabSx = {
   '&.MuiTab-root': {
     fontSize: FontSize.sm,
-    mr: 1,
+    p: 0.5,
+    mr: 0.5,
     '&.Mui-selected': {
       fontSize: FontSize.sm,
     },
@@ -35,13 +36,12 @@ const MarketActionsV2: React.FC<{}> = () => {
 
   return (
     <Card sx={{ width: '100%', overflow: 'visible' }}>
-      <Box sx={{ p: 1.2 }}>
+      <Box p={1} sx={{ borderBottom: '0.5px solid', borderColor: 'divider' }}>
         <Tabs value={orderType} onChange={handleSetOrderType}>
           <Tab label="BUY" sx={tabSx} />
           <Tab label="SELL" sx={tabSx} />
         </Tabs>
       </Box>
-      <Divider />
       <Stack sx={{ width: '100%' }}>
         {orderType === PodOrderAction.BUY && <BuyPods />}
         {orderType === PodOrderAction.SELL && <SellPods />}

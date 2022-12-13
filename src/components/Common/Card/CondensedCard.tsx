@@ -1,27 +1,31 @@
 import React from 'react';
 import { Card, CardProps, Typography } from '@mui/material';
-import { FC } from '~/types';
 import Row from '../Row';
 
 type ICondensedCard = {
-  title: string;
-  actions?: React.ReactNode;
-};
+  children: React.ReactNode;
+  title: string | JSX.Element;
+  actions?: JSX.Element;
+} & Omit<CardProps, 'title'>;
 
 /**
  * designed to be used in context of the condensed MUI theme
  */
-const CondensedCard: FC<ICondensedCard & CardProps> = ({
-  children,
+const CondensedCard: React.FC<ICondensedCard> = ({
   title,
+  children,
   actions,
   ...cardProps
 }) => (
   <Card {...cardProps}>
-    <Row justifyContent="space-between" p={1}>
-      <Typography variant="headerSmall" p={0.5}>
-        {title}
-      </Typography>
+    <Row justifyContent="space-between" width="100%" p={1}>
+      {typeof title === 'string' ? (
+        <Typography variant="headerSmall" p={0.5}>
+          {title}
+        </Typography>
+      ) : (
+        title
+      )}
       {actions}
     </Row>
     {children}

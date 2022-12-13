@@ -23,13 +23,17 @@ const SubAction: FC<{ isActive: boolean; onClick: () => void }> = ({
     sx={{
       minWidth: 0,
       maxHeight: '23px',
-      padding: 0.4,
-      color: isActive ? undefined : 'text.primary',
-      backgroundColor: isActive ? BeanstalkPalette.lightYellow : undefined,
+      padding: 0.5,
+      color: 'text.primary',
+      backgroundColor: isActive
+        ? BeanstalkPalette.theme.winter.primary
+        : undefined,
       ':hover': {
-        backgroundColor: isActive ? BeanstalkPalette.lightYellow : undefined,
+        backgroundColor: isActive
+          ? BeanstalkPalette.theme.winter.primaryDark
+          : undefined,
       },
-      borderRadius: 0.4,
+      borderRadius: '4px',
     }}
   >
     {children}

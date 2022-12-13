@@ -20,21 +20,28 @@ const SellPods: React.FC<{}> = () => {
 
   return (
     <Stack>
-      <Stack sx={{ p: 0.8 }} gap={1}>
+      <Stack p={1} gap={1}>
         {/* buy or sell toggle */}
         <SubActionSelect />
-        {(order && orderType === PodOrderType.FILL) && (
+        {order && orderType === PodOrderType.FILL && (
           <>
             <StatHorizontal
               label="Place in Line"
-              labelTooltip="Any Pod in this range is eligible to sell to this Order.">
+              labelTooltip="Any Pod in this range is eligible to sell to this Order."
+            >
               0 - {displayBN(order.maxPlaceInLine)}
             </StatHorizontal>
             <StatHorizontal label="Price per Pod">
-              <Row gap={0.25}><TokenIcon token={BEAN[1]} /> {displayFullBN(order.pricePerPod, 4, 2)}</Row>
+              <Row gap={0.25}>
+                <TokenIcon token={BEAN[1]} />{' '}
+                {displayFullBN(order.pricePerPod, 4, 2)}
+              </Row>
             </StatHorizontal>
             <StatHorizontal label="Amount">
-              <Row gap={0.25}><TokenIcon token={PODS} /> {displayFullBN(order.remainingAmount, 2, 0)}</Row>
+              <Row gap={0.25}>
+                <TokenIcon token={PODS} />{' '}
+                {displayFullBN(order.remainingAmount, 2, 0)}
+              </Row>
             </StatHorizontal>
           </>
         )}
@@ -49,7 +56,9 @@ const SellPods: React.FC<{}> = () => {
               <Outlet />
             ) : (
               <Soon>
-                <Typography textAlign="center" color="gray">Select a pod order on the chart to sell to.</Typography>
+                <Typography textAlign="center" color="gray">
+                  Select a pod order on the chart to sell to.
+                </Typography>
               </Soon>
             )}
           </>

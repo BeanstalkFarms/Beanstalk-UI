@@ -171,6 +171,9 @@ export const BeanstalkPalette = {
       selected: hexToRgba('#168AAD', 40),
       red: '#DA2C38',
       error: '#E33D51',
+      orderGreen: '#60D394',
+      listingRed: '#EC4067',
+      primaryDark: '#0074AF',
       chart: {
         primaryLight: '#9DDEFF',
         blue: '#6B9AC4',
