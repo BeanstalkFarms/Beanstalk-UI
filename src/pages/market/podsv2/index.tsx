@@ -20,7 +20,7 @@ const PodsMarketNew: React.FC<{}> = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
 
   // sizes & calculations
-  const BOTTOM_HEIGHT = navHeight * 2.5;
+  const BOTTOM_HEIGHT = navHeight + 35;
   const CONTAINER_HEIGHT = `calc(100vh - ${BOTTOM_HEIGHT}px)`;
   const [accordionHeight, setAccordionHeight] = useState(sizes.CLOSED);
 
