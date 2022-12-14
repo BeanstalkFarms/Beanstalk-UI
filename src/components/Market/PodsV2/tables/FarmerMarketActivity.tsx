@@ -1,8 +1,11 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import ActivityTable from './activityTable';
 import { POD_MARKET_COLUMNS } from './market-activity-columns';
 import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
-import useFarmerMarket from '~/hooks/farmer/useFarmerMarket';
+import useFarmerMarket, {
+  FarmerMarketItem,
+} from '~/hooks/farmer/useFarmerMarket';
+import FarmerMarketDialog from '../Actions/FarmerMarketDialog';
 
 const C = POD_MARKET_COLUMNS;
 const columns = [
@@ -20,6 +23,10 @@ const columns = [
 ];
 
 const FarmerMarketActivity: React.FC<{}> = () => {
+  const [open, setOpen] = useState(false);
+  const [activeItem, setActiveItem] = useState<FarmerMarketItem | undefined>(
+    undefined
+  );
   const { data: farmerMarket } = useFarmerMarket();
 
   const harvestableIndex = useHarvestableIndex();
@@ -27,7 +34,7 @@ const FarmerMarketActivity: React.FC<{}> = () => {
 
   const rows = useMemo(
     () =>
-    farmerMarket.map((d, i) => ({
+      farmerMarket.map((d, i) => ({
         ...d,
         idx: i,
       })),
@@ -35,14 +42,26 @@ const FarmerMarketActivity: React.FC<{}> = () => {
   );
 
   return (
-    <ActivityTable
-      columns={columns}
-      rows={rows}
-      loading={isLoading}
-      getRowId={(row) => row.idx}
-      isUserTable
-      title="Orders and Listings"
-    />
+    <>
+      <ActivityTable
+        columns={columns}
+        rows={rows}
+        loading={isLoading}
+        getRowId={(row) => row.idx}
+        isUserTable
+        title="Orders and Listings"
+        onRowClick={({ row }) => {
+          const item = rows.find((r) => r.id === row.id);
+          item && setActiveItem(item);
+          setOpen(true);
+        }}
+      />
+      <FarmerMarketDialog
+        open={open}
+        onClose={() => setOpen(false)}
+        item={activeItem}
+      />
+    </>
   );
 };
 

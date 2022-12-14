@@ -27,7 +27,7 @@ type IActivityTable = {
 };
 
 const sizeMap = {
-  0: 56, // closed
+  0: 48, // closed
   1: 300, // half
   2: 750, // full
 };
