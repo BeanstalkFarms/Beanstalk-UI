@@ -68,20 +68,12 @@ const FarmerMarketDialog: React.FC<Props> = ({ item, open, onClose }) => {
             </InfoRow>
             <InfoRow label="PRICE" {...sharedProps}>
               {item.priceType === 'dynamic' ? (
-                <Typography
-                  variant="bodySmall"
-                  color="text.secondary"
-                  component="span"
-                >
-                  {displayFullBN(item.pricePerPod, 2)}
-                  <img
-                    alt=""
-                    src={dynamicPriceIcon}
-                    style={{ height: 'inherit', width: 'auto' }}
-                  />
+                <Typography variant="bodySmall" color="text.secondary" component="span">
+                  {displayFullBN(item.pricePerPod, 2, 2)}
+                  <img alt="" src={dynamicPriceIcon} style={{ height: 'inherit', width: 'auto' }} />
                 </Typography>
               ) : (
-                displayFullBN(item.pricePerPod, 2)
+                displayFullBN(item.pricePerPod, 2, 2)
               )}
             </InfoRow>
             {isListing && (
@@ -90,58 +82,46 @@ const FarmerMarketDialog: React.FC<Props> = ({ item, open, onClose }) => {
               </InfoRow>
             )}
             <InfoRow label="PLACE IN LINE" {...sharedProps}>
-              {`${isListing ? '0 - ' : ''}${displayBN(
-                item.placeInPodline,
-              )} PODS`}
+              {`${isOrder ? '0 - ' : ''}${displayBN(item.placeInPodline)} PODS`}
             </InfoRow>
-            {isListing && (
-              <InfoRow label="EXPIRY">
-                {`${
-                  item.listing?.maxHarvestableIndex?.gt(0)
-                    ? displayBN(item.listing?.maxHarvestableIndex.minus(harvestableIndex))
-                    : 'N/A'
-                }`}
-              </InfoRow>
-            )}
-            <InfoRow label="% Filled" {...sharedProps}>
-              {`${displayFullBN(item.fillPct, 2)}%`}
+            {isListing && (() => {
+              const expiry = item.listing?.maxHarvestableIndex.minus(harvestableIndex);
+              return (
+                <InfoRow label="EXPIRY" {...sharedProps}>
+                  {expiry?.gt(0) ? expiry.toString() : 'N/A'}
+                </InfoRow>
+              );
+            })()}
+            <InfoRow label="% FILLED" {...sharedProps}>
+              {(() => {
+                const pct = displayFullBN(item.fillPct, 2);
+                if (pct === 'NaN') return '-%';
+                return `${pct}%`;
+              })()}
             </InfoRow>
             <InfoRow label="TOTAL" {...sharedProps}>
-              {`${displayFullBN(item.remainingAmount.div(item.pricePerPod), 2)} BEAN`}
+              {`${displayFullBN(item.totalBeans, 2)} BEAN`}
             </InfoRow>
             <InfoRow label="STATUS" {...sharedProps}>
               <Typography
                 variant="bodySmall"
-                sx={{
-                  color: openStates.includes(item.status)
-                    ? BeanstalkPalette.theme.winter.orderGreen
-                    : 'text.primary',
+                sx={{ 
+                  color: openStates.includes(item.status) ? BeanstalkPalette.theme.winter.orderGreen : 'text.secondary' 
                 }}
               >
                 {item.status.toUpperCase()}
               </Typography>
             </InfoRow>
           </Stack>
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            alignItems="center"
-            gap={1}
-            p={1}
-          >
+          <Stack direction="row" justifyContent="flex-end" alignItems="center" gap={1} p={1}>
             <Button variant="text" sx={{ color: 'red', padding: 1 }} onClick={onClose}>
               CANCEL
             </Button>
             <Button
               variant="contained"
               color="primary"
-              sx={{
-                pl: 3,
-                pr: 3,
-                pt: 1,
-                pb: 1,
-                borderRadius: '6px',
-                height: 'unset',
+              sx={{ 
+                pl: 3, pr: 3, pt: 1, pb: 1, borderRadius: '6px', height: 'unset'
               }}
             >
               EDIT

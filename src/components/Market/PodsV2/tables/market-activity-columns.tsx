@@ -150,9 +150,11 @@ export const POD_MARKET_COLUMNS = {
           params.value instanceof BigNumber
             ? displayBN(params.value)
             : params.value;
-        const isFixed = params.row.priceType === 'fixed';
-        const start = isFixed ? 0 : '*'; // FIX ME: this doesn't show correct value for dynamic pricing
-        return <>{`${start} - ${strVal}`}</>;
+        const isListing = params.row.action === 'sell';
+        if (isListing) {
+          return <>{strVal}</>;
+        }
+        return <>{`${params.row.priceType === 'fixed' ? '0' : '*'} - ${strVal}`}</>;
       },
     } as GridColumns[number]),
 
