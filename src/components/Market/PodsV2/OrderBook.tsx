@@ -13,12 +13,7 @@ import { scrollbarStyles } from './common/tableStyles';
 import OrderBookRow from './tables/OrderbookRow';
 import OrderbookTableHeader from './tables/OrderbookTableHeader';
 
-const ORDER_GREEN = '#60D394';
-const LISTING_RED = '#EC4067';
-
 const precisionOptions: OrderbookPrecision[] = [0.01, 0.02, 0.05, 0.1];
-
-const CELL_HEIGHT = 21.91;
 
 const toggleOptions = [
   { value: 'min-max', label: 'MIN/MAX' },
@@ -39,15 +34,6 @@ const OrderBook: React.FC<{}> = () => {
       reduceByPrecision({ precision, priceBuckets: data })
     ).sort((a, b) => parseFloat(b[0]) - parseFloat(a[0]));
   }, [data, precision, reduceByPrecision]);
-
-  const isMinMax = aggregation === 'min-max';
-
-  const tableHeight = useMemo(() => {
-    if (!filteredData) return '100%';
-    return `${filteredData.length * CELL_HEIGHT}px`;
-  }, [filteredData]);
-
-  const showData = true;
 
   return (
     <CondensedCard
@@ -73,7 +59,7 @@ const OrderBook: React.FC<{}> = () => {
       }
     >
       <Stack
-        height="100%"
+        height={{ xs: 300, lg: '100%' }}
         py={1}
         sx={{
           borderTop: '0.5px solid',

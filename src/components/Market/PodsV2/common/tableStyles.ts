@@ -54,7 +54,6 @@ const marketplaceTableStyle = {
       color: 'text.tertiary',
       fontWeight: FontWeight.normal,
     },
-
     // Cell
     '& .MuiDataGrid-cell': {
       fontSize: FontSize.xs,
@@ -62,6 +61,10 @@ const marketplaceTableStyle = {
       '&:focused': {
         outline: 'none',
       },
+      minHeight: '0 !important',
+      maxHeight: '24px !important',
+      pt: '4px !important',
+      pb: '4px !important',
       border: 'none',
     },
     '& .MuiDataGrid-cell:focus': {
@@ -71,6 +74,10 @@ const marketplaceTableStyle = {
 
     // Row
     '& .MuiDataGrid-row': {
+      minHeight: '0 !important',
+      maxHeight: '24px !important',
+      pt: '4px !important',
+      pb: '4px !important',
       borderBottom: 'none',
       // borderColor: hexToRgba(BeanstalkPalette.lightGrey, 0.8),
     },
