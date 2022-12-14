@@ -484,24 +484,31 @@ const Graph: FC<GraphProps> = ({
     if (selectedPoint) {
       setSelectedPoint(undefined);
       hideTooltip();
-    }
-    else {
-      setSelectedPoint(tooltipData);
-      if (tooltipData?.type === 'listing') {
-        const data = listings[tooltipData.index];
-        if (data) {
-          handleClickFill(PodOrderAction.BUY, PodOrderType.FILL);
-          navigate(`/market/listing/${data.id}?action=${MARKET_SLUGS[0]}`);
-        }
-      } else if (tooltipData?.type === 'order') {
-        const data = orders[tooltipData.index];
-        if (data) {
-          handleClickFill(PodOrderAction.SELL, PodOrderType.FILL);
-          navigate(`/market/order/${data.id}?action=${MARKET_SLUGS[1]}`);
+      navigate('/market');
+      if (orderAction !== PodOrderAction.BUY) {
+        setOrderAction(PodOrderAction.BUY);
+      }
+      if (orderType !== PodOrderType.ORDER) {
+        setOrderType(PodOrderType.ORDER);
+      }
+      } else {
+        setSelectedPoint(tooltipData);
+        if (tooltipData?.type === 'listing') {
+          const data = listings[tooltipData.index];
+          if (data) {
+            handleClickFill(PodOrderAction.BUY, PodOrderType.FILL);
+            navigate(`/market/listing/${data.id}?action=${MARKET_SLUGS[0]}`);
+          }
+        } else if (tooltipData?.type === 'order') {
+          const data = orders[tooltipData.index];
+          if (data) {
+            handleClickFill(PodOrderAction.SELL, PodOrderType.FILL);
+            navigate(`/market/order/${data.id}?action=${MARKET_SLUGS[1]}`);
+          }
         }
       }
-    }
-  }, [handleClickFill, hideTooltip, navigate, listings, orders, selectedPoint, tooltipData]);
+  }, [handleClickFill, hideTooltip, navigate, listings, orders, selectedPoint, tooltipData,
+    orderType, setOrderType, orderAction, setOrderAction]);
 
   useHotkeys('esc', () => {
     setSelectedPoint(undefined);
