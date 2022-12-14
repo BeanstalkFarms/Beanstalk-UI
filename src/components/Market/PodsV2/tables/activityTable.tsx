@@ -75,6 +75,9 @@ const ActivityTable: FC<
         height: tableHeight,
         width: '100%',
         ...marketplaceTableStyle,
+        '& .MuiDataGrid-row': {
+          cursor: onRowClick ? 'pointer' : 'default'
+        },
       }}
     >
       <DataGrid

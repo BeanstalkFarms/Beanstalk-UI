@@ -94,9 +94,8 @@ const FarmerMarketDialog: React.FC<Props> = ({ item, open, onClose }) => {
             })()}
             <InfoRow label="% FILLED" {...sharedProps}>
               {(() => {
-                const pct = displayFullBN(item.fillPct, 2);
-                if (pct === 'NaN') return '-%';
-                return `${pct}%`;
+                if (item.fillPct.isNaN()) return '-%';
+                return `${displayFullBN(item.fillPct, 2)}%`;
               })()}
             </InfoRow>
             <InfoRow label="TOTAL" {...sharedProps}>

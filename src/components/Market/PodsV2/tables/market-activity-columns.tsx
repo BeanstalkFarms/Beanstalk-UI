@@ -7,7 +7,7 @@ import {
 import { DateTime } from 'luxon';
 import { Box, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { displayBN } from '~/util';
+import { displayBN, displayFullBN } from '~/util';
 import { ZERO_BN } from '~/constants';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN } from '~/constants/tokens';
@@ -197,10 +197,10 @@ export const POD_MARKET_COLUMNS = {
               fontSize: 'inherit',
               color: params.value.gt(0)
                 ? 'text.primary'
-                : BeanstalkPalette.grey,
+                : 'text.secondary',
             }}
           >
-            {progress.toFixed(1)}%
+            {progress.isNaN() ? '-%' : `${displayFullBN(progress, 2, 2)}%`}
           </Typography>
         );
       },
