@@ -1,7 +1,8 @@
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 
 import React from 'react';
-import { Module, ModuleHeader } from '~/components/Common/Module';
+import CondensedCard from '~/components/Common/Card/CondensedCard';
+
 import Centered from '~/components/Common/ZeroState/Centered';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
 import MarketGraph from '../../Pods/MarketGraph';
@@ -10,10 +11,7 @@ const MarketChart: React.FC<{ chartHeight: string }> = ({ chartHeight }) => {
   const data = useMarketData();
 
   return (
-    <Module>
-      <ModuleHeader>
-        <Typography variant="h4">Overview</Typography>
-      </ModuleHeader>
+    <CondensedCard title="OVERVIEW">
       {!data.loading && data.listings && data.orders ? (
         <Box width="100%" sx={{ height: chartHeight }}>
           <MarketGraph
@@ -29,7 +27,7 @@ const MarketChart: React.FC<{ chartHeight: string }> = ({ chartHeight }) => {
           <CircularProgress variant="indeterminate" />
         </Centered>
       )}
-    </Module>
+    </CondensedCard>
   );
 };
 

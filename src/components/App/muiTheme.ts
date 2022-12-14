@@ -29,11 +29,13 @@ declare module '@mui/material/styles' {
     bodySmall: React.CSSProperties;
     bodyMedium: React.CSSProperties;
     bodyLarge: React.CSSProperties;
+    headerSmall: React.CSSProperties;
   }
   interface TypographyVariantsOptions {
     bodySmall?: React.CSSProperties;
     bodyMedium?: React.CSSProperties;
     bodyLarge?: React.CSSProperties;
+    headerSmall?: React.CSSProperties;
   }
 
   interface TypeText {
@@ -67,6 +69,7 @@ declare module '@mui/material/Typography' {
     bodySmall: true;
     bodyMedium: true;
     bodyLarge: true;
+    headerSmall: true;
   }
 }
 
@@ -88,13 +91,15 @@ export const hexToRgba = (hex: string, alpha?: number) => {
   }
 
   const isCondensedHex = stripped.length === 3;
-  const hexArr = stripped.reduce((prev, curr) => {
-    if (isCondensedHex) { 
+  const hexArr = stripped
+    .reduce((prev, curr) => {
+      if (isCondensedHex) {
         prev += curr;
-    }
-    prev += curr;
-    return prev;
-  },'' as string).toString();
+      }
+      prev += curr;
+      return prev;
+    }, '' as string)
+    .toString();
 
   const r = parseInt(hexArr.slice(0, 2), 16);
   const g = parseInt(hexArr.slice(2, 4), 16);
@@ -166,6 +171,9 @@ export const BeanstalkPalette = {
       selected: hexToRgba('#168AAD', 40),
       red: '#DA2C38',
       error: '#E33D51',
+      orderGreen: '#60D394',
+      listingRed: '#EC4067',
+      primaryDark: '#0074AF',
       chart: {
         primaryLight: '#9DDEFF',
         blue: '#6B9AC4',
@@ -330,6 +338,7 @@ const muiThemeBase: ThemeOptions = {
     },
     caption: {
       fontSize: FontSize.xs, // 12px
+      lineHeight: '0.938rem', // 15px
       fontWeight: FontWeight.normal,
     },
     // nav labels, nav button labels, token labels (module)
@@ -345,6 +354,12 @@ const muiThemeBase: ThemeOptions = {
       fontSize: FontSize['2xl'], // 24px
       fontWeight: FontWeight.medium,
       lineHeight: '1.875rem', // 30px
+    },
+    // smaller, bold headers & text
+    headerSmall: {
+      fontFamily: 'Futura PT',
+      fontSize: FontSize.sm, // 14px
+      fontWeight: FontWeight.bold,
     },
     // page subtitles
     subtitle1: {

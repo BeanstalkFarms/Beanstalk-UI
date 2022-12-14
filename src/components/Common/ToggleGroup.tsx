@@ -20,7 +20,7 @@ export type IToggleGroup<T extends string | number> = ToggleButtonGroupProps & {
   fontSize?: keyof typeof FontSize;
 };
 
-const selectedBG = BeanstalkPalette.theme.winter.extraLight;
+const selectedBG = BeanstalkPalette.theme.winter.primary;
 
 export default function ToggleGroup<T extends string | number>({
   options,
@@ -52,12 +52,12 @@ export default function ToggleGroup<T extends string | number>({
           padding: 0,
           margin: 0,
           fontSize: FontSize[fontSize],
-          background: 'transparent',
+          background: 'none',
           '&.Mui-selected:hover': {
-            background: 'transparent',
+            background: 'none',
           },
           ':hover': {
-            background: 'transparent',
+            background: 'none',
           },
         },
       }}
@@ -88,7 +88,7 @@ export default function ToggleGroup<T extends string | number>({
                     background: isActive ? selectedBG : 'transparent',
                     ':hover': {
                       background: isActive
-                        ? hexToRgba(selectedBG, 0.8)
+                        ? BeanstalkPalette.theme.winter.primaryDark
                         : hexToRgba(selectedBG, 0.2),
                     },
                   }}

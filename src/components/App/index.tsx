@@ -48,7 +48,7 @@ import useAccount from '~/hooks/ledger/useAccount';
 import './App.css';
 
 import { FC } from '~/types';
-import PodsMarketNew from '~/pages/market/podsv2';
+import MarketV2 from '~/pages/market/podsv2';
 import FillListingWrapper from '~/components/Market/PodsV2/Actions/FillListingWrapper';
 import FillOrderWrapper from '~/components/Market/PodsV2/Actions/FillOrderWrapper';
 import Snowflakes from './theme/winter/Snowflakes';
@@ -155,7 +155,7 @@ export default function App() {
             <Route path="/market/create" element={<CreatePage />} />
             <Route path="/market/order/:id" element={<OrderPage />} />
             <Route path="/market/listing/:id" element={<ListingPage />} /> */}
-            <Route path="/market" element={<PodsMarketNew />}>
+            <Route path="/market" element={<MarketV2 />}>
               {/* https://ui.dev/react-router-nested-routes */}
               <Route path="listing/:listingID" element={<FillListingWrapper />} />
               <Route path="order/:orderID" element={<FillOrderWrapper />} />

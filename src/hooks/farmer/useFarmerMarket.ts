@@ -21,6 +21,7 @@ import useHarvestableIndex from '../beanstalk/useHarvestableIndex';
 import { ZERO_BN } from '~/constants';
 
 export type FarmerMarketItem = {
+  id: any;
   /**
    * Date of the event
    */
@@ -71,40 +72,54 @@ export type FarmerMarketItem = {
    * status of the order or listing
    */
   status: MarketStatus;
+  /**
+   * Pod order
+   */
+  order?: PodOrder;
+  /**
+   * Pod listing
+   */
+  listing?: PodListing;
 };
 
 const QUERY_AMOUNT = 50;
 
 const castOrderToItem = (order: PodOrder): FarmerMarketItem => ({
-    time: order.createdAt,
-    action: 'buy',
-    type: 'order',
-    priceType: 'fixed',
-    pricePerPod: order.pricePerPod,
-    remainingAmount: order.remainingAmount.div(order.pricePerPod),
-    placeInPodline: order.maxPlaceInLine,
-    numPods: order.totalAmount,
-    expiry: ZERO_BN, // pod orders don't expire
-    fillPct: order.filledAmount.div(order.totalAmount).times(100),
-    totalBeans: order.remainingAmount,
-    status: order.status,
-  });
+  id: order.id,
+  time: order.createdAt,
+  action: 'buy',
+  type: 'order',
+  priceType: 'fixed',
+  pricePerPod: order.pricePerPod,
+  remainingAmount: order.remainingAmount.div(order.pricePerPod),
+  placeInPodline: order.maxPlaceInLine,
+  numPods: order.totalAmount,
+  expiry: ZERO_BN, // pod orders don't expire
+  fillPct: order.filledAmount.div(order.totalAmount).times(100),
+  totalBeans: order.remainingAmount,
+  status: order.status,
+  order,
+});
 
-const castListingToItem = (listing: PodListing, harvestableIndex: BigNumber): FarmerMarketItem => ({
-    time: listing.createdAt,
-    action: 'sell',
-    type: 'listing',
-    priceType: 'fixed', // FIX ME this is not correct. It is either 'fixed' or 'dynamic',
-    pricePerPod: listing.pricePerPod,
-    remainingAmount: listing.remainingAmount,
-    placeInPodline: listing.index.minus(harvestableIndex),
-    numPods: listing.amount.times(listing.pricePerPod),
-    expiry: listing.maxHarvestableIndex.minus(harvestableIndex),
-    fillPct: listing.filledAmount.div(listing.amount).times(100),
-    totalBeans: listing.remainingAmount.times(listing.pricePerPod),
-    status: listing.status,
-
-  });
+const castListingToItem = (
+  listing: PodListing,
+  harvestableIndex: BigNumber
+): FarmerMarketItem => ({
+  id: listing.id,
+  time: listing.createdAt,
+  action: 'sell',
+  type: 'listing',
+  priceType: 'fixed', // FIX ME this is not correct. It is either 'fixed' or 'dynamic',
+  pricePerPod: listing.pricePerPod,
+  remainingAmount: listing.remainingAmount,
+  placeInPodline: listing.index.minus(harvestableIndex),
+  numPods: listing.amount.times(listing.pricePerPod),
+  expiry: listing.maxHarvestableIndex.minus(harvestableIndex),
+  fillPct: listing.filledAmount.div(listing.amount).times(100),
+  totalBeans: listing.remainingAmount.times(listing.pricePerPod),
+  status: listing.status,
+  listing,
+});
 
 export default function useFarmerMarket() {
   /// Beanstalk Data
@@ -112,16 +127,37 @@ export default function useFarmerMarket() {
   const account = useAccount();
 
   /// State
-  const orders = useSelector<AppState, AppState['_farmer']['market']['orders']>((state) => state._farmer.market.orders);
-  const listings = useSelector<AppState, AppState['_farmer']['market']['listings']>((state) => state._farmer.market.listings);
+  const orders = useSelector<AppState, AppState['_farmer']['market']['orders']>(
+    (state) => state._farmer.market.orders
+  );
+  const listings = useSelector<
+    AppState,
+    AppState['_farmer']['market']['listings']
+  >((state) => state._farmer.market.listings);
 
   /// Queries
-  const [getListings, listingsQuery] = useFarmerPodListingsLazyQuery({ fetchPolicy: 'cache-and-network', nextFetchPolicy: 'cache-first', notifyOnNetworkStatusChange: true  });
-  const [getOrders, ordersQuery] = useFarmerPodOrdersLazyQuery({ fetchPolicy: 'cache-and-network', nextFetchPolicy: 'cache-first', notifyOnNetworkStatusChange: true });
+  const [getListings, listingsQuery] = useFarmerPodListingsLazyQuery({
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true,
+  });
+  const [getOrders, ordersQuery] = useFarmerPodOrdersLazyQuery({
+    fetchPolicy: 'cache-and-network',
+    nextFetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true,
+  });
 
   /// cast query data to proper types
-  const listingsData = useCastApolloQuery<PodListing>(listingsQuery, 'podListings', (_podListing) => castPodListing(_podListing, harvestableIndex));
-  const ordersData = useCastApolloQuery<PodOrder>(ordersQuery, 'podOrders', castPodOrder);
+  const listingsData = useCastApolloQuery<PodListing>(
+    listingsQuery,
+    'podListings',
+    (_podListing) => castPodListing(_podListing, harvestableIndex)
+  );
+  const ordersData = useCastApolloQuery<PodOrder>(
+    ordersQuery,
+    'podOrders',
+    castPodOrder
+  );
 
   const isLoading = listingsQuery.loading || ordersQuery.loading;
   const error = listingsQuery.error || ordersQuery.error;
@@ -152,21 +188,27 @@ export default function useFarmerMarket() {
     if (isLoading) return items;
     const ordersById = keyBy(ordersData, 'id');
     const listingsById = keyBy(listingsData, 'id');
-    
+
     // use listings and orders in redux store as a fallback
-    const allOrderIds = new Set([...Object.keys(ordersById), ...Object.keys(orders)]);
-    const allListingIds = new Set([...Object.keys(listingsById), ...Object.keys(listings)]);
+    const allOrderIds = new Set([
+      ...Object.keys(ordersById),
+      ...Object.keys(orders),
+    ]);
+    const allListingIds = new Set([
+      ...Object.keys(listingsById),
+      ...Object.keys(listings),
+    ]);
 
     allOrderIds.forEach((id) => {
-      const _order = ordersById[id] ? ordersById[id] : orders[id];      
-        items.push(castOrderToItem(_order));
+      const _order = ordersById[id] ? ordersById[id] : orders[id];
+      items.push(castOrderToItem(_order));
     });
 
     allListingIds.forEach((id) => {
-      const _listing = listingsById[id] ? listingsById[id] : listings[id];      
-        items.push(castListingToItem(_listing, harvestableIndex));
+      const _listing = listingsById[id] ? listingsById[id] : listings[id];
+      items.push(castListingToItem(_listing, harvestableIndex));
     });
-    
+
     return items;
   }, [harvestableIndex, isLoading, listings, listingsData, orders, ordersData]);
 
