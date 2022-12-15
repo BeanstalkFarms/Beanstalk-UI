@@ -17,6 +17,7 @@ import MarketChart from '~/components/Market/PodsV2/chart/MarketChart';
 import { muiThemeCondensed } from '~/components/App/muiTheme';
 
 const SECTION_MAX_WIDTH = 400;
+const GAP = 0.8;
 
 const MarketPage: React.FC<{}> = () => {
   const banner = useBanner();
@@ -31,7 +32,7 @@ const MarketPage: React.FC<{}> = () => {
 
   const chartHeight = useMemo(() => {
     if (isMobile) return '400px';
-    return `calc(100vh - ${10 + BOTTOM_HEIGHT + accordionHeight + 57}px)`;
+    return `calc(100vh - ${(GAP * 10) + BOTTOM_HEIGHT + accordionHeight + 57}px)`;
   }, [BOTTOM_HEIGHT, accordionHeight, isMobile]);
 
   return (
