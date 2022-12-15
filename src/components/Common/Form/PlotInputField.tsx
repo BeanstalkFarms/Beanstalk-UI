@@ -15,6 +15,7 @@ import SliderField from './SliderField';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
+import { TokenInputProps } from '~/components/Common/Form/TokenInputField';
 
 const SLIDER_FIELD_KEYS = ['plot.start', 'plot.end'];
 const InputPropsLeft  = { endAdornment: 'Start' };
@@ -27,10 +28,11 @@ const PlotInputField : FC<{
   max?: BigNumber;
   /** */
   disabledAdvanced?: boolean;
-}> = ({
+} & TokenInputProps> = ({
   plots,
   max,
   disabledAdvanced = false,
+  ...props
 }) => {
   /// Form state
   const { values, setFieldValue, isSubmitting } = useFormikContext<{ 
@@ -71,9 +73,10 @@ const PlotInputField : FC<{
             </Row>
           ) : 'Select Plot'
         )}
+        size={props.size}
       />
     ),
-  }), [harvestableIndex, plot.index, showDialog]);
+  }), [harvestableIndex, plot.index, showDialog, props.size]);
 
   /// "Advanced" control in the Quote slot
   const Quote = useMemo(() => (disabledAdvanced ? undefined : (
@@ -156,6 +159,7 @@ const PlotInputField : FC<{
         balanceLabel={plot.index ? 'Plot Size' : undefined}
         onChange={onChangeAmount}
         quote={plot.index ? Quote : undefined}
+        {...props}
       />
       {values.settings.showRangeSelect && (
         <>
