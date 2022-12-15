@@ -12,7 +12,7 @@ import { ZERO_BN } from '~/constants';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN } from '~/constants/tokens';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import { IFarmerMarketEvent } from '~/hooks/farmer/useFarmerMarketplaceEvents';
+import { FarmerMarketItem } from '~/hooks/farmer/market/useFarmerMarket';
 
 const statusColorMap = {
   active: BeanstalkPalette.logoGreen,
@@ -145,7 +145,7 @@ export const POD_MARKET_COLUMNS = {
       flex: flex,
       align: align || 'left',
       headerAlign: align || 'left',
-      renderCell: (params: GridRenderCellParams<any, IFarmerMarketEvent>) => {
+      renderCell: (params: GridRenderCellParams<any, FarmerMarketItem>) => {
         const strVal =
           params.value instanceof BigNumber
             ? displayBN(params.value)
