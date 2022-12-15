@@ -3,7 +3,7 @@ import { CircularProgress, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
 import BigNumber from 'bignumber.js';
 import TokenInputField, { TokenInputProps } from '~/components/Common/Form/TokenInputField';
-import TokenAdornment from '~/components/Common/Form/TokenAdornment';
+import TokenAdornment, { TokenAdornmentProps } from '~/components/Common/Form/TokenAdornment';
 import useQuote, { QuoteHandler, QuoteSettings } from '~/hooks/ledger/useQuote';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
 import { displayFullBN } from '~/util/Tokens';
@@ -31,7 +31,10 @@ type TokenQuoteProviderCustomProps = {
   displayQuote?: false | ((state: BigNumber | undefined, tokenOut: Token) => React.ReactElement | undefined)
   /** */
   quoteSettings?: Partial<QuoteSettings>
+  /** */
+  TokenAdornmentProps?: Partial<TokenAdornmentProps>
 };
+
 type TokenQuoteProviderProps = (
   TokenQuoteProviderCustomProps
   & Partial<TokenInputProps>
@@ -59,6 +62,8 @@ const TokenQuoteProvider : FC<TokenQuoteProviderProps> = ({
   handleQuote,
   displayQuote: _displayQuote,
   quoteSettings,
+  /// Adornment
+  TokenAdornmentProps: _TokenAdornmentProps,
   /// Other props
   ...props
 }) => {
@@ -119,6 +124,7 @@ const TokenQuoteProvider : FC<TokenQuoteProviderProps> = ({
           opacity: disableTokenSelect ? 0.3 : 1,
         }}
         buttonLabel={tokenSelectLabel}
+        {..._TokenAdornmentProps}
       />
     )
   }), [
@@ -126,7 +132,8 @@ const TokenQuoteProvider : FC<TokenQuoteProviderProps> = ({
     showTokenSelect,
     isSubmitting,
     disableTokenSelect,
-    tokenSelectLabel
+    tokenSelectLabel,
+    _TokenAdornmentProps
   ]);
 
   // Render info about the quote beneath the input.

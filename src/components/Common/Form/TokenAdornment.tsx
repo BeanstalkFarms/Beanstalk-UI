@@ -14,7 +14,7 @@ import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
 
-const TokenAdornment: FC<
+export type TokenAdornmentProps = (
   {
     token: Token;
     buttonLabel?: string | JSX.Element;
@@ -23,8 +23,13 @@ const TokenAdornment: FC<
     downArrowIconSize?: keyof typeof IconSize;
     textVariant?: TypographyVariant;
   } & ButtonProps
-> = ({
+);
+
+const TokenAdornment: FC<TokenAdornmentProps> = ({
+  // Config
   token,
+  // Button
+  sx, 
   buttonLabel,
   disabled,
   onClick,
@@ -47,6 +52,7 @@ const TokenAdornment: FC<
         // '&:hover': {
         //   backgroundColor: 'primary.light',
         // }
+        ...sx,
       }}
       // If no click handler is provided, disable so that
       // no mouse events work (i.e. no hover bg)
