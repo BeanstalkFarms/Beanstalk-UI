@@ -57,12 +57,29 @@ export type CreateOrderFormValues = {
   }
 }
 
+// HOTFIX: Small forms
+const TOKEN_ADORNMENT_PROPS = {
+  iconSize: 'xs' as const,
+  textVariant: 'body1' as const,
+  sx: {
+    borderRadius: 0,
+  }
+};
+
 const PlaceInLineInputProps = {
   startAdornment: (
     <InputAdornment position="start">
       <Stack sx={{ pr: 0 }} alignItems="center">
-        <Typography color="text.primary" sx={{ mt: 0.09, mr: -0.2, fontSize: '1.5rem', opacity: '0.4' }}>0
-          -
+        <Typography
+          color="text.primary"
+          sx={{
+            opacity: '0.4',
+            // HOTFIX: Small forms
+            mt: 0.2,
+            mr: -0.2,
+            fontSize: 17.6,
+          }}>
+          0 -
         </Typography>
       </Stack>
     </InputAdornment>
@@ -73,6 +90,8 @@ const PricePerPodInputProps = {
   endAdornment: (
     <TokenAdornment
       token={BEAN[1]}
+      // HOTFIX: Small forms
+      {...TOKEN_ADORNMENT_PROPS}
     />
   )
 };
@@ -162,6 +181,7 @@ const CreateOrderV2Form : FC<
             placeholder={displayFullBN(podLine, 0).toString()}
             max={podLine}
             InputProps={PlaceInLineInputProps}
+            size="small"
           />
         </FieldWrapper>
         <FieldWrapper label="Price per Pod" tooltip={POD_MARKET_TOOLTIPS.pricePerPodOrder}>
@@ -170,6 +190,7 @@ const CreateOrderV2Form : FC<
             placeholder="0.0000"
             InputProps={PricePerPodInputProps}
             max={ONE_BN}
+            size="small"
           />
         </FieldWrapper>
         <FieldWrapper label="Order using">
@@ -183,6 +204,9 @@ const CreateOrderV2Form : FC<
                 state={state}
                 showTokenSelect={handleOpen}
                 handleQuote={handleQuote}
+                size="small"
+                // HOTFIX: Small forms Token adornment
+                TokenAdornmentProps={TOKEN_ADORNMENT_PROPS}
               />
             ))}
           </>
@@ -226,7 +250,6 @@ const CreateOrderV2Form : FC<
           type="submit"
           variant="contained"
           color="primary"
-          size="large"
           contract={contract}
           tokens={values.tokens}
           mode="auto"
