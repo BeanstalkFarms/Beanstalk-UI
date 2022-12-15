@@ -63,7 +63,7 @@ const TokenQuoteProvider : FC<TokenQuoteProviderProps> = ({
   displayQuote: _displayQuote,
   quoteSettings,
   /// Adornment
-  TokenAdornmentProps: _TokenAdornmentProps,
+  // TokenAdornmentProps: _TokenAdornmentProps,
   /// Other props
   ...props
 }) => {
@@ -123,8 +123,8 @@ const TokenQuoteProvider : FC<TokenQuoteProviderProps> = ({
           // reduce the opacity to make it less obvious.
           opacity: disableTokenSelect ? 0.3 : 1,
         }}
+        size={props.size}
         buttonLabel={tokenSelectLabel}
-        {..._TokenAdornmentProps}
       />
     )
   }), [
@@ -133,7 +133,7 @@ const TokenQuoteProvider : FC<TokenQuoteProviderProps> = ({
     isSubmitting,
     disableTokenSelect,
     tokenSelectLabel,
-    _TokenAdornmentProps
+    props.size
   ]);
 
   // Render info about the quote beneath the input.

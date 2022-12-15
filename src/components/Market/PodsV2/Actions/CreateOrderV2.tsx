@@ -57,15 +57,6 @@ export type CreateOrderFormValues = {
   }
 }
 
-// HOTFIX: Small forms
-const TOKEN_ADORNMENT_PROPS = {
-  iconSize: 'xs' as const,
-  textVariant: 'body1' as const,
-  sx: {
-    borderRadius: 0,
-  }
-};
-
 const PlaceInLineInputProps = {
   startAdornment: (
     <InputAdornment position="start">
@@ -91,7 +82,7 @@ const PricePerPodInputProps = {
     <TokenAdornment
       token={BEAN[1]}
       // HOTFIX: Small forms
-      {...TOKEN_ADORNMENT_PROPS}
+      size="small"
     />
   )
 };
@@ -205,8 +196,6 @@ const CreateOrderV2Form : FC<
                 showTokenSelect={handleOpen}
                 handleQuote={handleQuote}
                 size="small"
-                // HOTFIX: Small forms Token adornment
-                TokenAdornmentProps={TOKEN_ADORNMENT_PROPS}
               />
             ))}
           </>
