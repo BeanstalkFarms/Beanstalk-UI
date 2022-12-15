@@ -4,8 +4,8 @@ import { POD_MARKET_COLUMNS } from './market-activity-columns';
 import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import useFarmerMarket, {
   FarmerMarketItem,
-} from '~/hooks/farmer/useFarmerMarket';
-import FarmerMarketDialog from '../Actions/FarmerMarketDialog';
+} from '~/hooks/farmer/market/useFarmerMarket';
+import MarketItemDetailsDialog from '../Actions/MarketItemDetailsDialog';
 
 const C = POD_MARKET_COLUMNS;
 const columns = [
@@ -23,12 +23,15 @@ const columns = [
 ];
 
 const FarmerMarketActivity: React.FC<{}> = () => {
+  // LOCAL STATE
   const [open, setOpen] = useState(false);
-  const [activeItem, setActiveItem] = useState<FarmerMarketItem | undefined>(
-    undefined
-  );
+  const [showModeDialog, setShowModeDialog] = useState(false);
+  const [activeItem, setActiveItem] = useState<FarmerMarketItem | undefined>(undefined);
+
+  // DATA
   const { data: farmerMarket } = useFarmerMarket();
 
+  // HELPERS
   const harvestableIndex = useHarvestableIndex();
   const isLoading = farmerMarket.length === 0 || harvestableIndex.lte(0);
 
@@ -56,10 +59,12 @@ const FarmerMarketActivity: React.FC<{}> = () => {
           setOpen(true);
         }}
       />
-      <FarmerMarketDialog
-        open={open}
-        onClose={() => setOpen(false)}
+      <MarketItemDetailsDialog
         item={activeItem}
+        open={open}
+        open2={showModeDialog}
+        setOpen2={setShowModeDialog}
+        setOpen={setOpen}
       />
     </>
   );

@@ -13,11 +13,11 @@ import {
   MarketStatus,
   useFarmerPodListingsLazyQuery,
   useFarmerPodOrdersLazyQuery,
-} from '../../generated/graphql';
+} from '../../../generated/graphql';
 
 import useAccount from '~/hooks/ledger/useAccount';
 import { AppState } from '~/state';
-import useHarvestableIndex from '../beanstalk/useHarvestableIndex';
+import useHarvestableIndex from '../../beanstalk/useHarvestableIndex';
 import { ZERO_BN } from '~/constants';
 
 export type FarmerMarketItem = {

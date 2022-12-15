@@ -13,7 +13,6 @@ import MarketActionsV2 from '~/components/Market/PodsV2/MarketActionsV2';
 import MarketActivityV2, {
   sizes,
 } from '~/components/Market/PodsV2/MarketActivityV2';
-import OrderBook from '~/components/Market/PodsV2/OrderBook';
 import MarketChart from '~/components/Market/PodsV2/chart/MarketChart';
 import { muiThemeCondensed } from '~/components/App/muiTheme';
 
@@ -65,7 +64,7 @@ const MarketPage: React.FC<{}> = () => {
           gap={GAP}
         >
           <MarketActionsV2 />
-          <OrderBook />
+          {/* <OrderBook /> */}
           <Box height="fit-content" display={{ xs: 'block', lg: 'none' }}>
             <MarketActivityV2 setHeight={setAccordionHeight} />
           </Box>

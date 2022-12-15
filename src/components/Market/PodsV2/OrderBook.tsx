@@ -21,11 +21,8 @@ const toggleOptions = [
 ];
 
 const OrderBook: React.FC<{}> = () => {
-  const [precision, setPrecision] = useState<OrderbookPrecision>(
-    precisionOptions[0]
-  );
-  const [aggregation, setAggregation] =
-    useState<OrderbookAggregation>('min-max');
+  const [precision, setPrecision] = useState<OrderbookPrecision>(precisionOptions[0]);
+  const [aggregation, setAggregation] = useState<OrderbookAggregation>('min-max');
   const { data, error, reduceByPrecision } = useOrderbook();
 
   const filteredData = useMemo(() => {
@@ -58,8 +55,9 @@ const OrderBook: React.FC<{}> = () => {
         </Row>
       }
     >
+      
       <Stack
-        height={{ xs: 300, lg: '100%' }}
+        height="100%"
         py={1}
         sx={{
           borderTop: '0.5px solid',
@@ -80,15 +78,9 @@ const OrderBook: React.FC<{}> = () => {
           </Centered>
         ) : (
           <Stack
-            height="100%"
-            sx={({ breakpoints: b }) => ({
-              overflow: 'auto',
-              pb: 1,
-              // TODO: FIX THIS. this is a hack to make the table scroll all the way to the bottom
-              [b.up('lg')]: {
-                pb: 6,
-              },
-            })}
+            height={{ xs: '300px', lg: 'calc(100% - 48px)' }}
+            pb={{ xs: 1, lg:  6 }}
+            sx={{ overflow: 'auto' }}
           >
             {filteredData.map(([priceKey, bucket]) => (
               <OrderBookRow
@@ -100,6 +92,7 @@ const OrderBook: React.FC<{}> = () => {
           </Stack>
         )}
       </Stack>
+      
     </CondensedCard>
   );
 };
