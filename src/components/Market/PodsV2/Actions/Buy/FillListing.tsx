@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { CircularProgress, Stack, Typography } from '@mui/material';
 import usePodListing from '~/hooks/beanstalk/usePodListing';
-import FillListingV2 from '~/components/Market/PodsV2/Actions/FillListingV2';
+import FillListingForm from '~/components/Market/PodsV2/Actions/Buy/FillListingForm';
 import { bigNumberResult } from '~/util';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 
-const FillListingWrapper: React.FC<{}> = () => {
+const FillListing: React.FC<{}> = () => {
   const { listingID } = useParams<{ listingID: string }>();
-  const { data: listing, source, loading, error } = usePodListing(listingID);
+  const { data: listing, loading, error } = usePodListing(listingID);
   const beanstalk = useBeanstalkContract();
   
   /// Verify that this listing is still live via the contract.
@@ -52,8 +52,8 @@ const FillListingWrapper: React.FC<{}> = () => {
   }
 
   return (
-    <FillListingV2 podListing={listing} />
+    <FillListingForm podListing={listing} />
   );
 };
 
-export default FillListingWrapper;
+export default FillListing;

@@ -1,82 +1,108 @@
-import { Button, Typography } from '@mui/material';
-import { useAtom, useAtomValue } from 'jotai';
-import React, { useEffect } from 'react';
-import { BeanstalkPalette } from '~/components/App/muiTheme';
+import { Button, Tooltip } from '@mui/material';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { BeanstalkPalette, FontSize } from '~/components/App/muiTheme';
 import Row from '~/components/Common/Row';
 import { FC } from '~/types';
-import {
-  podsOrderTypeAtom,
-  PodOrderType,
-  podsOrderActionAtom,
-  PodOrderAction,
-} from '../info/atom-context';
 
-const SubAction: FC<{ isActive: boolean; onClick: () => void }> = ({
-  children,
-  isActive,
-  onClick,
+const BUTTON_SX = {
+  minWidth: 0,
+  maxHeight: '23px',
+  padding: 0.5,
+  color: 'text.secondary',
+  fontSize: FontSize.xs,
+  // https://stackoverflow.com/a/63276424
+  '&:disabled': {
+    pointerEvents: 'auto !important'
+  },
+  backgroundColor: undefined,
+  '&.Mui-active': {
+    color: 'text.primary',
+    backgroundColor: BeanstalkPalette.theme.winter.primary,
+    ':hover': {
+      backgroundColor: BeanstalkPalette.theme.winter.primaryDark
+    }
+  },
+  borderRadius: '4px',
+};
+
+const SubActionSelect: FC<{
+  action: 'buy' | 'sell',
+  id?: string;
+}> = ({
+  action,
+  id,
 }) => (
-  <Button
-    variant="text"
-    color="primary"
-    onClick={onClick}
-    sx={{
-      minWidth: 0,
-      maxHeight: '23px',
-      padding: 0.5,
-      color: 'text.primary',
-      backgroundColor: isActive
-        ? BeanstalkPalette.theme.winter.primary
-        : undefined,
-      ':hover': {
-        backgroundColor: isActive
-          ? BeanstalkPalette.theme.winter.primaryDark
-          : undefined,
-      },
-      borderRadius: '4px',
-    }}
-  >
-    {children}
-  </Button>
+  // Hack: if `id` is present, the user navigated to a specific listing/order,
+  // so we switch the selected tab to 1. Otherwise it's 0. Change is handled
+  // by NavLink routing to `to` so we don't need a handleChange function.
+  <Row gap={0.8}>
+    <Button 
+      variant="text"
+      component={NavLink}
+      to={`/market/${action}`}
+      sx={BUTTON_SX}
+      className={id ? undefined : 'Mui-active'}
+    >
+      {action === 'buy' ? 'ORDER' : 'LIST'}
+    </Button>
+    <Tooltip title={`Select a Pod ${action === 'buy' ? 'Listing' : 'Order'} on the graph to Fill.`}>
+      <div>
+        <Button 
+          variant="text"
+          component={NavLink}
+          disabled={!id}
+          to={`/market/${action}/${id}`}
+          sx={BUTTON_SX}
+          className={id ? 'Mui-active' : undefined}
+        >
+          FILL
+        </Button>
+      </div>
+    </Tooltip>
+  </Row>
 );
 
-const SubActionSelect: FC<{}> = () => {
-  const orderAction = useAtomValue(podsOrderActionAtom); // BUY vs SELL
-  const [orderType, setOrderType] = useAtom(podsOrderTypeAtom); // ORDER vs FILL / LIST vs FILL
-
-  useEffect(() => {
-    if (
-      orderAction === PodOrderAction.SELL &&
-      orderType === PodOrderType.ORDER
-    ) {
-      setOrderType(PodOrderType.LIST);
-    }
-  }, [orderAction, orderType, setOrderType]);
-
-  return (
-    <Row gap={0.8}>
-      <SubAction
-        isActive={orderType !== PodOrderType.FILL}
-        onClick={() =>
-          setOrderType(
-            orderAction === PodOrderAction.BUY
-              ? PodOrderType.ORDER
-              : PodOrderType.LIST
-          )
-        }
-      >
-        <Typography variant="caption">
-          {orderAction === PodOrderAction.BUY ? 'ORDER' : 'LIST'}
-        </Typography>
-      </SubAction>
-      <SubAction
-        isActive={orderType === PodOrderType.FILL}
-        onClick={() => setOrderType(PodOrderType.FILL)}
-      >
-        <Typography variant="caption">FILL</Typography>
-      </SubAction>
-    </Row>
-  );
-};
+// <Row gap={0.8}>
+//   <Button
+//     component={NavLink}
+//     to="/market/buy"
+//     variant="text"
+//     color="primary"
+//   >
+//     {createLabel}
+//   </Button>
+//   <Tooltip title="Test">
+//     <span>
+//       <Button
+//         variant="text"
+//         color="primary"
+//         disabled={!id}
+//       >
+//         {fillLabel}
+//       </Button>
+//     </span>
+//   </Tooltip>
+//   {/* <SubAction
+//        isActive={orderType !== PodOrderType.FILL}
+//        onClick={() =>
+//         setOrderType(
+//           orderAction === PodOrderAction.BUY
+//             ? PodOrderType.ORDER
+//             : PodOrderType.LIST
+//         )
+//       }
+//     >
+//        <Typography variant="caption">
+//          {orderAction === PodOrderAction.BUY ? 'ORDER' : 'LIST'}
+//        </Typography>
+//      </SubAction>
+//      <SubAction
+//        isActive={orderType === PodOrderType.FILL}
+//        onClick={() => setOrderType(PodOrderType.FILL)}
+//     >
+//        <Typography variant="caption">FILL</Typography>
+//      </SubAction> */}
+// </Row>
 
 export default SubActionSelect;

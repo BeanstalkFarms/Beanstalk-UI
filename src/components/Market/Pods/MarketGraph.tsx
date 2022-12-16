@@ -22,7 +22,6 @@ import { displayBN } from '~/util';
 import Row from '~/components/Common/Row';
 import { FC } from '~/types';
 import './MarketGraph.css';
-import { MARKET_SLUGS } from '~/components/Market/PodsV2/MarketActionsV2';
 import { useAtom } from 'jotai';
 import {
   PodOrderAction,
@@ -497,13 +496,13 @@ const Graph: FC<GraphProps> = ({
           const data = listings[tooltipData.index];
           if (data) {
             handleClickFill(PodOrderAction.BUY, PodOrderType.FILL);
-            navigate(`/market/listing/${data.id}?action=${MARKET_SLUGS[0]}`);
+            navigate(`/market/buy/${data.id}`);
           }
         } else if (tooltipData?.type === 'order') {
           const data = orders[tooltipData.index];
           if (data) {
             handleClickFill(PodOrderAction.SELL, PodOrderType.FILL);
-            navigate(`/market/order/${data.id}?action=${MARKET_SLUGS[1]}`);
+            navigate(`/market/sell/${data.id}`);
           }
         }
       }

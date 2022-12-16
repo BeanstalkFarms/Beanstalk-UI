@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, Box, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -7,13 +7,12 @@ import { useProvider } from 'wagmi';
 import BigNumber from 'bignumber.js';
 import toast from 'react-hot-toast';
 import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
-import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
 import TransactionToast from '~/components/Common/TxnToast';
 import {
   FormState,
   SettingInput, SlippageSettingsFragment, SmartSubmitButton, TokenOutputField,
   TokenQuoteProvider,
-  TokenSelectDialog, TxnPreview, TxnSeparator,
+  TokenSelectDialog, TxnSeparator,
   TxnSettings
 } from '~/components/Common/Form';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
@@ -28,7 +27,6 @@ import { Beanstalk } from '~/generated';
 import usePreferredToken, { PreferredToken } from '~/hooks/farmer/usePreferredToken';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
-import { ActionType } from '~/util/Actions';
 import Farm, { ChainableFunction, FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
 import { displayBN, displayTokenAmount, MinBN, toStringBaseUnitBN, parseError, toTokenUnitsBN } from '~/util';
 import { AppState } from '~/state';
@@ -184,6 +182,7 @@ const FillListingV2Form : FC<
             <TxnSeparator mt={0} />
             {/* Pods Output */}
             <TokenOutputField
+              size="small"
               token={PODS}
               amount={podsPurchased}
               amountTooltip={(
@@ -196,16 +195,16 @@ const FillListingV2Form : FC<
                   <TokenIcon
                     token={PODS}
                     css={{
-                      height: IconSize.small,
+                      height: IconSize.xs,
                     }}
                   />
-                  <Typography variant="bodyMedium">
+                  <Typography variant="bodySmall">
                     {PODS.symbol} @ {displayBN(placeInLine)}
                   </Typography>
                 </Row>
               )}
             />
-            <Box>
+            {/* <Box>
               <Accordion variant="outlined">
                 <StyledAccordionSummary title="Transaction Details" />
                 <AccordionDetails>
@@ -229,7 +228,7 @@ const FillListingV2Form : FC<
                   />
                 </AccordionDetails>
               </Accordion>
-            </Box>
+            </Box> */}
           </>
         ) : null}
         <SmartSubmitButton
@@ -265,7 +264,7 @@ const PREFERRED_TOKENS : PreferredToken[] = [
   }
 ];
 
-const FillListingV2 : FC<{
+const FillListingForm : FC<{
   podListing: PodListing
 }> = ({
   podListing
@@ -464,4 +463,4 @@ const FillListingV2 : FC<{
   );
 };
 
-export default FillListingV2;
+export default FillListingForm;

@@ -9,7 +9,7 @@ import {
 
 import useNavHeight from '~/hooks/app/usePageDimensions';
 import useBanner from '~/hooks/app/useBanner';
-import MarketActionsV2 from '~/components/Market/PodsV2/MarketActionsV2';
+import MarketActionsV2 from '~/components/Market/PodsV2/Actions';
 import MarketActivityV2, {
   sizes,
 } from '~/components/Market/PodsV2/MarketActivityV2';
@@ -19,6 +19,9 @@ import { muiThemeCondensed } from '~/components/App/muiTheme';
 const SECTION_MAX_WIDTH = 400;
 const GAP = 0.8;
 
+/**
+ * Lays out the structure of the market page.
+ */
 const MarketPage: React.FC<{}> = () => {
   const banner = useBanner();
   const navHeight = useNavHeight(!!banner);
@@ -44,10 +47,12 @@ const MarketPage: React.FC<{}> = () => {
         gap={1}
         sx={{ height: { xs: '100%', lg: CONTAINER_HEIGHT } }}
       >
+        {/* Left column: Chart & Activity */}
         <Stack
           width={{ xs: '100%', lg: `calc(100% - ${SECTION_MAX_WIDTH}px)` }}
+          height="100%"
           gap={1}
-          sx={{ boxSizing: 'border-box', height: '100%' }}
+          sx={{ boxSizing: 'border-box' }}
         >
           <Box>
             <MarketChart chartHeight={chartHeight} />
@@ -56,18 +61,17 @@ const MarketPage: React.FC<{}> = () => {
             <MarketActivityV2 setHeight={setAccordionHeight} />
           </Box>
         </Stack>
+        {/* Right column: Actions & Orderbook */}
         <Stack
-          sx={{
-            width: { xs: '100%', lg: `${SECTION_MAX_WIDTH}px` },
-            height: '100%',
-          }}
+          width={{ xs: '100%', lg: `${SECTION_MAX_WIDTH}px` }}
+          height="100%"
           gap={1}
         >
           <MarketActionsV2 />
           {/* <OrderBook /> */}
-          <Box height="fit-content" display={{ xs: 'block', lg: 'none' }}>
+          {/* <Box height="fit-content" display={{ xs: 'block', lg: 'none' }}>
             <MarketActivityV2 setHeight={setAccordionHeight} />
-          </Box>
+          </Box> */}
         </Stack>
       </Stack>
     </Box>

@@ -3,7 +3,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { ToastBar, Toaster } from 'react-hot-toast';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import NewProposalsDialog from '~/components/Governance/NewProposalsDialog';
 import NavBar from '~/components/Nav/NavBar';
@@ -48,10 +48,11 @@ import useAccount from '~/hooks/ledger/useAccount';
 import './App.css';
 
 import { FC } from '~/types';
-import MarketV2 from '~/pages/market/podsv2';
-import FillListingWrapper from '~/components/Market/PodsV2/Actions/FillListingWrapper';
-import FillOrderWrapper from '~/components/Market/PodsV2/Actions/FillOrderWrapper';
+import MarketV2Page from '~/pages/market/podsv2';
+import FillListing from '~/components/Market/PodsV2/Actions/Buy/FillListing';
 import Snowflakes from './theme/winter/Snowflakes';
+import CreateOrder from '~/components/Market/PodsV2/Actions/Buy/CreateOrder';
+import PodMarketBuy from '~/components/Market/PodsV2/Actions/Buy';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -155,10 +156,17 @@ export default function App() {
             <Route path="/market/create" element={<CreatePage />} />
             <Route path="/market/order/:id" element={<OrderPage />} />
             <Route path="/market/listing/:id" element={<ListingPage />} /> */}
-            <Route path="/market" element={<MarketV2 />}>
+            <Route path="/market" element={<MarketV2Page />}>
               {/* https://ui.dev/react-router-nested-routes */}
-              <Route path="listing/:listingID" element={<FillListingWrapper />} />
-              <Route path="order/:orderID" element={<FillOrderWrapper />} />
+              <Route path="/market/buy" element={<PodMarketBuy />}>
+                <Route index element={<CreateOrder />} />
+                <Route path="/market/buy/:listingID" element={<FillListing />} />
+              </Route>
+              <Route path="/market/sell" element={null} />
+              <Route path="/market/sell/:orderID" element={null} />
+              {/* <Route path="sell" element={<FillOrderWrapper />} /> */}
+              {/* <Route path="listing/:listingID" element={<FillListingWrapper />} /> */}
+              {/* <Route path="order/:orderID" element={<FillOrderWrapper />} /> */}
             </Route>
             {/* DEX CODE (hidden) */}
             {/* <Route path="/market/wells" element={<WellHomePage />} /> */}
@@ -169,7 +177,7 @@ export default function App() {
             <Route path="/silo/:address" element={<SiloTokenPage />} />
             <Route path="/swap" element={<SwapPage />} />
             <Route path="/404" element={<PageNotFound />} />
-            <Route path="*" element={<Navigate replace to="/404" />} />
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
           <Box
             sx={{

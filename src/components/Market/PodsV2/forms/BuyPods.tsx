@@ -5,7 +5,7 @@ import { Outlet, useParams } from 'react-router-dom';
 import SubActionSelect from '../common/SubActionSelect';
 import { PodOrderType, podsOrderTypeAtom } from '../info/atom-context';
 import Soon from '~/components/Common/ZeroState/Soon';
-import CreateOrderV2 from '~/components/Market/PodsV2/Actions/CreateOrderV2';
+import CreateOrder from '~/components/Market/PodsV2/Actions/Buy/CreateOrder';
 import usePodListing from '~/hooks/beanstalk/usePodListing';
 import StatHorizontal from '~/components/Common/StatHorizontal';
 import { displayBN, displayFullBN } from '~/util';
@@ -42,7 +42,7 @@ const BuyPods: React.FC<{}> = () => {
           </StatHorizontal>
         </div>
       )}
-      {orderType === PodOrderType.ORDER && <CreateOrderV2 />}
+      {orderType === PodOrderType.ORDER && <CreateOrder />}
       {orderType === PodOrderType.FILL && (
         <>
           {listingID ? (

@@ -1,4 +1,4 @@
-import { Alert, Box, InputAdornment, Stack, Typography } from '@mui/material';
+import { Box, InputAdornment, Stack, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 import { ethers } from 'ethers';
 import { useProvider } from 'wagmi';
 import toast from 'react-hot-toast';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import TransactionToast from '~/components/Common/TxnToast';
 import TxnAccordion from '~/components/Common/TxnAccordion';
 import { TokenSelectMode } from '~/components/Common/Form/TokenSelectDialog';
@@ -24,7 +23,6 @@ import {
   TxnSettings,
 } from '~/components/Common/Form';
 import Token, { ERC20Token, NativeToken } from '~/classes/Token';
-import useChainId from '~/hooks/chain/useChainId';
 import useChainConstant from '~/hooks/chain/useChainConstant';
 import useFarmerBalances from '~/hooks/farmer/useFarmerBalances';
 import { QuoteHandler } from '~/hooks/ledger/useQuote';
@@ -50,10 +48,8 @@ import {
 import { AppState } from '~/state';
 import { BEAN, ETH, PODS, WETH } from '~/constants/tokens';
 import { ONE_BN, ZERO_BN, POD_MARKET_TOOLTIPS } from '~/constants';
-import { IconSize } from '~/components/App/muiTheme';
 import SliderField from '~/components/Common/Form/SliderField';
 import FieldWrapper from '~/components/Common/Form/FieldWrapper';
-import IconWrapper from '~/components/Common/IconWrapper';
 import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 import { FC } from '~/types';
@@ -116,7 +112,6 @@ const CreateOrderV2Form: FC<
   tokenList,
   contract,
 }) => {
-  const chainId = useChainId();
   const getChainToken = useGetChainToken();
   const balances = useFarmerBalances();
 
@@ -173,7 +168,7 @@ const CreateOrderV2Form: FC<
           label="Max Place in Line"
           tooltip="The maximum Place in Line in which you are willing to buy Pods at the following price."
         >
-          <Box px={1}>
+          <Box px={1.7}>
             <SliderField
               min={0}
               fields={SLIDER_FIELD_KEYS}
@@ -220,8 +215,12 @@ const CreateOrderV2Form: FC<
         {isReady ? (
           <>
             <TxnSeparator mt={-1} />
-            <TokenOutputField token={PODS} amount={amountPods} />
-            <Alert
+            <TokenOutputField
+              token={PODS}
+              amount={amountPods}
+              size="small"
+            />
+            {/* <Alert
               color="warning"
               icon={
                 <IconWrapper boxSize={IconSize.medium}>
@@ -231,7 +230,7 @@ const CreateOrderV2Form: FC<
             >
               You will only receive this number of Pods if your Order is
               entirely Filled.
-            </Alert>
+            </Alert> */}
             <Box>
               <TxnAccordion>
                 <TxnPreview
@@ -289,7 +288,7 @@ const CreateOrderV2Form: FC<
 
 // ---------------------------------------------------
 
-const CreateOrderV2: FC<{}> = () => {
+const CreateOrder: FC<{}> = () => {
   /// Tokens
   const getChainToken = useGetChainToken();
   const Eth = useChainConstant(ETH);
@@ -514,4 +513,4 @@ const CreateOrderV2: FC<{}> = () => {
   );
 };
 
-export default CreateOrderV2;
+export default CreateOrder;

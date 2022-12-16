@@ -7,12 +7,12 @@ import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const OutputField : FC<{
   isNegative?: boolean;
+  size?: 'small'
 } & StackProps> = ({
-  //
   isNegative = false,
   children,
-  //
   sx,
+  size,
   ...props
 }) => (
   <Row
@@ -20,10 +20,10 @@ const OutputField : FC<{
       // backgroundColor: isNegative ? '#FFE5DF' : '#F6FAFE',
       backgroundColor: BeanstalkPalette.theme.winter.blueLight, 
       borderRadius: 1,
-      px: 2,
-      py: 2,
+      px: size === 'small' ? 1 : 2,
+      py: size === 'small' ? 0.5 : 2,
       color: isNegative ? BeanstalkPalette.theme.winter.error : 'inherit',
-      height: '70px',
+      height: size === 'small' ? undefined : '70px',
       ...sx
     }}
     alignItems="center"
