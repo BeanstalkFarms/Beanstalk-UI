@@ -3,7 +3,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { ToastBar, Toaster } from 'react-hot-toast';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 import NewProposalsDialog from '~/components/Governance/NewProposalsDialog';
 import NavBar from '~/components/Nav/NavBar';
@@ -48,11 +48,15 @@ import useAccount from '~/hooks/ledger/useAccount';
 import './App.css';
 
 import { FC } from '~/types';
-import MarketV2Page from '~/pages/market/podsv2';
-import FillListing from '~/components/Market/PodsV2/Actions/Buy/FillListing';
 import Snowflakes from './theme/winter/Snowflakes';
-import CreateOrder from '~/components/Market/PodsV2/Actions/Buy/CreateOrder';
+
+import PodMarketPage from '~/pages/market/podsv2';
 import PodMarketBuy from '~/components/Market/PodsV2/Actions/Buy';
+import PodMarketCreateOrder from '~/components/Market/PodsV2/Actions/Buy/CreateOrder';
+import PodMarketFillListing from '~/components/Market/PodsV2/Actions/Buy/FillListing';
+import PodMarketSell from '~/components/Market/PodsV2/Actions/Sell';
+import PodMarketCreateListing from '~/components/Market/PodsV2/Actions/Sell/CreateListing';
+import PodMarketFillOrder from '~/components/Market/PodsV2/Actions/Sell/FillOrder';
 
 BigNumber.set({ EXPONENTIAL_AT: [-12, 20] });
 
@@ -150,23 +154,19 @@ export default function App() {
             <Route path="/field" element={<FieldPage />} />
             <Route path="/governance" element={<GovernancePage />} />
             <Route path="/history" element={<TransactionHistoryPage />} />
-            {/* <Route path="/market" element={<PodMarketPage />} /> */}
-            {/* <Route path="/market/account" element={<MarketAccountPage />} />
-            <Route path="/market/activity" element={<MarketActivityPage />} />
-            <Route path="/market/create" element={<CreatePage />} />
-            <Route path="/market/order/:id" element={<OrderPage />} />
-            <Route path="/market/listing/:id" element={<ListingPage />} /> */}
-            <Route path="/market" element={<MarketV2Page />}>
+            <Route path="/market" index element={<Navigate to="/market/buy" />} />
+            <Route path="/market" element={<PodMarketPage />}>
               {/* https://ui.dev/react-router-nested-routes */}
               <Route path="/market/buy" element={<PodMarketBuy />}>
-                <Route index element={<CreateOrder />} />
-                <Route path="/market/buy/:listingID" element={<FillListing />} />
+                <Route index element={<PodMarketCreateOrder />} />
+                <Route path="/market/buy/:listingID" element={<PodMarketFillListing />} />
               </Route>
-              <Route path="/market/sell" element={null} />
-              <Route path="/market/sell/:orderID" element={null} />
-              {/* <Route path="sell" element={<FillOrderWrapper />} /> */}
-              {/* <Route path="listing/:listingID" element={<FillListingWrapper />} /> */}
-              {/* <Route path="order/:orderID" element={<FillOrderWrapper />} /> */}
+              <Route path="/market/sell" element={<PodMarketSell />}>
+                <Route index element={<PodMarketCreateListing />} />
+                <Route path="/market/sell/:orderID" element={<PodMarketFillOrder />} />
+              </Route>
+              <Route path="listing/:listingID" element={<Navigate to="/market/buy/:listingID" />} />
+              <Route path="order/:orderID" element={<Navigate to="/market/sell/:orderID" />} />
             </Route>
             {/* DEX CODE (hidden) */}
             {/* <Route path="/market/wells" element={<WellHomePage />} /> */}

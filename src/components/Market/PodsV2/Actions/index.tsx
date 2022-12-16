@@ -23,7 +23,7 @@ const MarketActionsV2: React.FC<{}> = () => {
   return (
     <Card sx={{ width: '100%', overflow: 'visible', position: 'relative' }}>
       <Box sx={{ px: 1.2, py: 1.2, borderBottom: '0.5px solid', borderColor: 'divider' }}>
-        <Tabs value={action === 'buy' ? 0 : 1}>
+        <Tabs value={(!action || action === 'buy') ? 0 : 1}>
           <Tab component={NavLink} to="/market/buy" label="BUY" sx={tabSx} />
           <Tab component={NavLink} to="/market/sell" label="SELL" sx={tabSx} />
         </Tabs>

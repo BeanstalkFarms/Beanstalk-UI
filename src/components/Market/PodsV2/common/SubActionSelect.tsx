@@ -46,7 +46,7 @@ const SubActionSelect: FC<{
     >
       {action === 'buy' ? 'ORDER' : 'LIST'}
     </Button>
-    <Tooltip title={`Select a Pod ${action === 'buy' ? 'Listing' : 'Order'} on the graph to Fill.`}>
+    <Tooltip title={id ? '' : `Select a Pod ${action === 'buy' ? 'Listing' : 'Order'} on the graph to Fill.`}>
       <div>
         <Button 
           variant="text"

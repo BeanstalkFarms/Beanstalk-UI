@@ -28,7 +28,7 @@ import usePreferredToken, { PreferredToken } from '~/hooks/farmer/usePreferredTo
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import Farm, { ChainableFunction, FarmFromMode, FarmToMode } from '~/lib/Beanstalk/Farm';
-import { displayBN, displayTokenAmount, MinBN, toStringBaseUnitBN, parseError, toTokenUnitsBN } from '~/util';
+import { displayBN, displayTokenAmount, MinBN, toStringBaseUnitBN, parseError, toTokenUnitsBN, displayFullBN } from '~/util';
 import { AppState } from '~/state';
 import { BEAN, ETH, PODS, WETH } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
@@ -39,6 +39,8 @@ import { IconSize } from '~/components/App/muiTheme';
 import Row from '~/components/Common/Row';
 import { FC } from '~/types';
 import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
+import StatHorizontal from '~/components/Common/StatHorizontal';
+import FarmerChip from '~/components/Common/FarmerChip';
 
 export type FillListingFormValues = FormState & {
   settings: SlippageSettingsFragment;
@@ -440,26 +442,48 @@ const FillListingForm : FC<{
   }, [Bean, podListing, signer, Eth, Weth, beanstalk, refetchFarmerField, refetchFarmerBalances, balances, middleware]);
 
   return (
-    <Formik<FillListingFormValues>
-      enableReinitialize
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-    >
-      {(formikProps: FormikProps<FillListingFormValues>) => (
-        <>
-          <TxnSettings placement="condensed-form-top-right">
-            <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
-          </TxnSettings>
-          <FillListingV2Form
-            podListing={podListing}
-            handleQuote={handleQuote}
-            contract={beanstalk}
-            farm={farm}
-            {...formikProps}
-          />
-        </>
-      )}
-    </Formik>
+    <Stack gap={2}>
+      <Stack px={0.5} gap={0.75}>
+        <StatHorizontal label="Seller" maxHeight={20}>
+          <FarmerChip account={podListing.account} />
+        </StatHorizontal>
+        <StatHorizontal label="Place in Line">
+          {displayBN(podListing.placeInLine)}
+        </StatHorizontal>
+        <StatHorizontal label="Pods Available">
+          <Row gap={0.25}>
+            <TokenIcon token={PODS} />{' '}
+            {displayFullBN(podListing.remainingAmount, 2, 0)}
+          </Row>
+        </StatHorizontal>
+        <StatHorizontal label="Price per Pod">
+          <Row gap={0.25}>
+            <TokenIcon token={BEAN[1]} />{' '}
+            {displayFullBN(podListing.pricePerPod, 4, 2)}
+          </Row>
+        </StatHorizontal>
+      </Stack>
+      <Formik<FillListingFormValues>
+        enableReinitialize
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+      >
+        {(formikProps: FormikProps<FillListingFormValues>) => (
+          <>
+            <TxnSettings placement="condensed-form-top-right">
+              <SettingInput name="settings.slippage" label="Slippage Tolerance" endAdornment="%" />
+            </TxnSettings>
+            <FillListingV2Form
+              podListing={podListing}
+              handleQuote={handleQuote}
+              contract={beanstalk}
+              farm={farm}
+              {...formikProps}
+            />
+          </>
+        )}
+      </Formik>
+    </Stack>
   );
 };
 

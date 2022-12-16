@@ -23,7 +23,7 @@ const OutputField : FC<{
       px: size === 'small' ? 1 : 2,
       py: size === 'small' ? 0.5 : 2,
       color: isNegative ? BeanstalkPalette.theme.winter.error : 'inherit',
-      height: size === 'small' ? undefined : '70px',
+      height: size === 'small' ? '42px' : '70px',
       ...sx
     }}
     alignItems="center"

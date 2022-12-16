@@ -130,7 +130,7 @@ const FillOrderV2Form: FC<
   );
 };
 
-const FillOrderV2: FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
+const FillOrderForm: FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
   /// Tokens
   const Bean = useChainConstant(BEAN);
 
@@ -244,4 +244,4 @@ const FillOrderV2: FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
   );
 };
 
-export default FillOrderV2;
+export default FillOrderForm;
