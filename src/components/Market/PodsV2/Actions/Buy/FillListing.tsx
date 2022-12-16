@@ -3,12 +3,17 @@ import { useParams } from 'react-router-dom';
 import { CircularProgress, Stack, Typography } from '@mui/material';
 import usePodListing from '~/hooks/beanstalk/usePodListing';
 import FillListingForm from '~/components/Market/PodsV2/Actions/Buy/FillListingForm';
-import { bigNumberResult } from '~/util';
+import { bigNumberResult, displayBN, displayFullBN } from '~/util';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
+import StatHorizontal from '~/components/Common/StatHorizontal';
+import Row from '~/components/Common/Row';
+import TokenIcon from '~/components/Common/TokenIcon';
+import FarmerChip from '~/components/Common/FarmerChip';
+import { BEAN, PODS } from '~/constants/tokens';
 
 const FillListing: React.FC<{}> = () => {
   const { listingID } = useParams<{ listingID: string }>();
-  const { data: listing, loading, error } = usePodListing(listingID);
+  const { data: podListing, loading, error } = usePodListing(listingID);
   const beanstalk = useBeanstalkContract();
   
   /// Verify that this listing is still live via the contract.
@@ -43,7 +48,7 @@ const FillListing: React.FC<{}> = () => {
       </Stack>
     );
   }
-  if (!listing || !listingValid) {
+  if (!podListing || !listingValid) {
     return (
       <Stack height={200} alignItems="center" justifyContent="center">
         <Typography>Listing not found.</Typography>
@@ -52,7 +57,31 @@ const FillListing: React.FC<{}> = () => {
   }
 
   return (
-    <FillListingForm podListing={listing} />
+    <Stack gap={2}>
+      {/* Listing Details */}
+      <Stack px={0.5} gap={0.75}>
+        <StatHorizontal label="Seller" maxHeight={20}>
+          <FarmerChip account={podListing.account} />
+        </StatHorizontal>
+        <StatHorizontal label="Place in Line">
+          {displayBN(podListing.placeInLine)}
+        </StatHorizontal>
+        <StatHorizontal label="Pods Available">
+          <Row gap={0.25}>
+            <TokenIcon token={PODS} />{' '}
+            {displayFullBN(podListing.remainingAmount, 2, 0)}
+          </Row>
+        </StatHorizontal>
+        <StatHorizontal label="Price per Pod">
+          <Row gap={0.25}>
+            <TokenIcon token={BEAN[1]} />{' '}
+            {displayFullBN(podListing.pricePerPod, 4, 2)}
+          </Row>
+        </StatHorizontal>
+      </Stack>
+      {/* Form */}
+      <FillListingForm podListing={podListing} />
+    </Stack>
   );
 };
 

@@ -9,9 +9,9 @@
 
 @keyframes mg-pulse {
   0% {
-    r: 7px;
+    r: 9px;
   }
   100% {
-    r: 8px;
+    r: 10.5px;
   }
 }

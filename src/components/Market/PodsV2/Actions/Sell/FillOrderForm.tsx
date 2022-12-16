@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, Box, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
@@ -8,7 +8,7 @@ import TransactionToast from '~/components/Common/TxnToast';
 import {
   PlotFragment,
   PlotSettingsFragment, SmartSubmitButton,
-  TokenOutputField, TxnPreview,
+  TokenOutputField,
   TxnSeparator
 } from '~/components/Common/Form';
 import FarmModeField from '~/components/Common/Form/FarmModeField';
@@ -24,8 +24,6 @@ import { ZERO_BN } from '~/constants';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { PodOrder } from '~/state/farmer/market';
-import StyledAccordionSummary from '~/components/Common/Accordion/AccordionSummary';
-import { ActionType } from '~/util/Actions';
 import { FC } from '~/types';
 import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
@@ -65,12 +63,14 @@ const FillOrderV2Form: FC<
     ),
     [allPlots, harvestableIndex, podOrder.maxPlaceInLine]
   );
-  const placeInLine   = plot.index ? new BigNumber(plot.index).minus(harvestableIndex) : undefined;
+
+  // const placeInLine   = plot.index ? new BigNumber(plot.index).minus(harvestableIndex) : undefined;
   const beansReceived = plot.amount?.times(podOrder.pricePerPod) || ZERO_BN;
   const isReady = (
     numEligiblePlots > 0
     && plot.index
     && plot.amount?.gt(0)
+    && values.destination
   );
 
   return (
@@ -90,8 +90,9 @@ const FillOrderV2Form: FC<
               token={BEAN[1]}
               amount={beansReceived}
               isLoading={false}
+              size="small"
             />
-            <Box>
+            {/* <Box>
               <Accordion variant="outlined">
                 <StyledAccordionSummary title="Transaction Details" />
                 <AccordionDetails>
@@ -111,7 +112,7 @@ const FillOrderV2Form: FC<
                   />
                 </AccordionDetails>
               </Accordion>
-            </Box>
+            </Box> */}
           </>
         )}
         <SmartSubmitButton
