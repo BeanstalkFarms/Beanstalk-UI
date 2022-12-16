@@ -32,7 +32,7 @@ const sx = {
 };
 
 export const sizes = {
-  CLOSED: 56,
+  CLOSED: 44,
   HALF: 300,
   FULL: 750,
 };
@@ -62,11 +62,10 @@ const MarketActivityV2: React.FC<{ setHeight: any }> = (props) => {
   return (
     <Stack
       sx={{
-        position: 'relative',
         bottom: 0,
         height: openState !== 0 ? `${size}px` : undefined,
         // FIXME: transition -> nice-to-have
-        transition: openState === 0 ? 'max-height 200ms ease-in' : null,
+        // transition: openState === 0 ? 'height 200ms ease-in' : null,
         // mt: openState !== 2 ? 1 : 0,
       }}
     >
@@ -108,7 +107,7 @@ const MarketActivityV2: React.FC<{ setHeight: any }> = (props) => {
           </Row>
         }
       >
-        <Stack height="100%" sx={{ overflow: 'hidden', visibility: 'visible' }}>
+        <Stack height="100%" sx={{ visibility: 'visible' }}>
           {openState !== 0 && tab === 0 && <FarmerMarketActivity />}
           {openState !== 0 && tab === 1 && <MarketActivity />}
         </Stack>

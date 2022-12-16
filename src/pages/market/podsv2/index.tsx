@@ -32,11 +32,11 @@ const MarketPage: React.FC<{}> = () => {
 
   const chartHeight = useMemo(() => {
     if (isMobile) return '400px';
-    return `calc(100vh - ${(GAP * 10) + BOTTOM_HEIGHT + accordionHeight + 57}px)`;
+    return `calc(100vh - ${GAP * 10 + BOTTOM_HEIGHT + accordionHeight + 57}px)`;
   }, [BOTTOM_HEIGHT, accordionHeight, isMobile]);
 
   return (
-    <Box py={1}>
+    <Box py={1} sx={{ position: 'relative' }}>
       <Stack
         px={1}
         direction={{ xs: 'column', lg: 'row' }}

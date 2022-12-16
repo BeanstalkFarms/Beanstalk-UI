@@ -39,6 +39,7 @@ import { ONE_BN, ZERO_BN, POD_MARKET_TOOLTIPS } from '~/constants';
 import FieldWrapper from '~/components/Common/Form/FieldWrapper';
 import { FC } from '~/types';
 import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
+import { useFetchFarmerMarketItems } from '~/hooks/farmer/market/useFarmerMarket';
 
 export type CreateListingFormValues = {
   plot:        PlotFragment
@@ -221,6 +222,7 @@ const CreateListingV2: FC<{}> = () => {
   /// Farmer
   const plots            = useFarmerPlots();
   const [refetchFarmerMarket] = useFetchFarmerMarket();
+  const { fetch: refetchFarmerMarketItems } = useFetchFarmerMarketItems();
 
   /// Form
   const middleware = useFormMiddleware();
@@ -278,7 +280,8 @@ const CreateListingV2: FC<{}> = () => {
 
       const receipt = await txn.wait();
       await Promise.all([
-        refetchFarmerMarket()
+        refetchFarmerMarket(),
+        refetchFarmerMarketItems(),
       ]);
 
       txToast.success(receipt);
@@ -287,7 +290,7 @@ const CreateListingV2: FC<{}> = () => {
       txToast?.error(err) || toast.error(parseError(err));
       console.error(err);
     }
-  }, [beanstalk, getChainToken, harvestableIndex, plots, refetchFarmerMarket, middleware]);
+  }, [middleware, plots, harvestableIndex, beanstalk, refetchFarmerMarket, refetchFarmerMarketItems, getChainToken]);
 
   return (
     <Formik<CreateListingFormValues>
