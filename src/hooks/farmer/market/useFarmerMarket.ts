@@ -121,20 +121,8 @@ const castListingToItem = (
   listing,
 });
 
-export default function useFarmerMarket() {
-  /// Beanstalk Data
-  const harvestableIndex = useHarvestableIndex();
+export function useFetchFarmerMarketItems() {
   const account = useAccount();
-
-  /// State
-  const orders = useSelector<AppState, AppState['_farmer']['market']['orders']>(
-    (state) => state._farmer.market.orders
-  );
-  const listings = useSelector<
-    AppState,
-    AppState['_farmer']['market']['listings']
-  >((state) => state._farmer.market.listings);
-
   /// Queries
   const [getListings, listingsQuery] = useFarmerPodListingsLazyQuery({
     fetchPolicy: 'cache-and-network',
@@ -147,22 +135,7 @@ export default function useFarmerMarket() {
     notifyOnNetworkStatusChange: true,
   });
 
-  /// cast query data to proper types
-  const listingsData = useCastApolloQuery<PodListing>(
-    listingsQuery,
-    'podListings',
-    (_podListing) => castPodListing(_podListing, harvestableIndex)
-  );
-  const ordersData = useCastApolloQuery<PodOrder>(
-    ordersQuery,
-    'podOrders',
-    castPodOrder
-  );
-
-  const isLoading = listingsQuery.loading || ordersQuery.loading;
-  const error = listingsQuery.error || ordersQuery.error;
-
-  const _fetch = useCallback(async () => {
+  const fetch = useCallback(async () => {
     if (!account) return;
 
     await Promise.all([
@@ -182,6 +155,34 @@ export default function useFarmerMarket() {
       }),
     ]);
   }, [account, getListings, getOrders]);
+
+  return { listings: listingsQuery, orders: ordersQuery, fetch };
+}
+
+export default function useFarmerMarket() {
+  /// Beanstalk Data
+  const harvestableIndex = useHarvestableIndex();
+
+  /// State
+  const orders = useSelector<AppState, AppState['_farmer']['market']['orders']>((state) => state._farmer.market.orders);
+  const listings = useSelector<AppState, AppState['_farmer']['market']['listings']>((state) => state._farmer.market.listings);
+
+  const { listings: listingsQuery, orders: ordersQuery, fetch } = useFetchFarmerMarketItems();
+
+  /// cast query data to proper types
+  const listingsData = useCastApolloQuery<PodListing>(
+    listingsQuery,
+    'podListings',
+    (_podListing) => castPodListing(_podListing, harvestableIndex)
+  );
+  const ordersData = useCastApolloQuery<PodOrder>(
+    ordersQuery,
+    'podOrders',
+    castPodOrder
+  );
+
+  const isLoading = listingsQuery.loading || ordersQuery.loading;
+  const error = listingsQuery.error || ordersQuery.error;
 
   const farmerMarketItems = useMemo(() => {
     const items: FarmerMarketItem[] = [];
@@ -213,7 +214,7 @@ export default function useFarmerMarket() {
   }, [harvestableIndex, isLoading, listings, listingsData, orders, ordersData]);
 
   useEffect(() => {
-    _fetch();
+    fetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -13,12 +13,11 @@ export default function useFarmerMarketItemStats(
 ) {
   const harvestableIndex = useHarvestableIndex();
   const data = useMemo(() => {
-    if (!item) return undefined;
-    if (item.action === 'sell' && !item.listing) {
-      return undefined;
-    }
-
-    if (item.action === 'buy' && !item.order) {
+    if (
+      !item ||
+      (item.type === 'listing' && !item.listing) ||
+      (item.type === 'order' && !item.order)
+    ) {
       return undefined;
     }
 

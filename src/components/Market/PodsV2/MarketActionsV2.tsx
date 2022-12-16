@@ -35,7 +35,7 @@ const MarketActionsV2: React.FC<{}> = () => {
   };
 
   return (
-    <Card sx={{ width: '100%', overflow: 'visible' }}>
+    <Card sx={{ width: '100%', overflow: 'visible', position: 'relative' }}>
       <Box p={1} sx={{ borderBottom: '0.5px solid', borderColor: 'divider' }}>
         <Tabs value={orderType} onChange={handleSetOrderType}>
           <Tab label="BUY" sx={tabSx} />

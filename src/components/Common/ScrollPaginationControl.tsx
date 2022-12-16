@@ -70,7 +70,7 @@ const ScrollPaginationControl: React.FC<IScrollPaginationControl> = ({
     if (!handleFetchMore || !cacheRef?.current) return;
     const [sh, st, ch] = [el?.scrollHeight, el?.scrollTop, el?.clientHeight];
     if (sh && st && ch) {
-      const isBottom = sh - st === ch;
+      const isBottom = sh - st - 1 <= ch;
       // only call fetchMore if we're at the bottom and we are on the last page
       if (isBottom && !hasNextPage) {
         handleFetchMore();

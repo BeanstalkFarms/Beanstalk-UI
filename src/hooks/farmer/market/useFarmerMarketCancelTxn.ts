@@ -1,15 +1,17 @@
 import { useCallback, useState } from 'react';
 import { useSigner } from 'wagmi';
+import BigNumber from 'bignumber.js';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import TransactionToast from '~/components/Common/TxnToast';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
 import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
 import { useBeanstalkContract } from '../../ledger/useContract';
 import useFormMiddleware from '../../ledger/useFormMiddleware';
-import { BEAN } from '~/constants/tokens';
+import { BEAN, PODS } from '~/constants/tokens';
 import useChainConstant from '../../chain/useChainConstant';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { PodOrder } from '~/state/farmer/market';
+import { useFetchFarmerMarketItems } from './useFarmerMarket';
 
 export default function useFarmerMarketCancelTxn() {
   /// Helpers
@@ -26,6 +28,8 @@ export default function useFarmerMarketCancelTxn() {
   const [refetchFarmerField] = useFetchFarmerField();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
   const [refetchFarmerMarket] = useFetchFarmerMarket();
+  // subgraph queries
+  const { fetch: fetchFarmerMarket } = useFetchFarmerMarketItems();
 
   /// Form
   const middleware = useFormMiddleware();
@@ -46,7 +50,7 @@ export default function useFarmerMarketCancelTxn() {
           txToast.confirming(txn);
 
           const receipt = await txn.wait();
-          await Promise.all([refetchFarmerField(), refetchFarmerMarket()]);
+          await Promise.all([refetchFarmerField(), refetchFarmerMarket(), fetchFarmerMarket()]);
           txToast.success(receipt);
         } catch (err) {
           txToast.error(err);
@@ -56,7 +60,7 @@ export default function useFarmerMarketCancelTxn() {
         }
       })();
     },
-    [beanstalk, middleware, refetchFarmerField, refetchFarmerMarket]
+    [beanstalk, middleware, refetchFarmerField, refetchFarmerMarket, fetchFarmerMarket]
   );
 
   const cancelOrder = useCallback(
@@ -73,7 +77,7 @@ export default function useFarmerMarketCancelTxn() {
           const txn = await beanstalk.cancelPodOrder(
             Bean.stringify(order.pricePerPod),
             Bean.stringify(order.maxPlaceInLine),
-            Bean.stringify(order.minFillAmount || 0),
+            PODS.stringify(order.minFillAmount || new BigNumber(1)),
             destination
           );
           txToast.confirming(txn);
@@ -82,6 +86,7 @@ export default function useFarmerMarketCancelTxn() {
           await Promise.all([
             refetchFarmerMarket(), // clear old pod order
             refetchFarmerBalances(), // refresh Beans
+            fetchFarmerMarket()
           ]);
           txToast.success(receipt);
           // navigate('/market/account');
@@ -93,7 +98,7 @@ export default function useFarmerMarketCancelTxn() {
         }
       })();
     },
-    [Bean, beanstalk, middleware, refetchFarmerBalances, refetchFarmerMarket]
+    [Bean, beanstalk, middleware, refetchFarmerBalances, refetchFarmerMarket, fetchFarmerMarket]
   );
 
   return {

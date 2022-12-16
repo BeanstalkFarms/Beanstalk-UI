@@ -32,21 +32,26 @@ const MarketItemDetailsDialog: React.FC<Props> = ({
   const onClick = useCallback(() => {
     if (!item) return;
     if (item.type === 'listing') {
+      // close ORDER DETAILS dialog
       setOpen(false);
+      // initiate cancel listing
       cancelListing(item.id);
     } else if (item?.type === 'order') {
+      // close ORDER DETAILS dialog
       setOpen(false);
+      // open FARM TO MODE dialog
       setOpen2(true);
     }
   }, [cancelListing, item, setOpen, setOpen2]);
 
-  const handleCancelOrder = useCallback(
-    (mode: FarmToMode) => {
-      if (!item || !item.order) return;
-      cancelOrder(item.order, mode, () => setOpen2(false));
-    },
-    [cancelOrder, item, setOpen2]
-  );
+  const handleCancelOrder = useCallback(async (mode: FarmToMode) => {
+    if (!item || !item.order) return;
+    cancelOrder(
+      item.order, 
+      mode, 
+      () => setOpen2(false)
+    );
+  }, [cancelOrder, item, setOpen2]);
 
   if (!data) {
     return null;
