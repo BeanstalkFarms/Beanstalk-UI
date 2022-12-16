@@ -17,7 +17,7 @@ const columns = [
 
 const MarketActivity: React.FC<{}> = () => {
   const { data, harvestableIndex, fetchMoreData } = useMarketplaceEventData();
-
+  
   // map row data to have index due to duplicated ids causing rendering issues
   const rows = useMemo(() => {
     if (!data || !data.length) return [];

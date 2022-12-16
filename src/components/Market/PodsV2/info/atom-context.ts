@@ -42,8 +42,23 @@ export type ValueAtom<T extends BigNumber | null> = PrimitiveAtom<T>;
 // chart type atom (pods / Depth || select listing voroni)
 export const marketChartTypeAtom = atom<'depth' | 'listing'>('depth');
 
+const _marketBottomTabsAtom = atom<PartialOpenState>(0);
+const accordionSizes = {
+  0: 44,
+  1: 300,
+  2: 750,
+};
+export const marketBottomTabsHeightAtom = atom(accordionSizes[0]);
 // open state of the bottom tabs (market / your orders)
-export const marketBottomTabsAtom = atom<PartialOpenState>(0);
+export const marketBottomTabsAtom = atom(
+  (get) => get(_marketBottomTabsAtom),
+  (_get, set, update: PartialOpenState) => {
+    // set the height of the bottom tabs
+    set(marketBottomTabsHeightAtom, accordionSizes[update]);
+    // set the open state
+    set(_marketBottomTabsAtom, update);
+  }
+);
 
 // whether the PodOrderAction is Buy or Sell
 // export const podsOrderActionAtom = atom<PodOrderAction | null>(null);
