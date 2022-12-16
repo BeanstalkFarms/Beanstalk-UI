@@ -80,6 +80,7 @@ const FillOrderV2Form: FC<
           plots={eligiblePlots}
           max={podOrder.remainingAmount}
           disabledAdvanced
+          size="small"
         />
         <FarmModeField name="destination" />
         {isReady && (
@@ -119,7 +120,6 @@ const FillOrderV2Form: FC<
           type="submit"
           variant="contained"
           color="primary"
-          size="large"
           tokens={[]}
           mode="auto"
         >

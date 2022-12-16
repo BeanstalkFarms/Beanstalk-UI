@@ -11,8 +11,8 @@ import useTabs from '~/hooks/display/useTabs';
 const tabSx = {
   '&.MuiTab-root': {
     fontSize: FontSize.sm,
-    p: 0.5,
-    mr: 0.5,
+    // p: 0.5,
+    // mr: 0.5,
     '&.Mui-selected': {
       fontSize: FontSize.sm,
     },

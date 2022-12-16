@@ -40,9 +40,9 @@ const SubAction: FC<{ isActive: boolean; onClick: () => void }> = ({
   </Button>
 );
 
-const SubActionSelect: React.FC<{}> = () => {
-  const orderAction = useAtomValue(podsOrderActionAtom);
-  const [orderType, setOrderType] = useAtom(podsOrderTypeAtom);
+const SubActionSelect: FC<{}> = () => {
+  const orderAction = useAtomValue(podsOrderActionAtom); // BUY vs SELL
+  const [orderType, setOrderType] = useAtom(podsOrderTypeAtom); // ORDER vs FILL / LIST vs FILL
 
   useEffect(() => {
     if (

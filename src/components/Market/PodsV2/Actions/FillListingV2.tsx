@@ -177,6 +177,7 @@ const FillListingV2Form : FC<
           state={values.tokens[0]}
           showTokenSelect={handleOpen}
           handleQuote={handleQuote}
+          size="small"
         />
         {isReady ? (
           <>
@@ -235,7 +236,6 @@ const FillListingV2Form : FC<
           type="submit"
           variant="contained"
           color="primary"
-          size="large"
           disabled={!isSubmittable}
           contract={contract}
           tokens={values.tokens}
