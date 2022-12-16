@@ -3,6 +3,7 @@ import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 import PlotInputField from '~/components/Common/Form/PlotInputField';
 import TransactionToast from '~/components/Common/TxnToast';
 import {
@@ -131,7 +132,7 @@ const FillOrderV2Form: FC<
   );
 };
 
-const FillOrderForm: FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
+const FillOrderForm: FC<{ podOrder: PodOrder }> = ({ podOrder }) => {
   /// Tokens
   const Bean = useChainConstant(BEAN);
 
@@ -162,6 +163,9 @@ const FillOrderForm: FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
     }
   }), []);
 
+  /// Navigation
+  const navigate = useNavigate();
+
   /// Handlers
   const onSubmit = useCallback(async (values: FillOrderFormValues, formActions: FormikHelpers<FillOrderFormValues>) => {
     let txToast;
@@ -186,6 +190,7 @@ const FillOrderForm: FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
             account:        podOrder.account,
             maxPlaceInLine: Bean.stringify(podOrder.maxPlaceInLine),
             pricePerPod:    Bean.stringify(podOrder.pricePerPod),
+            minFillAmount:  PODS.stringify(podOrder.minFillAmount || 0), // minFillAmount for Orders is measured in Pods
           },
           Bean.stringify(index),
           Bean.stringify(start),
@@ -218,15 +223,19 @@ const FillOrderForm: FC<{ podOrder: PodOrder}> = ({ podOrder }) => {
       await Promise.all([
         refetchFarmerField(),     // refresh plots; decrement pods
         refetchFarmerBalances(),  // increment balance of BEAN received
+        // FIXME: refresh orders
       ]);
       txToast.success(receipt);
       formActions.resetForm();
+
+      // Return to market index, open Your Orders
+      navigate('/market/sell');
     } catch (err) {
       txToast?.error(err) || toast.error(parseError(err));
     } finally {
       formActions.setSubmitting(false);
     }
-  }, [middleware, allPlots, podOrder.account, podOrder.maxPlaceInLine, podOrder.pricePerPod, podOrder.minFillAmount, Bean, beanstalk, refetchFarmerField, refetchFarmerBalances]);
+  }, [middleware, allPlots, podOrder.account, podOrder.maxPlaceInLine, podOrder.pricePerPod, podOrder.minFillAmount, Bean, beanstalk, refetchFarmerField, refetchFarmerBalances, navigate]);
 
   return (
     <Formik<FillOrderFormValues>
