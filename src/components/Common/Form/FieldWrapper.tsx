@@ -22,7 +22,7 @@ const FieldWrapper : FC<{
         <Typography
           sx={{
             fontSize: 'bodySmall',
-            px: 1,
+            px: 0.5,
             mb: 0.25
           }}
           display="inline-block"

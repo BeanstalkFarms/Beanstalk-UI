@@ -17,8 +17,8 @@ const PLACEMENTS = {
     position: 'absolute',
     top: 0,
     right: 0,
-    pr: 1.3,
-    pt: 0.8
+    pr: 0.8,
+    pt: 0.4
   },
 };
 

@@ -54,6 +54,7 @@ const PricePerPodInputProps = {
   endAdornment: (
     <TokenAdornment
       token={BEAN[1]}
+      size="small"
     />
   )
 };
@@ -132,6 +133,7 @@ const CreateListingV2Form: FC<
       <Stack gap={1}>
         <PlotInputField
           plots={plots}
+          size="small"
         />
         {plot.index && (
           <>
@@ -146,6 +148,7 @@ const CreateListingV2Form: FC<
                 placeholder="0.0000"
                 InputProps={PricePerPodInputProps}
                 max={ONE_BN}
+                size="small"
               />
             </FieldWrapper>
             <FieldWrapper label="Expires in" tooltip={POD_MARKET_TOOLTIPS.expiresAt}>
@@ -154,6 +157,7 @@ const CreateListingV2Form: FC<
                 placeholder="0.0000"
                 InputProps={ExpiresAtInputProps}
                 max={placeInLine.plus(plot.start || ZERO_BN)}
+                size="small"
               />
             </FieldWrapper>
             <FarmModeField
@@ -192,7 +196,6 @@ const CreateListingV2Form: FC<
           type="submit"
           variant="contained"
           color="primary"
-          size="large"
           tokens={[]}
           mode="auto"
         >

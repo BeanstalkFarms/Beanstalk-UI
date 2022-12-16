@@ -1,6 +1,6 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { Box, Card, CardProps } from '@mui/material';
+import { Box, Card, CardProps, Stack, Typography } from '@mui/material';
 import { Tooltip, useTooltip } from '@visx/tooltip';
 import { Text } from '@visx/text';
 import { Circle, Line } from '@visx/shape';
@@ -12,9 +12,9 @@ import { localPoint } from '@visx/event';
 import { PatternLines } from '@visx/pattern';
 import { applyMatrixToPoint, Zoom } from '@visx/zoom';
 import { ProvidedZoom, TransformMatrix } from '@visx/zoom/lib/types';
-import { voronoi, VoronoiPolygon } from '@visx/voronoi';
+import { voronoi } from '@visx/voronoi';
 import BigNumber from 'bignumber.js';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import EntityIcon from '~/components/Market/Pods/EntityIcon';
@@ -22,14 +22,6 @@ import { displayBN } from '~/util';
 import Row from '~/components/Common/Row';
 import { FC } from '~/types';
 import './MarketGraph.css';
-import { MARKET_SLUGS } from '~/components/Market/PodsV2/MarketActionsV2';
-import { useAtom } from 'jotai';
-import {
-  PodOrderAction,
-  PodOrderType,
-  podsOrderActionTypeAtom,
-  podsOrderTypeAtom
-} from '~/components/Market/PodsV2/info/atom-context';
 
 /// //////////////////////////////// TYPES ///////////////////////////////////
 
@@ -40,9 +32,9 @@ type CirclePosition = {
   id: string;
 };
 
-type TooltipData = {
+type SelectedPoint = {
   type: 'listing' | 'order';
-  index: number;
+  index: number; // index in the listings or orders array
   coordinate: CirclePosition
 }
 
@@ -57,6 +49,7 @@ export type MarketGraphProps = {
 type GraphProps = {
   width: number;
   height: number;
+  params: { listingID?: string, orderID?: string };
 } & MarketGraphProps;
 
 /// //////////////////////////////// STYLE & LAYOUT ///////////////////////////////////
@@ -78,9 +71,9 @@ const tickLabelProps = (type: 'x' | 'y') => () => ({
 
 const tooltipWidth = 100;
 const scaleXMin = 1;
-const scaleXMax = 1;
+const scaleXMax = 4;
 const scaleYMin = 1;
-const scaleYMax = 1;
+const scaleYMax = 4;
 
 const margin = {
   top: 10,
@@ -164,6 +157,15 @@ const TooltipCard : FC<CardProps> = ({ children, sx, ...props }) => (
 
 /// //////////////////////////////// GRAPH ///////////////////////////////////
 
+/**
+ * @TODO
+ * - Voronoi is extremely slow because of cascading rerenders with zooming
+ * - The selected point should be displayed on top of other points, since SVG
+ *   doesn't support z-index this has to be done by moving it to the top of
+ *   the element stack, which breaks the indexing pattern. Check out svg#use.
+ * - If loading page directly to a listing/order, the cursor position lines are
+ *   not drawn correctly of the zoom position isn't known.
+ */
 const Graph: FC<GraphProps> = ({
   height,
   width,
@@ -171,8 +173,9 @@ const Graph: FC<GraphProps> = ({
   orders,
   maxPlaceInLine,
   maxPlotSize,
+  params
 }) => {
-  ///
+  /// Sizing
   const innerWidth  = width -  (margin.left + margin.right);
   const innerHeight = height - (margin.top  + margin.bottom);
   const svgRef = useRef<SVGRectElement>(null);
@@ -184,8 +187,8 @@ const Graph: FC<GraphProps> = ({
     tooltipLeft,
     hideTooltip,
     showTooltip,
-    tooltipData,
-  } = useTooltip<TooltipData>();
+    tooltipData: hoveredPoint,
+  } = useTooltip<SelectedPoint>();
 
   /// Scales
   const xScale = scaleLinear<number>({
@@ -253,27 +256,28 @@ const Graph: FC<GraphProps> = ({
       })(combinedPositions),
     [innerWidth, innerHeight, combinedPositions],
   );
-  const polygons = voronoiLayout.polygons();
-  const [selectedPoint, setSelectedPoint] = useState<TooltipData | undefined>(undefined);
-  const [hoveredId, setVoronoiHoveredId] = useState<string | null>(null);
-  const [neighborIds, setVoronoiNeighborIds] = useState<Set<string>>(new Set());
-  const [orderAction, setOrderAction] = useAtom(podsOrderActionTypeAtom);
-  const [orderType, setOrderType] = useAtom(podsOrderTypeAtom);
+  // const polygons = voronoiLayout.polygons();
+  const [voroHoveredId, setVoronoiHoveredId] = useState<string | null>(null);
+  // const [voroNeighborIds, setVoronoiNeighborIds] = useState<Set<string>>(new Set());
+
+  /// Selected point
+  const [selectedPoint, setSelectedPoint] = useState<SelectedPoint | undefined>(undefined);
+  const cursorPoint = useMemo(() => selectedPoint || hoveredPoint, [selectedPoint, hoveredPoint]);
 
   const navigate = useNavigate();
   
   /// Helpers
-  const peerOpacity = useCallback((_type: TooltipData['type'], _i: number) => (
-    !tooltipData?.type 
+  const peerOpacity = useCallback((_type: SelectedPoint['type'], _i: number) => (
+    !cursorPoint?.type 
       ? 1 
-      : tooltipData.type === _type
-        ? (tooltipData.index === _i ? 1 : HOVER_PEER_OPACITY)
+      : cursorPoint.type === _type
+        ? (cursorPoint.index === _i ? 1 : HOVER_PEER_OPACITY)
         : HOVER_PEER_OPACITY
-  ), [tooltipData]);
+  ), [cursorPoint]);
 
   /// Elements
   const orderCircles = orderPositions.map((coordinate, i) => {
-    const active = tooltipData?.type === 'order' && i === tooltipData?.index;
+    const active = cursorPoint?.type === 'order' && i === cursorPoint?.index;
     return (
       <Circle
         key={`order-${i}`}
@@ -290,7 +294,7 @@ const Graph: FC<GraphProps> = ({
     );
   });
   const listingCircles = listingPositions.map((coordinate, i) => {
-    const active = tooltipData?.type === 'listing' && i === tooltipData?.index;
+    const active = cursorPoint?.type === 'listing' && i === cursorPoint?.index;
     return (
       <Circle
         key={`listing-${i}`}
@@ -306,61 +310,62 @@ const Graph: FC<GraphProps> = ({
       />
     );
   });
-  const voroniPolygons = (
-    <g>
-      {polygons.map((polygon) => (
-        <VoronoiPolygon
-          key={`polygon-${polygon.data.id}`}
-          polygon={polygon}
-          fill={
-            hoveredId && (polygon.data.id === hoveredId || neighborIds.has(polygon.data.id))
-              ? 'red'
-              : 'transparent'
-          }
-          fillOpacity={hoveredId && neighborIds.has(polygon.data.id) ? 0.05 : 0.2}
-          strokeLinejoin="round"
-        />
-      ))}
-    </g>
-  );
-  const cursorPositionLines = (tooltipOpen && tooltipData)
-    ? tooltipData?.type === 'listing'
+  // const voroniPolygons = (
+  //   <g>
+  //     {polygons.map((polygon) => (
+  //       <VoronoiPolygon
+  //         key={`polygon-${polygon.data.id}`}
+  //         polygon={polygon}
+  //         fill={
+  //           voroHoveredId && (polygon.data.id === voroHoveredId || voroNeighborIds.has(polygon.data.id))
+  //             ? 'red'
+  //             : 'transparent'
+  //         }
+  //         fillOpacity={voroHoveredId && voroNeighborIds.has(polygon.data.id) ? 0.05 : 0.2}
+  //         strokeLinejoin="round"
+  //       />
+  //     ))}
+  //   </g>
+  // );
+
+  const cursorPositionLines = cursorPoint
+    ? cursorPoint?.type === 'listing'
       ? (
         <g>
           <Line
-            from={{ x: 0, y: tooltipData.coordinate.y }}
-            to={{   x: tooltipData.coordinate.x, y: tooltipData.coordinate.y }}
+            from={{ x: 0, y: cursorPoint.coordinate.y }}
+            to={{   x: cursorPoint.coordinate.x, y: cursorPoint.coordinate.y }}
             stroke={BeanstalkPalette.lightGrey}
             strokeWidth={1}
             pointerEvents="none"
           />
           <Line
-            from={{ x: tooltipData.coordinate.x, y: innerHeight }}
-            to={{   x: tooltipData.coordinate.x, y: tooltipData.coordinate.y }}
+            from={{ x: cursorPoint.coordinate.x, y: innerHeight }}
+            to={{   x: cursorPoint.coordinate.x, y: cursorPoint.coordinate.y }}
             stroke={BeanstalkPalette.lightGrey}
             strokeWidth={1}
             pointerEvents="none"
           />
-          <Text fill="white" x={tooltipData.coordinate.x + 10} y={innerHeight - axis.xHeight} fontSize={14}>
-            {displayBN(listings[tooltipData.index].placeInLine)}
+          <Text fill="white" x={cursorPoint.coordinate.x + 10} y={innerHeight - axis.xHeight} fontSize={14}>
+            {displayBN(listings[cursorPoint.index].placeInLine)}
           </Text>
-          <Text fill="white" x={axis.yWidth + 10} y={tooltipData.coordinate.y - 5} fontSize={14}>
-            {listings[tooltipData.index].pricePerPod.toFixed(4)}
+          <Text fill="white" x={axis.yWidth + 10} y={cursorPoint.coordinate.y - 5} fontSize={14}>
+            {listings[cursorPoint.index].pricePerPod.toFixed(4)}
           </Text>
         </g>
       )
       : (
         <g>
           <Line
-            from={{ x: 0, y: tooltipData.coordinate.y }}
-            to={{   x: tooltipData.coordinate.x, y: tooltipData.coordinate.y }}
+            from={{ x: 0, y: cursorPoint.coordinate.y }}
+            to={{   x: cursorPoint.coordinate.x, y: cursorPoint.coordinate.y }}
             stroke={BeanstalkPalette.lightGrey}
             strokeWidth={1}
             pointerEvents="none"
           />
           <Line
-            from={{ x: tooltipData.coordinate.x, y: innerHeight }}
-            to={{   x: tooltipData.coordinate.x, y: tooltipData.coordinate.y }}
+            from={{ x: cursorPoint.coordinate.x, y: innerHeight }}
+            to={{   x: cursorPoint.coordinate.x, y: cursorPoint.coordinate.y }}
             stroke={BeanstalkPalette.lightGrey}
             strokeWidth={1}
             pointerEvents="none"
@@ -368,15 +373,15 @@ const Graph: FC<GraphProps> = ({
           <rect
             fill={`url(#${PATTERN_ID})`}
             x={0}
-            y={tooltipData.coordinate.y}
-            height={innerHeight - tooltipData.coordinate.y}
-            width={tooltipData.coordinate.x}
+            y={cursorPoint.coordinate.y}
+            height={innerHeight - cursorPoint.coordinate.y}
+            width={cursorPoint.coordinate.x}
           />
-          <Text fill="white" x={tooltipData.coordinate.x + 10} y={innerHeight - axis.xHeight} fontSize={14}>
-            {displayBN(orders[tooltipData.index].maxPlaceInLine)}
+          <Text fill="white" x={cursorPoint.coordinate.x + 10} y={innerHeight - axis.xHeight} fontSize={14}>
+            {displayBN(orders[cursorPoint.index].maxPlaceInLine)}
           </Text>
-          <Text fill="white" x={axis.yWidth + 10} y={tooltipData.coordinate.y - 5} fontSize={14}>
-            {orders[tooltipData.index].pricePerPod.toFixed(4)}
+          <Text fill="white" x={axis.yWidth + 10} y={cursorPoint.coordinate.y - 5} fontSize={14}>
+            {orders[cursorPoint.index].pricePerPod.toFixed(4)}
           </Text>
         </g>
       )
@@ -399,27 +404,27 @@ const Graph: FC<GraphProps> = ({
     // that we can hover over circles correctly even when zoomed in.
     const transformedPoint = zoom.applyInverseToPoint(point);
 
-    /// Voronoi
-    const closest = voronoiLayout.find(transformedPoint.x, transformedPoint.y, neighborRadius);
+    // Voronoi
+    // const closest = voronoiLayout.find(transformedPoint.x, transformedPoint.y, neighborRadius);
 
     // find neighboring polygons to hightlight
-    if (closest && closest.data.id !== hoveredId) {
-      const neighbors = new Set<string>();
-      const cell = voronoiLayout.cells[closest.index];
-      if (!cell) return;
+    // if (closest && closest.data.id !== voroHoveredId) {
+    //   const neighbors = new Set<string>();
+    //   const cell = voronoiLayout.cells[closest.index];
+    //   if (!cell) return;
 
-      cell.halfedges.forEach((index) => {
-        const edge = voronoiLayout.edges[index];
-        const { left, right } = edge;
-        if (left && left !== closest) neighbors.add(left.data.id);
-        else if (right && right !== closest) neighbors.add(right.data.id);
-      });
+    //   cell.halfedges.forEach((index) => {
+    //     const edge = voronoiLayout.edges[index];
+    //     const { left, right } = edge;
+    //     if (left && left !== closest) neighbors.add(left.data.id);
+    //     else if (right && right !== closest) neighbors.add(right.data.id);
+    //   });
 
-      setVoronoiNeighborIds(neighbors);
-      setVoronoiHoveredId(closest.data.id);
-    }
+    //   setVoronoiNeighborIds(neighbors);
+    //   setVoronoiHoveredId(closest.data.id);
+    // }
 
-    ///
+    // Check if we're hovering a Listing
     const listingIndex = findPointInCircles(listingPositions, transformedPoint);
     if (listingIndex !== undefined) {
       // Get the original position of the circle (no zoom)
@@ -432,7 +437,7 @@ const Graph: FC<GraphProps> = ({
       // if you zoom/pan around.
       const zoomedCoordinate = zoom.applyToPoint(coordinate);
 
-      // Show tooltip at bottom-right corner of circle position.
+      // Show tooltip at top-right corner of circle position.
       // Nudge inward to make hovering easier.
       return showTooltip({
         tooltipLeft: zoomedCoordinate.x,
@@ -445,7 +450,7 @@ const Graph: FC<GraphProps> = ({
       });
     }
 
-    ///
+    // Check if we're hovering an Order
     const orderIndex = findPointInCircles(orderPositions, transformedPoint);
     if (orderIndex !== undefined) {
       // Get the original position of the circle (no zoom)
@@ -469,71 +474,87 @@ const Graph: FC<GraphProps> = ({
       });
     }
 
-    ///
     return hideTooltip();
-  }, [hideTooltip, hoveredId, listingPositions, orderPositions, selectedPoint, showTooltip, voronoiLayout]);
+  }, [hideTooltip, listingPositions, orderPositions, selectedPoint, showTooltip]);
 
-  const handleClickFill = useCallback((action: PodOrderAction, type: PodOrderType) => {
-    if (orderAction !== action) {
-      setOrderAction(action);
-    }
-    setOrderType(type);
-  }, [orderAction, setOrderAction, setOrderType]);
-
-  const handleClick = useCallback(() => { 
-    if (selectedPoint) {
-      setSelectedPoint(undefined);
-      hideTooltip();
-      navigate('/market');
-      if (orderAction !== PodOrderAction.BUY) {
-        setOrderAction(PodOrderAction.BUY);
-      }
-      if (orderType !== PodOrderType.ORDER) {
-        setOrderType(PodOrderType.ORDER);
-      }
-      } else {
-        setSelectedPoint(tooltipData);
-        if (tooltipData?.type === 'listing') {
-          const data = listings[tooltipData.index];
-          if (data) {
-            handleClickFill(PodOrderAction.BUY, PodOrderType.FILL);
-            navigate(`/market/listing/${data.id}?action=${MARKET_SLUGS[0]}`);
-          }
-        } else if (tooltipData?.type === 'order') {
-          const data = orders[tooltipData.index];
-          if (data) {
-            handleClickFill(PodOrderAction.SELL, PodOrderType.FILL);
-            navigate(`/market/order/${data.id}?action=${MARKET_SLUGS[1]}`);
-          }
-        }
-      }
-  }, [handleClickFill, hideTooltip, navigate, listings, orders, selectedPoint, tooltipData,
-    orderType, setOrderType, orderAction, setOrderAction]);
-
-  useHotkeys('esc', () => {
+  // Reset: remove selected point and hide tooltip.
+  const reset = useCallback(() => {
     setSelectedPoint(undefined);
     hideTooltip();
-  }, {}, [setSelectedPoint, hideTooltip]);
-  // useHotkeys('tab', () => {
-  //   if (selectedPoint) {
-  //     if (selectedPoint.type === 'listing') {
-  //       const point = {
-  //         index: 0,
-  //         coordinate: listingPositions[0],
-  //         type: 'listing' as const
-  //       };
-  //       setSelectedPoint(point);
-  //     }
-  //   }
-  // }, {}, [selectedPoint]);
+    navigate('/market/buy');
+  }, [hideTooltip, navigate]);
+
+  const handleClick = useCallback(() => { 
+    // Clicking with a point selected returns back to the market index
+    if (selectedPoint) {
+      reset();
+    } 
+    
+    // If we're hovering a point, select it
+    else if (hoveredPoint) {
+      setSelectedPoint(hoveredPoint);
+      if (hoveredPoint.type === 'listing') {
+        // handleClickFill(PodOrderAction.BUY, PodOrderType.FILL);
+        navigate(`/market/buy/${listings[hoveredPoint.index].id}`);
+      } else if (hoveredPoint.type === 'order') {
+        // handleClickFill(PodOrderAction.SELL, PodOrderType.FILL);
+        navigate(`/market/sell/${orders[hoveredPoint.index].id}`);
+      }
+    }
+  }, [selectedPoint, hoveredPoint, reset, navigate, listings, orders]);
+
+  /// Effects
+  useEffect(() => {
+    if (selectedPoint && !(params.listingID || params.orderID)) {
+      setSelectedPoint(undefined);
+      hideTooltip();
+    } else if (!selectedPoint) {
+      if (params.listingID) {
+        const index = listings.findIndex((l) => l.id === params.listingID);
+        setSelectedPoint({
+          type: 'listing',
+          index,
+          coordinate: listingPositions[index]
+        });
+      } else if (params.orderID) {
+        const index = orders.findIndex((l) => l.id === params.orderID);
+        setSelectedPoint({
+          type: 'order',
+          index,
+          coordinate: orderPositions[index],
+        });
+      }
+    }
+  }, [hideTooltip, listingPositions, listings, orderPositions, orders, params.listingID, params.orderID, selectedPoint]);
+
+  /// Hotkeys
+  useHotkeys('esc', reset, {}, [reset]);
   
   // This works to constrain at x=0 y=0 but it causes some weird
   // mouse and zoom behavior.
   // https://airbnb.io/visx/docs/zoom#Zoom_constrain
-  const constrain = (
+  const constrain = useCallback((
     transformMatrix: TransformMatrix,
-    // prevTransformMatrix: TransformMatrix
+    prevTransformMatrix: TransformMatrix
   ) => {
+    // // Fix scaling
+    // const { scaleX, scaleY, translateX, translateY } = transformMatrix;
+    // if (scaleX < scaleXMin || scaleX > scaleXMax) return prevTransformMatrix;
+    // if (scaleY < scaleYMin || scaleY > scaleYMax) return prevTransformMatrix;
+
+    // // Fix translate
+    // const min = applyMatrixToPoint(transformMatrix, { x: 0, y: 0 });
+    // const max = applyMatrixToPoint(transformMatrix, { x: width, y: height });
+    // if (max.x < width || max.y < height) {
+    //   return prevTransformMatrix;
+    // }
+    // if (min.x > 0 || min.y > 0) {
+    //   return prevTransformMatrix;
+    // }
+    // return transformMatrix;
+
+    if (selectedPoint) return prevTransformMatrix;
+
     const { scaleX, scaleY, translateX, translateY } = transformMatrix;
     // Fix constrain scale
     // if (scaleX < 1) transformMatrix.scaleX = 1;
@@ -557,9 +578,10 @@ const Graph: FC<GraphProps> = ({
     if (max.y < height) {
       transformMatrix.translateY = translateY + Math.abs(max.y - height);
     }
+
     // Return the matrix
     return transformMatrix;
-  };
+  }, [height, width, selectedPoint]);
 
   return (
     <>
@@ -596,7 +618,7 @@ const Graph: FC<GraphProps> = ({
               />
               <g clipPath="url(#zoom-clip)">
                 <g transform={zoom.toString()}>
-                  {voroniPolygons}
+                  {/* {voroniPolygons} */}
                   {cursorPositionLines}
                   {orderCircles}
                   {listingCircles}
@@ -626,11 +648,11 @@ const Graph: FC<GraphProps> = ({
                   cursor: (
                     selectedPoint
                       ? 'default'         // when selected, freeze cursor
-                      : zoom.isDragging
-                        ? 'grabbing'      // if dragging, show grab
-                        : tooltipData
-                          ? 'pointer'     // hovering over a point but haven't clicked it yet
-                          : 'grab'        // not hovering a point, user can drag
+                      : hoveredPoint      // hovering over a point but haven't clicked it yet
+                        ? 'pointer'      
+                        : zoom.isDragging
+                          ? 'grabbing'    // if dragging, show grab
+                          : 'default'        // not hovering a point, user can drag
                   ),
                   touchAction: 'none',
                 }}
@@ -662,12 +684,15 @@ const Graph: FC<GraphProps> = ({
                 hideZero
               />
             </svg>
+            {/**
+              * Show a tooltip with the number of Pods whenever a point is
+              * hovered over or selected.
+              */}
             {tooltipOpen &&
-              typeof tooltipData === 'object' &&
-              tooltipData != null &&
+              cursorPoint &&
               tooltipLeft != null &&
               tooltipTop != null &&
-              !selectedPoint && (
+              (
                 <Tooltip
                   offsetLeft={10}
                   offsetTop={-40}
@@ -676,7 +701,6 @@ const Graph: FC<GraphProps> = ({
                   width={tooltipWidth}
                   applyPositionStyle
                   style={{
-                    // padding: 0,
                     backgroundColor: 'transparent',
                     boxShadow: 'none',
                     fontSize: 13,
@@ -684,26 +708,23 @@ const Graph: FC<GraphProps> = ({
                 >
                   <TooltipCard>
                     <Row gap={0.5}>
-                      <EntityIcon type={tooltipData.type} size={20} />
-                      {tooltipData.type === 'listing'
-                        ? displayBN(listings[tooltipData.index].remainingAmount)
-                        : displayBN(orders[tooltipData.index].remainingAmount)
+                      <EntityIcon type={cursorPoint.type} size={20} />
+                      {cursorPoint.type === 'listing'
+                        ? displayBN(listings[cursorPoint.index].remainingAmount)
+                        : displayBN(orders[cursorPoint.index].remainingAmount)
                       } Pods
                     </Row>
-                    {/* <Typography display="block" variant="bodySmall" color="gray" textAlign="left" mt={0.25}>
-                      Click to view
-                    </Typography> */}
                   </TooltipCard>
                 </Tooltip>
             )}
-            {/* {selectedPoint && ( */}
-            {/*  <SelectedPointPopover */}
-            {/*    selectedPoint={selectedPoint} */}
-            {/*    orders={orders} */}
-            {/*    listings={listings} */}
-            {/*    onClose={() => setSelectedPoint(undefined)} */}
-            {/*  /> */}
-            {/* )} */}
+            {selectedPoint && (
+              <Stack sx={{ position: 'absolute', top: 0, right: 10 }}>
+                <Typography color="text.tertiary" variant="bodySmall" textAlign="right" sx={{ textTransform: 'capitalize' }}>Viewing: {selectedPoint.type} {selectedPoint.type === 'listing' ? selectedPoint.coordinate.id : selectedPoint.coordinate.id.substring(0, 8)}</Typography>
+                <Typography color="text.tertiary" variant="bodySmall" textAlign="right">
+                  Hit ESC or click anywhere to close
+                </Typography>
+              </Stack>
+            )}
           </Box>
         )}
       </Zoom>
@@ -711,18 +732,65 @@ const Graph: FC<GraphProps> = ({
   );
 };
 
-const MarketGraph: FC<MarketGraphProps> = (props) => (
-  <ParentSize debounceTime={50}>
-    {({ width: visWidth, height: visHeight }) => (
-      <Graph
-        width={visWidth}
-        height={visHeight}
-        {...props}
+const MarketGraph: FC<MarketGraphProps> = (props) => {
+  const params = useParams<GraphProps['params']>();
+  return (
+    <ParentSize debounceTime={100}>
+      {({ width, height }) => (
+        <Graph
+          width={width}
+          height={height}
+          params={params}
+          {...props}
         >
-        {props.children}
-      </Graph>
+          {props.children}
+        </Graph>
       )}
-  </ParentSize>
+    </ParentSize>
   );
+};
 
 export default MarketGraph;
+
+// {selectedPoint && (
+//   <SelectedPointPopover
+//     selectedPoint={selectedPoint}
+//     orders={orders}
+//     listings={listings}
+//     onClose={() => setSelectedPoint(undefined)}
+//   />
+// )}
+
+// <Typography display="block" variant="bodySmall" color="gray" textAlign="left" mt={0.25}>
+  // Click to view
+// </Typography>
+
+// useHotkeys('tab', () => {
+//   if (selectedPoint) {
+//     if (selectedPoint.type === 'listing') {
+//       const point = {
+//         index: 0,
+//         coordinate: listingPositions[0],
+//         type: 'listing' as const
+//       };
+//       setSelectedPoint(point);
+//     }
+//   }
+// }, {}, [selectedPoint]);
+
+// const handleClickFill = useCallback((action: PodOrderAction, type: PodOrderType) => {
+//   if (orderAction !== action) {
+//     setOrderAction(action);
+//   }
+//   setOrderType(type);
+// }, [orderAction, setOrderAction, setOrderType]);
+
+// if (orderAction !== PodOrderAction.BUY) {
+//   setOrderAction(PodOrderAction.BUY);
+// }
+// if (orderType !== PodOrderType.ORDER) {
+//   setOrderType(PodOrderType.ORDER);
+// }
+
+// const [orderAction, setOrderAction] = useAtom(podsOrderActionTypeAtom);
+// const [orderType, setOrderType] = useAtom(podsOrderTypeAtom);
