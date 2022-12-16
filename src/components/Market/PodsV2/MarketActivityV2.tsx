@@ -19,8 +19,7 @@ const sx = {
     '&.MuiTab-root': {
       fontSize: FontSize.sm,
       fontWeight: FontWeight.bold,
-      p: 0.5,
-      mr: 0.5,
+      lineHeight: FontSize.sm,
       '&.Mui-selected': {
         fontSize: FontSize.sm,
       },
@@ -107,7 +106,7 @@ const MarketActivityV2: React.FC<{ setHeight: any }> = (props) => {
           </Row>
         }
       >
-        <Stack height="100%" sx={{ visibility: 'visible' }}>
+        <Stack height="100%">
           {openState !== 0 && tab === 0 && <FarmerMarketActivity />}
           {openState !== 0 && tab === 1 && <MarketActivity />}
         </Stack>

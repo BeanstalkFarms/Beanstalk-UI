@@ -11,7 +11,7 @@ const MarketChart: React.FC<{ chartHeight: string }> = ({ chartHeight }) => {
   const data = useMarketData();
 
   return (
-    <CondensedCard title="OVERVIEW">
+    <CondensedCard title="OVERVIEW" sx={{ height: '100%' }}>
       {!data.loading && data.listings && data.orders ? (
         <Box width="100%" sx={{ height: chartHeight }}>
           <MarketGraph
@@ -23,7 +23,7 @@ const MarketChart: React.FC<{ chartHeight: string }> = ({ chartHeight }) => {
           />
         </Box>
       ) : (
-        <Centered>
+        <Centered height="100%">
           <CircularProgress variant="indeterminate" />
         </Centered>
       )}
