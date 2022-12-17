@@ -8,11 +8,16 @@ import useTabs from '~/hooks/display/useTabs';
 
 import { FontSize, FontWeight } from '~/components/App/muiTheme';
 import Row from '~/components/Common/Row';
-import { marketBottomTabsAtom, marketBottomTabsHeightAtom } from './info/atom-context';
+import {
+  marketBottomTabsAtom,
+  marketBottomTabsHeightAtom,
+} from './info/atom-context';
 import DropdownIcon from '~/components/Common/DropdownIcon';
 import MarketActivity from './tables/MarketActivity';
 import FarmerMarketActivity from './tables/FarmerMarketActivity';
 import CondensedCard from '~/components/Common/Card/CondensedCard';
+import useMarketplaceEventData from '~/hooks/beanstalk/useMarketplaceEventData';
+import useFarmerMarket from '~/hooks/farmer/market/useFarmerMarket';
 
 const sx = {
   tabs: {
@@ -34,6 +39,15 @@ const MarketActivityV2: React.FC<{}> = () => {
   const [tab, setTab] = useTabs();
   const [openState, setOpenState] = useAtom(marketBottomTabsAtom);
   const size = useAtomValue(marketBottomTabsHeightAtom);
+
+  // DATA
+  // pull queries out of their respecitive hooks to avoid re-fetching
+  const {
+    data: eventsData,
+    harvestableIndex,
+    fetchMoreData,
+  } = useMarketplaceEventData();
+  const { data: farmerMarket } = useFarmerMarket();
 
   const openIfClosed = useCallback(() => {
     if (openState === 0) {
@@ -90,8 +104,19 @@ const MarketActivityV2: React.FC<{}> = () => {
         }
       >
         <Stack height="100%">
-          {openState !== 0 && tab === 0 && <FarmerMarketActivity />}
-          {openState !== 0 && tab === 1 && <MarketActivity />}
+          {openState !== 0 && tab === 0 && (
+            <FarmerMarketActivity
+              data={farmerMarket}
+              initializing={!farmerMarket.length || harvestableIndex.lte(0)}
+            />
+          )}
+          {openState !== 0 && tab === 1 && (
+            <MarketActivity
+              data={eventsData}
+              initializing={!eventsData.length || harvestableIndex.lte(0)}
+              fetchMoreData={fetchMoreData}
+            />
+          )}
         </Stack>
       </CondensedCard>
     </Stack>
