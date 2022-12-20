@@ -47,7 +47,7 @@ import { sgEnvKey } from '~/graph/client';
 import useBanner from '~/hooks/app/useBanner';
 import useNavHeight from '~/hooks/app/usePageDimensions';
 
-import pageBackground from '~/img/beanstalk/interface/bg/winter-bg.png';
+import pageBackground from '~/img/beanstalk/interface/bg/winter.png';
 
 import EnforceNetwork from '~/components/App/EnforceNetwork';
 import useAccount from '~/hooks/ledger/useAccount';

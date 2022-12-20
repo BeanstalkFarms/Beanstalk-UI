@@ -83,7 +83,7 @@ const NewProposalsDialog: FC<{}> = () => {
         <Button
           onClick={dismiss}
           fullWidth
-          color="dark"
+          color="primary"
           variant="outlined"
         >
           <Typography variant="body1">Not now</Typography>
