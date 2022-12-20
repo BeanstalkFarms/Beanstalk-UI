@@ -734,6 +734,7 @@ const Graph: FC<GraphProps> = ({
 
 const MarketGraph: FC<MarketGraphProps> = (props) => {
   const params = useParams<GraphProps['params']>();
+
   return (
     <ParentSize debounceTime={100}>
       {({ width, height }) => (

@@ -108,26 +108,6 @@ const CreateListingV2Form: FC<
     !REQUIRED_KEYS.some((k) => values[k] === null)
   );
 
-  const v = useMemo(() => {
-    const start = values.plot.start;
-    const end = values.plot.end;
-    const index = values.plot.index;
-    const amount = values.plot.amount;
-    const pricePerPod = values.pricePerPod;
-    const expiresAt = values.expiresAt;
-    const destination = values.destination;
-
-    console.log('start: ', start?.toString());
-    console.log('end: ', end?.toString());
-    console.log('index: ', index?.toString());
-    console.log('amount: ', amount?.toString());
-    console.log('pricePerPod: ', pricePerPod?.toString());
-    console.log('expiresAt: ', expiresAt?.toString());
-    console.log('destination: ', destination?.toString());
-
-    return 0;
-  }, [values.destination, values.expiresAt, values.plot.amount, values.plot.end, values.plot.index, values.plot.start, values.pricePerPod]);
-
   return (
     <Form autoComplete="off" noValidate>
       <Stack gap={1}>

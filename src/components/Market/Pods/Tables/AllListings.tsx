@@ -32,8 +32,6 @@ const AllListings : FC<{ data: ReturnType<typeof useMarketData> }> = ({ data }) 
       COLUMNS.numPodsActive(1),
       // maxHarvestableIndex
       COLUMNS.expiry(data.harvestableIndex, 1),
-      // other
-      COLUMNS.rightChevron
     ]
     : [
       COLUMNS.listingId(0.7),

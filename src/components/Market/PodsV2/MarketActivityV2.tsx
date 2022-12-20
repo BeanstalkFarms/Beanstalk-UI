@@ -13,6 +13,7 @@ import DropdownIcon from '~/components/Common/DropdownIcon';
 import MarketActivity from './tables/MarketActivity';
 import FarmerMarketActivity from './tables/FarmerMarketActivity';
 import CondensedCard from '~/components/Common/Card/CondensedCard';
+import AllListingsTable from './tables/AllListingsTable';
 
 const sx = {
   tabs: {
@@ -80,6 +81,7 @@ const MarketActivityV2: React.FC<{ setHeight: any }> = (props) => {
           <Tabs value={tab} onChange={setTab}>
             <Tab label="Your Orders" sx={sx.tabs} onClick={openIfClosed} />
             <Tab label="Market Activity" sx={sx.tabs} onClick={openIfClosed} />
+            <Tab label="Listings" sx={sx.tabs} onClick={openIfClosed} />
           </Tabs>
         }
         actions={
@@ -110,6 +112,7 @@ const MarketActivityV2: React.FC<{ setHeight: any }> = (props) => {
         <Stack height="100%" sx={{ visibility: 'visible' }}>
           {openState !== 0 && tab === 0 && <FarmerMarketActivity />}
           {openState !== 0 && tab === 1 && <MarketActivity />}
+          {openState !== 0 && tab === 2 && <AllListingsTable />}
         </Stack>
       </CondensedCard>
     </Stack>
