@@ -125,13 +125,13 @@ export function useFetchFarmerMarketItems() {
   const account = useAccount();
   /// Queries
   const [getListings, listingsQuery] = useFarmerPodListingsLazyQuery({
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
+    fetchPolicy: 'network-only',
+    nextFetchPolicy: 'cache-only',
     notifyOnNetworkStatusChange: true,
   });
   const [getOrders, ordersQuery] = useFarmerPodOrdersLazyQuery({
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first',
+    fetchPolicy: 'network-only',
+    nextFetchPolicy: 'cache-only',
     notifyOnNetworkStatusChange: true,
   });
 

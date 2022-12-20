@@ -1,10 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import ActivityTable from './activityTable';
 import { POD_MARKET_COLUMNS } from './market-activity-columns';
-import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
-import useFarmerMarket, {
-  FarmerMarketItem,
-} from '~/hooks/farmer/market/useFarmerMarket';
+import { FarmerMarketItem } from '~/hooks/farmer/market/useFarmerMarket';
 import MarketItemDetailsDialog from '../Actions/MarketItemDetailsDialog';
 
 const C = POD_MARKET_COLUMNS;
@@ -22,35 +19,29 @@ const columns = [
   C.status(1, 'right'),
 ];
 
-const FarmerMarketActivity: React.FC<{}> = () => {
+const FarmerMarketActivity: React.FC<{
+  data: FarmerMarketItem[] | undefined;
+  initializing: boolean;
+}> = ({ data, initializing }) => {
   // LOCAL STATE
   const [open, setOpen] = useState(false);
   const [showModeDialog, setShowModeDialog] = useState(false);
-  const [activeItem, setActiveItem] = useState<FarmerMarketItem | undefined>(undefined);
-
-  // DATA
-  const { data: farmerMarket } = useFarmerMarket();
-
-  // HELPERS
-  const harvestableIndex = useHarvestableIndex();
-  const isLoading = farmerMarket.length === 0 || harvestableIndex.lte(0);
-
-  const rows = useMemo(
-    () =>
-      farmerMarket.map((d, i) => ({
-        ...d,
-        idx: i,
-      })),
-    [farmerMarket]
+  const [activeItem, setActiveItem] = useState<FarmerMarketItem | undefined>(
+    undefined
   );
+
+  const rows = useMemo(() => {
+    if (!data || !data?.length) return [];
+    return data;
+  }, [data]);
 
   return (
     <>
       <ActivityTable
         columns={columns}
         rows={rows}
-        loading={isLoading}
-        getRowId={(row) => row.idx}
+        loading={initializing}
+        getRowId={(row) => row.id}
         isUserTable
         title="Orders and Listings"
         onRowClick={({ row }) => {
