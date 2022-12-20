@@ -60,7 +60,6 @@ const FillOrder: React.FC<{}> = () => {
     <Stack gap={2}>
       {/* Listing Details */}
       <Box px={0.5}>
-        <Typography variant="h4">Order {podOrder.id.substring(0, 6)}</Typography>
         <Stack gap={0.75}>
           <StatHorizontal label="Buyer" maxHeight={20}>
             <FarmerChip account={podOrder.account} />
