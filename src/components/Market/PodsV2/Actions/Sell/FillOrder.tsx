@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { CircularProgress, Stack, Typography } from '@mui/material';
+import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import { bigNumberResult, displayBN, displayFullBN } from '~/util';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import usePodOrder from '~/hooks/beanstalk/usePodOrder';
@@ -59,26 +59,35 @@ const FillOrder: React.FC<{}> = () => {
   return (
     <Stack gap={2}>
       {/* Listing Details */}
-      <Stack px={0.5} gap={0.75}>
-        <StatHorizontal label="Buyer" maxHeight={20}>
-          <FarmerChip account={podOrder.account} />
-        </StatHorizontal>
-        <StatHorizontal label="Place in Line">
-          0 - {displayBN(podOrder.maxPlaceInLine)}
-        </StatHorizontal>
-        <StatHorizontal label="Pods Requested">
-          <Row gap={0.25}>
-            <TokenIcon token={PODS} />{' '}
-            {displayFullBN(podOrder.remainingAmount, 2, 0)}
-          </Row>
-        </StatHorizontal>
-        <StatHorizontal label="Price per Pod">
-          <Row gap={0.25}>
-            <TokenIcon token={BEAN[1]} />{' '}
-            {displayFullBN(podOrder.pricePerPod, 4, 2)}
-          </Row>
-        </StatHorizontal>
-      </Stack>
+      <Box px={0.5}>
+        <Typography variant="h4">Order {podOrder.id.substring(0, 6)}</Typography>
+        <Stack gap={0.75}>
+          <StatHorizontal label="Buyer" maxHeight={20}>
+            <FarmerChip account={podOrder.account} />
+          </StatHorizontal>
+          <StatHorizontal label="Place in Line">
+            0 - {displayBN(podOrder.maxPlaceInLine)}
+          </StatHorizontal>
+          <StatHorizontal label="Pods Requested">
+            <Row gap={0.25}>
+              <TokenIcon token={PODS} />{' '}
+              {displayFullBN(podOrder.remainingAmount, 2, 0)}
+            </Row>
+          </StatHorizontal>
+          <StatHorizontal label="Price per Pod">
+            <Row gap={0.25}>
+              <TokenIcon token={BEAN[1]} />{' '}
+              {displayFullBN(podOrder.pricePerPod, 4, 2)}
+            </Row>
+          </StatHorizontal>
+          <StatHorizontal label="Beans Remaining">
+            <Row gap={0.25}>
+              <TokenIcon token={BEAN[1]} />{' '}
+              {displayFullBN(podOrder.remainingAmount.times(podOrder.pricePerPod), 2, 0)}
+            </Row>
+          </StatHorizontal>
+        </Stack>
+      </Box>
       <FillOrderForm podOrder={podOrder} />
     </Stack>
   );
