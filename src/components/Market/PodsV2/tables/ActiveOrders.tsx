@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
 import MarketTable from './marketTable';
-import COLUMNS from './columns/orders-columns';
+import COLUMNS from './columns/market-columns';
 
 const columns = [
   COLUMNS.orderId(1, 'left'),
@@ -11,8 +11,9 @@ const columns = [
   COLUMNS.numPods(1, 'right'),
 ];
 
-const OpenOrders: React.FC<{}> = () => {
-  const data = useMarketData();
+const ActiveOrders: React.FC<{
+  data: ReturnType<typeof useMarketData>;
+}> = ({ data }) => {
   const navigate = useNavigate();
 
   return (
@@ -28,4 +29,4 @@ const OpenOrders: React.FC<{}> = () => {
   );
 };
 
-export default OpenOrders;
+export default ActiveOrders;

@@ -6,14 +6,15 @@ import {
 } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
 import { Box, Tooltip, Typography } from '@mui/material';
-import { PodListing } from '~/state/farmer/market';
+import { PodListing, PodOrder } from '~/state/farmer/market';
 import { displayBN, displayFullBN, MaxBN } from '~/util';
 import Row from '~/components/Common/Row';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN, PODS } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
+import EntityIcon from '~/components/Market/Pods/EntityIcon';
 
-const MARKET_LISTING_COLUMNS = {
+const MARKET_COLUMNS = {
   listingId: (flex: number, align?: 'left' | 'right') =>
     ({
       field: 'id',
@@ -23,6 +24,28 @@ const MARKET_LISTING_COLUMNS = {
       headerAlign: align || 'left',
       renderCell: (params: GridRenderEditCellParams<any, PodListing>) => (
         <>{`#${params.value}`}</>
+      ),
+    } as GridColumns[number]),
+
+  orderId: (flex: number, align?: 'left' | 'right') =>
+    ({
+      field: 'id',
+      headerName: 'Order',
+      flex,
+      align: align || 'left',
+      headerAlign: align || 'left',
+      renderCell: (params: GridRenderCellParams<any, PodOrder>) => (
+        <Tooltip placement="right" title="">
+          <Row gap={1}>
+            <EntityIcon type="buy" />
+            <Typography
+              display={{ xs: 'none', md: 'block' }}
+              sx={{ fontSize: 'inherit' }}
+            >
+              {params.row.id.substring(0, 8)}
+            </Typography>
+          </Row>
+        </Tooltip>
       ),
     } as GridColumns[number]),
 
@@ -128,6 +151,61 @@ const MARKET_LISTING_COLUMNS = {
         );
       },
     } as GridColumns[number]),
+
+  maxPlaceInLine: (flex: number, align?: 'left' | 'right') =>
+    ({
+      field: 'maxPlaceInLine',
+      headerName: 'Place in Line',
+      type: 'number',
+      flex: flex,
+      align: align || 'left',
+      headerAlign: align || 'left',
+      valueGetter: (params: GridRenderCellParams) =>
+        (params.value as BigNumber).toNumber(),
+      renderCell: (params: GridRenderCellParams) => (
+        <Typography sx={{ fontSize: 'inherit' }} component="span">
+          <Box display={{ xs: 'none', md: 'block' }}>
+            0 - {displayFullBN(new BigNumber(params.value), 0)}
+          </Box>
+          <Box display={{ xs: 'block', md: 'none' }}>
+            0 - {displayBN(new BigNumber(params.value))}
+          </Box>
+        </Typography>
+      ),
+    } as GridColumns[number]),
+
+  numPods: (flex: number, align?: 'left' | 'right') =>
+    ({
+      field: 'totalAmount',
+      headerName: 'Amount',
+      type: 'number',
+      flex: flex,
+      // disableColumnMenu: true,
+      align: align || 'right',
+      headerAlign: align || 'right',
+      renderCell: (params: GridRenderCellParams) => (
+        <Tooltip
+          placement="right"
+          title={
+            <>
+              Total Value:{' '}
+              {displayFullBN(
+                (params.value as BigNumber).times(params.row.pricePerPod),
+                BEAN[1].displayDecimals
+              )}{' '}
+              BEAN
+            </>
+          }
+        >
+          <Row gap={0.3}>
+            <TokenIcon token={PODS} />
+            <Typography sx={{ fontSize: 'inherit' }}>
+              {displayBN(params.value)}
+            </Typography>
+          </Row>
+        </Tooltip>
+      ),
+    } as GridColumns[number]),
 };
 
-export default MARKET_LISTING_COLUMNS;
+export default MARKET_COLUMNS;
