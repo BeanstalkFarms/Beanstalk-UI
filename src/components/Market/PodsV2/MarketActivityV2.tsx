@@ -14,6 +14,7 @@ import MarketActivity from './tables/MarketActivity';
 import FarmerMarketActivity from './tables/FarmerMarketActivity';
 import CondensedCard from '~/components/Common/Card/CondensedCard';
 import AllListingsTable from './tables/AllListingsTable';
+import OpenOrders from './tables/OpenOrders';
 
 const sx = {
   tabs: {
@@ -82,6 +83,7 @@ const MarketActivityV2: React.FC<{ setHeight: any }> = (props) => {
             <Tab label="Your Orders" sx={sx.tabs} onClick={openIfClosed} />
             <Tab label="Market Activity" sx={sx.tabs} onClick={openIfClosed} />
             <Tab label="Listings" sx={sx.tabs} onClick={openIfClosed} />
+            <Tab label="Orders" sx={sx.tabs} onClick={openIfClosed} />
           </Tabs>
         }
         actions={
@@ -113,6 +115,7 @@ const MarketActivityV2: React.FC<{ setHeight: any }> = (props) => {
           {openState !== 0 && tab === 0 && <FarmerMarketActivity />}
           {openState !== 0 && tab === 1 && <MarketActivity />}
           {openState !== 0 && tab === 2 && <AllListingsTable />}
+          {openState !== 0 && tab === 3 && <OpenOrders />}
         </Stack>
       </CondensedCard>
     </Stack>

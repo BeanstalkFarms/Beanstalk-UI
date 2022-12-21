@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import ActivityTable from './activityTable';
+import MarketTable from './marketTable';
 import useMarketplaceEventData from '~/hooks/beanstalk/useMarketplaceEventData';
-import { POD_MARKET_COLUMNS } from './market-activity-columns';
+import { POD_MARKET_COLUMNS } from './columns/market-activity-columns';
 
 const C = POD_MARKET_COLUMNS;
 
@@ -30,7 +30,7 @@ const MarketActivity: React.FC<{}> = () => {
   const isInitializing = rows.length === 0 || harvestableIndex.lte(0);
 
   return (
-    <ActivityTable
+    <MarketTable
       loading={isInitializing}
       fetchMore={fetchMoreData}
       columns={columns}

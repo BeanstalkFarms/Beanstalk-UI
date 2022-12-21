@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import ActivityTable from './activityTable';
-import { POD_MARKET_COLUMNS } from './market-activity-columns';
+import MarketTable from './marketTable';
+import { POD_MARKET_COLUMNS } from './columns/market-activity-columns';
 import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import useFarmerMarket, {
   FarmerMarketItem,
@@ -26,7 +26,9 @@ const FarmerMarketActivity: React.FC<{}> = () => {
   // LOCAL STATE
   const [open, setOpen] = useState(false);
   const [showModeDialog, setShowModeDialog] = useState(false);
-  const [activeItem, setActiveItem] = useState<FarmerMarketItem | undefined>(undefined);
+  const [activeItem, setActiveItem] = useState<FarmerMarketItem | undefined>(
+    undefined
+  );
 
   // DATA
   const { data: farmerMarket } = useFarmerMarket();
@@ -46,7 +48,7 @@ const FarmerMarketActivity: React.FC<{}> = () => {
 
   return (
     <>
-      <ActivityTable
+      <MarketTable
         columns={columns}
         rows={rows}
         loading={isLoading}

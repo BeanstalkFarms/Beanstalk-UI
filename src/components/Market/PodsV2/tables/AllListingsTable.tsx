@@ -4,7 +4,7 @@ import { DataGridProps } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
 import COLUMNS from './columns/listings-columns';
-import ActivityTable from './activityTable';
+import MarketTable from './marketTable';
 import { PodListing } from '~/state/farmer/market';
 
 const AllListingsTable: React.FC<{}> = () => {
@@ -37,7 +37,7 @@ const AllListingsTable: React.FC<{}> = () => {
       ];
 
   return (
-    <ActivityTable
+    <MarketTable
       columns={columns}
       rows={data.listings || []}
       loading={data.loading}
