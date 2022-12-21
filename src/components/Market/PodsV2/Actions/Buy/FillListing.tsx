@@ -60,7 +60,8 @@ const FillListing: React.FC<{}> = () => {
     <Stack gap={2}>
       {/* Listing Details */}
       <Stack px={0.5} gap={0.75}>
-        <StatHorizontal label="Seller" maxHeight={20}>
+        {/* add margin right of -0.5 to offset padding from farmer chip */}
+        <StatHorizontal label="Seller" maxHeight={20} sx={{ mr: -0.5 }}>
           <FarmerChip account={podListing.account} />
         </StatHorizontal>
         <StatHorizontal label="Place in Line">

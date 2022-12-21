@@ -40,7 +40,6 @@ const ActiveListings: React.FC<{
       loading={data.loading}
       getRowId={(row: PodListing) => `${row.account}-${row.id}`}
       onRowClick={({ row }) => {
-        console.log('row: ', row);
         navigate(`/market/buy/${row.id.toString()}`);
       }}
     />

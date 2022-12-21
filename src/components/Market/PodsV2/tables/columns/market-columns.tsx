@@ -55,10 +55,16 @@ const MARKET_COLUMNS = {
         params.value - harvestableIndex.toNumber(),
       renderCell: (params: GridRenderCellParams) => (
         <>
-          <Typography sx={{ fontSize: 'inherit' }} display={{ xs: 'none', md: 'block' }}>
+          <Typography
+            sx={{ fontSize: 'inherit' }}
+            display={{ xs: 'none', md: 'block' }}
+          >
             {displayFullBN(new BigNumber(params.value), 0)}
           </Typography>
-          <Typography sx={{ fontSize: 'inherit' }} display={{ xs: 'block', md: 'none' }}>
+          <Typography
+            sx={{ fontSize: 'inherit' }}
+            display={{ xs: 'block', md: 'none' }}
+          >
             {displayBN(new BigNumber(params.value))}
           </Typography>
         </>
@@ -154,10 +160,16 @@ const MARKET_COLUMNS = {
         (params.value as BigNumber).toNumber(),
       renderCell: (params: GridRenderCellParams) => (
         <>
-          <Typography sx={{ fontSize: 'inherit' }} display={{ xs: 'none', md: 'block' }}>
+          <Typography
+            sx={{ fontSize: 'inherit' }}
+            display={{ xs: 'none', md: 'block' }}
+          >
             0 - {displayFullBN(new BigNumber(params.value), 0)}
           </Typography>
-          <Typography sx={{ fontSize: 'inherit' }} display={{ xs: 'block', md: 'none' }}>
+          <Typography
+            sx={{ fontSize: 'inherit' }}
+            display={{ xs: 'block', md: 'none' }}
+          >
             0 - {displayBN(new BigNumber(params.value))}
           </Typography>
         </>

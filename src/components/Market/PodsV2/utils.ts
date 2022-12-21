@@ -1,24 +1,21 @@
 import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const marketParams = {
-  listingId: undefined,
-  orderId: undefined,
-};
-
-const MARKET_SLUG = 'market';
-const BUY_SLUG = 'buy';
-const SELL_SLUG = 'sell';
-
-export const useMarketPageUrlUtil = () => {
+export const useMarketPageUrlParams = () => {
   const location = useLocation();
 
   const data = useMemo(() => {
-    const path = location.pathname;
-    const [action, entityId] = path.split('/').slice(1, 3);
-    const isBuy = action === 'buy';
-    
-    return [action, entityId] as const;
+    const [action, id] = location.pathname.split('/').slice(2, 4);
+    if (['buy', 'sell'].includes(action.toLowerCase())) {
+      return {
+        listingID: action === 'buy' ? id : undefined,
+        orderID: action === 'sell' ? id : undefined,
+      };
+    }
+    return {
+      listingID: undefined,
+      orderID: undefined,
+    };
   }, [location.pathname]);
 
   return data;

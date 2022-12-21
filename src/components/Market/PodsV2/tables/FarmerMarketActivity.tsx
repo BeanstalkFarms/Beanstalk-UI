@@ -40,6 +40,7 @@ const FarmerMarketActivity: React.FC<{
         rows={rows}
         columns={columns}
         loading={initializing}
+        title="Orders and Listings"
         getRowId={(row) => row.id}
         onRowClick={({ row }) => {
           const item = rows.find((r) => r.id === row.id);

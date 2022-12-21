@@ -8,9 +8,10 @@ export const scrollbarStyles = {
   '& ::-webkit-scrollbar': {
     width: '4px',
     height: '4px',
-    // '@media (max-width: 800px)': {
-    //   height: '4px',
-    // },
+    // hide horizontal scroll bar on desktop
+    '@media (min-width: 900px)': {
+      height: '0',
+    },
   },
   '& ::-webkit-scrollbar-track': {
     width: '4px',
