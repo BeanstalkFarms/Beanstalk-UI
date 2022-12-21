@@ -1,4 +1,5 @@
 import { Box, CircularProgress } from '@mui/material';
+import { useAtomValue } from 'jotai';
 
 import React from 'react';
 import CondensedCard from '~/components/Common/Card/CondensedCard';
@@ -6,14 +7,24 @@ import CondensedCard from '~/components/Common/Card/CondensedCard';
 import Centered from '~/components/Common/ZeroState/Centered';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
 import MarketGraph from '../../Pods/MarketGraph';
+import { marketBottomTabsAtom } from '../info/atom-context';
 
-const MarketChart: React.FC<{ chartHeight: string }> = ({ chartHeight }) => {
+const MarketChart: React.FC<{ 
+  chartHeight: string; 
+}> = ({
+  chartHeight,
+}) => {
   const data = useMarketData();
+  const openState = useAtomValue(marketBottomTabsAtom);
+  const marketBottomTabsOpen = openState === 1 || openState === 2;
 
   return (
-    <CondensedCard title="OVERVIEW">
+    <CondensedCard title="OVERVIEW" sx={{ height: '100%' }}>
       {!data.loading && data.listings && data.orders ? (
-        <Box width="100%" sx={{ height: chartHeight }}>
+        <Box 
+          width="100%" 
+          sx={{ height: chartHeight, minHeight: marketBottomTabsOpen ? '140px' : 0 }}
+        >
           <MarketGraph
             listings={data.listings}
             orders={data.orders}
@@ -23,9 +34,11 @@ const MarketChart: React.FC<{ chartHeight: string }> = ({ chartHeight }) => {
           />
         </Box>
       ) : (
-        <Centered>
-          <CircularProgress variant="indeterminate" />
-        </Centered>
+        <Box sx={{ height: chartHeight, overflow: 'hidden' }}>
+          <Centered height="100%">
+            <CircularProgress variant="indeterminate" />
+          </Centered>
+        </Box>
       )}
     </CondensedCard>
   );

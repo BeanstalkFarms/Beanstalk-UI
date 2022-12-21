@@ -119,8 +119,12 @@ const FillListingV2Form : FC<
   /// max amount that the user can input of `tokenIn`.
   useEffect(() => {
     (async () => {
-      console.debug('exec');
-      const maxBeans = podListing.remainingAmount.times(podListing.pricePerPod);
+      // Maximum BEAN precision is 6 decimals. remainingAmount * pricePerPod may
+      // have more decimals, so we truncate at 6.
+      const maxBeans = podListing.remainingAmount.times(podListing.pricePerPod).dp(
+        BEAN[1].decimals,
+        BigNumber.ROUND_DOWN,
+      );
       if (maxBeans.gt(0)) {
         if (tokenIn === Bean) {
           /// 1 POD is consumed by 1 BEAN
@@ -348,11 +352,13 @@ const FillListingForm : FC<{
       const formData    = values.tokens[0];
       const tokenIn     = formData.token;
       const amountBeans = tokenIn === Bean ? formData.amount : formData.amountOut;
-      if (!podListing) throw new Error('No pod listing.');
-      if (!signer) throw new Error('Connect a wallet that can sign transactions first.');
-      if (values.tokens.length > 1) throw new Error('Only one token supported at this time');
+
+      // Checks
+      if (!podListing) throw new Error('No Pod Listing found');
+      if (!signer) throw new Error('Connect a wallet');
+      if (values.tokens.length > 1) throw new Error('Only one input token supported');
       if (!formData.amount || !amountBeans || amountBeans.eq(0)) throw new Error('No amount set');
-      if (podListing.amount.lt(new BigNumber(1))) throw new Error('Amount not greater than minFillAmount.');
+      if (amountBeans.lt(podListing.minFillAmount)) throw new Error(`This Listing requires a minimum fill amount of ${displayTokenAmount(podListing.minFillAmount, PODS)}`);
 
       const data : string[] = [];
       const amountPods = amountBeans.div(podListing.pricePerPod);

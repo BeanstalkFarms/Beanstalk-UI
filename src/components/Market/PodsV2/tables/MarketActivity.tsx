@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import MarketTable from './marketTable';
-import useMarketplaceEventData from '~/hooks/beanstalk/useMarketplaceEventData';
 import { POD_MARKET_COLUMNS } from './columns/market-activity-columns';
+import { MarketEvent } from '~/hooks/beanstalk/useMarketplaceEventData';
 
 const C = POD_MARKET_COLUMNS;
 
@@ -15,27 +15,24 @@ const columns = [
   C.total(0.75, 'left'),
 ];
 
-const MarketActivity: React.FC<{}> = () => {
-  const { data, harvestableIndex, fetchMoreData } = useMarketplaceEventData();
-
+const MarketActivity: React.FC<{
+  data: MarketEvent[] | undefined;
+  initializing: boolean;
+  fetchMoreData: () => Promise<void>;
+}> = ({ data, initializing, fetchMoreData }) => {
   // map row data to have index due to duplicated ids causing rendering issues
   const rows = useMemo(() => {
     if (!data || !data.length) return [];
-    return data.map((r, i) => ({
-      idx: i,
-      ...r,
-    }));
+    return data;
   }, [data]);
-
-  const isInitializing = rows.length === 0 || harvestableIndex.lte(0);
 
   return (
     <MarketTable
-      loading={isInitializing}
+      loading={initializing}
       fetchMore={fetchMoreData}
       columns={columns}
       rows={rows}
-      getRowId={(row) => row.idx}
+      getRowId={(row) => row.id}
     />
   );
 };

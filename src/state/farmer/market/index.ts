@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { ZERO_BN } from '~/constants';
-import { BEAN } from '~/constants/tokens';
+import { BEAN, PODS } from '~/constants/tokens';
 import {
   MarketStatus,
   PodListingFragment,
@@ -48,8 +48,9 @@ export const castPodListing = (
     start: toTokenUnitsBN(listing.start, BEAN[1].decimals),
     status: listing.status as MarketStatus,
     mode: listing.mode.toString() as FarmToMode, // FIXME: use numbers instead?
+
     // @ts-ignore
-    minFillAmount: listing.minFillAmount || ZERO_BN,
+    minFillAmount: toTokenUnitsBN(listing.minFillAmount || ZERO_BN, BEAN[1].decimals),
 
     placeInLine: index.minus(harvestableIndex),
     pricingFunction: listing?.pricingFunction ?? null,
@@ -89,8 +90,9 @@ export const castPodOrder = (order: PodOrderFragment): PodOrder => {
 
     maxPlaceInLine: toTokenUnitsBN(order.maxPlaceInLine, BEAN[1].decimals),
     pricePerPod: pricePerPod,
+
     // @ts-ignore
-    minFillAmount: order.minFillAmount || ZERO_BN,
+    minFillAmount: toTokenUnitsBN(order.minFillAmount || ZERO_BN, PODS.decimals),
 
     status: order.status as MarketStatus,
     pricingFunction: order?.pricingFunction ?? null,

@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import { useSigner } from 'wagmi';
 import BigNumber from 'bignumber.js';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import TransactionToast from '~/components/Common/TxnToast';
@@ -12,6 +11,7 @@ import useChainConstant from '../../chain/useChainConstant';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { PodOrder } from '~/state/farmer/market';
 import { useFetchFarmerMarketItems } from './useFarmerMarket';
+import { useSigner } from '~/hooks/ledger/useSigner';
 
 export default function useFarmerMarketCancelTxn() {
   /// Helpers

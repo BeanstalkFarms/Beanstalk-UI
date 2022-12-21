@@ -276,7 +276,7 @@ const Graph: FC<GraphProps> = ({
   ), [cursorPoint]);
 
   /// Elements
-  const orderCircles = orderPositions.map((coordinate, i) => {
+  const orderCircles = useMemo(() => orderPositions.map((coordinate, i) => {
     const active = cursorPoint?.type === 'order' && i === cursorPoint?.index;
     return (
       <Circle
@@ -292,8 +292,8 @@ const Graph: FC<GraphProps> = ({
         className={`mg-point mg-point-o${active ? ' mg-active' : ''}`}
       />
     );
-  });
-  const listingCircles = listingPositions.map((coordinate, i) => {
+  }), [cursorPoint?.index, cursorPoint?.type, orderPositions, peerOpacity]);
+  const listingCircles = useMemo(() => listingPositions.map((coordinate, i) => {
     const active = cursorPoint?.type === 'listing' && i === cursorPoint?.index;
     return (
       <Circle
@@ -309,7 +309,7 @@ const Graph: FC<GraphProps> = ({
         className={`mg-point mg-point-l${active ? ' mg-active' : ''}`}
       />
     );
-  });
+  }), [cursorPoint?.index, cursorPoint?.type, listingPositions, peerOpacity]);
   // const voroniPolygons = (
   //   <g>
   //     {polygons.map((polygon) => (
@@ -583,152 +583,157 @@ const Graph: FC<GraphProps> = ({
     return transformMatrix;
   }, [height, width, selectedPoint]);
 
+  const onMouseMove = useCallback((zoom: ProvidedZoom<SVGSVGElement> & any) => 
+    (evt: React.MouseEvent | React.TouchEvent) => {
+      zoom.dragMove(evt); // handle zoom drag
+      handleMouseMove(evt, zoom); // handle hover event for tooltips
+    },
+  [handleMouseMove]);
+  const onMouseLeave = useCallback((zoom: ProvidedZoom<SVGSVGElement> & any) => 
+    () => {
+      if (zoom.isDragging) zoom.dragEnd();
+    },
+  []);
+
   return (
-    <>
-      <Zoom<SVGSVGElement>
-        width={width}
-        height={height}
-        constrain={constrain}
-        scaleXMin={scaleXMin}
-        scaleXMax={scaleXMax}
-        scaleYMin={scaleYMin}
-        scaleYMax={scaleYMax}
-      >
-        {(zoom) => (
-          <Box sx={{ position: 'relative' }}>
-            <svg
-              width={width}
-              height={height}
-              ref={zoom.containerRef}
-            >
-              <RectClipPath
-                id="zoom-clip"
-                width={width - axis.yWidth}
-                height={height - axis.xHeight}
-                x={axis.yWidth}
-                y={0}
-              />
-              <PatternLines
-                id={PATTERN_ID}
-                height={5}
-                width={5}
-                stroke={BeanstalkPalette.logoGreen}
-                strokeWidth={1}
-                orientation={['diagonal']}
-              />
-              <g clipPath="url(#zoom-clip)">
-                <g transform={zoom.toString()}>
-                  {/* {voroniPolygons} */}
-                  {cursorPositionLines}
-                  {orderCircles}
-                  {listingCircles}
-                </g>
+    <Zoom<SVGSVGElement>
+      width={width}
+      height={height}
+      constrain={constrain}
+      scaleXMin={scaleXMin}
+      scaleXMax={scaleXMax}
+      scaleYMin={scaleYMin}
+      scaleYMax={scaleYMax}
+    >
+      {(zoom) => (
+        <Box sx={{ position: 'relative' }}>
+          <svg
+            width={width}
+            height={height}
+            ref={zoom.containerRef}
+          >
+            <RectClipPath
+              id="zoom-clip"
+              width={width - axis.yWidth}
+              height={height - axis.xHeight}
+              x={axis.yWidth}
+              y={0}
+            />
+            <PatternLines
+              id={PATTERN_ID}
+              height={5}
+              width={5}
+              stroke={BeanstalkPalette.logoGreen}
+              strokeWidth={1}
+              orientation={['diagonal']}
+            />
+            <g clipPath="url(#zoom-clip)">
+              <g transform={zoom.toString()}>
+                {/* {voroniPolygons} */}
+                {cursorPositionLines}
+                {orderCircles}
+                {listingCircles}
               </g>
-              <rect
-                width={width - axis.yWidth}
-                height={height - axis.xHeight}
-                x={axis.yWidth}
-                y={0}
-                fill="transparent"
-                ref={svgRef}
-                onTouchStart={zoom.dragStart}
-                onTouchMove={zoom.dragMove}
-                onTouchEnd={zoom.dragEnd}
-                onMouseDown={zoom.dragStart}
-                onClick={handleClick}
-                onMouseMove={(evt) => {
-                  zoom.dragMove(evt); // handle zoom drag
-                  handleMouseMove(evt, zoom); // handle hover event for tooltips
+            </g>
+            <rect
+              width={width - axis.yWidth}
+              height={height - axis.xHeight}
+              x={axis.yWidth}
+              y={0}
+              fill="transparent"
+              ref={svgRef}
+              onTouchStart={zoom.dragStart}
+              onTouchMove={zoom.dragMove}
+              onTouchEnd={zoom.dragEnd}
+              onMouseDown={zoom.dragStart}
+              onClick={handleClick}
+              onMouseMove={onMouseMove(zoom)}
+              onMouseUp={zoom.dragEnd}
+              onMouseLeave={onMouseLeave(zoom)}
+              css={{
+                cursor: (
+                  selectedPoint
+                    ? 'default'         // when selected, freeze cursor
+                    : hoveredPoint      // hovering over a point but haven't clicked it yet
+                      ? 'pointer'      
+                      : zoom.isDragging
+                        ? 'grabbing'    // if dragging, show grab
+                        : 'default'        // not hovering a point, user can drag
+                ),
+                touchAction: 'none',
+              }}
+            />
+            <AxisLeft<typeof yScale>
+              scale={rescaleYWithZoom(yScale, zoom)}
+              left={axis.yWidth}
+              numTicks={10}
+              stroke={axisColor}
+              tickLabelProps={tickLabelProps('y')}
+              tickStroke={axisColor}
+              tickFormat={(d) => d.valueOf().toFixed(2)}
+              hideZero
+            />
+            {/* X axis: Place in Line */}
+            <AxisBottom<typeof xScale>
+              scale={rescaleXWithZoom(xScale, zoom)}
+              top={height - axis.xHeight}
+              left={axis.yWidth}
+              numTicks={10}
+              stroke={axisColor}
+              tickLabelProps={tickLabelProps('x')}
+              tickStroke={axisColor}
+              tickFormat={(_d) => {
+                const d = _d.valueOf();
+                if (d < 1e6) return `${d / 1e3}k`;
+                return `${d / 1e6}M`;
+              }}
+              hideZero
+            />
+          </svg>
+          {/**
+            * Show a tooltip with the number of Pods whenever a point is
+            * hovered over or selected.
+            */}
+          {tooltipOpen &&
+            cursorPoint &&
+            tooltipLeft != null &&
+            tooltipTop != null &&
+            (
+              <Tooltip
+                offsetLeft={10}
+                offsetTop={-40}
+                left={tooltipLeft}
+                top={tooltipTop}
+                width={tooltipWidth}
+                applyPositionStyle
+                style={{
+                  backgroundColor: 'transparent',
+                  boxShadow: 'none',
+                  fontSize: 13,
                 }}
-                onMouseUp={zoom.dragEnd}
-                onMouseLeave={() => {
-                  if (zoom.isDragging) zoom.dragEnd();
-                }}
-                css={{
-                  cursor: (
-                    selectedPoint
-                      ? 'default'         // when selected, freeze cursor
-                      : hoveredPoint      // hovering over a point but haven't clicked it yet
-                        ? 'pointer'      
-                        : zoom.isDragging
-                          ? 'grabbing'    // if dragging, show grab
-                          : 'default'        // not hovering a point, user can drag
-                  ),
-                  touchAction: 'none',
-                }}
-              />
-              <AxisLeft<typeof yScale>
-                scale={rescaleYWithZoom(yScale, zoom)}
-                left={axis.yWidth}
-                numTicks={10}
-                stroke={axisColor}
-                tickLabelProps={tickLabelProps('y')}
-                tickStroke={axisColor}
-                tickFormat={(d) => d.valueOf().toFixed(2)}
-                hideZero
-              />
-              {/* X axis: Place in Line */}
-              <AxisBottom<typeof xScale>
-                scale={rescaleXWithZoom(xScale, zoom)}
-                top={height - axis.xHeight}
-                left={axis.yWidth}
-                numTicks={10}
-                stroke={axisColor}
-                tickLabelProps={tickLabelProps('x')}
-                tickStroke={axisColor}
-                tickFormat={(_d) => {
-                  const d = _d.valueOf();
-                  if (d < 1e6) return `${d / 1e3}k`;
-                  return `${d / 1e6}M`;
-                }}
-                hideZero
-              />
-            </svg>
-            {/**
-              * Show a tooltip with the number of Pods whenever a point is
-              * hovered over or selected.
-              */}
-            {tooltipOpen &&
-              cursorPoint &&
-              tooltipLeft != null &&
-              tooltipTop != null &&
-              (
-                <Tooltip
-                  offsetLeft={10}
-                  offsetTop={-40}
-                  left={tooltipLeft}
-                  top={tooltipTop}
-                  width={tooltipWidth}
-                  applyPositionStyle
-                  style={{
-                    backgroundColor: 'transparent',
-                    boxShadow: 'none',
-                    fontSize: 13,
-                  }}
-                >
-                  <TooltipCard>
-                    <Row gap={0.5}>
-                      <EntityIcon type={cursorPoint.type} size={20} />
-                      {cursorPoint.type === 'listing'
-                        ? displayBN(listings[cursorPoint.index].remainingAmount)
-                        : displayBN(orders[cursorPoint.index].remainingAmount)
-                      } Pods
-                    </Row>
-                  </TooltipCard>
-                </Tooltip>
-            )}
-            {selectedPoint && (
-              <Stack sx={{ position: 'absolute', top: 0, right: 10 }}>
-                <Typography color="text.tertiary" variant="bodySmall" textAlign="right" sx={{ textTransform: 'capitalize' }}>Viewing: {selectedPoint.type} {selectedPoint.type === 'listing' ? selectedPoint.coordinate.id : selectedPoint.coordinate.id.substring(0, 8)}</Typography>
-                <Typography color="text.tertiary" variant="bodySmall" textAlign="right">
-                  Hit ESC or click anywhere to close
-                </Typography>
-              </Stack>
-            )}
-          </Box>
-        )}
-      </Zoom>
-    </>
+              >
+                <TooltipCard>
+                  <Row gap={0.5}>
+                    <EntityIcon type={cursorPoint.type} size={20} />
+                    {cursorPoint.type === 'listing'
+                      ? displayBN(listings[cursorPoint.index].remainingAmount)
+                      : displayBN(orders[cursorPoint.index].remainingAmount)
+                    } Pods
+                  </Row>
+                </TooltipCard>
+              </Tooltip>
+          )}
+          {selectedPoint && (
+            <Stack sx={{ position: 'absolute', top: 0, right: 10 }}>
+              <Typography color="text.tertiary" variant="bodySmall" textAlign="right" sx={{ textTransform: 'capitalize' }}>Viewing: {selectedPoint.type} {selectedPoint.type === 'listing' ? selectedPoint.coordinate.id : selectedPoint.coordinate.id.substring(0, 8)}</Typography>
+              <Typography color="text.tertiary" variant="bodySmall" textAlign="right">
+                Hit ESC or click anywhere to close
+              </Typography>
+            </Stack>
+          )}
+        </Box>
+      )}
+    </Zoom>
   );
 };
 
