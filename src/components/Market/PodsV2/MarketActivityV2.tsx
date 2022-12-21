@@ -75,8 +75,8 @@ const MarketActivityV2: React.FC<{}> = () => {
         }}
         title={
           <Tabs value={tab} onChange={setTab}>
-            <Tab label="BUY" sx={sx.tabs} onClick={openIfClosed} />
-            <Tab label="SELL" sx={sx.tabs} onClick={openIfClosed} />
+            <Tab label="BUY NOW" sx={sx.tabs} onClick={openIfClosed} />
+            <Tab label="SELL NOW" sx={sx.tabs} onClick={openIfClosed} />
             <Tab label="YOUR ORDERS" sx={sx.tabs} onClick={openIfClosed} />
             <Tab label="MARKET ACTIVITY" sx={sx.tabs} onClick={openIfClosed} />
           </Tabs>

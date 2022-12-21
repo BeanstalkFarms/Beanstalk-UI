@@ -5,14 +5,14 @@ import {
   GridRenderEditCellParams,
 } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
-import { Box, Tooltip, Typography } from '@mui/material';
+import { Tooltip, Typography } from '@mui/material';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 import { displayBN, displayFullBN, MaxBN } from '~/util';
 import Row from '~/components/Common/Row';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN, PODS } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
-import EntityIcon from '~/components/Market/Pods/EntityIcon';
+import { FontSize } from '~/components/App/muiTheme';
 
 const MARKET_COLUMNS = {
   listingId: (flex: number, align?: 'left' | 'right') =>
@@ -35,17 +35,7 @@ const MARKET_COLUMNS = {
       align: align || 'left',
       headerAlign: align || 'left',
       renderCell: (params: GridRenderCellParams<any, PodOrder>) => (
-        <Tooltip placement="right" title="">
-          <Row gap={1}>
-            <EntityIcon type="buy" />
-            <Typography
-              display={{ xs: 'none', md: 'block' }}
-              sx={{ fontSize: 'inherit' }}
-            >
-              {params.row.id.substring(0, 8)}
-            </Typography>
-          </Row>
-        </Tooltip>
+        <>{params.row.id.substring(0, 8)}</>
       ),
     } as GridColumns[number]),
 
@@ -64,14 +54,14 @@ const MARKET_COLUMNS = {
       valueGetter: (params: GridRenderCellParams) =>
         params.value - harvestableIndex.toNumber(),
       renderCell: (params: GridRenderCellParams) => (
-        <Typography sx={{ fontSize: 'inherit' }} component="span">
-          <Box display={{ xs: 'none', md: 'block' }}>
+        <>
+          <Typography sx={{ fontSize: 'inherit' }} display={{ xs: 'none', md: 'block' }}>
             {displayFullBN(new BigNumber(params.value), 0)}
-          </Box>
-          <Box display={{ xs: 'block', md: 'none' }}>
+          </Typography>
+          <Typography sx={{ fontSize: 'inherit' }} display={{ xs: 'block', md: 'none' }}>
             {displayBN(new BigNumber(params.value))}
-          </Box>
-        </Typography>
+          </Typography>
+        </>
       ),
     } as GridColumns[number]),
 
@@ -163,14 +153,14 @@ const MARKET_COLUMNS = {
       valueGetter: (params: GridRenderCellParams) =>
         (params.value as BigNumber).toNumber(),
       renderCell: (params: GridRenderCellParams) => (
-        <Typography sx={{ fontSize: 'inherit' }} component="span">
-          <Box display={{ xs: 'none', md: 'block' }}>
+        <>
+          <Typography sx={{ fontSize: 'inherit' }} display={{ xs: 'none', md: 'block' }}>
             0 - {displayFullBN(new BigNumber(params.value), 0)}
-          </Box>
-          <Box display={{ xs: 'block', md: 'none' }}>
+          </Typography>
+          <Typography sx={{ fontSize: 'inherit' }} display={{ xs: 'block', md: 'none' }}>
             0 - {displayBN(new BigNumber(params.value))}
-          </Box>
-        </Typography>
+          </Typography>
+        </>
       ),
     } as GridColumns[number]),
 
@@ -187,14 +177,14 @@ const MARKET_COLUMNS = {
         <Tooltip
           placement="right"
           title={
-            <>
+            <Typography sx={{ fontSize: FontSize.sm }}>
               Total Value:{' '}
               {displayFullBN(
                 (params.value as BigNumber).times(params.row.pricePerPod),
                 BEAN[1].displayDecimals
               )}{' '}
               BEAN
-            </>
+            </Typography>
           }
         >
           <Row gap={0.3}>

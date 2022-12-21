@@ -26,9 +26,7 @@ const FarmerMarketActivity: React.FC<{
   // LOCAL STATE
   const [open, setOpen] = useState(false);
   const [showModeDialog, setShowModeDialog] = useState(false);
-  const [activeItem, setActiveItem] = useState<FarmerMarketItem | undefined>(
-    undefined
-  );
+  const [activeItem, setActiveItem] = useState<FarmerMarketItem | undefined>(undefined);
 
   const rows = useMemo(() => {
     if (!data || !data?.length) return [];
@@ -38,12 +36,11 @@ const FarmerMarketActivity: React.FC<{
   return (
     <>
       <MarketTable
-        columns={columns}
+        isUserTable
         rows={rows}
+        columns={columns}
         loading={initializing}
         getRowId={(row) => row.id}
-        isUserTable
-        title="Orders and Listings"
         onRowClick={({ row }) => {
           const item = rows.find((r) => r.id === row.id);
           item && setActiveItem(item);

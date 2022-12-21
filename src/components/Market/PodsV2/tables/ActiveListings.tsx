@@ -16,13 +16,13 @@ const ActiveListings: React.FC<{
 
   const columns: DataGridProps['columns'] = useMemo(() => {
     const c = [
-      COLUMNS.listingId(1.3, 'left'),
+      COLUMNS.listingId(1, 'left'),
       // index
       COLUMNS.plotIndex(data.harvestableIndex, 1, 'left'),
       // pricePerPod
       COLUMNS.pricePerPod(1, 'left'),
       // amount
-      COLUMNS.numPodsActive(1, 'left'),
+      COLUMNS.numPodsActive(0.7, 'left'),
     ];
 
     if (!isMobile) {

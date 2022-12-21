@@ -6,8 +6,11 @@ import COLUMNS from './columns/market-columns';
 
 const columns = [
   COLUMNS.orderId(1, 'left'),
+  // maxPlaceInLine
   COLUMNS.maxPlaceInLine(1, 'left'),
+  // pricePerPod
   COLUMNS.pricePerPod(1, 'left'),
+  // totalAmount
   COLUMNS.numPods(1, 'right'),
 ];
 

@@ -20,18 +20,14 @@ const MarketActivity: React.FC<{
   initializing: boolean;
   fetchMoreData: () => Promise<void>;
 }> = ({ data, initializing, fetchMoreData }) => {
-  // map row data to have index due to duplicated ids causing rendering issues
-  const rows = useMemo(() => {
-    if (!data || !data.length) return [];
-    return data;
-  }, [data]);
+  const rows = useMemo(() => (!data || !data.length ? [] : data), [data]);
 
   return (
     <MarketTable
+      rows={rows}
+      columns={columns}
       loading={initializing}
       fetchMore={fetchMoreData}
-      columns={columns}
-      rows={rows}
       getRowId={(row) => row.id}
     />
   );
