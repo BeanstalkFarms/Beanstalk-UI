@@ -19,7 +19,7 @@ import BigNumber from 'bignumber.js';
 import { useNavigate } from 'react-router-dom';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import EntityIcon from '~/components/Market/PodsV1/EntityIcon';
+import EntityIcon from '~/components/Market/PodsV2/common/EntityIcon';
 import { displayBN } from '~/util';
 import Row from '~/components/Common/Row';
 import { FC } from '~/types';

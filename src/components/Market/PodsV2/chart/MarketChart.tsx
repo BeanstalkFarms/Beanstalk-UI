@@ -5,8 +5,8 @@ import React from 'react';
 import CondensedCard from '~/components/Common/Card/CondensedCard';
 
 import Centered from '~/components/Common/ZeroState/Centered';
+import MarketGraph from '~/components/Market/PodsV2/MarketGraph';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
-import MarketGraph from '../../PodsV1/MarketGraph';
 import { marketBottomTabsAtom } from '../info/atom-context';
 
 const MarketChart: React.FC<{ 

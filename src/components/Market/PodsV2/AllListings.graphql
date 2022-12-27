@@ -1,4 +1,4 @@
-#import "../PodListing.fragment.graphql"
+#import "./PodListing.fragment.graphql"
 query AllPodListings(
   $first: Int = 1000,
   $status: MarketStatus = ACTIVE,

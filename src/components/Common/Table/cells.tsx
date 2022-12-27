@@ -10,7 +10,7 @@ import { PodListing, PodOrder } from '~/state/farmer/market';
 import TokenIcon from '../TokenIcon';
 import AddressIcon from '../AddressIcon';
 import Row from '~/components/Common/Row';
-import EntityIcon from '~/components/Market/PodsV1/EntityIcon';
+import EntityIcon from '~/components/Market/PodsV2/common/EntityIcon';
 import { WellActivityData } from '~/components/Market/Wells/Tables';
 import { Token } from '~/classes';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
