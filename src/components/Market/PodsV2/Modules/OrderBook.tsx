@@ -9,9 +9,9 @@ import useOrderbook, {
   OrderbookAggregation,
   OrderbookPrecision,
 } from '~/hooks/beanstalk/useOrderbook';
-import { scrollbarStyles } from './common/tableStyles';
-import OrderBookRow from './tables/OrderbookRow';
-import OrderbookTableHeader from './tables/OrderbookTableHeader';
+import { scrollbarStyles } from '../common/tableStyles';
+import OrderBookRow from '../tables/OrderbookRow';
+import OrderbookTableHeader from '../tables/OrderbookTableHeader';
 
 const precisionOptions: OrderbookPrecision[] = [0.01, 0.02, 0.05, 0.1];
 

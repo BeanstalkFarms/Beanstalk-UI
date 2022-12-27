@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { InputAdornment, Slider, Stack, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
-import MarketTable from './marketTable';
+import BaseTable from './BaseTable';
 import COLUMNS from './columns/market-columns';
 
 const columns = [
@@ -20,7 +20,7 @@ const ActiveOrders: React.FC<{
   const navigate = useNavigate();
 
   return (
-    <MarketTable
+    <BaseTable
       columns={columns}
       rows={data.orders || []}
       loading={data.loading}

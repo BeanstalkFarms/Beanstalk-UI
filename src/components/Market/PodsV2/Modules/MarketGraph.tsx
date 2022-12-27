@@ -24,7 +24,7 @@ import { displayBN } from '~/util';
 import Row from '~/components/Common/Row';
 import { FC } from '~/types';
 import './MarketGraph.css';
-import { useMarketPageUrlParams } from '../PodsV2/utils';
+import { useMarketPageUrlParams } from '../utils';
 
 /// //////////////////////////////// TYPES ///////////////////////////////////
 

@@ -5,11 +5,11 @@ import React from 'react';
 import CondensedCard from '~/components/Common/Card/CondensedCard';
 
 import Centered from '~/components/Common/ZeroState/Centered';
-import MarketGraph from '~/components/Market/PodsV2/MarketGraph';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
 import { marketBottomTabsAtom } from '../info/atom-context';
+import EntityGraph from './MarketGraph';
 
-const MarketChart: React.FC<{ 
+const MarketGraphContainer: React.FC<{ 
   chartHeight: string; 
 }> = ({
   chartHeight,
@@ -25,7 +25,7 @@ const MarketChart: React.FC<{
           width="100%" 
           sx={{ height: chartHeight, minHeight: marketBottomTabsOpen ? '140px' : 0 }}
         >
-          <MarketGraph
+          <EntityGraph
             listings={data.listings}
             orders={data.orders}
             maxPlaceInLine={data.maxPlaceInLine}
@@ -44,4 +44,4 @@ const MarketChart: React.FC<{
   );
 };
 
-export default MarketChart;
+export default MarketGraphContainer;

@@ -11,13 +11,13 @@ import Row from '~/components/Common/Row';
 import {
   marketBottomTabsAtom,
   marketBottomTabsHeightAtom,
-} from './info/atom-context';
+} from '../info/atom-context';
 import DropdownIcon from '~/components/Common/DropdownIcon';
-import MarketActivity from './tables/MarketActivity';
-import FarmerMarketActivity from './tables/FarmerMarketActivity';
+import MarketActivityTable from '../tables/MarketActivity';
+import FarmerMarketActivityTable from '../tables/FarmerMarketActivity';
 import CondensedCard from '~/components/Common/Card/CondensedCard';
-import ActiveListings from './tables/ActiveListings';
-import ActiveOrders from './tables/ActiveOrders';
+import ActiveListings from '../tables/ActiveListings';
+import ActiveOrders from '../tables/ActiveOrders';
 import useMarketctivityData from '~/hooks/beanstalk/useMarketActivityData';
 import useFarmerMarket from '~/hooks/farmer/market/useFarmerMarket';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
@@ -38,7 +38,7 @@ const sx = {
   },
 };
 
-const MarketActivityV2: React.FC<{}> = () => {
+const MarketActivity: React.FC<{}> = () => {
   // STATE
   const [openState, setOpenState] = useAtom(marketBottomTabsAtom);
   const [tab, setTab] = useTabs();
@@ -120,13 +120,13 @@ const MarketActivityV2: React.FC<{}> = () => {
             <ActiveOrders data={marketData} />
           )}
           {openState !== 0 && tab === 2 && (
-            <FarmerMarketActivity
+            <FarmerMarketActivityTable
               data={farmerMarket}
               initializing={!farmerMarket.length || harvestableIndex.lte(0)}
             />
           )}
           {openState !== 0 && tab === 3 && (
-            <MarketActivity
+            <MarketActivityTable
               data={eventsData}
               fetchMoreData={fetchMoreData}
               initializing={!eventsData.length || harvestableIndex.lte(0)}
@@ -138,4 +138,4 @@ const MarketActivityV2: React.FC<{}> = () => {
   );
 };
 
-export default MarketActivityV2;
+export default MarketActivity;

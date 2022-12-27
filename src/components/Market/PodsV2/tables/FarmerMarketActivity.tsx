@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import MarketTable from './marketTable';
+import BaseTable from './BaseTable';
 import { POD_MARKET_COLUMNS } from './columns/market-activity-columns';
 import { FarmerMarketItem } from '~/hooks/farmer/market/useFarmerMarket';
 import MarketItemDetailsDialog from '../Actions/MarketItemDetailsDialog';
@@ -35,7 +35,7 @@ const FarmerMarketActivity: React.FC<{
 
   return (
     <>
-      <MarketTable
+      <BaseTable
         isUserTable
         rows={rows}
         columns={columns}

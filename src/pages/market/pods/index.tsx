@@ -11,9 +11,9 @@ import {
 import { useAtomValue } from 'jotai';
 import useNavHeight from '~/hooks/app/usePageDimensions';
 import useBanner from '~/hooks/app/useBanner';
-import MarketActionsV2 from '~/components/Market/PodsV2/Actions';
-import MarketActivityV2 from '~/components/Market/PodsV2/MarketActivityV2';
-import MarketChart from '~/components/Market/PodsV2/chart/MarketChart';
+import MarketActions from '~/components/Market/PodsV2/Modules/MarketActions';
+import MarketActivityTable from '~/components/Market/PodsV2/Modules/MarketActivity';
+import MarketGraphContainer from '~/components/Market/PodsV2/Modules/MarketGraphContainer';
 import { muiThemeCondensed } from '~/components/App/muiTheme';
 import { marketBottomTabsHeightAtom } from '~/components/Market/PodsV2/info/atom-context';
 
@@ -51,13 +51,13 @@ const MarketPage: React.FC<{}> = () => {
       <Stack sx={{ position: 'relative' }} gap={1}>
         <Stack gap={1}>
           <Box sx={{ width: { xs: '100%', lg: LEFT_MAX_WIDTH } }}>
-            <MarketChart chartHeight={chartHeight} />
+            <MarketGraphContainer chartHeight={chartHeight} />
           </Box>
           <Box sx={marketActionsV2Sx}>
-            <MarketActionsV2 />
+            <MarketActions />
           </Box>
           <Box sx={{ width: { xs: '100%', lg: LEFT_MAX_WIDTH } }}>
-            <MarketActivityV2 />
+            <MarketActivityTable />
           </Box>
         </Stack>
       </Stack>

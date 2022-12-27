@@ -4,7 +4,7 @@ import { DataGridProps } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
 import COLUMNS from './columns/market-columns';
-import MarketTable from './marketTable';
+import BaseTable from './BaseTable';
 import { PodListing } from '~/state/farmer/market';
 
 const ActiveListings: React.FC<{
@@ -34,7 +34,7 @@ const ActiveListings: React.FC<{
   }, [data.harvestableIndex, isMobile]);
 
   return (
-    <MarketTable
+    <BaseTable
       columns={columns}
       rows={data.listings || []}
       loading={data.loading}

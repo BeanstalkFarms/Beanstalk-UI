@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import MarketTable from './marketTable';
+import BaseTable from './BaseTable';
 import { POD_MARKET_COLUMNS } from './columns/market-activity-columns';
 import { MarketEvent } from '~/hooks/beanstalk/useMarketActivityData';
 
@@ -23,7 +23,7 @@ const MarketActivity: React.FC<{
   const rows = useMemo(() => (!data || !data.length ? [] : data), [data]);
 
   return (
-    <MarketTable
+    <BaseTable
       rows={rows}
       columns={columns}
       loading={initializing}
