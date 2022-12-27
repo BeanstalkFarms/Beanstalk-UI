@@ -1,4 +1,4 @@
-#import "../PodOrder.fragment.graphql"
+#import "./PodOrder.fragment.graphql"
 query AllPodOrders(
   $first: Int = 1000,
   $status: MarketStatus = ACTIVE
