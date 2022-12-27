@@ -72,6 +72,7 @@ const MarketActivityV2: React.FC<{}> = () => {
           flexDirection: 'column',
           width: '100%',
           height: '100%',
+          
         }}
         title={
           <Tabs value={tab} onChange={setTab}>
@@ -111,7 +112,7 @@ const MarketActivityV2: React.FC<{}> = () => {
           </Row>
         }
       >
-        <Stack height="100%">
+        <Stack sx={{ flex: 1, height: '100%' }}>
           {openState !== 0 && tab === 0 && (
             <ActiveListings data={marketData} />
           )}

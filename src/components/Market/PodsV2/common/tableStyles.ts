@@ -62,10 +62,10 @@ const marketplaceTableStyle = {
       '&:focused': {
         outline: 'none',
       },
-      minHeight: '24px !important',
-      maxHeight: '24px !important',
-      pt: '4px !important',
-      pb: '4px !important',
+      // minHeight: '24px !important',
+      // maxHeight: '24px !important',
+      // pt: '4px !important',
+      // pb: '4px !important',
       border: 'none',
     },
     '& .MuiDataGrid-cell:focus': {
@@ -75,11 +75,11 @@ const marketplaceTableStyle = {
 
     // Row
     '& .MuiDataGrid-row': {
-      minHeight: '24px !important',
-      maxHeight: '24px !important',
-      pt: '4px !important',
-      pb: '4px !important',
-      borderBottom: 'none',
+      // minHeight: '24px !important',
+      // maxHeight: '24px !important',
+      // pt: '4px !important',
+      // pb: '4px !important',
+      // borderBottom: 'none',
       // borderColor: hexToRgba(BeanstalkPalette.lightGrey, 0.8),
     },
     // Icon

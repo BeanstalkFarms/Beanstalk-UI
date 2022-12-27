@@ -1,13 +1,10 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useRef } from 'react';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { Box, CircularProgress } from '@mui/material';
-import { useAtomValue } from 'jotai';
 import { FC } from '~/types';
 import { MarketBaseTableProps } from '~/components/Common/Table/TabTable';
 
-import ScrollPaginationControl from '~/components/Common/ScrollPaginationControl';
 import Centered from '~/components/Common/ZeroState/Centered';
-import { marketBottomTabsAtom } from '../info/atom-context';
 import AuthEmptyState from '~/components/Common/ZeroState/AuthEmptyState';
 import marketplaceTableStyle from '../common/tableStyles';
 
@@ -46,7 +43,7 @@ const EmptyOverlay: React.FC<{ message?: string; isUserTable?: boolean }> = ({
   );
 };
 
-const TAB_CONTROL_HEIGHT = 52;
+// const TAB_CONTROL_HEIGHT = 52;
 
 const MarketTable: FC<
   IActivityTable & MarketBaseTableProps & DataGridProps
@@ -60,32 +57,55 @@ const MarketTable: FC<
   isUserTable = false,
   ...props
 }) => {
-  const openState = useAtomValue(marketBottomTabsAtom);
-  const tableHeight = useMemo(
-    () => sizeMap[openState === 2 ? openState : 1] - TAB_CONTROL_HEIGHT,
-    [openState]
-  );
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  // const openState = useAtomValue(marketBottomTabsAtom);
+  // const tableHeight = useMemo(
+  //   () => sizeMap[openState === 2 ? openState : 1] - TAB_CONTROL_HEIGHT,
+  //   [openState]
+  // );
 
   return (
     <Box
       ref={scrollRef}
       sx={{
-        px: 0.2,
-        height: tableHeight,
+        // Container
+        px: 0,
+        height: '100%',
         width: '100%',
+        // Table styles
         ...marketplaceTableStyle,
         '& .MuiDataGrid-row': {
           cursor: onRowClick ? 'pointer' : 'default',
         },
+        '& .MuiDataGrid-columnHeaders': {
+          borderBottom: '1px solid #fefefe15 !important',
+        },
+        '& .MuiDataGrid-columnHeaders .MuiDataGrid-columnHeaderTitle': {
+          // lineHeight: '20px',
+          textTransform: 'uppercase'
+        },
+        '& .MuiDataGrid-footerContainer': {
+          minHeight: 'auto',
+          borderTop: '1px solid #fefefe15 !important',
+          justifyContent: 'flex-end !important'
+        },
+        '& .MuiDataGrid-footerContainer .MuiTablePagination-root .MuiToolbar-root': {
+          minHeight: '0 !important',
+          fontSize: 14
+        },
+        '& .MuiDataGrid-footerContainer .MuiTablePagination-root p': {
+          my: 0,
+          fontSize: 14
+        }
       }}
     >
       <DataGrid
-        rowHeight={24}
+        rowHeight={40}
         disableSelectionOnClick
+        headerHeight={40}
         columns={columns}
         rows={rows}
-        pageSize={maxRows}
+        pageSize={maxRows || 100}
         density="compact"
         onRowClick={onRowClick}
         initialState={{
@@ -93,9 +113,11 @@ const MarketTable: FC<
             sortModel: [{ field: 'time', sort: 'desc' }],
           },
         }}
+        // Hide the rows per page selector
+        rowsPerPageOptions={[]}
         components={{
           // We add pagination for now b/c Mui-DataGrid doesn't support maxRows > 100 if not on pro plan
-          Footer: ScrollPaginationControl,
+          // Footer: ScrollPaginationControl,
           NoRowsOverlay: EmptyOverlay,
           LoadingOverlay: EmptyOverlay,
         }}
