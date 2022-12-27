@@ -51,7 +51,7 @@ const ROUTES : { [key in RouteKeys] : RouteData[] } = {
       title: 'Balances',
     },
     {
-      path: '/market',
+      path: '/market/buy',
       title: 'Market',
     },
   ],

@@ -146,7 +146,7 @@ export default function App() {
         {/* use zIndex to move content over content */}
         <Box sx={{ position: 'relative', zIndex: 1 }}>
           <Routes>
-            <Route path="/" element={<ForecastPage />} />
+            <Route index element={<ForecastPage />} />
             <Route path="/analytics" element={<AnalyticsPage />} />
             <Route path="/balances" element={<BalancesPage />} />
             <Route path="/barn" element={<Barn />} />
