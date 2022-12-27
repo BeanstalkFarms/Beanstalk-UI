@@ -4,7 +4,6 @@ import { atom } from 'jotai';
 import BigNumber from 'bignumber.js';
 
 import { ONE_BN, ZERO_BN } from '~/constants';
-import { CreateOrderFormValues } from '../../PodsV1/Actions/CreateOrder';
 import AtomInputField from '~/components/Common/Atom/AtomInputField';
 import AtomOutputField from '~/components/Common/Atom/AtomOutputField';
 import Row from '~/components/Common/Row';
@@ -12,6 +11,16 @@ import FulfillOrderAmount from '../common/FulfillOrderAmount';
 import PlaceInLineSlider from '../common/PlaceInLineSlider';
 import PricingFnSelect from '../common/PricingFnSelect';
 import { placeInLineAtom, pricePerPodAtom } from '../info/atom-context';
+import { FormTokenState } from '~/components/Common/Form';
+
+export type CreateOrderFormValues = {
+  placeInLine: BigNumber | null;
+  pricePerPod: BigNumber | null;
+  tokens: FormTokenState[];
+  settings: {
+    slippage: number;
+  }
+}
 
 export const createOrderFormAtom = atom<CreateOrderFormValues>({
   placeInLine: null,

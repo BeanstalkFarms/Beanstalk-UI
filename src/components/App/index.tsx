@@ -50,7 +50,7 @@ import './App.css';
 import { FC } from '~/types';
 import Snowflakes from './theme/winter/Snowflakes';
 
-import PodMarketPage from '~/pages/market/podsv2';
+import PodMarketPage from '~/pages/market/pods';
 import PodMarketBuy from '~/components/Market/PodsV2/Actions/Buy';
 import PodMarketCreateOrder from '~/components/Market/PodsV2/Actions/Buy/CreateOrder';
 import PodMarketFillListing from '~/components/Market/PodsV2/Actions/Buy/FillListing';

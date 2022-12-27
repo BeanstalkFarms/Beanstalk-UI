@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 import { InputAdornment, Box, Typography, Stack, Alert } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { FormikHelpers, Formik, FormikProps, Form } from 'formik';
@@ -7,6 +6,8 @@ import React, { useMemo } from 'react';
 import { useSigner } from 'wagmi';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import {
+  PlotFragment,
+  PlotSettingsFragment,
   SmartSubmitButton,
   TokenAdornment,
   TokenInputField,
@@ -35,7 +36,14 @@ import {
   PlotMap,
   toStringBaseUnitBN,
 } from '~/util';
-import { CreateListingFormValues } from '../../PodsV1/Actions/CreateListing';
+
+export type CreateListingFormValues = {
+  plot:        PlotFragment
+  pricePerPod: BigNumber | null;
+  expiresAt:   BigNumber | null;
+  destination: FarmToMode | null;
+  settings:    PlotSettingsFragment & {};
+}
 
 const initValues = {
   plot: {
