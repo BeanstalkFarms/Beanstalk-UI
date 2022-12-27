@@ -154,7 +154,7 @@ const useMarketplaceEventData = () => {
               type: 'order' as const,
               label: 'Pod Order Cancelled',
               numPods: toTokenUnitsBN(podOrder?.podAmount, BEAN[1].decimals),
-              placeInPodline: `0 - ${displayBN(toTokenUnitsBN(podOrder?.maxPlaceInLine, BEAN[1].decimals))}`,
+              placeInPodline: podOrder?.maxPlaceInLine > 0 ? `0 - ${displayBN(toTokenUnitsBN(podOrder?.maxPlaceInLine, BEAN[1].decimals))}` : '-',
               pricePerPod: toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals),
               totalBeans,
               totalValue: getUSD(BEAN[1], totalBeans),

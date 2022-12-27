@@ -5,7 +5,7 @@ import {
   GridValueFormatterParams,
 } from '@mui/x-data-grid';
 import { DateTime } from 'luxon';
-import { Box, Typography } from '@mui/material';
+import { Box, Link, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { displayBN, displayFullBN } from '~/util';
 import { ZERO_BN } from '~/constants';
@@ -45,7 +45,11 @@ export const POD_MARKET_COLUMNS = {
         formatDate(params.value),
       renderCell: (params: GridRenderCellParams) => (
         <Typography color="text.tertiary" sx={{ fontSize: 'inherit' }}>
-          {params.formattedValue}
+          {params.row.hash ? (
+            <Link href={`https://etherscan.io/tx/${params.row.hash}`} rel="noreferrer" target="_blank" underline="hover" color="text.tertiary">
+              {params.formattedValue}
+            </Link>
+          ) : params.formattedValue}
         </Typography>
       ),
     } as GridColumns[number]),
@@ -107,8 +111,14 @@ export const POD_MARKET_COLUMNS = {
       headerAlign: align || 'left',
       renderCell: (params: GridRenderCellParams) => (
         <Box display="inline-flex" sx={{ gap: 0.25, alignItems: 'center' }}>
-          <TokenIcon token={BEAN[1]} />
-          {displayBN(params.value || ZERO_BN)}
+          {params.value?.gt(0) ? (
+            <>
+              <TokenIcon token={BEAN[1]} />
+              {displayBN(params.value || ZERO_BN)}
+            </>
+          ) : (
+            '-'
+          )}
         </Box>
       ),
     } as GridColumns[number]),
@@ -121,7 +131,11 @@ export const POD_MARKET_COLUMNS = {
       align: align || 'left',
       headerAlign: align || 'left',
       renderCell: (params: GridRenderCellParams) => (
-        <>{displayBN(params.value)} PODS</>
+        params.value?.gt(0) ? (
+          <>{displayBN(params.value)} PODS</>
+        ) : (
+          '-'
+        )
       ),
     } as GridColumns[number]),
 
@@ -134,7 +148,11 @@ export const POD_MARKET_COLUMNS = {
       align: align || 'left',
       headerAlign: align,
       renderCell: (params: GridRenderCellParams) => (
-        <>{displayBN(params.value)} PODS</>
+        params.value?.gt(0) ? (
+          <>{displayBN(params.value)} PODS</>
+        ) : (
+          '-'
+        )
       ),
     } as GridColumns[number]),
 
@@ -146,14 +164,20 @@ export const POD_MARKET_COLUMNS = {
       align: align || 'left',
       headerAlign: align || 'left',
       renderCell: (params: GridRenderCellParams<any, FarmerMarketItem>) => {
+        if (!params.value || params.value.eq(0))  {
+          return <>-</>;
+        }
+        
         const strVal =
           params.value instanceof BigNumber
             ? displayBN(params.value)
             : params.value;
         const isListing = params.row.action === 'sell';
+
         if (isListing) {
           return <>{strVal}</>;
         }
+
         return (
           <>{`${params.row.priceType === 'fixed' ? '0' : '*'} - ${strVal}`}</>
         );
