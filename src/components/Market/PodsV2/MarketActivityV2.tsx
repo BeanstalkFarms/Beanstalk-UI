@@ -18,7 +18,7 @@ import FarmerMarketActivity from './tables/FarmerMarketActivity';
 import CondensedCard from '~/components/Common/Card/CondensedCard';
 import ActiveListings from './tables/ActiveListings';
 import ActiveOrders from './tables/ActiveOrders';
-import useMarketplaceEventData from '~/hooks/beanstalk/useMarketplaceEventData';
+import useMarketctivityData from '~/hooks/beanstalk/useMarketActivityData';
 import useFarmerMarket from '~/hooks/farmer/market/useFarmerMarket';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
 
@@ -48,7 +48,7 @@ const MarketActivityV2: React.FC<{}> = () => {
 
   // DATA
   // pull queries out of their respecitive hooks to avoid re-fetching
-  const { data: eventsData, harvestableIndex, fetchMoreData } = useMarketplaceEventData();
+  const { data: eventsData, harvestableIndex, fetchMoreData } = useMarketctivityData();
   const { data: farmerMarket } = useFarmerMarket();
   const marketData = useMarketData();
 

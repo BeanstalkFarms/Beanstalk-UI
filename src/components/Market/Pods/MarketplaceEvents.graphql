@@ -1,10 +1,6 @@
 query MarketplaceEvents(
   $events_first: Int = 1000,
-  $events_timestamp_lt: BigInt!,
-  # $orders_first: Int = 1000,
-  # $orders_updatedAt_lt: BigInt!,
-  # $listings_first: Int = 1000,
-  # $listings_updatedAt_lt: BigInt!
+  $events_timestamp_lt: BigInt!
 ) {
   marketplaceEvents(
     orderBy: createdAt,

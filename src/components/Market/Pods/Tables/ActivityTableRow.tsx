@@ -6,7 +6,7 @@ import { displayBN } from '~/util';
 import { ZERO_BN } from '~/constants';
 import podIcon from '~/img/beanstalk/pod-icon.svg';
 import beanIcon from '~/img/tokens/bean-logo-circled.svg';
-import { MarketEvent } from '~/hooks/beanstalk/useMarketplaceEventData';
+import { MarketEvent } from '~/hooks/beanstalk/useMarketActivityData';
 import EntityIcon from '~/components/Market/Pods/EntityIcon';
 
 import { FC } from '~/types';

@@ -10,7 +10,7 @@ fragment PodListing on PodListing {
   updatedAt
   status
   # Listing data
-  originalIndex         # original index of the plot listed
+  #originalIndex         # original index of the plot listed
   index                 # current index of the plot listed
   start                 # start within plot for listing
   amount                # amount of pods listed

@@ -6,14 +6,11 @@ query HistoricalListings(
   }, orderBy: updatedAt, orderDirection: desc) {
     id
     status
-    # ---
-    amount
-    pricePerPod
-    index
-    originalIndex
     historyID
+    index
+    amount
     filledAmount
-    # ---
+    pricePerPod
     updatedAt
   }
 }

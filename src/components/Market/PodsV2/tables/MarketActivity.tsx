@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import MarketTable from './marketTable';
 import { POD_MARKET_COLUMNS } from './columns/market-activity-columns';
-import { MarketEvent } from '~/hooks/beanstalk/useMarketplaceEventData';
+import { MarketEvent } from '~/hooks/beanstalk/useMarketActivityData';
 
 const C = POD_MARKET_COLUMNS;
 

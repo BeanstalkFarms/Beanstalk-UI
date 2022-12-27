@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import PageHeaderSecondary from '~/components/Common/PageHeaderSecondary';
 import useTabs from '~/hooks/display/useTabs';
-import useMarketplaceEventData, { QUERY_AMOUNT } from '~/hooks/beanstalk/useMarketplaceEventData';
+import useMarketctivityData, { QUERY_AMOUNT } from '~/hooks/beanstalk/useMarketActivityData';
 import { Module, ModuleContent } from '~/components/Common/Module';
 import Row from '~/components/Common/Row';
 import ActivityTableHeader from '~/components/Market/Pods/Tables/ActivityTableHeader';
@@ -22,7 +22,7 @@ const MarketActivityPage: FC<{}> = () => {
   const [tab, handleChangeTab] = useTabs();
   const [scrollPosition, setScrollPosition] = useState<number | undefined>();
 
-  const { data, harvestableIndex, loading, fetchMoreData } = useMarketplaceEventData();
+  const { data, harvestableIndex, loading, fetchMoreData } = useMarketctivityData();
 
   const handleFetchMore = () => {
     fetchMoreData();
