@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { atom, useAtom, useSetAtom } from 'jotai';
 import BigNumber from 'bignumber.js';
-import PlaceInLineSlider from '../common/PlaceInLineSlider';
+import PlaceInLineSlider from '../Common/PlaceInLineSlider';
 import { AppState } from '~/state';
 import useToggle from '~/hooks/display/useToggle';
 import {

@@ -7,9 +7,9 @@ import { ONE_BN, ZERO_BN } from '~/constants';
 import AtomInputField from '~/components/Common/Atom/AtomInputField';
 import AtomOutputField from '~/components/Common/Atom/AtomOutputField';
 import Row from '~/components/Common/Row';
-import FulfillOrderAmount from '../common/FulfillOrderAmount';
-import PlaceInLineSlider from '../common/PlaceInLineSlider';
-import PricingFnSelect from '../common/PricingFnSelect';
+import FulfillOrderAmount from '../Common/FulfillOrderAmount';
+import PlaceInLineSlider from '../Common/PlaceInLineSlider';
+import PricingFnSelect from '../Common/PricingFnSelect';
 import { placeInLineAtom, pricePerPodAtom } from '../info/atom-context';
 import { FormTokenState } from '~/components/Common/Form';
 

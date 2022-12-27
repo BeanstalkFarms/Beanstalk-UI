@@ -1,7 +1,7 @@
 import { Box, Stack } from '@mui/material';
 import React from 'react';
 import { Outlet, useParams } from 'react-router-dom';
-import SubActionSelect from '~/components/Market/PodsV2/common/SubActionSelect';
+import SubActionSelect from '~/components/Market/PodsV2/Common/SubActionSelect';
 
 const Buy: React.FC<{}> = () => {
   const { listingID } = useParams<{ listingID?: string }>();

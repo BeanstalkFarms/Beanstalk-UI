@@ -6,7 +6,7 @@ import { MarketBaseTableProps } from '~/components/Common/Table/TabTable';
 
 import Centered from '~/components/Common/ZeroState/Centered';
 import AuthEmptyState from '~/components/Common/ZeroState/AuthEmptyState';
-import marketplaceTableStyle from '../common/tableStyles';
+import marketplaceTableStyle from '../Common/tableStyles';
 
 type IActivityTable = {
   /**

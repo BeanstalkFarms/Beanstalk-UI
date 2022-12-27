@@ -13,11 +13,11 @@ import {
   marketBottomTabsHeightAtom,
 } from '../info/atom-context';
 import DropdownIcon from '~/components/Common/DropdownIcon';
-import MarketActivityTable from '../tables/MarketActivity';
-import FarmerMarketActivityTable from '../tables/FarmerMarketActivity';
+import MarketActivityTable from '../Tables/MarketActivity';
+import FarmerMarketActivityTable from '../Tables/FarmerMarketActivity';
 import CondensedCard from '~/components/Common/Card/CondensedCard';
-import ActiveListings from '../tables/ActiveListings';
-import ActiveOrders from '../tables/ActiveOrders';
+import ActiveListings from '../Tables/ActiveListings';
+import ActiveOrders from '../Tables/ActiveOrders';
 import useMarketctivityData from '~/hooks/beanstalk/useMarketActivityData';
 import useFarmerMarket from '~/hooks/farmer/market/useFarmerMarket';
 import useMarketData from '~/hooks/beanstalk/useMarketData';

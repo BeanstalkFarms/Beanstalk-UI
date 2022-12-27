@@ -2,7 +2,7 @@ import { Stack, Typography } from '@mui/material';
 import { useAtomValue } from 'jotai';
 import React from 'react';
 import { Outlet, useParams } from 'react-router-dom';
-import SubActionSelect from '../common/SubActionSelect';
+import SubActionSelect from '../Common/SubActionSelect';
 import { PodOrderType, podsOrderTypeAtom } from '../info/atom-context';
 import Soon from '~/components/Common/ZeroState/Soon';
 import CreateOrder from '~/components/Market/PodsV2/Actions/Buy/CreateOrder';

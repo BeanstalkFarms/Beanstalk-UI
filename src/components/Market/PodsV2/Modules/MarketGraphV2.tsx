@@ -9,7 +9,7 @@ import {
   selectedListingAtom,
   selectedOrderAtom,
 } from '../info/atom-context';
-import ChartTypePill from '../common/ChartTypePill';
+import ChartTypePill from '../Common/ChartTypePill';
 
 const SelectedOrdersTemp: React.FC<{}> = () => {
   const [selectedOrder, selectOrder] = useAtom(selectedOrderAtom);

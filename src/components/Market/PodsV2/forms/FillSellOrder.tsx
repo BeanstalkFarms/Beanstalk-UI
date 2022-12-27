@@ -5,7 +5,7 @@ import InfoRow from '~/components/Common/Form/InfoRow';
 import { ZERO_BN } from '~/constants';
 import { displayFullBN, displayBN } from '~/util';
 import AtomInputField from '~/components/Common/Atom/AtomInputField';
-import PlaceInLineSlider from '../common/PlaceInLineSlider';
+import PlaceInLineSlider from '../Common/PlaceInLineSlider';
 import { selectedListingAtom, fulfillAmountAtom } from '../info/atom-context';
 
 const FillSellOrder: React.FC<{}> = () => {
