@@ -61,7 +61,8 @@ const FillOrder: React.FC<{}> = () => {
       {/* Listing Details */}
       <Box px={0.5}>
         <Stack gap={0.75}>
-          <StatHorizontal label="Buyer" maxHeight={20}>
+          {/* add mr of -0.5 to offset padding of farmer chip */}
+          <StatHorizontal label="Buyer" maxHeight={20} sx={{ mr: -0.5 }}>
             <FarmerChip account={podOrder.account} />
           </StatHorizontal>
           <StatHorizontal label="Place in Line">

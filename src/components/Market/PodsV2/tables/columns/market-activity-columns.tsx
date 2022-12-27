@@ -154,19 +154,20 @@ export const POD_MARKET_COLUMNS = {
         if (isListing) {
           return <>{strVal}</>;
         }
-        return <>{`${params.row.priceType === 'fixed' ? '0' : '*'} - ${strVal}`}</>;
+        return (
+          <>{`${params.row.priceType === 'fixed' ? '0' : '*'} - ${strVal}`}</>
+        );
       },
     } as GridColumns[number]),
 
-  activityPlaceInLine: (flex: number, align?: 'left' | 'right') => ({
-    field: 'placeInPodline',
-    headerName: 'PLACE IN LINE',
-    flex: flex,
-    headerAlign: align || 'left',
-    renderCell: (params: GridRenderCellParams) => (
-      <>{params.value}</>
-    ),
-  } as GridColumns[number]),
+  activityPlaceInLine: (flex: number, align?: 'left' | 'right') =>
+    ({
+      field: 'placeInPodline',
+      headerName: 'PLACE IN LINE',
+      flex: flex,
+      headerAlign: align || 'left',
+      renderCell: (params: GridRenderCellParams) => <>{params.value}</>,
+    } as GridColumns[number]),
 
   expiry: (flex: number, align?: 'left' | 'right') =>
     ({
@@ -195,9 +196,7 @@ export const POD_MARKET_COLUMNS = {
           <Typography
             sx={{
               fontSize: 'inherit',
-              color: params.value.gt(0)
-                ? 'text.primary'
-                : 'text.secondary',
+              color: params.value.gt(0) ? 'text.primary' : 'text.secondary',
             }}
           >
             {progress.isNaN() ? '-%' : `${displayFullBN(progress, 2, 2)}%`}

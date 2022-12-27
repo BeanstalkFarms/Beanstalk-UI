@@ -48,7 +48,7 @@ const EmptyOverlay: React.FC<{ message?: string; isUserTable?: boolean }> = ({
 
 const TAB_CONTROL_HEIGHT = 52;
 
-const ActivityTable: FC<
+const MarketTable: FC<
   IActivityTable & MarketBaseTableProps & DataGridProps
 > = ({
   rows,
@@ -117,4 +117,4 @@ const ActivityTable: FC<
   );
 };
 
-export default ActivityTable;
+export default MarketTable;

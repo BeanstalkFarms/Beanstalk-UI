@@ -10,7 +10,7 @@ import useMarketData from '~/hooks/beanstalk/useMarketData';
 
 import { FC } from '~/types';
 
-const AllListings : FC<{ data: ReturnType<typeof useMarketData> }> = ({ data }) => {
+const AllOrders : FC<{ data: ReturnType<typeof useMarketData> }> = ({ data }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -48,4 +48,4 @@ const AllListings : FC<{ data: ReturnType<typeof useMarketData> }> = ({ data }) 
   );
 };
 
-export default AllListings;
+export default AllOrders;

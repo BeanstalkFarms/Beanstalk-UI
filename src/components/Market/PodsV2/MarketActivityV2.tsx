@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Stack, Tab, Tabs } from '@mui/material';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
@@ -16,8 +16,11 @@ import DropdownIcon from '~/components/Common/DropdownIcon';
 import MarketActivity from './tables/MarketActivity';
 import FarmerMarketActivity from './tables/FarmerMarketActivity';
 import CondensedCard from '~/components/Common/Card/CondensedCard';
+import ActiveListings from './tables/ActiveListings';
+import ActiveOrders from './tables/ActiveOrders';
 import useMarketplaceEventData from '~/hooks/beanstalk/useMarketplaceEventData';
 import useFarmerMarket from '~/hooks/farmer/market/useFarmerMarket';
+import useMarketData from '~/hooks/beanstalk/useMarketData';
 
 const sx = {
   tabs: {
@@ -36,33 +39,31 @@ const sx = {
 };
 
 const MarketActivityV2: React.FC<{}> = () => {
-  const [tab, setTab] = useTabs();
+  // STATE
   const [openState, setOpenState] = useAtom(marketBottomTabsAtom);
+  const [tab, setTab] = useTabs();
+
+  // HELPERS
   const size = useAtomValue(marketBottomTabsHeightAtom);
 
   // DATA
   // pull queries out of their respecitive hooks to avoid re-fetching
-  const {
-    data: eventsData,
-    harvestableIndex,
-    fetchMoreData,
-  } = useMarketplaceEventData();
+  const { data: eventsData, harvestableIndex, fetchMoreData } = useMarketplaceEventData();
   const { data: farmerMarket } = useFarmerMarket();
+  const marketData = useMarketData();
 
-  const openIfClosed = useCallback(() => {
+  // FUNCTIONS
+  const openIfClosed = () => {
     if (openState === 0) {
       setOpenState(1);
     }
-  }, [openState, setOpenState]);
+  };
 
   return (
     <Stack
-      sx={{
-        bottom: 0,
-        height: openState !== 0 ? `${size}px` : undefined,
-        // FIXME: transition -> nice-to-have
-        // transition: openState === 0 ? 'height 200ms ease-in' : null,
-        // mt: openState !== 2 ? 1 : 0,
+      sx={{ 
+        bottom: 0, 
+        height: openState !== 0 ? `${size}px` : undefined 
       }}
     >
       <CondensedCard
@@ -74,6 +75,8 @@ const MarketActivityV2: React.FC<{}> = () => {
         }}
         title={
           <Tabs value={tab} onChange={setTab}>
+            <Tab label="BUY NOW" sx={sx.tabs} onClick={openIfClosed} />
+            <Tab label="SELL NOW" sx={sx.tabs} onClick={openIfClosed} />
             <Tab label="YOUR ORDERS" sx={sx.tabs} onClick={openIfClosed} />
             <Tab label="MARKET ACTIVITY" sx={sx.tabs} onClick={openIfClosed} />
           </Tabs>
@@ -87,16 +90,21 @@ const MarketActivityV2: React.FC<{}> = () => {
               }}
               sx={sx.icons}
             >
-              <DropdownIcon open={openState !== 0} />
+              <DropdownIcon 
+                open={openState !== 0} 
+              />
             </Stack>
             <Stack display={{ xs: 'none', md: 'flex' }}>
               {openState === 1 && (
-                <FullscreenIcon onClick={() => setOpenState(2)} sx={sx.icons} />
+                <FullscreenIcon 
+                  onClick={() => setOpenState(2)} 
+                  sx={sx.icons} 
+                />
               )}
               {openState === 2 && (
-                <FullscreenExitIcon
-                  onClick={() => setOpenState(1)}
-                  sx={sx.icons}
+                <FullscreenExitIcon 
+                  onClick={() => setOpenState(1)} 
+                  sx={sx.icons} 
                 />
               )}
             </Stack>
@@ -105,16 +113,22 @@ const MarketActivityV2: React.FC<{}> = () => {
       >
         <Stack height="100%">
           {openState !== 0 && tab === 0 && (
+            <ActiveListings data={marketData} />
+          )}
+          {openState !== 0 && tab === 1 && (
+            <ActiveOrders data={marketData} />
+          )}
+          {openState !== 0 && tab === 2 && (
             <FarmerMarketActivity
               data={farmerMarket}
               initializing={!farmerMarket.length || harvestableIndex.lte(0)}
             />
           )}
-          {openState !== 0 && tab === 1 && (
+          {openState !== 0 && tab === 3 && (
             <MarketActivity
               data={eventsData}
-              initializing={!eventsData.length || harvestableIndex.lte(0)}
               fetchMoreData={fetchMoreData}
+              initializing={!eventsData.length || harvestableIndex.lte(0)}
             />
           )}
         </Stack>

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import ActivityTable from './activityTable';
+import MarketTable from './marketTable';
+import { POD_MARKET_COLUMNS } from './columns/market-activity-columns';
 import { MarketEvent } from '~/hooks/beanstalk/useMarketplaceEventData';
-import { POD_MARKET_COLUMNS } from './market-activity-columns';
 
 const C = POD_MARKET_COLUMNS;
 
@@ -20,18 +20,14 @@ const MarketActivity: React.FC<{
   initializing: boolean;
   fetchMoreData: () => Promise<void>;
 }> = ({ data, initializing, fetchMoreData }) => {
-  // map row data to have index due to duplicated ids causing rendering issues
-  const rows = useMemo(() => {
-    if (!data || !data.length) return [];
-    return data;
-  }, [data]);
+  const rows = useMemo(() => (!data || !data.length ? [] : data), [data]);
 
   return (
-    <ActivityTable
+    <MarketTable
+      rows={rows}
+      columns={columns}
       loading={initializing}
       fetchMore={fetchMoreData}
-      columns={columns}
-      rows={rows}
       getRowId={(row) => row.id}
     />
   );

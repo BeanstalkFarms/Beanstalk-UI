@@ -14,7 +14,7 @@ import { applyMatrixToPoint, Zoom } from '@visx/zoom';
 import { ProvidedZoom, TransformMatrix } from '@visx/zoom/lib/types';
 import { voronoi } from '@visx/voronoi';
 import BigNumber from 'bignumber.js';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
 import EntityIcon from '~/components/Market/Pods/EntityIcon';
@@ -22,6 +22,7 @@ import { displayBN } from '~/util';
 import Row from '~/components/Common/Row';
 import { FC } from '~/types';
 import './MarketGraph.css';
+import { useMarketPageUrlParams } from '../PodsV2/utils';
 
 /// //////////////////////////////// TYPES ///////////////////////////////////
 
@@ -503,21 +504,25 @@ const Graph: FC<GraphProps> = ({
     }
   }, [selectedPoint, hoveredPoint, reset, navigate, listings, orders]);
 
-  /// Effects
   useEffect(() => {
-    if (selectedPoint && !(params.listingID || params.orderID)) {
-      setSelectedPoint(undefined);
-      hideTooltip();
-    } else if (!selectedPoint) {
-      if (params.listingID) {
-        const index = listings.findIndex((l) => l.id === params.listingID);
+    // both are undefined
+    if (!params.listingID && !params.orderID) {
+      if (selectedPoint) {
+        setSelectedPoint(undefined);
+        hideTooltip();
+      }
+    } else if (params.listingID) {
+      const index = listings.findIndex((l) => l.id === params.listingID);
+      if (!selectedPoint || selectedPoint.index !== index) {
         setSelectedPoint({
           type: 'listing',
           index,
           coordinate: listingPositions[index]
         });
-      } else if (params.orderID) {
-        const index = orders.findIndex((l) => l.id === params.orderID);
+      }
+    } else if (params.orderID) {
+      const index = orders.findIndex((l) => l.id === params.orderID);
+      if (!selectedPoint || selectedPoint.index !== index) {
         setSelectedPoint({
           type: 'order',
           index,
@@ -525,7 +530,7 @@ const Graph: FC<GraphProps> = ({
         });
       }
     }
-  }, [hideTooltip, listingPositions, listings, orderPositions, orders, params.listingID, params.orderID, selectedPoint]);
+  }, [hideTooltip, listingPositions, listings, orderPositions, orders, params, selectedPoint]);
 
   /// Hotkeys
   useHotkeys('esc', reset, {}, [reset]);
@@ -738,7 +743,9 @@ const Graph: FC<GraphProps> = ({
 };
 
 const MarketGraph: FC<MarketGraphProps> = (props) => {
-  const params = useParams<GraphProps['params']>();
+  // const params = useParams<GraphProps['params']>();
+  const params = useMarketPageUrlParams();
+
   return (
     <ParentSize debounceTime={100}>
       {({ width, height }) => (
