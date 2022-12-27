@@ -3,7 +3,7 @@ import {
   Button,
   Typography,
 } from '@mui/material';
-import MoreDropdown from '~/components/Market/Pods/MoreDropdown';
+import MoreDropdown from '~/components/Market/PodsV1/MoreDropdown';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';

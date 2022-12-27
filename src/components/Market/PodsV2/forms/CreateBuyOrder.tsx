@@ -4,7 +4,7 @@ import { atom } from 'jotai';
 import BigNumber from 'bignumber.js';
 
 import { ONE_BN, ZERO_BN } from '~/constants';
-import { CreateOrderFormValues } from '../../Pods/Actions/CreateOrder';
+import { CreateOrderFormValues } from '../../PodsV1/Actions/CreateOrder';
 import AtomInputField from '~/components/Common/Atom/AtomInputField';
 import AtomOutputField from '~/components/Common/Atom/AtomOutputField';
 import Row from '~/components/Common/Row';
@@ -42,7 +42,6 @@ const priceInputProps = {
 const maxPriceAtom = atom<BigNumber | null>(ONE_BN);
 
 const CreateBuyOrder: React.FC<{}> = () => (
-
   <Stack gap={0.8}>
     <PlaceInLineSlider />
     {/* (max) place in line input */}

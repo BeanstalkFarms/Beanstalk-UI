@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Box, Card, CardProps, Stack, Typography } from '@mui/material';
@@ -17,7 +19,7 @@ import BigNumber from 'bignumber.js';
 import { useNavigate } from 'react-router-dom';
 import { PodListing, PodOrder } from '~/state/farmer/market';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import EntityIcon from '~/components/Market/Pods/EntityIcon';
+import EntityIcon from '~/components/Market/PodsV1/EntityIcon';
 import { displayBN } from '~/util';
 import Row from '~/components/Common/Row';
 import { FC } from '~/types';

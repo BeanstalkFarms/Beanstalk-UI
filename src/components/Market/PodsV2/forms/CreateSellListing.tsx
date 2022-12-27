@@ -1,14 +1,12 @@
+/* eslint-disable */
+
 import { InputAdornment, Box, Typography, Stack, Alert } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import { FormikHelpers, Formik, FormikProps, Form } from 'formik';
 import React, { useMemo } from 'react';
 import { useSigner } from 'wagmi';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-import { atom } from 'jotai';
-import { focusAtom } from 'jotai/optics';
-import { OpticFor } from 'optics-ts';
 import {
-  PlotFragment,
   SmartSubmitButton,
   TokenAdornment,
   TokenInputField,
@@ -37,7 +35,7 @@ import {
   PlotMap,
   toStringBaseUnitBN,
 } from '~/util';
-import { CreateListingFormValues } from '../../Pods/Actions/CreateListing';
+import { CreateListingFormValues } from '../../PodsV1/Actions/CreateListing';
 
 const initValues = {
   plot: {
@@ -54,24 +52,24 @@ const initValues = {
   },
 };
 
-const createSellListingAtom = atom<CreateListingFormValues>(initValues);
+// const createSellListingAtom = atom<CreateListingFormValues>(initValues);
 
-const plotAtom = focusAtom(
-  createSellListingAtom,
-  (optic: OpticFor<CreateListingFormValues>) => optic.prop('plot')
-);
-const plotIndexAtom = focusAtom(plotAtom, (optic: OpticFor<PlotFragment>) =>
-  optic.prop('index')
-);
-const plotAmountAtom = focusAtom(plotAtom, (optic: OpticFor<PlotFragment>) =>
-  optic.prop('amount')
-);
-const plotStartAtom = focusAtom(plotAtom, (optic: OpticFor<PlotFragment>) =>
-  optic.prop('start')
-);
-const plotEndAtom = focusAtom(plotAtom, (optic: OpticFor<PlotFragment>) =>
-  optic.prop('end')
-);
+// const plotAtom = focusAtom(
+//   createSellListingAtom,
+//   (optic: OpticFor<CreateListingFormValues>) => optic.prop('plot')
+// );
+// const plotIndexAtom = focusAtom(plotAtom, (optic: OpticFor<PlotFragment>) =>
+//   optic.prop('index')
+// );
+// const plotAmountAtom = focusAtom(plotAtom, (optic: OpticFor<PlotFragment>) =>
+//   optic.prop('amount')
+// );
+// const plotStartAtom = focusAtom(plotAtom, (optic: OpticFor<PlotFragment>) =>
+//   optic.prop('start')
+// );
+// const plotEndAtom = focusAtom(plotAtom, (optic: OpticFor<PlotFragment>) =>
+//   optic.prop('end')
+// );
 
 const PricePerPodInputProps = {
   inputProps: { step: '0.01' },

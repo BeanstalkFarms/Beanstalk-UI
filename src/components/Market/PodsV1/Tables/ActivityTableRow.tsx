@@ -7,7 +7,7 @@ import { ZERO_BN } from '~/constants';
 import podIcon from '~/img/beanstalk/pod-icon.svg';
 import beanIcon from '~/img/tokens/bean-logo-circled.svg';
 import { MarketEvent } from '~/hooks/beanstalk/useMarketActivityData';
-import EntityIcon from '~/components/Market/Pods/EntityIcon';
+import EntityIcon from '~/components/Market/PodsV1/EntityIcon';
 
 import { FC } from '~/types';
 
