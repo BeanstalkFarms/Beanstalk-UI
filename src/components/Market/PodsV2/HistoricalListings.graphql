@@ -4,13 +4,18 @@ query HistoricalListings(
   podListings(where: {
     historyID_in: $historyIDs
   }, orderBy: updatedAt, orderDirection: desc) {
+    #// Identifiers
     id
     status
     historyID
+    #// Pricing
+    pricePerPod
+    #// Configuration
     index
+    #// Amounts
     amount
     filledAmount
-    pricePerPod
+    #// Metadata
     updatedAt
   }
 }

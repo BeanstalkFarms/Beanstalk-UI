@@ -25,22 +25,10 @@ export type FarmerMarketItem = {
   /**
    * Date of the event
    */
-  time: string | number | undefined;
-  /**
-   * Action of the event
-   */
+  createdAt: string | number | undefined;
   action: 'buy' | 'sell';
-  /**
-   *
-   */
   type: 'order' | 'listing';
-  /**
-   *
-   */
   priceType: 'fixed' | 'dynamic';
-  /**
-   *
-   */
   pricePerPod: BigNumber;
   /**
    * remaining amount of PODS
@@ -65,7 +53,7 @@ export type FarmerMarketItem = {
    */
   fillPct: BigNumber;
   /**
-   * total value in beans to 100% fill
+   * Total value in beans to 100% fill
    */
   totalBeans: BigNumber;
   /**
@@ -85,19 +73,32 @@ export type FarmerMarketItem = {
 const QUERY_AMOUNT = 50;
 
 const castOrderToItem = (order: PodOrder): FarmerMarketItem => ({
+  // Identifiers
   id: order.id,
-  time: order.createdAt,
   action: 'buy',
   type: 'order',
+
+  // Pricing
   priceType: 'fixed',
   pricePerPod: order.pricePerPod,
-  remainingAmount: order.remainingAmount.div(order.pricePerPod),
-  placeInPodline: order.maxPlaceInLine,
-  numPods: order.totalAmount,
+
+  // Constraints
   expiry: ZERO_BN, // pod orders don't expire
-  fillPct: order.filledAmount.div(order.totalAmount).times(100),
-  totalBeans: order.remainingAmount,
+  placeInPodline: order.maxPlaceInLine,
+  
+  // Amounts
+  remainingAmount: order.remainingAmount,
+  numPods: order.totalAmount,
+  totalBeans: order.filledAmount.times(order.pricePerPod),
+  
+  // Metadata
   status: order.status,
+  createdAt: order.createdAt,
+  
+  // Computed
+  fillPct: order.filledAmount.div(order.totalAmount).times(100),
+
+  // Source
   order,
 });
 
@@ -105,19 +106,32 @@ const castListingToItem = (
   listing: PodListing,
   harvestableIndex: BigNumber
 ): FarmerMarketItem => ({
+  // Identifiers
   id: listing.id,
-  time: listing.createdAt,
   action: 'sell',
   type: 'listing',
+
+  // Pricing
   priceType: 'fixed', // FIX ME this is not correct. It is either 'fixed' or 'dynamic',
   pricePerPod: listing.pricePerPod,
-  remainingAmount: listing.remainingAmount,
-  placeInPodline: listing.index.minus(harvestableIndex),
-  numPods: listing.amount.times(listing.pricePerPod),
+
+  // Constraints
   expiry: listing.maxHarvestableIndex.minus(harvestableIndex),
+
+  // Amounts
+  remainingAmount: listing.remainingAmount,
+  numPods: listing.amount.times(listing.pricePerPod),
   fillPct: listing.filledAmount.div(listing.amount).times(100),
   totalBeans: listing.remainingAmount.times(listing.pricePerPod),
+  
+  // Metadata
   status: listing.status,
+  createdAt: listing.createdAt,
+  
+  // Computed
+  placeInPodline: listing.index.minus(harvestableIndex),
+
+  // Source
   listing,
 });
 

@@ -4,13 +4,22 @@ query HistoricalOrders(
   podOrders(where: {
     historyID_in: $historyIDs
   }, orderBy: updatedAt, orderDirection: desc) {
+    #// Identifiers
     id
     historyID
-    status
+
+    #// Pricing
+    pricePerPod
+
+    #// Constraints
+    maxPlaceInLine
+
+    #// Amounts
     podAmount
     podAmountFilled
-    pricePerPod
-    maxPlaceInLine
+    
+    #// Metadata
+    status
     updatedAt
   }
 }
