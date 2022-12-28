@@ -2,7 +2,6 @@ import { Stack, Typography } from '@mui/material';
 import { useAtomValue } from 'jotai';
 import React from 'react';
 import { Outlet, useParams } from 'react-router-dom';
-import SubActionSelect from '../Common/SubActionSelect';
 import { PodOrderType, podsOrderTypeAtom } from '../info/atom-context';
 import CreateListingV2 from '~/components/Market/PodsV2/Actions/Sell/CreateListing';
 import Soon from '~/components/Common/ZeroState/Soon';
@@ -22,7 +21,7 @@ const SellPods: React.FC<{}> = () => {
     <Stack>
       <Stack p={1} gap={1}>
         {/* buy or sell toggle */}
-        <SubActionSelect />
+        {/* <SubActionSelect /> */}
         {order && orderType === PodOrderType.FILL && (
           <>
             <StatHorizontal

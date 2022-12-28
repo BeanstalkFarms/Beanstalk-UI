@@ -33,11 +33,11 @@ const formatDate = (value: string | undefined) => {
   });
 };
 
-export const POD_MARKET_COLUMNS = {
-  date: (flex: number, align?: 'left' | 'right') =>
+export const MARKET_ACTIVITY_COLUMNS = {
+  date: (flex: number, align?: 'left' | 'right', headerName = 'DATE') =>
     ({
-      field: 'time',
-      headerName: 'DATE',
+      field: 'createdAt',
+      headerName: headerName,
       flex: flex,
       align: align || 'left',
       headerAlign: align || 'left',
@@ -237,10 +237,12 @@ export const POD_MARKET_COLUMNS = {
       align: align || 'left',
       headerAlign: align || 'left',
       renderCell: (params: GridRenderCellParams) => (
-        <Box display="inline-flex" sx={{ gap: 0.25, alignItems: 'center' }}>
-          <TokenIcon token={BEAN[1]} />
-          {displayBN(params.value || ZERO_BN)}
-        </Box>
+        params.value ? (
+          <Box display="inline-flex" sx={{ gap: 0.25, alignItems: 'center' }}>
+            <TokenIcon token={BEAN[1]} />
+            {displayBN(params.value || ZERO_BN)}
+          </Box>
+        ) : '-'
       ),
     } as GridColumns[number]),
 

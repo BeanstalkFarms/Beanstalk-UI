@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import BaseTable from './BaseTable';
-import { POD_MARKET_COLUMNS } from './columns/market-activity-columns';
+import { MARKET_ACTIVITY_COLUMNS } from './columns/market-activity-columns';
 import { FarmerMarketItem } from '~/hooks/farmer/market/useFarmerMarket';
 import MarketItemDetailsDialog from '../Actions/MarketItemDetailsDialog';
 
-const C = POD_MARKET_COLUMNS;
+const C = MARKET_ACTIVITY_COLUMNS;
 const columns = [
   C.date(1.5),
   C.action(0.9),

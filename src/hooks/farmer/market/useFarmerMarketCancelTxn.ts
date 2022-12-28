@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import BigNumber from 'bignumber.js';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import TransactionToast from '~/components/Common/TxnToast';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
@@ -12,6 +11,7 @@ import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { PodOrder } from '~/state/farmer/market';
 import { useFetchFarmerMarketItems } from './useFarmerMarket';
 import { useSigner } from '~/hooks/ledger/useSigner';
+import useAccount from '~/hooks/ledger/useAccount';
 
 export default function useFarmerMarketCancelTxn() {
   /// Helpers
@@ -21,6 +21,7 @@ export default function useFarmerMarketCancelTxn() {
   const [loading, setLoading] = useState(false);
 
   /// Ledger
+  const account = useAccount();
   const { data: signer } = useSigner();
   const beanstalk = useBeanstalkContract(signer);
 
@@ -28,7 +29,6 @@ export default function useFarmerMarketCancelTxn() {
   const [refetchFarmerField] = useFetchFarmerField();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
   const [refetchFarmerMarket] = useFetchFarmerMarket();
-  // subgraph queries
   const { fetch: fetchFarmerMarket } = useFetchFarmerMarketItems();
 
   /// Form
@@ -71,15 +71,27 @@ export default function useFarmerMarketCancelTxn() {
           success: 'Cancellation successful.',
         });
         try {
+          if (!account) throw new Error('Connect a wallet first.');
+
           setLoading(true);
           middleware.before();
           before?.();
-          const txn = await beanstalk.cancelPodOrder(
+
+          const params = [
             Bean.stringify(order.pricePerPod),
             Bean.stringify(order.maxPlaceInLine),
-            PODS.stringify(order.minFillAmount || new BigNumber(1)),
-            destination
-          );
+            PODS.stringify(order.minFillAmount || 0),
+          ] as const;
+
+          console.debug('Canceling order: ', [account, ...params]);
+
+          // Check: Verify these params actually hash to an on-chain order
+          // This prevents invalid orders from getting cancelled and emitting
+          // a bogus PodOrderCancelled event.
+          const verify = await beanstalk.podOrder(account, ...params);
+          if (!verify || verify.eq(0)) throw new Error('Order not found');
+          
+          const txn = await beanstalk.cancelPodOrder(...params, destination);
           txToast.confirming(txn);
 
           const receipt = await txn.wait();
@@ -98,7 +110,7 @@ export default function useFarmerMarketCancelTxn() {
         }
       })();
     },
-    [Bean, beanstalk, middleware, refetchFarmerBalances, refetchFarmerMarket, fetchFarmerMarket]
+    [account, middleware, Bean, beanstalk, refetchFarmerMarket, refetchFarmerBalances, fetchFarmerMarket]
   );
 
   return {

@@ -23,19 +23,19 @@ export type MarketEvent = {
   pricePerPod?: BigNumber;
   totalBeans?: BigNumber;
   totalValue?: BigNumber;
-  time?: number;
+  createdAt?: number;
   /** Txn hash */
   hash: string;
 };
 
-export const QUERY_AMOUNT = 50;
+export const QUERY_AMOUNT = 500;
 export const MAX_TIMESTAMP = '9999999999999'; // 166 455 351 3803
 
 /**
  * Load historical market activity. This merges raw event date from `eventsQuery`
  * with parsed data from `ordersQuery` and `listingsQuery`.
  */
-const useMarketctivityData = () => {
+const useMarketActivityData = () => {
   /// Beanstalk data
   const harvestableIndex = useHarvestableIndex();
   const getUSD = useSiloTokenToFiat();
@@ -144,17 +144,18 @@ const useMarketctivityData = () => {
               pricePerPod: pricePerPod,
               totalBeans,
               totalValue: getUSD(BEAN[1], totalBeans),
-              time: e.createdAt,
+              createdAt: e.createdAt,
             };
           }
           case 'PodOrderCancelled': {
             const podOrder = podOrdersById[e.historyID];
-            const totalBeans = toTokenUnitsBN(
-              podOrder?.podAmount, BEAN[1].decimals
-            )?.multipliedBy(
-              toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals)
-            );
-            return {
+            const podAmount = podOrder ? toTokenUnitsBN(podOrder.podAmount || 0, BEAN[1].decimals) : undefined;
+            const pricePerPod = podOrder ? toTokenUnitsBN(new BigNumber(podOrder.pricePerPod || 0), BEAN[1].decimals) : undefined;
+            const totalBeans = podAmount && pricePerPod
+              ? podAmount.multipliedBy(pricePerPod)
+              : undefined;
+              
+          return {
               id: e.id,
               hash: e.hash,
               entity: 'order' as const,
@@ -165,8 +166,8 @@ const useMarketctivityData = () => {
               placeInPodline: podOrder?.maxPlaceInLine > 0 ? `0 - ${displayBN(toTokenUnitsBN(podOrder?.maxPlaceInLine, BEAN[1].decimals))}` : '-',
               pricePerPod: toTokenUnitsBN(new BigNumber(podOrder?.pricePerPod || 0), BEAN[1].decimals),
               totalBeans,
-              totalValue: getUSD(BEAN[1], totalBeans),
-              time: e.createdAt,
+              totalValue: totalBeans ? getUSD(BEAN[1], totalBeans) : undefined,
+              createdAt: e.createdAt,
             };
           }
           case 'PodOrderFilled': {
@@ -185,7 +186,7 @@ const useMarketctivityData = () => {
               pricePerPod: pricePerPod,
               totalBeans,
               totalValue: getUSD(BEAN[1], totalBeans),
-              time: e.createdAt,
+              createdAt: e.createdAt,
             };
           }
           case 'PodListingCreated': {
@@ -203,7 +204,7 @@ const useMarketctivityData = () => {
               pricePerPod: pricePerPod,
               totalBeans,
               totalValue: getUSD(BEAN[1], totalBeans),
-              time: e.createdAt,
+              createdAt: e.createdAt,
             };
           }
           case 'PodListingCancelled': {
@@ -222,7 +223,7 @@ const useMarketctivityData = () => {
               pricePerPod: pricePerPod,
               totalBeans,
               totalValue: getUSD(BEAN[1], totalBeans),
-              time: e.createdAt,
+              createdAt: e.createdAt,
             };
           }
           case 'PodListingFilled': {
@@ -241,7 +242,7 @@ const useMarketctivityData = () => {
               pricePerPod: pricePerPod,
               totalBeans,
               totalValue: getUSD(BEAN[1], totalBeans),
-              time: e.createdAt,
+              createdAt: e.createdAt,
             };
           }
           default: {
@@ -289,4 +290,4 @@ const useMarketctivityData = () => {
   };
 };
 
-export default useMarketctivityData;
+export default useMarketActivityData;

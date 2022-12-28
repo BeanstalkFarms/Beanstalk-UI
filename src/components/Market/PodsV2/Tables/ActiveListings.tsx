@@ -3,9 +3,10 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import { DataGridProps } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
-import COLUMNS from './columns/market-columns';
+import MARKET_COLUMNS from './columns/market-columns';
 import BaseTable from './BaseTable';
 import { PodListing } from '~/state/farmer/market';
+import { MARKET_ACTIVITY_COLUMNS } from '~/components/Market/PodsV2/Tables/columns/market-activity-columns';
 
 const ActiveListings: React.FC<{
   data: ReturnType<typeof useMarketData>;
@@ -16,18 +17,20 @@ const ActiveListings: React.FC<{
 
   const columns: DataGridProps['columns'] = useMemo(() => {
     const c = [
-      COLUMNS.listingId(1, 'left'),
+      MARKET_ACTIVITY_COLUMNS.date(1, 'left', 'CREATED AT'),
+      //
+      MARKET_COLUMNS.listingId(1, 'left'),
       // index
-      COLUMNS.plotIndex(data.harvestableIndex, 1, 'left'),
+      MARKET_COLUMNS.plotIndex(data.harvestableIndex, 1, 'left'),
       // pricePerPod
-      COLUMNS.pricePerPod(1, 'left'),
+      MARKET_COLUMNS.pricePerPod(1, 'left'),
       // amount
-      COLUMNS.numPodsActive(0.7, 'left'),
+      MARKET_COLUMNS.numPodsActive(0.7, 'left'),
     ];
 
     if (!isMobile) {
       // maxHarvestableIndex
-      c.push(COLUMNS.expiry(data.harvestableIndex, 1, 'right'));
+      c.push(MARKET_COLUMNS.expiry(data.harvestableIndex, 1, 'right'));
     }
 
     return c;

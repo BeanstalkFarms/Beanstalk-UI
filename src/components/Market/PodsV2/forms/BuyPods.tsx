@@ -2,7 +2,6 @@ import { Stack, Typography } from '@mui/material';
 import { useAtomValue } from 'jotai';
 import React from 'react';
 import { Outlet, useParams } from 'react-router-dom';
-import SubActionSelect from '../Common/SubActionSelect';
 import { PodOrderType, podsOrderTypeAtom } from '../info/atom-context';
 import Soon from '~/components/Common/ZeroState/Soon';
 import CreateOrder from '~/components/Market/PodsV2/Actions/Buy/CreateOrder';
@@ -21,7 +20,7 @@ const BuyPods: React.FC<{}> = () => {
   return (
     <Stack p={1} gap={1}>
       {/* ORDER & FILL / LIST & FILL */}
-      <SubActionSelect />
+      {/* <SubActionSelect /> */}
       {/* Stats */}
       {listing && orderType === PodOrderType.FILL && (
         <div>
