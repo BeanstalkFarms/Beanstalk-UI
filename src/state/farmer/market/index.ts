@@ -146,6 +146,19 @@ export type PodListing = {
    */
   mode: FarmToMode;
 
+  /// ///////////// Constraints ////////////////
+
+  /**
+   * The absolute position in line at which this listing expires.
+   * @decimals 6
+   */
+  maxHarvestableIndex: BigNumber;
+
+  /**
+   *
+   */
+  minFillAmount: BigNumber;
+
   /// ///////////// Pricing ////////////////
 
   /**
@@ -163,19 +176,6 @@ export type PodListing = {
    * @decimals 6
    */
   pricePerPod: BigNumber;
-
-  /// ///////////// Constraints ////////////////
-
-  /**
-   * The absolute position in line at which this listing expires.
-   * @decimals 6
-   */
-  maxHarvestableIndex: BigNumber;
-
-  /**
-   *
-   */
-  minFillAmount: BigNumber;
 
   /// ///////////// Amounts ////////////////
 
@@ -245,25 +245,6 @@ export type PodOrder = {
    */
   account: string;
 
-  /// ///////////// Pricing ////////////////
-
-  /**
-   * 0 => FIXED, use pricePerPod
-   * 1 => DYNAMIC, use pricingFunction
-   * null => PodMarket-V1 didn't have price type
-   */
-  pricingType: PricingType | undefined | null;
-
-  /**
-   * The price per Pod, in Beans.
-   */
-  pricePerPod: BigNumber;
-
-  /**
-   * Market-V2 pricing function
-   */
-  pricingFunction: string | null;
-
   /// ///////////// Constraints ////////////////
 
   /**
@@ -277,6 +258,25 @@ export type PodOrder = {
    * transaction to be considered valid.
    */
   minFillAmount: BigNumber;
+
+  /// ///////////// Pricing ////////////////
+
+  /**
+   * null = V1 FIXED, use `pricePerPod`
+   * 0    = V2 FIXED, use `pricingFunction`
+   * 1    = V2 DYNAMIC, use `pricingFunction`
+   */
+  pricingType: PricingType | undefined | null;
+
+  /**
+   * The price per Pod, in Beans.
+   */
+  pricePerPod: BigNumber;
+
+  /**
+   * Market-V2 pricing function
+   */
+  pricingFunction: string | null;
 
   /// ///////////// Amounts ////////////////
 

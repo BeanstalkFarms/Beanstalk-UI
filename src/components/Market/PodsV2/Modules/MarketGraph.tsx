@@ -237,7 +237,7 @@ const Graph: FC<GraphProps> = ({
       y: yScale(listing.pricePerPod.toNumber()),
       // radius is plot size
       radius: calculateCircleRadius(
-        listing.amount.toNumber(),
+        listing.remainingAmount.toNumber(),
         maxPlotSize
       ),
     })),

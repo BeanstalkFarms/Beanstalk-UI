@@ -26,7 +26,7 @@ const useMarketData = () => {
   ), [harvestableIndex, listings]);
   const maxPlotSize = useMemo(() => (
     listings
-      ? Math.max(...listings.map((l) => new BigNumber(l.amount).toNumber()))
+      ? Math.max(...listings.map((l) => new BigNumber(l.remainingAmount).toNumber()))
       : 0
   ), [listings]);
 

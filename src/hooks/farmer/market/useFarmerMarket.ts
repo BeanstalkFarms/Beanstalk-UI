@@ -21,52 +21,55 @@ import useHarvestableIndex from '../../beanstalk/useHarvestableIndex';
 import { ZERO_BN } from '~/constants';
 
 export type FarmerMarketItem = {
-  id: any;
-  /**
-   * Date of the event
-   */
-  createdAt: string | number | undefined;
+  // Identifiers
+  id: string;
   action: 'buy' | 'sell';
   type: 'order' | 'listing';
+
+  // Pricing
   priceType: 'fixed' | 'dynamic';
   pricePerPod: BigNumber;
+
   /**
    * remaining amount of PODS
    */
   remainingAmount: BigNumber;
+
+  /**
+   * total amount of PODS
+   */
+  numPods: BigNumber;
+  
+  /**
+   * percentage filled
+   */
+  fillPct: BigNumber;
+
+  /**
+   * Total value in beans to 100% fill
+   */
+  totalBeans: BigNumber;
+
+  // Derived
+
   /**
    * type is 'order' => max place in line
    * type is 'listing' => index minus harvestable index
    */
   placeInPodline: BigNumber;
-  /**
-   * total amount of PODS
-   */
-  numPods: BigNumber;
+  
   /**
    * type is 'order' => 0 (orders don't have an expiry)
    * type is 'listing' => max harvestable index minus harvestable index
    */
   expiry: BigNumber;
-  /**
-   * percentage filled
-   */
-  fillPct: BigNumber;
-  /**
-   * Total value in beans to 100% fill
-   */
-  totalBeans: BigNumber;
-  /**
-   * status of the order or listing
-   */
+  
+  // Metadata
   status: MarketStatus;
-  /**
-   * Pod order
-   */
+  createdAt: string | number | undefined;
+
+  // Source
   order?: PodOrder;
-  /**
-   * Pod listing
-   */
   listing?: PodListing;
 };
 
@@ -120,8 +123,8 @@ const castListingToItem = (
 
   // Amounts
   remainingAmount: listing.remainingAmount,
-  numPods: listing.amount.times(listing.pricePerPod),
-  fillPct: listing.filledAmount.div(listing.amount).times(100),
+  numPods: listing.remainingAmount,
+  fillPct: listing.filledAmount.div(listing.remainingAmount).times(100),
   totalBeans: listing.remainingAmount.times(listing.pricePerPod),
   
   // Metadata
