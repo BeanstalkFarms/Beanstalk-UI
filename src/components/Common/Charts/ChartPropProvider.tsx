@@ -308,7 +308,7 @@ const getY1 = (d: SeriesPoint<BaseDataPoint>) => {
 const baseDataPoint = {
   season: true,
   date: true,
-  timestamp: true,
+  createdAt: true,
 } as const;
 
 /**

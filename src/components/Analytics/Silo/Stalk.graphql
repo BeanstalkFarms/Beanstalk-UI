@@ -15,7 +15,7 @@ query SeasonalStalk(
   ) { 
     id
     season
-    timestamp
-    totalStalk
+    createdAt
+    stalk
   }
 }

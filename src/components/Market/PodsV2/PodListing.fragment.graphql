@@ -1,0 +1,28 @@
+fragment PodListing on PodListing {
+  # Metadata
+  id
+  farmer {
+    id
+  }
+  historyID
+  index
+  createdAt
+  updatedAt
+  status
+  # Listing data
+  #originalIndex         # original index of the plot listed
+  index                 # current index of the plot listed
+  start                 # start within plot for listing
+  amount                # amount of pods listed
+  originalAmount        # total amount of original listing
+  remainingAmount       # remaining amount left to be filled
+  filledAmount          # amount filled on this listing
+  filled                # total amount filled from original listing
+  cancelledAmount       # amount cancelled on this listing
+  pricePerPod     
+  minFillAmount   
+  maxHarvestableIndex   # max harvestable index before expiration
+  pricingFunction       # MarketV2 pricing function
+  mode
+  pricingType           # MarketV2 pricing type
+}

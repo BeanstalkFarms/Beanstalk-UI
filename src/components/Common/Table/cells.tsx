@@ -10,7 +10,7 @@ import { PodListing, PodOrder } from '~/state/farmer/market';
 import TokenIcon from '../TokenIcon';
 import AddressIcon from '../AddressIcon';
 import Row from '~/components/Common/Row';
-import EntityIcon from '~/components/Market/Pods/EntityIcon';
+import EntityIcon from '~/components/Market/PodsV2/Common/EntityIcon';
 import { WellActivityData } from '~/components/Market/Wells/Tables';
 import { Token } from '~/classes';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
@@ -99,7 +99,7 @@ const COLUMNS = {
         placement="right"
         title="">
         <Row gap={1}>
-          <EntityIcon type="listing" />
+          <EntityIcon type="sell" />
           <Typography display={{ xs: 'none', md: 'block' }}>
             #{params.row.id}
           </Typography>
@@ -126,7 +126,7 @@ const COLUMNS = {
         placement="right"
         title="">
         <Row gap={1}>
-          <EntityIcon type="order" />
+          <EntityIcon type="buy" />
           <Typography display={{ xs: 'none', md: 'block' }}>
             {params.row.id.substring(0, 8)}
           </Typography>
@@ -170,7 +170,8 @@ const COLUMNS = {
     headerAlign: 'left',
     flex: 1,
     renderCell: (params: GridRenderCellParams<any, PodListing | PodOrder>) => {
-      const progress = params.row.filledAmount.div(params.row.totalAmount).times(100);
+      const total = 'totalAmount' in params.row ? params.row.totalAmount : params.row.originalAmount; 
+      const progress = params.row.filledAmount.div(total).times(100);
       return (
         <Row gap={1} width="100%">
           <Box sx={{ flex: 1 }}>
