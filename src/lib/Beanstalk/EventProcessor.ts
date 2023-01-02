@@ -657,10 +657,10 @@ export default class EventProcessor {
       id:               id,
       account:          event.args.account.toLowerCase(),
       maxPlaceInLine:   tokenBN(event.args.maxPlaceInLine, BEAN[1]),
-      totalAmount:      tokenBN(event.args.amount, BEAN[1]),
+      podAmount:      tokenBN(event.args.amount, BEAN[1]),
       pricePerPod:      tokenBN(event.args.pricePerPod, BEAN[1]),
-      remainingAmount:  tokenBN(event.args.amount, BEAN[1]),
-      filledAmount:     new BigNumber(0),
+      podAmountRemaining:  tokenBN(event.args.amount, BEAN[1]),
+      podAmountFilled:     new BigNumber(0),
       minFillAmount:    tokenBN(event.args.minFillAmount || 0, PODS),
       status:           MarketStatus.Active,
       pricingFunction:  event.args.pricingFunction,
@@ -680,11 +680,11 @@ export default class EventProcessor {
     if (!this.orders[id]) return;
 
     const amount = tokenBN(event.args.amount, BEAN[1]);
-    this.orders[id].filledAmount    = this.orders[id].filledAmount.plus(amount);
-    this.orders[id].remainingAmount = this.orders[id].totalAmount.minus(this.orders[id].filledAmount);
+    this.orders[id].podAmountFilled    = this.orders[id].podAmountFilled.plus(amount);
+    this.orders[id].podAmountRemaining = this.orders[id].podAmount.minus(this.orders[id].podAmountFilled);
 
     /// Update status
-    const isFilled = this.orders[id].remainingAmount.isEqualTo(0);
+    const isFilled = this.orders[id].podAmountRemaining.isEqualTo(0);
     if (isFilled) {
       this.orders[id].status = MarketStatus.Filled;
       // delete this.orders[id];

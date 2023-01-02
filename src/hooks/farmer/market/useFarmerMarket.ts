@@ -20,7 +20,7 @@ import { AppState } from '~/state';
 import useHarvestableIndex from '../../beanstalk/useHarvestableIndex';
 import { ZERO_BN } from '~/constants';
 
-export type FarmerMarketItem = {
+export type FarmerMarketEntity = {
   // Identifiers
   id: string;
   action: 'buy' | 'sell';
@@ -50,6 +50,10 @@ export type FarmerMarketItem = {
    */
   totalBeans: BigNumber;
 
+  // FIX
+  _podsTotalAmount: BigNumber;
+  _beanTotalAmmount: BigNumber;
+
   // Derived
 
   /**
@@ -75,7 +79,7 @@ export type FarmerMarketItem = {
 
 const QUERY_AMOUNT = 50;
 
-const castOrderToItem = (order: PodOrder): FarmerMarketItem => ({
+const castOrderToItem = (order: PodOrder): FarmerMarketEntity => ({
   // Identifiers
   id: order.id,
   action: 'buy',
@@ -88,18 +92,22 @@ const castOrderToItem = (order: PodOrder): FarmerMarketItem => ({
   // Constraints
   expiry: ZERO_BN, // pod orders don't expire
   placeInPodline: order.maxPlaceInLine,
+
+  //
+  _podsTotalAmount: order.podAmountRemaining,
+  _beanTotalAmmount: order.podAmount.times(order.pricePerPod),
   
   // Amounts
-  remainingAmount: order.remainingAmount,
-  numPods: order.totalAmount,
-  totalBeans: order.filledAmount.times(order.pricePerPod),
+  remainingAmount: order.podAmountRemaining,
+  numPods: order.podAmount,
+  totalBeans: order.podAmount.times(order.pricePerPod),
   
   // Metadata
   status: order.status,
   createdAt: order.createdAt,
   
   // Computed
-  fillPct: order.filledAmount.div(order.totalAmount).times(100),
+  fillPct: order.podAmountFilled.div(order.podAmount).times(100),
 
   // Source
   order,
@@ -108,7 +116,7 @@ const castOrderToItem = (order: PodOrder): FarmerMarketItem => ({
 const castListingToItem = (
   listing: PodListing,
   harvestableIndex: BigNumber
-): FarmerMarketItem => ({
+): FarmerMarketEntity => ({
   // Identifiers
   id: listing.id,
   action: 'sell',
@@ -120,6 +128,10 @@ const castListingToItem = (
 
   // Constraints
   expiry: listing.maxHarvestableIndex.minus(harvestableIndex),
+
+  //
+  _podsTotalAmount: listing.originalAmount,
+  _beanTotalAmmount: listing.originalAmount.times(listing.pricePerPod),
 
   // Amounts
   remainingAmount: listing.remainingAmount,
@@ -202,7 +214,7 @@ export default function useFarmerMarket() {
   const error = listingsQuery.error || ordersQuery.error;
 
   const farmerMarketItems = useMemo(() => {
-    const items: FarmerMarketItem[] = [];
+    const items: FarmerMarketEntity[] = [];
     if (isLoading) return items;
     const ordersById = keyBy(ordersData, 'id');
     const listingsById = keyBy(listingsData, 'id');

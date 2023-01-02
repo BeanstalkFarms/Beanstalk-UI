@@ -13,6 +13,7 @@ import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN, PODS } from '~/constants/tokens';
 import { ZERO_BN } from '~/constants';
 import { FontSize } from '~/components/App/muiTheme';
+import { FarmerMarketHistoryItem } from '~/hooks/farmer/market/useFarmerMarket2';
 
 const MARKET_COLUMNS = {
   listingId: (flex: number, align?: 'left' | 'right') =>
@@ -174,15 +175,14 @@ const MARKET_COLUMNS = {
           </Typography>
         </>
       ),
-    } as GridColumns[number]),
+    } as GridColumns<FarmerMarketHistoryItem>[number]),
 
-  numPods: (flex: number, align?: 'left' | 'right') =>
+  orderPodAmountRemaining: (flex: number, align?: 'left' | 'right') =>
     ({
-      field: 'totalAmount',
-      headerName: 'Amount',
+      field: 'podAmountRemaining',
+      headerName: 'AMOUNT',
       type: 'number',
       flex: flex,
-      // disableColumnMenu: true,
       align: align || 'right',
       headerAlign: align || 'right',
       renderCell: (params: GridRenderCellParams) => (
@@ -202,6 +202,7 @@ const MARKET_COLUMNS = {
           <Row gap={0.3}>
             <TokenIcon token={PODS} />
             <Typography sx={{ fontSize: 'inherit' }}>
+              {/* {JSON.stringify(params.row)} */}
               {displayBN(params.value)}
             </Typography>
           </Row>

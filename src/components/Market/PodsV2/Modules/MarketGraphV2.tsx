@@ -39,7 +39,7 @@ const SelectedOrdersTemp: React.FC<{}> = () => {
             <Row justifyContent="space-between">
               <Typography variant="body1">amount</Typography>
               <Typography variant="body1">
-                {displayBN(selectedOrder.remainingAmount)}
+                {displayBN(selectedOrder.podAmountRemaining)}
               </Typography>
             </Row>
           </Stack>
@@ -172,7 +172,7 @@ const PodsChart: React.FC<{}> = () => {
                   <Row justifyContent="space-between">
                     <Typography variant="body1">amount</Typography>
                     <Typography variant="body1">
-                      {displayBN(order.remainingAmount)}
+                      {displayBN(order.podAmountRemaining)}
                     </Typography>
                   </Row>
                 </Stack>

@@ -5,32 +5,32 @@ fragment PodListing on PodListing {
   historyID
   
   #// Configuration
-  index                 # current index of the plot listed
-  start                 # start within plot for listing
+  index
+  start
   mode
 
   #// Pricing
-  pricingType           # MarketV2 pricing type
+  pricingType
   pricePerPod           
-  pricingFunction       # MarketV2 pricing function
+  pricingFunction
 
   #// Constraints
-  maxHarvestableIndex   # max harvestable index before expiration
+  maxHarvestableIndex
   minFillAmount
 
-  #// Amounts
-  amount                # amount of pods listed
-  originalAmount        # total amount of original listing
-  remainingAmount       # remaining amount left to be filled
-  filledAmount          # amount filled on this listing
+  #// Amounts [Relative to Original]
+  originalIndex
+  originalAmount
+  filled
+
+  #// Amounts [Relative to Child]
+  amount
+  remainingAmount
+  filledAmount
 
   #// Metadata
   status
   createdAt
   updatedAt
-
-  #// Other
-  #originalIndex         # original index of the plot listed
-  #cancelledAmount       # amount cancelled on this listing
-  #filled                # total amount filled from original listing
+  #creationHash
 }

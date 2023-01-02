@@ -7,12 +7,12 @@ import {
 import { DateTime } from 'luxon';
 import { Box, Link, Typography } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import { displayBN, displayFullBN } from '~/util';
+import { displayBN, displayFullBN, MinBN } from '~/util';
 import { ZERO_BN } from '~/constants';
 import TokenIcon from '~/components/Common/TokenIcon';
-import { BEAN } from '~/constants/tokens';
+import { BEAN, PODS } from '~/constants/tokens';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import { FarmerMarketItem } from '~/hooks/farmer/market/useFarmerMarket';
+import { FarmerMarketEntity } from '~/hooks/farmer/market/useFarmerMarket';
 
 const statusColorMap = {
   active: BeanstalkPalette.logoGreen,
@@ -34,7 +34,13 @@ const formatDate = (value: string | undefined) => {
 };
 
 export const MARKET_ACTIVITY_COLUMNS = {
-  date: (flex: number, align?: 'left' | 'right', headerName = 'DATE') =>
+  // FIXME: move to market-columns
+  createdAt: (
+    flex: number,
+    align?: 'left' | 'right',
+    headerName = 'DATE',
+    hashKey = 'hash'
+  ) =>
     ({
       field: 'createdAt',
       headerName: headerName,
@@ -45,8 +51,8 @@ export const MARKET_ACTIVITY_COLUMNS = {
         formatDate(params.value),
       renderCell: (params: GridRenderCellParams) => (
         <Typography color="text.tertiary" sx={{ fontSize: 'inherit' }}>
-          {params.row.hash ? (
-            <Link href={`https://etherscan.io/tx/${params.row.hash}`} rel="noreferrer" target="_blank" underline="hover" color="text.tertiary">
+          {params.row[hashKey] ? (
+            <Link href={`https://etherscan.io/tx/${params.row[hashKey]}`} rel="noreferrer" target="_blank" underline="hover" color="text.tertiary">
               {params.formattedValue}
             </Link>
           ) : params.formattedValue}
@@ -54,7 +60,7 @@ export const MARKET_ACTIVITY_COLUMNS = {
       ),
     } as GridColumns[number]),
 
-  action: (flex: number, align?: 'left' | 'right') =>
+  labelAction: (flex: number, align?: 'left' | 'right') =>
     ({
       field: 'action',
       headerName: 'ACTION',
@@ -66,7 +72,7 @@ export const MARKET_ACTIVITY_COLUMNS = {
       ),
     } as GridColumns[number]),
 
-  type: (flex: number, align?: 'left' | 'right') =>
+  labelType: (flex: number, align?: 'left' | 'right') =>
     ({
       field: 'type',
       headerName: 'TYPE',
@@ -78,7 +84,8 @@ export const MARKET_ACTIVITY_COLUMNS = {
       ),
     } as GridColumns[number]),
 
-  entity: (flex: number, align?: 'left' | 'right') =>
+  // FIXME: why is 'entity' used
+  labelEntity: (flex: number, align?: 'left' | 'right') =>
     ({
       field: 'entity',
       headerName: 'TYPE',
@@ -90,17 +97,17 @@ export const MARKET_ACTIVITY_COLUMNS = {
       ),
     } as GridColumns[number]),
 
-  priceType: (flex: number, align?: 'left' | 'right') =>
-    ({
-      field: 'priceType',
-      headerName: 'PRICE TYPE',
-      flex: flex,
-      align: align || 'left',
-      headerAlign: align || 'left',
-      renderCell: (params: GridRenderCellParams) => (
-        <>{params.value.toUpperCase()}</>
-      ),
-    } as GridColumns[number]),
+  // pricingType: (flex: number, align?: 'left' | 'right') =>
+  //   ({
+  //     field: 'pricingType',
+  //     headerName: 'PRICE TYPE',
+  //     flex: flex,
+  //     align: align || 'left',
+  //     headerAlign: align || 'left',
+  //     renderCell: (params: GridRenderCellParams) => (
+  //       <>{params.value.toUpperCase()}</>
+  //     ),
+  //   } as GridColumns[number]),
 
   pricePerPod: (flex: number, align?: 'left' | 'right') =>
     ({
@@ -123,47 +130,53 @@ export const MARKET_ACTIVITY_COLUMNS = {
       ),
     } as GridColumns[number]),
 
-  numPods: (flex: number, align?: 'left' | 'right') =>
+  amountPods: (flex: number, align?: 'left' | 'right') =>
     ({
-      field: 'numPods',
+      field: 'amountPods',
       headerName: 'AMOUNT',
       flex: flex,
       align: align || 'left',
       headerAlign: align || 'left',
       renderCell: (params: GridRenderCellParams) => (
         params.value?.gt(0) ? (
-          <>{displayBN(params.value)} PODS</>
+          <>
+            <TokenIcon token={PODS} />
+            {displayBN(params.value)}
+          </>
         ) : (
           '-'
         )
       ),
     } as GridColumns[number]),
 
-  numPodsActive: (flex: number, align?: 'left' | 'right') =>
-    ({
-      field: 'remainingAmount',
-      headerName: 'AMOUNT',
-      flex: flex,
-      type: 'number',
-      align: align || 'left',
-      headerAlign: align,
-      renderCell: (params: GridRenderCellParams) => (
-        params.value?.gt(0) ? (
-          <>{displayBN(params.value)} PODS</>
-        ) : (
-          '-'
-        )
-      ),
-    } as GridColumns[number]),
+  // remainingAmountPods: (flex: number, align?: 'left' | 'right') =>
+  //   ({
+  //     field: 'remainingAmount',
+  //     headerName: 'PODS',
+  //     flex: flex,
+  //     type: 'number',
+  //     align: align || 'left',
+  //     headerAlign: align,
+  //     renderCell: (params: GridRenderCellParams) => (
+  //       params.value?.gt(0) ? (
+  //         <>
+  //           <TokenIcon token={PODS} />&nbsp;
+  //           {displayBN(params.value)}
+  //         </>
+  //       ) : (
+  //         '-'
+  //       )
+  //     ),
+  //   } as GridColumns[number]),
 
   placeInLine: (flex: number, align?: 'left' | 'right') =>
     ({
-      field: 'placeInPodline',
+      field: 'placeInLine',
       headerName: 'PLACE IN LINE',
       flex: flex,
       align: align || 'left',
       headerAlign: align || 'left',
-      renderCell: (params: GridRenderCellParams<any, FarmerMarketItem>) => {
+      renderCell: (params: GridRenderCellParams<any, FarmerMarketEntity>) => {
         if (!params.value || params.value.eq(0))  {
           return <>-</>;
         }
@@ -186,7 +199,7 @@ export const MARKET_ACTIVITY_COLUMNS = {
 
   activityPlaceInLine: (flex: number, align?: 'left' | 'right') =>
     ({
-      field: 'placeInPodline',
+      field: 'placeInLine',
       headerName: 'PLACE IN LINE',
       flex: flex,
       headerAlign: align || 'left',
@@ -196,7 +209,7 @@ export const MARKET_ACTIVITY_COLUMNS = {
   expiry: (flex: number, align?: 'left' | 'right') =>
     ({
       field: 'expiry',
-      headerName: 'EXPIRY @',
+      headerName: 'EXPIRES IN',
       flex: flex,
       align: align || 'left',
       type: 'string',
@@ -223,15 +236,15 @@ export const MARKET_ACTIVITY_COLUMNS = {
               color: params.value.gt(0) ? 'text.primary' : 'text.secondary',
             }}
           >
-            {progress.isNaN() ? '-%' : `${displayFullBN(progress, 2, 2)}%`}
+            {progress.isNaN() ? '-' : `${displayFullBN(MinBN(progress, new BigNumber(100)), 2, 2)}%`}
           </Typography>
         );
       },
     } as GridColumns[number]),
 
-  total: (flex: number, align?: 'left' | 'right') =>
+  amountBeans: (flex: number, align?: 'left' | 'right') =>
     ({
-      field: 'totalBeans',
+      field: 'amountBeans',
       headerName: 'TOTAL',
       flex: flex,
       align: align || 'left',

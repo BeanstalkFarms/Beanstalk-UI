@@ -3,18 +3,22 @@ import BaseTable from './BaseTable';
 import { MARKET_ACTIVITY_COLUMNS } from './columns/market-activity-columns';
 import { MarketEvent } from '~/hooks/beanstalk/useMarketActivityData';
 
-const C = MARKET_ACTIVITY_COLUMNS;
-
 const columns = [
-  C.date(1.5),
-  C.action(1),
-  C.entity(1),
-  C.pricePerPod(1),
-  C.numPods(1),
-  C.activityPlaceInLine(1),
-  C.total(0.75, 'left'),
+  MARKET_ACTIVITY_COLUMNS.createdAt(1.5),
+  MARKET_ACTIVITY_COLUMNS.labelAction(1),
+  MARKET_ACTIVITY_COLUMNS.labelEntity(1),
+  MARKET_ACTIVITY_COLUMNS.pricePerPod(1),
+  MARKET_ACTIVITY_COLUMNS.amountPods(1),
+  MARKET_ACTIVITY_COLUMNS.activityPlaceInLine(1),
+  MARKET_ACTIVITY_COLUMNS.amountBeans(0.75, 'left'),
 ];
 
+/**
+ * Displays a table of all activity on the Market, including:
+ * 
+ * Order, Listings
+ * Create, Fill, Cancel
+ */
 const MarketActivity: React.FC<{
   data: MarketEvent[] | undefined;
   initializing: boolean;

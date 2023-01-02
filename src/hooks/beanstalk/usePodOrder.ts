@@ -2,10 +2,10 @@ import { useMemo } from 'react';
 import { usePodOrderQuery } from '~/generated/graphql';
 import { Source } from '~/util';
 import { castPodOrder } from '~/state/farmer/market';
-import useFarmerOrders from '../farmer/useFarmerOrders';
+import useFarmerOrdersLedger from '../farmer/useFarmerOrdersLedger';
 
 const usePodOrder = (id: string | undefined) => {
-  const farmerOrders   = useFarmerOrders();
+  const farmerOrders   = useFarmerOrdersLedger();
   const query          = usePodOrderQuery({ variables: { id: id || '' }, skip: !id });
   const [data, source] = useMemo(() => {
     if (id && query.data?.podOrder) {

@@ -23,4 +23,5 @@ fragment PodOrder on PodOrder {
   status
   createdAt
   updatedAt
+  #creationHash
 }

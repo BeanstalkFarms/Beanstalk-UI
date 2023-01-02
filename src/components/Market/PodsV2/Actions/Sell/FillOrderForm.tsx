@@ -79,7 +79,7 @@ const FillOrderV2Form: FC<
       <Stack gap={1}>
         <PlotInputField
           plots={eligiblePlots}
-          max={podOrder.remainingAmount}
+          max={podOrder.podAmountRemaining}
           disabledAdvanced
           size="small"
         />

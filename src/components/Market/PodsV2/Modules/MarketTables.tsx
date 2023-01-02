@@ -14,12 +14,12 @@ import {
 } from '../info/atom-context';
 import DropdownIcon from '~/components/Common/DropdownIcon';
 import MarketActivityTable from '../Tables/MarketActivity';
-import FarmerMarketActivityTable from '../Tables/FarmerMarketActivity';
+import FarmerMarketActivityTable from '../Tables/FarmerOrders';
 import CondensedCard from '~/components/Common/Card/CondensedCard';
-import ActiveListings from '../Tables/ActiveListings';
-import ActiveOrders from '../Tables/ActiveOrders';
+import AllActiveListings from '../Tables/AllActiveListings';
+import AllActiveOrders from '../Tables/AllActiveOrders';
 import useMarketActivityData from '~/hooks/beanstalk/useMarketActivityData';
-import useFarmerMarket from '~/hooks/farmer/market/useFarmerMarket';
+import useFarmerMarket from '~/hooks/farmer/market/useFarmerMarket2';
 import useMarketData from '~/hooks/beanstalk/useMarketData';
 
 const sx = {
@@ -38,7 +38,7 @@ const sx = {
   },
 };
 
-const MarketActivity: React.FC<{}> = () => {
+const MarketTables: React.FC<{}> = () => {
   // STATE
   const [openState, setOpenState] = useAtom(marketBottomTabsAtom);
   const [tab, setTab] = useTabs();
@@ -48,9 +48,9 @@ const MarketActivity: React.FC<{}> = () => {
 
   // DATA
   // pull queries out of their respecitive hooks to avoid re-fetching
-  const { data: eventsData, harvestableIndex, fetchMoreData } = useMarketActivityData();
-  const { data: farmerMarket } = useFarmerMarket();
-  const marketData = useMarketData();
+  const marketData = useMarketData(); // "BUY NOW" and "SELL NOW"
+  const { data: farmerMarket } = useFarmerMarket(); // "YOUR ORDERS"
+  const { data: eventsData, harvestableIndex, fetchMoreData } = useMarketActivityData(); // "MARKETACTIVITY"
 
   // FUNCTIONS
   const openIfClosed = () => {
@@ -114,10 +114,10 @@ const MarketActivity: React.FC<{}> = () => {
       >
         <Stack sx={{ flex: 1, height: '100%' }}>
           {openState !== 0 && tab === 0 && (
-            <ActiveListings data={marketData} />
+            <AllActiveListings data={marketData} />
           )}
           {openState !== 0 && tab === 1 && (
-            <ActiveOrders data={marketData} />
+            <AllActiveOrders data={marketData} />
           )}
           {openState !== 0 && tab === 2 && (
             <FarmerMarketActivityTable
@@ -138,4 +138,4 @@ const MarketActivity: React.FC<{}> = () => {
   );
 };
 
-export default MarketActivity;
+export default MarketTables;

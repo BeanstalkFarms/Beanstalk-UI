@@ -170,8 +170,8 @@ const COLUMNS = {
     headerAlign: 'left',
     flex: 1,
     renderCell: (params: GridRenderCellParams<any, PodListing | PodOrder>) => {
-      const total = 'totalAmount' in params.row ? params.row.totalAmount : params.row.originalAmount; 
-      const progress = params.row.filledAmount.div(total).times(100);
+      const total = 'totalAmount' in params.row ? params.row.podAmount : params.row.originalAmount; 
+      const progress = params.row.podAmountFilled.div(total).times(100);
       return (
         <Row gap={1} width="100%">
           <Box sx={{ flex: 1 }}>

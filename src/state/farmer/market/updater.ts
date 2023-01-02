@@ -4,12 +4,11 @@ import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useChainId from '~/hooks/chain/useChainId';
 import useBlocks from '~/hooks/ledger/useBlocks';
 import useAccount from '~/hooks/ledger/useAccount';
-import EventProcessor from '~/lib/Beanstalk/EventProcessor';
 import useWhitelist from '~/hooks/beanstalk/useWhitelist';
 import useSeason from '~/hooks/beanstalk/useSeason';
 import { EventCacheName } from '../events2';
 import useEvents, { GetQueryFilters } from '../events2/updater';
-import { resetFarmerMarket, updateFarmerMarket } from './actions';
+import { resetFarmerMarket } from './actions';
 
 export const useFetchFarmerMarket = () => {
   /// Helpers
@@ -75,19 +74,19 @@ export const useFetchFarmerMarket = () => {
 
   /// Handlers
   const fetch = useCallback(async () => {
-    if (initialized) {
-      const allEvents = await fetchMarketEvents();
-      if (!allEvents) return;
-      const p = new EventProcessor(account, { season, whitelist });
-      p.ingestAll(allEvents);
+    // if (initialized) {
+    //   const allEvents = await fetchMarketEvents();
+    //   if (!allEvents) return;
+    //   const p = new EventProcessor(account, { season, whitelist });
+    //   p.ingestAll(allEvents);
 
-      // Update Field
-      dispatch(updateFarmerMarket({
-        listings: p.listings,
-        orders: p.orders,
-      }));
-    }
-  }, [dispatch, fetchMarketEvents, initialized, season, whitelist, account]);
+    //   // Update Field
+    //   dispatch(updateFarmerMarket({
+    //     listings: p.listings,
+    //     orders: p.orders,
+    //   }));
+    // }
+  }, []);
   
   const clear = useCallback(() => {
     console.debug('[farmer/silo/useFarmerSilo] CLEAR');

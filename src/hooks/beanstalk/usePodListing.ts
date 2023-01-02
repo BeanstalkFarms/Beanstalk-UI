@@ -2,11 +2,11 @@ import { useMemo } from 'react';
 import { usePodListingQuery } from '~/generated/graphql';
 import { Source } from '~/util';
 import { castPodListing } from '~/state/farmer/market';
-import useFarmerListings from '../farmer/useFarmerListings';
+import useFarmerListingsLedger from '../farmer/useFarmerListingsLedger';
 import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 
 const usePodListing = (index: string | undefined) => {
-  const farmerListings = useFarmerListings();
+  const farmerListings = useFarmerListingsLedger();
   const query          = usePodListingQuery({ variables: { index: index || '' }, skip: !index });
   const harvestableIndex = useHarvestableIndex();
   const [data, source] = useMemo(() => {

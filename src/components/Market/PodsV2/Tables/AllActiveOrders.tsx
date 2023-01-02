@@ -6,22 +6,17 @@ import { MARKET_ACTIVITY_COLUMNS } from './columns/market-activity-columns';
 import MARKET_COLUMNS from './columns/market-columns';
 
 const columns = [
-  MARKET_ACTIVITY_COLUMNS.date(1, 'left', 'CREATED AT'),
-  //
+  MARKET_ACTIVITY_COLUMNS.createdAt(1, 'left', 'CREATED AT', 'creationHash'),
   MARKET_COLUMNS.orderId(1, 'left'),
-  // maxPlaceInLine
   MARKET_COLUMNS.maxPlaceInLine(1, 'left'),
-  // pricePerPod
   MARKET_COLUMNS.pricePerPod(1, 'left'),
-  // totalAmount
-  MARKET_COLUMNS.numPods(1, 'right'),
+  MARKET_COLUMNS.orderPodAmountRemaining(1, 'right'),
 ];
 
-const ActiveOrders: React.FC<{
+const AllActiveOrders: React.FC<{
   data: ReturnType<typeof useMarketData>;
 }> = ({ data }) => {
   const navigate = useNavigate();
-
   return (
     <BaseTable
       columns={columns}
@@ -35,4 +30,4 @@ const ActiveOrders: React.FC<{
   );
 };
 
-export default ActiveOrders;
+export default AllActiveOrders;

@@ -19,7 +19,7 @@ import TxnAccordion from '~/components/Common/TxnAccordion';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import useFarmerListings from '~/hooks/farmer/useFarmerListings';
+import useFarmerListingsLedger from '~/hooks/farmer/useFarmerListingsLedger';
 import useFarmerPlots from '~/hooks/farmer/useFarmerPlots';
 import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import { ActionType } from '~/util/Actions';
@@ -92,7 +92,7 @@ const CreateListingV2Form: FC<
   const plot = values.plot;
 
   /// Data
-  const existingListings = useFarmerListings();
+  const existingListings = useFarmerListingsLedger();
 
   /// Derived
   const placeInLine = useMemo(

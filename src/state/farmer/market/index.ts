@@ -14,6 +14,9 @@ export enum PricingType {
   DYNAMIC = 1,
 }
 
+export type PricingTypes = PricingType | null;
+export type PricingFunctions = string | null;
+
 /**
  * Cast a Pod Listing from Subgraph form -> Redux form.
  * @param listing The PodListing as returned by the subgraph.
@@ -25,8 +28,7 @@ export const castPodListing = (
 ): PodListing => {
   const [account, id] = listing.id.split('-'); // Subgraph returns a conjoined ID
   const index = toTokenUnitsBN(id, BEAN[1].decimals);
-  const remainingAmount = toTokenUnitsBN(listing.remainingAmount, BEAN[1].decimals);
-  const originalAmount = toTokenUnitsBN(listing.originalAmount, BEAN[1].decimals);
+  const maxHarvestableIndex = toTokenUnitsBN(listing.maxHarvestableIndex, BEAN[1].decimals);
 
   return {
     // Identifiers
@@ -38,27 +40,32 @@ export const castPodListing = (
     start: toTokenUnitsBN(listing.start, BEAN[1].decimals),
     mode: listing.mode.toString() as FarmToMode, // FIXME: use numbers instead?
     
-    // Pricing
-    pricingType: (listing?.pricingType || null) as PricingType | null,
-    pricePerPod: toTokenUnitsBN(listing.pricePerPod, BEAN[1].decimals), // if pricingTyped == FIXED
-    pricingFunction: listing?.pricingFunction ?? null, // if pricingTyped == DYNAMIC
-    
     // Constraints
-    maxHarvestableIndex: toTokenUnitsBN(listing.maxHarvestableIndex, BEAN[1].decimals),
-    minFillAmount: toTokenUnitsBN(listing.minFillAmount || ZERO_BN, BEAN[1].decimals),
-
-    // Amounts
-    // amount: remainingAmount,
-    originalAmount: originalAmount,
-    filledAmount: toTokenUnitsBN(listing.filledAmount, BEAN[1].decimals),
-    remainingAmount: remainingAmount, // where is this used?
+    maxHarvestableIndex: maxHarvestableIndex,
+    minFillAmount: toTokenUnitsBN(listing.minFillAmount || ZERO_BN, BEAN[1].decimals), // default to zero for backwards compat
     
+    // Pricing
+    pricingType: (listing?.pricingType as PricingType) || null,
+    pricePerPod: toTokenUnitsBN(listing.pricePerPod, BEAN[1].decimals), // if pricingTyped == null | 0
+    pricingFunction: listing?.pricingFunction ?? null, // if pricingType == 1
+    
+    // Amounts [Relative to Original]
+    originalIndex: toTokenUnitsBN(listing.originalIndex, BEAN[1].decimals),
+    originalAmount: toTokenUnitsBN(listing.originalAmount, BEAN[1].decimals),
+    filled: toTokenUnitsBN(listing.filled, BEAN[1].decimals),
+    
+    // Amounts [Relative to Child]
+    amount: toTokenUnitsBN(listing.amount, BEAN[1].decimals),
+    remainingAmount: toTokenUnitsBN(listing.remainingAmount, BEAN[1].decimals),
+    filledAmount: toTokenUnitsBN(listing.filledAmount, BEAN[1].decimals),
+    
+    // Computed
+    placeInLine: index.minus(harvestableIndex),
+    expiry: maxHarvestableIndex.minus(harvestableIndex),
+
     // Metadata
     status: listing.status as MarketStatus,
     createdAt: listing?.createdAt || null,
-
-    // Computed
-    placeInLine: index.minus(harvestableIndex),
   };
 };
 
@@ -68,248 +75,135 @@ export const castPodListing = (
  * @returns Redux form of PodOrder.
  */
 export const castPodOrder = (order: PodOrderFragment): PodOrder => {
-  const pricePerPod = toTokenUnitsBN(order.pricePerPod, BEAN[1].decimals);
+  const podAmount = toTokenUnitsBN(order.podAmount, BEAN[1].decimals);
   const beanAmount = toTokenUnitsBN(order.beanAmount, BEAN[1].decimals);
-  const podAmount = (
-    new BigNumber(order.podAmount).eq(0)
-      ? beanAmount.div(pricePerPod)
-      : toTokenUnitsBN(order.podAmount, BEAN[1].decimals)
-  );
-  const podAmountFilled = toTokenUnitsBN(
-    order.podAmountFilled,
-    BEAN[1].decimals
-  );
+  const podAmountFilled = toTokenUnitsBN(order.podAmountFilled, BEAN[1].decimals);
+  const beanAmountFilled = toTokenUnitsBN(order.beanAmountFilled, BEAN[1].decimals);
 
-  return {
+  const data = {
     // Identifiers
     id: order.id,
     account: order.farmer.id,
 
     // Pricing
-    pricingType: (order?.pricingType || null) as PricingType | null, // if pricingTyped == FIXED
-    pricingFunction: order?.pricingFunction ?? null,  // if pricingTyped == DYNAMIC
-    pricePerPod: pricePerPod,
+    pricingType: (order.pricingType as PricingType) || null,
+    pricePerPod: toTokenUnitsBN(order.pricePerPod, BEAN[1].decimals),  // if pricingTyped == null | 0
+    pricingFunction: order?.pricingFunction ?? null, // if pricingType == 1
 
     // Constraints
     maxPlaceInLine: toTokenUnitsBN(order.maxPlaceInLine, BEAN[1].decimals),
-    minFillAmount: toTokenUnitsBN(order.minFillAmount || ZERO_BN, PODS.decimals),
+    minFillAmount: toTokenUnitsBN(order.minFillAmount || ZERO_BN, PODS.decimals), // default to zero for backwards compat
 
     // Amounts
-    totalAmount: podAmount,
-    filledAmount: podAmountFilled,
-    remainingAmount: podAmount.minus(podAmountFilled),
+    podAmount: podAmount,
+    podAmountFilled: podAmountFilled,
+    beanAmount: beanAmount,
+    beanAmountFilled: beanAmountFilled,
+
+    // Computed
+    podAmountRemaining: podAmount.minus(podAmountFilled),
+    beanAmountRemaining: beanAmount.minus(beanAmountFilled),
 
     // Metadata
     status: order.status as MarketStatus,
     createdAt: order.createdAt,
   };
+
+  console.debug('Casting order: ', order.id, data);
+
+  return data;
 };
 
+/**
+ * Unless otherwise specified, values here match the value returned by the subgraph
+ * in BigNumber form with the appropriate number of decimals.
+ * 
+ * See Beanstalk-Subgraph/schema.graphql for details.
+ */
 export type PodListing = {
   /// ///////////// Identifiers ////////////////
 
-  /**
-   * The ID of the Pod Listing. Equivalent to the `index` with no decimals.
-   */
   id: string;
-
-  /**
-   * The address of the Farmer that owns the Listing.
-   */
   account: string;
 
   /// ///////////// Configuration ////////////////
 
-  /**
-   * The absolute index of the listed Plot in the Pod Line.
-   *
-   * Measured from the front, so the Listing contains all Pods between
-   * (index) and (index + totalAmount).
-   *
-   * An example where the podLine is 50,000 but the index is 150,000:
-   *    0         the first Pod issued
-   *    100,000   harvestableIndex
-   *    150,000   index
-   *
-   * @decimals 6
-   */
   index: BigNumber;
-
-  /**
-   * The difference in index of where the listing starts selling pods from and where the plot starts
-   * @decimals 6
-   */
   start: BigNumber;
-
-  /**
-   * Where Beans are sent when the listing is filled.
-   */
   mode: FarmToMode;
 
   /// ///////////// Constraints ////////////////
 
-  /**
-   * The absolute position in line at which this listing expires.
-   * @decimals 6
-   */
   maxHarvestableIndex: BigNumber;
-
-  /**
-   *
-   */
   minFillAmount: BigNumber;
 
   /// ///////////// Pricing ////////////////
 
-  /**
-   *
-   */
-  pricingType: PricingType | undefined | null;
+  pricingType: PricingTypes;
+  pricePerPod: BigNumber; // Beans per Pod
+  pricingFunction: PricingFunctions;
 
-  /**
-   *
-   */
-  pricingFunction: string | null;
+  /// ///////////// Amounts [Relative to Original] ////////////////
 
-  /**
-   * Price per Pod, in Beans.
-   * @decimals 6
-   */
-  pricePerPod: BigNumber;
-
-  /// ///////////// Amounts ////////////////
-
-  /**
-   * The total number of Pods to sell from the Plot.
-   * This is the number of Pods that can still be bought.
-   * Every time it changes, `index` is updated.
-   */
-  // amount: BigNumber;
-
-  /**
-   * The total number of Pods originally intended to be sold.
-   * Fixed upon emission of `PodListingCreated`.
-   */
+  originalIndex: BigNumber;
   originalAmount: BigNumber;
+  filled: BigNumber;
 
-  /**
-   * The number of Pods left to sell.
-   *
-   * `remainingAmount = amount`
-   * `totalAmount > remainingAmount > 0`
-   */
+  /// ///////////// Amounts [Relative to Child] ////////////////
+
+  amount: BigNumber;
   remainingAmount: BigNumber;
-
-  /**
-   * The number of Pods that have been bought from this PodListing.
-   *
-   * `filledAmount = totalAmount - amount`
-   * `0 < filledAmount < totalAmount`
-   */
   filledAmount: BigNumber;
-
-  /// ///////////// Metadata ////////////////
-
-  /**
-   * Pod Listing status.
-   */
-  status: MarketStatus;
-
-  /**
-   * approximate timestamp in which the listing was created
-   * optional b/c it is only available from the subgraph
-   */
-  createdAt?: string;
 
   /// ///////////// Computed ////////////////
 
-  /**
-   * Computed value of `index - harvestableIndex` for each Listing.
-   */
   placeInLine: BigNumber;
+  expiry: BigNumber;
+
+  /// ///////////// Metadata ////////////////
+
+  status: MarketStatus;
+  createdAt?: string;
 };
 
+/**
+ * Unless otherwise specified, values here match the value returned by the subgraph
+ * in BigNumber form with the appropriate number of decimals.
+ * 
+ * See Beanstalk-Subgraph/schema.graphql for details.
+ */
 export type PodOrder = {
   /// ///////////// Identifiers ////////////////
 
-  /**
-   * The id of the Pod Order.
-   *
-   * Computed by hashing the Farmer’s address and the previous block’s hash. In the case of a collisions,
-   * Beanstalk will hash the ID until there is no collision.
-   */
   id: string;
-
-  /**
-   * Wallet address that created the Order.
-   */
   account: string;
 
   /// ///////////// Constraints ////////////////
 
-  /**
-   * The User is willing to buy any Pod that is before maxPlaceInLine at pricePerPod.
-   * As the Pod Line moves, this value stays the same because new Pods meet the criteria.
-   */
   maxPlaceInLine: BigNumber;
-
-  /**
-   * The minimum number of Pods that must be sold to this PodOrder for a 
-   * transaction to be considered valid.
-   */
   minFillAmount: BigNumber;
 
   /// ///////////// Pricing ////////////////
 
-  /**
-   * null = V1 FIXED, use `pricePerPod`
-   * 0    = V2 FIXED, use `pricingFunction`
-   * 1    = V2 DYNAMIC, use `pricingFunction`
-   */
-  pricingType: PricingType | undefined | null;
-
-  /**
-   * The price per Pod, in Beans.
-   */
-  pricePerPod: BigNumber;
-
-  /**
-   * Market-V2 pricing function
-   */
-  pricingFunction: string | null;
+  pricingType: PricingTypes;
+  pricePerPod: BigNumber; // Beans per Pod
+  pricingFunction: PricingFunctions;
 
   /// ///////////// Amounts ////////////////
 
-  /**
-   * The total number of Pods that can be sold to this PodOrder at 
-   * the moment of order creation.
-   */
-  totalAmount: BigNumber;
+  podAmount: BigNumber;
+  podAmountFilled: BigNumber;
+  beanAmount: BigNumber;
+  beanAmountFilled: BigNumber;
+  
+  /// ///////////// Computed ////////////////
 
-  /**
-   * The number of Pods left to be sold to this PodOrder.
-   * `remainingAmount = totalAmount - filledAmount`
-   * `totalAmount > remainingAmount > 0`
-   */
-  remainingAmount: BigNumber;
-
-  /**
-   * The number of Pods that have been sold to this PodOrder.
-   * `0 < filledAmount < totalAmount`
-   */
-  filledAmount: BigNumber;
+  podAmountRemaining: BigNumber;
+  beanAmountRemaining: BigNumber;
 
   /// ///////////// Metadata ////////////////
 
-  /**
-   * Pod Order status.
-   */
   status: MarketStatus;
-
-  /**
-   * Timestamp at which the order was created.
-   * Optional b/c it is only available from the subgraph
-   */
   createdAt?: string;
 };
 
