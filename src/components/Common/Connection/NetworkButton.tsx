@@ -65,7 +65,7 @@ const NetworkButton: React.FC<ButtonProps & {
         }}
       >
         {children || (
-          <Typography variant="bodyMedium" sx={{ display: { lg: 'block', xs: 'none' }, color: 'text.primary' }}>
+          <Typography variant="bodyMedium" sx={{ display: { xl: 'block', xs: 'none' }, color: 'text.primary' }}>
             {text}
           </Typography>
         )}
