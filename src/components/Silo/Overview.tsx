@@ -35,7 +35,6 @@ const depositStats = (s: BigNumber, v: BigNumber[]) => (
     )}
     subtitle={`Season ${s.toString()}`}
     amount={displayUSD(v[0])}
-    color="primary"
     amountIcon={undefined}
     gap={0.25}
     sx={{ ml: 0 }}
@@ -48,7 +47,6 @@ const seedsStats = (s: BigNumber, v: BigNumber[]) => (
     titleTooltip="Seeds are illiquid tokens that yield 1/10,000 Stalk each Season."
     subtitle={`Season ${s.toString()}`}
     amount={displayStalk(v[0])}
-    color="primary"
     sx={{ minWidth: 180, ml: 0 }}
     amountIcon={undefined}
     gap={0.25}
@@ -114,10 +112,7 @@ const Overview: FC<{
     <Module>
       <ModuleTabs value={tab} onChange={handleChange} sx={{ minHeight: 0 }}>
         <StyledTab label={
-          <ChipLabel name="Deposits">
-            {displayUSD(breakdown.states.deposited.value)}
-            {/* <Fiat value={breakdown.states.deposited.value} amount={breakdown.states.deposited.value} /> */}
-          </ChipLabel>
+          <ChipLabel name="Deposits">{displayUSD(breakdown.states.deposited.value)}</ChipLabel>
         } />
         <StyledTab label={
           <ChipLabel name="Stalk">

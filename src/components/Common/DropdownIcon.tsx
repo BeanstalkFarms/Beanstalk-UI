@@ -8,15 +8,17 @@ const DropdownIcon : FC<{
   open: boolean;
   mode?: 'vertical' | 'right-rotate',
   disabled?: boolean;
+  light?: boolean;
 } & IconProps> = ({
   disabled,
   open,
   mode = 'vertical',
+  light = false,
   sx
 }) => (
   <ExpandMoreIcon
     sx={{
-      color: disabled ? 'text.disabled' : 'text.primary',
+      color: disabled ? 'text.disabled' : light ? 'white' : 'text.primary',
       marginLeft: '-4px',
       marginRight: '-4px',
       // Flip the icon when the popover or drawer is open.

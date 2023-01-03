@@ -23,10 +23,10 @@ const GuideButton: FC<{ title: string; guides: Guide[] }> = (props) => {
         <Button
           onClick={show}
           variant="contained"
-          color="light"
+          color="primary"
           sx={{ p: 1, borderRadius: 100, minWidth: 0, width: '25px', height: '25px' }}
         >
-          <QuestionMarkIcon sx={{ fontSize: FontSize.sm }} />
+          <QuestionMarkIcon sx={{ fontSize: FontSize.sm, background: 'primary.main' }} />
         </Button>
       </Box>
       <GuideDialog open={isOpen} onClose={hide} {...props} />

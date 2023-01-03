@@ -252,12 +252,12 @@ const muiThemeBase: ThemeOptions = {
     divider: BeanstalkPalette.blue,
     primary: {
       main: BeanstalkPalette.theme.winter.primary,
-      dark: '#0074AF',
-      light: '#33B7FB',
+      // dark: '#0074AF',
+      light: BeanstalkPalette.theme.winter.primaryHover,
       contrastText: '#ffffff',
     },
     secondary: {
-      main: BeanstalkPalette.theme.winter.blueDark,
+      main: BeanstalkPalette.blue,
       contrastText: '#ffffff',
     },
     light: {
@@ -290,7 +290,7 @@ const muiThemeBase: ThemeOptions = {
     background: {
       default: BeanstalkPalette.theme.winter.iceBlue,
       paper: BeanstalkPalette.white,
-    },
+    }
   },
 
   /**
@@ -526,7 +526,7 @@ const muiThemeBase: ThemeOptions = {
             borderColor: 'divider',
             borderWidth: 1,
             borderStyle: 'solid',
-            backgroundColor: BeanstalkPalette.theme.winter.extraLight,
+            backgroundColor: BeanstalkPalette.lightestBlue,
             color: 'text.primary',
             p: 1,
             px: 1.25,
@@ -772,8 +772,8 @@ const muiThemeBase: ThemeOptions = {
           },
           style: (t) =>
             t.theme.unstable_sx({
-              color: BeanstalkPalette.logoGreen,
-              backgroundColor: BeanstalkPalette.lightestGreen,
+              color: 'primary.main',
+              backgroundColor: BeanstalkPalette.theme.winter.primaryHover,
             }),
         },
         {
