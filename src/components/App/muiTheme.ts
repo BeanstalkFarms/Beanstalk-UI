@@ -4,7 +4,6 @@ import {
   lighten,
   responsiveFontSizes,
   ThemeOptions,
-  Theme,
 } from '@mui/material/styles';
 import React from 'react';
 
@@ -218,8 +217,6 @@ export const FontWeight = {
 };
 
 export const XXLWidth = 1400;
-
-const sx = <T extends { theme: Theme }>(t: T) => t.theme.unstable_sx;
 
 // FIXME: changes to createTheme don't hot reload.
 const muiThemeBase: ThemeOptions = {
