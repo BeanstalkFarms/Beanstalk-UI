@@ -52,6 +52,9 @@ declare module '@mui/material/Button' {
     inverse: true;
     naked: true;
   }
+  interface ButtonPropsVariantOverrides {
+    'outlined-secondary': true
+  }
 }
 declare module '@mui/material/IconButton' {
   interface IconButtonPropsColorOverrides {
@@ -121,6 +124,9 @@ export const BeanstalkPalette = {
   lightGreen: '#E1F8E6',
   supportGreen: '#19873B',
   lightestGreen: '#EDF8EE',
+
+  winterGreen: '#1D8A79',
+
   // Blues
   blue: '#C1DEF2',
   textBlue: '#122540',
@@ -193,6 +199,30 @@ export const BeanstalkPalette = {
   },
 };
 
+export const AppPalette = {
+  divider: BeanstalkPalette.blue,
+  primary: {
+    main: BeanstalkPalette.theme.winter.primary,
+    light: '#4AA193',
+    dark: '#146054',
+    contrastText: BeanstalkPalette.white,
+    hover: hexToRgba('#1D8A79', 0.05),
+  },
+  secondary: {
+    main: BeanstalkPalette.blue,
+    light: '#CDE4F4',
+    dark: '#879BA9',
+    contrastText: BeanstalkPalette.black,
+  },
+  text: {
+    primary: BeanstalkPalette.textBlue,
+    secondary: BeanstalkPalette.lightGrey,
+    tertiary: BeanstalkPalette.lightestGrey,
+    grey: BeanstalkPalette.grey,
+    cta: '#3B3B3B',
+  }
+};
+
 export const PAGE_BORDER_COLOR = BeanstalkPalette.blue;
 
 export const IconSize = {
@@ -253,7 +283,7 @@ const muiThemeBase: ThemeOptions = {
     divider: BeanstalkPalette.blue,
     primary: {
       main: BeanstalkPalette.theme.winter.primary,
-      // dark: '#0074AF',
+      dark: '#146054',
       light: BeanstalkPalette.theme.winter.primaryHover,
       contrastText: '#ffffff',
     },
@@ -284,9 +314,8 @@ const muiThemeBase: ThemeOptions = {
     //
     text: {
       primary: BeanstalkPalette.textBlue,
-      secondary: BeanstalkPalette.lightGrey,
-      tertiary: BeanstalkPalette.lightestGrey,
-      disabled: BeanstalkPalette.grey
+      secondary: BeanstalkPalette.grey,
+      tertiary: BeanstalkPalette.lightGrey,
     },
     background: {
       default: BeanstalkPalette.theme.winter.iceBlue,
@@ -429,6 +458,20 @@ const muiThemeBase: ThemeOptions = {
             },
           },
         },
+        {
+          props: {
+            variant: 'outlined-secondary',
+          },
+          style: sx({
+            border: '1px solid',
+            color: 'text.primary',
+            borderColor: 'divider',
+            ':hover': {
+              borderColor: 'primary.main',
+              background: BeanstalkPalette.theme.winter.primaryHover
+            }
+          })
+        }
       ],
       defaultProps: {
         disableElevation: true,
