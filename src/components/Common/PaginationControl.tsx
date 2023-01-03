@@ -1,5 +1,4 @@
 import React from 'react';
-import { experimental_sx as sx } from '@mui/material/styles';
 
 import { Box, styled } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
@@ -11,7 +10,7 @@ import { FC } from '~/types';
 
 const PaginationItem = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isActive',
-})<{ isActive: boolean }>(({ isActive, theme }) => sx({
+})<{ isActive: boolean }>(({ isActive, theme }) => theme.unstable_sx({
   height: '5px',
   minWidth: '20px',
   width: '100%',
