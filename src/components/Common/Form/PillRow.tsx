@@ -34,16 +34,16 @@ const PillRow : FC<{
     {...props}
   >
     <Tooltip title={tooltip}>
-      <Typography color="text.tertiary" {...props.labelProps}>
+      <Typography color="text.secondary" {...props.labelProps}>
         {label}
       </Typography>
     </Tooltip>
     <Button
-      variant="outlined"
+      variant="outlined-secondary"
       onClick={onClick}
-      color="light"
+      color="secondary"
       sx={{
-        color: 'white',
+        color: 'text.primary',
         px: 0.75,
         py: 0.5,
         my: 0.5,

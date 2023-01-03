@@ -60,6 +60,7 @@ const PoolCard: FC<{
   return ButtonProps ? (
     <Button
       variant="outlined-secondary"
+      color="secondary"
       sx={{
         height: 'auto', // FIXME
         display: 'block',

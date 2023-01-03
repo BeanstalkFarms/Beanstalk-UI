@@ -31,9 +31,9 @@ const PaginationArrow: FC<{
     sx={{
       transform: `rotate(${isRightArrow ? '180' : '0'}deg)`,
       cursor: disabled ? 'default' : 'pointer',
-      color: disabled ? 'text.secondary' : 'text.primary',
+      color: disabled ? 'text.tertiary' : 'text.primary',
       ':hover': { 
-        color: disabled ? 'text.secondary' : 'primary.main'
+        color: disabled ? 'text.tertiary' : 'primary.main'
       }
     }}
   />

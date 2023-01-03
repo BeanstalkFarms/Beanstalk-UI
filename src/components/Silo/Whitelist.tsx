@@ -78,7 +78,7 @@ const Whitelist : FC<{
       >
         <Grid container alignItems="flex-end">
           <Grid item md={2.5} xs={4}>
-            <Typography color="text.disabled">Token</Typography>
+            <Typography color="text.secondary">Token</Typography>
           </Grid>
           <Grid item md={3} xs={0} display={{ xs: 'none', md: 'block' }}>
             <Row gap={0.25}>
@@ -90,7 +90,7 @@ const Whitelist : FC<{
                   </>
                 }
               >
-                <Typography color="text.disabled">Rewards</Typography>
+                <Typography color="text.secondary">Rewards</Typography>
               </Tooltip>
               &nbsp;
               <Tooltip
@@ -163,11 +163,11 @@ const Whitelist : FC<{
           </Grid>
           <Grid item md={1.5} xs={0} display={{ xs: 'none', md: 'block' }}>
             <Tooltip title="Total Value Deposited in the Silo.">
-              <Typography color="text.disabled">TVD</Typography>
+              <Typography color="text.secondary">TVD</Typography>
             </Tooltip>
           </Grid>
           <Grid item md={3.5} xs={0} display={{ xs: 'none', md: 'block' }}>
-            <Typography color="text.disabled">Amount Deposited</Typography>
+            <Typography color="text.secondary">Amount Deposited</Typography>
           </Grid>
           <Grid
             item
@@ -195,7 +195,7 @@ const Whitelist : FC<{
                 </>
               }
             >
-              <Typography color="text.disabled">Value Deposited</Typography>
+              <Typography color="text.secondary">Value Deposited</Typography>
             </Tooltip>
           </Grid>
         </Grid>

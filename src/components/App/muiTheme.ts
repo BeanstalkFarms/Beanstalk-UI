@@ -40,6 +40,7 @@ declare module '@mui/material/styles' {
 
   interface TypeText {
     tertiary?: string;
+    light?: string;
   }
 }
 
@@ -185,7 +186,7 @@ export const BeanstalkPalette = {
       listingRed: '#EC4067',
       primaryDark: '#0074AF',
       chart: {
-        primaryLight: '#9DDEFF',
+        primaryLight: '#D1E7E4',
         blue: '#6B9AC4',
         blueLight: '#D0D7DD',
         purple: '#4059AD',
@@ -316,6 +317,7 @@ const muiThemeBase: ThemeOptions = {
       primary: BeanstalkPalette.textBlue,
       secondary: BeanstalkPalette.grey,
       tertiary: BeanstalkPalette.lightGrey,
+      light: BeanstalkPalette.lightestGrey
     },
     background: {
       default: BeanstalkPalette.theme.winter.iceBlue,
@@ -448,6 +450,19 @@ const muiThemeBase: ThemeOptions = {
         },
         {
           props: {
+            variant: 'outlined',
+            color: 'light',
+          },
+          style: sx({
+            borderColor: BeanstalkPalette.lightestGrey,
+            ':hover': {
+              borderColor: 'primary.main',
+              background: BeanstalkPalette.theme.winter.primaryHover
+            }
+          })
+        },
+        {
+          props: {
             variant: 'contained',
             color: 'primary',
           },
@@ -461,6 +476,7 @@ const muiThemeBase: ThemeOptions = {
         {
           props: {
             variant: 'outlined-secondary',
+            color: 'secondary',
           },
           style: sx({
             border: '1px solid',
@@ -523,7 +539,7 @@ const muiThemeBase: ThemeOptions = {
           },
           style: sx({
             backgroundColor: 'rgba(253, 244, 231, 0.3)',
-            color: BeanstalkPalette.white,
+            color: 'text.primary',
           }),
         },
       ],
@@ -637,9 +653,9 @@ const muiThemeBase: ThemeOptions = {
       styleOverrides: {
         root: sx({
           borderRadius: 1,
-          '&.Mui-selected': {
-            backgroundColor: '#168AAD',
-          },
+          // '&.Mui-selected': {
+            // backgroundColor: '#168AAD',
+          // },
         }),
       },
     },
@@ -651,9 +667,12 @@ const muiThemeBase: ThemeOptions = {
           py: 1,
           // border: '0.5px solid',
           // borderColor: 'divider',
-          '&:hover': {
-            backgroundColor: BeanstalkPalette.theme.winter.selected,
-          },
+          // '&:hover': {
+          //   backgroundColor: hexToRgba(BeanstalkPalette.lightGrey, 0.5),
+          // },
+          // '&.Mui-selected': {
+          //   backgroundColor: BeanstalkPalette.theme.winter.primaryHover,
+          // }
         }),
       },
     },
@@ -699,7 +718,7 @@ const muiThemeBase: ThemeOptions = {
           fontWeight: 700,
           fontSize: '1rem', // 1*16 = 16px
           textTransform: 'none',
-          color: 'text.secondary',
+          color: 'text.tertiary',
           // fontSize: 20,
           '&:active': {},
           '&:hover': {
@@ -759,6 +778,7 @@ const muiThemeBase: ThemeOptions = {
         transitionDuration: 0,
         PaperProps: {
           sx: {
+            background: BeanstalkPalette.white,
             minWidth: { xs: '95%', sm: '400px' },
           },
         },
@@ -797,8 +817,8 @@ const muiThemeBase: ThemeOptions = {
             color: 'primary',
           },
           style: sx({
-            color: BeanstalkPalette.logoGreen,
-            backgroundColor: BeanstalkPalette.lightestGreen,
+            color: BeanstalkPalette.theme.winter.primary,
+            backgroundColor: hexToRgba(BeanstalkPalette.theme.winter.primary, 0.1),
           }),
         },
         {
@@ -807,7 +827,7 @@ const muiThemeBase: ThemeOptions = {
             color: 'secondary',
           },
           style: sx({
-            color: BeanstalkPalette.darkBlue,
+            color: BeanstalkPalette.textBlue,
             backgroundColor: BeanstalkPalette.lightestBlue,
           }),
         },
@@ -830,7 +850,7 @@ const muiThemeBase: ThemeOptions = {
           strokeDashoffset: '0px',
         }),
       },
-    },
+    }
   },
 };
 

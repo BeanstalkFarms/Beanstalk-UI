@@ -9,9 +9,9 @@ const EmbeddedCard: FC<CardProps> = ({ children, ...cardProps }) => (
     {...cardProps} 
     sx={{ 
       ...cardProps.sx, 
-      borderWidth: '.5px !important', 
+      border: 'none',
       borderRadius: '6px !important',
-      background: BeanstalkPalette.theme.winter.blueDark
+      background: BeanstalkPalette.white
     }}>
     {children}
   </Card>

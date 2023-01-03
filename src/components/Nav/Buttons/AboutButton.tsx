@@ -26,6 +26,7 @@ import useGlobal from '~/hooks/app/useGlobal';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const AboutButton: FC<ButtonProps> = ({ sx }) => {
   /// Theme
@@ -51,7 +52,7 @@ const AboutButton: FC<ButtonProps> = ({ sx }) => {
 
   /// Content
   const menuContent = (
-    <MenuList component={Card}>
+    <MenuList component={Card} sx={{ background: BeanstalkPalette.white }}>
       {/* Menu Items */}
       {/* <MenuItem
         item={{ title: 'Settings', path: '/settings' }}

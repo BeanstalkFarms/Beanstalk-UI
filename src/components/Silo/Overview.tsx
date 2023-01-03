@@ -85,7 +85,7 @@ const Overview: FC<{
         titleTooltip="Stalk is the governance token of the Beanstalk DAO. Stalk entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
         subtitle={`Season ${s.toString()}`}
         amount={displayStalk(v[0])}
-        color="primary"
+        color="text.primary"
         sx={{ minWidth: 220, ml: 0 }}
         gap={0.25}
       />
@@ -93,7 +93,7 @@ const Overview: FC<{
         title="Stalk Ownership"
         titleTooltip="Your current ownership of Beanstalk is displayed as a percentage. Ownership is determined by your proportional ownership of the total Stalk supply."
         amount={displayPercentage(ownership.multipliedBy(100))}
-        color="text.tertiary"
+        color="text.primary"
         gap={0.25}
         sx={{ minWidth: 200, ml: 0 }}
       />
@@ -101,7 +101,7 @@ const Overview: FC<{
         title="Stalk Grown per Day"
         titleTooltip="The number of Stalk your Seeds will grow every 24 Seasons based on your current Seed balance."
         amount={displayStalk(farmerSilo.seeds.active.times(STALK_PER_SEED_PER_SEASON).times(24))}
-        color="text.secondary"
+        color="text.primary"
         gap={0.25}
         sx={{ minWidth: 120, ml: 0 }}
       />

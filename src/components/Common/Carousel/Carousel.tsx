@@ -44,7 +44,7 @@ Carousel.Elements = function NewCarouselElements({
   sx,
   disableSlide = false,
   disableFade = false,
-  duration = 200,
+  duration = 300,
   override = undefined,
 }: CarouselElementsProps) {
   const transitions = useCarouselConfig({

@@ -34,6 +34,7 @@ import useGlobal from '~/hooks/app/useGlobal';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props }) => {
   const account = useAccount();
@@ -84,7 +85,7 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
   }
 
   const menu = (
-    <MenuList sx={{ minWidth: 250 }} component={Card}>
+    <MenuList sx={{ minWidth: 250, background: BeanstalkPalette.white }} component={Card}>
       <MenuItem onClick={() => {
         toggleMenuAnchor();
         setSettingsOpen(true);

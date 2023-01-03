@@ -33,7 +33,7 @@ const StyledAccordionSummary : FC<{
       <Typography
         variant="body1"
         sx={gradientText ? {
-          background: 'linear-gradient(90deg, #00A6FB 0%, #1DB584 46.87%, #84B51D 96.2%)',
+          background: 'linear-gradient(90deg, #1D8A79 0%, #7B61FF 36.58%, #1F78B4 96.2%)',
           '-webkit-background-clip': 'text',
           '-webkit-text-fill-color': 'transparent'
         } : null}
