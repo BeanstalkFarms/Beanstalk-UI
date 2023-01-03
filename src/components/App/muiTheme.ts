@@ -387,7 +387,7 @@ const muiThemeBase: ThemeOptions = {
       },
       styleOverrides: {
         root: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             borderWidth: 1,
             borderColor: 'divider',
           }),
@@ -396,7 +396,7 @@ const muiThemeBase: ThemeOptions = {
     MuiDivider: {
       styleOverrides: {
         root: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             borderColor: 'divider',
             borderWidth: 0.5,
           }),
@@ -433,7 +433,7 @@ const muiThemeBase: ThemeOptions = {
       },
       styleOverrides: {
         root: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             textTransform: 'none',
             // fontWeight: 'bold',
             '&.MuiButton-root:hover': {
@@ -447,29 +447,29 @@ const muiThemeBase: ThemeOptions = {
             lineHeight: '1.25rem',
           }),
         /// Sizes
-        sizeSmall: (t) => sx(t)({}),
+        sizeSmall: (t) => t.theme.unstable_sx({}),
         sizeMedium: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             py: 1,
             px: 1,
             height: '45px',
           }),
         sizeLarge: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             py: 1.5,
             px: 1.5,
             height: '60px',
           }),
         disabled: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             pointerEvents: 'auto',
           }),
         startIcon: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             marginLeft: 0, // prevent adornment from pulling close to right margin
           }),
         endIcon: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             marginRight: 0, // prevent adornment from pulling close to right margin
           }),
       },
@@ -481,7 +481,7 @@ const muiThemeBase: ThemeOptions = {
             color: 'warning',
           },
           style: (t) =>
-            sx(t)({
+            t.theme.unstable_sx({
               backgroundColor: 'rgba(253, 244, 231, 0.3)',
               color: BeanstalkPalette.white,
             }),
@@ -490,7 +490,7 @@ const muiThemeBase: ThemeOptions = {
       defaultProps: {},
       styleOverrides: {
         root: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             px: 1,
             alignItems: 'center',
             '& .MuiAlert-icon': {
@@ -499,7 +499,7 @@ const muiThemeBase: ThemeOptions = {
             },
           }),
         message: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             ml: 0.5,
           }),
       },
@@ -520,7 +520,7 @@ const muiThemeBase: ThemeOptions = {
       ],
       styleOverrides: {
         tooltip: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             typography: 'body1',
             borderColor: 'divider',
             borderWidth: 1,
@@ -539,7 +539,7 @@ const muiThemeBase: ThemeOptions = {
         elevation: 0,
       },
       styleOverrides: {
-        root: (t) => sx(t)({}),
+        root: (t) => t.theme.unstable_sx({}),
       },
       variants: [
         {
@@ -559,13 +559,13 @@ const muiThemeBase: ThemeOptions = {
         // in margin on AccordionSummary during expansion.
         // None of these work...
         root: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             minHeight: '0 !important',
             my: 0,
             px: 1,
           }),
         expanded: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             minHeight: '0 !important',
             m: [0, 0],
           }),
@@ -574,7 +574,7 @@ const muiThemeBase: ThemeOptions = {
     MuiAccordionDetails: {
       styleOverrides: {
         root: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             pt: 0,
             pb: 1,
           }),
@@ -602,7 +602,7 @@ const muiThemeBase: ThemeOptions = {
     MuiListItem: {
       styleOverrides: {
         root: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             borderRadius: 1,
             '&.Mui-selected': {
               backgroundColor: '#168AAD',
@@ -613,7 +613,7 @@ const muiThemeBase: ThemeOptions = {
     MuiListItemButton: {
       styleOverrides: {
         root: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             borderRadius: 1,
             px: 1,
             py: 1,
@@ -628,7 +628,7 @@ const muiThemeBase: ThemeOptions = {
     MuiList: {
       styleOverrides: {
         root: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             // p: 0
           }),
       },
@@ -644,7 +644,7 @@ const muiThemeBase: ThemeOptions = {
       },
       styleOverrides: {
         root: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             fontWeight: 'normal',
             mr: { xs: 2, md: 0 },
             minHeight: 0,
@@ -660,7 +660,7 @@ const muiThemeBase: ThemeOptions = {
       },
       styleOverrides: {
         root: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             p: 0,
             minHeight: 0,
             mr: 2,
@@ -735,13 +735,13 @@ const muiThemeBase: ThemeOptions = {
         },
       },
       styleOverrides: {
-        root: (t) => sx(t)({}),
+        root: (t) => t.theme.unstable_sx({}),
       },
     },
     MuiDialogContent: {
       styleOverrides: {
         root: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             px: 1,
             // pb: 0.5,
           }),
@@ -750,7 +750,7 @@ const muiThemeBase: ThemeOptions = {
     MuiContainer: {
       styleOverrides: {
         root: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             paddingTop: {
               md: 4,
               xs: 2,
@@ -770,7 +770,7 @@ const muiThemeBase: ThemeOptions = {
             color: 'primary',
           },
           style: (t) =>
-            sx(t)({
+            t.theme.unstable_sx({
               color: BeanstalkPalette.logoGreen,
               backgroundColor: BeanstalkPalette.lightestGreen,
             }),
@@ -781,7 +781,7 @@ const muiThemeBase: ThemeOptions = {
             color: 'secondary',
           },
           style: (t) =>
-            sx(t)({
+            t.theme.unstable_sx({
               color: BeanstalkPalette.darkBlue,
               backgroundColor: BeanstalkPalette.lightestBlue,
             }),
@@ -789,7 +789,7 @@ const muiThemeBase: ThemeOptions = {
       ],
       styleOverrides: {
         root: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             fontWeight: 'normal',
             borderRadius: 1,
           }),
@@ -801,7 +801,7 @@ const muiThemeBase: ThemeOptions = {
           animationDuration: '0.8s',
         },
         circleIndeterminate: (t) =>
-          sx(t)({
+          t.theme.unstable_sx({
             animation: 'none',
             strokeDasharray: '80px, 200px',
             strokeDashoffset: '0px',
