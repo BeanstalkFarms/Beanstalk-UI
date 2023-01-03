@@ -6,12 +6,12 @@ import { Pool } from '~/classes';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { ZERO_BN } from '~/constants';
 import Row from '~/components/Common/Row';
-import { BeanstalkPalette } from '../App/muiTheme';
 
 /**
  * Displays data about a Pool containing Beans and other assets.
  */
 import { FC } from '~/types';
+import { BeanstalkPalette } from '../App/muiTheme';
 
 const PoolCard: FC<{
   pool: Pool;
@@ -70,14 +70,15 @@ const PoolCard: FC<{
   return ButtonProps ? (
     <Button
       variant="outlined"
-      color="secondary"
+      color="light"
       sx={{
         height: 'auto', // FIXME
         display: 'block',
         color: 'text.primary',
-        borderColor: BeanstalkPalette.theme.winter.divider,
+        borderColor: 'divider',
         ':hover': {
           borderColor: 'primary.main',
+          background: BeanstalkPalette.theme.winter.primaryHover
         }
       }}
       {...ButtonProps}

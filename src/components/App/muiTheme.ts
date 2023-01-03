@@ -162,6 +162,7 @@ export const BeanstalkPalette = {
     },
     winter: {
       primary: '#1D8A79',
+      primaryHover: hexToRgba('#1D8A79', 0.05),
       light: '#177694',
       paleBlue: '#01497C',
       iceBlue: '#A7CBE7',
@@ -248,7 +249,7 @@ const muiThemeBase: ThemeOptions = {
    * https://mui.com/material-ui/customization/palette/
    */
   palette: {
-    divider: BeanstalkPalette.theme.winter.divider,
+    divider: BeanstalkPalette.blue,
     primary: {
       main: BeanstalkPalette.theme.winter.primary,
       dark: '#0074AF',
@@ -261,7 +262,7 @@ const muiThemeBase: ThemeOptions = {
     },
     light: {
       main: BeanstalkPalette.white,
-      contrastText: BeanstalkPalette.black,
+      contrastText: BeanstalkPalette.textBlue,
     },
     inverse: {
       main: BeanstalkPalette.white,
@@ -284,10 +285,11 @@ const muiThemeBase: ThemeOptions = {
       primary: BeanstalkPalette.textBlue,
       secondary: BeanstalkPalette.lightGrey,
       tertiary: BeanstalkPalette.lightestGrey,
+      disabled: BeanstalkPalette.grey
     },
     background: {
       default: BeanstalkPalette.theme.winter.iceBlue,
-      paper: BeanstalkPalette.offWhite,
+      paper: BeanstalkPalette.white,
     },
   },
 
@@ -419,8 +421,8 @@ const muiThemeBase: ThemeOptions = {
           },
           style: {
             '&.Mui-disabled': {
-              backgroundColor: '#C1C1C1',
-              color: BeanstalkPalette.grey,
+              backgroundColor: BeanstalkPalette.lightestGrey,
+              color: BeanstalkPalette.lightGrey,
             },
           },
         },

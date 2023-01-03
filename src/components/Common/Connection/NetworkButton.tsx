@@ -35,7 +35,7 @@ const NetworkButton: React.FC<ButtonProps & {
       <Button
         disableFocusRipple
         variant="contained"
-        color="secondary"
+        color="light"
         startIcon={showIcons && (
           <TokenIcon
             token={ETH[SupportedChainId.MAINNET]}

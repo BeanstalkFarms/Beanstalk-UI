@@ -12,7 +12,7 @@ import { useTheme } from '@mui/material/styles';
 import DropdownIcon from '~/components/Common/DropdownIcon';
 import useToggle from '~/hooks/display/useToggle';
 import useAnchor from '~/hooks/display/useAnchor';
-import { PAGE_BORDER_COLOR } from '~/components/App/muiTheme';
+import { BeanstalkPalette, PAGE_BORDER_COLOR } from '~/components/App/muiTheme';
 
 /**
  * Show a "Folder". A folder is a button that shows a popup;
@@ -93,7 +93,7 @@ const FolderMenu: FC<{
   const content = (
     <Box>
       <Button
-        color="secondary"
+        color="light"
         startIcon={startIcon}
         endIcon={<DropdownIcon open={isOpen} />}
         onClick={isOpen ? close : open}
@@ -103,7 +103,6 @@ const FolderMenu: FC<{
         }}
         {...buttonProps}
         sx={{
-          color: 'text.primary',
           // Fully rounded by default; when open, remove
           // the bottom rounding to look like a "tab".
           borderBottomLeftRadius: popoverOpen ? 0 : undefined,
@@ -113,11 +112,10 @@ const FolderMenu: FC<{
           borderWidth: 1,
           boxSizing: 'border-box',
           borderStyle: 'solid',
-          // border: 'none',
-          borderColor: popoverOpen ? PAGE_BORDER_COLOR : 'secondary.main',
+          borderColor: popoverOpen ? 'divider' : 'white',
           // Keep this white so we can make it look like the
           // button is "expanding" into a Box when you click it.
-          borderBottomColor: 'secondary.main',
+          borderBottomColor: 'white',
           // Without disabling the transition, the border fades
           // in/out and looks weird.
           transition: 'none !important',
@@ -127,7 +125,8 @@ const FolderMenu: FC<{
           // Positioning and other styles.
           ...buttonProps.sx,
           '&:hover': {
-            backgroundColor: 'secondary.main'
+            borderColor: 'divider',
+            borderBottomColor: 'white'
           }
         }}
       >
@@ -142,13 +141,14 @@ const FolderMenu: FC<{
         anchorEl={anchorEl}
         placement="bottom-start"
         disablePortal
-        sx={{
-          zIndex,
-        }}
+        nonce={undefined}
+        onResize={undefined}
+        onResizeCapture={undefined}
+        sx={{ zIndex }}
       >
         <Box
           sx={(_theme) => ({
-            background: _theme.palette.secondary.main,
+            background: BeanstalkPalette.white,
             width: popperWidth !== undefined ? popperWidth : '325px',
             borderBottomLeftRadius: _theme.shape.borderRadius,
             borderBottomRightRadius: _theme.shape.borderRadius,

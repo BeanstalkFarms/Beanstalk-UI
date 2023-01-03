@@ -65,7 +65,7 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
       <>
         <Button
           variant="contained"
-          color="primary"
+          color="light"
           {...props}
           onClick={showWallets}
         >
@@ -184,7 +184,7 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
       <Button
         disableFocusRipple
         variant="contained"
-        color="secondary"
+        color="light"
         startIcon={<AddressIcon address={account} />}
         endIcon={<DropdownIcon open={menuVisible} />}
         {...props}

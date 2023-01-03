@@ -68,7 +68,7 @@ const AboutButton: FC<ButtonProps> = ({ sx }) => {
           target="_blank"
           rel="noreferrer"
           variant="contained"
-          color="secondary"
+          color="light"
           sx={{ py: 0.9 }}
         >
           <Row spacing={1}>
@@ -99,7 +99,7 @@ const AboutButton: FC<ButtonProps> = ({ sx }) => {
        */}
       <NavDrawer open={open && isMedium} hideDrawer={hide} />
       <Button
-        color="secondary"
+        color="light"
         variant="contained"
         aria-label="open drawer"
         onClick={show}
