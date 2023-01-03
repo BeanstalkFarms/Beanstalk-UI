@@ -1,7 +1,6 @@
 import React from 'react';
-import { experimental_sx as sx } from '@mui/material/styles';
 
-import { Box, styled } from '@mui/material';
+import { Box, styled, experimental_sx as sx } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 
 import { BeanstalkPalette } from '../App/muiTheme';
