@@ -1,7 +1,6 @@
 import { deepmerge } from '@mui/utils';
 import {
   createTheme,
-  // experimental_sx as sx,
   lighten,
   responsiveFontSizes,
   ThemeOptions,
