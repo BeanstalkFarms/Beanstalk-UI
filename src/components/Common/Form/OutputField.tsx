@@ -18,11 +18,11 @@ const OutputField : FC<{
   <Row
     sx={{
       // backgroundColor: isNegative ? '#FFE5DF' : '#F6FAFE',
-      backgroundColor: BeanstalkPalette.theme.winter.blueLight, 
+      backgroundColor: BeanstalkPalette.lightestBlue, 
       borderRadius: 1,
       px: size === 'small' ? 1 : 2,
       py: size === 'small' ? 0.5 : 2,
-      color: isNegative ? BeanstalkPalette.theme.winter.error : 'inherit',
+      color: isNegative ? BeanstalkPalette.washedRed : 'inherit',
       height: size === 'small' ? '42px' : '70px',
       ...sx
     }}

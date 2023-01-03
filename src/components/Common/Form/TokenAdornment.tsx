@@ -70,7 +70,7 @@ const TokenAdornment: FC<TokenAdornmentProps> = ({
               }}
             />
           ) : null}
-          <Box sx={{ color: 'text.tertiary' }}>
+          <Box sx={{ color: 'text.primary' }}>
             <Typography variant={textVariant} fontWeight="fontWeightRegular">
               {buttonLabel || token.symbol}
             </Typography>
@@ -79,7 +79,8 @@ const TokenAdornment: FC<TokenAdornmentProps> = ({
             <KeyboardArrowDownIcon
               sx={{
                 fontSize: downArrowIconSize || 18,
-                color: hexToRgba(BeanstalkPalette.lightestGrey, 0.87)
+                color: hexToRgba(BeanstalkPalette.textBlue, 0.87)
+                // color: hexToRgba(BeanstalkPalette.theme.winter.primary, 0.87)
               }}
             />
           )}

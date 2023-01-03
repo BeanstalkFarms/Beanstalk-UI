@@ -289,7 +289,7 @@ const muiThemeBase: ThemeOptions = {
     },
     background: {
       default: BeanstalkPalette.theme.winter.iceBlue,
-      paper: BeanstalkPalette.white,
+      paper: BeanstalkPalette.offWhite,
     }
   },
 
