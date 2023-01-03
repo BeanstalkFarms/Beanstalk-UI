@@ -122,6 +122,7 @@ export const BeanstalkPalette = {
   lightestGreen: '#EDF8EE',
   // Blues
   blue: '#C1DEF2',
+  textBlue: '#122540',
   lightBlue: '#DAEBF7',
   lightestBlue: '#F6FAFE',
   darkBlue: '#1F78B4',
@@ -133,6 +134,7 @@ export const BeanstalkPalette = {
   lightGrey: '#9E9E9E',
   lightestGrey: '#DDDDDD',
   white: '#fff',
+  offWhite: '#FCFCFC',
   black: '#333',
   // Reds
   // #FBE6E0
@@ -159,9 +161,10 @@ export const BeanstalkPalette = {
       lightBrown: '#E5D7C8',
     },
     winter: {
-      primary: '#00A6FB',
+      primary: '#1D8A79',
       light: '#177694',
       paleBlue: '#01497C',
+      iceBlue: '#A7CBE7',
       divider: '#002855',
       blueDark: '#023E7D',
       extraLight: '#168AAD',
@@ -188,8 +191,7 @@ export const BeanstalkPalette = {
   },
 };
 
-export const PAGE_BG_COLOR = BeanstalkPalette.theme.winter.light;
-export const PAGE_BORDER_COLOR = BeanstalkPalette.theme.winter.blueLight;
+export const PAGE_BORDER_COLOR = BeanstalkPalette.blue;
 
 export const IconSize = {
   xs: 14,
@@ -279,13 +281,13 @@ const muiThemeBase: ThemeOptions = {
     },
     //
     text: {
-      primary: BeanstalkPalette.white,
+      primary: BeanstalkPalette.textBlue,
       secondary: BeanstalkPalette.lightGrey,
       tertiary: BeanstalkPalette.lightestGrey,
     },
     background: {
-      default: '#016586',
-      paper: BeanstalkPalette.theme.winter.paleBlue,
+      default: BeanstalkPalette.theme.winter.iceBlue,
+      paper: BeanstalkPalette.offWhite,
     },
   },
 
