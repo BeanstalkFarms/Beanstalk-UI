@@ -4,6 +4,7 @@ import {
   lighten,
   responsiveFontSizes,
   ThemeOptions,
+  experimental_sx as sx,
 } from '@mui/material/styles';
 import React from 'react';
 
@@ -383,20 +384,22 @@ const muiThemeBase: ThemeOptions = {
         color: 'secondary',
       },
       styleOverrides: {
-        root: (t) =>
-          t.theme.unstable_sx({
-            borderWidth: 1,
-            borderColor: 'divider',
-          }),
+        root: sx({
+          borderWidth: 1,
+          borderColor: 'divider',
+        }),
       },
     },
     MuiDivider: {
       styleOverrides: {
-        root: (t) =>
-          t.theme.unstable_sx({
-            borderColor: 'divider',
-            borderWidth: 0.5,
-          }),
+        root: sx({
+          borderColor: 'divider',
+          borderWidth: 0.5,
+        }),
+        // root: sx({
+        //   borderColor: 'divider',
+        //   borderWidth: 0.5,
+        // }),
       },
     },
     MuiButton: {
@@ -429,46 +432,40 @@ const muiThemeBase: ThemeOptions = {
         disableRipple: true,
       },
       styleOverrides: {
-        root: (t) =>
-          t.theme.unstable_sx({
-            textTransform: 'none',
-            // fontWeight: 'bold',
-            '&.MuiButton-root:hover': {
-              // backgroundColor: BeanstalkPalette.supportGreen,
-            },
-            '&.MuiLoadingButton-root:hover': {
-              // backgroundColor: BeanstalkPalette.supportGreen,
-            },
-            fontWeight: 700,
-            fontSize: '1rem',
-            lineHeight: '1.25rem',
-          }),
+        root: sx({
+          textTransform: 'none',
+          // fontWeight: 'bold',
+          '&.MuiButton-root:hover': {
+            // backgroundColor: BeanstalkPalette.supportGreen,
+          },
+          '&.MuiLoadingButton-root:hover': {
+            // backgroundColor: BeanstalkPalette.supportGreen,
+          },
+          fontWeight: 700,
+          fontSize: '1rem',
+          lineHeight: '1.25rem',
+        }),
         /// Sizes
-        sizeSmall: (t) => t.theme.unstable_sx({}),
-        sizeMedium: (t) =>
-          t.theme.unstable_sx({
-            py: 1,
-            px: 1,
-            height: '45px',
-          }),
-        sizeLarge: (t) =>
-          t.theme.unstable_sx({
-            py: 1.5,
-            px: 1.5,
-            height: '60px',
-          }),
-        disabled: (t) =>
-          t.theme.unstable_sx({
-            pointerEvents: 'auto',
-          }),
-        startIcon: (t) =>
-          t.theme.unstable_sx({
-            marginLeft: 0, // prevent adornment from pulling close to right margin
-          }),
-        endIcon: (t) =>
-          t.theme.unstable_sx({
-            marginRight: 0, // prevent adornment from pulling close to right margin
-          }),
+        sizeSmall: sx({}),
+        sizeMedium: sx({
+          py: 1,
+          px: 1,
+          height: '45px',
+        }),
+        sizeLarge: sx({
+          py: 1.5,
+          px: 1.5,
+          height: '60px',
+        }),
+        disabled: sx({
+          pointerEvents: 'auto',
+        }),
+        startIcon: sx({
+          marginLeft: 0, // prevent adornment from pulling close to right margin
+        }),
+        endIcon: sx({
+          marginRight: 0, // prevent adornment from pulling close to right margin
+        }),
       },
     },
     MuiAlert: {
@@ -477,28 +474,25 @@ const muiThemeBase: ThemeOptions = {
           props: {
             color: 'warning',
           },
-          style: (t) =>
-            t.theme.unstable_sx({
-              backgroundColor: 'rgba(253, 244, 231, 0.3)',
-              color: BeanstalkPalette.white,
-            }),
+          style: sx({
+            backgroundColor: 'rgba(253, 244, 231, 0.3)',
+            color: BeanstalkPalette.white,
+          }),
         },
       ],
       defaultProps: {},
       styleOverrides: {
-        root: (t) =>
-          t.theme.unstable_sx({
-            px: 1,
-            alignItems: 'center',
-            '& .MuiAlert-icon': {
-              m: 0,
-              p: 0,
-            },
-          }),
-        message: (t) =>
-          t.theme.unstable_sx({
-            ml: 0.5,
-          }),
+        root: sx({
+          px: 1,
+          alignItems: 'center',
+          '& .MuiAlert-icon': {
+            m: 0,
+            p: 0,
+          },
+        }),
+        message: sx({
+          ml: 0.5,
+        }),
       },
     },
     MuiTooltip: {
@@ -516,18 +510,17 @@ const muiThemeBase: ThemeOptions = {
         },
       ],
       styleOverrides: {
-        tooltip: (t) =>
-          t.theme.unstable_sx({
-            typography: 'body1',
-            borderColor: 'divider',
-            borderWidth: 1,
-            borderStyle: 'solid',
-            backgroundColor: BeanstalkPalette.theme.winter.extraLight,
-            color: 'text.primary',
-            p: 1,
-            px: 1.25,
-            transition: 'box-shadow none 300ms',
-          }),
+        tooltip: sx({
+          typography: 'body1',
+          borderColor: 'divider',
+          borderWidth: 1,
+          borderStyle: 'solid',
+          backgroundColor: BeanstalkPalette.theme.winter.extraLight,
+          color: 'text.primary',
+          p: 1,
+          px: 1.25,
+          transition: 'box-shadow none 300ms',
+        }),
       },
     },
     MuiAccordion: {
@@ -536,7 +529,7 @@ const muiThemeBase: ThemeOptions = {
         elevation: 0,
       },
       styleOverrides: {
-        root: (t) => t.theme.unstable_sx({}),
+        root: sx({}),
       },
       variants: [
         {
@@ -555,26 +548,23 @@ const muiThemeBase: ThemeOptions = {
         // FIXME: trying to disable the increase
         // in margin on AccordionSummary during expansion.
         // None of these work...
-        root: (t) =>
-          t.theme.unstable_sx({
-            minHeight: '0 !important',
-            my: 0,
-            px: 1,
-          }),
-        expanded: (t) =>
-          t.theme.unstable_sx({
-            minHeight: '0 !important',
-            m: [0, 0],
-          }),
+        root: sx({
+          minHeight: '0 !important',
+          my: 0,
+          px: 1,
+        }),
+        expanded: sx({
+          minHeight: '0 !important',
+          m: [0, 0],
+        }),
       },
     },
     MuiAccordionDetails: {
       styleOverrides: {
-        root: (t) =>
-          t.theme.unstable_sx({
-            pt: 0,
-            pb: 1,
-          }),
+        root: sx({
+          pt: 0,
+          pb: 1,
+        }),
       },
     },
     MuiTextField: {
@@ -598,36 +588,33 @@ const muiThemeBase: ThemeOptions = {
     },
     MuiListItem: {
       styleOverrides: {
-        root: (t) =>
-          t.theme.unstable_sx({
-            borderRadius: 1,
-            '&.Mui-selected': {
-              backgroundColor: '#168AAD',
-            },
-          }),
+        root: sx({
+          borderRadius: 1,
+          '&.Mui-selected': {
+            backgroundColor: '#168AAD',
+          },
+        }),
       },
     },
     MuiListItemButton: {
       styleOverrides: {
-        root: (t) =>
-          t.theme.unstable_sx({
-            borderRadius: 1,
-            px: 1,
-            py: 1,
-            // border: '0.5px solid',
-            // borderColor: 'divider',
-            '&:hover': {
-              backgroundColor: BeanstalkPalette.theme.winter.selected,
-            },
-          }),
+        root: sx({
+          borderRadius: 1,
+          px: 1,
+          py: 1,
+          // border: '0.5px solid',
+          // borderColor: 'divider',
+          '&:hover': {
+            backgroundColor: BeanstalkPalette.theme.winter.selected,
+          },
+        }),
       },
     },
     MuiList: {
       styleOverrides: {
-        root: (t) =>
-          t.theme.unstable_sx({
-            // p: 0
-          }),
+        root: sx({
+          // p: 0
+        }),
       },
     },
     MuiListItemText: {
@@ -640,12 +627,11 @@ const muiThemeBase: ThemeOptions = {
         variant: 'scrollable',
       },
       styleOverrides: {
-        root: (t) =>
-          t.theme.unstable_sx({
-            fontWeight: 'normal',
-            mr: { xs: 2, md: 0 },
-            minHeight: 0,
-          }),
+        root: sx({
+          fontWeight: 'normal',
+          mr: { xs: 2, md: 0 },
+          minHeight: 0,
+        }),
         indicator: {
           display: 'none',
         },
@@ -656,33 +642,32 @@ const muiThemeBase: ThemeOptions = {
         disableRipple: true,
       },
       styleOverrides: {
-        root: (t) =>
-          t.theme.unstable_sx({
-            p: 0,
-            minHeight: 0,
-            mr: 2,
-            textAlign: 'left',
-            minWidth: 0,
-            // fontWeight: 'normal',
+        root: sx({
+          p: 0,
+          minHeight: 0,
+          mr: 2,
+          textAlign: 'left',
+          minWidth: 0,
+          // fontWeight: 'normal',
+          fontWeight: 700,
+          fontSize: '1rem', // 1*16 = 16px
+          textTransform: 'none',
+          color: 'text.secondary',
+          // fontSize: 20,
+          '&:active': {},
+          '&:hover': {
+            color: 'text.primary',
+            labelIcon: {
+              color: 'text.primary',
+            },
+          },
+          '&.Mui-selected': {
+            // fontWeight: 'bold',
             fontWeight: 700,
             fontSize: '1rem', // 1*16 = 16px
-            textTransform: 'none',
-            color: 'text.secondary',
-            // fontSize: 20,
-            '&:active': {},
-            '&:hover': {
-              color: 'text.primary',
-              labelIcon: {
-                color: 'text.primary',
-              },
-            },
-            '&.Mui-selected': {
-              // fontWeight: 'bold',
-              fontWeight: 700,
-              fontSize: '1rem', // 1*16 = 16px
-              color: 'text.primary',
-            },
-          }),
+            color: 'text.primary',
+          },
+        }),
       },
     },
     MuiButtonBase: {
@@ -732,31 +717,29 @@ const muiThemeBase: ThemeOptions = {
         },
       },
       styleOverrides: {
-        root: (t) => t.theme.unstable_sx({}),
+        root: sx({}),
       },
     },
     MuiDialogContent: {
       styleOverrides: {
-        root: (t) =>
-          t.theme.unstable_sx({
-            px: 1,
-            // pb: 0.5,
-          }),
+        root: sx({
+          px: 1,
+          // pb: 0.5,
+        }),
       },
     },
     MuiContainer: {
       styleOverrides: {
-        root: (t) =>
-          t.theme.unstable_sx({
-            paddingTop: {
-              md: 4,
-              xs: 2,
-            },
-            paddingBottom: {
-              md: 4,
-              xs: 2,
-            },
-          }),
+        root: sx({
+          paddingTop: {
+            md: 4,
+            xs: 2,
+          },
+          paddingBottom: {
+            md: 4,
+            xs: 2,
+          },
+        }),
       },
     },
     MuiChip: {
@@ -766,30 +749,27 @@ const muiThemeBase: ThemeOptions = {
             variant: 'filled',
             color: 'primary',
           },
-          style: (t) =>
-            t.theme.unstable_sx({
-              color: BeanstalkPalette.logoGreen,
-              backgroundColor: BeanstalkPalette.lightestGreen,
-            }),
+          style: sx({
+            color: BeanstalkPalette.logoGreen,
+            backgroundColor: BeanstalkPalette.lightestGreen,
+          }),
         },
         {
           props: {
             variant: 'filled',
             color: 'secondary',
           },
-          style: (t) =>
-            t.theme.unstable_sx({
-              color: BeanstalkPalette.darkBlue,
-              backgroundColor: BeanstalkPalette.lightestBlue,
-            }),
+          style: sx({
+            color: BeanstalkPalette.darkBlue,
+            backgroundColor: BeanstalkPalette.lightestBlue,
+          }),
         },
       ],
       styleOverrides: {
-        root: (t) =>
-          t.theme.unstable_sx({
-            fontWeight: 'normal',
-            borderRadius: 1,
-          }),
+        root: sx({
+          fontWeight: 'normal',
+          borderRadius: 1,
+        }),
       },
     },
     MuiCircularProgress: {
@@ -797,12 +777,11 @@ const muiThemeBase: ThemeOptions = {
         root: {
           animationDuration: '0.8s',
         },
-        circleIndeterminate: (t) =>
-          t.theme.unstable_sx({
-            animation: 'none',
-            strokeDasharray: '80px, 200px',
-            strokeDashoffset: '0px',
-          }),
+        circleIndeterminate: sx({
+          animation: 'none',
+          strokeDasharray: '80px, 200px',
+          strokeDashoffset: '0px',
+        }),
       },
     },
   },
