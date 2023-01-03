@@ -1,10 +1,11 @@
 import { deepmerge } from '@mui/utils';
 import {
   createTheme,
-  experimental_sx as sx,
+  // experimental_sx as sx,
   lighten,
   responsiveFontSizes,
   ThemeOptions,
+  Theme,
 } from '@mui/material/styles';
 import React from 'react';
 
@@ -219,6 +220,8 @@ export const FontWeight = {
 
 export const XXLWidth = 1400;
 
+const sx = <T extends { theme: Theme }>(t: T) => t.theme.unstable_sx;
+
 // FIXME: changes to createTheme don't hot reload.
 const muiThemeBase: ThemeOptions = {
   breakpoints: {
@@ -384,18 +387,20 @@ const muiThemeBase: ThemeOptions = {
         color: 'secondary',
       },
       styleOverrides: {
-        root: sx({
-          borderWidth: 1,
-          borderColor: 'divider',
-        }),
+        root: (t) =>
+          sx(t)({
+            borderWidth: 1,
+            borderColor: 'divider',
+          }),
       },
     },
     MuiDivider: {
       styleOverrides: {
-        root: sx({
-          borderColor: 'divider',
-          borderWidth: 0.5,
-        }),
+        root: (t) =>
+          sx(t)({
+            borderColor: 'divider',
+            borderWidth: 0.5,
+          }),
       },
     },
     MuiButton: {
@@ -428,40 +433,46 @@ const muiThemeBase: ThemeOptions = {
         disableRipple: true,
       },
       styleOverrides: {
-        root: sx({
-          textTransform: 'none',
-          // fontWeight: 'bold',
-          '&.MuiButton-root:hover': {
-            // backgroundColor: BeanstalkPalette.supportGreen,
-          },
-          '&.MuiLoadingButton-root:hover': {
-            // backgroundColor: BeanstalkPalette.supportGreen,
-          },
-          fontWeight: 700,
-          fontSize: '1rem',
-          lineHeight: '1.25rem',
-        }),
+        root: (t) =>
+          sx(t)({
+            textTransform: 'none',
+            // fontWeight: 'bold',
+            '&.MuiButton-root:hover': {
+              // backgroundColor: BeanstalkPalette.supportGreen,
+            },
+            '&.MuiLoadingButton-root:hover': {
+              // backgroundColor: BeanstalkPalette.supportGreen,
+            },
+            fontWeight: 700,
+            fontSize: '1rem',
+            lineHeight: '1.25rem',
+          }),
         /// Sizes
-        sizeSmall: sx({}),
-        sizeMedium: sx({
-          py: 1,
-          px: 1,
-          height: '45px',
-        }),
-        sizeLarge: sx({
-          py: 1.5,
-          px: 1.5,
-          height: '60px',
-        }),
-        disabled: sx({
-          pointerEvents: 'auto',
-        }),
-        startIcon: sx({
-          marginLeft: 0, // prevent adornment from pulling close to right margin
-        }),
-        endIcon: sx({
-          marginRight: 0, // prevent adornment from pulling close to right margin
-        }),
+        sizeSmall: (t) => sx(t)({}),
+        sizeMedium: (t) =>
+          sx(t)({
+            py: 1,
+            px: 1,
+            height: '45px',
+          }),
+        sizeLarge: (t) =>
+          sx(t)({
+            py: 1.5,
+            px: 1.5,
+            height: '60px',
+          }),
+        disabled: (t) =>
+          sx(t)({
+            pointerEvents: 'auto',
+          }),
+        startIcon: (t) =>
+          sx(t)({
+            marginLeft: 0, // prevent adornment from pulling close to right margin
+          }),
+        endIcon: (t) =>
+          sx(t)({
+            marginRight: 0, // prevent adornment from pulling close to right margin
+          }),
       },
     },
     MuiAlert: {
@@ -470,25 +481,28 @@ const muiThemeBase: ThemeOptions = {
           props: {
             color: 'warning',
           },
-          style: sx({
-            backgroundColor: 'rgba(253, 244, 231, 0.3)',
-            color: BeanstalkPalette.white,
-          }),
+          style: (t) =>
+            sx(t)({
+              backgroundColor: 'rgba(253, 244, 231, 0.3)',
+              color: BeanstalkPalette.white,
+            }),
         },
       ],
       defaultProps: {},
       styleOverrides: {
-        root: sx({
-          px: 1,
-          alignItems: 'center',
-          '& .MuiAlert-icon': {
-            m: 0,
-            p: 0,
-          },
-        }),
-        message: sx({
-          ml: 0.5,
-        }),
+        root: (t) =>
+          sx(t)({
+            px: 1,
+            alignItems: 'center',
+            '& .MuiAlert-icon': {
+              m: 0,
+              p: 0,
+            },
+          }),
+        message: (t) =>
+          sx(t)({
+            ml: 0.5,
+          }),
       },
     },
     MuiTooltip: {
@@ -506,17 +520,18 @@ const muiThemeBase: ThemeOptions = {
         },
       ],
       styleOverrides: {
-        tooltip: sx({
-          typography: 'body1',
-          borderColor: 'divider',
-          borderWidth: 1,
-          borderStyle: 'solid',
-          backgroundColor: BeanstalkPalette.theme.winter.extraLight,
-          color: 'text.primary',
-          p: 1,
-          px: 1.25,
-          transition: 'box-shadow none 300ms',
-        }),
+        tooltip: (t) =>
+          sx(t)({
+            typography: 'body1',
+            borderColor: 'divider',
+            borderWidth: 1,
+            borderStyle: 'solid',
+            backgroundColor: BeanstalkPalette.theme.winter.extraLight,
+            color: 'text.primary',
+            p: 1,
+            px: 1.25,
+            transition: 'box-shadow none 300ms',
+          }),
       },
     },
     MuiAccordion: {
@@ -525,7 +540,7 @@ const muiThemeBase: ThemeOptions = {
         elevation: 0,
       },
       styleOverrides: {
-        root: sx({}),
+        root: (t) => sx(t)({}),
       },
       variants: [
         {
@@ -544,23 +559,26 @@ const muiThemeBase: ThemeOptions = {
         // FIXME: trying to disable the increase
         // in margin on AccordionSummary during expansion.
         // None of these work...
-        root: sx({
-          minHeight: '0 !important',
-          my: 0,
-          px: 1,
-        }),
-        expanded: sx({
-          minHeight: '0 !important',
-          m: [0, 0],
-        }),
+        root: (t) =>
+          sx(t)({
+            minHeight: '0 !important',
+            my: 0,
+            px: 1,
+          }),
+        expanded: (t) =>
+          sx(t)({
+            minHeight: '0 !important',
+            m: [0, 0],
+          }),
       },
     },
     MuiAccordionDetails: {
       styleOverrides: {
-        root: sx({
-          pt: 0,
-          pb: 1,
-        }),
+        root: (t) =>
+          sx(t)({
+            pt: 0,
+            pb: 1,
+          }),
       },
     },
     MuiTextField: {
@@ -584,33 +602,36 @@ const muiThemeBase: ThemeOptions = {
     },
     MuiListItem: {
       styleOverrides: {
-        root: sx({
-          borderRadius: 1,
-          '&.Mui-selected': {
-            backgroundColor: '#168AAD',
-          },
-        }),
+        root: (t) =>
+          sx(t)({
+            borderRadius: 1,
+            '&.Mui-selected': {
+              backgroundColor: '#168AAD',
+            },
+          }),
       },
     },
     MuiListItemButton: {
       styleOverrides: {
-        root: sx({
-          borderRadius: 1,
-          px: 1,
-          py: 1,
-          // border: '0.5px solid',
-          // borderColor: 'divider',
-          '&:hover': {
-            backgroundColor: BeanstalkPalette.theme.winter.selected,
-          },
-        }),
+        root: (t) =>
+          sx(t)({
+            borderRadius: 1,
+            px: 1,
+            py: 1,
+            // border: '0.5px solid',
+            // borderColor: 'divider',
+            '&:hover': {
+              backgroundColor: BeanstalkPalette.theme.winter.selected,
+            },
+          }),
       },
     },
     MuiList: {
       styleOverrides: {
-        root: sx({
-          // p: 0
-        }),
+        root: (t) =>
+          sx(t)({
+            // p: 0
+          }),
       },
     },
     MuiListItemText: {
@@ -623,11 +644,12 @@ const muiThemeBase: ThemeOptions = {
         variant: 'scrollable',
       },
       styleOverrides: {
-        root: sx({
-          fontWeight: 'normal',
-          mr: { xs: 2, md: 0 },
-          minHeight: 0,
-        }),
+        root: (t) =>
+          sx(t)({
+            fontWeight: 'normal',
+            mr: { xs: 2, md: 0 },
+            minHeight: 0,
+          }),
         indicator: {
           display: 'none',
         },
@@ -638,32 +660,33 @@ const muiThemeBase: ThemeOptions = {
         disableRipple: true,
       },
       styleOverrides: {
-        root: sx({
-          p: 0,
-          minHeight: 0,
-          mr: 2,
-          textAlign: 'left',
-          minWidth: 0,
-          // fontWeight: 'normal',
-          fontWeight: 700,
-          fontSize: '1rem', // 1*16 = 16px
-          textTransform: 'none',
-          color: 'text.secondary',
-          // fontSize: 20,
-          '&:active': {},
-          '&:hover': {
-            color: 'text.primary',
-            labelIcon: {
-              color: 'text.primary',
-            },
-          },
-          '&.Mui-selected': {
-            // fontWeight: 'bold',
+        root: (t) =>
+          sx(t)({
+            p: 0,
+            minHeight: 0,
+            mr: 2,
+            textAlign: 'left',
+            minWidth: 0,
+            // fontWeight: 'normal',
             fontWeight: 700,
             fontSize: '1rem', // 1*16 = 16px
-            color: 'text.primary',
-          },
-        }),
+            textTransform: 'none',
+            color: 'text.secondary',
+            // fontSize: 20,
+            '&:active': {},
+            '&:hover': {
+              color: 'text.primary',
+              labelIcon: {
+                color: 'text.primary',
+              },
+            },
+            '&.Mui-selected': {
+              // fontWeight: 'bold',
+              fontWeight: 700,
+              fontSize: '1rem', // 1*16 = 16px
+              color: 'text.primary',
+            },
+          }),
       },
     },
     MuiButtonBase: {
@@ -713,30 +736,32 @@ const muiThemeBase: ThemeOptions = {
         },
       },
       styleOverrides: {
-        root: sx({}),
+        root: (t) => sx(t)({}),
       },
     },
     MuiDialogContent: {
       styleOverrides: {
-        root: sx({
-          px: 1,
-          // pb: 0.5,
-        }),
+        root: (t) =>
+          sx(t)({
+            px: 1,
+            // pb: 0.5,
+          }),
       },
     },
     MuiContainer: {
       styleOverrides: {
-        root: sx({
-          paddingTop: {
-            md: 4,
-            xs: 2,
-          },
-          paddingBottom: {
-            md: 4,
-            xs: 2,
-          },
-        })
-      }
+        root: (t) =>
+          sx(t)({
+            paddingTop: {
+              md: 4,
+              xs: 2,
+            },
+            paddingBottom: {
+              md: 4,
+              xs: 2,
+            },
+          }),
+      },
     },
     MuiChip: {
       variants: [
@@ -745,27 +770,30 @@ const muiThemeBase: ThemeOptions = {
             variant: 'filled',
             color: 'primary',
           },
-          style: sx({
-            color: BeanstalkPalette.logoGreen,
-            backgroundColor: BeanstalkPalette.lightestGreen,
-          }),
+          style: (t) =>
+            sx(t)({
+              color: BeanstalkPalette.logoGreen,
+              backgroundColor: BeanstalkPalette.lightestGreen,
+            }),
         },
         {
           props: {
             variant: 'filled',
             color: 'secondary',
           },
-          style: sx({
-            color: BeanstalkPalette.darkBlue,
-            backgroundColor: BeanstalkPalette.lightestBlue,
-          }),
+          style: (t) =>
+            sx(t)({
+              color: BeanstalkPalette.darkBlue,
+              backgroundColor: BeanstalkPalette.lightestBlue,
+            }),
         },
       ],
       styleOverrides: {
-        root: sx({
-          fontWeight: 'normal',
-          borderRadius: 1,
-        }),
+        root: (t) =>
+          sx(t)({
+            fontWeight: 'normal',
+            borderRadius: 1,
+          }),
       },
     },
     MuiCircularProgress: {
@@ -773,11 +801,12 @@ const muiThemeBase: ThemeOptions = {
         root: {
           animationDuration: '0.8s',
         },
-        circleIndeterminate: sx({
-          animation: 'none',
-          strokeDasharray: '80px, 200px',
-          strokeDashoffset: '0px',
-        }),
+        circleIndeterminate: (t) =>
+          sx(t)({
+            animation: 'none',
+            strokeDasharray: '80px, 200px',
+            strokeDashoffset: '0px',
+          }),
       },
     },
   },
