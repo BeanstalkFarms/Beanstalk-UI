@@ -61,7 +61,7 @@ const Stat: FC<StatProps> = ({
           <Tooltip title={titleTooltip} placement="right">
             <HelpOutlineIcon
               sx={{
-                color: 'text.tertiary',
+                color: 'text.secondary',
                 display: 'inline',
                 mb: 0.5,
                 fontSize: '11px',
@@ -82,7 +82,7 @@ const Stat: FC<StatProps> = ({
     </Tooltip>
     {/* Subtitle */}
     {subtitle !== undefined && (
-      <Typography variant="bodySmall" color="text.tertiary">
+      <Typography variant="bodySmall" color="text.primary">
         {subtitle}
       </Typography>
     )}

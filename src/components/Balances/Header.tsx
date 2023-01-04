@@ -7,7 +7,6 @@ import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from '~/state';
 import Row from '../Common/Row';
-import { BeanstalkPalette } from '../App/muiTheme';
 import { PODS, SEEDS, SPROUTS, STALK } from '~/constants/tokens';
 import HeaderItem from '~/components/Balances/HeaderItem';
 
@@ -27,7 +26,7 @@ const VerticalDivider = () => (
       sx={{
         width: '0.5px',
         height: '20px',
-        borderColor: BeanstalkPalette.lightGrey,
+        borderColor: 'divider',
       }}
     />
   </Box>

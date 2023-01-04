@@ -2,7 +2,6 @@ import React, { useCallback } from 'react';
 import { useNetwork, useSwitchNetwork } from 'wagmi';
 import { Alert, Button, Dialog, DialogProps, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { grey } from '@mui/material/colors';
 import { SWITCH_NETWORK_ERRORS } from '~/constants/wallets';
 import { SupportedChainId, TESTNET_RPC_ADDRESSES } from '~/constants';
 import { ETH } from '~/constants/tokens';
@@ -52,15 +51,15 @@ const NetworkDialog: React.FC<DialogProps & {
               key={chain.id}
               size="large"
               variant="outlined"
-              color="primary"
+              color="light"
               onClick={handleSwitch(chain.id)}
               sx={{
                 py: 1,
                 minWidth: isMedium ? null : 400,
-                borderColor: grey[300],
-                '&:hover': {
-                  borderColor: 'primary.main',
-                }
+                // borderColor: grey[300],
+                // '&:hover': {
+                //   borderColor: 'primary.main',
+                // }
               }}
             >
               <Row justifyContent="space-between" sx={{ width: '100%' }} gap={3}>

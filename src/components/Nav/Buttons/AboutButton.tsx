@@ -26,6 +26,7 @@ import useGlobal from '~/hooks/app/useGlobal';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const AboutButton: FC<ButtonProps> = ({ sx }) => {
   /// Theme
@@ -51,7 +52,7 @@ const AboutButton: FC<ButtonProps> = ({ sx }) => {
 
   /// Content
   const menuContent = (
-    <MenuList component={Card}>
+    <MenuList component={Card} sx={{ background: BeanstalkPalette.white, border: '1px solid', borderColor: 'divider' }}>
       {/* Menu Items */}
       {/* <MenuItem
         item={{ title: 'Settings', path: '/settings' }}
@@ -68,7 +69,7 @@ const AboutButton: FC<ButtonProps> = ({ sx }) => {
           target="_blank"
           rel="noreferrer"
           variant="contained"
-          color="secondary"
+          color="primary"
           sx={{ py: 0.9 }}
         >
           <Row spacing={1}>
@@ -77,7 +78,7 @@ const AboutButton: FC<ButtonProps> = ({ sx }) => {
                 Contract: {beanstalkAddress.slice(0, 6)}...
               </Typography>
             </ListItemText>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" color="white">
               <ArrowForwardIcon
                 sx={{ transform: 'rotate(-45deg)', fontSize: 12 }}
               />
@@ -99,7 +100,7 @@ const AboutButton: FC<ButtonProps> = ({ sx }) => {
        */}
       <NavDrawer open={open && isMedium} hideDrawer={hide} />
       <Button
-        color="secondary"
+        color="light"
         variant="contained"
         aria-label="open drawer"
         onClick={show}

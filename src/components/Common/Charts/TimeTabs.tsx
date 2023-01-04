@@ -11,9 +11,9 @@ const AGGREGATION = [
 ];
 
 const WINDOWS = [
-  { label: '1W', index: 0 },
-  { label: '1M', index: 1 },
-  { label: 'All', index: 2 },
+  { label: 'W', index: 0 },
+  { label: 'M', index: 1 },
+  { label: 'ALL', index: 2 },
 ];
 
 export type TimeTabState = [SeasonAggregation, SeasonRange];

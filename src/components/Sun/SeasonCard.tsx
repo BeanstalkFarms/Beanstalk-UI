@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import rainySeasonIcon from '~/img/beanstalk/sun/rainy-season.svg';
 import drySeasonIcon from '~/img/beanstalk/sun/dry-season.svg';
 import { displayBN, displayFullBN } from '../../util';
-import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
+import { FontSize, IconSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
@@ -37,7 +37,7 @@ const SeasonCard: FC<SeasonCardProps> = ({
           className="next-season"
           sx={{ 
             borderColor: 'rgba(240, 223, 146, 1)',
-            borderWidth: 1,
+            borderWidth: 0.5,
             borderStyle: 'solid',
             display: 'none',
             position: 'absolute',
@@ -51,7 +51,7 @@ const SeasonCard: FC<SeasonCardProps> = ({
           }}
         >
           <Row justifyContent="center" height="100%">
-            <Typography pl={1} fontSize={FontSize.sm} textAlign="left" sx={{ color: BeanstalkPalette.theme.winter.blueDark }}>
+            <Typography pl={1} fontSize={FontSize.sm} textAlign="left" color="text.primary">
               The forecast for Season {season.toString()} is based on data in the current Season.
             </Typography>
           </Row>
@@ -76,7 +76,7 @@ const SeasonCard: FC<SeasonCardProps> = ({
               ) : (
                 <img src={rainySeasonIcon} height={IconSize.small} alt="" />
               )}
-              <Typography color="text.primary" variant="bodySmall">
+              <Typography variant="bodySmall">
                 {season?.toString() || '-'}
               </Typography>
             </Row>

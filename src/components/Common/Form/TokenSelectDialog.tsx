@@ -65,7 +65,7 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
   mode = TokenSelectMode.MULTI,
 }) => {
   /** keep an internal copy of selected tokens */
-  const [selectedInternal, setSelectedInternal] = useState<Set<Token>>(new Set());
+  const [selectedInternal, setSelectedInternal] = useState<Set<Token>>(new Set<Token>());
 
   const getBalance = useCallback((addr: string) => {
     if (!_balances) return ZERO_BN;
@@ -138,7 +138,7 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
             <ListItem
               key={_token.address}
               color="primary"
-              selected={selectedInternal.has(_token)}
+              // selected={selectedInternal.has(_token)}
               disablePadding
               onClick={onClickItem(_token)}
               sx={{
@@ -152,10 +152,10 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
                   fontSize: FontSize.base,
                   lineHeight: '1.25rem',
                   color: BeanstalkPalette.lightGrey
-                },
+                }
               }}
             >
-              <ListItemButton disableRipple>
+              <ListItemButton disableRipple selected={selectedInternal.has(_token)}>
                 {/* Top-level button stack */}
                 <Row justifyContent="space-between" sx={{ width: '100%' }}>
                   {/* Icon & text left side */}

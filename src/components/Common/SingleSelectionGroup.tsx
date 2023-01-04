@@ -67,6 +67,7 @@ export default function SingleSelectionGroup<T extends TSelect>({
         size={size}
         value={value}
         onChange={handleOnChange}
+        multiple={false}
         IconComponent={ExpandMoreIcon}
         {...props}
         sx={{

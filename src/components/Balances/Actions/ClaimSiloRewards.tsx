@@ -16,8 +16,8 @@ import {
   ModuleContent,
 } from '~/components/Common/Module';
 import beanIcon from '~/img/tokens/bean-logo-circled.svg';
-import stalkIcon from '~/img/beanstalk/stalk-icon-white.svg';
-import seedIcon from '~/img/beanstalk/seed-icon-white.svg';
+import stalkIcon from '~/img/beanstalk/stalk-icon-winter.svg';
+import seedIcon from '~/img/beanstalk/seed-icon-winter.svg';
 
 import useRevitalized from '~/hooks/farmer/useRevitalized';
 import { AppState } from '~/state';
@@ -307,7 +307,7 @@ const RewardsContent: React.FC<{}> = () => {
           size="medium"
           variant="contained"
           sx={{ width: '100%', whiteSpace: 'nowrap', mt: '20px !important' }}
-          endIcon={!open ? <DropdownIcon open={false} disabled={breakdown?.totalValue?.eq(0)} /> : null}
+          endIcon={!open ? <DropdownIcon open={false} disabled={breakdown?.totalValue?.eq(0)} light /> : null}
           onClick={() => {
             if (open) {
               hide();

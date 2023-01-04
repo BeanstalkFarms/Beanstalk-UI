@@ -8,7 +8,16 @@ import { FC } from '~/types';
 export const ChipLabel : FC<{ name: string; token?: Token }> = ({ name, children }) => (
   <Row gap={0.2}>
     {name}&nbsp;
-    <Chip label={children} size="small" sx={{ fontWeight: 'bold', background: '#DAE4FF', color: 'primary.main' }} />
+    <Chip 
+      label={children} 
+      size="small" 
+      color="primary"
+      sx={{ 
+        fontWeight: 'bold', 
+        // background: BeanstalkPalette.theme.winter.primaryHover, 
+        // color: 'primary.main' 
+      }} 
+    />
   </Row>
 ); 
 

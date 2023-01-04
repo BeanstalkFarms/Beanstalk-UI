@@ -12,7 +12,7 @@ const BlurComponent : FC<StackProps & { blur?: number; opacity?: number }> = ({ 
       position: 'absolute',
       left: 0,
       top: 0,
-      backgroundColor: hexToRgba(BeanstalkPalette.theme.winter.paleBlue, opacity),
+      backgroundColor: hexToRgba(BeanstalkPalette.white, opacity),
       backdropFilter: `blur(${blur}px)`,
       zIndex: 999,
       textAlign: 'center',

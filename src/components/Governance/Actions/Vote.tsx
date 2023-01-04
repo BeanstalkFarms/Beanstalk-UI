@@ -215,7 +215,7 @@ const VoteForm: FC<FormikProps<VoteFormValues> & {
             <Button
               variant="contained"
               color="primary"
-              size="large"
+              size="medium"
               href={proposal.link || SNAPSHOT_LINK}
               target="_blank"
               rel="noreferrer"

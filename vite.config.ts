@@ -56,6 +56,7 @@ export default defineConfig(({ command, mode }) => ({
               'wss://*.bridge.walletconnect.org',
               'registry.walletconnect.com',
               'wss://*.walletlink.org',
+              '*.dp.coinbase.com/amp',
               '*.google-analytics.com',
               '*.doubleclick.net'
             ],

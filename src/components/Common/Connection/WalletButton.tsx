@@ -34,6 +34,7 @@ import useGlobal from '~/hooks/app/useGlobal';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props }) => {
   const account = useAccount();
@@ -84,7 +85,7 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
   }
 
   const menu = (
-    <MenuList sx={{ minWidth: 250 }} component={Card}>
+    <MenuList sx={{ minWidth: 250, background: BeanstalkPalette.white, border: '1px solid', borderColor: 'divider' }} component={Card}>
       <MenuItem onClick={() => {
         toggleMenuAnchor();
         setSettingsOpen(true);
@@ -141,12 +142,12 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
         <Button
           fullWidth
           onClick={showPick}
-          color="secondary"
           sx={{
             py: 1.25,
-            color: 'primary.main',
+            color: BeanstalkPalette.brown,
+            backgroundColor: BeanstalkPalette.lightBrown,
             '&:hover': {
-              backgroundColor: 'secondary.main',
+              backgroundColor: BeanstalkPalette.lightBrown,
               opacity: 0.96
             },
           }}
@@ -159,12 +160,13 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
       <Box sx={{ px: 1, pt: 0.75, pb: 0.25 }}>
         <Button
           fullWidth
-          href="/#/chop"
           color="primary"
+          href="/#/chop"
           sx={{ 
+            background: BeanstalkPalette.brown,
             py: 1.25,
             '&:hover': {
-              backgroundColor: 'primary.main',
+              background: BeanstalkPalette.darkBrown,
               opacity: 0.96
             }
           }}
@@ -184,7 +186,7 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
       <Button
         disableFocusRipple
         variant="contained"
-        color="secondary"
+        color="light"
         startIcon={<AddressIcon address={account} />}
         endIcon={<DropdownIcon open={menuVisible} />}
         {...props}
