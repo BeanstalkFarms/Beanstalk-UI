@@ -116,17 +116,6 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
 
   if (!selectedInternal) return null;
 
-  const k = (() => {
-    if (selectedInternal.size > 0) {
-      console.log(selected);
-      Array.from(selectedInternal).forEach((t) => {
-        console.log(t);
-      });
-    }
-    
-    return 0;
-  })();
-
   return (
     <StyledDialog
       onClose={handleClose}
