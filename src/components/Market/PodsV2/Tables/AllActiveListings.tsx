@@ -18,18 +18,18 @@ const AllActiveListings: React.FC<{
     const c = [
       MarketColumns.Shared.createdAt(1, 'left', 'CREATED AT', 'creationHash'),
       MarketColumns.PodListing.listingId(1, 'left'),
-      MarketColumns.PodListing.plotIndex(data.harvestableIndex, 1, 'left'),
+      MarketColumns.Shared.placeInLine('listing', 1, 'left'),
       MarketColumns.Shared.pricePerPod(1, 'left'),
       MarketColumns.PodListing.remainingAmount(0.7, 'left'),
     ];
 
     // FIXME: MUI must provide a performant way to hide columns depending on screen size
     if (!isMobile) {
-      c.push(MarketColumns.PodListing.expiry(data.harvestableIndex, 1, 'right'));
+      c.push(MarketColumns.Shared.expiry(1, 'right'));
     }
 
     return c;
-  }, [data.harvestableIndex, isMobile]);
+  }, [isMobile]);
 
   return (
     <BaseTable

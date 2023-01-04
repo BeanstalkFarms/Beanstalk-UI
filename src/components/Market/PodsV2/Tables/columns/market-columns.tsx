@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   GridColumns,
   GridRenderCellParams,
@@ -6,14 +6,17 @@ import {
   GridValueFormatterParams,
 } from '@mui/x-data-grid';
 import BigNumber from 'bignumber.js';
-import { Box, Link, Tooltip, Typography } from '@mui/material';
+import { Box, IconButton, Link, Stack, Tooltip, TooltipProps, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 // import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
+import toast from 'react-hot-toast';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { PodListing, PodOrder, PricingType } from '~/state/farmer/market';
-import { displayBN, displayFullBN, MaxBN, MinBN } from '~/util';
+import { displayBN, displayFullBN, MinBN } from '~/util';
 import Row from '~/components/Common/Row';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN, PODS } from '~/constants/tokens';
@@ -23,12 +26,47 @@ import { FarmerMarketOrder } from '~/hooks/farmer/market/useFarmerMarket2';
 import etherscanIcon from '~/img/beanstalk/interface/nav/etherscan.svg';
 import EntityIcon from '~/components/Market/PodsV2/Common/EntityIcon';
 import { MarketEvent } from '~/hooks/beanstalk/useMarketActivityData';
+import { FC } from '~/types';
+import StatHorizontal from '~/components/Common/StatHorizontal';
+
+// componentsProps={{ tooltip: { sx: { fontSize: 10 } } }}
+const TooltipPill : FC<{ title: string | React.ReactElement } & { placement?: TooltipProps['placement'] }> = ({ children, title, placement }) => (
+  <Tooltip title={title ? <Typography fontSize={FontSize.sm}>{title}</Typography> : ''} placement={placement || 'right'}>
+    <Box sx={{
+      display: 'inline-block',
+      px: 0.25,
+      '&:hover': {
+        outlineOffset: 1,
+        backgroundColor: BeanstalkPalette.white,
+        outlineColor: BeanstalkPalette.lightGrey,
+        outlineStyle: 'solid',
+        outlineWidth: 1,
+        borderRadius: 0.5,
+      }
+    }}>
+      {children}
+    </Box>
+  </Tooltip>
+);
+
+const Copy : FC<{ value: string }> = ({ value }) => {
+  const onClick = useCallback(() => {
+    navigator.clipboard.writeText(value);
+    toast('Copied to clipboard');
+  }, [value]);
+  return (
+    <IconButton onClick={onClick} sx={{ ml: 0.5 }}>
+      <FileCopyIcon width={12} height={12} fontSize="small" sx={{ width: 12, height: 12 }} />
+    </IconButton>
+  );
+};
 
 /// ////////////////////////// Constants /////////////////////////////
 
 const MARKET_STATUS_TO_COLOR = {
   active: BeanstalkPalette.logoGreen,
   cancelled: 'text.secondary',
+  cancelled_partial: 'text.secondary',
 };
 
 const iconSx = {
@@ -37,13 +75,9 @@ const iconSx = {
 };
 
 const MARKET_EVENT_TO_ICON = {
-  // fill: '💰',
   fill: <SwapHorizIcon sx={iconSx} />,
-  // create: '✏️',
   create: <AddCircleOutlineIcon sx={iconSx} />,
-  // cancel: '❌',
   cancel: <DoNotDisturbIcon sx={iconSx} />
-  // unknown: undefined,
 };
 
 /// ////////////////////////// Utilities /////////////////////////////
@@ -65,7 +99,9 @@ const formatDate = (value: string | undefined) => {
 /// ////////////////////////// Columns /////////////////////////////
 
 export const MarketColumns = {
+  /** Consistent across tabs */
   Shared: {
+    /** */
     createdAt: (
       flex: number,
       align?: 'left' | 'right',
@@ -76,6 +112,7 @@ export const MarketColumns = {
         field: 'createdAt',
         headerName: headerName,
         flex: flex,
+        maxWidth: 150, // captures timestamp length
         align: align || 'left',
         headerAlign: align || 'left',
         valueFormatter: (params: GridValueFormatterParams) =>
@@ -93,19 +130,7 @@ export const MarketColumns = {
           </Typography>
         ),
       } as GridColumns[number]),
-    
-    // pricingType: (flex: number, align?: 'left' | 'right') =>
-    //   ({
-    //     field: 'pricingType',
-    //     headerName: 'PRICE TYPE',
-    //     flex: flex,
-    //     align: align || 'left',
-    //     headerAlign: align || 'left',
-    //     renderCell: (params: GridRenderCellParams) => (
-    //       <>{params.value.toUpperCase()}</>
-    //     ),
-    //   } as GridColumns[number]),
-
+    /** */
     pricePerPod: (flex: number, align?: 'left' | 'right') =>
       ({
         field: 'pricePerPod',
@@ -115,14 +140,81 @@ export const MarketColumns = {
         headerAlign: align || 'left',
         renderCell: (params: GridRenderCellParams) => (
           params.value?.gt(0) ? (
-            <Row display="inline-flex" gap={0.25} alignItems="center">
+            <Row gap={0.25}>
               <TokenIcon token={BEAN[1]} />
-              <span>{displayBN(params.value || ZERO_BN)}</span>
+              <span>{displayFullBN(params.value || ZERO_BN, 6, 0)}</span>
             </Row>
           ) : '-'
         ),
-      } as GridColumns[number])
+      } as GridColumns[number]),
+    
+    /** */
+    placeInLine: (type: undefined | 'listing' | 'order', flex: number, align?: 'left' | 'right') =>
+      ({
+        field: type === 'order' ? 'maxPlaceInLine' : 'placeInLine',
+        headerName: 'PLACE IN LINE',
+        flex: flex,
+        align: align || 'left',
+        headerAlign: align || 'left',
+        renderCell: (params: GridRenderCellParams<any, FarmerMarketOrder>) => {
+          if (!params.value || params.value.eq(0)) return <>-</>;
+          if ((type || params.row.type) === 'listing') {
+            return (
+              <TooltipPill title={<StatHorizontal label="Place in Line">{displayFullBN(params.value)}</StatHorizontal>}>
+                <>{displayBN(params.value)}</>
+              </TooltipPill>
+            );
+          }
+          return (
+            <TooltipPill title={(
+              <Stack gap={0.5}>
+                <StatHorizontal label="Max Place in Line">{displayFullBN(params.value)}</StatHorizontal>
+                <Typography fontSize="inherit">
+                  <InfoOutlinedIcon fontSize="inherit" sx={{ mb: -0.3 }} /> Any Pod before {displayBN(params.value)} can Fill this Order.
+                </Typography>
+              </Stack>
+            )}>
+              <>{`${params.row.pricingType === PricingType.DYNAMIC ? '*' : '0'} - ${displayBN(params.value)}`}</>
+            </TooltipPill>
+          );
+        },
+      } as GridColumns[number]),
+      
+    /** */
+    expiry: (flex: number, align?: 'left' | 'right') =>
+      ({
+        field: 'expiry',
+        headerName: 'EXPIRES IN',
+        flex: flex,
+        align: align || 'left',
+        type: 'string',
+        headerAlign: align || 'left',
+        renderCell: (params: GridRenderCellParams) => {
+          const expiry = params.value as BigNumber;
+          const hasExpiry = expiry.gt(0);
+          return (
+            <TooltipPill title={hasExpiry ? (
+              <Stack gap={0.5}>
+                <StatHorizontal label="Expires in">
+                  {displayFullBN(expiry)} Pods
+                </StatHorizontal>
+                <Typography fontSize="inherit">
+                  <InfoOutlinedIcon fontSize="inherit" sx={{ mb: -0.3 }} /> This Listing will automatically expire when {displayBN(expiry)} more Pods become Harvestable.
+                  {/* <InfoOutlinedIcon fontSize="inherit" sx={{ mb: -0.3 }} /> This Listing will automatically expire when the Pod Line moves forward by {displayBN(expiry)} Pods. */}
+                </Typography>
+              </Stack>) : ''}>
+              <Typography
+                sx={{ fontSize: 'inherit' }}
+                color={hasExpiry ? undefined : 'text.tertiary'}>
+                {hasExpiry ? `${displayBN(expiry)} PODS` : 'N/A'}
+              </Typography>
+            </TooltipPill>
+          );
+        },
+      } as GridColumns[number]),
   },
+
+  /** "MARKET ACTVITY" */
   ActivityItem: {
     /** create | cancel | fill */
     labelAction: (flex: number, align?: 'left' | 'right') =>
@@ -135,7 +227,7 @@ export const MarketColumns = {
         renderCell: (params: GridRenderCellParams<string, MarketEvent>) => (
           params.value
             ? (
-              <Row gap={0.2}>
+              <Row gap={0.25}>
                 {MARKET_EVENT_TO_ICON[params.value as keyof typeof MARKET_EVENT_TO_ICON]}
                 <span>{params.value.toUpperCase()}</span>
               </Row>
@@ -144,6 +236,8 @@ export const MarketColumns = {
         ),
       } as GridColumns[number]),
   },
+
+  /** "YOUR ORDERS" */
   HistoryItem: {
     /** order | listing */
     labelType: (flex: number, align?: 'left' | 'right') =>
@@ -153,14 +247,27 @@ export const MarketColumns = {
         flex: flex,
         align: align || 'left',
         headerAlign: align || 'left',
-        renderCell: (params: GridRenderCellParams) => (
-          <>
-            <EntityIcon type={params.value} size={12} sx={{ marginRight: 0.5 }} />
-            {params.value.toString().toUpperCase()}
-          </>
+        renderCell: (params: GridRenderCellParams<any, FarmerMarketOrder | MarketEvent>) => (
+          <TooltipPill
+            title={
+              <>
+                <StatHorizontal label="ID">
+                  {params.row.type === 'listing'
+                    ? params.row.id 
+                    : params.row.id.substring(0, 8)}
+                  <Copy value={params.row.id} />
+                </StatHorizontal>
+              </>
+          }>
+            <Row gap={0.5}>
+              <EntityIcon type={params.value} size={12} />
+              <span>{params.value.toString().toUpperCase()}</span>
+            </Row>
+          </TooltipPill>
         ),
       } as GridColumns[number]),
     
+    /** */  
     amountPods: (flex: number, align?: 'left' | 'right') =>
       ({
         field: 'amountPods',
@@ -170,56 +277,15 @@ export const MarketColumns = {
         headerAlign: align || 'left',
         renderCell: (params: GridRenderCellParams) => (
           params.value ? (
-            <>
+            <Row gap={0.25}>
               <TokenIcon token={PODS} />
-              {displayBN(params.value)}
-            </>
-          ) : (
-            '-'
-          )
+              <span>{displayFullBN(params.value, 2, 0)}</span>
+            </Row>
+          ) : '-'
         ),
       } as GridColumns[number]),
-    placeInLine: (flex: number, align?: 'left' | 'right') =>
-      ({
-        field: 'placeInLine',
-        headerName: 'PLACE IN LINE',
-        flex: flex,
-        align: align || 'left',
-        headerAlign: align || 'left',
-        renderCell: (params: GridRenderCellParams<any, FarmerMarketOrder>) => {
-          if (!params.value || params.value.eq(0))  {
-            return <>-</>;
-          }
-          
-          const strVal =
-            params.value instanceof BigNumber
-              ? displayBN(params.value)
-              : params.value;
-          const isListing = params.row.action === 'sell';
-  
-          if (isListing) {
-            return <>{strVal}</>;
-          }
-  
-          return (
-            <>{`${params.row.pricingType === PricingType.DYNAMIC ? '*' : '0'} - ${strVal}`}</>
-          );
-        },
-      } as GridColumns[number]),
-    
-    expiry: (flex: number, align?: 'left' | 'right') =>
-      ({
-        field: 'expiry',
-        headerName: 'EXPIRES IN',
-        flex: flex,
-        align: align || 'left',
-        type: 'string',
-        headerAlign: align || 'left',
-        renderCell: (params: GridRenderCellParams) => {
-          const expiry = params.value as BigNumber;
-          return <>{expiry.gt(0) ? `${displayBN(expiry)} PODS` : '-'}</>;
-        },
-      } as GridColumns[number]),
+
+    /** */
     fillPct: (flex: number, align?: 'left' | 'right') =>
       ({
         field: 'fillPct',
@@ -227,20 +293,54 @@ export const MarketColumns = {
         flex: flex,
         align: align || 'left',
         headerAlign: align || 'left',
-        renderCell: (params: GridRenderCellParams) => {
-          const progress = params.value as BigNumber;
+        renderCell: (params: GridRenderCellParams<any, FarmerMarketOrder>) => {
+          const progress = MinBN(
+            // round down so that we don't show 100% when it's not fully filled
+            (params.value as BigNumber).dp(2, BigNumber.ROUND_DOWN),
+            // cap at 100% to prevent bad data from confusing users
+            new BigNumber(100)
+          );
+          const title = params.row.type === 'listing' ? (
+            <>
+              <StatHorizontal label="Listed">
+                {displayFullBN(params.row.amountPods, 6)} PODS
+              </StatHorizontal>
+              <StatHorizontal label="Sold" color={BeanstalkPalette.washedRed}>
+                - {displayFullBN(params.row.amountPodsFilled, 6)} PODS
+              </StatHorizontal>
+              <StatHorizontal label="Received" color={BeanstalkPalette.logoGreen}>
+                + {displayFullBN(params.row.amountBeansFilled, 6)} BEAN
+              </StatHorizontal>
+            </>
+          ) : (
+            <>
+              <StatHorizontal label="Ordered">
+                {displayFullBN(params.row.amountPods, 6)} PODS
+              </StatHorizontal>
+              <StatHorizontal label="Sold" color={BeanstalkPalette.washedRed}>
+                - {displayFullBN(params.row.amountBeansFilled, 6)} BEAN
+              </StatHorizontal>
+              <StatHorizontal label="Received" color={BeanstalkPalette.logoGreen}>
+                + {displayFullBN(params.row.amountPodsFilled, 6)} PODS
+              </StatHorizontal>
+            </>
+          );
           return (
-            <Typography
-              sx={{
-                fontSize: 'inherit',
-                color: params.value.gt(0) ? 'text.primary' : 'text.secondary',
-              }}
-            >
-              {progress.isNaN() ? '-' : `${displayFullBN(MinBN(progress, new BigNumber(100)), 2, 2)}%`}
-            </Typography>
+            <TooltipPill title={title}>
+              <Typography
+                sx={{
+                  fontSize: 'inherit',
+                  color: params.value.gt(0) ? 'text.primary' : 'text.secondary',
+                }}
+              >
+                {progress.isNaN() ? '-' : `${displayFullBN(progress, 2, 2)}%`}
+              </Typography>
+            </TooltipPill>
           );
         },
       } as GridColumns[number]),
+    
+    /** */
     amountBeans: (flex: number, align?: 'left' | 'right') =>
       ({
         field: 'amountBeans',
@@ -250,13 +350,15 @@ export const MarketColumns = {
         headerAlign: align || 'left',
         renderCell: (params: GridRenderCellParams) => (
           params.value ? (
-            <Box display="inline-flex" sx={{ gap: 0.25, alignItems: 'center' }}>
+            <Row gap={0.25}>
               <TokenIcon token={BEAN[1]} />
-              {displayBN(params.value || ZERO_BN)}
-            </Box>
+              <span>{displayBN(params.value || ZERO_BN)}</span>
+            </Row>
           ) : '-'
         ),
       } as GridColumns[number]),
+
+    /** */
     status: (flex: number, align?: 'left' | 'right') =>
       ({
         field: 'status',
@@ -279,7 +381,10 @@ export const MarketColumns = {
         },
       } as GridColumns[number]),
   },
+
+  /** "BUY NOW" (Pod Listings) */
   PodListing: {
+    /** */
     listingId: (flex: number, align?: 'left' | 'right') =>
       ({
         field: 'id',
@@ -288,11 +393,15 @@ export const MarketColumns = {
         align: align || 'left',
         headerAlign: align || 'left',
         renderCell: (params: GridRenderEditCellParams<any, PodListing>) => (
-          <>{`#${params.value}`}</>
+          <Row gap={0.5}>
+            <EntityIcon type="listing" size={12}  />
+            <span>{params.value}</span>
+          </Row>
         ),
       } as GridColumns[number]),
     
-    plotIndex: (
+    /** */
+    placeInLine: (
       harvestableIndex: BigNumber,
       flex: number,
       align?: 'left' | 'right'
@@ -324,6 +433,7 @@ export const MarketColumns = {
         ),
       } as GridColumns[number]),
     
+    /** */
     remainingAmount: (flex: number, align?: 'left' | 'right') =>
       ({
         field: 'remainingAmount',
@@ -342,47 +452,9 @@ export const MarketColumns = {
           </Row>
         ),
       } as GridColumns[number]),
-
-    expiry: (
-      harvestableIndex: BigNumber,
-      flex: number,
-      align?: 'left' | 'right'
-    ) =>
-      ({
-        field: 'maxHarvestableIndex',
-        headerName: 'Expires in',
-        flex: flex,
-        value: 'number',
-        align: align || 'right',
-        headerAlign: align || 'right',
-        filterable: false, // TODO: make this filterable,
-        renderCell: (params: GridRenderCellParams) => {
-          const expiresIn = MaxBN(
-            (params.value as BigNumber).minus(harvestableIndex),
-            ZERO_BN
-          );
-          const tip = expiresIn?.gt(0) ? (
-            <>
-              If the Pod Line moves forward{' '}
-              {displayFullBN(
-                (params.value as BigNumber).minus(harvestableIndex),
-                PODS.displayDecimals
-              )}{' '}
-              Pods, this Listing will expire.
-            </>
-          ) : (
-            ''
-          );
-          return (
-            <Tooltip placement="right" title={tip}>
-              <Typography sx={{ fontSize: 'inherit' }}>
-                {displayBN(expiresIn)} Pods
-              </Typography>
-            </Tooltip>
-          );
-        },
-      } as GridColumns[number]),
   },
+
+  /** "SELL NOW" (Pod Orders) */
   PodOrder: {
     /** */
     orderId: (flex: number, align?: 'left' | 'right') =>
@@ -393,7 +465,10 @@ export const MarketColumns = {
         align: align || 'left',
         headerAlign: align || 'left',
         renderCell: (params: GridRenderCellParams<any, PodOrder>) => (
-          <>{params.row.id.substring(0, 8)}</>
+          <Row gap={0.5}>
+            <EntityIcon type="order" size={12}  />
+            <span>{params.value.substring(0, 8)}</span>
+          </Row>
         ),
       } as GridColumns[number]),
     
@@ -406,28 +481,24 @@ export const MarketColumns = {
         flex: flex,
         align: align || 'right',
         headerAlign: align || 'right',
-        renderCell: (params: GridRenderCellParams) => (
-          <Tooltip
+        renderCell: (params: GridRenderCellParams<any, PodOrder>) => (
+          <TooltipPill
             placement="right"
             title={
-              <Typography sx={{ fontSize: FontSize.sm }}>
-                Total Value:{' '}
-                {displayFullBN(
-                  (params.value as BigNumber).times(params.row.pricePerPod),
-                  BEAN[1].displayDecimals
-                )}{' '}
-                BEAN
-              </Typography>
+              <>
+                <StatHorizontal label="Pods Remaining">
+                  {displayFullBN(params.row.podAmountRemaining, 6, 0)}
+                </StatHorizontal>
+              </>
             }
           >
-            <Row gap={0.3}>
+            <Row gap={0.25}>
               <TokenIcon token={PODS} />
               <Typography sx={{ fontSize: 'inherit' }}>
-                {/* {JSON.stringify(params.row)} */}
                 {displayBN(params.value)}
               </Typography>
             </Row>
-          </Tooltip>
+          </TooltipPill>
         ),
       } as GridColumns[number]),
 
@@ -461,25 +532,3 @@ export const MarketColumns = {
       } as GridColumns<FarmerMarketOrder>[number]),
   }
 };
-
-const MARKET_COLUMNS = {
-  // pricePerPod: (flex: number, align?: 'left' | 'right') =>
-  //   ({
-  //     field: 'pricePerPod',
-  //     headerName: 'Price per Pod',
-  //     type: 'number',
-  //     flex,
-  //     align: align || 'left',
-  //     headerAlign: align || 'left',
-  //     renderCell: (params: GridRenderCellParams) => (
-  //       <Row gap={0.25}>
-  //         <TokenIcon token={BEAN[1]} />
-  //         <Typography sx={{ fontSize: 'inherit' }}>
-  //           {displayFullBN(params.value)}
-  //         </Typography>
-  //       </Row>
-  //     ),
-  //   } as GridColumns[number]),
-};
-
-export default MARKET_COLUMNS;

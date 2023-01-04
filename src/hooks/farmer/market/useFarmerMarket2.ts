@@ -43,12 +43,14 @@ export type FarmerMarketOrder = {
    * Listing: # of Pods in the initial listing
    */
   amountPods: BigNumber;
+  amountPodsFilled: BigNumber;
 
   /**
    * Order: # of Beans that were put into the order initially
    * Listing: # of Beans that could be received if Listing is completely Filled
    */
   amountBeans: BigNumber;
+  amountBeansFilled: BigNumber;
 
   /**
    * Order: 0 to `max place in line`
@@ -87,8 +89,10 @@ const castOrderToHistoryItem = (order: PodOrder): FarmerMarketOrder => ({
   pricingFunction: null,
 
   // Columns
-  amountPods: order.podAmountRemaining,
+  amountPods: order.podAmount,
+  amountPodsFilled: order.podAmountFilled,
   amountBeans: order.podAmount.times(order.pricePerPod),
+  amountBeansFilled: order.podAmountFilled.times(order.pricePerPod),
   placeInLine: order.maxPlaceInLine,
   fillPct: order.podAmountFilled.div(order.podAmount).times(100),
   expiry: ZERO_BN, // pod orders don't expire
@@ -113,7 +117,9 @@ const castListingToHistoryItem = (listing: PodListing): FarmerMarketOrder => ({
 
   // Columns
   amountPods: listing.originalAmount,
+  amountPodsFilled: listing.filled,
   amountBeans: listing.originalAmount.times(listing.pricePerPod),
+  amountBeansFilled: listing.filled.times(listing.pricePerPod),
   placeInLine: listing.placeInLine,
   fillPct: listing.filled.div(listing.originalAmount).times(100),
   expiry: listing.expiry,

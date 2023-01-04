@@ -7,7 +7,7 @@ import { MarketColumns } from './columns/market-columns';
 const columns = [
   MarketColumns.Shared.createdAt(1, 'left', 'CREATED AT', 'creationHash'),
   MarketColumns.PodOrder.orderId(1, 'left'),
-  MarketColumns.PodOrder.maxPlaceInLine(1, 'left'),
+  MarketColumns.Shared.placeInLine('order', 1, 'left'),
   MarketColumns.Shared.pricePerPod(1, 'left'),
   MarketColumns.PodOrder.podAmountRemaining(1, 'right'),
 ];

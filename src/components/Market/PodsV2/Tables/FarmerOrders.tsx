@@ -8,11 +8,11 @@ const columns = [
   MarketColumns.Shared.createdAt(1, 'left', 'DATE', 'creationHash'),
   MarketColumns.HistoryItem.labelType(0.6),
   MarketColumns.HistoryItem.amountPods(1, 'left'),
-  MarketColumns.HistoryItem.placeInLine(1, 'left'),
+  MarketColumns.Shared.placeInLine(undefined, 1, 'left'),
   MarketColumns.Shared.pricePerPod(0.8),
   MarketColumns.HistoryItem.amountBeans(1.3),
   MarketColumns.HistoryItem.fillPct(0.6),
-  MarketColumns.HistoryItem.expiry(0.5),
+  MarketColumns.Shared.expiry(0.5),
   MarketColumns.HistoryItem.status(0.6, 'right'),
 ];
 /**

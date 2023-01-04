@@ -17,7 +17,7 @@ const StatHorizontal : FC<{
 }) => (
   <Row justifyContent="space-between" gap={2} {...props}>
     <Tooltip title={labelTooltip} placement="right">
-      <Typography>
+      <Typography sx={{ font: 'inherit' }}>
         {label}&nbsp;
         {labelTooltip && (
           <HelpOutlineIcon

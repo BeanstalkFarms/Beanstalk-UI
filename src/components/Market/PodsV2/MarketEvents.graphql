@@ -29,6 +29,7 @@ query MarketEvents(
       amount
       maxHarvestableIndex
       pricePerPod
+      historyID
     }
     ... on PodListingFilled {
       id
@@ -57,6 +58,7 @@ query MarketEvents(
       amount
       maxPlaceInLine
       pricePerPod
+      historyID
     }
     ... on PodOrderFilled {
       id
