@@ -4,7 +4,6 @@ import {
   lighten,
   responsiveFontSizes,
   ThemeOptions,
-  experimental_sx as sx,
 } from '@mui/material/styles';
 import React from 'react';
 
@@ -392,12 +391,13 @@ const muiThemeBase: ThemeOptions = {
       styleOverrides: {
         root: sx({
           border: 'none'
+
         }),
       },
     },
     MuiDivider: {
       styleOverrides: {
-        root: sx({
+        root: (t) => t.theme.unstable_sx({
           borderColor: 'divider',
           borderWidth: 0.5,
         }),
@@ -461,7 +461,7 @@ const muiThemeBase: ThemeOptions = {
         disableRipple: true,
       },
       styleOverrides: {
-        root: sx({
+        root: (t) => t.theme.unstable_sx({
           textTransform: 'none',
           // fontWeight: 'bold',
           '&.MuiButton-root:hover': {
@@ -475,24 +475,24 @@ const muiThemeBase: ThemeOptions = {
           lineHeight: '1.25rem',
         }),
         /// Sizes
-        sizeSmall: sx({}),
-        sizeMedium: sx({
+        sizeSmall: (t) => t.theme.unstable_sx({}),
+        sizeMedium: (t) => t.theme.unstable_sx({
           py: 1,
           px: 1,
           height: '45px',
         }),
-        sizeLarge: sx({
+        sizeLarge: (t) => t.theme.unstable_sx({
           py: 1.5,
           px: 1.5,
           height: '60px',
         }),
-        disabled: sx({
+        disabled: (t) => t.theme.unstable_sx({
           pointerEvents: 'auto',
         }),
-        startIcon: sx({
+        startIcon: (t) => t.theme.unstable_sx({
           marginLeft: 0, // prevent adornment from pulling close to right margin
         }),
-        endIcon: sx({
+        endIcon: (t) => t.theme.unstable_sx({
           marginRight: 0, // prevent adornment from pulling close to right margin
         }),
       },
@@ -503,7 +503,7 @@ const muiThemeBase: ThemeOptions = {
           props: {
             color: 'warning',
           },
-          style: sx({
+          style: (t) => t.theme.unstable_sx({
             backgroundColor: 'rgba(253, 244, 231, 0.3)',
             color: 'text.primary',
           }),
@@ -511,7 +511,7 @@ const muiThemeBase: ThemeOptions = {
       ],
       defaultProps: {},
       styleOverrides: {
-        root: sx({
+        root: (t) => t.theme.unstable_sx({
           px: 1,
           alignItems: 'center',
           '& .MuiAlert-icon': {
@@ -519,7 +519,7 @@ const muiThemeBase: ThemeOptions = {
             p: 0,
           },
         }),
-        message: sx({
+        message: (t) => t.theme.unstable_sx({
           ml: 0.5,
         }),
       },
@@ -539,7 +539,7 @@ const muiThemeBase: ThemeOptions = {
         },
       ],
       styleOverrides: {
-        tooltip: sx({
+        tooltip: (t) => t.theme.unstable_sx({
           typography: 'body1',
           borderColor: 'divider',
           borderWidth: 1,
@@ -558,7 +558,7 @@ const muiThemeBase: ThemeOptions = {
         elevation: 0,
       },
       styleOverrides: {
-        root: sx({}),
+        root: (t) => t.theme.unstable_sx({}),
       },
       variants: [
         {
@@ -577,12 +577,12 @@ const muiThemeBase: ThemeOptions = {
         // FIXME: trying to disable the increase
         // in margin on AccordionSummary during expansion.
         // None of these work...
-        root: sx({
+        root: (t) => t.theme.unstable_sx({
           minHeight: '0 !important',
           my: 0,
           px: 1,
         }),
-        expanded: sx({
+        expanded: (t) => t.theme.unstable_sx({
           minHeight: '0 !important',
           m: [0, 0],
         }),
@@ -590,7 +590,7 @@ const muiThemeBase: ThemeOptions = {
     },
     MuiAccordionDetails: {
       styleOverrides: {
-        root: sx({
+        root: (t) => t.theme.unstable_sx({
           pt: 0,
           pb: 1,
         }),
@@ -617,14 +617,14 @@ const muiThemeBase: ThemeOptions = {
     },
     MuiListItem: {
       styleOverrides: {
-        root: sx({
+        root: (t) => t.theme.unstable_sx({
           borderRadius: 1,
         }),
       },
     },
     MuiListItemButton: {
       styleOverrides: {
-        root: sx({
+        root: (t) => t.theme.unstable_sx({
           borderRadius: 1,
           px: 1,
           py: 1,
@@ -648,7 +648,7 @@ const muiThemeBase: ThemeOptions = {
         variant: 'scrollable',
       },
       styleOverrides: {
-        root: sx({
+        root: (t) => t.theme.unstable_sx({
           fontWeight: 'normal',
           mr: { xs: 2, md: 0 },
           minHeight: 0,
@@ -663,7 +663,7 @@ const muiThemeBase: ThemeOptions = {
         disableRipple: true,
       },
       styleOverrides: {
-        root: sx({
+        root: (t) => t.theme.unstable_sx({
           p: 0,
           minHeight: 0,
           mr: 2,
@@ -724,19 +724,19 @@ const muiThemeBase: ThemeOptions = {
         },
       },
       styleOverrides: {
-        root: sx({}),
+        root: (t) => t.theme.unstable_sx({}),
       },
     },
     MuiDialogContent: {
       styleOverrides: {
-        root: sx({
+        root: (t) => t.theme.unstable_sx({
           px: 1,
         }),
       },
     },
     MuiContainer: {
       styleOverrides: {
-        root: sx({
+        root: (t) => t.theme.unstable_sx({
           paddingTop: {
             md: 4,
             xs: 2,
@@ -758,6 +758,7 @@ const muiThemeBase: ThemeOptions = {
           style: sx({
             color: BeanstalkPalette.theme.winter.primary,
             backgroundColor: hexToRgba(BeanstalkPalette.theme.winter.primary, 0.1),
+
           }),
         },
         {
@@ -772,7 +773,7 @@ const muiThemeBase: ThemeOptions = {
         },
       ],
       styleOverrides: {
-        root: sx({
+        root: (t) => t.theme.unstable_sx({
           fontWeight: 'normal',
           borderRadius: 1,
         }),
@@ -783,7 +784,7 @@ const muiThemeBase: ThemeOptions = {
         root: {
           animationDuration: '0.8s',
         },
-        circleIndeterminate: sx({
+        circleIndeterminate: (t) => t.theme.unstable_sx({
           animation: 'none',
           strokeDasharray: '80px, 200px',
           strokeDashoffset: '0px',

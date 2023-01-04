@@ -141,7 +141,12 @@ const FolderMenu: FC<{
         anchorEl={anchorEl}
         placement="bottom-start"
         disablePortal
-        sx={{ zIndex }}
+        sx={{
+          zIndex,
+        }}
+        nonce={undefined}
+        onResize={undefined}
+        onResizeCapture={undefined}>
       >
         <Box
           sx={(_theme) => ({
