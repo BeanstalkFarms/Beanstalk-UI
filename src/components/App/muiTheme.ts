@@ -158,6 +158,7 @@ export const BeanstalkPalette = {
   // Brown
   brown: 'rgba(121,87,57,1)',
   lightBrown: 'rgba(121,87,57,0.2)',
+  darkBrown: 'rgba(88, 59, 35, 1)',
 
   // ---
   theme: {

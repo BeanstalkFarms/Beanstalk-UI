@@ -142,12 +142,12 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
         <Button
           fullWidth
           onClick={showPick}
-          color="secondary"
           sx={{
             py: 1.25,
-            color: 'primary.main',
+            color: BeanstalkPalette.brown,
+            backgroundColor: BeanstalkPalette.lightBrown,
             '&:hover': {
-              backgroundColor: 'secondary.main',
+              backgroundColor: BeanstalkPalette.lightBrown,
               opacity: 0.96
             },
           }}
@@ -160,12 +160,13 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
       <Box sx={{ px: 1, pt: 0.75, pb: 0.25 }}>
         <Button
           fullWidth
-          href="/#/chop"
           color="primary"
+          href="/#/chop"
           sx={{ 
+            background: BeanstalkPalette.brown,
             py: 1.25,
             '&:hover': {
-              backgroundColor: 'primary.main',
+              background: BeanstalkPalette.darkBrown,
               opacity: 0.96
             }
           }}
