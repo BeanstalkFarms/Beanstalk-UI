@@ -91,7 +91,7 @@ const NavDrawer: FC<{
                     target="_blank"
                     rel="noreferrer"
                     variant="contained"
-                    color="secondary"
+                    color="primary"
                     sx={{ py: 0.9, zIndex: 3000 }}
                   >
                     <Row alignItems="center" spacing={1}>
