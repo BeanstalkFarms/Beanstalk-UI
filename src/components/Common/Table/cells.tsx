@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Chip, LinearProgress, Link, Tooltip, Typography } from '@mui/material';
+import { Chip, Link, Tooltip, Typography } from '@mui/material';
 import { GridColumns, GridRenderCellParams, GridValueFormatterParams } from '@mui/x-data-grid';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import BigNumber from 'bignumber.js';
@@ -10,7 +10,6 @@ import { PodListing, PodOrder } from '~/state/farmer/market';
 import TokenIcon from '../TokenIcon';
 import AddressIcon from '../AddressIcon';
 import Row from '~/components/Common/Row';
-import EntityIcon from '~/components/Market/PodsV2/Common/EntityIcon';
 import { WellActivityData } from '~/components/Market/Wells/Tables';
 import { Token } from '~/classes';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
@@ -81,61 +80,6 @@ const COLUMNS = {
     ),
   }) as GridColumns[number],
 
-  listingId: (flex: number) => ({
-    field: 'id',
-    headerName: 'Listing',
-    // renderHeader: (params: GridColumnHeaderParams) => (
-    //   <Box>
-    //     <Typography display={{ xs: 'none', md: 'block' }}>Pod Listing</Typography>
-    //     <Typography display={{ xs: 'block', md: 'none' }}>Listing</Typography>
-    //   </Box>
-    // ),
-    flex: flex,
-    disableColumnMenu: true,
-    align: 'left',
-    headerAlign: 'left',
-    renderCell: (params: GridRenderCellParams<any, PodListing>) => (
-      <Tooltip
-        placement="right"
-        title="">
-        <Row gap={1}>
-          <EntityIcon type="sell" />
-          <Typography display={{ xs: 'none', md: 'block' }}>
-            #{params.row.id}
-          </Typography>
-        </Row>
-      </Tooltip>
-    )
-  }) as GridColumns[number],
-
-  orderId: (flex: number) => ({
-    field: 'id',
-    headerName: 'Order',
-    // renderHeader: (params: GridColumnHeaderParams) => (
-    //   <>
-    //     <Typography display={{ xs: 'none', md: 'block' }}>Pod Order</Typography>
-    //     <Typography display={{ xs: 'block', md: 'none' }}>Order</Typography>
-    //   </>
-    // ),
-    flex: flex,
-    disableColumnMenu: true,
-    align: 'left',
-    headerAlign: 'left',
-    renderCell: (params: GridRenderCellParams<any, PodListing>) => (
-      <Tooltip
-        placement="right"
-        title="">
-        <Row gap={1}>
-          <EntityIcon type="buy" />
-          <Typography display={{ xs: 'none', md: 'block' }}>
-            {params.row.id.substring(0, 8)}
-          </Typography>
-        </Row>
-      </Tooltip>
-    )
-  }) as GridColumns[number],
-
-  ///
   numPodsActive: (flex: number) => ({
     field: 'remainingAmount',
     headerName: 'Amount',
@@ -163,31 +107,6 @@ const COLUMNS = {
 
     )
   }) as GridColumns[number],
-  progress: {
-    field: 'progress',
-    headerName: 'Progress',
-    align: 'left',
-    headerAlign: 'left',
-    flex: 1,
-    renderCell: (params: GridRenderCellParams<any, PodListing | PodOrder>) => {
-      const total = 'totalAmount' in params.row ? params.row.totalAmount : params.row.originalAmount; 
-      const progress = params.row.filledAmount.div(total).times(100);
-      return (
-        <Row gap={1} width="100%">
-          <Box sx={{ flex: 1 }}>
-            <LinearProgress
-              variant="determinate"
-              color="primary"
-              value={progress.toNumber()}
-            />
-          </Box>
-          <Typography fontSize="bodySmall" color="gray">
-            {progress.toFixed(1)}%
-          </Typography>
-        </Row>
-      );
-    },
-  } as GridColumns[number],
   pricePerPod: (flex: number) => ({
     field: 'pricePerPod',
     headerName: 'Price per Pod',

@@ -1,32 +1,30 @@
 import React, { useMemo, useState } from 'react';
 import BaseTable from './BaseTable';
-import { MARKET_ACTIVITY_COLUMNS } from './columns/market-activity-columns';
-import { FarmerMarketItem } from '~/hooks/farmer/market/useFarmerMarket';
+import { FarmerMarketOrder } from '~/hooks/farmer/market/useFarmerMarket2';
 import MarketItemDetailsDialog from '../Actions/MarketItemDetailsDialog';
+import { MarketColumns } from '~/components/Market/PodsV2/Tables/columns/market-columns';
 
-const C = MARKET_ACTIVITY_COLUMNS;
 const columns = [
-  C.date(1.5),
-  C.action(0.9),
-  C.type(0.9),
-  C.priceType(1),
-  C.pricePerPod(1),
-  C.numPodsActive(1, 'left'),
-  C.placeInLine(1, 'left'),
-  C.expiry(1),
-  C.fillPct(0.5),
-  C.total(1),
-  C.status(1, 'right'),
+  MarketColumns.Shared.createdAt(1, 'left', 'DATE', 'creationHash'),
+  MarketColumns.HistoryItem.labelType(0.6),
+  MarketColumns.HistoryItem.amountPods(1, 'left'),
+  MarketColumns.Shared.placeInLine(undefined, 1, 'left'),
+  MarketColumns.Shared.pricePerPod(0.8),
+  MarketColumns.HistoryItem.amountBeans(1.3),
+  MarketColumns.HistoryItem.fillPct(0.6),
+  MarketColumns.Shared.expiry(0.5),
+  MarketColumns.HistoryItem.status(0.6, 'right'),
 ];
-
-const FarmerMarketActivity: React.FC<{
-  data: FarmerMarketItem[] | undefined;
+/**
+ * Displays a table of a Farmer's outstanding Listings and Orders.
+ */
+const FarmerOrders: React.FC<{
+  data: FarmerMarketOrder[] | undefined;
   initializing: boolean;
 }> = ({ data, initializing }) => {
-  // LOCAL STATE
   const [open, setOpen] = useState(false);
   const [showModeDialog, setShowModeDialog] = useState(false);
-  const [activeItem, setActiveItem] = useState<FarmerMarketItem | undefined>(undefined);
+  const [activeItem, setActiveItem] = useState<FarmerMarketOrder | undefined>(undefined);
 
   const rows = useMemo(() => {
     if (!data || !data?.length) return [];
@@ -47,6 +45,7 @@ const FarmerMarketActivity: React.FC<{
           item && setActiveItem(item);
           setOpen(true);
         }}
+        sortModel={[]}
       />
       <MarketItemDetailsDialog
         item={activeItem}
@@ -59,4 +58,4 @@ const FarmerMarketActivity: React.FC<{
   );
 };
 
-export default FarmerMarketActivity;
+export default FarmerOrders;

@@ -12,7 +12,7 @@ import { useAtomValue } from 'jotai';
 import useNavHeight from '~/hooks/app/usePageDimensions';
 import useBanner from '~/hooks/app/useBanner';
 import MarketActions from '~/components/Market/PodsV2/Modules/MarketActions';
-import MarketActivityTable from '~/components/Market/PodsV2/Modules/MarketActivity';
+import MarketActivityTable from '~/components/Market/PodsV2/Modules/MarketTables';
 import MarketGraphContainer from '~/components/Market/PodsV2/Modules/MarketGraphContainer';
 import { muiThemeCondensed } from '~/components/App/muiTheme';
 import { marketBottomTabsHeightAtom } from '~/components/Market/PodsV2/info/atom-context';

@@ -19,11 +19,10 @@ import TxnAccordion from '~/components/Common/TxnAccordion';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
 import { useSigner } from '~/hooks/ledger/useSigner';
-import useFarmerListings from '~/hooks/farmer/useFarmerListings';
+import useFarmerListingsLedger from '~/hooks/farmer/useFarmerListingsLedger';
 import useFarmerPlots from '~/hooks/farmer/useFarmerPlots';
 import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import { ActionType } from '~/util/Actions';
-import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
 import {
   PlotMap,
   toStringBaseUnitBN,
@@ -39,7 +38,7 @@ import { ONE_BN, ZERO_BN, POD_MARKET_TOOLTIPS } from '~/constants';
 import FieldWrapper from '~/components/Common/Form/FieldWrapper';
 import { FC } from '~/types';
 import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
-import { useFetchFarmerMarketItems } from '~/hooks/farmer/market/useFarmerMarket';
+import { useFetchFarmerMarketItems } from '~/hooks/farmer/market/useFarmerMarket2';
 
 export type CreateListingFormValues = {
   plot:        PlotFragment
@@ -92,7 +91,7 @@ const CreateListingV2Form: FC<
   const plot = values.plot;
 
   /// Data
-  const existingListings = useFarmerListings();
+  const existingListings = useFarmerListingsLedger();
 
   /// Derived
   const placeInLine = useMemo(
@@ -201,7 +200,6 @@ const CreateListingV2: FC<{}> = () => {
 
   /// Farmer
   const plots            = useFarmerPlots();
-  const [refetchFarmerMarket] = useFetchFarmerMarket();
   const { fetch: refetchFarmerMarketItems } = useFetchFarmerMarketItems();
 
   /// Form
@@ -260,7 +258,6 @@ const CreateListingV2: FC<{}> = () => {
 
       const receipt = await txn.wait();
       await Promise.all([
-        refetchFarmerMarket(),
         refetchFarmerMarketItems(),
       ]);
 
@@ -270,7 +267,7 @@ const CreateListingV2: FC<{}> = () => {
       txToast?.error(err) || toast.error(parseError(err));
       console.error(err);
     }
-  }, [middleware, plots, harvestableIndex, beanstalk, refetchFarmerMarket, refetchFarmerMarketItems, getChainToken]);
+  }, [middleware, plots, harvestableIndex, beanstalk, refetchFarmerMarketItems, getChainToken]);
 
   return (
     <Formik<CreateListingFormValues>

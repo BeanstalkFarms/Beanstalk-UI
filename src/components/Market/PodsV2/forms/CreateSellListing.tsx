@@ -21,7 +21,7 @@ import { ONE_BN, POD_MARKET_TOOLTIPS, ZERO_BN } from '~/constants';
 import { BEAN, PODS } from '~/constants/tokens';
 import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
 import useGetChainToken from '~/hooks/chain/useGetChainToken';
-import useFarmerListings from '~/hooks/farmer/useFarmerListings';
+import useFarmerListingsLedger from '~/hooks/farmer/useFarmerListingsLedger';
 import useFarmerPlots from '~/hooks/farmer/useFarmerPlots';
 import { useBeanstalkContract } from '~/hooks/ledger/useContract';
 import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
@@ -114,7 +114,7 @@ const ListForm: FC<
   const plot = values.plot;
 
   /// Data
-  const existingListings = useFarmerListings();
+  const existingListings = useFarmerListingsLedger();
 
   /// Derived
   const placeInLine = useMemo(() => {

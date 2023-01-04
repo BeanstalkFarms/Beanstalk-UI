@@ -80,7 +80,7 @@ const getPriceKey = (pricePerPod: BigNumber) => {
 const handleBucketOrders = (orders: PodOrder[]) => orders.reduce((prev, order) => {
     const price = getPriceKey(order.pricePerPod);
     const bucket = prev[price] || initPriceBucket();
-    const beanAmount = order.remainingAmount.times(order.pricePerPod);
+    const beanAmount = order.podAmountRemaining.times(order.pricePerPod);
 
     // add to the depth of beans at the price point
     bucket.depth.bean = bucket.depth.bean.plus(beanAmount);

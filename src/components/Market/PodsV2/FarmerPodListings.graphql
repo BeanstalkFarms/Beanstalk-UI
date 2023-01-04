@@ -9,7 +9,8 @@ query FarmerPodListings(
     first: $first,
     where: { 
       createdAt_gt: $createdAt_gt,
-      farmer: $account 
+      farmer: $account,
+      status_not: FILLED_PARTIAL
     },
   ) {
     ...PodListing

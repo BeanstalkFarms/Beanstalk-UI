@@ -237,7 +237,7 @@ const Graph: FC<GraphProps> = ({
       y: yScale(listing.pricePerPod.toNumber()),
       // radius is plot size
       radius: calculateCircleRadius(
-        listing.amount.toNumber(),
+        listing.remainingAmount.toNumber(),
         maxPlotSize
       ),
     })),
@@ -724,7 +724,7 @@ const Graph: FC<GraphProps> = ({
                     <EntityIcon type={cursorPoint.type} size={20} />
                     {cursorPoint.type === 'listing'
                       ? displayBN(listings[cursorPoint.index].remainingAmount)
-                      : displayBN(orders[cursorPoint.index].remainingAmount)
+                      : displayBN(orders[cursorPoint.index].podAmountRemaining)
                     } Pods
                   </Row>
                 </TooltipCard>

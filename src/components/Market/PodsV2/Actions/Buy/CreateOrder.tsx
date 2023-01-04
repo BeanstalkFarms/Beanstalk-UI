@@ -53,7 +53,7 @@ import FieldWrapper from '~/components/Common/Form/FieldWrapper';
 import useFormMiddleware from '~/hooks/ledger/useFormMiddleware';
 
 import { FC } from '~/types';
-import { useFetchFarmerMarketItems } from '~/hooks/farmer/market/useFarmerMarket';
+import { useFetchFarmerMarketItems } from '~/hooks/farmer/market/useFarmerMarket2';
 
 export type CreateOrderFormValues = {
   placeInLine: BigNumber | null;

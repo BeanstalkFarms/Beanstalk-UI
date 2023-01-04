@@ -1,27 +1,31 @@
 import { useMemo } from 'react';
+import { FarmerMarketOrder } from '~/hooks/farmer/market/useFarmerMarket2';
 import { displayBN, displayFullBN } from '~/util';
-import useHarvestableIndex from '../../beanstalk/useHarvestableIndex';
-import { FarmerMarketItem } from './useFarmerMarket';
 
 const openStates = ['ACTIVE', 'FILLED_PARTIAL'];
 
-const isListing = (i: FarmerMarketItem) => i.type === 'listing' && i.listing;
-const isOrder = (i: FarmerMarketItem) => i.type === 'order' && i.order;
+const isListing = (i: FarmerMarketOrder) => i.type === 'listing' && i.source;
+const isOrder = (i: FarmerMarketOrder) => i.type === 'order' && i.source;
 
 export default function useFarmerMarketItemStats(
-  item: FarmerMarketItem | undefined | null
+  item: FarmerMarketOrder | undefined | null
 ) {
-  const harvestableIndex = useHarvestableIndex();
   const data = useMemo(() => {
     if (
       !item ||
-      (item.type === 'listing' && !item.listing) ||
-      (item.type === 'order' && !item.order)
+      (item.type === 'listing' && !item.source) ||
+      (item.type === 'order' && !item.source)
     ) {
       return undefined;
     }
 
     const items: { label: string; info: string }[] = [];
+    
+    items.push({
+      label: 'ID',
+      info: isOrder(item) ? item.id.substring(0,8) : item.id
+    });
+
     items.push({
       label: 'ACTION',
       info: item.action.toUpperCase(),
@@ -32,7 +36,7 @@ export default function useFarmerMarketItemStats(
     });
     items.push({
       label: 'PRICE TYPE',
-      info: item.priceType.toUpperCase(),
+      info: item.pricingType === 1 ? 'DYNAMIC' : 'FIXED',
     });
     items.push({
       label: 'PRICE',
@@ -41,20 +45,19 @@ export default function useFarmerMarketItemStats(
     if (isListing(item)) {
       items.push({
         label: 'AMOUNT',
-        info: `${displayBN(item.remainingAmount)} PODS`,
+        info: `${displayBN(item.amountPods)} PODS`,
       });
     }
     items.push({
       label: 'PLACE IN LINE',
       info: `${isOrder(item) ? '0 - ' : ''}${displayBN(
-        item.placeInPodline
+        item.placeInLine
       )} PODS`,
     });
     if (isListing(item)) {
-      const expiry = item.listing?.maxHarvestableIndex.minus(harvestableIndex);
       items.push({
         label: 'EXPIRY',
-        info: expiry?.gt(0) ? expiry.toString() : 'N/A',
+        info: item.expiry?.gt(0) ? item.expiry.toString() : 'N/A',
       });
     }
     items.push({
@@ -63,7 +66,7 @@ export default function useFarmerMarketItemStats(
     });
     items.push({
       label: 'TOTAL',
-      info: `${displayFullBN(item.totalBeans, 2)} BEAN`,
+      info: `${displayFullBN(item.amountBeans, 2)} BEAN`,
     });
     items.push({
       label: 'STATUS',
@@ -71,7 +74,7 @@ export default function useFarmerMarketItemStats(
     });
 
     return items;
-  }, [harvestableIndex, item]);
+  }, [item]);
 
   const isCancellable = useMemo(() => {
     if (!item) return false;

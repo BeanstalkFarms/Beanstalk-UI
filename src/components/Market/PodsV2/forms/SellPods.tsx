@@ -39,7 +39,7 @@ const SellPods: React.FC<{}> = () => {
             <StatHorizontal label="Amount">
               <Row gap={0.25}>
                 <TokenIcon token={PODS} />{' '}
-                {displayFullBN(order.remainingAmount, 2, 0)}
+                {displayFullBN(order.podAmountRemaining, 2, 0)}
               </Row>
             </StatHorizontal>
           </>

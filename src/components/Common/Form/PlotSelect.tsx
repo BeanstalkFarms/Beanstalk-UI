@@ -12,7 +12,7 @@ import {
 import BigNumber from 'bignumber.js';
 import { useTheme } from '@mui/material/styles';
 import { BEAN, PODS } from '~/constants/tokens';
-import useFarmerListings from '~/hooks/farmer/useFarmerListings';
+import useFarmerListingsLedger from '~/hooks/farmer/useFarmerListingsLedger';
 import { FontSize, IconSize } from '~/components/App/muiTheme';
 import { displayBN, displayFullBN, toStringBaseUnitBN , PlotMap } from '~/util';
 import podIcon from '~/img/beanstalk/pod-icon.svg';
@@ -40,7 +40,7 @@ const PlotSelect: FC<PlotSelectProps> = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const farmerListings = useFarmerListings();
+  const farmerListings = useFarmerListingsLedger();
   const orderedPlotKeys = useMemo(() => {
     if (!plots) return null;
     /// float sorting is good enough here
