@@ -172,15 +172,9 @@ export const BeanstalkPalette = {
     winter: {
       primary: '#1D8A79',
       primaryHover: hexToRgba('#1D8A79', 0.05),
-      light: '#177694',
-      paleBlue: '#01497C',
       iceBlue: '#A7CBE7',
       divider: '#002855',
-      blueDark: '#023E7D',
-      extraLight: '#168AAD',
       blueLight: '#1E6091',
-      lightGreen: '#D5F2E3',
-      selected: hexToRgba('#168AAD', 40),
       red: '#DA2C38',
       error: '#E33D51',
       orderGreen: '#60D394',
@@ -199,30 +193,6 @@ export const BeanstalkPalette = {
       },
     },
   },
-};
-
-export const AppPalette = {
-  divider: BeanstalkPalette.blue,
-  primary: {
-    main: BeanstalkPalette.theme.winter.primary,
-    light: '#4AA193',
-    dark: '#146054',
-    contrastText: BeanstalkPalette.white,
-    hover: hexToRgba('#1D8A79', 0.05),
-  },
-  secondary: {
-    main: BeanstalkPalette.blue,
-    light: '#CDE4F4',
-    dark: '#879BA9',
-    contrastText: BeanstalkPalette.black,
-  },
-  text: {
-    primary: BeanstalkPalette.textBlue,
-    secondary: BeanstalkPalette.lightGrey,
-    tertiary: BeanstalkPalette.lightestGrey,
-    grey: BeanstalkPalette.grey,
-    cta: '#3B3B3B',
-  }
 };
 
 export const PAGE_BORDER_COLOR = BeanstalkPalette.blue;
