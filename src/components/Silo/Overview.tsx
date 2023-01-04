@@ -19,8 +19,8 @@ import useFarmerSiloHistory from '~/hooks/farmer/useFarmerSiloHistory';
 import { FC } from '~/types';
 import { BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
 
-import stalkIconWinter from '~/img/beanstalk/stalk-icon-winter.svg';
-import seedIconWinter from '~/img/beanstalk/seed-icon-winter.svg';
+import stalkIconWinter from '~/img/beanstalk/stalk-icon-green.svg';
+import seedIconWinter from '~/img/beanstalk/seed-icon-green.svg';
 
 const depositStats = (s: BigNumber, v: BigNumber[]) => (
   <Stat
