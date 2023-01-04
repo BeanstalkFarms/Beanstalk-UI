@@ -24,7 +24,7 @@ const HoverMenu: FC<{
     <Tooltip
       components={{ Tooltip: Card }}
       title={(
-        <MenuList>
+        <MenuList sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
           {items.map((item) => (
             <MenuItem key={item.path} item={item} onClick={hide} />
           ))}
@@ -36,13 +36,19 @@ const HoverMenu: FC<{
       leaveTouchDelay={10000}
       disableFocusListener
       placement="bottom-start"
-      sx={{ marginTop: 10 }}
+      sx={{ 
+        marginTop: 10,
+        border: '1px solid',
+        borderColor: 'divider'
+      }}
       componentsProps={{
         popper: {
           sx: {
-            paddingTop: 0.5
+            // background: 'yellow',
+            paddingTop: 0.5,
           }
         }
+        
       }}
     >
       {/* Partial duplicate of LinkButton */}

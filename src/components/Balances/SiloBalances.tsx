@@ -136,7 +136,9 @@ const SiloBalances: React.FC<{}> = () => {
                   textAlign: 'left',
                   px: 0,
                   py: 1,
+                  borderWidth: 0.5,
                   borderColor: 'divider',
+                  background: BeanstalkPalette.white, 
                   '&:hover': {
                     borderColor: 'unset',
                   }

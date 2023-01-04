@@ -37,7 +37,7 @@ const SeasonCard: FC<SeasonCardProps> = ({
           className="next-season"
           sx={{ 
             borderColor: 'rgba(240, 223, 146, 1)',
-            borderWidth: 1,
+            borderWidth: 0.5,
             borderStyle: 'solid',
             display: 'none',
             position: 'absolute',
