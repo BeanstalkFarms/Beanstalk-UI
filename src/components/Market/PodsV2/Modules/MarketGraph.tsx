@@ -14,7 +14,7 @@ import { localPoint } from '@visx/event';
 import { PatternLines } from '@visx/pattern';
 import { applyMatrixToPoint, Zoom } from '@visx/zoom';
 import { ProvidedZoom, TransformMatrix } from '@visx/zoom/lib/types';
-import { voronoi } from '@visx/voronoi';
+import { voronoi, VoronoiPolygon } from '@visx/voronoi';
 import BigNumber from 'bignumber.js';
 import { useNavigate } from 'react-router-dom';
 import { PodListing, PodOrder } from '~/state/farmer/market';
@@ -259,9 +259,9 @@ const Graph: FC<GraphProps> = ({
       })(combinedPositions),
     [innerWidth, innerHeight, combinedPositions],
   );
-  // const polygons = voronoiLayout.polygons();
+  const polygons = voronoiLayout.polygons();
   const [voroHoveredId, setVoronoiHoveredId] = useState<string | null>(null);
-  // const [voroNeighborIds, setVoronoiNeighborIds] = useState<Set<string>>(new Set());
+  const [voroNeighborIds, setVoronoiNeighborIds] = useState<Set<string>>(new Set());
 
   /// Selected point
   const [selectedPoint, setSelectedPoint] = useState<SelectedPoint | undefined>(undefined);
@@ -313,23 +313,23 @@ const Graph: FC<GraphProps> = ({
       />
     );
   }), [cursorPoint?.index, cursorPoint?.type, listingPositions, peerOpacity]);
-  // const voroniPolygons = (
-  //   <g>
-  //     {polygons.map((polygon) => (
-  //       <VoronoiPolygon
-  //         key={`polygon-${polygon.data.id}`}
-  //         polygon={polygon}
-  //         fill={
-  //           voroHoveredId && (polygon.data.id === voroHoveredId || voroNeighborIds.has(polygon.data.id))
-  //             ? 'red'
-  //             : 'transparent'
-  //         }
-  //         fillOpacity={voroHoveredId && voroNeighborIds.has(polygon.data.id) ? 0.05 : 0.2}
-  //         strokeLinejoin="round"
-  //       />
-  //     ))}
-  //   </g>
-  // );
+  const voroniPolygons = (
+    <g>
+      {polygons.map((polygon) => (
+        <VoronoiPolygon
+          key={`polygon-${polygon.data.id}`}
+          polygon={polygon}
+          fill={
+            voroHoveredId && (polygon.data.id === voroHoveredId || voroNeighborIds.has(polygon.data.id))
+              ? 'red'
+              : 'transparent'
+          }
+          fillOpacity={voroHoveredId && voroNeighborIds.has(polygon.data.id) ? 0.05 : 0.2}
+          strokeLinejoin="round"
+        />
+      ))}
+    </g>
+  );
 
   const cursorPositionLines = cursorPoint
     ? cursorPoint?.type === 'listing'
@@ -408,24 +408,24 @@ const Graph: FC<GraphProps> = ({
     const transformedPoint = zoom.applyInverseToPoint(point);
 
     // Voronoi
-    // const closest = voronoiLayout.find(transformedPoint.x, transformedPoint.y, neighborRadius);
+    const closest = voronoiLayout.find(transformedPoint.x, transformedPoint.y, neighborRadius);
 
     // find neighboring polygons to hightlight
-    // if (closest && closest.data.id !== voroHoveredId) {
-    //   const neighbors = new Set<string>();
-    //   const cell = voronoiLayout.cells[closest.index];
-    //   if (!cell) return;
+    if (closest && closest.data.id !== voroHoveredId) {
+      const neighbors = new Set<string>();
+      const cell = voronoiLayout.cells[closest.index];
+      if (!cell) return;
 
-    //   cell.halfedges.forEach((index) => {
-    //     const edge = voronoiLayout.edges[index];
-    //     const { left, right } = edge;
-    //     if (left && left !== closest) neighbors.add(left.data.id);
-    //     else if (right && right !== closest) neighbors.add(right.data.id);
-    //   });
+      cell.halfedges.forEach((index) => {
+        const edge = voronoiLayout.edges[index];
+        const { left, right } = edge;
+        if (left && left !== closest) neighbors.add(left.data.id);
+        else if (right && right !== closest) neighbors.add(right.data.id);
+      });
 
-    //   setVoronoiNeighborIds(neighbors);
-    //   setVoronoiHoveredId(closest.data.id);
-    // }
+      setVoronoiNeighborIds(neighbors);
+      setVoronoiHoveredId(closest.data.id);
+    }
 
     // Check if we're hovering a Listing
     const listingIndex = findPointInCircles(listingPositions, transformedPoint);
@@ -636,7 +636,7 @@ const Graph: FC<GraphProps> = ({
             />
             <g clipPath="url(#zoom-clip)">
               <g transform={zoom.toString()}>
-                {/* {voroniPolygons} */}
+                {voroniPolygons}
                 {cursorPositionLines}
                 {orderCircles}
                 {listingCircles}
