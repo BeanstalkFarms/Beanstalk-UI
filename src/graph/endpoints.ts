@@ -1,11 +1,9 @@
 export enum SGEnvironments {
-  DNET_2_0_3 = 'dnet-2.0.3',
   BF_PROD = 'bf-prod',
   BF_DEV = 'bf-dev',
   BF_TEST = 'bf-test',
-  THEGRAPH_PROD = 'thegraph-prod',
-  THEGRAPH_DEV = 'thegraph-dev',
-  THEGRAPH_TEST = 'thegraph-test',
+  BF_2_0_3 = 'bf-2.0.3',
+  DNET_2_0_3 = 'dnet-2.0.3',
 }
 
 type SGEnvironment = {
@@ -17,17 +15,10 @@ type SGEnvironment = {
 }
 
 export const SUBGRAPH_ENVIRONMENTS : Record<SGEnvironments, SGEnvironment> = {
-  [SGEnvironments.DNET_2_0_3]: {
-    name: 'Decentralized Network v2.0.3',
-    subgraphs: {
-      beanstalk: `https://gateway.thegraph.com/api/${import.meta.env.VITE_THEGRAPH_API_KEY}/subgraphs/id/R9rnzRuiyDybfDsZfoM7eA9w8WuHtZKbroGrgWwDw1d`,
-      bean: 'https://graph.node.bean.money/subgraphs/name/bean', // fixme
-    }
-  },
   [SGEnvironments.BF_PROD]:       {
     name: 'Beanstalk Farms / Production',
     subgraphs: {
-      beanstalk: 'https://graph.node.bean.money/subgraphs/name/beanstalk-dev',
+      beanstalk: 'https://graph.node.bean.money/subgraphs/name/beanstalk',
       bean: 'https://graph.node.bean.money/subgraphs/name/bean'
     },
   },
@@ -45,25 +36,18 @@ export const SUBGRAPH_ENVIRONMENTS : Record<SGEnvironments, SGEnvironment> = {
       bean: 'https://graph.node.bean.money/subgraphs/name/bean-testing'
     }
   },
-  [SGEnvironments.THEGRAPH_PROD]: {
-    name: 'The Graph / Production',
+  [SGEnvironments.BF_2_0_3]: {
+    name: 'Beanstalk Farms / v2.0.3',
     subgraphs: {
-      beanstalk: 'https://api.thegraph.com/subgraphs/name/cujowolf/beanstalk',
-      bean: 'https://api.thegraph.com/subgraphs/name/cujowolf/bean'
+      beanstalk: 'https://graph.node.bean.money/subgraphs/name/beanstalk-2-0-3',
+      bean: 'https://graph.node.bean.money/subgraphs/name/bean', // fixme
     }
   },
-  [SGEnvironments.THEGRAPH_DEV]:  {
-    name: 'The Graph / Development',
+  [SGEnvironments.DNET_2_0_3]: {
+    name: 'Decentralized Network / v2.0.3',
     subgraphs: {
-      beanstalk: 'https://api.thegraph.com/subgraphs/name/cujowolf/beanstalk-dev',
-      bean: 'https://api.thegraph.com/subgraphs/name/cujowolf/bean'
-    }
-  },
-  [SGEnvironments.THEGRAPH_TEST]: {
-    name: 'The Graph / Test',
-    subgraphs: {
-      beanstalk: 'https://api.thegraph.com/subgraphs/name/cujowolf/beanstalk-testing',
-      bean: 'https://api.thegraph.com/subgraphs/name/cujowolf/bean'
+      beanstalk: `https://gateway.thegraph.com/api/${import.meta.env.VITE_THEGRAPH_API_KEY}/subgraphs/id/R9rnzRuiyDybfDsZfoM7eA9w8WuHtZKbroGrgWwDw1d`,
+      bean: 'https://graph.node.bean.money/subgraphs/name/bean', // fixme
     }
   },
 };

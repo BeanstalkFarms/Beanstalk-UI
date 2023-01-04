@@ -130,7 +130,7 @@ try {
 
 /// ///////////////////////// Links ////////////////////////////
 
-export let sgEnvKey = SGEnvironments.DNET_2_0_3;
+export let sgEnvKey = SGEnvironments.BF_PROD;
 export let sgEnv = SUBGRAPH_ENVIRONMENTS[sgEnvKey];
 
 try {
