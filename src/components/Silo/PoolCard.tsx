@@ -6,7 +6,6 @@ import { Pool } from '~/classes';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { ZERO_BN } from '~/constants';
 import Row from '~/components/Common/Row';
-import { BeanstalkPalette } from '../App/muiTheme';
 
 /**
  * Displays data about a Pool containing Beans and other assets.
@@ -24,10 +23,7 @@ const PoolCard: FC<{
 }) => {
   const cardContent = (
     <Row justifyContent="space-between">
-      <Row
-        alignItems="center"
-        gap={1.0}
-      >
+      <Row alignItems="center" gap={1.0}>
         <Row spacing={0.25} sx={{ fontSize: 24 }}>
           {pool.tokens.map((token) => (
             <TokenIcon key={token.address} token={token} />
@@ -39,10 +35,7 @@ const PoolCard: FC<{
       </Row>
       <Stack>
         <Row justifyContent="end" gap={0.6}>
-          <Typography
-            color="text.secondary"
-            variant="bodySmall"
-          >
+          <Typography color="text.tertiary" variant="bodySmall">
             liquidity:
           </Typography>
           <Typography variant="bodySmall">
@@ -50,10 +43,7 @@ const PoolCard: FC<{
           </Typography>
         </Row>
         <Row justifyContent="end" gap={0.6}>
-          <Typography
-            color="text.secondary"
-            variant="bodySmall"
-          >
+          <Typography color="text.tertiary" variant="bodySmall">
             deltaB:
           </Typography>
           <Row gap={0.25}>
@@ -69,16 +59,11 @@ const PoolCard: FC<{
   
   return ButtonProps ? (
     <Button
-      variant="outlined"
+      variant="outlined-secondary"
       color="secondary"
       sx={{
         height: 'auto', // FIXME
         display: 'block',
-        color: 'text.primary',
-        borderColor: BeanstalkPalette.theme.winter.divider,
-        ':hover': {
-          borderColor: 'primary.main',
-        }
       }}
       {...ButtonProps}
     >

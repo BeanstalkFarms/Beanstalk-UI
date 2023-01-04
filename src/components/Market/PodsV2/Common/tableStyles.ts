@@ -15,15 +15,15 @@ export const scrollbarStyles = {
   },
   '& ::-webkit-scrollbar-track': {
     width: '4px',
-    background: BeanstalkPalette.theme.winter.paleBlue,
+    background: BeanstalkPalette.offWhite,
   },
   '& ::-webkit-scrollbar-thumb': {
     borderRadius: 2,
     background: BeanstalkPalette.theme.winter.primary,
   },
-  '& ::-webkit-scrollbar-thumb:hover': {
-    background: BeanstalkPalette.theme.winter.blueLight,
-  },
+  // '& ::-webkit-scrollbar-thumb:hover': {
+  //   background: BeanstalkPalette.theme.winter.blueLight,
+  // },
 };
 
 const marketplaceTableStyle = {
@@ -52,7 +52,7 @@ const marketplaceTableStyle = {
     },
     '& .MuiDataGrid-columnHeaderTitle': {
       fontSize: FontSize.xs,
-      color: 'text.tertiary',
+      color: 'text.secondary',
       fontWeight: FontWeight.normal,
     },
     // Cell

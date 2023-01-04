@@ -88,7 +88,6 @@ const TokenPage: FC<{}> = () => {
             />
           }
         />
-
         <Stack gap={2} direction={{ xs: 'column', lg: 'row' }} width="100%">
           <Stack
             width="100%"

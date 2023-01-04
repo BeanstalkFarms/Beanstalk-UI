@@ -17,11 +17,11 @@ const BUTTON_SX = {
   },
   backgroundColor: undefined,
   '&.Mui-active': {
-    color: 'text.primary',
+    color: 'white',
     backgroundColor: BeanstalkPalette.theme.winter.primary,
-    ':hover': {
-      backgroundColor: BeanstalkPalette.theme.winter.primaryDark
-    }
+    // ':hover': {
+    //   backgroundColor: BeanstalkPalette.theme.winter.primaryDark
+    // }
   },
   borderRadius: '4px',
 };

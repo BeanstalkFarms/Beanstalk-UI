@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Box, IconButton, Menu, Stack, Typography } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 import { FC } from '~/types';
 
@@ -53,7 +52,6 @@ const TxnSettings : FC<{
         onClose={handleHideMenu}
         PaperProps={{
           sx: {
-            backgroundColor: BeanstalkPalette.theme.winter.extraLight,
             borderWidth: 2,
             borderColor: 'divider',
             borderStyle: 'solid',

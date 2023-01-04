@@ -3,21 +3,22 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IconProps } from '@mui/material';
 
 import { FC } from '~/types';
-import { BeanstalkPalette } from '../App/muiTheme';
 
 const DropdownIcon : FC<{
   open: boolean;
   mode?: 'vertical' | 'right-rotate',
   disabled?: boolean;
+  light?: boolean;
 } & IconProps> = ({
   disabled,
   open,
   mode = 'vertical',
+  light = false,
   sx
 }) => (
   <ExpandMoreIcon
     sx={{
-      color: disabled ? BeanstalkPalette.grey : 'text.primary',
+      color: disabled ? 'text.disabled' : light ? 'white' : 'text.primary',
       marginLeft: '-4px',
       marginRight: '-4px',
       // Flip the icon when the popover or drawer is open.

@@ -19,8 +19,8 @@ import useFarmerSiloHistory from '~/hooks/farmer/useFarmerSiloHistory';
 import { FC } from '~/types';
 import { BaseDataPoint } from '~/components/Common/Charts/ChartPropProvider';
 
-import stalkIconWinter from '~/img/beanstalk/stalk-icon-winter.svg';
-import seedIconWinter from '~/img/beanstalk/seed-icon-winter.svg';
+import stalkIconWinter from '~/img/beanstalk/stalk-icon-green.svg';
+import seedIconWinter from '~/img/beanstalk/seed-icon-green.svg';
 
 const depositStats = (s: BigNumber, v: BigNumber[]) => (
   <Stat
@@ -33,9 +33,9 @@ const depositStats = (s: BigNumber, v: BigNumber[]) => (
         </Typography>
       </>
     )}
+    color="primary"
     subtitle={`Season ${s.toString()}`}
     amount={displayUSD(v[0])}
-    color="primary"
     amountIcon={undefined}
     gap={0.25}
     sx={{ ml: 0 }}
@@ -48,7 +48,6 @@ const seedsStats = (s: BigNumber, v: BigNumber[]) => (
     titleTooltip="Seeds are illiquid tokens that yield 1/10,000 Stalk each Season."
     subtitle={`Season ${s.toString()}`}
     amount={displayStalk(v[0])}
-    color="primary"
     sx={{ minWidth: 180, ml: 0 }}
     amountIcon={undefined}
     gap={0.25}
@@ -87,7 +86,7 @@ const Overview: FC<{
         titleTooltip="Stalk is the governance token of the Beanstalk DAO. Stalk entitles holders to passive interest in the form of a share of future Bean mints, and the right to propose and vote on BIPs. Your Stalk is forfeited when you Withdraw your Deposited assets from the Silo."
         subtitle={`Season ${s.toString()}`}
         amount={displayStalk(v[0])}
-        color="primary"
+        color="text.primary"
         sx={{ minWidth: 220, ml: 0 }}
         gap={0.25}
       />
@@ -95,7 +94,7 @@ const Overview: FC<{
         title="Stalk Ownership"
         titleTooltip="Your current ownership of Beanstalk is displayed as a percentage. Ownership is determined by your proportional ownership of the total Stalk supply."
         amount={displayPercentage(ownership.multipliedBy(100))}
-        color="text.tertiary"
+        color="text.primary"
         gap={0.25}
         sx={{ minWidth: 200, ml: 0 }}
       />
@@ -103,7 +102,7 @@ const Overview: FC<{
         title="Stalk Grown per Day"
         titleTooltip="The number of Stalk your Seeds will grow every 24 Seasons based on your current Seed balance."
         amount={displayStalk(farmerSilo.seeds.active.times(STALK_PER_SEED_PER_SEASON).times(24))}
-        color="text.secondary"
+        color="text.primary"
         gap={0.25}
         sx={{ minWidth: 120, ml: 0 }}
       />
@@ -114,10 +113,7 @@ const Overview: FC<{
     <Module>
       <ModuleTabs value={tab} onChange={handleChange} sx={{ minHeight: 0 }}>
         <StyledTab label={
-          <ChipLabel name="Deposits">
-            {displayUSD(breakdown.states.deposited.value)}
-            {/* <Fiat value={breakdown.states.deposited.value} amount={breakdown.states.deposited.value} /> */}
-          </ChipLabel>
+          <ChipLabel name="Deposits">{displayUSD(breakdown.states.deposited.value)}</ChipLabel>
         } />
         <StyledTab label={
           <ChipLabel name="Stalk">

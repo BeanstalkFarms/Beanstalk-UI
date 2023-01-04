@@ -67,9 +67,9 @@ const DescriptionButton: FC<ButtonProps & {
       display: 'block',
       color: 'inherit',
       borderColor: isSelected ? 'primary.main' : 'divider',
-      backgroundColor: isSelected ? BeanstalkPalette.theme.winter.selected : null,
+      backgroundColor: isSelected ? BeanstalkPalette.theme.winter.primaryHover : null,
       '&:hover': {
-        backgroundColor: isSelected ? BeanstalkPalette.theme.winter.selected : null,
+        backgroundColor: isSelected ? BeanstalkPalette.theme.winter.primaryHover : null,
         borderColor: 'primary.main'
       },
       height: 'auto'

@@ -53,7 +53,7 @@ export const MARKET_ACTIVITY_COLUMNS = {
       valueFormatter: (params: GridValueFormatterParams) =>
         formatDate(params.value),
       renderCell: (params: GridRenderCellParams) => (
-        <Typography color="text.tertiary" sx={{ fontSize: 'inherit' }}>
+        <Typography color="text.secondary" sx={{ fontSize: 'inherit' }}>
           {params.row[hashKey] ? (
             <Link href={`https://etherscan.io/tx/${params.row[hashKey]}`} rel="noreferrer" target="_blank" underline="hover" color="text.tertiary" sx={{ '&:hover img': { display: 'inline-block' } }}>
               <Row>

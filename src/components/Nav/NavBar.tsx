@@ -26,8 +26,7 @@ const NavBar: FC<{}> = ({ children }) => (
     className="navbar"
     sx={{
       position: 'sticky',
-      bgcolor: 'background',
-      backgroundColor: 'background.default',
+      bgcolor: 'background.default',
       borderBottom: `${NAV_BORDER_HEIGHT}px solid ${PAGE_BORDER_COLOR}`,
     }}
   >

@@ -22,9 +22,9 @@ const Split : FC<{}> = ({ children }) => (
 
 const buttonStyle = {
   variant: 'outlined' as const,
-  color: 'light' as const,
+  color: 'dark' as const,
   size: 'small' as const,
-  sx: { fontWeight: 400 },
+  sx: { fontWeight: 400, color: 'text.primary' },
   disableElevation: true,
 };
 
