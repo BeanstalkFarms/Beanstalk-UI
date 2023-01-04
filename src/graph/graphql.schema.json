@@ -44598,7 +44598,7 @@
         "fields": [
           {
             "name": "amount",
-            "description": "Amount of pods listed",
+            "description": "The maximum amount of Pods remaining to be sold by *this* PodListing.\n\nWhen this PodListing is Filled or Cancelled, `amount` does NOT change.\n",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -44614,7 +44614,7 @@
           },
           {
             "name": "cancelledAmount",
-            "description": "Amount cancelled",
+            "description": "The number of Pods that were remaining in *this* PodListing when it was Cancelled.\n",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -44630,7 +44630,7 @@
           },
           {
             "name": "createdAt",
-            "description": "Timestamp created",
+            "description": "Timestamp of PodListing creation.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -44645,8 +44645,24 @@
             "deprecationReason": null
           },
           {
+            "name": "creationHash",
+            "description": "Transaction hash when this PodListing entity was created.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "farmer",
-            "description": "Farmer listing the plot",
+            "description": "The Farmer that created the PodListing.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -44662,7 +44678,7 @@
           },
           {
             "name": "fill",
-            "description": "Any associated market fill",
+            "description": "Any Fills associated with this PodListing.",
             "args": [],
             "type": {
               "kind": "OBJECT",
@@ -44674,7 +44690,7 @@
           },
           {
             "name": "filled",
-            "description": "Total amount filled from original listing",
+            "description": "The amount of Pods Filled since the initial PodListing was Created.\n\n`0 <= filled <= originalAmount`\n",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -44690,7 +44706,7 @@
           },
           {
             "name": "filledAmount",
-            "description": "Amount filled on this listing",
+            "description": "The number of Pods purchased from *this* PodListing.\n\nIf not yet Filled or the PodListing is CANCELLED: `filledAmount = 0`\n",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -44706,7 +44722,7 @@
           },
           {
             "name": "historyID",
-            "description": " Historical ID for joins on frontend",
+            "description": "Historical ID for joins",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -44722,7 +44738,7 @@
           },
           {
             "name": "id",
-            "description": "Account - Plot Index",
+            "description": "The PodListing ID is a unique subgraph ID: `{account}-{index}\"\n\nThe on-chain identifier for a PodListing is the `index`.\n",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -44738,7 +44754,7 @@
           },
           {
             "name": "index",
-            "description": "Current index of plot listed",
+            "description": "The Pod Index of the listed Plot.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -44754,7 +44770,7 @@
           },
           {
             "name": "maxHarvestableIndex",
-            "description": "Max harvestable index before listing expires",
+            "description": "When the `harvestableIndex` reaches this number, the Listing becomes EXPIRED.\n",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -44770,7 +44786,7 @@
           },
           {
             "name": "minFillAmount",
-            "description": "Minimum amount needed to fill this listing",
+            "description": "Minimum number of Beans required to perform a Fill.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -44786,7 +44802,7 @@
           },
           {
             "name": "mode",
-            "description": "Sale bean mode (internal/external)",
+            "description": "Where Beans are sent when the PodListing is Filled. See `FarmToMode`.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -44802,7 +44818,7 @@
           },
           {
             "name": "originalAmount",
-            "description": "Total amount of original listing",
+            "description": "The original amount of Pods listed in the first PodListing in a parent->child\nchain.\n",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -44818,7 +44834,7 @@
           },
           {
             "name": "originalIndex",
-            "description": "Original index of the plot listed",
+            "description": "The original index of the first PodListing in a parent->child chain.\n\nIf `originalIndex !== index`, then this PodListing was created when a parent\nPodListing was partially filled.\n",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -44834,7 +44850,7 @@
           },
           {
             "name": "plot",
-            "description": "Plot being listed",
+            "description": "Plot being Listed.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -44866,7 +44882,7 @@
           },
           {
             "name": "pricePerPod",
-            "description": "Market v1 price per pod",
+            "description": "[V1] The FIXED price per Pod denominated in Beans.\n\nEx. `pricePerPod = 10000` indicates a price of 0.01 Beans per Pod.\n\nIf `pricingType = 1`, this field is set to `0` and should be ignored.\n",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -44882,7 +44898,7 @@
           },
           {
             "name": "pricingFunction",
-            "description": "Market v2 pricing function",
+            "description": "[V2] The FIXED or DYNAMIC pricing function, encoded as bytes.\n\nThis must be decoded client-side, see `LibPolynomial.sol` for more info.\n",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -44894,7 +44910,7 @@
           },
           {
             "name": "pricingType",
-            "description": "Market v2 pricing type",
+            "description": "The Pricing Type states whether this PodListing uses FIXED or DYNAMIC pricing.\n\nnull = V1 FIXED  = use `pricePerPod`\n0    = V2 FIXED  = use `pricePerPod`\n1    = V2 DYNAMIC = use `pricingFunction`\n",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -44906,7 +44922,7 @@
           },
           {
             "name": "remainingAmount",
-            "description": "Remaining amount left to be filled",
+            "description": "The number of Pods remaining in *this* PodListing.\n\nWhen a Fill occurs, `remainingAmount` is decremented on this PodListing. A new\nPodListing is created with an updated `index` and `amount` equal to this\nPodListing's remainingAmount.\n\nIf this PodListing has NOT been Filled: `remainingAmount = amount`\nIf this PodListing has been Filled: `remainingAmount < amount`\nIf this PodListing has been Cancelled: `remainingAmount = 0`\n",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -44922,7 +44938,7 @@
           },
           {
             "name": "start",
-            "description": "Start within plot for listing",
+            "description": "The position within the Plot from which to sell Pods.\n\n0 <= `start` <= (plot size - `amount`)\n",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -44954,7 +44970,7 @@
           },
           {
             "name": "updatedAt",
-            "description": "Timestamp updated",
+            "description": "Timestamp of last update to this PodListing, including Fills and Cancellations.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -52580,6 +52596,262 @@
             "deprecationReason": null
           },
           {
+            "name": "creationHash",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_contains",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_contains_nocase",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_ends_with",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_ends_with_nocase",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_gt",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_gte",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_in",
+            "description": null,
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_lt",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_lte",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_not",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_not_contains",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_not_contains_nocase",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_not_ends_with",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_not_ends_with_nocase",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_not_in",
+            "description": null,
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_not_starts_with",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_not_starts_with_nocase",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_starts_with",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_starts_with_nocase",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "farmer",
             "description": null,
             "type": {
@@ -55654,6 +55926,12 @@
           },
           {
             "name": "createdAt",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
@@ -65437,7 +65715,7 @@
         "fields": [
           {
             "name": "beanAmount",
-            "description": "V2 - Original amount of beans used to order pods",
+            "description": "The original number of Beans locked in the PodOrder.\n\nDoes NOT change as Fills occur.\nAlways deterministic, since the Farmer must lock Beans for PodOrder fulfillment.\n\nIf FIXED (V1): `amount * pricePerPod` fields emitted in PodOrderCreated.\nIf FIXED (V2): `amount` field emitted in PodOrderCreated.\nIf DYNAMIC (V2): `amount` field emitted in PodOrderCreated.\n",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -65453,7 +65731,7 @@
           },
           {
             "name": "beanAmountFilled",
-            "description": "Bean Amount Filled",
+            "description": "The current number of Beans spent to acquire Pods.\n\nIncreases during each subsequent Fill:\n`0 <= beanAmountFilled <= beanAmount`\n\nUpon PodOrder cancellation, this value is locked.\n",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -65469,7 +65747,7 @@
           },
           {
             "name": "createdAt",
-            "description": "Creation timestamp",
+            "description": "Timestamp of PodOrder creation.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -65484,8 +65762,24 @@
             "deprecationReason": null
           },
           {
+            "name": "creationHash",
+            "description": "Transaction hash when this PodOrder entity was created.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "farmer",
-            "description": "Farmer placing the order",
+            "description": "The Farmer that created the Pod Order.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -65500,20 +65794,93 @@
             "deprecationReason": null
           },
           {
-            "name": "fill",
-            "description": "Any fill associated with this order",
-            "args": [],
+            "name": "fills",
+            "description": "All Fills associated with this PodOrder.",
+            "args": [
+              {
+                "name": "first",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "100",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "orderBy",
+                "description": null,
+                "type": {
+                  "kind": "ENUM",
+                  "name": "PodFill_orderBy",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "orderDirection",
+                "description": null,
+                "type": {
+                  "kind": "ENUM",
+                  "name": "OrderDirection",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "skip",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "0",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "where",
+                "description": null,
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "PodFill_filter",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
-              "kind": "OBJECT",
-              "name": "PodFill",
-              "ofType": null
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "PodFill",
+                    "ofType": null
+                  }
+                }
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "historyID",
-            "description": " Historical ID for joins",
+            "description": "Historical ID for joins: `{account}-{createdAt}`\n",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -65529,7 +65896,7 @@
           },
           {
             "name": "id",
-            "description": "Order ID emitted by event",
+            "description": "The PodOrder ID matchces the `id` stored on-chain:\n\n`keccak256(abi.encodePacked(account, pricePerPod, maxPlaceInLine, minFillAmount))`\n",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -65545,7 +65912,7 @@
           },
           {
             "name": "maxPlaceInLine",
-            "description": "Max place in line for pods to fulfill the order",
+            "description": "Any Pod before `maxPlaceInLine` is eligible to Fill this PodOrder.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -65561,7 +65928,7 @@
           },
           {
             "name": "minFillAmount",
-            "description": "Minimum amount needed to fill this order",
+            "description": "Minimum number of Pods required to perform a Fill.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -65577,7 +65944,7 @@
           },
           {
             "name": "podAmount",
-            "description": "V1 - Original amount of the ordered pods",
+            "description": "The original number of Pods requested by this PodOrder.\n\nDoes NOT change as Fills occur.\nNot deterministic for PodOrders with pricingType = DYNAMIC.\n\nIf pricingType = FIXED:\n  Set to the number of Pods which can be purchased by the Order.\n  If FIXED (V1): `amount` field emitted in PodOrderCreated. \n  If FIXED (V2): `amount / pricePerPod` fields emitted in PodOrderCreated.\n\nIf pricingType = DYNAMIC:\n  Set to `0`. The number of Pods that will be provided is unknown, since\n  the price is calculated based on the place in line of supplied Pods.\n",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -65593,7 +65960,7 @@
           },
           {
             "name": "podAmountFilled",
-            "description": "Current filled amount",
+            "description": "The current number of Pods that have been purchased by this PodOrder.\n\nIncreases during each subsequent Fill.\nIf pricingType = FIXED: `0 <= podAmountFilled <= podAmount`\nIf pricingType = DYNAMIC: No constraint, since `podAmount` is unknown.\n\nUpon PodOrder cancellation, this value is locked.\n",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -65609,7 +65976,7 @@
           },
           {
             "name": "podMarketplace",
-            "description": "Marketplace used for order",
+            "description": "Marketplace used for Pod Order.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -65625,7 +65992,7 @@
           },
           {
             "name": "pricePerPod",
-            "description": "Market v1 price per pod",
+            "description": "[V1] The FIXED price per Pod denominated in Beans.\n\nEx. `pricePerPod = 10000` indicates a price of 0.01 Beans per Pod.\n\nIf `pricingType = 1`, this field is initialized to `0` and should be ignored.\n",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -65641,7 +66008,7 @@
           },
           {
             "name": "pricingFunction",
-            "description": "Market v2 pricing function",
+            "description": "[V2] The FIXED or DYNAMIC pricing function, encoded as bytes.\n\nThis must be decoded client-side, see `LibPolynomial.sol` for more info.\n\nnull    = V1 FIXED    = use `pricePerPod`\n\"0x\"    = V2 FIXED    = use `pricePerPod`\n\"0x...\" = V2 DYNAMIC  = use `pricingFunction`\n",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -65653,7 +66020,7 @@
           },
           {
             "name": "pricingType",
-            "description": "Market v2 pricing type",
+            "description": "The Pricing Type states whether this PodOrder uses FIXED or DYNAMIC pricing.\n\nnull = V1 FIXED  = use `pricePerPod`\n0    = V2 FIXED  = use `pricePerPod`\n1    = V2 DYNAMIC = use `pricingFunction`\n",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -65665,7 +66032,7 @@
           },
           {
             "name": "status",
-            "description": "Current status of order",
+            "description": "Current status of order.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -65681,7 +66048,7 @@
           },
           {
             "name": "updatedAt",
-            "description": "Timestamp updated",
+            "description": "Timestamp of last PodOrder update. Changes when a PodOrder is Filled or Cancelled.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -73193,6 +73560,262 @@
             "deprecationReason": null
           },
           {
+            "name": "creationHash",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_contains",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_contains_nocase",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_ends_with",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_ends_with_nocase",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_gt",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_gte",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_in",
+            "description": null,
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_lt",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_lte",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_not",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_not_contains",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_not_contains_nocase",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_not_ends_with",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_not_ends_with_nocase",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_not_in",
+            "description": null,
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_not_starts_with",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_not_starts_with_nocase",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_starts_with",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "creationHash_starts_with_nocase",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "farmer",
             "description": null,
             "type": {
@@ -73461,19 +74084,27 @@
             "deprecationReason": null
           },
           {
-            "name": "fill",
+            "name": "fills",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
             },
             "defaultValue": null,
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "fill_",
+            "name": "fills_",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
@@ -73485,79 +74116,7 @@
             "deprecationReason": null
           },
           {
-            "name": "fill_contains",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "fill_contains_nocase",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "fill_ends_with",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "fill_ends_with_nocase",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "fill_gt",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "fill_gte",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "fill_in",
+            "name": "fills_contains",
             "description": null,
             "type": {
               "kind": "LIST",
@@ -73577,91 +74136,7 @@
             "deprecationReason": null
           },
           {
-            "name": "fill_lt",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "fill_lte",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "fill_not",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "fill_not_contains",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "fill_not_contains_nocase",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "fill_not_ends_with",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "fill_not_ends_with_nocase",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "fill_not_in",
+            "name": "fills_contains_nocase",
             "description": null,
             "type": {
               "kind": "LIST",
@@ -73681,48 +74156,60 @@
             "deprecationReason": null
           },
           {
-            "name": "fill_not_starts_with",
+            "name": "fills_not",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
             },
             "defaultValue": null,
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "fill_not_starts_with_nocase",
+            "name": "fills_not_contains",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
             },
             "defaultValue": null,
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "fill_starts_with",
+            "name": "fills_not_contains_nocase",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "fill_starts_with_nocase",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
             },
             "defaultValue": null,
             "isDeprecated": false,
@@ -75332,13 +75819,19 @@
             "deprecationReason": null
           },
           {
+            "name": "creationHash",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "farmer",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "fill",
+            "name": "fills",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
@@ -110739,7 +111232,7 @@
           },
           {
             "name": "bdv",
-            "description": "Original BDV of the deposit",
+            "description": "Current BDV of the deposit",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -110772,6 +111265,22 @@
           {
             "name": "depositedAmount",
             "description": "Original token amount deposited",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "BigInt",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "depositedBDV",
+            "description": "Original deposited BDV",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -111375,6 +111884,118 @@
           },
           {
             "name": "depositedAmount_not_in",
+            "description": null,
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "BigInt",
+                  "ofType": null
+                }
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "depositedBDV",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "BigInt",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "depositedBDV_gt",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "BigInt",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "depositedBDV_gte",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "BigInt",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "depositedBDV_in",
+            "description": null,
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "BigInt",
+                  "ofType": null
+                }
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "depositedBDV_lt",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "BigInt",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "depositedBDV_lte",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "BigInt",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "depositedBDV_not",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "BigInt",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "depositedBDV_not_in",
             "description": null,
             "type": {
               "kind": "LIST",
@@ -112630,6 +113251,12 @@
           },
           {
             "name": "depositedAmount",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "depositedBDV",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
@@ -121392,6 +122019,18 @@
             "deprecationReason": null
           },
           {
+            "name": "guidelines",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "id",
             "description": null,
             "args": [],
@@ -121537,6 +122176,18 @@
           },
           {
             "name": "symbol",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "template",
             "description": null,
             "args": [],
             "type": {

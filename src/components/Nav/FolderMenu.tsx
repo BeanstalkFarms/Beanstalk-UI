@@ -145,7 +145,9 @@ const FolderMenu: FC<{
         sx={{
           zIndex,
         }}
-      >
+        nonce={undefined}
+        onResize={undefined}
+        onResizeCapture={undefined}>
         <Box
           sx={(_theme) => ({
             background: _theme.palette.secondary.main,
