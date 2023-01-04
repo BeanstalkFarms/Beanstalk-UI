@@ -40,8 +40,9 @@ const marketplaceTableStyle = {
 
     // Column Header
     '& .MuiDataGrid-columnHeaders': {
-      outline: 'none',
-      border: 'none',
+      // outline: 'none',
+      // border: 'none',
+      borderBottom: `1px solid ${BeanstalkPalette.lightestGrey} !important`,
       '&:focused, active': {
         border: 'none',
       },

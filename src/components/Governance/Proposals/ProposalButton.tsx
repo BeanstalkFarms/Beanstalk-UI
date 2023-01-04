@@ -42,6 +42,7 @@ const ProposalButton: FC<{ proposal: Proposal }> = ({ proposal }) => {
         height: 'auto',
         color: 'text.primary',
         borderColor: 'divider',
+        background: BeanstalkPalette.white,
         '&:hover': {
           borderColor: 'primary.main'
         }

@@ -85,7 +85,7 @@ const WalletButton: FC<{ showFullText?: boolean; } & ButtonProps> = ({ ...props 
   }
 
   const menu = (
-    <MenuList sx={{ minWidth: 250, background: BeanstalkPalette.white }} component={Card}>
+    <MenuList sx={{ minWidth: 250, background: BeanstalkPalette.white, border: '1px solid', borderColor: 'divider' }} component={Card}>
       <MenuItem onClick={() => {
         toggleMenuAnchor();
         setSettingsOpen(true);

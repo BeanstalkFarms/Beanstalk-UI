@@ -62,6 +62,7 @@ const PoolCard: FC<{
       variant="outlined-secondary"
       color="secondary"
       sx={{
+        borderWidth: 0.5,
         height: 'auto', // FIXME
         display: 'block',
       }}

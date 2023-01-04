@@ -7,6 +7,7 @@ import { MarketBaseTableProps } from '~/components/Common/Table/TabTable';
 import Centered from '~/components/Common/ZeroState/Centered';
 import AuthEmptyState from '~/components/Common/ZeroState/AuthEmptyState';
 import marketplaceTableStyle from '../Common/tableStyles';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 type IActivityTable = {
   /**
@@ -73,15 +74,14 @@ const BaseTable: FC<
           cursor: onRowClick ? 'pointer' : 'default',
         },
         '& .MuiDataGrid-columnHeaders': {
-          borderBottom: '1px solid #4a4a4a15 !important',
+          borderBottom: '1px solid ${BeanstalkPalette.lightestGrey} !important',
         },
         '& .MuiDataGrid-columnHeaders .MuiDataGrid-columnHeaderTitle': {
-          // lineHeight: '20px',
           textTransform: 'uppercase'
         },
         '& .MuiDataGrid-footerContainer': {
           minHeight: 'auto',
-          borderTop: '1px solid #4a4a4a15 !important',
+          borderTop: `1px solid ${BeanstalkPalette.lightestGrey} !important`,
           justifyContent: 'flex-end !important'
         },
         '& .MuiDataGrid-footerContainer .MuiTablePagination-root .MuiToolbar-root': {

@@ -230,6 +230,7 @@ const Whitelist : FC<{
                   py: 1.5,
                   borderColor: 'divider',
                   borderWidth: '0.5px',
+                  background: BeanstalkPalette.white,
                   '&:hover': {
                     borderColor: 'primary.main',
                     backgroundColor: BeanstalkPalette.theme.winter.primaryHover,
