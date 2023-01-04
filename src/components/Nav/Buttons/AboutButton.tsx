@@ -69,7 +69,7 @@ const AboutButton: FC<ButtonProps> = ({ sx }) => {
           target="_blank"
           rel="noreferrer"
           variant="contained"
-          color="light"
+          color="primary"
           sx={{ py: 0.9 }}
         >
           <Row spacing={1}>
@@ -78,7 +78,7 @@ const AboutButton: FC<ButtonProps> = ({ sx }) => {
                 Contract: {beanstalkAddress.slice(0, 6)}...
               </Typography>
             </ListItemText>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" color="white">
               <ArrowForwardIcon
                 sx={{ transform: 'rotate(-45deg)', fontSize: 12 }}
               />
