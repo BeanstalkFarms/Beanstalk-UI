@@ -391,8 +391,7 @@ const muiThemeBase: ThemeOptions = {
       },
       styleOverrides: {
         root: sx({
-          borderWidth: 1,
-          borderColor: 'divider',
+          border: 'none'
         }),
       },
     },
@@ -402,10 +401,6 @@ const muiThemeBase: ThemeOptions = {
           borderColor: 'divider',
           borderWidth: 0.5,
         }),
-        // root: sx({
-        //   borderColor: 'divider',
-        //   borderWidth: 0.5,
-        // }),
       },
     },
     MuiButton: {
@@ -624,9 +619,6 @@ const muiThemeBase: ThemeOptions = {
       styleOverrides: {
         root: sx({
           borderRadius: 1,
-          // '&.Mui-selected': {
-            // backgroundColor: '#168AAD',
-          // },
         }),
       },
     },
@@ -636,22 +628,14 @@ const muiThemeBase: ThemeOptions = {
           borderRadius: 1,
           px: 1,
           py: 1,
-          // border: '0.5px solid',
-          // borderColor: 'divider',
-          // '&:hover': {
-          //   backgroundColor: hexToRgba(BeanstalkPalette.lightGrey, 0.5),
-          // },
-          // '&.Mui-selected': {
-          //   backgroundColor: BeanstalkPalette.theme.winter.primaryHover,
-          // }
+          border: '0.5px solid',
+          borderColor: BeanstalkPalette.white,
         }),
       },
     },
     MuiList: {
       styleOverrides: {
-        root: sx({
-          // p: 0
-        }),
+        root: sx({}),
       },
     },
     MuiListItemText: {
@@ -685,12 +669,10 @@ const muiThemeBase: ThemeOptions = {
           mr: 2,
           textAlign: 'left',
           minWidth: 0,
-          // fontWeight: 'normal',
           fontWeight: 700,
           fontSize: '1rem', // 1*16 = 16px
           textTransform: 'none',
           color: 'text.tertiary',
-          // fontSize: 20,
           '&:active': {},
           '&:hover': {
             color: 'text.primary',
@@ -699,25 +681,12 @@ const muiThemeBase: ThemeOptions = {
             },
           },
           '&.Mui-selected': {
-            // fontWeight: 'bold',
             fontWeight: 700,
             fontSize: '1rem', // 1*16 = 16px
             color: 'text.primary',
           },
         }),
       },
-    },
-    MuiButtonBase: {
-      // variants: [
-      //   {
-      //     props: { color: 'light' },
-      //     style: sx({
-      //       borderWidth: 1,
-      //       borderColor: 'red',
-      //     }),
-      //   }
-      // ],
-      styleOverrides: {},
     },
     MuiButtonGroup: {
       defaultProps: {
@@ -762,7 +731,6 @@ const muiThemeBase: ThemeOptions = {
       styleOverrides: {
         root: sx({
           px: 1,
-          // pb: 0.5,
         }),
       },
     },

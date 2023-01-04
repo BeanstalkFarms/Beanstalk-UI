@@ -65,7 +65,7 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
   mode = TokenSelectMode.MULTI,
 }) => {
   /** keep an internal copy of selected tokens */
-  const [selectedInternal, setSelectedInternal] = useState<Set<Token>>(new Set());
+  const [selectedInternal, setSelectedInternal] = useState<Set<Token>>(new Set<Token>());
 
   const getBalance = useCallback((addr: string) => {
     if (!_balances) return ZERO_BN;

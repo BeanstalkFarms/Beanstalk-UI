@@ -33,6 +33,7 @@ const depositStats = (s: BigNumber, v: BigNumber[]) => (
         </Typography>
       </>
     )}
+    color="primary"
     subtitle={`Season ${s.toString()}`}
     amount={displayUSD(v[0])}
     amountIcon={undefined}

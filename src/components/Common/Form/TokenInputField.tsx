@@ -248,6 +248,9 @@ const TokenInput: FC<
         onKeyDown={!allowNegative ? preventNegativeInput : undefined}
         sx={{
           borderRadius: 1,
+          '& .MuiOutlinedInput-root': {
+            background: '#fff',
+          },
           ...sx
         }}
       />

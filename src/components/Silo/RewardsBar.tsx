@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Divider, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import BigNumber from 'bignumber.js';
 import beanIcon from '~/img/tokens/bean-logo-circled.svg';
 import stalkIcon from '~/img/beanstalk/stalk-icon-winter.svg';
@@ -71,10 +71,7 @@ const RewardsBar: FC<RewardsBarProps & { compact?: boolean }> = (
           isClaimable={action && (action === ClaimRewardsAction.PLANT_AND_MOW || action === ClaimRewardsAction.CLAIM_ALL)}
         />
       </Row>
-      {/* Divider */}
-      <Box display={{ xs: 'block', lg: compact ? 'none' : 'block' }}>
-        <Divider orientation="vertical" />
-      </Box>
+      <Box display={{ xs: 'block', lg: compact ? 'none' : 'block' }} sx={{ borderLeft: '0.5px solid', borderColor: 'divider' }} />
       {/* Grown */}
       <Row gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
         <RewardItem
@@ -94,9 +91,7 @@ const RewardsBar: FC<RewardsBarProps & { compact?: boolean }> = (
           isClaimable={selectedActionIncludes(ClaimRewardsAction.MOW)}
         />
       </Row>
-      <Box display={{ xs: 'block', lg: compact ? 'none' : 'block' }}>
-        <Divider orientation="vertical" />
-      </Box>
+      <Box display={{ xs: 'block', lg: compact ? 'none' : 'block' }} sx={{ borderLeft: '0.5px solid', borderColor: 'divider' }} />
       {/* Revitalized */}
       <Row gap={{ xs: GAP_XS, md: GAP_MD, lg: GAP_LG }}>
         <RewardItem
