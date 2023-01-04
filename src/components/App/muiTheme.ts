@@ -172,7 +172,7 @@ export const BeanstalkPalette = {
     winter: {
       primary: '#1D8A79',
       primaryHover: hexToRgba('#1D8A79', 0.05),
-      iceBlue: '#A7CBE7',
+      iceBlue: '#A0C6E2',
       divider: '#002855',
       blueLight: '#1E6091',
       red: '#DA2C38',
