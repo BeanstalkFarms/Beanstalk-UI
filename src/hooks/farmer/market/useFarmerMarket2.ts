@@ -22,7 +22,7 @@ import { ZERO_BN } from '~/constants';
 /**
  * A single interface for items in the "Your Orders" tab.
  */
-export type FarmerMarketHistoryItem = {
+export type FarmerMarketOrder = {
   /// ///////////// Identifiers ////////////////
 
   id: string;
@@ -74,7 +74,7 @@ export type FarmerMarketHistoryItem = {
   creationHash: string;
 };
 
-const castOrderToHistoryItem = (order: PodOrder): FarmerMarketHistoryItem => ({
+const castOrderToHistoryItem = (order: PodOrder): FarmerMarketOrder => ({
   // Identifiers
   id: order.id,
   action: 'buy',
@@ -99,7 +99,7 @@ const castOrderToHistoryItem = (order: PodOrder): FarmerMarketHistoryItem => ({
   creationHash: order.creationHash,
 });
 
-const castListingToHistoryItem = (listing: PodListing): FarmerMarketHistoryItem => ({
+const castListingToHistoryItem = (listing: PodListing): FarmerMarketOrder => ({
   // Identifiers
   id: listing.id,
   action: 'sell',
@@ -173,12 +173,12 @@ export default function useFarmerMarket() {
   }, [fetch]);
 
   // Cast query data to decimal form
-  const listingItems = useCastApolloQuery<FarmerMarketHistoryItem>(
+  const listingItems = useCastApolloQuery<FarmerMarketOrder>(
     listingsQuery,
     'podListings',
     useCallback((l) => castListingToHistoryItem(castPodListing(l, harvestableIndex)), [harvestableIndex]),
   );
-  const orderItems = useCastApolloQuery<FarmerMarketHistoryItem>(
+  const orderItems = useCastApolloQuery<FarmerMarketOrder>(
     ordersQuery,
     'podOrders',
     useCallback((o) => castOrderToHistoryItem(castPodOrder(o)), []),

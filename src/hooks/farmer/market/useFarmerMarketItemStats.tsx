@@ -1,14 +1,14 @@
 import { useMemo } from 'react';
-import { FarmerMarketHistoryItem } from '~/hooks/farmer/market/useFarmerMarket2';
+import { FarmerMarketOrder } from '~/hooks/farmer/market/useFarmerMarket2';
 import { displayBN, displayFullBN } from '~/util';
 
 const openStates = ['ACTIVE', 'FILLED_PARTIAL'];
 
-const isListing = (i: FarmerMarketHistoryItem) => i.type === 'listing' && i.source;
-const isOrder = (i: FarmerMarketHistoryItem) => i.type === 'order' && i.source;
+const isListing = (i: FarmerMarketOrder) => i.type === 'listing' && i.source;
+const isOrder = (i: FarmerMarketOrder) => i.type === 'order' && i.source;
 
 export default function useFarmerMarketItemStats(
-  item: FarmerMarketHistoryItem | undefined | null
+  item: FarmerMarketOrder | undefined | null
 ) {
   const data = useMemo(() => {
     if (
@@ -23,7 +23,7 @@ export default function useFarmerMarketItemStats(
     
     items.push({
       label: 'ID',
-      info: item.id.toString(),
+      info: isOrder(item) ? item.id.substring(0,8) : item.id
     });
 
     items.push({

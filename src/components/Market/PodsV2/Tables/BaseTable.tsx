@@ -73,7 +73,7 @@ const BaseTable: FC<
           cursor: onRowClick ? 'pointer' : 'default',
         },
         '& .MuiDataGrid-columnHeaders': {
-          borderBottom: '1px solid #fefefe15 !important',
+          borderBottom: '1px solid #4a4a4a15 !important',
         },
         '& .MuiDataGrid-columnHeaders .MuiDataGrid-columnHeaderTitle': {
           // lineHeight: '20px',
@@ -81,7 +81,7 @@ const BaseTable: FC<
         },
         '& .MuiDataGrid-footerContainer': {
           minHeight: 'auto',
-          borderTop: '1px solid #fefefe15 !important',
+          borderTop: '1px solid #4a4a4a15 !important',
           justifyContent: 'flex-end !important'
         },
         '& .MuiDataGrid-footerContainer .MuiTablePagination-root .MuiToolbar-root': {

@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { LoadingButton } from '@mui/lab';
 import { BeanstalkPalette, FontSize } from '~/components/App/muiTheme';
 import CondensedCard from '~/components/Common/Card/CondensedCard';
-import { FarmerMarketHistoryItem } from '~/hooks/farmer/market/useFarmerMarket2';
+import { FarmerMarketOrder } from '~/hooks/farmer/market/useFarmerMarket2';
 import FarmerModeFieldDialog from './FarmToModeDialog';
 import useFarmerMarketItemStats from '~/hooks/farmer/market/useFarmerMarketItemStats';
 import Row from '~/components/Common/Row';
@@ -13,7 +13,7 @@ import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import { PodOrder } from '~/state/farmer/market';
 
 type Props = {
-  item: FarmerMarketHistoryItem | undefined | null;
+  item: FarmerMarketOrder | undefined | null;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   open2: boolean;

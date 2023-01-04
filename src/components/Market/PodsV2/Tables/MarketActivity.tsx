@@ -1,16 +1,16 @@
 import React, { useMemo } from 'react';
 import BaseTable from './BaseTable';
-import { MARKET_ACTIVITY_COLUMNS } from './columns/market-activity-columns';
 import { MarketEvent } from '~/hooks/beanstalk/useMarketActivityData';
+import { MarketColumns } from '~/components/Market/PodsV2/Tables/columns/market-columns';
 
 const columns = [
-  MARKET_ACTIVITY_COLUMNS.createdAt(1.5),
-  MARKET_ACTIVITY_COLUMNS.labelAction(1),
-  MARKET_ACTIVITY_COLUMNS.labelEntity(1),
-  MARKET_ACTIVITY_COLUMNS.pricePerPod(1),
-  MARKET_ACTIVITY_COLUMNS.amountPods(1),
-  MARKET_ACTIVITY_COLUMNS.activityPlaceInLine(1),
-  MARKET_ACTIVITY_COLUMNS.amountBeans(0.75, 'left'),
+  MarketColumns.Shared.createdAt(1),
+  MarketColumns.HistoryItem.labelType(1),
+  MarketColumns.ActivityItem.labelAction(1),
+  MarketColumns.Shared.pricePerPod(1),
+  MarketColumns.HistoryItem.amountPods(1),
+  MarketColumns.HistoryItem.placeInLine(1),
+  MarketColumns.HistoryItem.amountBeans(0.75, 'left'),
 ];
 
 /**

@@ -1,8 +1,8 @@
-query MarketplaceEvents(
+query MarketEvents(
   $events_first: Int = 1000,
   $events_timestamp_lt: BigInt!
 ) {
-  marketplaceEvents(
+  marketEvents: marketplaceEvents(
     orderBy: createdAt,
     orderDirection: desc,
     first: $events_first,
