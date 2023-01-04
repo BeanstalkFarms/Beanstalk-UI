@@ -19,11 +19,11 @@ const TokenBalanceTable: React.FC<{
           <>
             <Grid container direction="row" px={2}>
               <Grid item {...{ xs: 6, sm: 5, lg: 3.5 }}>
-                <Typography color="text.tertiary">Token</Typography>
+                <Typography color="text.secondary">Token</Typography>
               </Grid>
               <Grid item {...{ xs: 6, sm: 4, lg: 4.5 }} pl={1}>
                 <Stack textAlign={{ xs: 'right', sm: 'left' }}>
-                  <Typography color="text.tertiary">Amount</Typography>
+                  <Typography color="text.secondary">Amount</Typography>
                 </Stack>
               </Grid>
               <Grid
@@ -32,7 +32,7 @@ const TokenBalanceTable: React.FC<{
                 display={{ xs: 'none', sm: 'block' }}
               >
                 <Stack>
-                  <Typography textAlign="right" color="text.tertiary">
+                  <Typography textAlign="right" color="text.secondary">
                     Value
                   </Typography>
                 </Stack>

@@ -307,7 +307,7 @@ const RewardsContent: React.FC<{}> = () => {
           size="medium"
           variant="contained"
           sx={{ width: '100%', whiteSpace: 'nowrap', mt: '20px !important' }}
-          endIcon={!open ? <DropdownIcon open={false} disabled={breakdown?.totalValue?.eq(0)} /> : null}
+          endIcon={!open ? <DropdownIcon open={false} disabled={breakdown?.totalValue?.eq(0)} light /> : null}
           onClick={() => {
             if (open) {
               hide();
