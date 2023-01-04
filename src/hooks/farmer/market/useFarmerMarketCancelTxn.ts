@@ -2,16 +2,15 @@ import { useCallback, useState } from 'react';
 import { FarmToMode } from '~/lib/Beanstalk/Farm';
 import TransactionToast from '~/components/Common/TxnToast';
 import { useFetchFarmerField } from '~/state/farmer/field/updater';
-import { useFetchFarmerMarket } from '~/state/farmer/market/updater';
 import { useBeanstalkContract } from '../../ledger/useContract';
 import useFormMiddleware from '../../ledger/useFormMiddleware';
 import { BEAN, PODS } from '~/constants/tokens';
 import useChainConstant from '../../chain/useChainConstant';
 import { useFetchFarmerBalances } from '~/state/farmer/balances/updater';
 import { PodOrder } from '~/state/farmer/market';
-import { useFetchFarmerMarketItems } from './useFarmerMarket';
 import { useSigner } from '~/hooks/ledger/useSigner';
 import useAccount from '~/hooks/ledger/useAccount';
+import { useFetchFarmerMarketItems } from '~/hooks/farmer/market/useFarmerMarket2';
 
 export default function useFarmerMarketCancelTxn() {
   /// Helpers
@@ -28,8 +27,8 @@ export default function useFarmerMarketCancelTxn() {
   /// Farmer
   const [refetchFarmerField] = useFetchFarmerField();
   const [refetchFarmerBalances] = useFetchFarmerBalances();
-  const [refetchFarmerMarket] = useFetchFarmerMarket();
-  const { fetch: fetchFarmerMarket } = useFetchFarmerMarketItems();
+  // const [refetchFarmerMarket] = useFetchFarmerMarket();
+  const { fetch: refetchFarmerMarketItems } = useFetchFarmerMarketItems();
 
   /// Form
   const middleware = useFormMiddleware();
@@ -50,7 +49,10 @@ export default function useFarmerMarketCancelTxn() {
           txToast.confirming(txn);
 
           const receipt = await txn.wait();
-          await Promise.all([refetchFarmerField(), refetchFarmerMarket(), fetchFarmerMarket()]);
+          await Promise.all([
+            refetchFarmerField(),
+            refetchFarmerMarketItems()
+          ]);
           txToast.success(receipt);
         } catch (err) {
           txToast.error(err);
@@ -60,7 +62,7 @@ export default function useFarmerMarketCancelTxn() {
         }
       })();
     },
-    [beanstalk, middleware, refetchFarmerField, refetchFarmerMarket, fetchFarmerMarket]
+    [beanstalk, middleware, refetchFarmerField, refetchFarmerMarketItems]
   );
 
   const cancelOrder = useCallback(
@@ -96,9 +98,8 @@ export default function useFarmerMarketCancelTxn() {
 
           const receipt = await txn.wait();
           await Promise.all([
-            refetchFarmerMarket(), // clear old pod order
+            refetchFarmerMarketItems(), // clear old pod order
             refetchFarmerBalances(), // refresh Beans
-            fetchFarmerMarket()
           ]);
           txToast.success(receipt);
           // navigate('/market/account');
@@ -110,7 +111,7 @@ export default function useFarmerMarketCancelTxn() {
         }
       })();
     },
-    [account, middleware, Bean, beanstalk, refetchFarmerMarket, refetchFarmerBalances, fetchFarmerMarket]
+    [account, middleware, Bean, beanstalk, refetchFarmerMarketItems, refetchFarmerBalances]
   );
 
   return {

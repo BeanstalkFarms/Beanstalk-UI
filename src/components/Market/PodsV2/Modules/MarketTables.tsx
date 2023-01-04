@@ -50,7 +50,7 @@ const MarketTables: React.FC<{}> = () => {
   // pull queries out of their respecitive hooks to avoid re-fetching
   const marketData = useMarketData(); // "BUY NOW" and "SELL NOW"
   const { data: farmerMarket } = useFarmerMarket(); // "YOUR ORDERS"
-  const { data: eventsData, harvestableIndex, fetchMoreData } = useMarketActivityData(); // "MARKETACTIVITY"
+  const { data: eventsData, harvestableIndex, fetchMoreData } = useMarketActivityData(); // "MARKET ACTIVITY"
 
   // FUNCTIONS
   const openIfClosed = () => {

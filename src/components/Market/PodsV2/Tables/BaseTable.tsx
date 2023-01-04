@@ -55,15 +55,10 @@ const BaseTable: FC<
   onRowClick,
   fetchMore,
   isUserTable = false,
+  sortModel,
   ...props
 }) => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  // const openState = useAtomValue(marketBottomTabsAtom);
-  // const tableHeight = useMemo(
-  //   () => sizeMap[openState === 2 ? openState : 1] - TAB_CONTROL_HEIGHT,
-  //   [openState]
-  // );
-
   return (
     <Box
       ref={scrollRef}
@@ -110,7 +105,7 @@ const BaseTable: FC<
         onRowClick={onRowClick}
         initialState={{
           sorting: {
-            sortModel: [{ field: 'time', sort: 'desc' }],
+            sortModel: sortModel || [{ field: 'createdAt', sort: 'desc' }],
           },
         }}
         // Hide the rows per page selector
@@ -124,7 +119,7 @@ const BaseTable: FC<
         componentsProps={{
           footer: {
             scrollRef,
-            handleFetchMore: fetchMore,
+            // handleFetchMore: fetchMore,
           },
           noRowsOverlay: {
             message: `Your ${title} will appear here`,

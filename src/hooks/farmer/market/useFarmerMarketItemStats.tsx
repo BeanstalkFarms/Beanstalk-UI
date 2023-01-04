@@ -20,6 +20,12 @@ export default function useFarmerMarketItemStats(
     }
 
     const items: { label: string; info: string }[] = [];
+    
+    items.push({
+      label: 'ID',
+      info: item.id.toString(),
+    });
+
     items.push({
       label: 'ACTION',
       info: item.action.toUpperCase(),

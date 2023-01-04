@@ -12,7 +12,10 @@ import { ZERO_BN } from '~/constants';
 import TokenIcon from '~/components/Common/TokenIcon';
 import { BEAN, PODS } from '~/constants/tokens';
 import { BeanstalkPalette } from '~/components/App/muiTheme';
-import { FarmerMarketEntity } from '~/hooks/farmer/market/useFarmerMarket';
+import { FarmerMarketHistoryItem } from '~/hooks/farmer/market/useFarmerMarket2';
+import { PricingType } from '~/state/farmer/market';
+import etherscanIcon from '~/img/beanstalk/interface/nav/etherscan.svg';
+import Row from '~/components/Common/Row';
 
 const statusColorMap = {
   active: BeanstalkPalette.logoGreen,
@@ -52,8 +55,11 @@ export const MARKET_ACTIVITY_COLUMNS = {
       renderCell: (params: GridRenderCellParams) => (
         <Typography color="text.tertiary" sx={{ fontSize: 'inherit' }}>
           {params.row[hashKey] ? (
-            <Link href={`https://etherscan.io/tx/${params.row[hashKey]}`} rel="noreferrer" target="_blank" underline="hover" color="text.tertiary">
-              {params.formattedValue}
+            <Link href={`https://etherscan.io/tx/${params.row[hashKey]}`} rel="noreferrer" target="_blank" underline="hover" color="text.tertiary" sx={{ '&:hover img': { display: 'inline-block' } }}>
+              <Row>
+                <span>{params.formattedValue}</span>
+                <img src={etherscanIcon} alt="" css={{ height: 12, marginLeft: 5, display: 'none' }} />
+              </Row>
             </Link>
           ) : params.formattedValue}
         </Typography>
@@ -138,7 +144,7 @@ export const MARKET_ACTIVITY_COLUMNS = {
       align: align || 'left',
       headerAlign: align || 'left',
       renderCell: (params: GridRenderCellParams) => (
-        params.value?.gt(0) ? (
+        params.value ? (
           <>
             <TokenIcon token={PODS} />
             {displayBN(params.value)}
@@ -149,26 +155,6 @@ export const MARKET_ACTIVITY_COLUMNS = {
       ),
     } as GridColumns[number]),
 
-  // remainingAmountPods: (flex: number, align?: 'left' | 'right') =>
-  //   ({
-  //     field: 'remainingAmount',
-  //     headerName: 'PODS',
-  //     flex: flex,
-  //     type: 'number',
-  //     align: align || 'left',
-  //     headerAlign: align,
-  //     renderCell: (params: GridRenderCellParams) => (
-  //       params.value?.gt(0) ? (
-  //         <>
-  //           <TokenIcon token={PODS} />&nbsp;
-  //           {displayBN(params.value)}
-  //         </>
-  //       ) : (
-  //         '-'
-  //       )
-  //     ),
-  //   } as GridColumns[number]),
-
   placeInLine: (flex: number, align?: 'left' | 'right') =>
     ({
       field: 'placeInLine',
@@ -176,7 +162,7 @@ export const MARKET_ACTIVITY_COLUMNS = {
       flex: flex,
       align: align || 'left',
       headerAlign: align || 'left',
-      renderCell: (params: GridRenderCellParams<any, FarmerMarketEntity>) => {
+      renderCell: (params: GridRenderCellParams<any, FarmerMarketHistoryItem>) => {
         if (!params.value || params.value.eq(0))  {
           return <>-</>;
         }
@@ -192,7 +178,7 @@ export const MARKET_ACTIVITY_COLUMNS = {
         }
 
         return (
-          <>{`${params.row.priceType === 'fixed' ? '0' : '*'} - ${strVal}`}</>
+          <>{`${params.row.pricingType === PricingType.DYNAMIC ? '*' : '0'} - ${strVal}`}</>
         );
       },
     } as GridColumns[number]),

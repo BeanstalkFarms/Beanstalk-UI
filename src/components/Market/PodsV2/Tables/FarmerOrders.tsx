@@ -5,7 +5,7 @@ import { FarmerMarketHistoryItem } from '~/hooks/farmer/market/useFarmerMarket2'
 import MarketItemDetailsDialog from '../Actions/MarketItemDetailsDialog';
 
 const columns = [
-  MARKET_ACTIVITY_COLUMNS.createdAt(1, 'left', 'DATE'),
+  MARKET_ACTIVITY_COLUMNS.createdAt(1, 'left', 'DATE', 'creationHash'),
   MARKET_ACTIVITY_COLUMNS.labelType(0.6),
   
   // PODS
@@ -31,7 +31,6 @@ const columns = [
 
   MARKET_ACTIVITY_COLUMNS.status(0.6, 'right'),
 ];
-
 /**
  * Displays a table of a Farmer's outstanding Listings and Orders.
  */
@@ -62,6 +61,7 @@ const FarmerOrders: React.FC<{
           item && setActiveItem(item);
           setOpen(true);
         }}
+        sortModel={[]}
       />
       <MarketItemDetailsDialog
         item={activeItem}

@@ -66,6 +66,7 @@ export const castPodListing = (
     // Metadata
     status: listing.status as MarketStatus,
     createdAt: listing?.createdAt || null,
+    creationHash: listing.creationHash,
   };
 };
 
@@ -80,7 +81,7 @@ export const castPodOrder = (order: PodOrderFragment): PodOrder => {
   const podAmountFilled = toTokenUnitsBN(order.podAmountFilled, BEAN[1].decimals);
   const beanAmountFilled = toTokenUnitsBN(order.beanAmountFilled, BEAN[1].decimals);
 
-  const data = {
+  return {
     // Identifiers
     id: order.id,
     account: order.farmer.id,
@@ -107,11 +108,8 @@ export const castPodOrder = (order: PodOrderFragment): PodOrder => {
     // Metadata
     status: order.status as MarketStatus,
     createdAt: order.createdAt,
+    creationHash: order.creationHash,
   };
-
-  console.debug('Casting order: ', order.id, data);
-
-  return data;
 };
 
 /**
@@ -163,7 +161,8 @@ export type PodListing = {
   /// ///////////// Metadata ////////////////
 
   status: MarketStatus;
-  createdAt?: string;
+  createdAt: string;
+  creationHash: string;
 };
 
 /**
@@ -204,7 +203,8 @@ export type PodOrder = {
   /// ///////////// Metadata ////////////////
 
   status: MarketStatus;
-  createdAt?: string;
+  createdAt: string;
+  creationHash: string;
 };
 
 export type FarmerMarket = {

@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import BigNumber from 'bignumber.js';
 import useCastApolloQuery from '~/hooks/app/useCastApolloQuery';
 import {
@@ -11,8 +11,8 @@ import {
 } from '~/state/farmer/market';
 import {
   MarketStatus,
-  useFarmerPodListingsQuery,
-  useFarmerPodOrdersQuery,
+  useFarmerPodListingsLazyQuery,
+  useFarmerPodOrdersLazyQuery,
 } from '../../../generated/graphql';
 
 import useAccount from '~/hooks/ledger/useAccount';
@@ -70,7 +70,8 @@ export type FarmerMarketHistoryItem = {
   /// ///////////// Metadata ////////////////
 
   status: MarketStatus;
-  createdAt: string | number | undefined;
+  createdAt: string;
+  creationHash: string;
 };
 
 const castOrderToHistoryItem = (order: PodOrder): FarmerMarketHistoryItem => ({
@@ -95,6 +96,7 @@ const castOrderToHistoryItem = (order: PodOrder): FarmerMarketHistoryItem => ({
   // Metadata
   status: order.status,
   createdAt: order.createdAt,
+  creationHash: order.creationHash,
 });
 
 const castListingToHistoryItem = (listing: PodListing): FarmerMarketHistoryItem => ({
@@ -113,43 +115,62 @@ const castListingToHistoryItem = (listing: PodListing): FarmerMarketHistoryItem 
   amountPods: listing.originalAmount,
   amountBeans: listing.originalAmount.times(listing.pricePerPod),
   placeInLine: listing.placeInLine,
-  fillPct: listing.filledAmount.div(listing.originalAmount).times(100),
+  fillPct: listing.filled.div(listing.originalAmount).times(100),
   expiry: listing.expiry,
   
   // Metadata
   status: listing.status,
   createdAt: listing.createdAt,
+  creationHash: listing.creationHash,
 });
 
-const QUERY_AMOUNT = 1000;
+export function useFetchFarmerMarketItems() {
+  const account = useAccount();
+  
+  const [fetchListings, listingsQuery] = useFarmerPodListingsLazyQuery({
+    fetchPolicy: 'network-only',
+    nextFetchPolicy: 'cache-only',
+    notifyOnNetworkStatusChange: true,
+  });
+  const [fetchOrders, ordersQuery] = useFarmerPodOrdersLazyQuery({
+    fetchPolicy: 'network-only',
+    nextFetchPolicy: 'cache-only',
+    notifyOnNetworkStatusChange: true,
+  });
+
+  return {
+    listingsQuery,
+    ordersQuery,
+    fetch: useCallback(() => {
+      if (!account) return;
+      const opts = {
+        variables: {
+          account: account.toLowerCase(),
+          createdAt_gt: 0,
+        }
+      };
+      fetchListings(opts);
+      fetchOrders(opts);
+    }, [account, fetchListings, fetchOrders]),
+  };
+}
+
+const MARKET_STATUS_TO_ORDER = {
+  [MarketStatus.Active]: 0,
+  [MarketStatus.Expired]: 1,
+  [MarketStatus.Filled]: 2,
+  [MarketStatus.FilledPartial]: 3,
+  [MarketStatus.Cancelled]: 4,
+  [MarketStatus.CancelledPartial]: 5,
+};
 
 export default function useFarmerMarket() {
-  const account = useAccount();
   const harvestableIndex = useHarvestableIndex();
+  const { fetch, listingsQuery, ordersQuery } = useFetchFarmerMarketItems();
 
-  // Queries
-  const listingsQuery = useFarmerPodListingsQuery({
-    variables: {
-      account: account?.toLowerCase() || '',
-      createdAt_gt: 0,
-      first: QUERY_AMOUNT,
-    },
-    skip: !account,
-    fetchPolicy: 'network-only',
-    nextFetchPolicy: 'cache-only',
-    notifyOnNetworkStatusChange: true,
-  });
-  const ordersQuery = useFarmerPodOrdersQuery({
-    variables: {
-      account: account?.toLowerCase() || '',
-      createdAt_gt: 0,
-      first: QUERY_AMOUNT,
-    },
-    skip: !account,
-    fetchPolicy: 'network-only',
-    nextFetchPolicy: 'cache-only',
-    notifyOnNetworkStatusChange: true,
-  });
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
 
   // Cast query data to decimal form
   const listingItems = useCastApolloQuery<FarmerMarketHistoryItem>(
@@ -163,17 +184,20 @@ export default function useFarmerMarket() {
     useCallback((o) => castOrderToHistoryItem(castPodOrder(o)), []),
   );
 
-  console.debug(listingsQuery, ordersQuery);
-
   // Cast query data to history item form
-  const data = useMemo(() => {
+  const data = useMemo(() => 
     // shortcut to check if listings / orders are still loading
-    if (!listingItems || !orderItems) return [];
-    return [
-      ...listingItems,
-      ...orderItems,
-    ];
-  }, [listingItems, orderItems]);
+    [
+      ...listingItems || [],
+      ...orderItems || [],
+    ].sort((a, b) => {
+      // Sort by MARKET_STATUS_TO_ORDER, then by creation date
+      const x = MARKET_STATUS_TO_ORDER[a.status] - MARKET_STATUS_TO_ORDER[b.status];
+      if (x !== 0) return x;
+      return parseInt(b.createdAt, 10) - parseInt(a.createdAt, 10);
+    }),
+   [listingItems, orderItems]
+  );
 
   return {
     data,
