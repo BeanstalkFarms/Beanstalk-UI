@@ -389,7 +389,7 @@ const muiThemeBase: ThemeOptions = {
         color: 'secondary',
       },
       styleOverrides: {
-        root: sx({
+        root: (t) => t.theme.unstable_sx({
           border: 'none'
 
         }),
@@ -419,7 +419,7 @@ const muiThemeBase: ThemeOptions = {
             variant: 'outlined',
             color: 'light',
           },
-          style: sx({
+          style: (t) => t.theme.unstable_sx({
             borderColor: BeanstalkPalette.lightestGrey,
             ':hover': {
               borderColor: 'primary.main',
@@ -444,7 +444,7 @@ const muiThemeBase: ThemeOptions = {
             variant: 'outlined-secondary',
             color: 'secondary',
           },
-          style: sx({
+          style: (t) => t.theme.unstable_sx({
             border: '1px solid',
             color: 'text.primary',
             borderColor: 'divider',
@@ -635,7 +635,7 @@ const muiThemeBase: ThemeOptions = {
     },
     MuiList: {
       styleOverrides: {
-        root: sx({}),
+        root: (t) => t.theme.unstable_sx({}),
       },
     },
     MuiListItemText: {
@@ -755,7 +755,7 @@ const muiThemeBase: ThemeOptions = {
             variant: 'filled',
             color: 'primary',
           },
-          style: sx({
+          style: (t) => t.theme.unstable_sx({
             color: BeanstalkPalette.theme.winter.primary,
             backgroundColor: hexToRgba(BeanstalkPalette.theme.winter.primary, 0.1),
 
@@ -766,7 +766,7 @@ const muiThemeBase: ThemeOptions = {
             variant: 'filled',
             color: 'secondary',
           },
-          style: sx({
+          style: (t) => t.theme.unstable_sx({
             color: BeanstalkPalette.textBlue,
             backgroundColor: BeanstalkPalette.lightestBlue,
           }),

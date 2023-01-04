@@ -146,7 +146,7 @@ const FolderMenu: FC<{
         }}
         nonce={undefined}
         onResize={undefined}
-        onResizeCapture={undefined}>
+        onResizeCapture={undefined}
       >
         <Box
           sx={(_theme) => ({
