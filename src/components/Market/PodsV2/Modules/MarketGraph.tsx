@@ -61,8 +61,8 @@ const PATTERN_ID = 'brush_pattern';
 export const accentColor = '#f6acc8';
 export const background = '#584153';
 export const background2 = '#af8baf';
-const axisColor      = BeanstalkPalette.theme.winter.lightGreen;
-const tickLabelColor = BeanstalkPalette.theme.winter.lightGreen;
+const axisColor      = BeanstalkPalette.lightGrey;
+const tickLabelColor = BeanstalkPalette.lightGrey;
 const tickLabelProps = (type: 'x' | 'y') => () => ({
   fill: tickLabelColor,
   fontSize: 12,
@@ -153,7 +153,7 @@ const rescaleXWithZoom = (scale: any, zoom: any) => {
 /// //////////////////////////////// COMPONENTS ///////////////////////////////////
 
 const TooltipCard : FC<CardProps> = ({ children, sx, ...props }) => (
-  <Card sx={{ backgroundColor: BeanstalkPalette.theme.winter.extraLight, px: 0.5, py: 0.5, ...sx }} {...props}>
+  <Card sx={{ backgroundColor: BeanstalkPalette.lightestBlue, px: 0.5, py: 0.5, ...sx }} {...props}>
     {children}
   </Card>
 );

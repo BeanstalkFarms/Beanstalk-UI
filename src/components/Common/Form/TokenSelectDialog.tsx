@@ -116,6 +116,17 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
 
   if (!selectedInternal) return null;
 
+  const k = (() => {
+    if (selectedInternal.size > 0) {
+      console.log(selected);
+      Array.from(selectedInternal).forEach((t) => {
+        console.log(t);
+      });
+    }
+    
+    return 0;
+  })();
+
   return (
     <StyledDialog
       onClose={handleClose}
@@ -138,6 +149,7 @@ const TokenSelectDialog : TokenSelectDialogC = React.memo(({
             <ListItem
               key={_token.address}
               color="primary"
+              // selected={selectedInternal.has(_token)}
               disablePadding
               onClick={onClickItem(_token)}
               sx={{
