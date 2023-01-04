@@ -15,7 +15,7 @@ const AdvancedButton : FC<{
   <Button
     variant="outlined" // usually "contained"
     color="light"
-    // sx={{ backgroundColor: '#F6FAFE' }}
+    sx={{ color: 'text.primary' }}
     size="small"
     {...props}
   >

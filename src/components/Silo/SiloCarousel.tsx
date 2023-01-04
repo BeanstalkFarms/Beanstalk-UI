@@ -73,7 +73,7 @@ const useCardContentWithToken = (token: ERC20Token) => [
 const ImageWrapper = styled(Stack)(({ theme }) => ({
   justifyContent: 'flex-end',
   alignItems: 'center',
-  background: BeanstalkPalette.theme.winter.blueDark,
+  background: BeanstalkPalette.blue,
   width: '100%',
   height: '300px',
   [theme.breakpoints.down('md')]: { height: '250px !important' },
@@ -82,13 +82,14 @@ const ImageWrapper = styled(Stack)(({ theme }) => ({
 const InfoContent = styled(Stack)(({ theme }) => ({
   width: '100%',
   padding: '20px',
-  background: BeanstalkPalette.theme.winter.blueLight,
+  background: BeanstalkPalette.white,
   [theme.breakpoints.up('md')]: {
-    borderLeft: `${theme.palette.divider} 1px solid`,
+    // borderLeft: `${theme.palette.} 1px solid`,
+    borderLeft: '1px solid white',
     maxWidth: '40%',
   },
   [theme.breakpoints.down('md')]: {
-    borderTop: `${theme.palette.divider} 1px solid`,
+    borderTop: '1px solid white',
   },
   [theme.breakpoints.between('sm', 'md')]: {
     height: '200px',
@@ -100,7 +101,6 @@ const InfoContent = styled(Stack)(({ theme }) => ({
 
 const CarouselCard = styled(EmbeddedCard)(({ theme }) => ({
   // heights are defined here otherwise layout jumps occur during animation
-  borderColor: theme.palette.divider,
   overflow: 'hidden',
   [theme.breakpoints.up('md')]: { height: '300px' },
   [theme.breakpoints.between('sm', 'md')]: { height: '450px' },
@@ -139,7 +139,7 @@ const SiloCarousel: FC<{ token: ERC20Token }> = ({ token }) => {
                       {texts.map((text, i) => (
                         <Typography
                           variant="bodySmall"
-                          color="text.tertiary"
+                          color="text.secondary"
                           key={i}
                         >
                           {`${text}\n\n`}

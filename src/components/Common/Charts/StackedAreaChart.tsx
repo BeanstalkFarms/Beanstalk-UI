@@ -313,7 +313,7 @@ const Graph = (props: Props) => {
                     position: 'absolute'
                   }}
                 >
-                  <Card sx={{ p: 1, backgroundColor: BeanstalkPalette.theme.winter.blueLight }}>
+                  <Card sx={{ p: 1, backgroundColor: BeanstalkPalette.lightestBlue, border: '1px solid', borderColor: 'divider' }}>
                     {typeof tooltip === 'boolean' ? (
                       <Stack gap={0.5}>
                         {reversedKeys.map((key, index) => (
