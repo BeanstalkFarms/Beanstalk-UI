@@ -40,6 +40,7 @@ const APY: FC<{
     formatValue={formatValue}
     StatProps={useMemo(() => ({
       title: `Bean vAPY for Deposited ${metric}`,
+      // FIXME: identical to SiloAssetApyChip
       titleTooltip: 'The Variable Bean APY uses a moving average of Beans earned by Stalkholders during recent Seasons to estimate a future rate of return, accounting for Stalk growth.',
       gap: 0.5,
     }), [metric])}
