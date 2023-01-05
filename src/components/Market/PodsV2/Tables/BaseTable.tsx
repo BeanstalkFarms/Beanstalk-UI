@@ -74,7 +74,7 @@ const BaseTable: FC<
           cursor: onRowClick ? 'pointer' : 'default',
         },
         '& .MuiDataGrid-columnHeaders': {
-          borderBottom: '1px solid ${BeanstalkPalette.lightestGrey} !important',
+          borderBottom: `1px solid ${BeanstalkPalette.lightestGrey} !important`,
         },
         '& .MuiDataGrid-columnHeaders .MuiDataGrid-columnHeaderTitle': {
           textTransform: 'uppercase'
