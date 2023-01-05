@@ -73,7 +73,8 @@ export default defineConfig(({ command, mode }) => ({
             'img-src': [
               '\'self\'',
               '*.githubusercontent.com',
-              '*.arweave.net',
+              'https://*.arweave.net',
+              'https://arweave.net',
               'data:',
             ],
           })
