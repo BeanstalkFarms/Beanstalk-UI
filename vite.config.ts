@@ -56,7 +56,7 @@ export default defineConfig(({ command, mode }) => ({
               'wss://*.bridge.walletconnect.org',
               'registry.walletconnect.com',
               'wss://*.walletlink.org',
-              'https://.coinbase.com',
+              '*.coinbase.com',
               '*.google-analytics.com',
               '*.doubleclick.net'
             ],
@@ -73,6 +73,8 @@ export default defineConfig(({ command, mode }) => ({
             'img-src': [
               '\'self\'',
               '*.githubusercontent.com',
+              'arweave.net',
+              'data:',
             ],
           })
         }
