@@ -16,7 +16,7 @@ query SeasonalDepositedSiloAsset(
   ) { 
     id
     season
-    timestamp
-    totalDepositedAmount
+    createdAt
+    depositedAmount
   }
 }

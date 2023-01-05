@@ -104,7 +104,7 @@ const MarkdownWrapper: FC<{}> = ({ children }) => (
       code: {
         props: {
           style: {
-            backgroundColor: BeanstalkPalette.theme.winter.blueDark,
+            backgroundColor: BeanstalkPalette.lightestGrey,
             borderRadius: 3,
             margin: 1,
             padding: 0.75,

@@ -81,7 +81,7 @@ const SiloBalances: React.FC<{}> = () => {
           whiteSpace="nowrap"
         >
           <Grid item xs={6} sm={5} md={3} textAlign="left" pl={2}>
-            <Typography color="text.tertiary">Token</Typography>
+            <Typography color="text.secondary">Token</Typography>
           </Grid>
           <Grid
             item
@@ -89,7 +89,7 @@ const SiloBalances: React.FC<{}> = () => {
             display={{ xs: 'none', sm: 'block' }}
             textAlign="left"
           >
-            <Typography color="text.tertiary">Amount Deposited</Typography>
+            <Typography color="text.secondary">Amount Deposited</Typography>
           </Grid>
           <Grid
             item
@@ -97,7 +97,7 @@ const SiloBalances: React.FC<{}> = () => {
             pr={{ xs: 4, md: 0 }}
             textAlign="right"
           >
-            <Typography color="text.tertiary">Value Deposited</Typography>
+            <Typography color="text.secondary">Value Deposited</Typography>
           </Grid>
           <Grid
             item
@@ -105,7 +105,7 @@ const SiloBalances: React.FC<{}> = () => {
             display={{ xs: 'none', md: 'block' }}
             textAlign="right"
           >
-            <Typography color="text.tertiary">Stalk</Typography>
+            <Typography color="text.secondary">Stalk</Typography>
           </Grid>
           <Grid
             item
@@ -114,7 +114,7 @@ const SiloBalances: React.FC<{}> = () => {
             textAlign="right"
             pr={4}
           >
-            <Typography color="text.tertiary">Seeds</Typography>
+            <Typography color="text.secondary">Seeds</Typography>
           </Grid>
         </Grid>
       </Box>
@@ -136,7 +136,9 @@ const SiloBalances: React.FC<{}> = () => {
                   textAlign: 'left',
                   px: 0,
                   py: 1,
+                  borderWidth: 0.5,
                   borderColor: 'divider',
+                  background: BeanstalkPalette.white, 
                   '&:hover': {
                     borderColor: 'unset',
                   }
@@ -368,7 +370,7 @@ const SiloBalances: React.FC<{}> = () => {
                       >
                         <ArrowRightIcon
                           sx={{
-                            color: 'primary.main',
+                            color: 'secondary.main',
                             marginTop: '3px',
                           }}
                         />

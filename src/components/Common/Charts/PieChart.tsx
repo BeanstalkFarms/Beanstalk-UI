@@ -11,6 +11,7 @@ import { Stack, Typography } from '@mui/material';
  * Wrap the graph in a ParentSize handler.
  */
 import { FC } from '~/types';
+import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 // ------------------------------------------------------
 
@@ -186,7 +187,7 @@ const Pie : FC<PieProps & PieCustomizationProps> = ({
         </VisxPie>
         {title && (
           <text
-            fill="#ffffff"
+            fill={BeanstalkPalette.textBlue}
             x={0}
             y={0}
             dy=".33em"

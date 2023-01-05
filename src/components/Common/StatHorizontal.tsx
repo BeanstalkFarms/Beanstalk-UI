@@ -1,4 +1,4 @@
-import { Tooltip, Typography } from '@mui/material';
+import { StackProps, Tooltip, Typography } from '@mui/material';
 import React from 'react';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { FontSize } from '../App/muiTheme';
@@ -9,14 +9,15 @@ import { FC } from '~/types';
 const StatHorizontal : FC<{
   label: string | React.ReactElement,
   labelTooltip?: string | React.ReactElement;
-}> = ({
+} & StackProps> = ({
   label,
   labelTooltip = '',
-  children
+  children,
+  ...props
 }) => (
-  <Row justifyContent="space-between" gap={2}>
+  <Row justifyContent="space-between" gap={2} {...props}>
     <Tooltip title={labelTooltip} placement="right">
-      <Typography>
+      <Typography sx={{ font: 'inherit' }}>
         {label}&nbsp;
         {labelTooltip && (
           <HelpOutlineIcon

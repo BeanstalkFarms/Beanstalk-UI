@@ -1,4 +1,4 @@
-query SeasonalWeather($season_lte: Int, $first: Int) {
+query SeasonalTemperature($season_lte: Int, $first: Int) {
   seasons: fieldHourlySnapshots(
     where: {
       season_lte: $season_lte,
@@ -10,7 +10,7 @@ query SeasonalWeather($season_lte: Int, $first: Int) {
   ) {
     id
     season
-    timestamp
-    weather
+    createdAt
+    temperature
   }
 }

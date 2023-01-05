@@ -1,94 +1,74 @@
-import React from 'react';
-import { Box, CircularProgress, Container, Stack, Typography } from '@mui/material';
-import PageHeader from '~/components/Common/PageHeader';
-import useTabs from '~/hooks/display/useTabs';
-import AllListings from '~/components/Market/Pods/Tables/AllListings';
-import AllOrders from '~/components/Market/Pods/Tables/AllOrders';
-import CreateButtons from '~/components/Market/Pods/CreateButtons';
-import useMarketData from '~/hooks/beanstalk/useMarketData';
-import MarketGraph from '~/components/Market/Pods/MarketGraph';
-import { Module, ModuleContent, ModuleHeader, ModuleTabs } from '~/components/Common/Module';
-import GuideButton from '~/components/Common/Guide/GuideButton';
-import { HOW_TO_BUY_PODS, HOW_TO_SELL_PODS } from '~/util';
-import Centered from '~/components/Common/ZeroState/Centered';
-import { ChipLabel, StyledTab } from '~/components/Common/Tabs';
-import { FC } from '~/types';
+import React, { useMemo } from 'react';
+import {
+  Box,
+  Stack,
+  Theme,
+  ThemeProvider,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 
-const SLUGS = ['buy', 'sell'];
+import { useAtomValue } from 'jotai';
+import useNavHeight from '~/hooks/app/usePageDimensions';
+import useBanner from '~/hooks/app/useBanner';
+import MarketActions from '~/components/Market/PodsV2/Modules/MarketActions';
+import MarketActivityTable from '~/components/Market/PodsV2/Modules/MarketTables';
+import MarketGraphContainer from '~/components/Market/PodsV2/Modules/MarketGraphContainer';
+import { muiThemeCondensed } from '~/components/App/muiTheme';
+import { marketBottomTabsHeightAtom } from '~/components/Market/PodsV2/info/atom-context';
 
-const PodMarketPage: FC<{}> = () => {
-  /// Tabs
-  const [tab, handleChangeTab] = useTabs(SLUGS, 'view');
-  const data = useMarketData();
+const SECTION_MAX_WIDTH = 375;
+const GAP = 0.8;
+const SPACING_SIZE = GAP * 10;
+const LEFT_MAX_WIDTH = `calc(100% - ${SECTION_MAX_WIDTH}px - ${SPACING_SIZE}px)`;
+
+const marketActionsV2Sx = (theme: Theme) => ({
+  [theme.breakpoints.up('lg')]: {
+    position: 'absolute',
+    height: '100%',
+    top: 0,
+    right: 0,
+    width: SECTION_MAX_WIDTH,
+  }
+});
+
+const MarketPage: React.FC<{}> = () => {
+  // helpers
+  const banner = useBanner();
+  const navHeight = useNavHeight(!!banner);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
+  const bottomTabsHeight = useAtomValue(marketBottomTabsHeightAtom);
+
+  const chartHeight = useMemo(() => {
+    const bottomHeight = navHeight + 35;
+    if (isMobile) return '400px';
+    return `calc(100vh - ${GAP * 10 + bottomHeight + bottomTabsHeight + 57}px)`;
+  }, [navHeight, bottomTabsHeight, isMobile]);
+
   return (
-    <Container maxWidth="lg">
-      <Stack spacing={2}>
-        <PageHeader
-          title="The Pod Market"
-          description="Trade the Beanstalk-native debt asset"
-          href="https://docs.bean.money/almanac/farm/market#the-pod-market"
-          OuterStackProps={{
-            // alignItems: 'end'
-          }}
-          control={
-            <Stack direction={{ xs: 'row-reverse', md: 'row' }} justifyContent={{ xs: 'flex-end', md: 'flex-start' }} alignItems="center" gap={1}>
-              <GuideButton
-                title="The Farmers' Almanac: Market Guides"
-                guides={[
-                  HOW_TO_BUY_PODS,
-                  HOW_TO_SELL_PODS
-                ]}
-              />
-              <CreateButtons />
-            </Stack>
-          }
-        />
-        {/**
-          * Graph
-          */}
-        <Module sx={{ overflow: 'visible' }}> 
-          <ModuleHeader>
-            <Typography variant="h4">Overview</Typography>
-          </ModuleHeader>
-          <Box sx={{ width: '100%', height: '400px', position: 'relative', overflow: 'visible' }}>
-            {data.loading === false && data.listings !== undefined && data.orders !== undefined ? (
-              <MarketGraph
-                listings={data.listings}
-                orders={data.orders}
-                maxPlaceInLine={data.maxPlaceInLine}
-                maxPlotSize={data.maxPlotSize}
-                harvestableIndex={data.harvestableIndex}
-              />
-            ) : (
-              <Centered>
-                <CircularProgress variant="indeterminate" />
-              </Centered>
-            )}
+    <Box p={1}>
+      <Stack sx={{ position: 'relative' }} gap={1}>
+        <Stack gap={1}>
+          <Box sx={{ width: { xs: '100%', lg: LEFT_MAX_WIDTH } }}>
+            <MarketGraphContainer chartHeight={chartHeight} />
           </Box>
-        </Module>
-        {/**
-          * Buy Now and Sell Now
-          */}
-        <Module>
-          <ModuleTabs value={tab} onChange={handleChangeTab}>
-            <StyledTab label={
-              <ChipLabel name="Buy Now">
-                {data.listings?.length || 0}
-              </ChipLabel>
-            } />
-            <StyledTab label={
-              <ChipLabel name="Sell Now">
-                {data.orders?.length || 0}
-              </ChipLabel>
-            } />
-          </ModuleTabs>
-          <ModuleContent>
-            {tab === 0 && <AllListings data={data} />}
-            {tab === 1 && <AllOrders data={data} />}
-          </ModuleContent>
-        </Module>
+          <Box sx={marketActionsV2Sx}>
+            <MarketActions />
+          </Box>
+          <Box sx={{ width: { xs: '100%', lg: LEFT_MAX_WIDTH } }}>
+            <MarketActivityTable />
+          </Box>
+        </Stack>
       </Stack>
-    </Container>
+    </Box>
   );
 };
-export default PodMarketPage;
+
+const PodMarketV2: React.FC<{}> = () => (
+  <ThemeProvider theme={muiThemeCondensed}>
+    <MarketPage />
+  </ThemeProvider>
+);
+
+export default PodMarketV2;

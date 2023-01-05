@@ -154,8 +154,8 @@ const strokeBuffer = 2;
 const axisHeight = 21;
 const backgroundColor = '#da7cff';
 const labelColor = '#340098';
-const tickLabelColor = BeanstalkPalette.theme.winter.lightGreen;
-const axisColor = BeanstalkPalette.theme.winter.lightGreen;
+const tickLabelColor = BeanstalkPalette.lightGrey;
+const axisColor = BeanstalkPalette.lightGrey;
 const yAxisWidth = 57;
 
 const margin = {
@@ -308,7 +308,7 @@ const getY1 = (d: SeriesPoint<BaseDataPoint>) => {
 const baseDataPoint = {
   season: true,
   date: true,
-  timestamp: true,
+  createdAt: true,
 } as const;
 
 /**

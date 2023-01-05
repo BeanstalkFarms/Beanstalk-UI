@@ -4,7 +4,6 @@ import {
   Box,
   Card,
   CircularProgress,
-  Divider,
   Typography,
 } from '@mui/material';
 import { DataGrid, GridColumns, GridSortItem } from '@mui/x-data-grid';
@@ -67,7 +66,7 @@ const TableCard: FC<{
   return (
     <Card sx={{ border: onlyTable ? '0px solid' : undefined }}>
       {!onlyTable && (
-        <Row p={2} justifyContent="space-between">
+        <Row p={2} justifyContent="space-between" sx={{ borderBottom: '0.5px solid', borderColor: 'divider' }}>
           <Typography variant="h4">{title}</Typography>
           {state === 'ready' ? (
             <Row gap={0.3}>
@@ -77,7 +76,7 @@ const TableCard: FC<{
                 {value && (
                   <Typography
                     display={{ xs: 'none', sm: 'inline' }}
-                    color="text.secondary"
+                    color="text.tertiary"
                   >
                     {' '}
                     (<Fiat value={value} amount={value} />)
@@ -95,7 +94,7 @@ const TableCard: FC<{
           ) : null}
         </Row>
       )}
-      <Divider sx={{ borderColor: 'divider' }} />
+      {/* <Divider sx={{ borderColor: 'divider' }} /> */}
       <Box
         sx={{
           pt: 0.5,

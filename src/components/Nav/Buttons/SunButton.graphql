@@ -9,7 +9,6 @@ query SunButton {
     price
     deltaBeans # total change in supply
     rewardBeans # amount from Reward on Sunrise
-    # incentiveBeans # amount paid to sunrise caller
   }
   fields: fieldHourlySnapshots(
     first: 24,
@@ -21,8 +20,8 @@ query SunButton {
   ) {
     id
     season
-    newSoil
-		weather
+    issuedSoil
+		temperature
     podRate
   }
 }

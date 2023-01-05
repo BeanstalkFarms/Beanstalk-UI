@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Box, IconButton, Menu, Stack, Typography } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 import { FC } from '~/types';
 
@@ -13,10 +12,17 @@ const PLACEMENTS = {
     pr: 1.3,
     pt: 1.45
   },
+  'condensed-form-top-right': {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    pr: 0.8,
+    pt: 0.4
+  },
 };
 
 const TxnSettings : FC<{
-  placement?: 'form-top-right',
+  placement?: 'form-top-right' | 'condensed-form-top-right',
 }> = ({ 
   placement = 'form-top-right',
   children
@@ -46,7 +52,6 @@ const TxnSettings : FC<{
         onClose={handleHideMenu}
         PaperProps={{
           sx: {
-            backgroundColor: BeanstalkPalette.theme.winter.extraLight,
             borderWidth: 2,
             borderColor: 'divider',
             borderStyle: 'solid',

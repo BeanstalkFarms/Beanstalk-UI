@@ -13,10 +13,9 @@ import {
   RemoveDepositsEvent,
   PodListingCancelledEvent, PodListingCreatedEvent, PodListingFilledEvent, PodOrderCancelledEvent, PodOrderCreatedEvent, PodOrderFilledEvent } from '~/generated/Beanstalk/Beanstalk';
 import { BEAN, PODS } from '~/constants/tokens';
-import { TokenMap, ZERO_BN } from '~/constants';
+import { TokenMap } from '~/constants';
 import { FarmerSiloBalance, WithdrawalCrate } from '~/state/farmer/silo';
 import { PodListing, PodOrder } from '~/state/farmer/market';
-import { FarmToMode } from './Farm';
 import { PlotMap } from '~/util';
 import { MarketStatus } from '~/generated/graphql';
 
@@ -563,30 +562,36 @@ export default class EventProcessor {
 
   /// /////////////////////// MARKET  //////////////////////////
 
+  // eslint-disable-next-line
   PodListingCreated(event: Simplify<PodListingCreatedEvent>) {
-    const id          = event.args.index.toString();
-    const amount      = tokenBN(event.args.amount, BEAN[1]);
-    this.listings[id] = {
-      id:               id,
-      account:          event.args.account.toLowerCase(),
-      index:            tokenBN(event.args.index, BEAN[1]), // 6 dec
-      start:            tokenBN(event.args.start, BEAN[1]), // 6 dec
-      pricePerPod:      tokenBN(event.args.pricePerPod, BEAN[1]),
-      maxHarvestableIndex: tokenBN(event.args.maxHarvestableIndex, BEAN[1]),
-      mode:             event.args.mode.toString() as FarmToMode,
-      amount:           amount,   //
-      totalAmount:      amount,   //
-      remainingAmount:  amount,   //
-      filledAmount:     BN(0),    // 
-      minFillAmount:    tokenBN(event.args.minFillAmount || 0, BEAN[1]),
-      status:           MarketStatus.Active,
-      placeInLine:      ZERO_BN,  // FIXME
-    };
+    // const id          = event.args.index.toString();
+    // const amount      = tokenBN(event.args.amount, BEAN[1]);
+    // this.listings[id] = {
+    //   id:               id,
+    //   account:          event.args.account.toLowerCase(),
+    //   index:            tokenBN(event.args.index, BEAN[1]), // 6 dec
+    //   start:            tokenBN(event.args.start, BEAN[1]), // 6 dec
+    //   pricePerPod:      tokenBN(event.args.pricePerPod, BEAN[1]),
+    //   maxHarvestableIndex: tokenBN(event.args.maxHarvestableIndex, BEAN[1]),
+    //   mode:             event.args.mode.toString() as FarmToMode,
+    //   amount:           amount,   //
+    //   originalAmount:     amount,   //
+    //   remainingAmount:  amount,   //
+    //   filledAmount:     BN(0),    // 
+    //   minFillAmount:    tokenBN(event.args.minFillAmount || 0, BEAN[1]),
+    //   status:           MarketStatus.Active,
+    //   placeInLine:      ZERO_BN,  // FIXME
+    //   pricingFunction:  event.args.pricingFunction,
+    //   pricingType:      event.args.pricingType,
+    // };
   }
 
+  // eslint-disable-next-line
   PodListingCancelled(event: Simplify<PodListingCancelledEvent>) {
-    const id = event.args.index.toString();
-    if (this.listings[id]) delete this.listings[id];
+    // const id = event.args.index.toString();
+    // if (this.listings[id]) {
+    //   delete this.listings[id];
+    // }
   }
 
   /**
@@ -611,60 +616,66 @@ export default class EventProcessor {
    * @param event
    * @returns 
    */
+  // eslint-disable-next-line
   PodListingFilled(event: Simplify<PodListingFilledEvent>) {
-    const id = event.args.index.toString();
-    if (!this.listings[id]) return;
+    // const id = event.args.index.toString();
+    // if (!this.listings[id]) return;
     
-    const indexBN     = BN(event.args.index);
-    const deltaAmount = tokenBN(event.args.amount, BEAN[1]); 
-    // const start   = tokenBN(event.args.start,  BEAN[1]); 
+    // const indexBN     = BN(event.args.index);
+    // const deltaAmount = tokenBN(event.args.amount, BEAN[1]); 
+    // // const start   = tokenBN(event.args.start,  BEAN[1]); 
 
-    /// Move current listing's index up by |amount|
-    ///  FIXME: does this match the new marketplace behavior? Believe
-    ///  this assumes we are selling from the front (such that, as a listing
-    ///  is sold, the index increases).
-    const prevID = id;
-    const currentListing = this.listings[prevID]; // copy
-    delete this.listings[prevID];
+    // /// Move current listing's index up by |amount|
+    // ///  FIXME: does this match the new marketplace behavior? Believe
+    // ///  this assumes we are selling from the front (such that, as a listing
+    // ///  is sold, the index increases).
+    // const prevID = id;
+    // const currentListing = this.listings[prevID]; // copy
+    // delete this.listings[prevID];
 
-    /// The new index of the Plot, now that some of it has been sold.
-    const newIndex       = indexBN.plus(BN(event.args.amount)).plus(BN(event.args.start)); // no decimals
-    const newID          = newIndex.toString();
-    this.listings[newID] = currentListing;
+    // /// The new index of the Plot, now that some of it has been sold.
+    // const newIndex       = indexBN.plus(BN(event.args.amount)).plus(BN(event.args.start)); // no decimals
+    // const newID          = newIndex.toString();
+    // this.listings[newID] = currentListing;
 
-    /// Bump up |amountSold| for this listing
-    this.listings[newID].id              = newID;
-    this.listings[newID].index           = tokenBN(newIndex, BEAN[1]);
-    this.listings[newID].start           = new BigNumber(0); // After a Fill, the new start position is always zero (?)
-    this.listings[newID].filledAmount    = currentListing.filledAmount.plus(deltaAmount);
-    this.listings[newID].remainingAmount = currentListing.amount.minus(currentListing.filledAmount);
-    // others stay the same, incl. currentListing.totalAmount, etc.
+    // /// Bump up |amountSold| for this listing
+    // this.listings[newID].id              = newID;
+    // this.listings[newID].index           = tokenBN(newIndex, BEAN[1]);
+    // this.listings[newID].start           = new BigNumber(0); // After a Fill, the new start position is always zero (?)
+    // this.listings[newID].filledAmount    = currentListing.filledAmount.plus(deltaAmount);
+    // this.listings[newID].remainingAmount = currentListing.amount.minus(currentListing.filledAmount);
+    // // others stay the same, incl. currentListing.totalAmount, etc.
 
-    const isFilled = this.listings[newID].remainingAmount.isEqualTo(0);
-    if (isFilled) {
-      this.listings[newID].status = MarketStatus.Filled;
-      // delete this.listings[newID];
-    }
+    // const isFilled = this.listings[newID].remainingAmount.isEqualTo(0);
+    // if (isFilled) {
+    //   this.listings[newID].status = MarketStatus.Filled;
+    //   // delete this.listings[newID];
+    // }
   }
   
+  // eslint-disable-next-line
   PodOrderCreated(event: Simplify<PodOrderCreatedEvent>) {
-    const id = event.args.id.toString();
-    this.orders[id] = {
-      id:               id,
-      account:          event.args.account.toLowerCase(),
-      maxPlaceInLine:   tokenBN(event.args.maxPlaceInLine, BEAN[1]),
-      totalAmount:      tokenBN(event.args.amount, BEAN[1]),
-      pricePerPod:      tokenBN(event.args.pricePerPod, BEAN[1]),
-      remainingAmount:  tokenBN(event.args.amount, BEAN[1]),
-      filledAmount:     new BigNumber(0),
-      minFillAmount:    tokenBN(event.args.minFillAmount || 0, PODS),
-      status:           MarketStatus.Active,
-    };
+    // const id = event.args.id.toString();
+    // this.orders[id] = {
+    //   id:               id,
+    //   account:          event.args.account.toLowerCase(),
+    //   maxPlaceInLine:   tokenBN(event.args.maxPlaceInLine, BEAN[1]),
+    //   podAmount:      tokenBN(event.args.amount, BEAN[1]),
+    //   pricePerPod:      tokenBN(event.args.pricePerPod, BEAN[1]),
+    //   podAmountRemaining:  tokenBN(event.args.amount, BEAN[1]),
+    //   podAmountFilled:     new BigNumber(0),
+    //   minFillAmount:    tokenBN(event.args.minFillAmount || 0, PODS),
+    //   status:           MarketStatus.Active,
+    //   pricingFunction:  event.args.pricingFunction,
+    //   pricingType:      event.args.priceType,
+    // };
   }
 
   PodOrderCancelled(event: Simplify<PodOrderCancelledEvent>) {
     const id = event.args.id.toString();
-    if (this.orders[id]) delete this.orders[id];
+    if (this.orders[id]) {
+      delete this.orders[id];
+    }
   }
   
   PodOrderFilled(event: Simplify<PodOrderFilledEvent>) {
@@ -672,11 +683,11 @@ export default class EventProcessor {
     if (!this.orders[id]) return;
 
     const amount = tokenBN(event.args.amount, BEAN[1]);
-    this.orders[id].filledAmount    = this.orders[id].filledAmount.plus(amount);
-    this.orders[id].remainingAmount = this.orders[id].totalAmount.minus(this.orders[id].filledAmount);
+    this.orders[id].podAmountFilled    = this.orders[id].podAmountFilled.plus(amount);
+    this.orders[id].podAmountRemaining = this.orders[id].podAmount.minus(this.orders[id].podAmountFilled);
 
     /// Update status
-    const isFilled = this.orders[id].remainingAmount.isEqualTo(0);
+    const isFilled = this.orders[id].podAmountRemaining.isEqualTo(0);
     if (isFilled) {
       this.orders[id].status = MarketStatus.Filled;
       // delete this.orders[id];

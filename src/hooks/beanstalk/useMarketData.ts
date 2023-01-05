@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { MarketStatus, useAllPodOrdersQuery } from '~/generated/graphql';
 import useCastApolloQuery from '~/hooks/app/useCastApolloQuery';
 import useHarvestableIndex from '~/hooks/beanstalk/useHarvestableIndex';
@@ -11,13 +11,17 @@ const useMarketData = () => {
   const harvestableIndex = useHarvestableIndex();
   
   /// Queries
-  const listingsQ = usePodListings({ variables: { status: MarketStatus.Active, }, fetchPolicy: 'cache-and-network', nextFetchPolicy: 'cache-first', notifyOnNetworkStatusChange: true });
-  const ordersQ   = useAllPodOrdersQuery({ variables: { status: MarketStatus.Active }, fetchPolicy: 'cache-and-network', nextFetchPolicy: 'cache-first', notifyOnNetworkStatusChange: true  });
+  const listingsQuery = usePodListings({ variables: { status: MarketStatus.Active, }, fetchPolicy: 'cache-and-network', nextFetchPolicy: 'cache-first', notifyOnNetworkStatusChange: true });
+  const ordersQuery   = useAllPodOrdersQuery({ variables: { status: MarketStatus.Active }, fetchPolicy: 'cache-and-network', nextFetchPolicy: 'cache-first', notifyOnNetworkStatusChange: true });
   
+  /// Query status
+  const loading = listingsQuery.loading || ordersQuery.loading;
+  const error   = listingsQuery.error   || ordersQuery.error;
+
   /// Cast query data to BigNumber, etc.
-  const listings = useCastApolloQuery<PodListing>(listingsQ, 'podListings', (_listing) => castPodListing(_listing, harvestableIndex));
-  const orders   = useCastApolloQuery<PodOrder>(ordersQ, 'podOrders', castPodOrder);
-  
+  const listings = useCastApolloQuery<PodListing>(listingsQuery, 'podListings', useCallback((_listing) => castPodListing(_listing, harvestableIndex), [harvestableIndex]), loading);
+  const orders   = useCastApolloQuery<PodOrder>(ordersQuery, 'podOrders', castPodOrder, loading);
+
   /// Calculations
   const maxPlaceInLine = useMemo(() => (
     listings
@@ -26,13 +30,9 @@ const useMarketData = () => {
   ), [harvestableIndex, listings]);
   const maxPlotSize = useMemo(() => (
     listings
-      ? Math.max(...listings.map((l) => new BigNumber(l.amount).toNumber()))
+      ? Math.max(...listings.map((l) => new BigNumber(l.remainingAmount).toNumber()))
       : 0
   ), [listings]);
-
-  /// Query status
-  const loading = listingsQ.loading || ordersQ.loading;
-  const error   = listingsQ.error   || ordersQ.error;
 
   return {
     listings,

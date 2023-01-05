@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import rainySeasonIcon from '~/img/beanstalk/sun/rainy-season.svg';
 import drySeasonIcon from '~/img/beanstalk/sun/dry-season.svg';
 import { displayBN, displayFullBN } from '../../util';
-import { BeanstalkPalette, FontSize, IconSize } from '../App/muiTheme';
+import { FontSize, IconSize } from '../App/muiTheme';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
@@ -12,7 +12,7 @@ import { FC } from '~/types';
 export interface SeasonCardProps {
   season: BigNumber;
   rewardBeans: BigNumber | undefined;
-  newSoil: BigNumber | undefined;
+  issuedSoil: BigNumber | undefined;
   temperature: BigNumber | undefined;
   deltaTemperature: BigNumber | undefined;
   podRate: BigNumber;
@@ -23,7 +23,7 @@ export interface SeasonCardProps {
 const SeasonCard: FC<SeasonCardProps> = ({ 
   season,
   rewardBeans,
-  newSoil,
+  issuedSoil,
   podRate,
   temperature,
   deltaTemperature,
@@ -37,7 +37,7 @@ const SeasonCard: FC<SeasonCardProps> = ({
           className="next-season"
           sx={{ 
             borderColor: 'rgba(240, 223, 146, 1)',
-            borderWidth: 1,
+            borderWidth: 0.5,
             borderStyle: 'solid',
             display: 'none',
             position: 'absolute',
@@ -51,7 +51,7 @@ const SeasonCard: FC<SeasonCardProps> = ({
           }}
         >
           <Row justifyContent="center" height="100%">
-            <Typography pl={1} fontSize={FontSize.sm} textAlign="left" sx={{ color: BeanstalkPalette.theme.winter.blueDark }}>
+            <Typography pl={1} fontSize={FontSize.sm} textAlign="left" color="text.primary">
               The forecast for Season {season.toString()} is based on data in the current Season.
             </Typography>
           </Row>
@@ -76,7 +76,7 @@ const SeasonCard: FC<SeasonCardProps> = ({
               ) : (
                 <img src={rainySeasonIcon} height={IconSize.small} alt="" />
               )}
-              <Typography color="text.primary" variant="bodySmall">
+              <Typography variant="bodySmall">
                 {season?.toString() || '-'}
               </Typography>
             </Row>
@@ -90,10 +90,10 @@ const SeasonCard: FC<SeasonCardProps> = ({
           {/* Soil */}
           <Grid item xs={3} md={2} textAlign="right">
             <Typography variant="bodySmall">
-              {newSoil
-                ? newSoil.lt(0.01)
+              {issuedSoil
+                ? issuedSoil.lt(0.01)
                   ? '<0.01'
-                  : displayFullBN(newSoil, 2, 2) 
+                  : displayFullBN(issuedSoil, 2, 2) 
                 : '-'}
             </Typography>
           </Grid>

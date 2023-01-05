@@ -9,7 +9,7 @@ import { FC } from '~/types';
 const FarmerChip : FC<{ account: string }> = ({ account }) => (
   <Button
     size="small"
-    variant="outlined"
+    variant="text"
     color="primary"
     sx={{
       fontWeight: 400,
@@ -22,7 +22,7 @@ const FarmerChip : FC<{ account: string }> = ({ account }) => (
     <Row gap={0.5}>
       <AddressIcon
         address={account}
-        size={IconSize.small}
+        size={IconSize.xs}
       />
       <Typography>
         {account.substring(0, 6)}

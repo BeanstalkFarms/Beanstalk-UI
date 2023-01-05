@@ -27,6 +27,8 @@ const TokenOutputField : FC<{
   amountTooltip?: string | JSX.Element;
   /** Override the end adornment section */
   override?: any;
+  /** */
+  size?: 'small';
 }> = ({
   token,
   amount,
@@ -36,15 +38,16 @@ const TokenOutputField : FC<{
   isDelta = true,
   isLoading = false,
   override,
+  size,
 }) => {
   const isZero     = amount.eq(0);
   const isNegative = amount.lt(0);
   const prefix     = (!isDelta || isZero) ? '' : isNegative ? '-' : '+';
   return (
-    <OutputField isNegative={isNegative}>
+    <OutputField isNegative={isNegative} size={size}>
       {!isLoading ? (
         <Tooltip title={amountTooltip}>
-          <Typography display="inline" variant="bodyLarge" sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
+          <Typography display="inline" variant={size === 'small' ? 'body1' : 'bodyLarge'} sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
             {amount.abs().gt(new BigNumber(1000000)) ? (
               <>
                 {prefix}&nbsp;{displayFullBN(amount.abs(), 0)}
@@ -68,11 +71,11 @@ const TokenOutputField : FC<{
             <TokenIcon
               token={token}
               css={{
-                height: IconSize.small,
+                height: size === 'small' ? IconSize.xs : IconSize.small,
               }}
             />
           )}
-          <Typography variant="bodyMedium" color="text.primary">
+          <Typography variant={size === 'small' ? 'bodySmall' : 'bodyMedium'} color="text.primary">
             {modifier && `${modifier} `}{token.symbol}
           </Typography>
         </Row>

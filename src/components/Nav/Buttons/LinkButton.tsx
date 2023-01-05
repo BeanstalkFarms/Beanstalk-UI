@@ -17,7 +17,13 @@ import { FC } from '~/types';
 
 const LinkButton: FC<{ to: string; title: string, tag?: string }> = ({ to, title, tag }) => {
   const resolved = useResolvedPath(to);
-  const match    = useMatch({ path: resolved.pathname, end: true });
+  const match    = useMatch({
+    path: resolved.pathname,
+    // require exact match for the index page
+    // otherwise, use prefix match
+    // this keeps the Market tab highlighted even when you click into an order
+    end: to === '/'
+  });
   
   return (
     <Stack sx={{
@@ -38,8 +44,8 @@ const LinkButton: FC<{ to: string; title: string, tag?: string }> = ({ to, title
         to={to}
         size="small"
         variant="text"
-        color={match ? 'primary' : 'light'}
         sx={{
+          color: match ? 'primary.main' : 'text.primary',
           '&:hover > h6': {
             textDecorationThickness: '2px',
           },

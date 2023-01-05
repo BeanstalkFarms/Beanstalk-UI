@@ -114,16 +114,6 @@ const cache = new InMemoryCache({
         siloAssetHourlySnapshots: mergeUsingSeasons(['$siloAsset']),
         siloHourlySnapshots: mergeUsingSeasons([]),
         siloYields: mergeUsingSeasons([]),
-        marketplaceEvents: {
-          // Don't cache separate results based on
-          // any of this field's arguments.
-          keyArgs: false,
-          // Concatenate the incoming list items with
-          // the existing list items.
-          merge(existing = [], incoming) {
-            return [...existing, ...incoming];
-          },
-        },
       }
     }
   }
@@ -140,8 +130,19 @@ try {
 
 /// ///////////////////////// Links ////////////////////////////
 
-export const sgEnvKey = store.getState().app.settings.subgraphEnv || SGEnvironments.BF_PROD;
-export const sgEnv = SUBGRAPH_ENVIRONMENTS[sgEnvKey] || SUBGRAPH_ENVIRONMENTS[SGEnvironments.BF_PROD];
+export let sgEnvKey = SGEnvironments.BF_PROD;
+export let sgEnv = SUBGRAPH_ENVIRONMENTS[sgEnvKey];
+
+try {
+  const sgEnvInState = store.getState().app.settings.subgraphEnv;
+  // Verify that this version is still supported.
+  if (SUBGRAPH_ENVIRONMENTS[sgEnvInState]) {
+    sgEnvKey = sgEnvInState;
+    sgEnv = SUBGRAPH_ENVIRONMENTS[sgEnvInState];
+  }
+} catch (e) {
+  console.warn('Failed to read subgraph env from state, skipping.');
+}
 
 const beanstalkLink = new HttpLink({
   uri: sgEnv.subgraphs.beanstalk,

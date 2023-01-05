@@ -10,15 +10,17 @@ import { useMemo } from 'react';
 export default function useCastApolloQuery<T>(
   query: ApolloQueryResult<any>,
   key: string,
-  cast: (elem: any) => T
+  cast: (elem: any) => T,
+  skip?: boolean,
 ) {
   return useMemo<T[] | undefined>(() => {
-    if (query.loading || !query.data?.[key]) return undefined;
+    if (skip || query.loading || !query.data?.[key]) return undefined;
     return query.data[key].map(cast);
   }, [
     query.data, 
     query.loading,
     cast,
-    key
+    key,
+    skip
   ]);
 }

@@ -28,8 +28,8 @@ import { FC } from '~/types';
 
 const castField = (data: SunButtonQuery['fields'][number]) => ({
   season:   new BigNumber(data.season),
-  newSoil:  toTokenUnitsBN(data.newSoil, BEAN[1].decimals),
-  temperature: new BigNumber(data.weather),
+  issuedSoil:  toTokenUnitsBN(data.issuedSoil, BEAN[1].decimals),
+  temperature: new BigNumber(data.temperature),
   podRate:  new BigNumber(data.podRate),
 });
 const castSeason = (data: SunButtonQuery['seasons'][number]) => ({
@@ -123,34 +123,34 @@ const PriceButton: FC<ButtonProps> = ({ ...props }) => {
         <Box px={1}>
           <Grid container>
             <Grid item xs={1.5} md={1.25}>
-              <Typography color="text.primary" variant="bodySmall">
+              <Typography variant="bodySmall">
                 Season
               </Typography>
             </Grid>
             <Grid item xs={3} md={2} textAlign="right">
-              <Typography color="text.primary" variant="bodySmall">
+              <Typography variant="bodySmall">
                 New Beans
               </Typography>
             </Grid>
             <Grid item xs={3} md={2} textAlign="right">
-              <Typography color="text.primary" variant="bodySmall">
+              <Typography variant="bodySmall">
                 Soil
               </Typography>
             </Grid>
             <Grid item xs={4} md={2.75}>
               <Stack alignItems="flex-end">
-                <Typography color="text.primary" variant="bodySmall">
+                <Typography variant="bodySmall">
                   Temperature
                 </Typography>
               </Stack>
             </Grid>
             <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }} textAlign="right">
-              <Typography color="text.primary" variant="bodySmall">
+              <Typography variant="bodySmall">
                 Pod Rate
               </Typography>
             </Grid>
             <Grid item xs={0} md={2} display={{ xs: 'none', md: 'block' }} textAlign="right">
-              <Typography color="text.primary" variant="bodySmall">
+              <Typography variant="bodySmall">
                 Delta Demand
               </Typography>
             </Grid>
@@ -159,7 +159,7 @@ const PriceButton: FC<ButtonProps> = ({ ...props }) => {
         <SeasonCard
           season={season.plus(1)}
           rewardBeans={peg.rewardBeans}
-          newSoil={peg.soilStart}
+          issuedSoil={peg.soilStart}
           podRate={NEW_BN}
           temperature={beanstalkField.weather.yield.plus(peg.deltaTemperature)} // FIXME expected
           deltaDemand={peg.deltaPodDemand}
@@ -180,7 +180,7 @@ const PriceButton: FC<ButtonProps> = ({ ...props }) => {
               temperature={s.temperature}
               deltaTemperature={deltaTemperature}
               deltaDemand={undefined}
-              newSoil={s.newSoil}
+              issuedSoil={s.issuedSoil}
               podRate={s.podRate}
             />
           );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StackProps } from '@mui/material';
+import { lighten, StackProps } from '@mui/material';
 import Row from '~/components/Common/Row';
 
 import { FC } from '~/types';
@@ -7,23 +7,22 @@ import { BeanstalkPalette } from '~/components/App/muiTheme';
 
 const OutputField : FC<{
   isNegative?: boolean;
+  size?: 'small'
 } & StackProps> = ({
-  //
   isNegative = false,
   children,
-  //
   sx,
+  size,
   ...props
 }) => (
   <Row
     sx={{
-      // backgroundColor: isNegative ? '#FFE5DF' : '#F6FAFE',
-      backgroundColor: BeanstalkPalette.theme.winter.blueLight, 
+      backgroundColor: isNegative ? lighten(BeanstalkPalette.lightestRed, 0.25) : BeanstalkPalette.lightestBlue,
       borderRadius: 1,
-      px: 2,
-      py: 2,
-      color: isNegative ? BeanstalkPalette.theme.winter.error : 'inherit',
-      height: '70px',
+      px: size === 'small' ? 1 : 2,
+      py: size === 'small' ? 0.5 : 2,
+      color: isNegative ? BeanstalkPalette.trueRed : 'inherit',
+      height: size === 'small' ? '42px' : '70px',
       ...sx
     }}
     alignItems="center"
