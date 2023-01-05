@@ -176,6 +176,7 @@ const DepositForm : FC<
         ) : null}
         <SmartSubmitButton
           loading={isSubmitting}
+          disabled={isSubmitting || amount.lte(0)}
           type="submit"
           variant="contained"
           color="primary"

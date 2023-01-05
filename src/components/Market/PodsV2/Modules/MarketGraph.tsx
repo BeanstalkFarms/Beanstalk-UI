@@ -349,10 +349,10 @@ const Graph: FC<GraphProps> = ({
             strokeWidth={1}
             pointerEvents="none"
           />
-          <Text fill="white" x={cursorPoint.coordinate.x + 10} y={innerHeight - axis.xHeight} fontSize={14}>
+          <Text fill={BeanstalkPalette.textBlue} x={cursorPoint.coordinate.x + 10} y={innerHeight - axis.xHeight} fontSize={14}>
             {displayBN(listings[cursorPoint.index].placeInLine)}
           </Text>
-          <Text fill="white" x={axis.yWidth + 10} y={cursorPoint.coordinate.y - 5} fontSize={14}>
+          <Text fill={BeanstalkPalette.textBlue} x={axis.yWidth + 10} y={cursorPoint.coordinate.y - 5} fontSize={14}>
             {listings[cursorPoint.index].pricePerPod.toFixed(4)}
           </Text>
         </g>
@@ -380,10 +380,10 @@ const Graph: FC<GraphProps> = ({
             height={innerHeight - cursorPoint.coordinate.y}
             width={cursorPoint.coordinate.x}
           />
-          <Text fill="white" x={cursorPoint.coordinate.x + 10} y={innerHeight - axis.xHeight} fontSize={14}>
+          <Text fill={BeanstalkPalette.textBlue}x={cursorPoint.coordinate.x + 10} y={innerHeight - axis.xHeight} fontSize={14}>
             {displayBN(orders[cursorPoint.index].maxPlaceInLine)}
           </Text>
-          <Text fill="white" x={axis.yWidth + 10} y={cursorPoint.coordinate.y - 5} fontSize={14}>
+          <Text fill={BeanstalkPalette.textBlue} x={axis.yWidth + 10} y={cursorPoint.coordinate.y - 5} fontSize={14}>
             {orders[cursorPoint.index].pricePerPod.toFixed(4)}
           </Text>
         </g>

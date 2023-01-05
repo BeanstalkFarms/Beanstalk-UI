@@ -57,7 +57,7 @@ const SiloAssetApyChip: FC<SiloAssetApyChipProps> = ({ token, metric, variant = 
                 gap={0.25}
                 variant="h4"
                 amount={latestYield ? displayFullBN(latestYield.beansPerSeasonEMA, Bean.displayDecimals) : '0'}
-                subtitle="14-day exponential moving average of Beans earned by all Stalkholders per Season."
+                subtitle="30-day exponential moving average of Beans earned by all Stalkholders per Season."
               />
             </Box>
           )}
